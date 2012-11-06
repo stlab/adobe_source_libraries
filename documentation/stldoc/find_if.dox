@@ -1,0 +1,65 @@
+/** \page stldoc_find_if find_if
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template<class InputIterator, class Predicate>
+InputIterator find_if(InputIterator first, InputIterator last,
+                      Predicate pred);
+\endcode
+\section Description Description
+Returns the first iterator <code>i</code> in the range <code>[first, last)</code> such that
+<code>pred(*i)</code> is true.  Returns <code>last</code> if no such iterator exists.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+Predicate is a model of \ref stldoc_Predicate.
+<li>
+InputIterator is a model of \ref stldoc_InputIterator.
+<li>
+The value type of InputIterator is convertible to the argument type
+   of Predicate.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+For each iterator <code>i</code> in the range <code>[first, last)</code>, *i is in the
+   domain of Predicate. 
+</ul>
+\section Complexity Complexity
+Linear: at most <code>last - first</code> applications of <code>Pred</code>.
+\section Example Example
+\code
+List<int> L;
+L.push_back(-3);
+L.push_back(0);
+L.push_back(3);
+L.push_back(-2);
+
+List<int>::iterator result = find_if(L.begin(), L.end(),
+                                     bind2nd(greater<int>(), 0));
+assert(result == L.end() || *result > 0);
+\endcode
+\section Notes Notes
+\section See_also See also
+\ref stldoc_find.
+
+
+*/

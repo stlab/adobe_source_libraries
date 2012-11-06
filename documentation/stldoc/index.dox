@@ -1,0 +1,107 @@
+/** \page stldoc_index Standard Template Library Programmer's Guide
+
+<CENTER>
+<table BORDER="0" CELLPADDING="2" CELLSPACING="10">
+    <tr>
+        <td WIDTH="50%" >
+          <div SIZE="5"><B>
+          \ref stldoc_stl_introduction
+          </B></div>
+        </td>
+        <td WIDTH="50%" >
+          <div SIZE="5"><B>
+          \ref stldoc_doc_introduction
+          </B></div>
+        </td>
+    </tr>
+    <tr>
+        <td WIDTH="50%" >
+          <div SIZE="5"><B>
+          \ref stldoc_table_of_contents
+          </B></div>
+        </td>
+        <td WIDTH="50%" >
+          <div SIZE="5"><B>
+<div Color="#555555">Download the STL</div>
+          </B></div>
+        </td>
+    </tr>
+    <tr>
+        <td WIDTH="50%" >
+          <div SIZE="5"><B>
+          \ref stldoc_stl_index
+          </B></div>
+        </td>
+        <td WIDTH="50%" >
+          <div SIZE="5"><B>
+          \ref stldoc_stl_index_cat
+          </B></div>
+        </td>
+    </tr>
+    <tr>
+        <td WIDTH="50%" >
+          <div SIZE="5"><B>
+          \ref stldoc_design_documents
+          </B></div>
+        </td>
+        <td WIDTH="50%" >
+          <div SIZE="5"><B>
+          <A HREF="whats_new.html">What's New</A>
+          </B></div>
+        </td>
+    </tr>
+    <tr>
+        <td WIDTH="50%" >
+          <div SIZE="5"><B>
+          \ref stldoc_other_resources
+          </B></div>
+        </td>
+        <td WIDTH="50%" >
+          <div SIZE="5"><B>
+          \ref stldoc_FAQ
+          </B></div>
+        </td>
+    </tr>
+    <tr>
+        <td ColSpan=2 Align=CENTER>
+          <div SIZE="5"><B>
+          <A HREF="standard_library.html">IOstreams library (experimental)</A>
+          </B></div>
+        </td>
+    </tr>
+    <tr>
+        <td ColSpan=2 Align=CENTER>
+          <div SIZE="5"><B>
+          <A HREF="mailto:stl@sgi.com">Send us a comment</A>
+          </B></div>
+        </td>
+    </tr>
+</table>
+</CENTER>
+<CENTER><P ALIGN="CENTER">
+<IMG SRC="whitespace.gif" Alt="" ALIGN="TOP" WIDTH="2" HEIGHT="2">
+</P></CENTER>
+<HR>
+<p>
+<div SIZE="-1">Copyright &#169; 1996-1999 </div><BR CLEAR="ALL">
+ <div SIZE="-1">Silicon Graphics Computer Systems, Inc. </div></P>
+<p>
+<I><div SIZE="-1">Permission to use, copy, modify, distribute and sell 
+this software and its documentation for any purpose is hereby granted 
+without fee, provided that the above copyright notice appears in all 
+copies and that both that copyright notice and this permission notice 
+appear in supporting documentation. Silicon Graphics makes no 
+representations about the suitability of this software for any purpose. 
+It is provided &quot;as is&quot; without express or implied warranty. </div></I></P>
+<p>
+<div SIZE="-1">Copyright &#169; 1994 </div><BR CLEAR="ALL">
+ <div SIZE="-1">Hewlett-Packard Company </div></P>
+<p>
+<I><div SIZE="-1">Permission to use, copy, modify, distribute and sell 
+this software and its documentation for any purpose is hereby granted 
+without fee, provided that the above copyright notice appears in all 
+copies and that both that copyright notice and this permission notice 
+appear in supporting documentation. Hewlett-Packard Company makes no 
+representations about the suitability of this software for any purpose. 
+It is provided &quot;as is&quot; without express or implied warranty. </div></I></P>
+*/

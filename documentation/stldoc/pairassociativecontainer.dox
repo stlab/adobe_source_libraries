@@ -1,0 +1,150 @@
+/** \page stldoc_PairAssociativeContainer PairAssociativeContainer
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Pair Associative Container is an \ref stldoc_AssociativeContainer that
+associates a key with some other object.  The value type of a
+Pair Associative Container is <code>\ref stldoc_pair&lt;const key_type, data_type&gt;</code>. <A href="#1">[1]</A>
+\section Refinement_of Refinement of
+\ref stldoc_AssociativeContainer
+\section Associated_types Associated types
+One new type is introduced, in addition to the types defined in the
+\ref stldoc_AssociativeContainer requirements.  Additionally, Pair Associative
+Container introduces one new type restriction
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Key type
+</td>
+<td valign="top">
+<code>X::key_type</code>
+</td>
+<td valign="top">
+The type of the key associated with <code>X::value_type</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Data type
+</td>
+<td valign="top">
+<code>X::data_type</code>
+</td>
+<td valign="top">
+The type of the data associated with <code>X::value_type</code>.  A Pair Associative
+   Container can be thought of as a mapping from <code>key_type</code> to
+   <code>data_type</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Value type
+</td>
+<td valign="top">
+<code>X::value_type</code>
+</td>
+<td valign="top">
+The type of object stored in the container.  The value type is
+   required to be <code>\ref stldoc_pair&lt;const key_type, data_type&gt;</code>.
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Pair Associative Container
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>a</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>t</code>
+</td>
+<td valign="top">
+Object of type <code>X::value_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>d</code>
+</td>
+<td valign="top">
+Object of type <code>X::data_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>k</code>
+</td>
+<td valign="top">
+Object of type <code>X::key_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>p</code>, <code>q</code>
+</td>
+<td valign="top">
+Object of type <code>X::iterator</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+\section Valid_expressions Valid expressions
+None, except for those defined in the \ref stldoc_AssociativeContainer requirements.
+\section Expression_semantics Expression semantics
+\section Complexity_guarantees Complexity guarantees
+\section Invariants Invariants
+\section Models Models
+<ul>
+<li>
+<code>\ref stldoc_Map</code>
+<li>
+<code>\ref stldoc_Multimap</code>
+<li>
+<code>\ref stldoc_hash_map</code>
+<li>
+<code>\ref stldoc_hash_multimap</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+The value type must be <code>\ref stldoc_pair&lt;const key_type, data_type&gt;</code>,
+rather than <code>\ref stldoc_pair&lt;key_type, data_type&gt;</code>, because of the
+\ref stldoc_AssociativeContainer invariant of key immutability.  The
+<code>data_type</code> part of an object in a Pair Associative Container may 
+be modified, but the <code>key_type</code> part may not be.  Note the implication
+of this fact: a Pair Associative Container cannot provide
+mutable iterators (as defined in the \ref stldoc_trivial
+requirements), because the value type of a mutable iterator must
+be \ref stldoc_Assignable, and  <code>\ref stldoc_pair&lt;const key_type, data_type&gt;</code> is 
+not \ref stldoc_Assignable.  However, a Pair Associative Container can
+provide iterators that are not completely constant: iterators such
+that the expression <code>(*i).second = d</code> is valid.
+\section See_also See also
+\ref stldoc_AssociativeContainer, \ref stldoc_SimpleAssociativeContainer
+
+
+*/

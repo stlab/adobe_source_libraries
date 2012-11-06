@@ -1,0 +1,91 @@
+/** \page stldoc_max_element max_element
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Max_element</code> is an overloaded name; there are actually two 
+<code>max_element</code> functions.    
+\code
+template <class ForwardIterator>
+ForwardIterator max_element(ForwardIterator first, ForwardIterator last);
+
+template <class ForwardIterator, class BinaryPredicate>
+ForwardIterator max_element(ForwardIterator first, ForwardIterator last,
+                            BinaryPredicate comp);
+\endcode
+\section Description Description
+<code>Max_element</code> finds the largest element in the range <code>[first, last)</code>.
+It returns the first iterator <code>i</code> in <code>[first, last)</code> such that no
+other iterator in <code>[first, last)</code> points to a value greater than <code>*i</code>.
+The return value is <code>last</code> if and only if <code>[first, last)</code> is an empty
+range.
+<p>
+The two versions of <code>max_element</code> differ in how they define whether one
+element is less than another.  The first version compares
+objects using <code>operator&lt;</code>, and the second compares objects using
+a \ref stldoc_functors <code>comp</code>.  
+<p>
+The first version of <code>max_element</code> returns 
+the first iterator <code>i</code> in <code>[first, last)</code> such that, for every
+iterator <code>j</code> in <code>[first, last)</code>, <code>*i &lt; *j</code> is <code>false</code>.
+The second version returns 
+the first iterator <code>i</code> in <code>[first, last)</code> such that, for every
+iterator <code>j</code> in <code>[first, last)</code>, <code>comp(*i, *j)</code> is <code>false</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator</code>'s value type is \ref stldoc_LessThanComparable.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>BinaryPredicate</code> is a model of \ref stldoc_BinaryPredicate.
+<li>
+<code>ForwardIterator</code>'s value type is convertible to <code>BinaryPredicate</code>'s
+   first argument type and second argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Zero comparisons if <code>[first, last)</code> is an empty range,
+otherwise exactly <code>(last - first) - 1</code> comparisons.
+\section Example Example
+\code
+int main()
+{
+  List<int> L;
+  generate_n(front_insert_iterator(L), 1000, rand);
+  
+  list<int>::const_iterator it = max_element(L.begin(), L.end());
+  cout << "The largest element is " << *it << endl;
+}
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_min</code>, <code>\ref stldoc_max</code>, <code>\ref stldoc_min_element</code>, \ref stldoc_LessThanComparable,
+<code>\ref stldoc_sort</code>, <code>\ref stldoc_nth_element</code>
+
+
+*/

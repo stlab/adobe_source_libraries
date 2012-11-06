@@ -1,0 +1,388 @@
+/** \page stldoc_OutputIterator OutputIterator
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+An Output Iterator is a type that provides a mechanism for storing
+(but not necessarily accessing) a sequence of values.  Output
+Iterators are in some sense the converse of \ref stldoc_InputIterator, but
+they have a far more restrictive interface: they do not necessarily support
+member access or equality, and they do not necessarily have either an
+associated distance type or even a value type <A href="#1">[1]</A>.  Intuitively, one
+picture of an Output Iterator is a tape: you can write a value to the
+current location and you can advance to the next location, but you
+cannot read values and you cannot back up or rewind.
+\section Refinement_of Refinement of
+\ref stldoc_Assignable, \ref stldoc_DefaultConstructible
+\section Associated_types Associated types
+None. <A href="#1">[1]</A>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Output Iterator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>x</code>, <code>y</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+If <code>x</code> is an Output Iterator of type <code>X</code>, then the expression <code>*x =
+t;</code> stores the value <code>t</code> into <code>x</code>.  Note that <code>operator=</code>, like other
+C++ functions, may be overloaded; it may, in fact, even be a template
+function.  In general, then, <code>t</code> may be any of several different
+types.  A type <code>T</code> belongs to the <i>set of value types</i> of <code>X</code> 
+if, for an object <code>t</code> of type <code>T</code>, <code>*x = t;</code> is well-defined and
+does not require performing any non-trivial conversions on <code>t</code>. <A href="#1">[1]</A>
+<p>
+An Output Iterator may be <i>singular</i>, meaning that the results of
+most operations, including copying and dereference assignment, are
+undefined.  The only operation that is guaranteed to be supported is
+assigning a nonsingular iterator to a singular iterator.
+<p>
+An Output Iterator may be <i>dereferenceable</i>, meaning that 
+assignment through it is defined.  Dereferenceable iterators are always
+nonsingular, but nonsingular iterators are not necessarily 
+dereferenceable.
+\section Valid_expressions Valid expressions
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Default constructor
+</td>
+<td valign="top">
+\code
+X x;
+X()
+\endcode
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Copy constructor
+</td>
+<td valign="top">
+<code>X(x)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Copy constructor
+</td>
+<td valign="top">
+<code>X y(x);</code> or <code>X y = x;</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Dereference assignment
+</td>
+<td valign="top">
+<code>*x = t</code>
+</td>
+<td valign="top">
+<code>t</code> is convertible to a type in the set of value types of <code>X</code>. <A href="#1">[1]</A>
+</td>
+<td valign="top">
+Result is not used
+</td>
+</tr>
+<tr>
+<td valign="top">
+Preincrement
+</td>
+<td valign="top">
+<code>++x</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X&amp;</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Postincrement
+</td>
+<td valign="top">
+<code>(void) x++</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Postincrement and assign
+</td>
+<td valign="top">
+<code>*x++ = t;</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Result is not used
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Default constructor
+</td>
+<td valign="top">
+\code
+X x;
+X()
+\endcode
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>x</code> may be singular
+</td>
+</tr>
+<tr>
+<td valign="top">
+Copy constructor
+</td>
+<td valign="top">
+<code>X(x)</code>
+</td>
+<td valign="top">
+<code>x</code> is nonsingular
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>*X(x) = t</code> is equivalent to <code>*x = t</code> <A href="#2">[2]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Copy constructor
+</td>
+<td valign="top">
+<code>X x(y);</code> or <code>X x = y;</code>
+</td>
+<td valign="top">
+<code>y</code> is nonsingular
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>*y = t</code> is equivalent to <code>*x = t</code> <A href="#2">[2]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Dereference assignment
+</td>
+<td valign="top">
+<code>*x = t</code>
+</td>
+<td valign="top">
+<code>x</code> is dereferenceable.  If there has been a previous assignment through
+   <code>x</code>, then there has been an intervening increment. <A href="#3">[3]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Preincrement
+</td>
+<td valign="top">
+<code>++x</code>
+</td>
+<td valign="top">
+<code>x</code> is dereferenceable.  <code>x</code> has previously been assigned through.
+   If <code>x</code> has previously been incremented, then there has been an
+   intervening assignment through <code>x</code> <A href="#3">[3]</A> <A href="#4">[4]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>x</code> points to the next location into which a value may be stored
+</td>
+</tr>
+<tr>
+<td valign="top">
+Postincrement
+</td>
+<td valign="top">
+<code>(void) x++</code>
+</td>
+<td valign="top">
+<code>x</code> is dereferenceable.  <code>x</code> has previously been assigned through.
+</td>
+<td valign="top">
+Equivalent to <code>(void) ++x</code>
+</td>
+<td valign="top">
+<code>x</code> points to the next location into which a value may be stored
+</td>
+</tr>
+<tr>
+<td valign="top">
+Postincrement and assign
+</td>
+<td valign="top">
+<code>*x++ = t;</code>
+</td>
+<td valign="top">
+<code>x</code> is dereferenceable.  If there has been a previous assignment through
+   <code>x</code>, then there has been an intervening increment.  <A href="#3">[3]</A> <A href="#4">[4]</A>
+</td>
+<td valign="top">
+Equivalent to <code>{*x = t; ++x; }</code>
+</td>
+<td valign="top">
+<code>x</code> points to the next location into which a value may be stored
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+The complexity of operations on output iterators is
+guaranteed to be amortized constant time.
+\section Invariants Invariants
+\section Models Models
+<ul>
+<li>
+ \ref stldoc_ostream_iterator
+<li>
+ \ref stldoc_insert_iterator
+<li>
+ \ref stldoc_front_insert_iterator
+<li>
+ \ref stldoc_back_insert_iterator
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+Other iterator types, including \ref stldoc_trivial and
+\ref stldoc_InputIterator, define the notion of a <i>value type</i>, the type returned
+when an iterator is dereferenced.  This notion does not apply to
+Output Iterators, however, since the dereference operator (unary
+<code>operator*</code>) does not return a usable value for Output Iterators.  The
+only context in which the dereference operator may be used is
+assignment through an output iterator: <code>*x = t</code>.  Although 
+\ref stldoc_InputIterator and output iterators are roughly symmetrical concepts,
+there is an important sense in which accessing and storing values are
+not symmetrical: for an \ref stldoc_InputIterator <code>operator*</code> must return a
+unique type, but, for an Output Iterator, in the expression <code>*x = t</code>,
+there is no reason why <code>operator=</code> must take a unique type.  <A href="#5">[5]</A>
+Consequently, there need not be any unique &quot;value type&quot; for Output Iterators.
+<p><A name="2">[2]</A>
+There should be only one active copy of a single Output Iterator at
+any one time.  That is: after creating and using a copy <code>x</code> of 
+an Output Iterator <code>y</code>, the original output iterator <code>y</code> should no
+longer be used.
+<p><A name="3">[3]</A>
+Assignment through an Output Iterator <code>x</code> is expected to alternate with
+incrementing <code>x</code>, and there must be an assignment through <code>x</code> before
+<code>x</code> is ever incremented.  Any other order of operations results in
+undefined behavior.  That is: <code>{*x = t</code>; ++x; *x = t2; ++x}<code> is 
+acceptable, but </code>{*x = t<code>; ++x; ++x; *x = t2;}</code> is not.
+<p><A name="4">[4]</A>
+Note that an Output Iterator need not define comparison for equality.
+Even if an <code>operator==</code> is defined, <code>x == y</code> need not imply
+<code>++x == ++y</code>.
+<p><A name="5">[5]</A>
+If you are implementing an Output Iterator class <code>X</code>, one
+sensible way to define <code>*x = t</code> is to define <code>X::operator*()</code> to
+return an object of some private class <code>X_proxy</code>, and then to define
+<code>X_proxy::operator=</code>.  Note that you may overload
+<code>X_proxy::operator=</code>, or even define it as a member template; this
+allows assignment of more than one type through Output Iterators of
+class <code>X</code>.
+\section See_also See also
+\ref stldoc_trivial, \ref stldoc_InputIterator, \ref stldoc_Iterators
+
+
+*/

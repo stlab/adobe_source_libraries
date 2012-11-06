@@ -1,0 +1,338 @@
+/*!
+\defgroup layout_library Layout Library (Eve)
+\ingroup asl_libraries
+
+\defgroup eve_engine Layout Engine
+\ingroup layout_library
+
+\defgroup right_to_left_layout Implementing Right-To-Left Layout
+\ingroup eve_engine
+
+The layout library now contains support for implementing right-to-left layout for right-to-left languages and can support mixed direction layouts. This support comes from two features:
+
+<ol>
+<li>Symmetry between  adobe::layout_attributes_alignment_t::align_forward /  adobe::layout_attributes_alignment_t::align_forward_fill and  adobe::layout_attributes_alignment_t::align_reverse /  adobe::layout_attributes_alignment_t::align_reverse_fill, especially with regards to guides.</li>
+
+<li>The ability to construct a layout with items reversed using adobe::eve_t::add_view_element.</li>
+</ol>
+
+With these, implementing RTL support is fairly stright forward, if your content is in a RTL local, then add the items to the layout with the horizontal alignment attributes flipped and in reverse order.
+
+\todo (sparent) : At this point, no right-to-left languages are supported by the Begin example application. I believe the necessary support is now in the layout library, we'll be testing by implementing RTL language support in Begin soon.
+*/
+
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*!
+\enum adobe::layout_attributes_placement_t::placement_t
+
+Specifies the placement of child views inside their containing view.
+*/
+
+/*!
+\var adobe::layout_attributes_placement_t::placement_t adobe::layout_attributes_placement_t::place_leaf
+
+This view is a leaf node and has no children.
+*/
+
+/*!
+\var adobe::layout_attributes_placement_t::placement_t adobe::layout_attributes_placement_t::place_column
+
+Children are to be stacked in a column in the parent view.
+*/
+
+/*!
+\var adobe::layout_attributes_placement_t::placement_t adobe::layout_attributes_placement_t::place_row
+
+Children are to be lined up in a row in the parent view.
+*/
+
+/*!
+\var adobe::layout_attributes_placement_t::placement_t adobe::layout_attributes_placement_t::place_overlay
+
+Intended for use when two or more placeable objects are to occupy the same screen real estate at mutually exclusive times. In this instance the immediate children of the parent whose placement is set to overlay have their vertical and horizontal alignments set to align_fill.
+*/
+
+
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*!
+\class adobe::layout_attributes_t layout_attributes.hpp <adobe/layout_attributes.hpp>
+\ingroup eve_engine
+
+\brief Layout data interface from the client to the engine.
+
+\par
+\image html calculate_data_t.jpg layout_attributes_t slice-independent placeable object geometry
+
+\todo
+    (sparent) : We have a mechanism for defaulting container attributes. This needs to be extended to view attributes such as supressing guides.
+*/
+
+/*!
+\var adobe::layout_attributes_t::spacing_m
+
+\par
+spacing is the amount of space <i>between children</i>. Because the spacing vector is used to determine spacing between children, for a container with <code>N</code> children only the first <code>N-1</code> spacing values will be used. If the spacing vector has a single element, that value is used for all spacing between all children. This only applies to container placeable objects.
+*/
+
+/*!
+\var adobe::layout_attributes_t::placement_m
+
+\par
+placement is the enumeration denoting the orientation children will have with respect to one another when being laid out.
+
+\sa
+    \ref adobe::layout_attributes_placement_t::placement_t
+*/
+
+/*!
+\var adobe::layout_attributes_t::slice_m
+
+\par
+This array contains the orientation-specific geometry for the placeable object in the two relative orientations (horiztonal and vertical).
+
+\sa
+    \ref adobe::layout_attributes_t::slice_t
+*/
+
+/*!
+\var adobe::layout_attributes_t::indent_m
+
+\par
+indent is a cross-stream value denoting the amount of indent for this single value. Cross-stream means that it is a value perpendicular to the orientation of the slice in which it is defined. Therefore, the horizontal indent is the amount in which the placeable object will be moved down vertically inside its parent.
+*/
+
+/*!
+\var adobe::layout_attributes_t::create_m
+
+\par create is a boolean denoting whether or not this placeable object will
+actually exist as a UI framework. If <code>false</code>, this placeable object's
+geometry will affect the view layout but will not send a
+<code>place</code> call through the layout element object. Noncreating
+views such as <code>row</code> and <code>column</code> are good
+examples of placeable object types whose <code>create_m</code> is
+<code>false</code>.
+
+\sa
+    \ref poly_placeable_t
+*/
+
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*!
+\class adobe::layout_attributes_t::slice_t layout_attributes.hpp <adobe/layout_attributes.hpp>
+\ingroup eve_engine
+
+\brief placeable object geometry for a single orientation of layout_attributes_t.
+
+\par
+\image html calculate_data_t_slice_t.jpg layout_attributes_t::slice_t placeable object geometry for the horizontal orientation
+
+\par
+The above is a diagram detailing a placeable object's geometry for a the horizontal orientation. The vertical orientation is similar but runs top-to-bottom instead of left-to-right.
+*/
+
+/*!
+\var adobe::layout_attributes_t::slice_t::margin_m
+
+\par
+margin is a pair of values- one for either end of the slice. A margin represents a border around the children of this placeable object. Thus, this value only applies to container placeable objects. Margins are similar to insets except they cannot be "bled into" by subchildren outsets.
+*/
+
+/*!
+\var adobe::layout_attributes_t::slice_t::alignment_m
+
+\par
+alignment specifies the relationship of this placeable object to its parent along this orientation.
+
+\sa
+    \ref adobe::layout_attributes_alignment_t::alignment_t
+*/
+
+/*!
+\var adobe::layout_attributes_t::slice_t::child_alignment_m
+
+\par
+child_alignment attempts to specify the alignment of the children contained inside this placeable object for this orientation. This alignment value will be applied to all immediate children of this placeable object who have no overriding alignment value of their own (that is, their alignment is <code>align_default</code>).
+
+\sa
+    \ref adobe::layout_attributes_alignment_t::alignment_t
+*/
+
+
+/*!
+\var adobe::layout_attributes_t::slice_t::suppress_m
+
+\par
+suppress handles the propagation of guide points from the children in this placeable object to the parent of this placeable object. If suppress is <code>true</code> then guides are "clipped" at this placeable object and the parent of this placeable object does not see guide point information about any of the children contained within.
+
+\todo
+    (sparent) Currently only implemented cross stream
+*/
+
+/*!
+\class adobe::layout_attributes_alignment_t layout_attributes.hpp <adobe/layout_attributes.hpp>
+
+\brief A utility class for referencing the alignment characteristics in layout_attributes_t
+*/
+
+/*!
+\var adobe::layout_attributes_alignment_t::align_default
+
+default alignment, alignment is picked up by the parent.
+*/
+
+/*!
+\var adobe::layout_attributes_alignment_t::align_forward
+
+aligned either left or top depending on axis.
+*/
+
+/*!
+\var adobe::layout_attributes_alignment_t::align_reverse
+
+aligned either right or bottom depending on axis.
+*/
+
+/*!
+\var adobe::layout_attributes_alignment_t::align_center
+
+aligned centered within available space. Guides are supporessed
+*/
+
+/*!
+\var adobe::layout_attributes_alignment_t::align_proportional
+
+extra space in the parent container's layout is distributed evenly among those with this alignment. First item being forward aligned and last item being right aligned. Guides are suppressed.
+*/
+
+/*!
+\var  adobe::layout_attributes_alignment_t::align_forward_fill
+
+Expands to fill the available space. Identical to align_reverse_fill unless item is not a container and contains a guide, in which case, the guide will snap to other forward guides, and the item will fill forward. Normally used for edit_text, edit_number, and popup.
+*/
+
+/*!
+\var adobe::layout_attributes_alignment_t::align_reverse_fill
+
+Expands to fill the available space. Identical to align_forward_fill unless item is not a container and contains a guide, in which case, the guide will snap to other reverse guides, and the item will fill reverse. This alignment is the conterpart to align_forward_fill, intended for implementing support for right-to-left languages. See \ref right_to_left_layout.
+*/
+
+/*!
+\var adobe::layout_attributes_alignment_t::align_left
+
+Identical to align_foward.
+*/
+
+/*!
+\var adobe::layout_attributes_alignment_t::align_right
+
+Identical to align_reverse.
+*/
+
+/*!
+\var adobe::layout_attributes_alignment_t::align_top
+
+Identical to align_foward.
+*/
+
+/*!
+\var adobe::layout_attributes_alignment_t::align_bottom
+
+Identical to align_reverse.
+*/
+
+/*!
+\var adobe::layout_attributes_alignment_t::align_fill
+
+Identical to align_forward_fill.
+*/
+
+
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*!
+\class adobe::place_data_t layout_attributes.hpp <adobe/layout_attributes.hpp>
+\ingroup eve_engine
+
+\brief Layout data interface from the engine to the client.
+
+\par The place_data_t is the primary communication mechanism that engine uses
+to get solved layout information to the client. The place_data_t is
+similar to the layout_attributes_t, except for the following: - data
+included is the "solved" result, not the data the client passed in
+(though the solution is based on the client's data) - data included is
+only pertinent to the laying-out of the placeable object into it's final resting
+place.
+
+\par This struct is used when calling the place operation
+inside the placeable object's related \ref poly_placeable_t.
+
+\sa
+    \ref adobe::poly_placeable_t
+*/
+
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*!
+\class adobe::place_data_t::slice_t layout_attributes.hpp <adobe/layout_attributes.hpp>
+\ingroup eve_engine
+
+\brief Element geometry for a single orientation of place_data_t.
+*/
+
+/*!
+\var adobe::place_data_t::slice_t::length_m
+
+\par
+length is the "active content" of the placeable object, and is also the space in which child placeable objects will be placed (if there are any).
+*/
+
+/*!
+\var adobe::place_data_t::slice_t::position_m
+
+\par
+position is a point representing the top-left corner of the placeable object. The point can either be relative to the top-left point of the topmost view or the top-left point of the parent view depending on which option was specified to the engine at layout time.
+
+\sa
+    \ref adobe::eve_t::evaluate_options_t
+*/
+
+/*!
+\var adobe::place_data_t::slice_t::outset_m
+
+\par
+outset is the same as the outset value described in \ref adobe::extents_t::slice_t::outset_m. However because the outset can bleed through a parent placeable object, it is possible for the outset of any given placeable object to change during layout. Therefore this calculated outset value is returned to the client for proper placement of outset-affected placeable objects.
+*/
+
+/*!
+\var adobe::place_data_t::slice_t::guide_set_m
+
+\par
+guides are the same as the guides values described in \ref adobe::extents_t::slice_t::guide_set_m. However now the values have been modified to coincide with other guide values presented to the engine. These guide values will ensure points of interest in this placeable object will "snap" to points of interest in other placeable objects.
+*/
+
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*!
+\fn void adobe::set_margin(adobe::layout_attributes_t& container, int x)
+\ingroup eve_engine
+
+Quick way of setting every margin in a container to a single size.
+
+\param container geography for a container
+\param x value to which the margins should be set
+*/

@@ -1,0 +1,52 @@
+/* simple PME test file */
+sheet distance_calculator
+{
+input:
+    unit        : 1;
+interface:
+    distance    : 15 * unit;
+    rate        : 3 * unit;
+    time        : 5 * unit;
+
+logic:
+    relate {
+        rate <== distance / time;
+        time <== distance / rate;
+        distance <== rate * time;
+    }
+};
+
+/* testing comment */
+
+print(distance_calculator, "first dump");
+dump(distance_calculator);
+
+reinitialize (distance_calculator, {});
+
+dump(distance_calculator);
+
+update (distance_calculator, { distance : 150 });
+
+dump(distance_calculator);
+
+assert (distance_calculator, distance == 150 );
+
+update (distance_calculator, { unit : 2 });
+
+dump(distance_calculator);
+
+reinitialize(distance_calculator, { unit : 2 });
+
+dump(distance_calculator);
+
+/* testing comment */
+
+check (distance_calculator, {
+	rate: 6,
+	distance: 60,
+	time: 10
+});
+
+/* testing contributing */
+
+contributing(distance_calculator);

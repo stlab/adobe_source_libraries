@@ -1,0 +1,116 @@
+/** \page stldoc_count count
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Count</code> is an overloaded name: there are two <code>count</code> functions.
+\code
+template <class InputIterator, class EqualityComparable>
+iterator_traits<InputIterator>::difference_type
+count(InputIterator first, InputIterator last, 
+      const EqualityComparable& value);
+
+template <class InputIterator, class EqualityComparable, class Size>
+void count(InputIterator first, InputIterator last, 
+           const EqualityComparable& value,
+           Size& n);
+\endcode
+\section Description Description
+<code>Count</code> finds the number of elements in <code>[first, last)</code> that are 
+equal to <code>value</code>.  More precisely, the first version of <code>count</code>
+returns the number of iterators <code>i</code> in <code>[first, last)</code> such that 
+<code>*i == value</code>.  The second version of <code>count</code> adds to <code>n</code> the number of 
+iterators <code>i</code> in <code>[first, last)</code> such that <code>*i == value</code>. 
+<p>
+The second version of <code>count</code> was the one defined in the original
+STL, and the first version is the one defined in the 
+draft C++ standard; the definition was changed because the
+older interface was clumsy and error-prone.  The older interface
+required the use of a temporary variable, which had to be
+initialized to 0 before the call to <code>count</code>.
+<p>
+Both interfaces are currently supported <A href="#1">[1]</A>, for
+reasons of backward compatibility, but eventually the older
+version will be removed.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version, which takes three arguments:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>EqualityComparable</code> is a model of \ref stldoc_EqualityComparable.
+<li>
+<code>InputIterator</code>'s value type is a model of \ref stldoc_EqualityComparable.
+<li>
+An object of <code>InputIterator</code>'s value type can be compared for equality with
+   an object of type <code>EqualityComparable</code>.
+</ul>
+For the second version, which takes four arguments:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>EqualityComparable</code> is a model of \ref stldoc_EqualityComparable.
+<li>
+<code>Size</code> is an integral type that can hold values of
+   <code>InputIterator</code>'s distance type.
+<li>
+<code>InputIterator</code>'s value type is a model of \ref stldoc_EqualityComparable.
+<li>
+An object of <code>InputIterator</code>'s value type can be compared for equality with
+   an object of type <code>EqualityComparable</code>.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>n</code> plus the number of elements equal to <code>value</code> does not exceed
+   the maximum value of type <code>Size</code>.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>last - first</code> comparisons.
+\section Example Example
+\code
+int main() {
+  int A[] = { 2, 0, 4, 6, 0, 3, 1, -7 };
+  const int N = sizeof(A) / sizeof(int);
+
+  cout << "Number of zeros: " 
+       << count(A, A + N, 0)
+       << endl;
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The new <code>count</code> interface uses the <code>\ref stldoc_iterator_traits</code> class, which
+relies on a C++ feature known as <i>partial specialization</i>.  Many of
+today's compilers don't implement the complete standard; in
+particular, many compilers do not support partial specialization.  If
+your compiler does not support partial specialization, then you will
+not be able to use the newer version of <code>count</code>, or any other STL
+components that involve <code>\ref stldoc_iterator_traits</code>.
+\section See_also See also
+<code>\ref stldoc_count_if</code>, <code>\ref stldoc_find</code>, <code>\ref stldoc_find_if</code>
+
+
+*/

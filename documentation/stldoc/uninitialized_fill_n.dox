@@ -1,0 +1,91 @@
+/** \page stldoc_uninitialized_fill_n uninitialized_fill_n
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html allocators.gif</td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: allocators, algorithms</td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class ForwardIterator, class Size, class T>
+ForwardIterator uninitialized_fill_n(ForwardIterator first, Size n,
+                                     const T& x);
+\endcode
+\section Description Description
+In C++, the operator <code>new</code> allocates memory for an object and then
+creates an object at that location by calling a constructor.  Occasionally,
+however, it is useful to separate those two operations. <A href="#1">[1]</A> If each iterator
+in the range <code>[first, first + n)</code> points to uninitialized
+memory, then <code>uninitialized_fill_n</code> creates copies of <code>x</code>
+in that range.  That is, for each iterator <code>i</code> in the range <code>[first,
+first + n)</code>, <code>uninitialized_fill_n</code> creates a copy of <code>x</code> in 
+the location pointed to <code>i</code> by calling <code>\ref stldoc_construct(&amp;*i, x)</code>.
+\section Definition Definition
+Defined in the standard header <A href="memory">memory</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator</code> is mutable.
+<li>
+<code>Size</code> is an integral type that is convertible to <code>ForwardIterator</code>'s
+   distance type.
+<li>
+<code>ForwardIterator</code>'s value type has a constructor that takes a
+   single argument of type <code>T</code>.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>n</code> is nonnegative.
+<li>
+<code>[first, first + n)</code> is a valid range.
+<li>
+Each iterator in <code>[first, first + n)</code> points to
+   a region of uninitialized memory that is large enough to store
+   a value of <code>ForwardIterator</code>'s value type.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>n</code> constructor calls.
+\section Example Example
+\code
+class Int {
+public:
+  Int(int x) : val(x) {}
+  int get() { return val; }
+private:
+  int val;
+};    
+
+int main()
+{
+  const int N = 137;
+  
+  Int val(46);
+  Int* A = (Int*) malloc(N * sizeof(Int));
+  uninitialized_fill_n(A, N, val);
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+In particular, this sort of low-level memory management is used
+in the implementation of some container classes.
+\section See_also See also
+\ref stldoc_Allocators, <code>\ref stldoc_construct</code>, <code>\ref stldoc_destroy</code>, 
+<code>\ref stldoc_uninitialized_copy</code>, <code>\ref stldoc_uninitialized_fill</code>,
+<code>\ref stldoc_raw_storage_iterator</code>
+
+
+*/

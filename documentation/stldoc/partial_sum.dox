@@ -1,0 +1,115 @@
+/** \page stldoc_partial_sum partial_sum
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Partial_sum</code> is an overloaded name; there are actually two <code>partial_sum</code>
+functions.
+\code
+template <class InputIterator, class OutputIterator>
+OutputIterator partial_sum(InputIterator first, InputIterator last,
+                           OutputIterator result);
+
+template <class InputIterator, class OutputIterator, class BinaryOperation>
+OutputIterator partial_sum(InputIterator first, InputIterator last,
+                           OutputIterator result, BinaryOperation binary_op);
+\endcode
+\section Description Description
+<code>Partial_sum</code> calculates a generalized partial sum: <code>*first</code> is assigned
+to <code>*result</code>, the sum of <code>*first</code> and <code>*(first + 1)</code> is assigned to 
+<code>*(result + 1)</code>, and so on.  <A href="#1">[1]</A>
+<p>
+More precisely, a running sum is first initialized to <code>*first</code> and
+assigned to <code>*result</code>.  For each iterator <code>i</code> in <code>[first + 1, last)</code>, in
+order from beginning to end, the sum is updated by <code>sum = sum + *i</code>
+(in the first version) or <code>sum = binary_op(sum, *i)</code> (in the second
+version) and is assigned to <code>*(result + (i - first))</code>.  <A href="#2">[2]</A>
+\section Definition Definition
+Defined in the standard header <A href="numeric">numeric</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator.
+<li>
+If <code>x</code> and <code>y</code> are objects of <code>InputIterator</code>'s value type, then
+   <code>x + y</code> is defined.
+<li>
+The return type of <code>x + y</code> is convertible to <code>InputIterator</code>'s
+   value type.
+<li>
+<code>InputIterator</code>'s value type is convertible to a type in
+   <code>OutputIterator</code>'s set of value types.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator.
+<li>
+<code>BinaryFunction</code> is a model of \ref stldoc_BinaryFunction.
+<li>
+<code>InputIterator</code>'s value type is convertible to <code>BinaryFunction</code>'s
+   first argument type and second argument type.
+<li>
+<code>BinaryFunction</code>'s result type is convertible to <code>InputIterator</code>'s
+   value type.
+<li>
+<code>InputIterator</code>'s value type is convertible to a type in
+   <code>OutputIterator</code>'s set of value types.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>[result, result + (last - first))</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Zero applications of the binary operation if <code>[first, last)</code>
+is a empty range, otherwise exactly <code>(last - first) - 1</code> applications.
+\section Example Example
+\code
+int main()
+{
+  const int N = 10;
+  int A[N];
+
+  fill(A, A+N, 1);
+  cout << "A:                 ";
+  copy(A, A+N, ostream_iterator<int>(cout, " "));
+  cout << endl;
+
+  cout << "Partial sums of A: ";
+  partial_sum(A, A+N, ostream_iterator<int>(cout, " "));
+  cout << endl;
+}  
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note that <code>result</code> is permitted to be the same iterator as
+<code>first</code>.  This is useful for computing partial sums &quot;in place&quot;.
+<p><A name="2">[2]</A>
+The binary operation is not required to be either associative or
+commutative: the order of all operations is specified.
+\section See_also See also
+<code>\ref stldoc_adjacent_difference</code>, <code>\ref stldoc_accumulate</code>, <code>\ref stldoc_inner_product</code>, 
+<code>\ref stldoc_count</code>
+
+
+*/

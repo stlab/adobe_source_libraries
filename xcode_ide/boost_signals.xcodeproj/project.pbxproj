@@ -1,0 +1,380 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CE5C2031094797BA00EB4BB6 /* connection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C202C094797BA00EB4BB6 /* connection.cpp */; };
+		CE5C2032094797BA00EB4BB6 /* named_slot_map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C202D094797BA00EB4BB6 /* named_slot_map.cpp */; };
+		CE5C2033094797BA00EB4BB6 /* signal_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C202E094797BA00EB4BB6 /* signal_base.cpp */; };
+		CE5C2034094797BA00EB4BB6 /* slot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C202F094797BA00EB4BB6 /* slot.cpp */; };
+		CE5C2035094797BA00EB4BB6 /* trackable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C2030094797BA00EB4BB6 /* trackable.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = adobe_xconfig_staticlib.xcconfig; sourceTree = "<group>"; };
+		CE5C202C094797BA00EB4BB6 /* connection.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = connection.cpp; path = ../../boost_libraries/libs/signals/src/connection.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C202D094797BA00EB4BB6 /* named_slot_map.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = named_slot_map.cpp; path = ../../boost_libraries/libs/signals/src/named_slot_map.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C202E094797BA00EB4BB6 /* signal_base.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = signal_base.cpp; path = ../../boost_libraries/libs/signals/src/signal_base.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C202F094797BA00EB4BB6 /* slot.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = slot.cpp; path = ../../boost_libraries/libs/signals/src/slot.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C2030094797BA00EB4BB6 /* trackable.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = trackable.cpp; path = ../../boost_libraries/libs/signals/src/trackable.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; path = adobe_debug.xcconfig; sourceTree = "<group>"; };
+		CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; path = adobe_release.xcconfig; sourceTree = "<group>"; };
+		D2AAC046055464E500DB518D /* libboost_signals.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libboost_signals.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D289987405E68DCB004EDB86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* boost_signals */ = {
+			isa = PBXGroup;
+			children = (
+				CE5C1FF1094795E800EB4BB6 /* xcconfigs */,
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6A0FF2B0290797F04C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = boost_signals;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				CE5C202C094797BA00EB4BB6 /* connection.cpp */,
+				CE5C202D094797BA00EB4BB6 /* named_slot_map.cpp */,
+				CE5C202E094797BA00EB4BB6 /* signal_base.cpp */,
+				CE5C202F094797BA00EB4BB6 /* slot.cpp */,
+				CE5C2030094797BA00EB4BB6 /* trackable.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC046055464E500DB518D /* libboost_signals.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C6A0FF2B0290797F04C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+		CE5C1FF1094795E800EB4BB6 /* xcconfigs */ = {
+			isa = PBXGroup;
+			children = (
+				CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */,
+				CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */,
+				CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */,
+			);
+			name = xcconfigs;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC043055464E500DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC045055464E500DB518D /* boost_signals */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "boost_signals" */;
+			buildPhases = (
+				D2AAC043055464E500DB518D /* Headers */,
+				D2AAC044055464E500DB518D /* Sources */,
+				D289987405E68DCB004EDB86 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = boost_signals;
+			productName = boost_signals;
+			productReference = D2AAC046055464E500DB518D /* libboost_signals.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "boost_signals" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 08FB7794FE84155DC02AAC07 /* boost_signals */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC045055464E500DB518D /* boost_signals */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC044055464E500DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE5C2031094797BA00EB4BB6 /* connection.cpp in Sources */,
+				CE5C2032094797BA00EB4BB6 /* named_slot_map.cpp in Sources */,
+				CE5C2033094797BA00EB4BB6 /* signal_base.cpp in Sources */,
+				CE5C2034094797BA00EB4BB6 /* slot.cpp in Sources */,
+				CE5C2035094797BA00EB4BB6 /* trackable.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91EC08733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = boost_signals;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1DEB91ED08733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = boost_signals;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1DEB91F008733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		1DEB91F108733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		CE92979C0A8AA81600D13B7B /* Debug_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = boost_signals;
+				SDKROOT = macosx;
+			};
+			name = Debug_PPC;
+		};
+		CE92979D0A8AA81600D13B7B /* Debug_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = boost_signals;
+				SDKROOT = macosx;
+			};
+			name = Debug_i386;
+		};
+		CE92979E0A8AA81600D13B7B /* Debug_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = boost_signals;
+				SDKROOT = macosx;
+			};
+			name = Debug_Universal;
+		};
+		CE92979F0A8AA81600D13B7B /* Release_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				ARCHS = ppc;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = boost_signals;
+				SDKROOT = macosx;
+			};
+			name = Release_PPC;
+		};
+		CE9297A00A8AA81600D13B7B /* Release_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				ARCHS = i386;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = boost_signals;
+				SDKROOT = macosx;
+			};
+			name = Release_i386;
+		};
+		CE9297A10A8AA81600D13B7B /* Release_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = boost_signals;
+				SDKROOT = macosx;
+			};
+			name = Release_Universal;
+		};
+		CE9297A20A8AA81600D13B7B /* Debug_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = ppc;
+			};
+			name = Debug_PPC;
+		};
+		CE9297A30A8AA81600D13B7B /* Debug_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = i386;
+			};
+			name = Debug_i386;
+		};
+		CE9297A40A8AA81600D13B7B /* Debug_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+			};
+			name = Debug_Universal;
+		};
+		CE9297A50A8AA81600D13B7B /* Release_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = ppc;
+			};
+			name = Release_PPC;
+		};
+		CE9297A60A8AA81600D13B7B /* Release_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = i386;
+			};
+			name = Release_i386;
+		};
+		CE9297A70A8AA81600D13B7B /* Release_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+			};
+			name = Release_Universal;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "boost_signals" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91EC08733DB70010E9CD /* Debug */,
+				CE92979C0A8AA81600D13B7B /* Debug_PPC */,
+				CE92979D0A8AA81600D13B7B /* Debug_i386 */,
+				CE92979E0A8AA81600D13B7B /* Debug_Universal */,
+				1DEB91ED08733DB70010E9CD /* Release */,
+				CE92979F0A8AA81600D13B7B /* Release_PPC */,
+				CE9297A00A8AA81600D13B7B /* Release_i386 */,
+				CE9297A10A8AA81600D13B7B /* Release_Universal */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "boost_signals" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91F008733DB70010E9CD /* Debug */,
+				CE9297A20A8AA81600D13B7B /* Debug_PPC */,
+				CE9297A30A8AA81600D13B7B /* Debug_i386 */,
+				CE9297A40A8AA81600D13B7B /* Debug_Universal */,
+				1DEB91F108733DB70010E9CD /* Release */,
+				CE9297A50A8AA81600D13B7B /* Release_PPC */,
+				CE9297A60A8AA81600D13B7B /* Release_i386 */,
+				CE9297A70A8AA81600D13B7B /* Release_Universal */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

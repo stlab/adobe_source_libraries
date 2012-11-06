@@ -1,0 +1,18 @@
+/*!
+\defgroup asl_thread_id Thread ID
+\ingroup thread
+*/
+
+/*!
+\typedef adobe::thread_id_t
+\ingroup asl_thread_id
+
+Opaque pointer for the thread_id identifier
+*/
+
+/*!
+\fn adobe::thread_id_t adobe::thread_id()
+\ingroup asl_thread_id
+
+\return A unique identifier for this thread
+*/

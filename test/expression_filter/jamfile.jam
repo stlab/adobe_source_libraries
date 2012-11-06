@@ -1,0 +1,15 @@
+project adobe/expression_filter
+    : requirements
+        <include>../../../adobe_platform_libraries
+    ;
+
+SOURCES =
+    main.cpp
+    ../../../adobe_platform_libraries/source/expression_formatter.cpp
+    ;
+
+exe expression_filter
+    : $(SOURCES)
+    ;
+
+run $(SOURCES) ;

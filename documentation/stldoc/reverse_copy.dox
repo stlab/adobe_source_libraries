@@ -1,0 +1,77 @@
+/** \page stldoc_reverse_copy reverse_copy
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class BidirectionalIterator, class OutputIterator>
+OutputIterator reverse_copy(BidirectionalIterator first,
+                            BidirectionalIterator last,
+                            OutputIterator result);
+\endcode
+\section Description Description
+<code>Reverse_copy</code> copies elements from the range <code>[first, last)</code>
+to the range <code>[result, result + (last - first))</code> such that the
+copy is a reverse of the original range.  Specifically: for 
+every <code>i</code> such that <code>0 &lt;= i &lt; (last - first)</code>, <code>reverse_copy</code>
+performs the assignment <code>*(result + (last - first) - i) = 
+*(first + i)</code>.
+<p>
+The return value is <code>result + (last - first)</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+BidirectionalIterator is a model of \ref stldoc_BidirectionalIterator.
+<li>
+OutputIterator is a model of \ref stldoc_OutputIterator.
+<li>
+The value type of BidirectionalIterator is convertible to a
+   type in OutputIterator's set of value types.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+There is enough space to hold all of the elements being copied.
+   More formally, the requirement is that 
+   <code>[result, result + (last - first))</code> is a valid range. 
+<li>
+The ranges <code>[first, last)</code> and <code>[result, result + (last - first))</code>
+   do not overlap.
+</ul>
+\section Complexity Complexity
+Linear: exactly <code>last - first</code> assignments.
+\section Example Example
+\code
+Vector<int> V;
+V.push_back(0);
+V.push_back(1);
+V.push_back(2);
+copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
+                // Output: 0 1 2
+List<int> L(V.size());
+reverse_copy(V.begin(), V.end(), L.begin());
+copy(L.begin(), L.end(), ostream_iterator<int>(cout, " "));
+                // Output: 2 1 0
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_reverse</code>, <code>\ref stldoc_copy</code>
+
+
+*/

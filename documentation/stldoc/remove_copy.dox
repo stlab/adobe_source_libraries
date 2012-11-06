@@ -1,0 +1,82 @@
+/** \page stldoc_remove_copy remove_copy
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class InputIterator, class OutputIterator, class T>
+OutputIterator remove_copy(InputIterator first, InputIterator last,
+                           OutputIterator result, const T& value);
+\endcode
+\section Description Description
+<code>Remove_copy</code> copies elements that are not equal to <code>value</code> from the 
+range <code>[first, last)</code> to a range beginning at <code>result</code>.  The return
+value is the end of the resulting range.  This operation is stable,
+meaning that the relative order of the elements that are copied is the same 
+as in the range <code>[first, last)</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator.
+<li>
+<code>InputIterator</code>'s value type is convertible to a type in
+   <code>OutputIterator</code>'s set of value types.
+<li>
+<code>T</code> is a model of \ref stldoc_EqualityComparable.
+<li>
+Objects of type <code>T</code> can be compared for equality with objects
+   of <code>InputIterator</code>'s value type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+There is enough space in the output range to store the copied
+   values.  That is, if there are <code>n</code> elements in <code>[first, last)</code>
+   that are not equal to <code>value</code>, then <code>[result, result+n)</code> is
+   a valid range.
+<li>
+<code>result</code> is not an iterator in the range <code>[first, last)</code>.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>last - first</code> comparisons for equality, and at most
+<code>last - first</code> assignments.
+\section Example Example
+Print all nonzero elements of a vector on the standard output.
+\code
+Vector<int> V;
+V.push_back(-2);
+V.push_back(0);
+V.push_back(-1);
+V.push_back(0);
+V.push_back(1);
+V.push_back(2);
+
+remove_copy(V.begin(), V.end(), 
+            ostream_iterator<int>(cout, "\n"),
+            0);
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_copy</code>, <code>\ref stldoc_remove</code>, <code>\ref stldoc_remove_if</code>, <code>\ref stldoc_remove_copy_if</code>,
+<code>\ref stldoc_unique</code>, <code>\ref stldoc_unique_copy</code>.
+
+
+*/

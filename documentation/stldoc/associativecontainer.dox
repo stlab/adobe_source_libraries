@@ -1,0 +1,526 @@
+/** \page stldoc_AssociativeContainer AssociativeContainer
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b> : containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+An Associative Container is a variable-sized \ref stldoc_Container that
+supports efficient retrieval of elements (values) based on keys.  It
+supports insertion and removal of elements, but differs from a
+\ref stldoc_Sequence in that it does not provide a mechanism for inserting an
+element at a specific position. <A href="#1">[1]</A>
+<p>
+As with all containers, the elements in an Associative Container are
+of type <code>value_type</code>.  Additionally, each element in an Associative
+Container has a <i>key</i>, of type <code>key_type</code>.  In some Associative
+Containers, \ref stldoc_SimpleAssociativeContainer, the <code>value_type</code> and
+<code>key_type</code> are the same : elements are their own keys.  In others, the
+key is some specific part of the value.  Since elements are stored
+according to their keys, it is essential that the key associated with
+each element is immutable.  In \ref stldoc_SimpleAssociativeContainer this
+means that the elements themselves are immutable, while 
+in other types of Associative Containers, such as 
+\ref stldoc_PairAssociativeContainer, the elements themselves are mutable but
+the part of an element that is its key cannot be modified.  This means
+that an Associative Container's value type is not \ref stldoc_Assignable.
+<p>
+The fact that the value type of an Associative Container is not
+\ref stldoc_Assignable has an important consequence : associative
+containers cannot have mutable iterators.  This is simply because
+a mutable iterator (as defined in the \ref stldoc_trivial requirements)
+must allow assignment.  That is, if <code>i</code> is a mutable iterator and 
+<code>t</code> is an object of <code>i</code>'s value type, then <code>*i = t</code> must be a valid
+expression.  
+<p>
+In \ref stldoc_SimpleAssociativeContainer, where the elements are the keys,
+the elements are completely immutable; the nested types <code>iterator</code> and
+<code>const_iterator</code> are therefore the same.  Other types of associative
+containers, however, do have mutable elements, and do provide
+iterators through which elements can be modified.  
+\ref stldoc_PairAssociativeContainer, for example, have two different
+nested types <code>iterator</code> and <code>const_iterator</code>.  Even in this case,
+<code>iterator</code> is not a mutable iterator : as explained above,
+it does not provide the expression <code>*i = t</code>.  It is, however, possible
+to modify an element through such an iterator: if, for example, <code>i</code>
+is of type <code>\ref stldoc_Map&lt;int, double&gt;</code>, then <code>(*i).second = 3</code> is a valid
+expression.
+<p>
+In some associative containers, \ref stldoc_UniqueAssociativeContainer,
+it is guaranteed that no two elements have the same key. <A href="#2">[2]</A>  In other
+associative containers, \ref stldoc_MultipleAssociativeContainer, multiple
+elements with the same key are permitted.
+\section Refinement_of Refinement of
+\ref stldoc_ForwardContainer, \ref stldoc_DefaultConstructible
+\section Associated_types Associated types
+One new type is introduced, in addition to the types defined in the
+\ref stldoc_ForwardContainer requirements.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Key type
+</td>
+<td valign="top">
+<code>X ::key_type</code>
+</td>
+<td valign="top">
+The type of the key associated with <code>X::value_type</code>.  Note that the
+   key type and value type might be the same.
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Associative Container
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>a</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>t</code>
+</td>
+<td valign="top">
+Object of type <code>X::value_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>k</code>
+</td>
+<td valign="top">
+Object of type <code>X::key_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>p</code>, <code>q</code>
+</td>
+<td valign="top">
+Object of type <code>X::iterator</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+If <code>a</code> is an associative container, then <code>p</code> is a
+<i>valid iterator in a</i> if it is a valid iterator that is 
+reachable from <code>a.begin()</code>.
+<p>
+If <code>a</code> is an associative container, then <code>[p, q)</code> is a <i>valid range in a</i>
+if <code>[p, q)</code> is a valid range and <code>p</code> is a valid iterator in <code>a</code>.
+\section Valid_expressions Valid expressions
+In addition to the expressions defined in \ref stldoc_ForwardContainer, the
+following expressions must be valid.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Default constructor
+</td>
+<td valign="top">
+\code
+X()
+X a;
+\endcode
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Erase key
+</td>
+<td valign="top">
+<code>a.erase(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>size_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Erase element
+</td>
+<td valign="top">
+<code>a.erase(p)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Erase range
+</td>
+<td valign="top">
+<code>a.erase(p, q)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Clear
+</td>
+<td valign="top">
+<code>a.clear()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Find
+</td>
+<td valign="top">
+<code>a.find(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>iterator</code> if <code>a</code> is mutable, otherwise <code>const_iterator</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Count
+</td>
+<td valign="top">
+<code>a.count(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>size_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Equal range
+</td>
+<td valign="top">
+<code>a.equal_range(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>pair&lt;iterator, iterator&gt;</code> if <code>a</code> is mutable, otherwise
+   <code>pair&lt;const_iterator, const_iterator&gt;</code>.
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Default constructor
+</td>
+<td valign="top">
+\code
+X()
+X a;
+\endcode
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Creates an empty container.
+</td>
+<td valign="top">
+The size of the container is <code>0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Erase key
+</td>
+<td valign="top">
+<code>a.erase(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Destroys all elements whose key is the same as <code>k</code>, and removes
+   them from <code>a</code>. <A href="#2">[2]</A>  The return value is the number of elements that
+   were erased, <i>i.e.</i> the old value of <code>a.count(k)</code>.
+</td>
+<td valign="top">
+<code>a.size()</code> is decremented by <code>a.count(k)</code>.
+   <code>a</code> contains no elements with key <code>k</code>.  
+</td>
+</tr>
+<tr>
+<td valign="top">
+Erase element
+</td>
+<td valign="top">
+<code>a.erase(p)</code>
+</td>
+<td valign="top">
+<code>p</code> is a dereferenceable iterator in <code>a</code>.
+</td>
+<td valign="top">
+Destroys the element pointed to by <code>p</code>, and removes it from <code>a</code>.
+</td>
+<td valign="top">
+<code>a.size()</code> is decremented by 1.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Erase range
+</td>
+<td valign="top">
+<code>a.erase(p, q)</code>
+</td>
+<td valign="top">
+<code>[p, q)</code> is a valid range in <code>a</code>.
+</td>
+<td valign="top">
+Destroys the elements in the range <code>[p,q)</code> and removes them from
+   <code>a</code>. 
+</td>
+<td valign="top">
+<code>a.size()</code> is decremented by the distance from <code>i</code> to <code>j</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Clear
+</td>
+<td valign="top">
+<code>a.clear()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Equivalent to <code>a.erase(a.begin(), a.end())</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Find
+</td>
+<td valign="top">
+<code>a.find(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns an iterator pointing to an element whose key is the same
+   as <code>k</code>, or <code>a.end()</code> if no such element exists.
+</td>
+<td valign="top">
+Either the return value is <code>a.end()</code>, or else the return value has
+   a key that is the same as <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Count
+</td>
+<td valign="top">
+<code>a.count(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns the number of elements in <code>a</code> whose keys are the same as <code>k</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Equal range
+</td>
+<td valign="top">
+<code>a.equal_range(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns a pair <code>P</code> such that <code>[P.first, P.second)</code> is a range
+   containing all elements in <code>a</code> whose keys are the same as <code>k</code>. <A href="#3">[3]</A>
+   If no elements have the same key as <code>k</code>, the return value is an empty
+   range.
+</td>
+<td valign="top">
+The distance between <code>P.first</code> and <code>P.second</code> is equal to
+   <code>a.count(k)</code>.  If <code>p</code> is a dereferenceable iterator in <code>a</code>, then
+   either <code>p</code> lies in the range <code>[P.first, P.second)</code>, or else
+   <code>*p</code> has a key that is not the same as <code>k</code>.
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+Average complexity for erase key is at most <code>O(log(size()) + count(k))</code>.
+<p>
+Average complexity for erase element is constant time.
+<p>
+Average complexity for erase range is at most 
+   <code>O(log(size()) + N)</code>, where <code>N</code> is the number of elements in the range.
+<p>
+Average complexity for count is at most <code>O(log(size()) + count(k))</code>.
+<p>
+Average complexity for find is at most logarithmic.
+<p>
+Average complexity for equal range is at most logarithmic.
+\section Invariants Invariants
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Contiguous storage
+</td>
+<td valign="top">
+All elements with the same key are adjacent to each other.  That
+   is, if <code>p</code> and <code>q</code> are iterators that point to elements that have
+   the same key, and if <code>p</code> precedes <code>q</code>, then every element in the
+   range <code>[p, q)</code> has the same key as every other element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Immutability of keys
+</td>
+<td valign="top">
+Every element of an Associative Container has an immutable key.
+   Objects may be inserted and erased, but an element in an 
+   Associative Container may not be modified in such a way as to change
+   its key.
+</td>
+</tr>
+</table>
+\section Models Models
+<ul>
+<li>
+<code>\ref stldoc_set</code>
+<li>
+<code>\ref stldoc_multiset</code>
+<li>
+<code>\ref stldoc_hash_set</code>
+<li>
+<code>\ref stldoc_hash_multiset</code>
+<li>
+<code>\ref stldoc_Map</code>
+<li>
+<code>\ref stldoc_Multimap</code>
+<li>
+<code>\ref stldoc_hash_map</code>
+<li>
+<code>\ref stldoc_hash_multimap</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+The reason there is no such mechanism is that the way in which
+elements are arranged in an associative container is typically a class
+invariant; elements in a \ref stldoc_SortedAssociativeContainer, for
+example, are always stored in ascending order, and elements in a 
+\ref stldoc_HashedAssociativeContainer are always stored according to the
+hash function.  It would make no sense to allow the position of an
+element to be chosen arbitrarily.
+<p><A name="2">[2]</A>
+Keys are not required to be \ref stldoc_EqualityComparable : associative
+containers do not necessarily use <code>operator==</code> to determine whether two
+keys are the same.  In \ref stldoc_SortedAssociativeContainer, for example,
+where keys are ordered by a comparison function, two keys are considered
+to be the same if neither one is less than the other.
+<p><A name="3">[3]</A>
+Note the implications of this member function : it means that if
+two elements have the same key, there must be no elements with
+different keys in between them.  The requirement that elements with
+the same key be stored contiguously is an associative container
+invariant.
+\section See_also See also
+\ref stldoc_SimpleAssociativeContainer, \ref stldoc_PairAssociativeContainer,
+\ref stldoc_UniqueAssociativeContainer, \ref stldoc_MultipleAssociativeContainer,
+\ref stldoc_SortedAssociativeContainer, 
+\ref stldoc_UniqueSortedAssociativeContainer, 
+\ref stldoc_MultipleSortedAssociativeContainer,
+\ref stldoc_HashedAssociativeContainer,
+\ref stldoc_UniqueHashedAssociativeContainer, 
+\ref stldoc_MultipleHashedAssociativeContainer.
+
+
+*/

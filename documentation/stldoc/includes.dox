@@ -1,0 +1,172 @@
+/** \page stldoc_includes includes
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Includes</code> is an overloaded name; there are actually two <code>includes</code>
+functions.
+\code
+template <class InputIterator1, class InputIterator2>
+bool includes(InputIterator1 first1, InputIterator1 last1,
+              InputIterator2 first2, InputIterator2 last2);
+
+template <class InputIterator1, class InputIterator2, class StrictWeakOrdering>
+bool includes(InputIterator1 first1, InputIterator1 last1,
+              InputIterator2 first2, InputIterator2 last2, 
+              StrictWeakOrdering comp);
+\endcode
+\section Description Description
+<code>Includes</code> tests whether one sorted range includes another sorted
+range.  That is, it returns <code>true</code> if and only if, for every element in
+<code>[first2, last2)</code>, an equivalent element <A href="#1">[1]</A> is also present in
+<code>[first1, last1)</code> <A href="#2">[2]</A>.
+Both <code>[first1, last1)</code> and <code>[first2, last2)</code> must be sorted in ascending order.
+<p>
+The two versions of <code>includes</code> differ in how they define whether one
+element is less than another.  The first version compares
+objects using <code>operator&lt;</code>, and the second compares objects using
+the \ref stldoc_functors <code>comp</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>InputIterator1</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator2</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator1</code> and <code>InputIterator2</code> have the same value type.
+<li>
+<code>InputIterator</code>'s value type is a model of \ref stldoc_LessThanComparable.
+<li>
+The ordering on objects of <code>InputIterator1</code>'s value type is a <i>strict
+   weak ordering</i>, as defined in the \ref stldoc_LessThanComparable requirements.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>InputIterator1</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator2</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator1</code> and <code>InputIterator2</code> have the same value type.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>InputIterator1</code>'s value type is convertible to <code>StrictWeakOrdering</code>'s
+   argument type.
+</ul>
+\section Preconditions Preconditions
+For the first version:
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first2, last2)</code> is a valid range.
+<li>
+<code>[first1, last1)</code> is ordered in ascending order according to
+   <code>operator&lt;</code>.  That is, for every pair of iterators <code>i</code> and <code>j</code>
+   in <code>[first1, last1)</code> such that <code>i</code> precedes <code>j</code>, 
+   <code>*j &lt; *i</code> is <code>false</code>.
+<li>
+<code>[first2, last2)</code> is ordered in ascending order according to
+   <code>operator&lt;</code>.  That is, for every pair of iterators <code>i</code> and <code>j</code>
+   in <code>[first2, last2)</code> such that <code>i</code> precedes <code>j</code>, 
+   <code>*j &lt; *i</code> is <code>false</code>.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first2, last2)</code> is a valid range.
+<li>
+<code>[first1, last1)</code> is ordered in ascending order according to
+   <code>comp</code>.  That is, for every pair of iterators <code>i</code> and <code>j</code>
+   in <code>[first1, last1)</code> such that <code>i</code> precedes <code>j</code>, 
+   <code>comp(*j, *i)</code> is <code>false</code>.
+<li>
+<code>[first2, last2)</code> is ordered in ascending order according to
+   <code>comp</code>.  That is, for every pair of iterators <code>i</code> and <code>j</code>
+   in <code>[first2, last2)</code> such that <code>i</code> precedes <code>j</code>, 
+   <code>comp(*j, *i)</code> is <code>false</code>.
+</ul>
+\section Complexity Complexity
+Linear.  Zero comparisons if either <code>[first1, last1)</code> or <code>[first2, last2)</code>
+is an empty range, otherwise at most <code>2 * ((last1 - first1) + (last2 -
+first2)) - 1</code> comparisons.
+\section Example Example
+\code
+int A1[] = { 1, 2, 3, 4, 5, 6, 7 };
+int A2[] = { 1, 4, 7 };
+int A3[] = { 2, 7, 9 };
+int A4[] = { 1, 1, 2, 3, 5, 8, 13, 21 };
+int A5[] = { 1, 2, 13, 13 };
+int A6[] = { 1, 1, 3, 21 };
+
+const int N1 = sizeof(A1) / sizeof(int);
+const int N2 = sizeof(A2) / sizeof(int);
+const int N3 = sizeof(A3) / sizeof(int);
+const int N4 = sizeof(A4) / sizeof(int);
+const int N5 = sizeof(A5) / sizeof(int);
+const int N6 = sizeof(A6) / sizeof(int);
+
+cout << "A2 contained in A1: " 
+     << (includes(A1, A1 + N1, A2, A2 + N2) ? "true" : "false") << endl;
+cout << "A3 contained in A1: " 
+     << (includes(A1, A1 + N2, A3, A3 + N3) ? "true" : "false") << endl;
+cout << "A5 contained in A4: " 
+     << (includes(A4, A4 + N4, A5, A5 + N5) ? "true" : "false") << endl;
+cout << "A6 contained in A4: " 
+     << (includes(A4, A4 + N4, A6, A6 + N6) ? "true" : "false") << endl;
+
+\endcode
+The output is:
+\code
+A2 contained in A1: true
+A3 contained in A1: false
+A5 contained in A4: false
+A6 contained in A4: true
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+This reads &quot;an equivalent element&quot; rather than &quot;the same element&quot;
+because 
+the ordering by which the input ranges are sorted
+is permitted to be a strict weak ordering that is not a total ordering:
+there might be values <code>x</code> and <code>y</code> that are
+equivalent (that is, neither <code>x &lt; y</code> nor <code>y &lt; x</code> is true) but not
+equal.  See the \ref stldoc_LessThanComparable requirements for a fuller
+discussion.)   
+If you're using a total ordering
+(if you're using <code>strcmp</code>, for example, or if you're using
+ordinary arithmetic comparison on integers), then you can ignore this
+technical distinction: for a total ordering, equality and equivalence
+are the same.
+<p><A name="2">[2]</A>
+Note that the range <code>[first2, last2)</code> may contain a consecutive range
+of equivalent elements: there is no requirement that every element in
+the range be unique.  In this case, <code>includes</code> will return <code>false</code>
+unless, for every element in <code>[first2, last2)</code>, a distinct equivalent
+element is also present in <code>[first1, last1)</code>.  That is, if a certain
+value appears <code>n</code> times in <code>[first2, last2)</code> and <code>m</code> times in 
+<code>[first1, last1)</code>, then <code>includes</code> will return <code>false</code> if <code>m &lt; n</code>.
+\section See_also See also
+<code>\ref stldoc_set_union</code>, <code>\ref stldoc_set_intersection</code>, <code>\ref stldoc_set_difference</code>, 
+<code>\ref stldoc_set_symmetric_difference</code>, <code>\ref stldoc_sort</code>
+
+
+*/

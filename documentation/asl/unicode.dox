@@ -1,0 +1,106 @@
+/*!
+\defgroup asl_unicode Unicode Utilities
+\ingroup parsing
+
+\brief Basic unicode utilities
+*/
+
+/*!
+\fn typename boost::enable_if<is_utf32_type<I>, O>::type adobe::to_utf8(I code, O output)
+\ingroup asl_unicode
+
+\param code     I models Integer; I must be a valid utf32-encoded code point
+\param output   O models OutputIterator; required: sizeof(value_type(O)) = 1 byte; destination of utf8-encoded conversion
+
+\return An output iterator pointing to the end of the inserted utf8-encoded text
+*/
+
+/*!
+\fn typename boost::enable_if<is_utf32_iterator_type<I>, O>::type adobe::to_utf8(I first, I last, O output)
+\ingroup asl_unicode
+
+\param first    I models InputIterator; required: sizeof(value_type(I)) = 4 bytes; <code>[ first, last )</code> must be valid utf32-encoded byte stream
+\param last     iterator pointing to one past the end of the InputIterator range to convert
+\param output   O models OutputIterator; required: sizeof(value_type(O)) = 1 byte; destination of utf8-encoded conversion
+
+\return An output iterator pointing to the end of the inserted utf8-encoded text
+*/
+
+/*!
+\fn typename boost::enable_if<is_utf16_type<I>, O>::type adobe::to_utf8(I code, O output)
+\ingroup asl_unicode
+
+\param code     I models Integer; I must be a valid utf16-encoded code point
+\param output   O models OutputIterator; required: sizeof(value_type(O)) = 1 byte; destination of utf8-encoded conversion
+
+\return An output iterator pointing to the end of the inserted utf8-encoded text
+*/
+
+/*!
+\fn typename boost::enable_if<is_utf16_iterator_type<I>, O>::type adobe::to_utf8(I first, I last, O output)
+\ingroup asl_unicode
+
+\param first    I models InputIterator; required: sizeof(value_type(I)) = 2 bytes; <code>[ first, last )</code> must be valid utf16-encoded byte stream
+\param last     iterator pointing to one past the end of the InputIterator range to convert
+\param output   O models OutputIterator; required: sizeof(value_type(O)) = 1 byte; destination of utf8-encoded conversion
+
+\return An output iterator pointing to the end of the inserted utf8-encoded text
+*/
+
+/*!
+\fn typename boost::enable_if<is_utf32_type<I>, O>::type adobe::to_utf16(I code, O output)
+\ingroup asl_unicode
+
+\param code     I models Integer; I must be a valid utf32-encoded code point
+\param output   O models OutputIterator; required: sizeof(value_type(O)) = 2 bytes; destination of utf16-encoded conversion
+
+\return An output iterator pointing to the end of the inserted utf16-encoded text
+*/
+
+/*!
+\fn typename boost::enable_if<is_utf8_iterator_type<I>, O>::type adobe::to_utf16(I first, I last, O output)
+\ingroup asl_unicode
+
+\param first    I models InputIterator; required: sizeof(value_type(I)) = 1 byte; <code>[ first, last )</code> must be valid utf8-encoded byte stream
+\param last     iterator pointing to one past the end of the InputIterator range to convert
+\param output   O models OutputIterator; required: sizeof(value_type(O)) = 2 bytes; destination of utf16-encoded conversion
+
+\return An output iterator pointing to the end of the inserted utf16-encoded text
+*/
+
+/*!
+\fn typename boost::enable_if<is_utf8_iterator_type<I>, boost::uint16_t>::type adobe::to_utf16(I first, I last)
+\ingroup asl_unicode
+
+\pre
+    <code>[ first, last )</code> must convert to exactly one utf16-encoded code point
+
+\param first    I models InputIterator; <code>[ first, last )</code> must be valid utf8-encoded byte stream
+\param last     iterator pointing to one past the end of the InputIterator range to convert
+
+\return The byte stream converted to a single utf16-encoded code point
+*/
+
+/*!
+\fn O adobe::to_utf32(I first, I last, O output)
+\ingroup asl_unicode
+
+\param first    I models InputIterator; <code>[ first, last )</code> must be valid utf8- or utf16-encoded byte stream
+\param last     iterator pointing to one past the end of the InputIterator range to convert
+\param output   O models OutputIterator; The result of the conversion of the first utf8- or utf16-encoded character sequence into a utf32-encoded code point
+
+\return An output iterator pointing to the end of the inserted utf32-encoded text
+*/
+
+/*!
+\fn boost::uint32_t adobe::to_utf32(I first, I last)
+\ingroup asl_unicode
+
+\pre
+    <code>[ first, last )</code> must convert to exactly one utf32-encoded code point
+
+\param first    I models InputIterator; <code>[ first, last )</code> must be valid utf8- or utf16-encoded byte stream
+\param last     iterator pointing to one past the end of the InputIterator range to convert
+
+\return The byte stream converted to a single utf32-encoded code point
+*/

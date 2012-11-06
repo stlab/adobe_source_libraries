@@ -1,0 +1,69 @@
+/** \page stldoc_advance advance
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: algorithms, iterators</td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class InputIterator, class Distance>
+void advance(InputIterator& i, Distance n);
+\endcode
+\section Description Description
+<code>Advance(i, n)</code> increments the iterator <code>i</code> by the distance <code>n</code>.  If <code>n &gt; 0</code> it is equivalent
+to executing <code>++i</code> <code>n</code> times, and if <code>n &lt; 0</code> it is equivalent to
+executing <code>--i</code> <code>n</code> times.  If <code>n == 0</code>, the call has no effect.
+\section Definition Definition
+Defined in the standard header <A href="iterator">iterator</A>, and in the
+nonstandard backward-compatibility header <A href="iterator.h">iterator.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>Distance</code> is an integral type that is convertible to <code>InputIterator</code>'s
+   distance type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>i</code> is nonsingular.
+<li>
+Every iterator between <code>i</code> and <code>i+n</code> (inclusive) is nonsingular.
+<li>
+If <code>InputIterator</code> is a model of \ref stldoc_InputIterator or \ref stldoc_ForwardIterator,
+   then <code>n</code> must be nonnegative.  If <code>InputIterator</code> is a model of
+   \ref stldoc_BidirectionalIterator or \ref stldoc_RandomAccessIterator, then
+   this precondition does not apply.
+</ul>
+\section Complexity Complexity
+Constant time if <code>InputIterator</code> is a model of 
+\ref stldoc_RandomAccessIterator, otherwise linear time.
+\section Example Example
+\code
+List<int> L;
+L.push_back(0);
+L.push_back(1);
+
+List<int>::iterator i = L.begin();
+advance(i, 2);
+assert(i == L.end());
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_distance</code>, \ref stldoc_InputIterator, \ref stldoc_BidirectionalIterator,
+\ref stldoc_RandomAccessIterator, <code>\ref stldoc_iterator_traits</code>, \ref stldoc_Iterators.
+
+
+*/

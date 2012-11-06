@@ -1,0 +1,149 @@
+/*************************************************************************************************/
+
+/*
+
+    ADOBE CONFIDENTIAL
+    ___________________
+
+    Copyright 2003 - 2003 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: All information contained herein is, and remains the property of
+    Adobe Systems Incorporated and its suppliers, if any. The intellectual and 
+    technical concepts contained herein are proprietary to Adobe Systems Incorporated 
+    and its suppliers and may be covered by U.S. and Foreign Patents, patents 
+    in process, and are protected by trade secret or copyright law. Dissemination 
+    of this information or reproduction of this material is strictly forbidden 
+    unless prior written permission is obtained from Adobe Systems Incorporated.
+ 
+*/
+
+/*************************************************************************************************/
+
+/*! \page web_glossary Glossary of Terms
+
+\htmlonly
+    <style TYPE="text/css">
+        DIV.def { margin-left: 40px; margin-top: 2px; }
+        H2 { text-align: center }
+        H3 { margin-bottom: 2px; }
+        H4 { margin-left: 20px; margin-bottom: 2px; }
+    </style>
+\endhtmlonly
+
+    <center>
+    \ref glossary_A | \ref glossary_B | \ref glossary_C | \ref glossary_D | \ref glossary_E | \ref glossary_F | \ref glossary_G | \ref glossary_H | \ref glossary_I | \ref glossary_J | \ref glossary_K | \ref glossary_L | \ref glossary_M | \ref glossary_N | \ref glossary_O | \ref glossary_P | \ref glossary_R | \ref glossary_S | \ref glossary_T | \ref glossary_U | \ref glossary_V | \ref glossary_W | \ref glossary_X | \ref glossary_Y | \ref glossary_Z
+    </center>
+
+    \section glossary_A A
+        \subsection glossary_ABI ABI
+            <div class="def">Application Binary Interface. The assembly-level specification for how functions are to interact with one another (pass parameters, parameter ordering, type size specifications, etc.)</div>
+
+        \subsection glossary_adobe_ adobe::
+            \subsubsection glossary_adobe_array adobe::array_t
+                <div class="def"><a href="http://stlab.adobe.com/classadobe_1_1array__t.html">adobe::array_t</a> is a copy-on-write vector of values.</div>
+
+            \subsubsection glossary_adobe_auto_ptr adobe::auto_ptr
+                <div class="def">adobe::auto_ptr is an improved \c auto_ptr class and \c auto_resource for managing non-pointer referenced resources.</div>
+
+            \subsubsection glossary_adobe_dictionary adobe::dictionary_t
+                <div class="def"><a href="http://stlab.adobe.com/classadobe_1_1dictionary__t.html">adobe::dictionary_t</a>is a copy-on-write name/value associative container (this is great for messaging.)</div>
+
+            \subsubsection glossary_adobe_final adobe::final
+                <div class="def">adobe::final is a mix-in class to ensure that a class cannot be derived from. From Doug Ahmann.</div>
+
+            \subsubsection glossary_adobe_forest adobe::forest
+                <div class="def"><a href="http://stlab.adobe.com/classadobe_1_1forest.html">adobe::forest</a> is a hierarchical container class.</div>
+
+            \subsubsection glossary_adobe_name adobe::name_t
+                <div class="def"><a href="http://stlab.adobe.com/classadobe_1_1name__t.html">adobe::name_t</a> is an efficient string class for simple, non-mutable, character strings.</div>
+
+        \subsection glossary_API API
+            <div class="def">Application Programming Interface. The C or C++ header file that describes the functions available to you in the DLL (or other code block).</div>
+
+    \section glossary_B B
+        \subsection glossary_bjam bjam
+            <div class="def">bjam is an executable component of the Boost Build system version 2 (BBv2). BBv2 is used for building the \ref web_sourcelibrary and the necessary components of the <a href="http://www.boost.org">boost</a> libraries. See \ref asl_readme for more informoration.</div>
+
+    \section glossary_C C
+        \subsection glossary_class_invariant class invariants
+            <div class="def">(Also see \ref glossary_invariant.) A class invariant expresses constraints that must always hold true of any object of that class (except, possibly, during the course of a method invocation on the class). Class invariants behave like \ref glossary_postconditions - the child's invariant must imply the parent's invariant.</div>
+
+    \section glossary_D D
+        \subsection glossary_discriminated_type discriminated types
+            <div class="def"> A generic (in the sense of <i>general</i> as opposed to <i>template-based programming</i>) concept of types that contain values of different types but do not attempt conversion between them, i.e. 5 is held strictly as an \c int and is not implicitly convertible either to "5" or to 5.0. Their indifference to interpretation but awareness of type effectively makes them safe, generic containers of single values, with no scope for surprises from ambiguous conversions. (taken from a defintion found at <a href="http://www.boost.org/doc/html/any.html">boost.org</a>.)</div>
+
+    \section glossary_E E
+
+    \section glossary_F F
+
+    \section glossary_G G
+
+    \section glossary_H H
+
+    \section glossary_I I
+        \subsection glossary_invariant invariant
+            <div class="def">A rule, such as the ordering of an ordered list or heap, that applies throughout the life of a data structure (see \ref glossary_class_invariant) or procedure. Each change to the data structure must maintain the correctness of the invariant.</div>
+
+    \section glossary_J J
+
+    \section glossary_K K
+
+    \section glossary_L L
+        \subsection glossary_leading_edge leading edge
+            <div class="def">The first iteration path through an adobe::forest node, contrasting to the \ref glossary_trailing_edge which is the second iteration path.</div>
+
+    \section glossary_M M
+
+    \section glossary_N N
+
+    \section glossary_O O
+
+    \section glossary_P P
+        \subsection glossary_postconditions postconditions
+            <div class="def">One or more statements of what the method guarantees to the caller after it is done. An error in a postcondition denotes an error in the method implementation.</div>
+
+        \subsection glossary_preconditions preconditions
+            <div class="def">The set of conditions on a method that must be met to permit the method to execute correctly. Preconditions essentially capture what the method expects to be true when it is called - a violation of the precondition denotes a bug in the client of the method.</div>
+
+        \subsection glossary_projection_function projection function
+            <div class="def">A Unary Function without side effects. See \ref concept_transform_function. Also known as a project function.</div>
+
+    \section glossary_Q Q
+
+    \section glossary_R R
+        \subsection glossary_reference_range range
+            <div class="def">A concept and associated traits and functions for handling <code>[first, last)</code> style ranges. Please see \ref concept_range.</div>
+
+        \subsection glossary_reference_semantics reference semantics
+            <div class="def">When you can treat a variable as you would treat an <code>int*</code></div>
+
+        \subsection glossary_regular_type regular type
+            <div class="def">Please see the related page on \ref concept_regular_type.</div>
+
+    \section glossary_S S
+
+    \section glossary_T T
+        \subsection glossary_trailing_edge trailing edge
+            <div class="def">The second iteration path through an adobe::forest node, contrasting to the \ref glossary_leading_edge which is the first iteration path.</div>
+
+        \subsection glossary_translation_unit translation unit
+            <div class="def">A source file together with all the headers and source files included via \c \#include, less any source lines skipped by any of the conditional inclusion (\c \#if, etc.) preprocessing directives.</div>
+
+    \section glossary_U U
+
+    \section glossary_V V
+        \subsection glossary_value value
+            <div class="def">Please see the related page on \ref concept_regular_type.</div>
+
+        \subsection glossary_value_semantics value semantics
+            <div class="def">When you can treat a variable as you would treat an <code>int</code></div>
+
+    \section glossary_W W
+
+    \section glossary_X X
+
+    \section glossary_Y Y
+
+    \section glossary_Z Z
+*/

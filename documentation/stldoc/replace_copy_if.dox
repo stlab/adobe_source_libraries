@@ -1,0 +1,84 @@
+/** \page stldoc_replace_copy_if replace_copy_if
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class InputIterator, class OutputIterator, class Predicate, class T>
+OutputIterator replace_copy_if(InputIterator first, InputIterator last,
+                               OutputIterator result, Predicate pred,
+                               const T& new_value) 
+\endcode
+\section Description Description
+<code>Replace_copy_if</code> copies elements from the range <code>[first, last)</code> to
+the range <code>[result, result + (last-first))</code>, except that any element
+for which <code>pred</code> is <code>true</code> is not copied; <code>new_value</code> is copied instead.
+More precisely, for every integer <code>n</code> such that <code>0 &lt;= n &lt; last-first</code>,
+<code>replace_copy_if</code> performs the assignment <code>*(result+n) = new_value</code>
+if <code>pred(*(first+n))</code>, and <code>*(result+n) = *(first+n)</code> 
+otherwise.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator.
+<li>
+<code>Predicate</code> is a model of \ref stldoc_Predicate.
+<li>
+<code>T</code> is convertible to <code>Predicate</code>'s argument type.
+<li>
+<code>T</code> is \ref stldoc_Assignable.
+<li>
+<code>T</code> is convertible to a type in <code>OutputIterator</code>'s set of value types.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+There is enough space in the output range to store the copied
+   values.  That is, <code>[result, result + (last-first))</code> is a valid range.
+<li>
+<code>result</code> is not an iterator within the range <code>[first, last)</code>.
+</ul>
+\section Complexity Complexity
+Linear.  <code>Replace_copy</code> performs exactly <code>last - first</code> 
+applications of <code>pred</code> and exactly <code>last - first</code> assignments.
+\section Example Example
+Copy elements from one \ref stldoc_Vector to another, replacing all negative
+numbers with <code>0</code>.
+\code
+Vector<int> V1;
+V1.push_back(1);
+V1.push_back(-1);
+V1.push_back(-5);
+V1.push_back(2);
+
+Vector<int> V2(4);
+
+replace_copy_if(V1.begin(), V1.end(), V2.begin(),
+                bind2nd(less<int>(), 0),
+                0);
+assert(V[0] == 1 && V[1] == 0 && V[2] == 0 && V[3] == 2);
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_copy</code>, <code>\ref stldoc_replace</code>, <code>\ref stldoc_replace_if</code>, <code>\ref stldoc_replace_copy</code>
+
+
+*/

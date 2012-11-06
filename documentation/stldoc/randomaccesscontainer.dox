@@ -1,0 +1,152 @@
+/** \page stldoc_RandomAccessContainer RandomAccessContainer
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Random Access Container is a \ref stldoc_ReversibleContainer 
+whose iterator type is a \ref stldoc_RandomAccessIterator.
+It provides amortized constant time access to arbitrary elements.
+\section Refinement_of Refinement of
+\ref stldoc_ReversibleContainer
+\section Associated_types Associated types
+No additional types beyond those defined in \ref stldoc_ReversibleContainer.
+However, the requirements for the iterator type are strengthened:
+it must be a \ref stldoc_RandomAccessIterator.
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Random Access Container
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>a</code>, <code>b</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The value type of <code>X</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+\section Valid_expressions Valid expressions
+In addition to the expressions defined in \ref stldoc_ReversibleContainer,
+the following expressions must be valid.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Element access
+</td>
+<td valign="top">
+<code>a[n]</code>
+</td>
+<td valign="top">
+<code>n</code> is convertible to <code>size_type</code>
+</td>
+<td valign="top">
+<code>reference</code> if <code>a</code> is mutable, <code>const_reference</code> otherwise
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+Semantics of an expression is defined only where it is not defined in
+\ref stldoc_ReversibleContainer, or where there is additional information.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Element access
+</td>
+<td valign="top">
+<code>a[n]</code>
+</td>
+<td valign="top">
+<code>0 &lt;= n &lt; a.size()</code>
+</td>
+<td valign="top">
+Returns the <code>n</code>th element from the beginning of the container.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+The run-time complexity of element access is amortized constant time.
+\section Invariants Invariants
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Element access
+</td>
+<td valign="top">
+The element returned by <code>a[n]</code> is the same as the one obtained by
+   incrementing <code>a.begin()</code> <code>n</code> times and then dereferencing the resulting
+   iterator.
+</td>
+</tr>
+</table>
+\section Models Models
+<ul>
+<li>
+ \ref stldoc_Vector
+<li>
+ \ref stldoc_Deque
+</ul>
+\section Notes Notes
+\section See_also See also
+The \ref stldoc_Iterators, \ref stldoc_RandomAccessIterator, \ref stldoc_Sequence
+
+*/

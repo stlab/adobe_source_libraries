@@ -1,0 +1,158 @@
+/** \page stldoc_DefaultConstructible DefaultConstructible
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html utilities.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: utilities</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A type is DefaultConstructible if it has a default constructor,
+that is, if it is possible to construct an object of that type 
+without initializing the object to any particular value.
+\section Refinement_of Refinement of
+\section Associated_types Associated types
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of DefaultConstructible
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>x</code>
+</td>
+<td valign="top">
+An object of type <code>X</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+\section Valid_expressions Valid expressions
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Default constructor
+</td>
+<td valign="top">
+<code>X()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Default constructor
+</td>
+<td valign="top">
+<code>X x;</code> <A href="#1">[1]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Default constructor
+</td>
+<td valign="top">
+<code>X()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Default constructor
+</td>
+<td valign="top">
+<code>X x;</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+\section Models Models
+<ul>
+<li>
+int
+<li>
+<code>\ref stldoc_Vector&lt;double&gt;</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+The form <code>X x = X()</code> is not guaranteed to be a valid expression,
+because it uses a copy constructor.  A type that is
+DefaultConstructible is not necessarily \ref stldoc_Assignable
+\section See_also See also
+\ref stldoc_Assignable
+
+
+*/

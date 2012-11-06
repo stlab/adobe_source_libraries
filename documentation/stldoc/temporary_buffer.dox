@@ -1,0 +1,208 @@
+/** \page stldoc_temporary_buffer temporary_buffer
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html allocators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: allocators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+Some algorithms, such as <code>\ref stldoc_stable_sort</code> and <code>\ref stldoc_inplace_merge</code>,
+are <i>adaptive</i>: they attempt to use extra temporary memory to store
+intermediate results, and their run-time complexity is better if that
+extra memory is available.  These algorithms use <code>temporary_buffer</code>
+to allocate that extra memory.
+<p>
+<code>temporary_buffer</code>'s constructor takes two arguments, <code>first</code> and
+<code>last</code>, of type <code>ForwardIterator</code>; the constructor allocates
+a buffer that is large enough to contain <code>N</code> objects of type <code>T</code>,
+where <code>0 &lt;= N &lt;= last - first</code> <A href="#1">[1]</A>, and it fills the buffer with 
+objects of type <code>T</code>.  The member functions <code>begin()</code> and 
+<code>end()</code> return iterators that point to the beginning and the end
+of the buffer.
+<p>
+Note that the elements in the buffer are guaranteed to be 
+initialized; that is, <code>begin()</code> points to an object of type
+<code>T</code>, not to raw memory.   However, the initial values of
+the buffer's elements are unspecified.  You should not rely
+on them to be initialized to any particular value.
+<p>
+<code>temporary_buffer</code> does not have a copy constructor, or an assignment
+operator.  Those operations would have complicated, and not terribly
+useful, semantics.
+<p>
+(Earlier versions of the STL used <code>\ref stldoc_get_temporary_buffer</code> and
+<code>\ref stldoc_return_temporary_buffer</code> instead of <code>temporary_buffer</code>.  
+<code>temporary_buffer</code> is more convenient, because it does not require
+using <code>\ref stldoc_uninitialized_copy</code>, and in some cases it is also more
+efficient.  Additionally, it is much easier to write exception-safe
+code with <code>temporary_buffer</code> than with <code>\ref stldoc_get_temporary_buffer</code> and
+<code>\ref stldoc_return_temporary_buffer</code>.)
+\section Example Example
+\code
+int main()
+{
+  vector<int> V(50);
+  iota(V.begin(), V.end(), 1);
+
+  temporary_buffer<vector<int>::iterator, int> buf(V.begin(), V.end());
+  copy(V.rbegin(), V.rbegin() + buf.size(), buf.begin());
+  copy(buf.begin(), buf.end(), ostream_iterator<int>(cout, "\n"));
+}
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="memory">memory</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+This class is an SGI extension; it is not part of the C++
+standard.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>ForwardIterator</code>
+</td>
+<td valign="top">
+The type of the iterators passed as arguments to
+   <code>temporary_buffer</code>'s constructor.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The type of object stored in the temporary buffer.
+</td>
+<td valign="top">
+<code>\ref stldoc_iterator_traits&lt;ForwardIterator&gt;::value_type</code> <A href="#2">[2]</A>
+</td>
+</tr>
+</table>
+\section Model_of Model of
+None.  <code>temporary_buffer</code> is vaguely similar to a \ref stldoc_Container, 
+but it does not provide the entire \ref stldoc_Container interface.  In
+particular, it is not a model of \ref stldoc_DefaultConstructible or
+\ref stldoc_Assignable.
+\section Type_requirements Type requirements
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator
+<li>
+<code>ForwardIterator</code> is mutable.
+<li>
+<code>T</code> has a constructor that can take a single argument of
+   <code>ForwardIterator</code>'s value type.
+</ul>
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+\code
+temporary_buffer(ForwardIterator first, 
+                 ForwardIterator last)
+\endcode
+</td>
+<td valign="top">
+Allocates a temporary buffer that holds at most <code>last - first</code> elements
+of type <code>T</code>, and constructs those elements.  The initial values of
+the elements are unspecified.  Precondition: <code>[first, last)</code> is a
+valid range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>~temporary_buffer()</code>
+</td>
+<td valign="top">
+Destroys the elements in the temporary buffer, and deallocates
+the buffer itself.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T* begin()</code>
+</td>
+<td valign="top">
+Returns a pointer to the first element in the buffer.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T* end()</code>
+</td>
+<td valign="top">
+Returns a pointer that points one past the last element
+in the buffer.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>ptrdiff_t requested_size() const</code>
+</td>
+<td valign="top">
+Returns the value <code>last - first</code>, where <code>first</code> and <code>last</code> are
+the arguments that were passed to the constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>ptrdiff_t size() const</code>
+</td>
+<td valign="top">
+Returns the number of elements in the temporary buffer,
+<code>end() - begin()</code>.  The return value satisfies the constraint
+<code>0 &lt;= size() &lt;= requested_size()</code>. 
+</td>
+</tr>
+</table>
+\section New_members New members
+\section Notes Notes
+<p><A name="1">[1]</A>
+The <i>requested size</i> is <code>last - first</code>.  The size of the
+temporary buffer is never larger than the requested size, but it might
+well be smaller; the size might even be zero.  The intention is that
+<code>temporary_buffer</code> will allocate as large a buffer as is possible
+without hurting performance.  Note that determining this maximum size
+is quite difficult: it depends on cache size, physical versus virtual
+memory, heap fragmentation, and so on.  A good implementation of
+<code>temporary_buffer</code> must be nonportable.
+<p><A name="2">[2]</A>
+The \ref stldoc_iterator_traits mechanism relies on partial
+specialization of templates.  If your compiler does not yet
+implement this features, then you will not be able to use this
+default parameter; you will have to provide both template arguments.
+\section See_also See also
+
+
+*/

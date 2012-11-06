@@ -1,0 +1,76 @@
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+/*!
+\defgroup conversion Conversions
+\ingroup utility
+*/
+
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*!
+\class adobe::promote conversion.hpp <adobe/conversion.hpp>
+\ingroup conversion
+
+\brief A struct for compile-time type promotion
+
+\details
+Type promotion is the operation of converting a value into another type without any loss of resolution as to the original value (lossless conversion). For example, type promotion is implicit in the language when one sets a <code>double</code> from a <code>long</code>. Further explicit type promotions are possible for user-defined types through template specializations of this struct. See <code>adobe::value_t</code> for a type that utilizes adobe::promote.
+
+\note
+    <code>char</code> is <i>not</i> specified to promote to <code>wchar_t</code> as standard behavior. Without knowing the source or destination character encodings there is not enough information to do this type promotion correctly.
+
+\see_also
+    - <code>adobe::static_name_t</code>
+    - <code>adobe::value_t</code>
+
+\section standard_promotions Standard Promotions
+    - The following promote to <code>double</code>:
+        - <code>short</code>
+        - <code>unsigned short</code>
+        - <code>int</code>
+        - <code>unsigned int</code>
+        - <code>long</code>
+        - <code>unsigned long</code>
+        - <code>float</code>
+*/
+
+/*!
+\typedef adobe::promote<T>::type
+
+Type to which <code>T</code> can be promoted. Default is <code>T</code> itself.
+*/
+
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*!
+\fn lht adobe::explicit_cast(const rht& rhs)
+\ingroup conversion
+
+\param rhs The object to be cast to type <code>lhs</code>
+
+\return The explicit cast of one object with type \c lht into one of type \c rht.
+
+\complexity
+Constant.
+*/
+
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*!
+\fn T& adobe::remove_const(const T& x)
+\ingroup conversion
+
+\param x The const variable from which <code>const</code>ness is to be removed.
+
+\return A non-const reference to <code>x</code>.
+
+\complexity
+Constant.
+*/

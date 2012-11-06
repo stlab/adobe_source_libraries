@@ -1,0 +1,109 @@
+/*************************************************************************************************/
+
+/*
+
+    ADOBE CONFIDENTIAL
+    ___________________
+
+    Copyright 2003 - 2003 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: All information contained herein is, and remains the property of
+    Adobe Systems Incorporated and its suppliers, if any. The intellectual and 
+    technical concepts contained herein are proprietary to Adobe Systems Incorporated 
+    and its suppliers and may be covered by U.S. and Foreign Patents, patents 
+    in process, and are protected by trade secret or copyright law. Dissemination 
+    of this information or reproduction of this material is strictly forbidden 
+    unless prior written permission is obtained from Adobe Systems Incorporated.
+ 
+*/
+
+/*************************************************************************************************/
+
+/*! \defgroup concept_convertible_to_function ConvertibleToFunction
+\ingroup asl_concepts
+
+\description
+A ConvertibleToFunction is simply something which can be invoked using function notation - or something that \c boost::bind can convert to a function. Specifically, a ConvertibleToFunction can be:
+    - A pointer to a function
+    - A pointer to a class or struct data member (argument is a pointer or a reference to a struct/class instance)
+    - A pointer to a class or struct member function (first argument is a pointer or a reference to a struct/class instance; Member function arguments follow in order)
+    - A \c boost::reference_wrapper to a ConvertibleToFunction
+    - A function object
+
+Where functions are passed as template parameters in the Adobe Source Libraries, any ConvertibleToFunction may be used. The idea is that <code>boost::bind(x, ...);</code> is a valid expression where <code>...</code> are arguments to <code>x</code>. <code>x</code>, in this case, is ConvertibleToFunction.
+
+\refinement_of
+
+\associated_types
+
+\notation
+<table>
+    <tr>
+        <td valign="top"><code>F</code></td>
+        <td valign="top">A type that is a model of ConvertibleToFunction</td>
+    </tr>
+    <tr>
+        <td valign="top"><code>x1...xn</code></td>
+        <td valign="top">An optional argument list for the type that is a model of ConvertibleToFunction</td>
+    </tr>
+    <tr>
+        <td valign="top"><code>f</code></td>
+        <td valign="top">Object of type <code>F</code></td>
+    </tr>
+</table>
+
+\definitions
+
+\valid_expressions
+<table>
+    <tr>
+        <th>Name</th><th>Expression</th><th>Type requirements</th><th>Return type</th>
+    </tr>
+    <tr>
+        <td valign="top">Convertible</td>
+        <td valign="top"><code>boost::bind(&f, x1...xn);</code></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">An invokable <code>boost::function</code> whose template argument is the function signature of <code>f</code></td>
+    </tr>
+</table>
+
+\expression_semantics
+
+\complexity
+
+\invariants
+
+\models
+    - Anything that is acceptable to <code>boost::bind</code>.
+
+\example
+Given a \c vector of structs...
+\par
+\code
+struct my_struct { bool value_m; }
+std::vector<my_struct> my_vector;
+
+// Code here to fill the vector with some bools...
+\endcode
+\par
+Writing the following would be an error:
+\par
+\code
+iter = std::find_if(my_vector.begin(), my_vector.end(), &my_struct::value_m); // Error!
+\endcode
+\par
+But because a pointer to a member is ConvertibleToFunction, and in this case the function meets
+the requirements of a predicate (that is, the accessing of \c value_m will return either
+\c true or \c false) we can write:
+\par
+\code
+iter = adobe::find_if(my_vector.begin(), my_vector.end(), &my_struct::value_m); // works!
+\endcode
+\par
+Further, because \c vector meets the requirements of a \ref concept_convertible_to_range, this can be shortened to:
+\par
+\code
+iter = adobe::find_if(my_vector, &my_struct::value_m); // also works!
+\endcode
+*/

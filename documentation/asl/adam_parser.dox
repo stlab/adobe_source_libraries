@@ -1,0 +1,164 @@
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*!
+\defgroup adamparser Property Model Parser
+\ingroup property_model
+*/
+
+/*!
+\fn void adobe::parse(std::istream& stream, const adobe::line_position_t& position, const adobe::adam_callback_suite_t& callbacks)
+\ingroup adamparser
+
+The Adam parsing function.
+
+\param stream       The input stream to be parsed.
+\param position     The starting line position.
+\param callbacks    The callback suite used for client code communication.
+*/
+
+/*!
+\fn adobe::array_t adobe::parse_adam_expression(const std::string& expression)
+\ingroup adamparser
+
+Parses an Adam expression.
+
+\param expression The expression to be parsed in tokenized form.
+*/
+
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*!
+\class adobe::adam_callback_suite_t adam_parser.hpp <adobe/adam_parser.hpp>
+\ingroup adamparser
+
+\brief Callback class for the Adam parser.
+
+Client-defined callback function used by the Adam parser to communicate with the client code. The Adam parser will discover cell declarations and will signal callbacks herein of those declarations.
+*/
+
+/*!
+\typedef adobe::adam_callback_suite_t::add_cell_proc_t
+
+A callback function signature for a \ref concept_convertible_to_function that needs to be supplied. During the parsing of an Adam definition, the client will receive cell declaration notifications through this callback.
+
+\param type         cell type declared in the defintion.
+\param cell_name    name of the cell specified.
+\param position     position in the parse of the declaration.
+\param expr_or_init array of tokens representing one of several things.
+\param brief        trailing comment to this cell.
+\param detailed     leading comment to this cell.
+*/
+
+/*!
+\typedef adobe::adam_callback_suite_t::add_interface_proc_t
+
+A callback function signature for a \ref concept_convertible_to_function that needs to be supplied. During the parsing of an Adam definition, the client will receive interface cell declaration notifications through this callback.
+
+\param cell_name    name of the cell specified.
+\param linked       specifies if the output cell is back-linked to the input cell.
+\param position1    position1 in the parse of the declaration.
+\param initializer  array of tokens representing the input cell initializer.
+\param position2    position2 in the parse of the declaration.
+\param expression   array of tokens representing the output cell relation expression.
+\param brief        trailing comment to this cell.
+\param detailed     leading comment to this cell.
+*/
+
+/*!
+\typedef adobe::adam_callback_suite_t::add_relation_proc_t
+
+A callback function signature for a \ref concept_convertible_to_function that needs to be supplied. During the parsing of an Adam definition, the client will receive relation declaration notifications through this callback.
+
+\param position         position in the parse of the relation set declaration
+\param conditional      tokenized expression array representing the optional conditional enabling this relation set.
+\param first            first relation in the set.
+\param last             one-past-the-last relation in the set.
+\param brief            trailing comment to relation set.
+\param detailed         leading comment to relation set.
+
+\sa
+    \ref adobe::adam_callback_suite_t::relation_t for more information on the relation_t type.
+*/
+
+/*!
+\enum adobe::adam_callback_suite_t::cell_type_t
+
+Enumeration type denoting the kind of cell found in the parse.
+*/
+
+/*!
+\var adobe::adam_callback_suite_t::cell_type_t adobe::adam_callback_suite_t::input_k
+
+Specifies a linked input cell for the \c add_cell_proc_m callback routine. If this cell type is specified the expression in the array_t is the cell initializer.
+*/
+
+/*!
+\var adobe::adam_callback_suite_t::cell_type_t adobe::adam_callback_suite_t::output_k
+
+Specifies an output cell for the \c add_cell_proc_m callback routine. If this cell type is specified the expression in the array_t is the relation expression.
+*/
+
+/*!
+\var adobe::adam_callback_suite_t::cell_type_t adobe::adam_callback_suite_t::constant_k
+
+Specifies a constant cell for the \c add_cell_proc_m callback routine. If this cell type is specified the expression in the array_t is the cell initializer.
+*/
+
+/*!
+\var adobe::adam_callback_suite_t::cell_type_t adobe::adam_callback_suite_t::logic_k
+
+Specifies a logic cell for the \c add_cell_proc_m callback routine. If this cell type is specified the expression in the array_t is the relation expression.
+*/
+
+/*!
+\var adobe::adam_callback_suite_t::cell_type_t adobe::adam_callback_suite_t::invariant_k
+
+Specifies an invariant cell for the \c add_cell_proc_m callback routine. If this cell type is specified the expression in the array_t is the relation expression.
+*/
+
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*!
+\class adobe::adam_callback_suite_t::relation_t
+\ingroup adamparser
+
+\brief Struct containing details of a relation expression for client callbacks from the Adam parser.
+
+Every relation declared in an Adam expression is parsed and packed into this struct for the client code.
+*/
+
+/*!
+\var adobe::adam_callback_suite_t::relation_t::name_set_m
+
+Set of named cells being operated upon by this relation.
+*/
+
+/*!
+\var adobe::adam_callback_suite_t::relation_t::position_m
+
+Position in the parse of the relation declaration.
+*/
+
+/*!
+\var adobe::adam_callback_suite_t::relation_t::expression_m
+
+Tokenized expression array of the relation.
+*/
+
+/*!
+\var adobe::adam_callback_suite_t::relation_t::detailed_m
+
+Leading comment for the relation.
+*/
+
+/*!
+\var adobe::adam_callback_suite_t::relation_t::brief_m
+
+Trailing comment for the relation.
+*/

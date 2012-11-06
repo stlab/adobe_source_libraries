@@ -1,0 +1,703 @@
+/** \page stldoc_Deque Deque
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+A <code>deque</code> <A href="#1">[1]</A> is very much like a <code>\ref stldoc_Vector</code>: like <code>vector</code>, it is a
+sequence that supports random access to elements, constant time
+insertion and removal of elements at the end of the sequence, and
+linear time insertion and removal of elements in the middle.
+<p>
+The main way in which <code>deque</code> differs from <code>vector</code> is
+that <code>deque</code> also supports constant time insertion and removal
+of elements at the beginning of the sequence <A href="#2">[2]</A>.
+Additionally, <code>deque</code> does not have any member functions
+analogous to <code>vector</code>'s <code>capacity()</code> and
+<code>reserve()</code>, and does not provide any of the guarantees on
+iterator validity that are associated with those member functions.
+<A href="#3">[3]</A>
+\section Example Example
+\code
+deque<int> Q;
+Q.push_back(3);
+Q.push_front(1);
+Q.insert(Q.begin() + 1, 2);
+Q[2] = 0;
+copy(Q.begin(), Q.end(), ostream_iterator<int>(cout, " "));
+// The values that are printed are 1 2 0
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="deque">deque</A>, and in the nonstandard
+backward-compatibility header <A href="deque.h">deque.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The deque's value type: the type of object that is stored
+   in the deque.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Alloc</code>
+</td>
+<td valign="top">
+The <code>deque</code>'s allocator, used for all internal memory management.
+</td>
+<td valign="top">
+<code>\ref stldoc_Allocators</code>
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_RandomAccessContainer,
+\ref stldoc_FrontInsertionSequence,
+\ref stldoc_BackInsertionSequence.
+\section Type_requirements Type requirements
+None, except for those imposed by the requirements of 
+\ref stldoc_RandomAccessContainer,
+\ref stldoc_FrontInsertionSequence,
+and \ref stldoc_BackInsertionSequence.
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The type of object, <code>T</code>, stored in the deque.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Pointer to <code>T</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Reference to <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const reference to <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+An unsigned integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>difference_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+A signed integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Iterator used to iterate through a <code>deque</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const iterator used to iterate through a <code>deque</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Iterator used to iterate backwards through a <code>deque</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Const iterator used to iterate backwards through a <code>deque</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator begin()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the beginning of the <code>deque</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator end()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the end of the <code>deque</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator begin() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns a <code>const_iterator</code> pointing to the beginning of the <code>deque</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator end() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns a <code>const_iterator</code> pointing to the end of the <code>deque</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_iterator rbegin()</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>reverse_iterator</code> pointing to the beginning of the
+   reversed deque.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_iterator rend()</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>reverse_iterator</code> pointing to the end of the
+   reversed deque.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator rbegin() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>const_reverse_iterator</code> pointing to the beginning of the
+   reversed deque.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator rend() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>const_reverse_iterator</code> pointing to the end of the
+   reversed deque.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type size() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns the size of the <code>deque</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type max_size() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns the largest possible size of the <code>deque</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool empty() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+<code>true</code> if the <code>deque</code>'s size is <code>0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference operator[](size_type n)</code>
+</td>
+<td valign="top">
+ \ref stldoc_RandomAccessContainer
+</td>
+<td valign="top">
+Returns the <code>n</code>'th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference operator[](size_type n) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_RandomAccessContainer
+</td>
+<td valign="top">
+Returns the <code>n</code>'th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>deque()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Creates an empty deque.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>deque(size_type n)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Creates a deque with <code>n</code> elements.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>deque(size_type n, const T&amp; t)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Creates a deque with <code>n</code> copies of <code>t</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>deque(const deque&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The copy constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+deque(InputIterator f, InputIterator l)
+\endcode
+<A href="#4">[4]</A>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Creates a deque with a copy of a range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>~deque()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The destructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>deque&amp; operator=(const deque&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The assignment operator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference front()</code>
+</td>
+<td valign="top">
+ \ref stldoc_FrontInsertionSequence
+</td>
+<td valign="top">
+Returns the first element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference front() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_FrontInsertionSequence
+</td>
+<td valign="top">
+Returns the first element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference back()</code>
+</td>
+<td valign="top">
+ \ref stldoc_BackInsertionSequence
+</td>
+<td valign="top">
+Returns the last element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference back() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_BackInsertionSequence
+</td>
+<td valign="top">
+Returns the last element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void push_front(const T&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_FrontInsertionSequence
+</td>
+<td valign="top">
+Inserts a new element at the beginning.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void push_back(const T&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_BackInsertionSequence
+</td>
+<td valign="top">
+Inserts a new element at the end.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void pop_front()</code>
+</td>
+<td valign="top">
+ \ref stldoc_FrontInsertionSequence
+</td>
+<td valign="top">
+Removes the first element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void pop_back()</code>
+</td>
+<td valign="top">
+ \ref stldoc_BackInsertionSequence
+</td>
+<td valign="top">
+Removes the last element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void swap(deque&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Swaps the contents of two deques.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+iterator insert(iterator pos, 
+                const T& x)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts <code>x</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+void insert(iterator pos, 
+            InputIterator f, InputIterator l)
+\endcode
+<A href="#4">[4]</A>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts the range <code>[f, l)</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void insert(iterator pos,
+            size_type n, const T& x)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts <code>n</code> copies of <code>x</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator erase(iterator pos)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases the element at position <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator erase(iterator first, iterator last)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases the range <code>[first, last)</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void clear()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases all of the elements.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void resize(n, t = T())</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts or erases elements at the end such that the size becomes <code>n</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+bool operator==(const deque&, 
+                const deque&)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_ForwardContainer
+</td>
+<td valign="top">
+Tests two deques for equality.  This is a global function, not
+   a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+bool operator<(const deque&, 
+               const deque&)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_ForwardContainer
+</td>
+<td valign="top">
+Lexicographical comparison.  This is a global function, not
+   a member function.
+</td>
+</tr>
+</table>
+\section New_members New members
+All of <code>deque</code>'s members are defined in the 
+\ref stldoc_RandomAccessContainer,
+\ref stldoc_FrontInsertionSequence, 
+and \ref stldoc_BackInsertionSequence
+requirements.  <code>Deque</code> does not introduce any new members.
+\section Notes Notes
+<p><A name="1">[1]</A>
+The name <i>deque</i> is pronounced &quot;deck&quot;, and stands for
+&quot;double-ended queue.&quot;  Knuth (section 2.6) reports that the name was
+coined by E. J. Schweppe.  See section 2.2.1 of Knuth for more
+information about deques.  (D. E. Knuth, <i>The Art of Computer
+Programming.  Volume 1: Fundamental Algorithms</i>, second edition.  
+Addison-Wesley, 1973.)
+<p><A name="2">[2]</A>
+Inserting an element at the beginning or end of a <code>deque</code> takes
+amortized constant time.  Inserting an element in the middle is linear
+in <code>n</code>, where <code>n</code> is the smaller of the number of 
+elements from the insertion point to the beginning, and the number of 
+elements from the insertion point to the end.
+<p><A name="3">[3]</A>
+The semantics of iterator invalidation for <code>deque</code> is as
+follows.  <code>Insert</code> (including <code>push_front</code> and
+<code>push_back</code>) invalidates all iterators that refer to a
+<code>deque</code>.  <code>Erase</code> in the middle of a <code>deque</code>
+invalidates all iterators that refer to the <code>deque</code>.  
+<code>Erase</code> at the beginning or end of a <code>deque</code> (including
+<code>pop_front</code> and <code>pop_back</code>) invalidates an iterator only
+if it points to the erased element.
+<p><A name="4">[4]</A>
+This member function relies on <i>member template</i> functions, which
+at present (early 1998) are not supported by all compilers.  If your
+compiler supports member templates, you can call this function with
+any type of \ref stldoc_InputIterator.  If your
+compiler does not yet support member templates, though, then the
+arguments must either be of type <code>const value_type*</code> or of type
+<code>deque::const_iterator</code>.
+\section See_also See also
+<code>\ref stldoc_Vector</code>,
+<code>\ref stldoc_List</code>,
+<code>\ref stldoc_Slist</code>
+
+
+*/

@@ -1,0 +1,34 @@
+# Establish common build settings across all .../adobe/test projects 
+# above and beyond those established for all .../adobe projects 
+
+project 
+	: requirements 
+		<library>/adobe//asl_dev
+	    <library>/boost/test//boost_unit_test_framework 
+	;
+
+build-project unit_tests ;
+
+
+build-project adam_smoke ;
+build-project adam_tutorial ;
+build-project any_iterator ;
+alias closed_hash_test : closed_hash/<asl>dev : <toolset>gcc,<variant>release:<optimization>off ;
+build-project cmath ;
+build-project eve_smoke ;
+build-project forest_smoke ;
+build-project md5 ;
+build-project move ;
+build-project poly ;
+build-project property_model_eval ;
+build-project reduction ;
+build-project serialization ;
+build-project sha ;
+build-project stable_partition_selection ;
+build-project string_test ;
+build-project typeinfo ;
+build-project unicode ;
+build-project vector ;
+build-project xml_parser ;
+build-project zuidgen ;
+

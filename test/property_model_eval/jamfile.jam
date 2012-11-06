@@ -1,0 +1,49 @@
+# Jamfile for building the propert model evaluator
+
+SOURCES = pmeval.cpp adam_test_parser.cpp queryable_sheet.cpp iomanip_flat.cpp
+         /boost/program_options//boost_program_options
+         ;
+
+
+#build the executable
+ exe pmeval :  
+            $(SOURCES)
+            ;
+
+ import os ;
+
+ # Construct the destination path location
+ OS = [ os.name ] ;
+ DEST_PATH = $(TOP)/../built_artifacts/install/$(OS)/ ;
+
+
+
+install app
+    :   pmeval
+    :   <variant>release:<location>$(DEST_PATH)"release/pmeval"
+        <variant>debug:<location>$(DEST_PATH)"debug/pmeval"
+    ;
+
+explicit app ;
+
+install examples
+    :   [ glob ./*.pme ]
+    :   <variant>release:<location>$(DEST_PATH)"release/pmeval/examples"
+        <variant>debug:<location>$(DEST_PATH)"debug/pmeval/examples"
+    ;
+
+explicit examples ;
+
+alias install_program : app examples ;
+explicit install_program ;
+
+run pmeval #source
+    $(SOURCES)
+     : # args
+     : default.pme minmax.pme pm_tut.pme # input-files
+     : # requirements
+     : pmeval-test # target-name
+     : # default-build
+     ;
+
+explicit pmeval ; 

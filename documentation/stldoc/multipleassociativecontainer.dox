@@ -1,0 +1,248 @@
+/** \page stldoc_MultipleAssociativeContainer MultipleAssociativeContainer
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Multiple Associative Container is an \ref stldoc_AssociativeContainer in
+which there may be more than one element with the same key.  That is,
+it is an \ref stldoc_AssociativeContainer that does not have the restrictions
+of a \ref stldoc_UniqueAssociativeContainer.
+\section Refinement_of Refinement of
+\ref stldoc_AssociativeContainer
+\section Associated_types Associated types
+None, except for those defined by
+\ref stldoc_AssociativeContainer
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Multiple Associative Container
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>a</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>t</code>
+</td>
+<td valign="top">
+Object of type <code>X::value_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>k</code>
+</td>
+<td valign="top">
+Object of type <code>X::key_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>p</code>, <code>q</code>
+</td>
+<td valign="top">
+Object of type <code>X::iterator</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+\section Valid_expressions Valid expressions
+In addition to the expressions defined in
+\ref stldoc_AssociativeContainer, the
+following expressions must be valid.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Range constructor
+</td>
+<td valign="top">
+\code
+X(i, j)
+X a(i, j);
+\endcode
+</td>
+<td valign="top">
+<code>i</code> and <code>j</code> are \ref stldoc_InputIterator whose value type is convertible
+   to <code>T</code> <A href="#1">[1]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Insert element
+</td>
+<td valign="top">
+<code>a.insert(t)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X::iterator</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Insert range
+</td>
+<td valign="top">
+<code>a.insert(i, j)</code>
+</td>
+<td valign="top">
+<code>i</code> and <code>j</code> are \ref stldoc_InputIterator whose value type is convertible
+   to <code>X::value_type</code>.
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Range constructor
+</td>
+<td valign="top">
+\code
+X(i, j)
+X a(i, j);
+\endcode
+</td>
+<td valign="top">
+<code>[i,j)</code> is a valid range.
+</td>
+<td valign="top">
+Creates an associative container that contains all elements in the range <code>[i,j)</code>.
+</td>
+<td valign="top">
+<code>size()</code> is equal to the distance from <code>i</code> to <code>j</code>.  Each element
+   in <code>[i, j)</code> is present in the container.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Insert element
+</td>
+<td valign="top">
+<code>a.insert(t)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Inserts <code>t</code> into <code>a</code>.
+</td>
+<td valign="top">
+The size of <code>a</code> is incremented by <code>1</code>.  The value of <code>a.count(t)</code>
+   is incremented by <code>a</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Insert range
+</td>
+<td valign="top">
+<code>a.insert(i, j)</code>
+</td>
+<td valign="top">
+<code>[i, j)</code> is a valid range.
+</td>
+<td valign="top">
+Equivalent to <code>a.insert(t)</code> for each object <code>t</code> that is pointed to
+   by an iterator in the range <code>[i, j)</code>.  Each element is inserted into
+   <code>a</code>.
+</td>
+<td valign="top">
+The size of <code>a</code> is incremented by <code>j - i</code>.
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+Average complexity for insert element is at most logarithmic.  
+<p>
+Average complexity for insert range is at most <code>O(N * log(size() + N))</code>,
+where <code>N</code> is <code>j - i</code>.
+\section Invariants Invariants
+\section Models Models
+<ul>
+<li>
+<code>\ref stldoc_multiset</code>
+<li>
+<code>\ref stldoc_Multimap</code>
+<li>
+<code>\ref stldoc_hash_multiset</code>
+<li>
+<code>\ref stldoc_hash_multimap</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+At present (early 1998), not all compilers support
+&quot;member templates&quot;.  If your compiler supports member
+templates then <code>i</code> and <code>j</code> may be of any type that
+conforms to the \ref stldoc_InputIterator
+requirements.  If your compiler does not yet support member
+templates, however, then <code>i</code> and <code>j</code> must be of type
+<code>const T*</code> or of type <code>X::const_iterator</code>.
+\section See_also See also
+\ref stldoc_AssociativeContainer, 
+\ref stldoc_UniqueAssociativeContainer,
+\ref stldoc_UniqueSortedAssociativeContainer, 
+\ref stldoc_MultipleSortedAssociativeContainer
+
+
+*/

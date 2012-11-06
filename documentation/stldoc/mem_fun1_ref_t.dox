@@ -1,0 +1,287 @@
+/** \page stldoc_mem_fun1_ref_t mem_fun1_ref_t
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left">\image html adaptors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: functors, adaptors</td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Mem_fun1_ref_t</code> is an adaptor for member functions.  If <code>X</code> is some class
+with a member function <code>Result X::f(Arg)</code> (that is, a member function
+that takes one argument of type <code>Arg</code> and that returns a value of type
+<code>Result</code> <A href="#1">[1]</A>), then a <code>mem_fun1_ref_t&lt;Result, X, Arg&gt;</code> is a
+\ref stldoc_functors adaptor that makes it possible to call <code>f</code> as if
+it were an ordinary function instead of a member function.
+<p>
+<code>Mem_fun1_ref_t&lt;Result, X, Arg&gt;</code>'s constructor takes a pointer to one of
+<code>X</code>'s member functions.  Then, like all function objects, <code>mem_fun1_ref_t</code>
+has an <code>operator()</code> that allows the <code>mem_fun1_ref_t</code> to be invoked with
+ordinary function call syntax.  In this case, <code>mem_fun1_ref_t</code>'s
+<code>operator()</code> takes two arguments; the first is of type <code>X</code> and the
+second is of type <code>Arg</code>.
+<p>
+If <code>F</code> is a <code>mem_fun1_ref_t</code> that was constructed to use the member
+function <code>X::f</code>, and if <code>x</code> is an object of type <code>X</code> and <code>a</code> is a
+value of type <code>Arg</code>, then the expression <code>F(x, a)</code> is equivalent to
+the expression <code>x.f(a)</code>.  The difference is simply that <code>F</code> can be
+passed to STL algorithms whose arguments must be function objects.
+<p>
+<code>Mem_fun1_ref_t</code> is one of a family of member function adaptors.
+These adaptors are useful if you want to combine generic programming
+with inheritance and polymorphism, since, in C++, polymorphism
+involves calling member functions through pointers or references.  In
+fact, though, <code>mem_fun1_ref_t</code> is usually not as useful as
+<code>\ref stldoc_mem_fun1_t</code>.  The difference between the two is that
+<code>mem_fun1_t</code>'s first argument is a pointer to an object while
+<code>mem_fun1_ref_t</code>'s argument is a reference to an object.  References,
+unlike pointers, can't be stored in STL containers: pointers are
+objects in their own right, but references are merely aliases.
+<p>
+As with many other adaptors, it is usually inconvenient to use 
+<code>mem_fun1_ref_t</code>'s constructor directly.  It is usually better to use
+the helper function <code>mem_fun_ref</code> <A href="#2">[2]</A> instead.
+\section Example Example
+Given a vector of vectors, extract one element from each vector.
+\code
+int main() {
+  int A1[5] = {1, 2, 3, 4, 5};
+  int A2[5] = {1, 1, 2, 3, 5};
+  int A3[5] = {1, 4, 1, 5, 9};
+
+  Vector<vector<int> > V;
+  V.push_back(vector<int>(A1, A1 + 5));
+  V.push_back(vector<int>(A2, A2 + 5));
+  V.push_back(vector<int>(A3, A3 + 5));
+
+  int indices[3] = {0, 2, 4};
+
+  int& (vector<int>::*extract)(vector<int>::size_type);
+  extract = vector<int>::operator[];
+  transform(V.begin(), V.end(), indices,
+            ostream_iterator<int>(cout, "\n"),
+            mem_fun_ref(extract));
+}
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>Result</code>
+</td>
+<td valign="top">
+The member function's return type.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+The class whose member function the <code>mem_fun1_ref_t</code> invokes.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Arg</code>
+</td>
+<td valign="top">
+The member function's argument type.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_AdaptableBinaryFunction
+\section Type_requirements Type requirements
+<ul>
+<li>
+<code>X</code> has at least one member function that takes a single argument
+   of type <code>Arg</code> and that returns a value of type <code>Result</code>. <A href="#1">[1]</A>
+</ul>
+\section Public_base_classes Public base classes
+<code>\ref stldoc_binary_function&lt;X, Arg, Result&gt;</code>
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>first_argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of the first argument: <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>second_argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of the second argument: <code>Arg</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of the result: <code>Result</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+Result operator()(X& x, Arg a) const
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_BinaryFunction
+</td>
+<td valign="top">
+Function call operator.  Invokes <code>x.f(a)</code>, where <code>f</code> is
+   the member function that was passed to the constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+explicit mem_fun1_ref_t(Result (X::*f)(Arg))
+\endcode
+</td>
+<td valign="top">
+<code>mem_fun1_ref_t</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class Result, class X, class Arg>
+mem_fun1_ref_t<Result, X, Arg>
+mem_fun_ref(Result (X::*f)(Arg));
+\endcode
+<A href="#2">[2]</A>
+</td>
+<td valign="top">
+<code>mem_fun1_ref_t</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_AdaptableBinaryFunction
+requirements, but are specific to 
+<code>mem_fun1_ref_t</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+\code
+explicit mem_fun1_ref_t(Result (X::*f)(Arg))
+\endcode
+</td>
+<td valign="top">
+The constructor.  Creates a <code>mem_fun1_ref_t</code> that calls the member
+   function <code>f</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class Result, class X, class Arg>
+mem_fun1_ref_t<Result, X, Arg>
+mem_fun1_ref(Result (X::*f)(Arg));
+\endcode
+<A href="#2">[2]</A>
+</td>
+<td valign="top">
+If <code>f</code> is of type <code>Result (X::*)(Arg)</code> then <code>mem_fun_ref(f)</code> is the
+same as <code>mem_fun1_ref_t&lt;Result, X, Arg&gt;(f)</code>, but is more convenient.  This is a
+global function, not a member function.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+The type <code>Result</code> is permitted to be <code>void</code>.  That is, this
+adaptor may be used for functions that return no value.  However, this
+presents implementation difficulties.  According to the draft C++
+standard, it is possible to return from a <code>void</code> function by writing
+<code>return void</code> instead of just <code>return</code>.  At present, however (early
+1998), very few compilers support that feature.  As a substitute,
+then, <code>mem_fun1_ref_t</code> uses partial specialization to support <code>void</code> member
+functions.  If your compiler has not implemented partial
+specialization, then you will not be able to use <code>mem_fun1_ref_t</code> with
+member functions whose return type is <code>void</code>.
+<p><A name="2">[2]</A>
+This helper function was called <code>mem_fun1_ref</code> in drafts of the C++
+standard, but it is called <code>mem_fun_ref</code> in the final standard.  This
+implementation provides both versions for backward compatibility, but
+<code>mem_fun1_ref</code> will be removed in a future release.
+\section See_also See also
+<code>\ref stldoc_mem_fun_t</code>, <code>\ref stldoc_mem_fun_ref_t</code>, <code>\ref stldoc_mem_fun1_t</code>
+
+
+*/

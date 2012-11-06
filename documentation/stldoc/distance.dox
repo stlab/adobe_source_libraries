@@ -1,0 +1,105 @@
+/** \page stldoc_distance distance
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b> : algorithms, iterators</td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Distance</code> is an overloaded name; there are actually two <code>distance</code>
+functions.
+\code
+template <class InputIterator>
+inline iterator_traits<InputIterator>::difference_type
+distance(InputIterator first, InputIterator last);
+
+template <class InputIterator, class Distance>
+void distance(InputIterator first, InputIterator last, Distance& n);
+\endcode
+\section Description Description
+Finds the distance between <code>first</code> and <code>last</code>, <i>i.e.</i> the number of
+times that <code>first</code> must be incremented until it is equal to
+<code>last</code>.  <A href="#1">[1]</A> The first version of <code>distance</code>, which takes two arguments,
+simply returns that distance; the second version, which takes
+three arguments and which has a return type of <code>void</code>, increments
+<code>n</code> by that distance.
+<p>
+The second version of <code>distance</code> was the one defined in the original
+STL, and the first version is the one defined in the 
+draft C++ standard; the definition was changed because the
+older interface was clumsy and error-prone.  The older interface
+required the use of a temporary variable, and it has semantics
+that are somewhat nonintuitive: it increments <code>n</code> by the distance
+from <code>first</code> to <code>last</code>, rather than storing that distance in <code>n</code>. <A href="#2">[2]</A>
+<p>
+Both interfaces are currently supported <A href="#3">[3]</A>, for
+reasons of backward compatibility, but eventually the older
+version will be removed.
+\section Definition Definition
+Defined in the standard header <A href="iterator">iterator</A>, and in the
+nonstandard backward-compatibility header <A href="iterator.h">iterator.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+</ul>
+For the second version :
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>Distance</code> is an integral type that is able to represent a distance
+   between iterators of type <code>InputIterator</code>.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a <i>valid range</i>, as defined in the
+   \ref stldoc_InputIterator requirements.
+</ul>
+\section Complexity Complexity
+Constant time if <code>InputIterator</code> is a model of 
+\ref stldoc_RandomAccessIterator, otherwise linear time.
+\section Example Example
+\code
+int main() {
+  List<int> L;
+  L.push_back(0);
+  L.push_back(1);
+
+  assert(distance(L.begin(), L.end()) == L.size());
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+This is the reason that <code>distance</code> is not defined for
+\ref stldoc_OutputIterator : it is impossible to compare two \ref stldoc_OutputIterator
+for equality.
+<p><A name="2">[2]</A>
+Forgetting to initialize <code>n</code> to 0 is a common mistake.
+<p><A name="3">[3]</A>
+The new <code>distance</code> interface uses the <code>\ref stldoc_iterator_traits</code> class, which
+relies on a C++ feature known as <i>partial specialization</i>.  Many of
+today's compilers don't implement the complete standard; in
+particular, many compilers do not support partial specialization.  If
+your compiler does not support partial specialization, then you will
+not be able to use the newer version of <code>distance</code>, or any other STL
+components that involve <code>\ref stldoc_iterator_traits</code>.
+\section See_also See also
+<code>\ref stldoc_distance_type</code>, <code>\ref stldoc_advance</code>, 
+\ref stldoc_InputIterator, \ref stldoc_RandomAccessIterator, \ref stldoc_iterator_tags,
+<code>\ref stldoc_iterator_traits</code>, \ref stldoc_Iterators.
+
+
+*/

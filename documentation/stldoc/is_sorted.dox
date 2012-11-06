@@ -1,0 +1,95 @@
+/** \page stldoc_is_sorted is_sorted
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Is_sorted</code> is an overloaded name; there are actually two <code>is_sorted</code>
+functions.
+\code
+template <class ForwardIterator>
+bool is_sorted(ForwardIterator first, ForwardIterator last)
+
+template <class ForwardIterator, class StrictWeakOrdering>
+bool is_sorted(ForwardIterator first, ForwardIterator last,
+               StrictWeakOrdering comp)
+\endcode
+\section Description Description
+<code>Is_sorted</code> returns <code>true</code> if the range <code>[first, last)</code> is sorted
+in ascending order, and <code>false</code> otherwise.
+<p>
+The two versions of <code>is_sorted</code> differ in how they define whether one
+element is less than another.  The first version compares
+objects using <code>operator&lt;</code>, and the second compares objects using the
+\ref stldoc_functors <code>comp</code>.  The
+first version of <code>is_sorted</code> returns <code>true</code> if and only if, for every
+iterator <code>i</code> in the range <code>[first, last - 1)</code>, <code>*(i + 1) &lt; *i</code> is
+<code>false</code>.  The second version returns <code>true</code> if and only if,
+for every iterator <code>i</code> in the range <code>[first, last - 1)</code>, <code>comp(*(i + 1),
+*i)</code> is <code>false</code>
+\section Definition Definition
+Defined in <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator</code>'s value type is a model of \ref stldoc_LessThanComparable.
+<li>
+The ordering on objects of <code>ForwardIterator</code>'s value type is a <i>strict
+   weak ordering</i>, as defined in the \ref stldoc_LessThanComparable requirements.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>ForwardIterator</code>'s value type is convertible to
+   <code>StrictWeakOrdering</code>'s argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Zero comparisons if <code>[first, last)</code> is an empty range,
+otherwise at most <code>(last - first) - 1</code> comparisons.
+\section Example Example
+\code
+int A[] = {1, 4, 2, 8, 5, 7};
+const int N = sizeof(A) / sizeof(int);
+
+assert(!is_sorted(A, A + N));
+sort(A, A + N);
+assert(is_sorted(A, A + N));
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_sort</code>,
+<code>\ref stldoc_stable_sort</code>,
+<code>\ref stldoc_partial_sort</code>,
+<code>\ref stldoc_partial_sort_copy</code>,
+<code>\ref stldoc_sort_heap</code>,
+<code>\ref stldoc_binary_search</code>,
+<code>\ref stldoc_lower_bound</code>,
+<code>\ref stldoc_upper_bound</code>,
+<code>\ref stldoc_less&lt;T&gt;</code>,
+\ref stldoc_StrictWeakOrdering,
+\ref stldoc_LessThanComparable
+
+
+*/

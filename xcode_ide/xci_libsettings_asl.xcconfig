@@ -1,0 +1,5 @@
+// Settings that are useful when building with the Adobe Source Libraries
+
+ASL_HEADER_SEARCH_PATHS = ../../adobe_source_libraries/
+ASL_GCC_PREPROCESSOR_DEFINITIONS = ADOBE_SERIALIZATION=1 ADOBE_STD_SERIALIZATION=1
+ASL_LIBRARY_SEARCH_PATHS = ./build/$(CONFIGURATION)/

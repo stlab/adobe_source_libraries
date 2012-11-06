@@ -1,0 +1,260 @@
+/** \page stldoc_FAQ FAQ
+
+<H1>Frequently Asked Questions</H1>
+<H2>about the SGI Standard Template Library</H2>
+
+<hr>
+
+<p><b>Is the STL Y2K compliant?</b>
+<br>
+Yes.  The STL does not store or manipulate dates in any way, so there
+are no year 2000 issues.  
+
+<p><b>Which compilers are supported?</b>
+<br>
+The STL has been tested on these compilers: SGI 7.1 and later, or 7.0
+with the -n32 or -64 flag;  gcc 2.8 or egcs 1.x; Microsoft 5.0 and
+later.  (But see below.)  Boris Fomitchev distributes a
+<A Href="http://www.metabyte.com/~fbp/stl/index.html">port</A> for
+some other compilers.
+<p>
+If you succeed in using the SGI STL with some other compiler, please
+<A href="mailto:stl@sgi.com">let us know</A>, and please tell us what
+modifications (if any) you had to make.  We expect that most of the
+changes will be restricted to the <code>&lt;stl_config.h&gt;</code> header.
+
+<p><b>What about older SGI compilers?</b>
+<br>
+
+Given the rate of improvement in C++ implementations, SGI strongly
+recommends that you upgrade your compiler.  If this is not possible,
+you might try the version of the STL for older Borland and Microsoft
+compilers (see the <b>Download the STL</b> page), or Boris Fomitchev's
+<A Href="http://www.metabyte.com/~fbp/stl/index.html">port</A>.  Neither
+of these is supported.
+
+<p><b>How do I install the SGI STL?</b>
+<br>
+You should unpack the STL include files in a new directory, and then
+use the <code>-I</code> (or <code>/I</code>) option to direct the compiler to
+look there first.  We don't recommend overwriting the vendor's include
+files.
+<p>
+At present the SGI STL consists entirely of header files.  You don't have
+to build or link in any additional runtime libraries.
+
+<p><b>Are there any compatibility issues with Visual C++?</b>
+<br>
+Visual C++ provides its own STL implementation, and some of the other
+Microsoft C++ library headers may rely on that implementation.  In
+particular, the SGI STL has not been tested in combination with
+Microsoft's new <code>&lt;iostream&gt;</code> header.  It has been used
+successfully with the older <code>&lt;iostream.h&gt;</code> header.
+
+<p><b>Is the SGI STL thread safe?</b>
+<br>
+Yes.  However, you should be aware that not everyone uses the
+phrase &quot;thread safe&quot; the same way.  See our 
+\ref stldoc_thread_safety
+for our design goals.
+
+<p><B>Are hash tables part of the C++ standard?</b>
+<br>
+No.  The hash table classes (<code>\ref stldoc_hash_set</code>, <code>\ref stldoc_hash_map</code>
+<code>\ref stldoc_hash_multiset</code> <code>\ref stldoc_hash_multimap</code> <code>\ref stldoc_hash</code>)
+are an extension.  They may be added to a future revision of the C++
+standard.
+<p>
+The <code>\ref stldoc_Rope</code> and <code>\ref stldoc_Slist</code> classes are also extensions.
+
+<p><B>Why is <code>list&lt;&gt;::size()</code> linear time?</b>
+<br>
+The <code>size()</code> member function, for <code>\ref stldoc_List</code> and
+<code>\ref stldoc_Slist</code>, takes time proportional to the number of elements
+in the list.  This was a deliberate tradeoff.  The only way to get a
+constant-time <code>size()</code> for linked lists would be to maintain an
+extra member variable containing the list's size.  This would require
+taking extra time to update that variable (it would make
+<code>splice()</code> a linear time operation, for example), and it would
+also make the list larger.  Many list algorithms don't require that
+extra word (algorithms that do require it might do better with vectors
+than with lists), and, when it is necessary to maintain an explicit
+size count, it's something that users can do themselves.
+<p>
+This choice is permitted by the C++ standard.  The standard says that
+<code>size()</code> &quot;should&quot; be constant time, and 
+&quot;should&quot; does not mean the same thing as &quot;shall&quot;.
+This is the officially recommended ISO wording for saying that an
+implementation is supposed to do something unless there is a good
+reason not to.
+<p>
+One implication of linear time <code>size()</code>: you should never write
+\code
+  if (L.size() == 0)
+    ...
+\endcode
+Instead, you should write
+\code
+  if (L.empty())
+    ...
+\endcode
+
+<p><B>Why doesn't <code>map</code>'s operator&lt; use the <code>map</code>'s
+   comparison function?</b>
+<br>
+A <code>map</code> has a notion of comparison, since one of its template 
+parameters is a comparison function.  However, <code>operator&lt;</code>
+for maps uses the elements' <code>operator&lt;</code> rather than that
+comparison function.  This appears odd, but it is deliberate and we
+believe that it is correct.
+<p>
+At the most trivial level, this isn't a bug in our implementation
+because it's what's mandated by the C++ standard.  (The behavior of
+<code>operator&lt;</code> is described in Table 65, in section 23.1.)
+<p>
+A more interesting question: is the requirement in the standard correct,
+or is there actually a bug in the standard?
+<p>
+We believe that the requirements in the standard are correct.
+<p>
+First, there's a consistency argument: <code>operator&lt;</code> for a
+<code>\ref stldoc_Vector</code> (or <code>\ref stldoc_Deque</code>, or <code>\ref stldoc_List</code>) uses
+the element's <code>operator&lt;</code>.  Should <code>\ref stldoc_Map</code>'s
+<code>operator&lt;</code> do something else, just because there is another
+plausible way to compare objects?  It's reasonable to say, for all
+containers, that <code>operator&lt;</code> always means
+<code>operator&lt;</code>, and that if you need a different kind of
+comparison you can explicitly use <code>\ref stldoc_lexicographical_compare</code>.
+<p>
+Second, if we did use the <code>\ref stldoc_Map</code>'s comparison function,
+there would be a problem: which one do we use?  There are two
+<code>map</code> arguments, and, while we know that their comparison
+functions have the same type, we don't know that they have the same
+behavior.  The comparison function, after all, is a function object,
+and it might have internal state that affects the comparison.  (You
+might have a function object to compare strings, for example, with a
+boolean flag that determines whether the comparison is
+case-sensitive.)
+<p>
+There's also a related question, incidentally: how should
+<code>operator==</code> behave for sets?  A <code>set</code>'s comparison
+function induces an equivalence relation, so, just as you can use the
+<code>set</code>'s comparison function for lexicographical ordering, you
+could also use it for a version of equality.  Again, though, we define
+<code>operator==(const set&amp;, const set&amp;)</code> so that it just
+calls the elements' <code>operator==</code>.
+
+<p><b>Why does a <code>vector</code> expand its storage by a factor of two
+   when it performs a reallocation?</b>
+<br>
+Expanding a <code>\ref stldoc_Vector</code> by a factor of two is a time-space tradeoff;
+it means that each element will (on average) be copied twice
+when you're building a <code>\ref stldoc_Vector</code> one element at a time, and that
+the ratio of wasted to used space is at most 1.  (In general,
+if the exponent for expansion is r, the worst case wasted/used ratio is
+r - 1 and the number of times an element is copied approaches
+r/(r - 1).  If r = 1.25, for example, then elements are copied
+five times instead of twice.)
+<p> 
+If you need to control <code>\ref stldoc_Vector</code>'s memory usage more finely,
+you can use the member functions <code>capacity()</code> and
+<code>reserve()</code> instead of relying on automatic reallocation.
+
+<p><b>Why do the <i>pop</i> member functions return <code>void</code>?</b>
+<br>
+All of the STL's <i>pop</i> member functions (<code>pop_back</code> in
+<code>\ref stldoc_Vector</code>, <code>\ref stldoc_List</code>, and <code>\ref stldoc_Deque</code>; 
+<code>pop_front</code> in <code>\ref stldoc_List</code>, <code>\ref stldoc_Slist</code>, and
+<code>\ref stldoc_Deque</code>; <code>pop</code> in <code>\ref stldoc_stack</code>, 
+<code>\ref stldoc_queue</code>, and <code>\ref stldoc_priority_queue</code>) return <code>void</code>,
+rather than returning the element that was removed.  This is for the
+sake of efficiency.
+<p>
+If the <code>pop</code> member functions were to return the element
+that was removed then they would have to return it by value rather
+than by reference.  (The element is being removed, so there wouldn't
+be anything for a reference to point to.)  Return by value, however,
+would be inefficient; it would involve at least one unnecessary copy
+constructor invocation.  The <code>pop</code> member functions return 
+nothing because it is impossible for them to return a value in a way
+that is both correct and efficient.
+<p>
+If you need to retrieve the value and then remove it, you can perform
+the two operations explicitly.  For example:
+\code
+  std::stack<T> s;
+  ...
+  T old_value = s.top();  
+  s.pop();
+\endcode
+
+<p><b>How do I sort a range in descending order instead of ascending?</b>
+\code
+sort(first, last, greater<T>());
+\endcode
+(Note that it must be <code>greater</code>, not <code>greater_eq</code>.  The
+comparison function <code>f</code> must be one such that <code>f(x, x)</code>
+is <code>false</code> for every <code>x</code>.)
+
+<p><b>Why am I getting uninitialized memory reads from Purify<SUP>TM</SUP>?</b>
+<br>
+We believe that the uninitialized memory read (UMR) messages in STL
+data structures are artifacts and can be ignored.
+<p>
+There are a number of reasons the compiler might generate reads from
+uninitialized memory (<i>e.g.</i> structure padding, inheritance from
+empty base classes, which still have nonzero size).  Purify tries to
+deal with this by distinguishing between uninitialized memory reads
+(UMR) and uninitialized memory copies (UMC).  The latter are not
+displayed by default.
+
+The distinction between the two isn't completely clear, but appears to
+be somewhat heuristic.  The validity of the heuristic seems to depend
+on compiler optimizations, etc.  As a result, some perfectly
+legitimate code generates UMR messages.  It's unfortunately often hard
+to tell whether a UMR message represents a genuine problem or just an
+artifact.
+
+<p><b>Why does Bounds Checker<SUP>TM</SUP> say that I have memory leaks?</b>
+<br>
+This is not an STL bug.  It is an artifact of certain kinds of leak detectors.
+<p>
+In the default STL allocator, memory allocated for blocks of small
+objects is not returned to <code>malloc</code>. It can only be reused by
+subsequent <code>allocate</code> requests of (approximately) the same
+size. Thus programs that use the default may appear to leak memory
+when monitored by certain kinds of simple leak detectors. This is
+intentional. Such &quot;leaks&quot; do not accumulate over time. Such
+&quot;leaks&quot; are not reported by garbage-collector-like leak
+detectors.
+<p>
+The primary design criterion for the default STL allocator was to make
+it no slower than the HP STL per-class allocators, but potentially
+thread-safe, and significantly less prone to fragmentation. Like the
+HP allocators, it does not maintain the necessary data structures to
+free entire chunks of small objects when none of the contained small
+objects are in use. This is an intentional choice of execution time
+over space use. It may not be appropriate for all programs. On many
+systems <code>malloc_alloc</code> may be more space efficient, and can be
+used when that is crucial.
+<p>
+The HP allocator design returned entire memory pools when the entire
+allocator was no longer needed. To allow this, it maintains a count of
+containers using a particular allocator. With the SGI design, this
+would only happen when the last container disappears, which is
+typically just before program exit. In most environments, this would
+be highly counterproductive; <code>free</code> would typically have to
+touch many long unreferenced pages just before the operating system
+reclaims them anyway. It would often introduce a significant delay on
+program exit, and would possibly page out large portions of other
+applications. There is nothing to be gained by this action, since the
+OS reclaims memory on program exit anyway, and it should do so
+without touching that memory.
+<p>
+In general, we recommend that leak detection tests be run with
+<code>malloc_alloc</code>. This yields more precise results with GC-based
+detectors (<i>e.g.</i> Pure Atria's Purify<SUP>TM</SUP>), 
+and it provides useful results even with detectors that simply count
+allocations and deallocations.
+
+*/

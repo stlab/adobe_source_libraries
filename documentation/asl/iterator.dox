@@ -1,0 +1,70 @@
+/*!
+\defgroup adobe_iterator Iterator Utilities
+\ingroup asl_libraries
+*/
+
+/*!
+\class adobe::any_iterator iterator.hpp <adobe/iterator.hpp>
+\ingroup adobe_iterator
+
+\brief An iterator wrapping another iterator of the same element type; a "polymorphic" iterator.
+
+\par Model Of:
+    - \ref concept_regular_type
+    - Iterator concept specified by C
+
+\par Types:
+    - T: Value type of the sequence's elements; models \ref concept_regular_type
+    - C: Iterator category
+    - R: Return type of operator*(); models Reference Type of T
+    - D: Difference type between iterators; models Signed Integer
+    
+The adobe::any_iterator template is an experiment in concept based polymorphism. We would expect that in most cases it would be more efficient to copy a sequence into a connonical form, perform the operation, and then copy it back. However, there may be uses cases where the copy is not desired or would be less efficient (such as lower bounds on a random access sequence). Constructing an any_iterator does require a free store allocation and could throw an exception.
+
+\todo (sparent) A future extension would be to include a tuple of "known types" into the interface which would be stored in a variant and eliminate the need for the heap allocation except for unknown types.
+
+\section Example Example
+
+This example illustrates how an any_iterator can be used to deal with runtime polymorphic sequences. We have a single concrete function, reverse_and_print(), which can be used with a list, vector, deque, or any other bidirectional sequence.
+
+\dontinclude any_iterator_example.cpp
+\skip start_of_example
+\until end_of_example
+*/
+
+/*!
+\fn adobe::any_iterator::any_iterator(I x)
+
+Constructs any_iterator wrapping a copy of \c x.
+I models an iterator matching <T, C, R, D>.
+*/
+
+/*!
+\class adobe::index_iterator iterator.hpp <adobe/iterator.hpp>
+\ingroup adobe_iterator
+
+\brief An iterator over elements which are the result of applying a function to an index.
+
+\par Model Of:
+    - \ref concept_regular_type
+    - Random Access Iterator
+
+\par Types:
+    - F: Models Unary Function
+    - T: Value type of the sequence's elements; models \ref concept_regular_type
+    - R: Return type of operator*(); models Reference Type of T
+    - I: Index type; models Unsigned Integer
+    - D: Difference type of I; models Signed Integer
+*/
+
+/*!
+\fn adobe::index_iterator::index_iterator(F f, I i)
+
+Constructs index_iterator with unary function \c f and index \c i.
+*/
+
+/*!
+\fn adobe::index_iterator::base() const
+
+Returns iterator's index.
+*/

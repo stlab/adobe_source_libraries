@@ -1,0 +1,4 @@
+// Settings that are useful when building with Intel TBB
+
+INTEL_TBB_GCC_PREPROCESSOR_DEFINITIONS = __TBB_NO_IMPLICIT_LINKAGE=1
+INTEL_TBB_HEADER_SEARCH_PATHS = ../../intel_tbb_libraries/include/

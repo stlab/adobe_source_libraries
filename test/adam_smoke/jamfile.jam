@@ -1,0 +1,9 @@
+# Jamfile for building the Adam smoke test app
+
+project adobe/adam_smoke ;
+
+run adam_smoke_test.cpp  ../../source/iomanip_asl_cel.cpp
+    : "./rtd" # args
+    : #files
+    : #requirements
+  ;

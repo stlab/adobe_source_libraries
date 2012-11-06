@@ -1,0 +1,120 @@
+/** \page stldoc_next_permutation next_permutation
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Next_permutation</code> is an overloaded name; there are actually two <code>next_permutation</code>
+functions.
+\code
+template <class BidirectionalIterator>
+bool next_permutation(BidirectionalIterator first,
+                      BidirectionalIterator last);
+
+template <class BidirectionalIterator, class StrictWeakOrdering>
+bool next_permutation(BidirectionalIterator first, BidirectionalIterator last,
+                      StrictWeakOrdering comp);
+\endcode
+\section Description Description
+<code>Next_permutation</code> transforms the range of elements <code>[first, last)</code>
+into the lexicographically next greater permutation of the elements.
+There is a finite number of distinct permutations (at most
+<code>N!</code> <A href="#1">[1]</A>, where <code>N</code> is <code>last - first</code>), so, if the permutations are
+ordered by <code>\ref stldoc_lexicographical_compare</code>, there is an unambiguous
+definition of which permutation is lexicographically next.  If such
+a permutation exists, <code>next_permutation</code> transforms <code>[first, last)</code>
+into that permutation and returns <code>true</code>.  Otherwise it transforms
+<code>[first, last)</code> into the lexicographically smallest permutation <A href="#2">[2]</A>
+and returns <code>false</code>.  
+<p>
+The postcondition is that the new permutation of elements is
+lexicographically greater than the old (as determined by
+<code>\ref stldoc_lexicographical_compare</code>) if and only if the return value is
+<code>true</code>.
+<p>
+The two versions of <code>next_permutation</code> differ in how they define
+whether one element is less than another.  The first version 
+compares objects using <code>operator&lt;</code>, and the second compares objects
+using a \ref stldoc_functors <code>comp</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version, the one that takes two arguments:
+<ul>
+<li>
+<code>BidirectionalIterator</code> is a model of \ref stldoc_BidirectionalIterator.
+<li>
+<code>BidirectionalIterator</code> is mutable.
+<li>
+<code>BidirectionalIterator</code>'s value type is \ref stldoc_LessThanComparable.
+<li>
+The ordering relation on <code>BidirectionalIterator</code>'s value type is
+   a <i>strict weak ordering</i>, as defined in the \ref stldoc_LessThanComparable
+   requirements.
+</ul>
+For the second version, the one that takes three arguments:
+<ul>
+<li>
+<code>BidirectionalIterator</code> is a model of \ref stldoc_BidirectionalIterator.
+<li>
+<code>BidirectionalIterator</code> is mutable.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>BidirectionalIterator</code>'s value type is convertible to
+   <code>StrictWeakOrdering</code>'s argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  At most <code>(last - first) / 2</code> swaps.
+\section Example Example
+This example uses <code>next_permutation</code> to implement the worst known
+deterministic sorting algorithm.  Most sorting algorithms are 
+<code>O(N log(N))</code>, and even bubble sort is only 
+<code>O(N^2)</code>.  This algorithm is actually <code>O(N!)</code>.
+\code
+template <class BidirectionalIterator> 
+void snail_sort(BidirectionalIterator first, BidirectionalIterator last)
+{
+  while (next_permutation(first, last)) {}
+}
+
+int main()
+{
+  int A[] = {8, 3, 6, 1, 2, 5, 7, 4};
+  const int N = sizeof(A) / sizeof(int);
+
+  snail_sort(A, A+N);
+  copy(A, A+N, ostream_iterator<int>(cout, "\n"));
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+If all of the elements in <code>[first, last)</code> are distinct from each
+other, then there are exactly <code>N!</code> permutations.  If some elements are
+the same as each other, though, then there are fewer.  There are, for
+example, only three (<code>3!/2!</code>) permutations of the elements <code>1 1 2</code>.
+<p><A name="2">[2]</A>
+Note that the lexicographically smallest permutation is, by
+definition, sorted in nondecreasing order.
+\section See_also See also
+<code>\ref stldoc_prev_permutation</code>, <code>\ref stldoc_lexicographical_compare</code>, 
+\ref stldoc_LessThanComparable, \ref stldoc_StrictWeakOrdering, <code>\ref stldoc_sort</code>
+
+
+*/

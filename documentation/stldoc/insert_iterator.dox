@@ -1,0 +1,332 @@
+/** \page stldoc_insert_iterator insert_iterator
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left">\image html adaptors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b> : iterators, adaptors</td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Insert_iterator</code> is an iterator adaptor that functions as an
+\ref stldoc_OutputIterator : assignment through an <code>insert_iterator</code> inserts
+an object into a \ref stldoc_Container.  Specifically, if <code>ii</code> is an
+<code>insert_iterator</code>, then <code>ii</code> keeps track of a \ref stldoc_Container <code>c</code>
+and an insertion point <code>p</code>; the expression <code>*ii = x</code> performs
+the insertion <code>c.insert(p, x)</code>.  <A href="#1">[1]</A>
+<p>
+There are two different \ref stldoc_Container concepts that define this
+expression : \ref stldoc_Sequence, and \ref stldoc_SortedAssociativeContainer.
+Both concepts define insertion into a container by means of
+<code>c.insert(p, x)</code>, but the semantics of this expression is very 
+different in the two cases.
+<p>
+For a \ref stldoc_Sequence <code>S</code>, the expression <code>S.insert(p, x)</code> means to
+insert the value <code>x</code> <i>immediately before</i> the iterator <code>p</code>.  That
+is, the two-argument version of <code>insert</code> allows you to control the
+location at which the new element will be inserted.  For a
+\ref stldoc_SortedAssociativeContainer, however, no such control is
+possible : the elements in a \ref stldoc_SortedAssociativeContainer always
+appear in ascending order of keys.  \ref stldoc_SortedAssociativeContainer
+define the two-argument version of <code>insert</code> as an optimization.  The
+first argument is only a hint : it points to the location where the 
+search will begin.
+<p>
+If you assign through an <code>insert_iterator</code> several times, then you
+will be inserting several elements into the underlying container.  In
+the case of a \ref stldoc_Sequence, they will appear at a particular location
+in the underlying sequence, in the order in which they were inserted :
+one of the arguments to <code>insert_iterator</code>'s constructor is an iterator
+<code>p</code>, and the new range will be inserted immediately before <code>p</code>.
+<p>
+In the case of a \ref stldoc_SortedAssociativeContainer, however, the
+iterator in the <code>insert_iterator</code>'s constructor is almost irrelevant.
+The new elements will not necessarily form a contiguous range; they
+will appear in the appropriate location in the container, in ascending
+order by key.  The order in which they are inserted only affects 
+efficiency : inserting an already-sorted range into a
+\ref stldoc_SortedAssociativeContainer is an <i>O(N</i>) operation.
+\section Example Example
+Insert a range of elements into a <code>\ref stldoc_List</code>.
+\code
+List<int> L;
+L.push_front(3);
+insert_iterator<List<int> > ii(L, L.begin());
+*ii++ = 0;
+*ii++ = 1;
+*ii++ = 2;
+copy(L.begin(), L.end(), ostream_iterator<int>(cout, " "));
+// The values that are printed are 0 1 2 3.
+\endcode
+Merge two sorted lists, inserting the resulting range into a 
+<code>\ref stldoc_set</code>.  Note that a <code>\ref stldoc_set</code> never contains duplicate
+elements.
+\code
+int main() 
+{
+  const int N = 6;
+
+  int A1[N] = {1, 3, 5, 7, 9, 11};
+  int A2[N] = {1, 2, 3, 4, 5, 6};
+  set<int> result;
+
+  merge(A1, A1 + N, A2, A2 + N, 
+        inserter(result, result.begin()));
+ 
+  copy(result.begin(), result.end(), ostream_iterator<int>(cout, " "));
+  cout << endl;
+
+  // The output is "1 2 3 4 5 6 7 9 11".
+}
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="iterator">iterator</A>, and in the nonstandard
+backward-compatibility header <A href="iterator.h">iterator.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>Container</code>
+</td>
+<td valign="top">
+The type of Container into which values will be inserted.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_OutputIterator.  An insert iterator's set of value types (as
+defined in the \ref stldoc_OutputIterator requirements) consists of
+a single type : <code>Container::value_type</code>.
+\section Type_requirements Type requirements
+<ul>
+<li>
+The template parameter <code>Container</code> is a model of \ref stldoc_Container.
+<li>
+<code>Container</code> is variable-sized, as described in the
+   \ref stldoc_Container requirements.
+<li>
+<code>Container</code> has a two-argument <code>insert</code> member function.
+   Specifically, if <code>c</code> is an object of type <code>Container</code>, 
+   <code>p</code> is an object of type <code>Container ::iterator</code> and <code>v</code> is an
+   object of type <code>Container::value_type</code>, then <code>c.insert(p, v)</code> 
+   must be a valid expression.
+</ul>
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>insert_iterator(Container&amp;, Container::iterator)</code>
+</td>
+<td valign="top">
+<code>insert_iterator</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>insert_iterator(const insert_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_trivial
+</td>
+<td valign="top">
+The copy constructor
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>insert_iterator&amp; operator=(const insert_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_trivial
+</td>
+<td valign="top">
+The assignment operator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>insert_iterator&amp; operator*()</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Used to implement the \ref stldoc_OutputIterator expression <code>*i = x</code>. <A href="#2">[2]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>insert_iterator&amp; operator=(const Container ::value_type&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Used to implement the \ref stldoc_OutputIterator expression <code>*i = x</code>. <A href="#2">[2]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>insert_iterator&amp; operator++()</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Preincrement.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>insert_iterator&amp; operator++(int)</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Postincrement.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>output_iterator_tag iterator_category(const insert_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_iterator_tags
+</td>
+<td valign="top">
+Returns the iterator's category.
+   This is a global function, not a member.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template<class Container, class Iter)
+insert_iterator<Container>
+inserter(Container& C, Iter i);
+\endcode
+</td>
+<td valign="top">
+<code>insert_iterator</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined 
+in the \ref stldoc_OutputIterator requirements,
+but are specific to <code>insert_iterator</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>insert_iterator(Container&amp; C, Container ::iterator i)</code>
+</td>
+<td valign="top">
+Constructs an <code>insert_iterator</code> that inserts objects in <code>C</code>.
+   If <code>Container</code> is a \ref stldoc_Sequence, then each object will be 
+   inserted immediately  before the element pointed to by <code>i</code>.  
+   If <code>C</code> is a \ref stldoc_SortedAssociativeContainer, then the first
+   insertion will use <code>i</code> as a hint for beginning the search.
+   The iterator <code>i</code> must be a dereferenceable or past-the-end
+   iterator in <code>C</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template<class Container, class Iter)
+insert_iterator<Container>
+inserter(Container& C, Iter i);
+\endcode
+</td>
+<td valign="top">
+Equivalent to <code>insert_iterator&lt;Container&gt;(C, i)</code>.  <A href="#2">[2]</A>
+   This is a global function, not a member function.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note the difference between assignment through a
+<code>Container ::iterator</code> and assignment through an
+<code>insert_iterator&lt;\ref stldoc_Container&gt;</code>.  If <code>i</code> is a valid
+<code>Sequence ::iterator</code>, then it points to some particular
+element in the \ref stldoc_Container; the expression <code>*i = t</code> 
+replaces that element with <code>t</code>, and does not change the total number
+of elements in the \ref stldoc_Container.  If <code>ii</code> is a valid
+<code>insert_iterator&lt;\ref stldoc_Container&gt;</code>, however, then 
+the expression <code>*ii = t</code> is equivalent, for some <code>\ref stldoc_Container</code>
+<code>c</code> and some valid <code>Container ::iterator j</code>, to the 
+expression <code>c.insert(j, t)</code>.  That is, it does not overwrite
+any of <code>c</code>'s elements and it does change <code>c</code>'s size.
+<p><A name="2">[2]</A>
+Note how assignment through an <code>insert_iterator</code> is implemented.
+In general, unary <code>operator*</code> must be defined so that it returns a
+proxy object, where the proxy object defines <code>operator=</code> to perform
+the insert operation.  In this case, for the sake of simplicity, the
+proxy object is the <code>insert_iterator</code> itself.  That is, <code>*i</code> simply
+returns <code>i</code>, and <code>*i = t</code> is equivalent to <code>i = t</code>.  You should not,
+however, rely on this behavior.  It is an implementation detail,
+and it is not guaranteed to remain the same in future versions.
+<p><A name="3">[3]</A>
+This function exists solely for the sake of convenience:
+since it is a non-member function, the template parameters may be
+inferred and the type of the <code>insert_iterator</code> need not be declared
+explicitly.  One easy way to reverse a range and insert it
+into a \ref stldoc_Sequence <code>S</code>, for example, is
+<code>\ref stldoc_reverse_copy(first, last, inserter(S, S.begin()))</code>.
+\section See_also See also
+\ref stldoc_front_insert_iterator, \ref stldoc_back_insert_iterator, \ref stldoc_OutputIterator,
+\ref stldoc_Sequence, \ref stldoc_Iterators
+
+
+*/

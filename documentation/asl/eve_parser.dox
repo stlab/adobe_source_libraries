@@ -1,0 +1,67 @@
+/*
+    Copyright 2005-2007 Adobe Systems Incorporated
+    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
+    or a copy at http://stlab.adobe.com/licenses.html)
+*/
+
+/*************************************************************************************************/
+
+/*!
+\defgroup eveparser Layout Library Parser
+\ingroup layout_library
+
+\struct adobe::eve_callback_suite_t eve_parser.hpp <adobe/eve_parser.hpp>
+\ingroup eveparser
+
+The eve_callback_suit_t specifies the client interface to the layout parser. Two callbacks are provided, one cells (typically added to an adobe::basic_sheet_t) and one for view elements.
+
+*/
+
+/*************************************************************************************************/
+
+/*!
+\typedef adobe::eve_callback_suite_t::position_t
+
+The position_t can hold only copyable type. It is passed as a parameter and returned from the add_view_proc_t to allow the client access to the parent of the node being created.
+
+*/
+
+/*************************************************************************************************/
+
+/*!
+\typedef adobe::eve_callback_suite_t::add_view_proc_t
+
+Client-defined callback function used by the layout library parser to communicate with the client code. The layout library parser will discover view class declarations and will notify this callback of those declarations.
+
+\param parent The parent view's position_t of the view currently being created.
+\param parse_location The line position of the view currently being created.
+\param name The name of the view currently being created.
+\param parameters An expression which will evaluate to a dictionary_t containing the view attributes.
+\param brief The contents of the trailing comment (if any) after this view class declaration
+\param detailed The contents of the lead comment (if any) before this view class declaration
+
+\return
+    The client callback should return an adobe::eve::position_t, which is a user-defined type that will be propagated to any immediate children of this view class declaration (if any).
+
+*/
+
+/*************************************************************************************************/
+
+/*!
+
+\fn adobe::line_position_t adobe::parse(std::istream& in, const line_position_t& line_position, const eve_callback_suite_t::position_t& position, const eve_callback_suite_t& assembler)
+\ingroup eveparser
+
+The layout library parsing function.
+
+\param in               The input stream to be parsed.
+\param line_position    The starting line position.
+\param position         The initial client-specific data to be used for the root view declaration(s).
+\param assembler        The client-defined callback functions to be called whenever a new cell declaration or view definition is encountered.
+
+\exception adobe::stream_error_t Thrown upon parsing failure. See documentation on adobe::stream_error_t for more information about this type.
+
+\return
+    Stream position information regarding where the parse finished.
+    
+*/

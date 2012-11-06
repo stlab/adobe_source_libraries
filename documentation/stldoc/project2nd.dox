@@ -1,0 +1,149 @@
+/** \page stldoc_project2nd project2nd
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Project2nd</code> is a \ref stldoc_functors that takes two arguments and
+returns its second argument; the first argument is unused.
+It is essentially a generalization of
+<code>\ref stldoc_identity</code> to the case of a \ref stldoc_BinaryFunction.
+\section Example Example
+\code
+int main()
+{
+  Vector<char*> v1(10, (char*) 0);
+  Vector<int> v2(10, 137);
+  Vector<int> result(10);
+
+  transform(v1.begin(), v1.end(), v2.begin(), result.begin(),
+            project2nd<char*, int>());
+  assert(equal(v2.begin(), v2.end(), result.begin()));
+}           
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+This function object is an SGI extension; it is not part of the C++
+standard.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>Arg1</code>
+</td>
+<td valign="top">
+<code>project2nd</code>'s first argument type.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Arg2</code>
+</td>
+<td valign="top">
+<code>project2nd</code>'s second argument type, and its result type.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_AdaptableBinaryFunction
+\section Type_requirements Type requirements
+None.
+\section Public_base_classes Public base classes
+\ref stldoc_binary_function&lt;Arg1, Arg2, Arg2&gt;
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>first_argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of <code>project2nd</code>'s first argument: <code>Arg1</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>second_argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of <code>project2nd</code>'s second argument: <code>Arg2</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of the result: <code>Arg2</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Arg1 operator()(const Arg1&amp;, const Arg2&amp; y) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+Function call.  The return value is <code>y</code>.
+</td>
+</tr>
+</table>
+\section New_members New members
+All of <code>project2nd</code>'s members are defined in the 
+\ref stldoc_AdaptableBinaryFunction
+requirements.  <code>project2nd</code> does not introduce any new members.
+\section Notes Notes
+\section See_also See also
+\ref stldoc_functors, <code>\ref stldoc_identity</code>, <code>\ref stldoc_project1st</code>, 
+<code>\ref stldoc_select1st</code>, <code>\ref stldoc_select2nd</code>
+
+
+*/

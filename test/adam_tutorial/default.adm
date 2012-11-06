@@ -1,0 +1,14 @@
+sheet distance_calculator
+{
+interface:
+    distance    : 15;
+    rate        : 3;
+    time        : 5;
+
+logic:
+    relate {
+        rate <== distance / time;
+        time <== distance / rate;
+        distance <== rate * time;
+    }
+}

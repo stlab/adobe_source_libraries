@@ -1,0 +1,115 @@
+/*************************************************************************************************/
+
+/*
+
+    ADOBE CONFIDENTIAL
+    ___________________
+
+    Copyright 2003 - 2003 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: All information contained herein is, and remains the property of
+    Adobe Systems Incorporated and its suppliers, if any. the intellectual and 
+    technical concepts contained herein are proprietary to Adobe Systems Incorporated 
+    and its suppliers and may be covered by U.S. and Foreign Patents, patents 
+    in process, and are protected by trade secret or copyright law. Dissemination 
+    of this information or reproduction of this material is strictly forbidden 
+    unless prior written permission is obtained from Adobe Systems Incorporated.
+ 
+*/
+
+/*************************************************************************************************/
+
+/*!
+\defgroup concept_regular_type Regular
+\ingroup asl_concepts
+
+\description
+The concept \ref concept_regular_type is the basic concept which allows for equational reasoning about
+code. Each of the sub-concepts which it refines are interconnected by the axioms which cannot be
+expressed until combined here.
+
+\refinement_of
+    - \ref stldoc_DefaultConstructible
+    - \ref stldoc_Assignable
+    - \ref stldoc_EqualityComparable
+
+\notation
+
+\valid_expressions
+All expressions that match the above concepts are valid.
+
+\expression_semantics
+Given type \c T which models \ref concept_regular_type and an action \c zap() which always modifies
+it's parameter:
+	- <tt>T a = b; assert(a == b);</tt> <em>copies are equal</em>
+	- <tt>T a; a = b;</tt> is equivalent to <tt>T a(b);</tt> <em>relate copy and assignment</em>
+	- <tt>T a = c; T b = c; a = d; assert(b==c);</tt> <em>copies are disjoint</em>
+	- <tt>T a = c; T b = c; zap(a); assert(b==c && a!=b);</tt> <em>copies don't intersect</em>
+
+\models
+	- int
+    - adobe::name_t
+    - adobe::copy_on_write
+
+\notes
+
+\see_also
+    - Alex Stepanov's paper on the <a href="http://www.stepanovpapers.com/DeSt98.pdf">concept of
+    regular types</a>.
+    - \ref concept_movable.
+
+\defgroup concept_movable Movable
+\ingroup asl_concepts
+
+\description
+The idea of movable is that a value can be relocated to a new position without requiring additional
+resources (and hence without throwing an exception) with complexity proportional to the \c sizeof()
+the object as opposed to copy which has complexity proportional to the area of the object.
+Iterators to remote parts remain valid after a move. Move can be used in place of copying when the
+value of the item being copied from will not be used again. Because of this move can be used in
+place of copying when the item being copied from is an r-value (an unnamed temporary).
+
+Ideally, the concept \ref concept_movable would be part of \ref concept_regular_type. However,
+because of current language restrictions and history, the best we can do at this time is approximate
+this concept. We document it as a refinement of Regular and use it as an optimization of copy.
+
+\refinement_of
+	- \ref concept_regular_type
+	
+\valid_expressions
+Given a type \c T which models \ref concept_movable:
+	- <tt>T b; T a(adobe::move_from<T>(b));</tt>
+	
+\par Required Signatures:
+    - <tt>T(adobe::move_from<T>);<tt> <em>// move-ctor</em>
+    - <tt>T& operator=(T);<tt> <em>// move-assign</em>
+
+\expression_semantics
+Given a type \c T which models \ref concept_movable, a function (which may be partial)
+<tt>remote_identity(T) -> I</tt> which return the identity of a non-local part of T and a function
+<tt>f(I& id) -> T</tt> which sets /c id to the remote_identity of it's result.
+	- <tt>I id = remote_identity(b); T a(adobe::move_from<T>(b)); assert(id == remote_identity(a));</tt>
+	<em>// explicit move-ctor</em>
+	- <tt>I id; T a = f(id); assert(id == remote_identity(a));</tt> <em>// move-ctor with r-value (RVO)</em>
+	- <tt>I id; T a; a = f(id); assert(id == remote_identity(a));</tt> <em>// move-assign with r-value</em>
+
+\models
+	- adobe::version_1::vector
+	- adobe::version_1::string_t
+	- adobe::version_1::closed_hash_set
+	- adobe::version_1::closed_hash_map
+	- adobe::copy_on_write
+	
+\notes
+Because movable currently relies on the return value optimization being implemented by the
+compiler and being applied as needed we cannot rely on the axioms holding in practice although
+they often do. We can only rely on move as a potential optimization of copy. If moving a type is
+required then swap should be used instead. See \ref stldoc_Assignable.
+
+The move-ctor is rarely invoked directly but rather is called by <tt>adobe::move(a)</tt>. The
+required signature are tested for with <tt>adobe::is_movable<T></tt>.
+
+\see_also
+	- \ref move_related
+*/

@@ -1,0 +1,62 @@
+/*!
+\class adobe::dancing_links dancing_links.hpp <adobe/dancing_links.hpp>
+\ingroup node_algorithm
+
+\brief An optimized implementation of the 1-cover problem [class under review]
+
+\par
+    The implementation is based on the Dancing Links Algorithm paper published by Knuth:
+\par
+    http://www-cs-faculty.stanford.edu/~knuth/papers/dancing-color.ps.gz
+\par
+This class is an implementation of the "1-cover" problem:
+\par
+<i>Given a matrix of 1s and 0s, is there a subset of the rows such that there is one and only one 1 in each column?</i>
+\par
+    It turns out a lot of interesting problems can be encoded in such a way that the 1-cover algorithm can be used to solve them (For example, counting the number of possible solutions to a Sudoku puzzle). Knuth talks in general about exact-cover problems (placing dominoes on a chessboard, the N-queens problem, etc.), and how each of these are specializations of the 1-cover problem, and so can be solved by this algorithm.
+*/
+
+/*!
+\fn void adobe::dancing_links::set(std::size_t row, std::size_t col)
+
+Establishes a 1-node at the intersection of <code>[ row, col ]</code>.
+
+\param row The row in which the node will be set
+\param col The column in which the node will be set
+
+\pre
+    You must start with the top-left node and work to the right, then down, when setting nodes in the matrix.
+    i.e., This must be the right-bottom-most node you have set to this point.
+*/
+
+/*!
+\fn void adobe::dancing_links::set_secondary_column(std::size_t col)
+
+Secondary columns take dancing links to the next step, in that they allow for a column to be optionally used zero or one times. This essentially allows for a condition that can be met once but no more than once.
+
+\param col The column which will be made secondary
+*/
+
+/*!
+\fn std::size_t adobe::dancing_links::search(std::size_t max_solutions)
+
+Performs a search looking for solutions to the 1-cover problem.
+
+\param max_solutions Maximum number of solutions to find before breaking out of the search.
+
+\return the number of solutions actually found
+*/
+
+/*!
+\fn std::size_t adobe::dancing_links::search(std::size_t max_solutions, ResultCallback callback)
+
+Performs a search looking for solutions to the 1-cover problem. When a solution is found the callback is called once for every row in the solution. The signature for the callback is:
+\code
+void (*ResultCallback)(std::size_t row, bool last_row_in_solution);
+\endcode
+
+\param max_solutions Maximum number of solutions to find before breaking out of the search.
+\param callback callback
+
+\return the number of solutions actually found
+*/

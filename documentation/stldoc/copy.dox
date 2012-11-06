@@ -1,0 +1,89 @@
+/** \page stldoc_copy copy
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b> : algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class InputIterator, class OutputIterator>
+OutputIterator copy(InputIterator first, InputIterator last,
+                    OutputIterator result);
+\endcode
+\section Description Description
+<code>Copy</code> copies elements from the range <code>[first, last)</code> to the range
+<code>[result, result + (last - first))</code>.  That is, it performs the 
+assignments <code>*result = *first</code>, <code>*(result + 1) = *(first + 1)</code>,
+and so on.  <A href="#1">[1]</A> Generally, for every integer <code>n</code> from <code>0</code> to <code>last - first</code>,
+<code>copy</code> performs the assignment <code>*(result + n) = *(first + n)</code>.
+Assignments are performed in forward order, <i>i.e.</i> in order of 
+increasing <code>n</code>. <A href="#2">[2]</A>
+<p>
+The return value is <code>result + (last - first)</code>
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+InputIterator is a model of \ref stldoc_InputIterator.
+<li>
+OutputIterator is a model of \ref stldoc_OutputIterator.
+<li>
+InputIterator's value type is convertible to a type in
+   OutputIterator's set of value types.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>result</code> is not an iterator within the range <code>[first, last)</code>.
+<li>
+There is enough space to hold all of the elements being copied.
+   More formally, the requirement is that 
+   <code>[result, result + (last - first))</code> is a valid range. <A href="#1">[1]</A>
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>last - first</code> assignments are performed.
+\section Example Example
+\code
+Vector<int> V(5);
+iota(V.begin(), V.end(), 1);
+
+List<int> L(V.size());
+copy(V.begin(), V.end(), L.begin());
+assert(equal(V.begin(), V.end(), L.begin()));
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note the implications of this.  <code>Copy</code> cannot be used to insert
+elements into an empty \ref stldoc_Container : it overwrites elements, rather
+than inserting elements.  If you want to insert elements into a
+\ref stldoc_Sequence, you can either use its <code>insert</code> member function explicitly,
+or else you can use <code>copy</code> along with an <code>\ref stldoc_insert_iterator</code> adaptor.
+<p><A name="2">[2]</A>
+The order of assignments matters in the case where the input and
+output ranges overlap : <code>copy</code> may not be used if <code>result</code> is in the
+range <code>[first, last)</code>.  That is, it may not be used if
+the beginning of the output range overlaps with the input range, but
+it may be used if the end of the output range overlaps with the input
+range; <code>\ref stldoc_copy_backward</code> has opposite restrictions.
+If the two ranges are completely nonoverlapping, of course, then
+either algorithm may be used.
+The order of assignments also matters if <code>result</code> is an <code>\ref stldoc_ostream_iterator</code>,
+or some other iterator whose semantics depends on the order or assignments.
+\section See_also See also
+<code>\ref stldoc_copy_backward</code>, <code>\ref stldoc_copy_n</code>
+
+
+*/

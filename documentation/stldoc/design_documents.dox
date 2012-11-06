@@ -1,0 +1,9 @@
+/** \page stldoc_design_documents Design Documents
+
+- \ref stldoc_thread_safety
+- \ref stldoc_complexity
+- \ref stldoc_string_discussion
+- \ref stldoc_ropeimpl
+- \ref stldoc_alloc
+
+*/

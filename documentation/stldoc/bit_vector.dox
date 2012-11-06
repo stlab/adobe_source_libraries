@@ -1,0 +1,728 @@
+/** \page stldoc_bit_vector bit_vector
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+A <code>bit_vector</code> is essentially a
+<code>\ref stldoc_Vector&lt;bool&gt;</code>: it is a
+\ref stldoc_Sequence that has the same interface as
+<code>\ref stldoc_Vector</code>.  The main difference is
+that <code>bit_vector</code> is optimized for space efficiency.  A
+<code>vector</code> always requires at least one byte per element, but a
+<code>bit_vector</code> only requires one bit per element.
+<p>
+<b>Warning</b>: The name <code>bit_vector</code> will be removed in a future release
+of the STL.  The only reason that <code>bit_vector</code> is a separate class,
+instead of a template specialization of <code>vector&lt;bool&gt;</code>, is that this
+would require partial specialization of templates.  On compilers that
+support partial specialization, <code>bit_vector</code> is a specialization of
+<code>vector&lt;bool&gt;</code>.  The name <code>bit_vector</code> is a <code>typedef</code>.  This <code>typedef</code>
+is not defined in the C++ standard, and is retained only for backward
+compatibility.
+\section Example Example
+\code
+bit_vector V(5);
+V[0] = true;
+V[1] = false;
+V[2] = false;
+V[3] = true;
+V[4] = false;
+
+for (bit_vector::iterator i = V.begin(); i < V.end(); ++i)
+  cout << (*i ? '1' : '0');
+cout << endl;
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="vector">vector</A>, and in the nonstandard
+backward-compatibility header <A href="bvector.h">bvector.h</A>.
+\section Template_parameters Template parameters
+None. <code>Bit_vector</code> is not a class template.
+\section Model_of Model of
+\ref stldoc_RandomAccessContainer,
+\ref stldoc_BackInsertionSequence.
+\section Type_requirements Type requirements
+None.
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The type of object stored in the bit_vector: <code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference</code>
+</td>
+<td valign="top">
+<code>bit_vector</code>
+</td>
+<td valign="top">
+A proxy class that acts as a reference to a single bit.  See below
+   for details.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const reference to <code>value_type</code>.  In <code>bit_vector</code> this is simply defined
+   to be <code>bool</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+An unsigned integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>difference_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+A signed integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Iterator used to iterate through a <code>bit_vector</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const iterator used to iterate through a <code>bit_vector</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Iterator used to iterate backwards through a <code>bit_vector</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Const iterator used to iterate backwards through a <code>bit_vector</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator begin()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the beginning of the <code>bit_vector</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator end()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the end of the <code>bit_vector</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator begin() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns a <code>const_iterator</code> pointing to the beginning of the <code>bit_vector</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator end() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns a <code>const_iterator</code> pointing to the end of the <code>bit_vector</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_iterator rbegin()</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>reverse_iterator</code> pointing to the beginning of the
+   reversed bit_vector.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_iterator rend()</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>reverse_iterator</code> pointing to the end of the
+   reversed bit_vector.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator rbegin() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>const_reverse_iterator</code> pointing to the beginning of the
+   reversed bit_vector.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator rend() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>const_reverse_iterator</code> pointing to the end of the
+   reversed bit_vector.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type size() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns the number of elements in the <code>bit_vector</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type max_size() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns the largest possible size of the <code>bit_vector</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type capacity() const</code>
+</td>
+<td valign="top">
+<code>bit_vector</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool empty() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+<code>true</code> if the <code>bit_vector</code>'s size is <code>0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference operator[](size_type n)</code>
+</td>
+<td valign="top">
+ \ref stldoc_RandomAccessContainer
+</td>
+<td valign="top">
+Returns the <code>n</code>'th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference operator[](size_type n) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_RandomAccessContainer
+</td>
+<td valign="top">
+Returns the <code>n</code>'th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bit_vector()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Creates an empty bit_vector.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bit_vector(size_type n)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Creates a bit_vector with <code>n</code> elements.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bit_vector(size_type n, bool t)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Creates a bit_vector with <code>n</code> copies of <code>t</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bit_vector(const bit_vector&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The copy constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+bit_vector(InputIterator, InputIterator)
+\endcode
+<A href="#1">[1]</A>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Creates a bit_vector with a copy of a range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>~bit_vector()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The destructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bit_vector&amp; operator=(const bit_vector&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The assignment operator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void reserve(size_t)</code>
+</td>
+<td valign="top">
+<code>bit_vector</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference front()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Returns the first element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference front() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Returns the first element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference back()</code>
+</td>
+<td valign="top">
+ \ref stldoc_BackInsertionSequence
+</td>
+<td valign="top">
+Returns the last element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference back() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_BackInsertionSequence
+</td>
+<td valign="top">
+Returns the last element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void push_back(const T&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_BackInsertionSequence
+</td>
+<td valign="top">
+Inserts a new element at the end.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void pop_back()</code>
+</td>
+<td valign="top">
+ \ref stldoc_BackInsertionSequence
+</td>
+<td valign="top">
+Removes the last element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void swap(bit_vector&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Swaps the contents of two bit_vectors.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void swap(bit_vector::reference x,
+          bit_vector::reference y)
+\endcode
+</td>
+<td valign="top">
+<code>bit_vector</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert(iterator pos, bool x)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts <code>x</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+void insert(iterator pos,
+            InputIterator f, InputIterator l)
+\endcode
+<A href="#1">[1]</A></td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts the range <code>[f, l)</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void insert(iterator pos, 
+            size_type n, bool x)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts <code>n</code> copies of <code>x</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void erase(iterator pos)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases the element at position <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void erase(iterator first, iterator last)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases the range <code>[first, last)</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void clear()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases all of the elements.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+bool operator==(const bit_vector&, 
+                const bit_vector&)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_ForwardContainer
+</td>
+<td valign="top">
+Tests two bit_vectors for equality.  This is a global function, not
+   a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+bool operator<(const bit_vector&, 
+               const bit_vector&)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_ForwardContainer
+</td>
+<td valign="top">
+Lexicographical comparison.  This is a global function, not
+   a member function.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_RandomAccessContainer 
+and \ref stldoc_BackInsertionSequence
+requirements, but are specific to <code>vector</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>reference</code>
+</td>
+<td valign="top">
+A proxy class that acts as a reference to a single bit; the reason it
+   exists is to allow expressions like <code>V[0] = true</code>.  (A proxy
+   class like this is necessary, because the C++ memory model does not
+   include independent addressing of objects smaller than one byte.)
+   The public member functions of <code>reference</code> are <code>operator bool() const</code>,
+   <code>reference&amp; operator=(bool)</code>, and <code>void flip()</code>.  That is, <code>reference</code>
+   acts like an ordinary reference: you can convert a <code>reference</code> to <code>bool</code>, 
+   assign a <code>bool</code> value through a <code>reference</code>, or flip the bit that a
+   <code>reference</code> refers to.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type capacity() const</code>
+</td>
+<td valign="top">
+Number of bits for which memory has been allocated.
+   <code>capacity()</code> is always greater than or equal to <code>size()</code>.
+   <A href="#2">[2]</A> <A href="#3">[3]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void reserve(size_type n)</code>
+</td>
+<td valign="top">
+If <code>n</code> is less than or equal to <code>capacity()</code>, this call has no effect.
+    Otherwise, it is a request for the allocation of additional 
+    memory.  If the request is successful, then <code>capacity()</code> is
+    greater than or equal to <code>n</code>; otherwise, <code>capacity()</code> is unchanged.
+    In either case, <code>size()</code> is unchanged.  <A href="#2">[2]</A> <A href="#4">[4]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void swap(bit_vector::reference x,
+          bit_vector::reference y)
+\endcode
+</td>
+<td valign="top">
+Swaps the bits referred to by <code>x</code> and <code>y</code>.  This is a global function,
+   not a member function.  It is necessary because the ordinary version
+   of <code>\ref stldoc_swap</code> takes arguments of type <code>T&amp;</code>, and <code>bit_vector::reference</code>
+   is a class, not a built-in C++ reference.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+This member function relies on <i>member template</i> functions, which
+at present (early 1998) are not supported by all compilers.  If your
+compiler supports member templates, you can call this function with
+any type of \ref stldoc_InputIterator.  If your
+compiler does not yet support member templates, though, then the
+arguments must either be of type <code>const bool*</code> or of type
+<code>bit_vector::const_iterator</code>.
+<p><A name="2">[2]</A>
+Memory will be reallocated automatically if more than <code>capacity() -
+size()</code> bits are inserted into the bit_vector.  Reallocation does
+not change <code>size()</code>, nor does it change the values of any bits
+of the bit_vector.  It does, however, increase <code>capacity()</code>,
+and it invalidates <A href="#5">[5]</A> any iterators that point into
+the bit_vector.
+<p><A name="3">[3]</A>
+When it is necessary to increase <code>capacity()</code>,
+<code>bit_vector</code> usually increases it by a factor of two.  It is
+crucial that the amount of growth is proportional to the current
+<code>capacity()</code>, rather than a fixed constant: in the former case
+inserting a series of bits into a bit_vector is a linear time
+operation, and in the latter case it is quadratic.
+<p><A name="4">[4]</A>
+<code>reserve()</code> is used to cause a reallocation manually.  The main
+reason for using <code>reserve()</code> is efficiency: if you know the
+capacity to which your <code>bit_vector</code> must eventually grow, then
+it is probably more efficient to allocate that memory all at once
+rather than relying on the automatic reallocation scheme.  The other
+reason for using <code>reserve()</code> is to control the invalidation of
+iterators. <A href="#5">[5]</A>
+<p><A name="5">[5]</A>
+A <code>bit_vector</code>'s iterators are invalidated when its memory is
+reallocated.  Additionally, inserting or deleting a bit in the middle
+of a bit_vector invalidates all iterators that point to bits following
+the insertion or deletion point.  It follows that you can prevent a
+bit_vector's iterators from being invalidated if you use
+<code>reserve()</code> to preallocate as much storage as the bit_vector
+will ever use, and if all insertions and deletions are at the
+bit_vector's end.
+\section See_also See also
+\ref stldoc_Vector
+
+
+*/

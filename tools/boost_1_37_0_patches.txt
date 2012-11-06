@@ -1,0 +1,171 @@
+diff -wur --unidirectional-new-file -x status -x adobe_information -xp4config -x bin.v2 ../diffable_boost_1_37_0/boost/detail/is_incrementable.hpp ../boost_libraries/boost/detail/is_incrementable.hpp
+--- ../diffable_boost_1_37_0/boost/detail/is_incrementable.hpp	2008-03-22 14:45:55.000000000 -0700
++++ ../boost_libraries/boost/detail/is_incrementable.hpp	2008-11-14 20:42:11.687500000 -0800
+@@ -65,10 +65,10 @@
+ # endif 
+   
+   // two check overloads help us identify which operator++ was picked
+-  char (& check(tag) )[2];
++  char (& (check)(tag) )[2];
+   
+   template <class T>
+-  char check(T const&);
++  char (check)(T const&);
+   
+ 
+   template <class T>
+@@ -78,7 +78,7 @@
+ 
+       BOOST_STATIC_CONSTANT(
+           bool
+-        , value = sizeof(is_incrementable_::check(BOOST_comma(++x,0))) == 1
++        , value = sizeof((is_incrementable_::check)(BOOST_comma(++x,0))) == 1
+       );
+   };
+ 
+@@ -89,7 +89,7 @@
+ 
+       BOOST_STATIC_CONSTANT(
+           bool
+-        , value = sizeof(is_incrementable_::check(BOOST_comma(x++,0))) == 1
++        , value = sizeof((is_incrementable_::check)(BOOST_comma(x++,0))) == 1
+       );
+   };
+ }
+diff -wur --unidirectional-new-file -x status -x adobe_information -xp4config -x bin.v2 ../diffable_boost_1_37_0/boost/test/floating_point_comparison.hpp ../boost_libraries/boost/test/floating_point_comparison.hpp
+--- ../diffable_boost_1_37_0/boost/test/floating_point_comparison.hpp	2008-10-13 01:20:26.000000000 -0700
++++ ../boost_libraries/boost/test/floating_point_comparison.hpp	2008-11-05 17:53:37.546875000 -0800
+@@ -220,8 +220,16 @@
+     }
+ };
+ 
++template<class T>
++struct static_ {
++  static T value;
++};
++
++template<class T>
++T static_<T>::value;
++
+ namespace {
+-check_is_close_t check_is_close;
++  const check_is_close_t& x = static_<check_is_close_t>::value;
+ }
+ 
+ //____________________________________________________________________________//
+@@ -243,7 +251,7 @@
+ };
+ 
+ namespace {
+-check_is_small_t check_is_small;
++  const check_is_small_t& y = static_<check_is_small_t>::value;
+ }
+ 
+ //____________________________________________________________________________//
+diff -wur --unidirectional-new-file -x status -x adobe_information -xp4config -x bin.v2 ../diffable_boost_1_37_0/tools/build/v2/tools/darwin.jam ../boost_libraries/tools/build/v2/tools/darwin.jam
+--- ../diffable_boost_1_37_0/tools/build/v2/tools/darwin.jam	2008-10-16 01:42:03.000000000 -0700
++++ ../boost_libraries/tools/build/v2/tools/darwin.jam	2008-11-05 14:07:26.656250000 -0800
+@@ -147,21 +147,22 @@
+         flags darwin.link OPTIONS
+             $(condition)/<main-target-type>EXE/<address-model>/<debug-symbols>off : -s ;
+     }
+-    else
+-    {
+-        # Otherwise we need to find a strip program to use. And hence
+-        # also tell the link action that we need to use a strip
+-        # post-process.
+-        flags darwin.link NEED_STRIP $(condition)/<debug-symbols>off : "" ;        
+-        strip =
+-            [ common.get-invocation-command darwin
+-                : strip : [ feature.get-values <striper> : $(options) ] : $(bin) : search-path ] ;
+-        flags darwin.link .STRIP $(condition) : $(strip[1]) ;
+-        if $(.debug-configuration)
+-        {
+-            ECHO notice: using strip :: $(condition) :: $(strip[1]) ;
+-        }
+-    }
++## produces bad code on macs (release). maybe different options need to be sent to strip
++#     else
++#     {
++#         # Otherwise we need to find a strip program to use. And hence
++#         # also tell the link action that we need to use a strip
++#         # post-process.
++#         flags darwin.link NEED_STRIP $(condition)/<debug-symbols>off : "" ;        
++#         strip =
++#             [ common.get-invocation-command darwin
++#                 : strip : [ feature.get-values <striper> : $(options) ] : $(bin) : search-path ] ;
++#         flags darwin.link .STRIP $(condition) : $(strip[1]) ;
++#         if $(.debug-configuration)
++#         {
++#             ECHO notice: using strip :: $(condition) :: $(strip[1]) ;
++#         }
++#     }
+ 
+     # - The archive builder (libtool is the default as creating
+     #   archives in darwin is complicated.
+diff -wur --unidirectional-new-file -x status -x adobe_information -xp4config -x bin.v2 ../diffable_boost_1_37_0/tools/build/v2/tools/msvc.jam ../boost_libraries/tools/build/v2/tools/msvc.jam
+--- ../diffable_boost_1_37_0/tools/build/v2/tools/msvc.jam	2008-10-16 01:42:03.000000000 -0700
++++ ../boost_libraries/tools/build/v2/tools/msvc.jam	2008-11-05 14:07:25.046875000 -0800
+@@ -973,6 +973,9 @@
+ 
+     # Declare msvc toolset specific features.
+     {
++       # Secure STL feature
++        feature.feature stl-security-theater : off on : propagated link-incompatible ;
++
+         feature.feature debug-store : object database : propagated ;
+         feature.feature pch-source  :                 : dependency free ;
+     }
+@@ -1040,6 +1043,8 @@
+     toolset.flags msvc.compile C++FLAGS  <exception-handling>on/<asynch-exceptions>off/<extern-c-nothrow>on : /EHsc ;
+     toolset.flags msvc.compile C++FLAGS  <exception-handling>on/<asynch-exceptions>on/<extern-c-nothrow>off : /EHa ;
+     toolset.flags msvc.compile C++FLAGS  <exception-handling>on/<asynch-exceptions>on/<extern-c-nothrow>on : /EHac ;
++    toolset.flags msvc.compile C++FLAGS  <stl-security-theater>off : /D_SECURE_SCL=0 ;
++    toolset.flags msvc.compile C++FLAGS  <stl-security-theater>on : /D_SECURE_SCL=1 ;
+ 
+     # By default 8.0 enables rtti support while prior versions disabled it. We
+     # simply enable or disable it explicitly so we do not have to depend on this
+diff -wur --unidirectional-new-file -x status -x adobe_information -xp4config -x bin.v2 ../diffable_boost_1_37_0/tools/build/v2/tools/testing.jam ../boost_libraries/tools/build/v2/tools/testing.jam
+--- ../diffable_boost_1_37_0/tools/build/v2/tools/testing.jam	2008-10-16 01:42:03.000000000 -0700
++++ ../boost_libraries/tools/build/v2/tools/testing.jam	2008-11-13 09:27:41.453125000 -0800
+@@ -62,6 +62,7 @@
+ feature.feature testing.arg        : : free incidental ;
+ feature.feature testing.input-file : : free dependency ;
+ 
++feature.feature preserve-test-targets : off on : incidental propagated ;
+ 
+ # Register target types.
+ type.register TEST         : test          ;
+@@ -393,11 +394,6 @@
+ 
+ 
+ local argv = [ modules.peek : ARGV ] ;
+-if --preserve-test-targets in $(argv)
+-{
+-    preserve-test-targets = true ;
+-}
+-
+ 
+ toolset.flags testing.capture-output ARGS <testing.arg> ;
+ toolset.flags testing.capture-output INPUT_FILES <testing.input-file> ;
+@@ -440,7 +436,7 @@
+ 
+     run-path-setup $(target) : $(source) : $(properties) ;
+ 
+-    if ! $(preserve-test-targets)
++    if [ feature.get-values preserve-test-targets : $(properties) ] = off
+     {
+         TEMPORARY $(targets-to-remove) ;
+         # Set a second action on target that will be executed after capture
+diff -wur --unidirectional-new-file -x status -x adobe_information -xp4config -x bin.v2 ../diffable_boost_1_37_0/tools/jam/src/expand.c ../boost_libraries/tools/jam/src/expand.c
+--- ../diffable_boost_1_37_0/tools/jam/src/expand.c	2008-07-29 04:43:31.000000000 -0700
++++ ../boost_libraries/tools/jam/src/expand.c	2008-11-05 14:07:25.984375000 -0800
+@@ -749,7 +749,7 @@
+     assert(l != 0);
+     assert(list_next(l) == 0);
+     # ifdef OS_CYGWIN
+-    assert( !strcmp( l->string, "c:\\foo\\bar" ) );
++    assert( strcmp( l->string, "c:\\foo\\bar" ) == 0 || strcmp( l->string, "C:\\foo\\bar" ) == 0 );
+     # else 
+     assert( !strcmp( l->string, cygpath ) );
+     # endif   

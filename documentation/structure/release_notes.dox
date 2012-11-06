@@ -1,0 +1,6 @@
+/*! \page asl_release_notes Release Notes
+
+These are the current release notes for the Adobe Source Libraries as found in the release_notes file in the distribution:
+
+\verbinclude release_notes.txt
+*/

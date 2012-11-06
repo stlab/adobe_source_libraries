@@ -1,0 +1,254 @@
+/** \page stldoc_MonoidOperation MonoidOperation
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Monoid Operation is a special sort of \ref stldoc_BinaryFunction.  A
+\ref stldoc_BinaryFunction must satisfy three conditions in order to
+be a Monoid Operation.  First, its first argument type and second
+argument type must be the same, and its result type must be the
+same as its argument type.  Second, there must be an identity
+element.  Third, the operation must be associative.  Examples
+of Monoid Operations are addition and multiplication. <A href="#1">[1]</A>
+\section Refinement_of Refinement of
+\ref stldoc_BinaryFunction
+\section Associated_types Associated types
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Argument type
+</td>
+<td valign="top">
+The type of the Monoid Operation's first argument and second argument,
+   and also the type returned when the Monoid Operation is returned.
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>F</code>
+</td>
+<td valign="top">
+A type that is a model of MonoidOperation
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+<code>F</code>'s argument type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>f</code>
+</td>
+<td valign="top">
+Object of type <code>F</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>x</code>, <code>y</code>, <code>z</code>
+</td>
+<td valign="top">
+Objects of type <code>T</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+A type <code>F</code> that is a model of \ref stldoc_BinaryFunction is <i>associative</i> if
+<code>F</code>'s first argument type, second argument type, and result type are
+the same, and if, for every object <code>f</code> of type <code>F</code> and for every 
+objects <code>x</code>, <code>y</code>, and <code>z</code> of <code>F</code>'s argument type, 
+<code>f(x, f(y, z))</code> is the same as <code>f(f(x, y), z)</code>. <A href="#2">[2]</A>
+\section Valid_Expressions Valid Expressions
+In addition to the expressions described in the \ref stldoc_BinaryFunction
+requirements, the following expressions must be valid.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Function call
+</td>
+<td valign="top">
+<code>f(x, y)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Identity element
+</td>
+<td valign="top">
+<code>identity_element(f)</code> <A href="#3">[3]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>T</code>
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Function call
+</td>
+<td valign="top">
+<code>f(x, y)</code>
+</td>
+<td valign="top">
+<code>x</code> and <code>y</code> are in the domain of <code>f</code>.
+</td>
+<td valign="top">
+Calls <code>f</code> with <code>x</code> and <code>y</code> as arguments.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Identity element
+</td>
+<td valign="top">
+<code>identity_element(f)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns the monoid's identity element.  That is, the return value
+   is a value <code>id</code> of type <code>T</code> such that, for all <code>x</code> in the domain
+   of <code>f</code>, <code>f(x, id)</code> and <code>f(id, x)</code> both return <code>x</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+\section Invariants Invariants
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Associativity
+</td>
+<td valign="top">
+For any <code>x</code>, <code>y</code>, and <code>z</code> of type <code>T</code>, <code>f(x, f(y, z))</code> and
+   <code>f(f(x, y), z)</code> return the same value. <A href="#4">[4]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Identity element.
+</td>
+<td valign="top">
+There exists some element <code>id</code> of type <code>T</code> such that, for all
+   <code>x</code> of type <code>T</code>, <code>f(x, id)</code> and <code>f(id, x)</code> both return <code>x</code>.
+   The expression <code>identity_element(f)</code> returns <code>id</code>.
+</td>
+</tr>
+</table>
+\section Models Models
+<ul>
+<li>
+<code>\ref stldoc_plus&lt;int&gt;</code>
+<li>
+<code>\ref stldoc_multiplies&lt;double&gt;</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+A monoid is one of three closely related algebraic structures.
+A <i>semigroup</i> is a set S, and a binary operation *, with the
+properties that * is closed on S (that is, if x and y are elements of
+S then x * y is also a member of S) and that * is associative (that
+is, if x, y, and z are elements of S, then x * (y * z) = (x * y) * z).
+A <i>monoid</i> is a semigroup that has an identity element.  That is,
+there exists some element id such that, for all x in S, x * id = id * x =
+x.  Finally, a <i>group</i> is a monoid with the property that every element
+has an inverse.  That is, for every x in S, there exists an element
+xi such that x * xi = xi * x = id.  As an example, the set of 
+real numbers under multiplication is a monoid (the identity element
+is 1), but it isn't a group.  It isn't a group because 0 has no inverse.
+<p><A name="2">[2]</A>
+Mathematics textbooks typically write this as an equation,
+instead of using words like &quot;is the same as&quot;.  We can't use
+equality in this definition, however, because <code>F</code>'s argument type
+might not be \ref stldoc_EqualityComparable.  If <code>F</code>'s argument type is
+\ref stldoc_EqualityComparable, however, then these two expression are expected
+to be equal: the condition of associativity becomes
+<code>f(x, f(y, z)) == f(f(x, y), z)</code>
+<p><A name="3">[3]</A>
+This is implemented as an overloaded function.  The function
+<code>identity_element</code> is defined, in the standard header <A href="functional">functional</A>, 
+and the nonstandard backward-compatibility header <A href="function.h">function.h</A>,
+for arguments of type <code>\ref stldoc_plus&lt;T&gt;</code> and <code>\ref stldoc_multiplies&lt;T&gt;</code>.  
+If you define a new Monoid Operation <code>F</code> (matrix multiplication, for
+example), you must overload <code>identity_element</code> for arguments of type
+<code>F</code>.  The <code>identity_element</code> function is an SGI extension; it is not
+part of the C++ standard. 
+<p><A name="4">[4]</A>
+Associativity is not the same as commutativity.  That is, the requirement
+that <code>x * (y * z) == (x * y) * z</code> is completely unrelated to
+the requirement that <code>x * y == y * x</code>.  Monoid operations are
+required to be associative, but they are not required to be 
+commutative.  As an example, square matrices under multiplication
+form a monoid even though matrix multiplication is not commutative.
+\section See_also See also
+\ref stldoc_BinaryFunction, <code>\ref stldoc_plus</code>, <code>\ref stldoc_multiplies</code>
+
+
+*/

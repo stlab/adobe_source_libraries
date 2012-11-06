@@ -1,0 +1,260 @@
+/** \page stldoc_LessThanComparable LessThanComparable
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html utilities.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: utilities</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A type is LessThanComparable if it is ordered: it must
+be possible to compare two objects of that type using <code>operator&lt;</code>, and
+<code>operator&lt;</code> must be a partial ordering.
+\section Refinement_of Refinement of
+\section Associated_types Associated types
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of LessThanComparable
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>x</code>, <code>y</code>, <code>z</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+Consider the relation <code>!(x &lt; y) &amp;&amp; !(y &lt; x)</code>.  If this relation is
+transitive (that is, if <code>!(x &lt; y) &amp;&amp; !(y &lt; x) &amp;&amp; !(y &lt; z) &amp;&amp; !(z &lt; y)</code>
+implies <code>!(x &lt; z) &amp;&amp; !(z &lt; x)</code>), then it satisfies the mathematical
+definition of an equivalence relation.  In this case, <code>operator&lt;</code>
+is a <i>strict weak ordering</i>.
+<p>
+If <code>operator&lt;</code> is a strict weak ordering, and if each equivalence class
+has only a single element, then <code>operator&lt;</code> is a <i>total ordering</i>.
+\section Valid_expressions Valid expressions
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Less
+</td>
+<td valign="top">
+<code>x &lt; y</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Convertible to <code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Greater
+</td>
+<td valign="top">
+<code>x &gt; y</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Convertible to <code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Less or equal
+</td>
+<td valign="top">
+<code>x &lt;= y</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Convertible to <code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Greater or equal
+</td>
+<td valign="top">
+<code>x &gt;= y</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Convertible to <code>bool</code>
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Less
+</td>
+<td valign="top">
+<code>x &lt; y</code>
+</td>
+<td valign="top">
+<code>x</code> and <code>y</code> are in the domain of <code>&lt;</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Greater
+</td>
+<td valign="top">
+<code>x &gt; y</code>
+</td>
+<td valign="top">
+<code>x</code> and <code>y</code> are in the domain of <code>&lt;</code>
+</td>
+<td valign="top">
+Equivalent to <code>y &lt; x</code> <A href="#1">[1]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Less or equal
+</td>
+<td valign="top">
+<code>x &lt;= y</code>
+</td>
+<td valign="top">
+<code>x</code> and <code>y</code> are in the domain of <code>&lt;</code>
+</td>
+<td valign="top">
+Equivalent to <code>!(y &lt; x)</code> <A href="#1">[1]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Greater or equal
+</td>
+<td valign="top">
+<code>x &gt;= y</code>
+</td>
+<td valign="top">
+<code>x</code> and <code>y</code> are in the domain of <code>&lt;</code>
+</td>
+<td valign="top">
+Equivalent to <code>!(x &lt; y)</code> <A href="#1">[1]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+\section Invariants Invariants
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Irreflexivity
+</td>
+<td valign="top">
+<code>x &lt; x</code> must be false.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Antisymmetry
+</td>
+<td valign="top">
+<code>x &lt; y</code> implies !(y &lt; x) <A href="#2">[2]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Transitivity
+</td>
+<td valign="top">
+<code>x &lt; y</code> and <code>y &lt; z</code> implies <code>x &lt; z</code> <A href="#3">[3]</A>
+</td>
+</tr>
+</table>
+\section Models Models
+<ul>
+<li>
+int
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+Only <code>operator&lt;</code> is fundamental; the other inequality operators
+are essentially syntactic sugar.
+<p><A name="2">[2]</A>
+Antisymmetry is a theorem, not an axiom: it follows from
+irreflexivity and transitivity.
+<p><A name="3">[3]</A>
+Because of irreflexivity and transitivity, <code>operator&lt;</code> always
+satisfies the definition of a <i>partial ordering</i>.  The definition of
+a <i>strict weak ordering</i> is stricter, and the definition of a
+<i>total ordering</i> is stricter still.
+\section See_also See also
+\ref stldoc_EqualityComparable, \ref stldoc_StrictWeakOrdering
+
+
+*/

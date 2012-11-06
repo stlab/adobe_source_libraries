@@ -1,0 +1,37 @@
+/*!
+\defgroup adobe_final Final
+\ingroup utility
+*/
+
+/*!
+\def ADOBE_FINAL
+\ingroup adobe_final
+
+\par
+A mixin class to ensure that a class cannot be derived from. The term 
+"final" is a Java keyword, for which there is no C++ equivalent.
+
+\par
+See CUJ May 2001, Page 51 for more information.
+
+\par
+Credit to Shanker Chandrabose for the idea.
+
+\author <a href="mailto:dahmann@adobe.com">Doug Ahmann</a>
+\date 05/10/2001 - created
+
+\example
+\code
+class foo : ADOBE_FINAL(foo)
+{
+};
+\endcode
+
+\example
+\code
+class bar { };
+class foo : public bar, ADOBE_FINAL(foo)
+{
+};
+\endcode
+*/

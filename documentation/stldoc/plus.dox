@@ -1,0 +1,159 @@
+/** \page stldoc_plus plus
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Plus&lt;T&gt;</code> is a \ref stldoc_functors.  Specifically, it is an 
+\ref stldoc_AdaptableBinaryFunction.  If <code>f</code> is an object of class
+<code>plus&lt;T&gt;</code> and <code>x</code> and <code>y</code> are objects of class <code>T</code>, then
+<code>f(x,y)</code> returns <code>x+y</code>.
+\section Example Example
+Each element in <code>V3</code> will be the sum of the corresponding elements
+in <code>V1</code> and <code>V2</code>
+\code
+const int N = 1000;
+Vector<double> V1(N);
+Vector<double> V2(N);
+Vector<double> V3(N);
+
+iota(V1.begin(), V1.end(), 1);
+fill(V2.begin(), V2.end(), 75);
+
+assert(V2.size() >= V1.size() && V3.size() >= V1.size());
+transform(V1.begin(), V1.end(), V2.begin(), V3.begin(),
+          plus<double>());
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The function object's argument type and result type.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_AdaptableBinaryFunction, \ref stldoc_DefaultConstructible
+\section Type_requirements Type requirements
+<code>T</code> must be a numeric type; if <code>x</code> and <code>y</code> are objects of type <code>T</code>,
+then <code>x+y</code> must be defined and must have a return type that is
+convertible to <code>T</code>.  <code>T</code> must be \ref stldoc_Assignable.
+\section Public_base_classes Public base classes
+<code>\ref stldoc_binary_function&lt;T, T, T&gt;</code>
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>first_argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of the first argument: <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>second_argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of the second argument: <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of the result: <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T operator()(const T&amp; x, const T&amp; y)</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+Function call operator.  The return value is <code>x + y</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>plus()</code>
+</td>
+<td valign="top">
+ \ref stldoc_DefaultConstructible
+</td>
+<td valign="top">
+The default constructor.
+</td>
+</tr>
+</table>
+\section New_members New members
+All of <code>plus</code>'s members are defined in the
+\ref stldoc_AdaptableBinaryFunction 
+and \ref stldoc_DefaultConstructible
+requirements. <code>Plus</code> does not introduce any new members.
+\section Notes Notes
+\section See_also See also
+The \ref stldoc_functors overview, 
+\ref stldoc_AdaptableBinaryFunction,
+<code>\ref stldoc_binary_function</code>, 
+<code>\ref stldoc_minus</code>, 
+<code>\ref stldoc_multiplies</code>,
+<code>\ref stldoc_divides</code>, 
+<code>\ref stldoc_modulus</code>, 
+<code>\ref stldoc_negate</code>
+
+
+*/

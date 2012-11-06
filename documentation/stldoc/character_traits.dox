@@ -1,0 +1,660 @@
+/** \page stldoc_character_traits character_traits
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html utilities.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b> : utilities</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+Several library components, including \ref stldoc_basic_string, need to perform
+operations on characters.  A Character Traits class is similar to
+a \ref stldoc_functors : it encapsulates some information about a 
+particular character type, and some operations on that type.  
+<p>
+Note that every member of a Character Traits class is static.  
+There is never any need to create a Character Traits object, and, in
+fact, there is no guarantee that creating such objects is possible.
+\section Refinement_of Refinement of
+Character Traits is not a refinement of any other concept.
+\section Associated_types Associated types
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Value type
+</td>
+<td valign="top">
+<code>X::char_type</code>
+</td>
+<td valign="top">
+The character type described by this Character Traits type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Int type
+</td>
+<td valign="top">
+<code>X::int_type</code>
+</td>
+<td valign="top">
+A type that is capable of representing every valid value of type
+   <code>char_type</code>, and, additionally an end-of-file value.  For <code>char</code>,
+   for example, the int type may be <code>int</code>, and for <code>wchar_t</code> it may 
+   be <code>wint_t</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Position type
+</td>
+<td valign="top">
+<code>X::pos_type</code>
+</td>
+<td valign="top">
+A type that can represent the position of a character of type
+   <code>char_type</code> within a file.  This type is usually <code>streampos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Offset type
+</td>
+<td valign="top">
+<code>X::off_type</code>
+</td>
+<td valign="top">
+An integer type that can represent the difference between two
+   <code>pos_type</code> values.  This type is usually <code>streamoff</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+State type
+</td>
+<td valign="top">
+<code>X::state_type</code>
+</td>
+<td valign="top">
+A type that can represent a state in a multibyte encoding
+   scheme.  This type, if used at all, is usually <code>mbstate_t</code>.
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Character Traits.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>c</code>, <code>c1</code>, <code>c2</code>
+</td>
+<td valign="top">
+A value of <code>X</code>'s value type, <code>X::char_type</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>e</code>, <code>e1</code>, <code>e2</code>
+</td>
+<td valign="top">
+A value of <code>X</code>'s int type, <code>X::int_type</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>n</code>
+</td>
+<td valign="top">
+A value of type <code>size_t</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>p</code>, <code>p1</code>, <code>p2</code>
+</td>
+<td valign="top">
+A non-null pointer of type <code>const X::char_type*</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>s</code>
+</td>
+<td valign="top">
+A non-null pointer of type <code>X::char_type*</code>.
+</td>
+</tr>
+</table>
+\section Valid_Expressions Valid Expressions
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Character assignment
+</td>
+<td valign="top">
+<code>X::assign(c1, c2)</code>
+</td>
+<td valign="top">
+<code>c1</code> is a modifiable lvalue.
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Character equality
+</td>
+<td valign="top">
+<code>X::eq(c1, c2)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Character comparison
+</td>
+<td valign="top">
+<code>X::lt(c1, c2)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Range comparison
+</td>
+<td valign="top">
+<code>X::compare(p1, p2, n)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>int</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Length
+</td>
+<td valign="top">
+<code>X::length(p)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>size_t</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Find
+</td>
+<td valign="top">
+<code>X::find(p, n, c)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>const X::char_type*</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Move
+</td>
+<td valign="top">
+<code>X::move(s, p, n)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X::char_type*</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Copy
+</td>
+<td valign="top">
+<code>X::copy(s, p, n)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X::char_type*</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Range assignment
+</td>
+<td valign="top">
+<code>X::assign(s, n, c)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X::char_type*</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+EOF value
+</td>
+<td valign="top">
+<code>X::eof()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X::int_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Not EOF
+</td>
+<td valign="top">
+<code>X::not_eof(e)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X::int_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Convert to value type
+</td>
+<td valign="top">
+<code>X::to_char_type(e)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X::char_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Convert to int type
+</td>
+<td valign="top">
+<code>X::to_int_type(c)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X::int_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Equal int type values
+</td>
+<td valign="top">
+<code>X::eq_int_type(e1, e2)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>bool</code>
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Character assignment
+</td>
+<td valign="top">
+<code>X::assign(c1, c2)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Performs the assignment <code>c1 = c2</code>
+</td>
+<td valign="top">
+<code>X::eq(c1, c2)</code> is <code>true</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Character equality
+</td>
+<td valign="top">
+<code>X::eq(c1, c2)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns <code>true</code> if and only if <code>c1</code> and <code>c2</code> are equal.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Character comparison
+</td>
+<td valign="top">
+<code>X::lt(c1, c2)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns <code>true</code> if and only if <code>c1</code> is less than <code>c2</code>.  Note that
+   for any two value values <code>c1</code> and <code>c2</code>, exactly one of 
+   <code>X::lt(c1, c2)</code>, <code>X::lt(c2, c1)</code>, and <code>X::eq(c1, c2)</code> should be
+   <code>true</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Range comparison
+</td>
+<td valign="top">
+<code>X::compare(p1, p2, n)</code>
+</td>
+<td valign="top">
+<code>[p1, p1+n)</code> and <code>[p2, p2+n)</code> are valid ranges.
+</td>
+<td valign="top">
+Generalization of <code>strncmp</code>.  Returns <code>0</code> if every element
+   in <code>[p1, p1+n)</code> is equal to the corresponding element 
+   in <code>[p2, p2+n)</code>, a negative value if there exists an element
+   in <code>[p1, p1+n)</code> less than the corresponding element in <code>[p2, p2+n)</code>
+   and all previous elements are equal, and a positive value 
+   if there exists an element in <code>[p1, p1+n)</code> greater than the
+   corresponding element in <code>[p2, p2+n)</code> and all previous elements
+   are equal.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Length
+</td>
+<td valign="top">
+<code>X::length(p)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Generalization of <code>strlen</code>.
+   Returns the smallest non-negative number <code>n</code> such that 
+   <code>X::eq(p+n, X::char_type())</code> is true.  Behavior is undefined
+   if no such <code>n</code> exists.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Find
+</td>
+<td valign="top">
+<code>X::find(p, n, c)</code>
+</td>
+<td valign="top">
+<code>[p, p+n)</code> is a valid range.
+</td>
+<td valign="top">
+Generalization of <code>strchr</code>.  Returns the first pointer <code>q</code>
+   in <code>[p, p+n)</code> such that <code>X::eq(*q, c)</code> is true.  Returns a 
+   null pointer if no such pointer exists.  (Note that this method
+   for indicating a failed search differs from that is 
+   <code>\ref stldoc_find</code>.)
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Move
+</td>
+<td valign="top">
+<code>X ::move(s, p, n)</code>
+</td>
+<td valign="top">
+<code>[p, p+n)</code> and <code>[s, s+n)</code> are valid ranges (possibly overlapping).
+</td>
+<td valign="top">
+Generalization of <code>memmove</code>.  Copies values from the range
+   <code>[p, p+n)</code> to the range <code>[s, s+n)</code>, and returns <code>s</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Copy
+</td>
+<td valign="top">
+<code>X::copy(s, p, n)</code>
+</td>
+<td valign="top">
+<code>[p, p+n)</code> and <code>[s, s+n)</code> are valid ranges which do not overlap.
+</td>
+<td valign="top">
+Generalization of <code>memcpy</code>.  Copies values from the range
+   <code>[p, p+n)</code> to the range <code>[s, s+n)</code>, and returns <code>s</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Range assignment
+</td>
+<td valign="top">
+<code>X::assign(s, n, c)</code>
+</td>
+<td valign="top">
+<code>[s, s+n)</code> is a valid range.
+</td>
+<td valign="top">
+Generalization of <code>memset</code>.  Assigns the value <code>c</code> to each pointer
+   in the range <code>[s, s+n)</code>, and returns <code>s</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+EOF value
+</td>
+<td valign="top">
+<code>X::eof()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns a value that can represent EOF.
+</td>
+<td valign="top">
+<code>X::eof()</code> is distinct from every valid value of type
+   <code>X::char_type</code>.  That is, there exists no value <code>c</code>
+   such that <code>X::eq_int_type(X::to_int_type(c), X::eof())</code> is <code>true</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Not EOF
+</td>
+<td valign="top">
+<code>X::not_eof(e)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns <code>e</code> if <code>e</code> represents a valid <code>char_type</code> value, and some
+   non-EOF value if <code>e</code> is <code>X::eof()</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Convert to value type
+</td>
+<td valign="top">
+<code>X::to_char_type(e)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Converts <code>e</code> to <code>X</code>'s int type.  If <code>e</code> is a representation of some
+   <code>char_type</code> value then it returns that value; if <code>e</code> is <code>X::eof()</code>
+   then the return value is unspecified.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Convert to int type
+</td>
+<td valign="top">
+<code>X::to_int_type(c)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Converts <code>c</code> to <code>X</code>'s int type.
+</td>
+<td valign="top">
+<code>X::to_char_type(X::to_int_type(c))</code> is a null operation.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Equal int type values
+</td>
+<td valign="top">
+<code>X::eq_int_type(e1, e2)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Compares two int type values.  If there exist values of type
+   <code>X::char_type</code> such that <code>e1</code> is <code>X::to_int_type(c1))</code> and
+   <code>e2</code> is <code>X::to_int_type(c2))</code>, then <code>X::eq_int_type(e1, e2)</code> is
+   the same as <code>X::eq(c1, c2)</code>.  Otherwise, <code>eq_int_type</code> returns
+   <code>true</code> if <code>e1</code> and <code>e2</code> are both EOF and <code>false</code> if one of
+   <code>e1</code> and <code>e2</code> is EOF and the other is not.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+<code>length</code>, <code>find</code>, <code>move</code>, <code>copy</code>, and the range version of <code>assign</code>
+are linear in <code>n</code>.
+<p>
+All other operations are constant time.
+\section Models Models
+<ul>
+<li>
+<code>\ref stldoc_char_traits&lt;char&gt;</code>
+<li>
+<code>\ref stldoc_char_traits&lt;wchar_t&gt;</code>
+</ul>
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_basic_string</code>
+
+
+*/

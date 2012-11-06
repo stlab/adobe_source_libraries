@@ -1,0 +1,75 @@
+/*************************************************************************************************/
+
+/*
+
+    ADOBE CONFIDENTIAL
+    ___________________
+
+    Copyright 2002 - 2004 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: All information contained herein is, and remains the property of
+    Adobe Systems Incorporated and its suppliers, if any. The intellectual and 
+    technical concepts contained herein are proprietary to Adobe Systems Incorporated 
+    and its suppliers and may be covered by U.S. and Foreign Patents, patents 
+    in process, and are protected by trade secret or copyright law. Dissemination 
+    of this information or reproduction of this material is strictly forbidden 
+    unless prior written permission is obtained from Adobe Systems Incorporated.
+ 
+*/
+
+/*! \defgroup concept_convertible_to_range ConvertibleToRange
+\ingroup asl_concepts
+
+\description
+ConvertibleToRange denotes a sequence of the form: <code>[begin, end)</code>. The elements of the range are the beginning element to the element before the end element. The following are examples of ranges:
+    - A  <i>container</i>, denotes a range <code>[container.begin(), container.end())</code>
+    - An <i>array</i>, denotes a range <code>[array[0], array[sizeof(array)/sizeof(array[0])])</code>
+    - An <i>std::pair</i> of <i>iterators</i> denotes a range <code>[pair.first, pair.last)</code>
+
+\refinement_of
+
+\associated_types
+
+\notation
+<table>
+    <tr>
+        <td valign="top"><code>X</code></td>
+        <td valign="top">A type that is a model of ConvertibleToRange</td>
+    </tr>
+    <tr>
+        <td valign="top"><code>x</code></td>
+        <td valign="top">Object of type <code>X</code></td>
+    </tr>
+    <tr>
+        <td valign="top"><code>I</code></td>
+        <td valign="top">A type for iterating over objects of type <code>X</code></td>
+    </tr>
+    <tr>
+        <td valign="top"><code>p</code>, <code>q</code></td>
+        <td valign="top">Objects of type <code>I</code></td>
+    </tr>
+</table>
+
+\definitions
+\subpar Valid&nbsp;Iterator
+\c p is a <i>valid iterator</i> in \c x if it is a valid (nonsingular) iterator that is reachable from \c adobe::begin(x).
+\subpar Valid&nbsp;Range
+<code>[p, q)</code> is a <i>valid range</i> in \c x if \c p and \c q are valid iterators in \c x and if \c q is reachable from \c p.
+
+\valid_expressions
+
+\expression_semantics
+
+\complexity
+
+\invariants
+\subpar Range&nbsp;Size
+\c adobe::size(x) is equal to the distance from \c adobe::begin(x) to \c adobe::end(x).  
+\subpar Completeness
+An algorithm that iterates through the range <code>[adobe::begin(x), adobe::end(x))</code> will pass through every element of \c x. <A href="#1">[1]</A>
+
+\notes
+<A name="1">[1]</A>
+The order in which the elements appear in any range is unspecified, even between two iterations where the range has had no intervening mutative operations.
+*/

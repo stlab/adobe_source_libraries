@@ -1,0 +1,472 @@
+diff -Nwurx '(.DS_Store|*.obj|*.o|*.so|*.dll|*.lib|*.exe|*.ilk|*.pdb)' --exclude=adobe_information ../diffable_tbb_2_0/build/common.inc ../intel_tbb_libraries/build/common.inc
+--- ../diffable_tbb_2_0/build/common.inc	2008-04-09 05:31:42.000000000 -0700
++++ ../intel_tbb_libraries/build/common.inc	2008-04-29 10:29:06.000000000 -0700
+@@ -26,8 +26,13 @@
+ 
+ ifndef tbb_os
+  ifeq ($(OS), Windows_NT)
++  CYGWIN:=$(shell uname)
++  ifeq ($(CYGWIN),)
+   export tbb_os=windows
+  else
++   export tbb_os=cygwin
++  endif #
++ else
+   OS:=$(shell uname)
+   ifeq ($(OS),)
+    $(error "$(OS) is not supported")
+diff -Nwurx '(.DS_Store|*.obj|*.o|*.so|*.dll|*.lib|*.exe|*.ilk|*.pdb)' --exclude=adobe_information ../diffable_tbb_2_0/build/cygwin.gcc.inc ../intel_tbb_libraries/build/cygwin.gcc.inc
+--- ../diffable_tbb_2_0/build/cygwin.gcc.inc	1969-12-31 16:00:00.000000000 -0800
++++ ../intel_tbb_libraries/build/cygwin.gcc.inc	2008-04-29 12:00:48.000000000 -0700
+@@ -0,0 +1,101 @@
++# Copyright 2008 Adobe Systems Incorporated.  All Rights Reserved.
++#
++# This file is part of Threading Building Blocks.
++#
++# Threading Building Blocks is free software; you can redistribute it
++# and/or modify it under the terms of the GNU General Public License
++# version 2 as published by the Free Software Foundation.
++#
++# Threading Building Blocks is distributed in the hope that it will be
++# useful, but WITHOUT ANY WARRANTY; without even the implied warranty
++# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with Threading Building Blocks; if not, write to the Free Software
++# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++#
++# As a special exception, you may use this file as part of a free software
++# library without restriction.  Specifically, if other files instantiate
++# templates or use macros or inline functions from this file, or you compile
++# this file and link it with other files to produce an executable, this
++# file does not by itself cause the resulting executable to be covered by
++# the GNU General Public License.  This exception does not however
++# invalidate any other reasons why the executable file might be covered by
++# the GNU General Public License.
++
++COMPILE_ONLY = -c -MMD
++PREPROC_ONLY = -E -x c
++INCLUDE_KEY = -I
++DEFINE_KEY = -D
++OUTPUT_KEY = -o #
++OUTPUTOBJ_KEY = -o #
++PIC_KEY = -fPIC
++WARNING_AS_ERROR_KEY = -Werror
++WARNING_KEY = -Wall
++WARNING_SUPPRESS = -Wno-parentheses
++DYLIB_KEY = -shared
++LIBDL = -ldl
++
++TBB_NOSTRICT = 1
++
++CPLUS = g++ 
++LIB_LINK_FLAGS = -shared
++LIBS = -lpthread -ldl # -lrt 
++C_FLAGS = $(CPLUS_FLAGS) -x c
++
++COMMON_CONFIGURATION_FLAGS = -DDO_ITT_NOTIFY -DUSE_PTHREAD -D_POSIX_THREAD_PRIO_INHERIT=1
++
++ifeq ($(cfg), release)
++        CPLUS_FLAGS = -O2 $(COMMON_CONFIGURATION_FLAGS)
++endif
++ifeq ($(cfg), debug)
++        CPLUS_FLAGS = -DTBB_DO_ASSERT -g -O0 $(COMMON_CONFIGURATION_FLAGS)
++endif
++
++ASM=
++ASM_FLAGS=
++
++TBB_ASM.OBJ=
++
++ifeq (itanium,$(arch))
++# Position-independent code (PIC) is a must on IA-64, even for regular (not shared) executables
++    CPLUS_FLAGS += $(PIC_KEY)
++endif 
++
++ifeq (em64t,$(arch))
++    CPLUS_FLAGS += -m64
++    LIB_LINK_FLAGS += -m64
++endif 
++
++ifeq (ia32,$(arch))
++    CPLUS_FLAGS += -m32 -march=i686
++    LIB_LINK_FLAGS += -m32
++endif 
++
++#------------------------------------------------------------------------------
++# Setting assembler data.
++#------------------------------------------------------------------------------
++%.$(OBJ): %.s
++	cpp $(ASM_FLAGS) <$< | grep -v '^#' >$*.tmp
++	$(ASM) -o $@ $*.tmp
++	rm $*.tmp
++
++ASSEMBLY_SOURCE=$(arch)-gas
++ifeq (itanium,$(arch))
++    ASM=as
++    TBB_ASM.OBJ = atomic_support.o lock_byte.o log2.o pause.o
++endif 
++#------------------------------------------------------------------------------
++# End of setting assembler data.
++#------------------------------------------------------------------------------
++
++#------------------------------------------------------------------------------
++# Setting tbbmalloc data.
++#------------------------------------------------------------------------------
++
++M_CPLUS_FLAGS = $(CPLUS_FLAGS) -fno-rtti -fno-exceptions -fno-schedule-insns2
++
++#------------------------------------------------------------------------------
++# End of setting tbbmalloc data.
++#------------------------------------------------------------------------------
+diff -Nwurx '(.DS_Store|*.obj|*.o|*.so|*.dll|*.lib|*.exe|*.ilk|*.pdb)' --exclude=adobe_information ../diffable_tbb_2_0/build/cygwin.inc ../intel_tbb_libraries/build/cygwin.inc
+--- ../diffable_tbb_2_0/build/cygwin.inc	1969-12-31 16:00:00.000000000 -0800
++++ ../intel_tbb_libraries/build/cygwin.inc	2008-04-29 12:00:52.000000000 -0700
+@@ -0,0 +1,86 @@
++# Copyright 2008 Adobe Systems Incorporated.  All Rights Reserved.
++#
++# This file is part of Threading Building Blocks.
++#
++# Threading Building Blocks is free software; you can redistribute it
++# and/or modify it under the terms of the GNU General Public License
++# version 2 as published by the Free Software Foundation.
++#
++# Threading Building Blocks is distributed in the hope that it will be
++# useful, but WITHOUT ANY WARRANTY; without even the implied warranty
++# of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with Threading Building Blocks; if not, write to the Free Software
++# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++#
++# As a special exception, you may use this file as part of a free software
++# library without restriction.  Specifically, if other files instantiate
++# templates or use macros or inline functions from this file, or you compile
++# this file and link it with other files to produce an executable, this
++# file does not by itself cause the resulting executable to be covered by
++# the GNU General Public License.  This exception does not however
++# invalidate any other reasons why the executable file might be covered by
++# the GNU General Public License.
++
++ifndef arch
++        ifeq ($(shell uname -m),i686)
++                export arch:=ia32
++        endif
++        ifeq ($(shell uname -m),ia64)
++                export arch:=itanium
++        endif
++        ifeq ($(shell uname -m),x86_64)
++                export arch:=em64t
++        endif
++endif
++
++ifndef runtime
++        #gcc_version:=$(shell gcc -v 2>&1 | grep 'gcc --version' | sed -e 's/^gcc version //' | sed -e 's/ .*$$//')
++        gcc_version_full=$(shell gcc --version | grep 'gcc'| egrep -o ' [0-9]+\.[0-9]+\.[0-9]+.*' | sed -e 's/^\ //')
++        gcc_version=$(shell echo "$(gcc_version_full)" | egrep -o '^[0-9]+\.[0-9]+\.[0-9]+\s*' | head -n 1 | sed -e 's/ *//g')
++        os_version:=$(shell uname)
++        os_kernel_version:=$(shell uname | sed -e 's/-.*$$//')
++        #export os_glibc_version_full:=$(shell getconf GNU_LIBC_VERSION | grep glibc | sed -e 's/^glibc //')
++        #os_glibc_version:=$(shell echo "$(os_glibc_version_full)" | sed -e '2,$$d' -e 's/-.*$$//')
++        export runtime:=$(gcc_version)
++endif
++
++native_compiler := gcc
++export compiler ?= gcc
++debugger ?= gdb
++
++CMD=sh -c
++CWD=$(shell pwd)
++RM?=rm -f
++RD?=rmdir
++MD?=mkdir -p
++NUL= /dev/null
++SLASH=/
++MAKE_VERSIONS=sh $(tbb_root)/build/version_info_linux.sh $(CPLUS) $(CPLUS_FLAGS) $(INCLUDES) >version_string.tmp
++MAKE_TBBVARS=sh $(tbb_root)/build/generate_tbbvars.sh
++
++ifdef LD_LIBRARY_PATH
++        export LD_LIBRARY_PATH := .:$(LD_LIBRARY_PATH)
++else
++        export LD_LIBRARY_PATH := .
++endif
++
++####### Build settigns ########################################################
++
++OBJ = o
++DLL = dll
++LIBEXT = dll
++
++TBB.DEF = 
++TBB.DLL = libtbb$(DEBUG_SUFFIX).$(DLL)
++TBB.LIB = $(TBB.DLL)
++LINK_TBB.LIB = $(TBB.LIB)
++
++MALLOC.DLL = libtbbmalloc$(DEBUG_SUFFIX).$(DLL)
++MALLOC.LIB = $(MALLOC.DLL)
++
++TBB_NOSTRICT=1
++
++TEST_LAUNCHER=sh $(tbb_root)/build/test_launcher.sh
+diff -Nwurx '(.DS_Store|*.obj|*.o|*.so|*.dll|*.lib|*.exe|*.ilk|*.pdb)' --exclude=adobe_information ../diffable_tbb_2_0/build/generate_tbbvars.sh ../intel_tbb_libraries/build/generate_tbbvars.sh
+--- ../diffable_tbb_2_0/build/generate_tbbvars.sh	2008-04-09 05:31:43.000000000 -0700
++++ ../intel_tbb_libraries/build/generate_tbbvars.sh	2008-04-29 10:29:06.000000000 -0700
+@@ -25,7 +25,6 @@
+ # the GNU General Public License.  This exception does not however
+ # invalidate any other reasons why the executable file might be covered by
+ # the GNU General Public License.
+-
+ # Script used to generate tbbvars.[c]sh scripts
+ bin_dir="$PWD"  # 
+ cd "$tbb_root"  # keep this comments here
+diff -Nwurx '(.DS_Store|*.obj|*.o|*.so|*.dll|*.lib|*.exe|*.ilk|*.pdb)' --exclude=adobe_information ../diffable_tbb_2_0/build/test_launcher.sh ../intel_tbb_libraries/build/test_launcher.sh
+--- ../diffable_tbb_2_0/build/test_launcher.sh	2008-04-09 05:31:43.000000000 -0700
++++ ../intel_tbb_libraries/build/test_launcher.sh	2008-04-29 10:29:06.000000000 -0700
+@@ -25,7 +25,9 @@
+ # the GNU General Public License.  This exception does not however
+ # invalidate any other reasons why the executable file might be covered by
+ # the GNU General Public License.
+-
+ # Set stack limit and run the command line passed via parameters
++# (But only if you're not running cygwin)
++if [ "`uname`" != "CYGWIN_NT-5.1" ]; then #
+ ulimit -s 10240 # 
++fi #
+ $* # 
+diff -Nwurx '(.DS_Store|*.obj|*.o|*.so|*.dll|*.lib|*.exe|*.ilk|*.pdb)' --exclude=adobe_information ../diffable_tbb_2_0/include/tbb/machine/gcc_4_1_generic.h ../intel_tbb_libraries/include/tbb/machine/gcc_4_1_generic.h
+--- ../diffable_tbb_2_0/include/tbb/machine/gcc_4_1_generic.h	1969-12-31 16:00:00.000000000 -0800
++++ ../intel_tbb_libraries/include/tbb/machine/gcc_4_1_generic.h	2008-04-29 10:29:05.000000000 -0700
+@@ -0,0 +1,99 @@
++/*
++    Copyright 2008 Adobe Systems Incorporated.  All Rights Reserved.
++
++    This file is part of Threading Building Blocks.
++
++    Threading Building Blocks is free software; you can redistribute it
++    and/or modify it under the terms of the GNU General Public License
++    version 2 as published by the Free Software Foundation.
++
++    Threading Building Blocks is distributed in the hope that it will be
++    useful, but WITHOUT ANY WARRANTY; without even the implied warranty
++    of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with Threading Building Blocks; if not, write to the Free Software
++    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++
++    As a special exception, you may use this file as part of a free software
++    library without restriction.  Specifically, if other files instantiate
++    templates or use macros or inline functions from this file, or you compile
++    this file and link it with other files to produce an executable, this
++    file does not by itself cause the resulting executable to be covered by
++    the GNU General Public License.  This exception does not however
++    invalidate any other reasons why the executable file might be covered by
++    the GNU General Public License.
++*/
++
++#ifndef __TBB_machine_H
++#error Do not include this file directly; include tbb_machine.h instead
++#endif
++
++#include <sched.h>
++
++#if defined (__GLIBC__)
++    #include <endian.h>
++    #if (__BYTE_ORDER == __BIG_ENDIAN)
++        #define __TBB_BIG_ENDIAN 1
++    #else
++        #define __TBB_BIG_ENDIAN 0
++    #endif
++#elif defined(_BIG_ENDIAN)
++    #define __TBB_BIG_ENDIAN 1
++#elif defined(_LITTLE_ENDIAN)
++    #define __TBB_BIG_ENDIAN 0
++#elif defined(__sparc) || defined (__sparc__) \
++   || defined(_POWER) || defined(__powerpc__) \
++   || defined(__ppc__) || defined(__hpux) \
++   || defined(_MIPSEB) || defined(__s390__)
++    #define __TBB_BIG_ENDIAN 1
++#elif defined(__i386__) || defined (__alpha__) \
++   || defined(__ia64) || defined(__ia64__) \
++   || defined(_M_IX86) || defined(_M_IA64) \
++   || defined(_M_ALPHA) || defined(__amd64) \
++   || defined(__amd64__) || defined(_M_AMD64) \
++   || defined(__x86_64) || defined(__x86_64__) \
++   || defined(_M_X64)
++    #define __TBB_BIG_ENDIAN 0
++#else
++    #error Unknown machine endianness.
++#endif
++
++#if defined(__i386__) || defined(__ppc__) \
++ || defined(__powerpc__)
++    #define __TBB_WORDSIZE 4
++#elif defined(__x86_64__) || defined(__ia64__) \
++   || defined(__ppc64__) || defined(__powerpc64__)
++    #define __TBB_WORDSIZE 8
++#else
++    #error Unknown machine word size.
++#endif
++
++template <typename T>
++inline T __TBB_machine_cmpswp_generic (volatile void *ptr, T value, T comparand)
++{
++    return __sync_val_compare_and_swap(static_cast<volatile T*>(ptr), comparand, value);
++}
++
++inline int32_t __TBB_machine_cmpswp4 (volatile void *ptr, int32_t value, int32_t comparand)
++{
++    return __TBB_machine_cmpswp_generic(ptr, value, comparand);
++}
++
++inline int64_t __TBB_machine_cmpswp8 (volatile void *ptr, int64_t value, int64_t comparand)
++{
++    return __TBB_machine_cmpswp_generic(ptr, value, comparand);
++}
++
++#if defined(__LP_64__)
++#define __TBB_CompareAndSwapW(P,V,C) __TBB_machine_cmpswp8(P,V,C)
++#else
++#define __TBB_CompareAndSwapW(P,V,C) __TBB_machine_cmpswp4(P,V,C)
++#endif
++
++#define __TBB_CompareAndSwap4(P,V,C) __TBB_machine_cmpswp4(P,V,C)
++#define __TBB_CompareAndSwap8(P,V,C) __TBB_machine_cmpswp8(P,V,C)
++#define __TBB_Yield() sched_yield()
++#define __TBB_fence_for_acquire() __sync_synchronize()
++#define __TBB_fence_for_release() __sync_synchronize()
+diff -Nwurx '(.DS_Store|*.obj|*.o|*.so|*.dll|*.lib|*.exe|*.ilk|*.pdb)' --exclude=adobe_information ../diffable_tbb_2_0/include/tbb/tbb_machine.h ../intel_tbb_libraries/include/tbb/tbb_machine.h
+--- ../diffable_tbb_2_0/include/tbb/tbb_machine.h	2008-04-09 05:31:33.000000000 -0700
++++ ../intel_tbb_libraries/include/tbb/tbb_machine.h	2008-04-29 10:29:06.000000000 -0700
+@@ -85,6 +85,11 @@
+ #include "tbb/machine/linux_em64t.h"
+ #endif
+ 
++#elif defined(__GNUC__) && (((__GNUC__ == 4) && (__GNUC_MINOR__ >= 1)) || (__GNUC__ > 4))
++
++#define __TBB_GENERIC_GNUC
++#include "tbb/machine/gcc_4_1_generic.h"
++
+ #endif
+ 
+ #if !defined(__TBB_CompareAndSwap4) || !defined(__TBB_CompareAndSwap8) || !defined(__TBB_Yield)
+diff -Nwurx '(.DS_Store|*.obj|*.o|*.so|*.dll|*.lib|*.exe|*.ilk|*.pdb)' --exclude=adobe_information ../diffable_tbb_2_0/src/tbb/cache_aligned_allocator.cpp ../intel_tbb_libraries/src/tbb/cache_aligned_allocator.cpp
+--- ../diffable_tbb_2_0/src/tbb/cache_aligned_allocator.cpp	2008-04-09 05:31:44.000000000 -0700
++++ ../intel_tbb_libraries/src/tbb/cache_aligned_allocator.cpp	2008-04-29 10:29:06.000000000 -0700
+@@ -113,6 +113,8 @@
+ #define MALLOCLIB_NAME "libtbbmalloc" DEBUG_SUFFIX ".dylib"
+ #elif __linux__ || __FreeBSD__ || __sun
+ #define MALLOCLIB_NAME "libtbbmalloc" DEBUG_SUFFIX ".so"
++#elif defined(__TBB_GENERIC_GNUC)
++#define MALLOCLIB_NAME "libtbbmalloc" DEBUG_SUFFIX ".so"
+ #else
+ #error Unknown OS
+ #endif
+diff -Nwurx '(.DS_Store|*.obj|*.o|*.so|*.dll|*.lib|*.exe|*.ilk|*.pdb)' --exclude=adobe_information ../diffable_tbb_2_0/src/tbb/itt_notify.cpp ../intel_tbb_libraries/src/tbb/itt_notify.cpp
+--- ../diffable_tbb_2_0/src/tbb/itt_notify.cpp	2008-04-09 05:31:43.000000000 -0700
++++ ../intel_tbb_libraries/src/tbb/itt_notify.cpp	2008-04-29 10:29:07.000000000 -0700
+@@ -84,6 +84,8 @@
+ #  define LIBITTNOTIFY_NAME "libittnotify.so"
+ # elif __APPLE__
+ #  define LIBITTNOTIFY_NAME "libittnotify.dylib"
++# elif defined(__TBB_GENERIC_GNUC)
++#  define LIBITTNOTIFY_NAME "libittnotify.so"
+ # else
+ #  error Unknown OS
+ # endif
+diff -Nwurx '(.DS_Store|*.obj|*.o|*.so|*.dll|*.lib|*.exe|*.ilk|*.pdb)' --exclude=adobe_information ../diffable_tbb_2_0/src/tbb/tbb_misc.h ../intel_tbb_libraries/src/tbb/tbb_misc.h
+--- ../diffable_tbb_2_0/src/tbb/tbb_misc.h	2008-04-09 05:31:44.000000000 -0700
++++ ../intel_tbb_libraries/src/tbb/tbb_misc.h	2008-04-29 10:29:07.000000000 -0700
+@@ -42,6 +42,8 @@
+ #include <sys/sysctl.h>
+ #elif defined(__FreeBSD__)
+ #include <unistd.h>
++#elif defined(__TBB_GENERIC_GNUC)
++#include <unistd.h>
+ #endif
+ 
+ namespace tbb {
+@@ -62,7 +64,7 @@
+     return static_cast<int>(si.dwNumberOfProcessors);
+ }
+ 
+-#elif defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__sun) 
++#elif defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__sun) || defined(__TBB_GENERIC_GNUC)
+ static inline int DetectNumberOfWorkers() {
+     long number_of_workers;
+ 
+@@ -79,6 +81,8 @@
+     size_t size = sizeof(ncpu);
+     sysctl( name, 2, &ncpu, &size, NULL, 0 );
+     number_of_workers = ncpu;
++#elif defined(__TBB_GENERIC_GNUC)
++    number_of_workers = sysconf(_SC_NPROCESSORS_ONLN);
+ #else
+ #error DetectNumberOfWorkers: Method to detect the number of online CPUs is unknown
+ #endif
+diff -Nwurx '(.DS_Store|*.obj|*.o|*.so|*.dll|*.lib|*.exe|*.ilk|*.pdb)' --exclude=adobe_information ../diffable_tbb_2_0/src/tbbmalloc/MemoryAllocator.cpp ../intel_tbb_libraries/src/tbbmalloc/MemoryAllocator.cpp
+--- ../diffable_tbb_2_0/src/tbbmalloc/MemoryAllocator.cpp	2008-04-09 05:31:46.000000000 -0700
++++ ../intel_tbb_libraries/src/tbbmalloc/MemoryAllocator.cpp	2008-04-29 10:29:08.000000000 -0700
+@@ -333,6 +333,9 @@
+     }
+ # elif _WIN64 && _MSC_VER>=1400
+     _BitScanReverse((unsigned long*)&pos, (unsigned long)number);
++#elif defined(__TBB_GENERIC_GNUC)
++    // Assumes running under Cygwin, so this is not generally accurate
++    __asm__ ("bsr %1,%0" : "=r"(pos) : "r"(number));
+ # else
+ #   error highestBitPos() not implemented for this platform
+ # endif
+diff -Nwurx '(.DS_Store|*.obj|*.o|*.so|*.dll|*.lib|*.exe|*.ilk|*.pdb)' --exclude=adobe_information ../diffable_tbb_2_0/src/test/harness.h ../intel_tbb_libraries/src/test/harness.h
+--- ../diffable_tbb_2_0/src/test/harness.h	2008-04-09 05:31:46.000000000 -0700
++++ ../intel_tbb_libraries/src/test/harness.h	2008-04-29 10:29:08.000000000 -0700
+@@ -42,8 +42,9 @@
+ #endif
+ #include <new>
+ #include "harness_assert.h"
++#include <tbb/tbb_machine.h>
+ 
+-#if __linux__||__APPLE__||__FreeBSD__ || __sun
++#if __linux__||__APPLE__||__FreeBSD__ || __sun || defined(__TBB_GENERIC_GNUC)
+     #include <pthread.h>
+ #elif _WIN32||WIN64
+     #include <windows.h>
+@@ -133,7 +134,7 @@
+ 
+     //! Start task
+     void start() {
+-#if __linux__||__APPLE__||__FreeBSD__ || __sun
++#if __linux__||__APPLE__||__FreeBSD__ || __sun || defined(__TBB_GENERIC_GNUC)
+         int status = pthread_create(&thread_id, NULL, thread_function, this);
+         ASSERT(0==status, "NativeParallelFor: pthread_create failed");
+ #else
+@@ -145,7 +146,7 @@
+ 
+     //! Wait for task to finish
+     void wait_to_finish() {
+-#if __linux__||__APPLE__||__FreeBSD__ || __sun
++#if __linux__||__APPLE__||__FreeBSD__ || __sun || defined(__TBB_GENERIC_GNUC)
+         int status = pthread_join( thread_id, NULL );
+         ASSERT( !status, "pthread_join failed" );
+ #else
+@@ -161,7 +162,7 @@
+         Top-level caller should let index default to 0. */
+     static size_t build_task_array( const Range& range, const Body& body, NativeParalleForTask* array, size_t index ); 
+ private:
+-#if __linux__||__APPLE__||__FreeBSD__ || __sun
++#if __linux__||__APPLE__||__FreeBSD__ || __sun || defined(__TBB_GENERIC_GNUC)
+     pthread_t thread_id;
+ #else
+     HANDLE thread_handle;
+@@ -173,7 +174,7 @@
+     //! Body to invoke over the range.
+     const Body body;
+ 
+-#if __linux__||__APPLE__||__FreeBSD__ || __sun
++#if __linux__||__APPLE__||__FreeBSD__ || __sun || defined(__TBB_GENERIC_GNUC)
+     static void* thread_function(void* object)
+ #else
+     static unsigned __stdcall thread_function( void* object )

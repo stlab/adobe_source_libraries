@@ -1,0 +1,107 @@
+/** \page stldoc_mismatch mismatch
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Mismatch</code> is an overloaded name; there are actually two <code>mismatch</code>
+functions.
+\code
+template <class InputIterator1, class InputIterator2>
+pair<InputIterator1, InputIterator2> 
+mismatch(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2);
+
+template <class InputIterator1, class InputIterator2, 
+          class BinaryPredicate>
+pair<InputIterator1, InputIterator2> 
+mismatch(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2,
+         BinaryPredicate binary_pred);
+\endcode
+\section Description Description
+<code>Mismatch</code> finds the first position where the two ranges <code>[first1, last1)</code>
+and <code>[first2, first2 + (last1 - first1))</code> differ.  The two 
+versions of <code>mismatch</code> use different tests for whether elements differ.
+<p>
+The first version of <code>mismatch</code> finds
+the first iterator <code>i</code> in <code>[first1, last1)</code> such that <code>*i != *(first2
++ (i - first1))</code>.  The return value is a pair whose first element is
+<code>i</code> and whose second element is <code>*(first2 + (i - first1))</code>.  If no
+such iterator <code>i</code> exists, the return value is a pair whose first
+element is <code>last1</code> and whose second element is 
+<code>*(first2 + (last1 - first1))</code>.  
+<p>
+The second version of <code>mismatch</code> finds
+the first iterator <code>i</code> in <code>[first1, last1)</code> such that <code>binary_pred(*i,
+*(first2 + (i - first1))</code> is <code>false</code>.  The return value is a pair 
+whose first element is <code>i</code> and whose second element is 
+<code>*(first2 + (i - first1))</code>.  If no such iterator <code>i</code> exists, the
+return value is a pair whose first element is <code>last1</code> and whose second
+element is <code>*(first2 + (last1 - first1))</code>.  
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>InputIterator1</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator2</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator1</code>'s value type is a model of \ref stldoc_EqualityComparable.
+<li>
+<code>InputIterator2</code>'s value type is a model of \ref stldoc_EqualityComparable.
+<li>
+<code>InputIterator1</code>'s value type can be compared for equality with
+   <code>InputIterator2</code>'s value type. 
+</ul>
+For the second version:
+<ul>
+<li>
+<code>InputIterator1</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator2</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>BinaryPredicate</code> is a model of \ref stldoc_BinaryPredicate.
+<li>
+<code>InputIterator1</code>'s value type is convertible to <code>BinaryPredicate</code>'s
+   first argument type.
+<li>
+<code>InputIterator2</code>'s value type is convertible to <code>BinaryPredicate</code>'s
+   second argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first2, first2 + (last2 - last1))</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  At most <code>last1 - first1</code> comparisons.
+\section Example Example
+\code
+int A1[] = { 3, 1, 4, 1, 5, 9, 3 };
+int A2[] = { 3, 1, 4, 2, 8, 5, 7 };
+const int N = sizeof(A1) / sizeof(int);
+
+pair<int*, int*> result = mismatch(A1, A1 + N, A2);
+cout << "The first mismatch is in position " << result.first - A1 << endl;
+cout << "Values are: " << *(result.first) << ", " << *(result.second) << endl;
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_equal</code>, <code>\ref stldoc_search</code>, <code>\ref stldoc_find</code>, <code>\ref stldoc_find_if</code>
+
+
+*/

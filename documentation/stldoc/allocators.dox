@@ -1,0 +1,142 @@
+/** \page stldoc_Allocators Allocators
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html allocators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html overview.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b> : allocators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: overview</td>
+</tr>
+</table>
+
+\section Summary Summary
+Allocators encapsulate allocation and deallocation of memory.  They
+provide a low-level interface that permits efficient allocation of 
+many small objects; different allocator types represent different
+schemes for memory management.
+<p>
+Note that allocators simply allocate and deallocate memory, as opposed
+to creating and destroying objects.  The STL also includes several
+low-level algorithms for manipulating uninitialized memory.
+<p>
+Note also that allocators do not attempt to encapsulate multiple
+memory models.  The C++ language only defines a single memory model
+(the difference of two pointers, for example, is always <code>ptrdiff_t</code>),
+and this memory model is the only one that allocators support. 
+<i>This is a major change from the definition of allocators in the
+original STL.</i> <A href="#1">[1]</A>
+\section Description Description
+The details of the allocator interface are still subject to change,
+and we do not guarantee that specific member functions will remain in
+future versions.  You should think of an allocator as a &quot;black box&quot;.
+That is, you may select a container's memory allocation strategy by
+instantiating the container template with a particular allocator <A href="#2">[2]</A>,
+but you should not make any assumptions about how the container 
+actually uses the allocator.  
+<p>
+The available allocators are as follows.  In most cases you shouldn't
+have to worry about the distinction: the default allocator, <code>alloc</code>,
+is usually the best choice.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+<code>alloc</code>
+</td>
+<td valign="top">
+The default allocator.  It is thread-safe, and usually has the best
+   performance characteristics.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pthread_alloc</code>
+</td>
+<td valign="top">
+A thread-safe allocator that uses a different memory pool for
+   each thread;  you can only 
+   use <code>pthread_alloc</code> if your operating system provides pthreads.
+   <code>Pthread_alloc</code> is usually faster than <code>alloc</code>, especially on
+   multiprocessor systems.  It can, however, cause
+   resource fragmentation: memory deallocated in one
+   thread is not available for use by other threads.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>single_client_alloc</code>
+</td>
+<td valign="top">
+A fast but thread-unsafe allocator.  In programs that only have
+   one thread, this allocator might be faster than <code>alloc</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>malloc_alloc</code>
+</td>
+<td valign="top">
+An allocator that simply uses the standard library function <code>malloc</code>.
+   It is thread-safe but slow; the main reason why you might
+   sometimes want to use it is to get more useful information from
+   bounds-checking or leak-detection tools while you are debugging.
+</td>
+</tr>
+</table>
+\section Examples Examples
+\code
+vector<double> V(100, 5.0);     // Uses the default allocator.
+vector<double, single_client_alloc> local(V.begin(), V.end());
+\endcode
+\section Concepts Concepts
+<ul>
+<li>
+Allocator
+</ul>
+\section Types Types
+<ul>
+<li>
+<code>alloc</code>
+<li>
+<code>pthread_alloc</code>
+<li>
+<code>single_client_alloc</code>
+<li>
+<code>malloc_alloc</code>
+<li>
+<code>\ref stldoc_raw_storage_iterator</code>
+</ul>
+\section Functions Functions
+<ul>
+<li>
+<code>\ref stldoc_construct</code>
+<li>
+<code>\ref stldoc_destroy</code>
+<li>
+<code>\ref stldoc_uninitialized_copy</code>
+<li>
+<code>\ref stldoc_uninitialized_fill</code>
+<li>
+<code>\ref stldoc_uninitialized_fill_n</code>
+<li>
+<code>\ref stldoc_get_temporary_buffer</code>
+<li>
+<code>\ref stldoc_return_temporary_buffer</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+The reason for this change is that the new interface reduces
+memory fragmentation, and that it allows an implementation that
+is both efficient and thread-safe.
+<p><A name="2">[2]</A>
+Different containers may use different allocators.  You might,
+for example, have some containers that use the default allocator
+<code>alloc</code> and others that use <code>pthread_alloc</code>.  Note, however, that
+<code>vector&lt;int&gt;</code> and <code>vector&lt;int, pthread_alloc&gt;</code> are distinct types.
+\section See_also See also
+
+
+*/

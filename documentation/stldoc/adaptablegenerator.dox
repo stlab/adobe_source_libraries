@@ -1,0 +1,77 @@
+/** \page stldoc_AdaptableGenerator AdaptableGenerator
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+An Adaptable Generator is a \ref stldoc_Generator with a nested
+<code>typedef</code> that defines its result type.  <A href="#1">[1]</A> This nested <code>typedef</code> makes
+it possible to use function object adaptors.
+\section Refinement_of Refinement of
+\ref stldoc_Generator
+\section Associated_types Associated types
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Result type
+</td>
+<td valign="top">
+<code>F::result_type</code>
+</td>
+<td valign="top">
+The type returned when the Generator is called
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>F</code>
+</td>
+<td valign="top">
+A type that is a model of Adaptable Generator
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+\section Valid_expressions Valid expressions
+None, except for those defined by \ref stldoc_Generator
+\section Expression_semantics Expression semantics
+\section Complexity_guarantees Complexity guarantees
+\section Invariants Invariants
+\section Models Models
+The STL does not include any types that are models of Adaptable
+Generator.  An example of a user-defined Adaptable Generator is
+as follows.
+\code
+struct counter
+{
+  typedef int result_type;
+
+  counter() : n(0) {}
+  result_type operator()() { return n++; }
+
+  result_type n;
+};
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note the implication of this: a function pointer <code>T (*f)()</code>
+is a \ref stldoc_Generator, but not an Adaptable Generator: the
+expression <code>f::result_type</code> is nonsensical.
+\section See_also See also
+\ref stldoc_Generator, \ref stldoc_AdaptableUnaryFunction, \ref stldoc_AdaptableBinaryFunction 
+
+
+*/

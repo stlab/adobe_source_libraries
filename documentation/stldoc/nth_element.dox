@@ -1,0 +1,120 @@
+/** \page stldoc_nth_element nth_element
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Nth_element</code> is an overloaded name; there are actually two <code>nth_element</code>
+functions.
+\code
+template <class RandomAccessIterator>
+void nth_element(RandomAccessIterator first, RandomAccessIterator nth,
+                 RandomAccessIterator last);
+
+template <class RandomAccessIterator, class StrictWeakOrdering>
+void nth_element(RandomAccessIterator first, RandomAccessIterator nth,
+                 RandomAccessIterator last, StrictWeakOrdering comp);
+\endcode
+\section Description Description
+<code>Nth_element</code> is similar to <code>\ref stldoc_partial_sort</code>, in that it partially
+orders a range of elements: it arranges the range <code>[first, last)</code> 
+such that the element pointed to by the iterator <code>nth</code> is the same as
+the element that would be in that position if the entire range 
+<code>[first, last)</code> had been sorted.  Additionally, 
+none of the elements in the range <code>[nth, last)</code> is less than any of
+the elements in the range <code>[first, nth)</code>.  <A href="#1">[1]</A>
+<p>
+The two versions of <code>nth_element</code> differ in how they define whether one
+element is less than another.  The first version compares
+objects using <code>operator&lt;</code>, and the second compares objects using
+a \ref stldoc_functors <code>comp</code>.
+<p>
+The postcondition for the first version of <code>nth_element</code> is as follows.
+There exists no iterator <code>i</code> in the range <code>[first, nth)</code> such that
+<code>*nth &lt; *i</code>, and there exists no iterator <code>j</code> in the range <code>[nth + 1, last)</code>
+such that <code>*j &lt; *nth</code>.
+<p>
+The postcondition for the second version of <code>nth_element</code> is as follows.
+There exists no iterator <code>i</code> in the range <code>[first, nth)</code> such that
+<code>comp(*nth, *i)</code> is <code>true</code>, and there exists no iterator <code>j</code> in the range 
+<code>[nth + 1, last)</code> such that <code>comp(*j, *nth)</code> is <code>true</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version, the one that takes three arguments:
+<ul>
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator.
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+<code>RandomAccessIterator</code>'s value type is \ref stldoc_LessThanComparable.
+<li>
+The ordering relation on <code>RandomAccessIterator</code>'s value type is
+ a <i>strict weak ordering</i>, as defined in the \ref stldoc_LessThanComparable
+ requirements.
+</ul>
+For the second version, the one that takes four arguments:
+<ul>
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator.
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>RandomAccessIterator</code>'s value type is convertible to
+   <code>StrictWeakOrdering</code>'s argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, nth)</code> is a valid range.
+<li>
+<code>[nth, last)</code> is a valid range.
+</ul>
+(It follows from these two conditions that <code>[first, last)</code> is a valid range.)
+\section Complexity Complexity
+On average, linear in <code>last - first</code>. <A href="#2">[2]</A>
+\section Example Example
+\code
+int A[] = {7, 2, 6, 11, 9, 3, 12, 10, 8, 4, 1, 5};
+const int N = sizeof(A) / sizeof(int);
+
+nth_element(A, A + 6, A + N);
+copy(A, A + N, ostream_iterator<int>(cout, " "));
+// The printed result is "5 2 6 1 4 3 7 8 9 10 11 12".
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The way in which this differs from <code>\ref stldoc_partial_sort</code> is that
+neither the range <code>[first, nth)</code> nor the range <code>[nth, last)</code> is be
+sorted: it is simply guaranteed that none of the elements in <code>[nth,
+last)</code> is less than any of the elements in <code>[first, nth)</code>.  In that
+sense, <code>nth_element</code> is more similar to <code>\ref stldoc_partition</code> than to
+<code>\ref stldoc_sort</code>.  <code>Nth_element</code> does less work than <code>\ref stldoc_partial_sort</code>, so,
+reasonably enough, it is faster.  That's the main reason to use
+<code>nth_element</code> instead of <code>\ref stldoc_partial_sort</code>.
+<p><A name="2">[2]</A>
+Note that this is significantly less than the run-time complexity
+of <code>\ref stldoc_partial_sort</code>.
+\section See_also See also
+<code>\ref stldoc_partial_sort</code>,
+<code>\ref stldoc_partition</code>,
+<code>\ref stldoc_sort</code>,
+\ref stldoc_StrictWeakOrdering,
+\ref stldoc_LessThanComparable
+
+
+*/

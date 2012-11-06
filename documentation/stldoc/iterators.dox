@@ -1,0 +1,208 @@
+/** \page stldoc_Iterators Iterators
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html overview.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b> : iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: overview</td>
+</tr>
+</table>
+
+\section Summary Summary
+Iterators are a generalization of pointers: they are
+objects that point to other objects.  As the name suggests, iterators
+are often used to iterate over a range of objects: if an iterator
+points to one element in a range, then it is possible to increment
+it so that it points to the next element.
+<p>
+Iterators are central to generic programming because they are an
+interface between containers and algorithms: algorithms typically
+take iterators as arguments, so a container need only provide a way to
+access its elements using iterators.  This makes it possible to write
+a generic algorithm that operates on many different kinds of
+containers, even containers as different as a \ref stldoc_Vector and a
+\ref stldoc_List.
+<p>
+The STL defines several different concepts related to iterators,
+several predefined iterators, and a collection of types and functions
+for manipulating iterators.
+\section Description Description
+Iterators are in fact not a single concept, but six concepts that
+form a hierarchy : some of them define only a very restricted set of
+operations, while others define additional functionality.  The 
+five concepts that are actually used by algorithms are
+\ref stldoc_InputIterator, \ref stldoc_OutputIterator, \ref stldoc_ForwardIterator,
+\ref stldoc_BidirectionalIterator, and \ref stldoc_RandomAccessIterator.  A sixth
+concept, \ref stldoc_trivial, is introduced only to clarify the 
+definitions of the other iterator concepts.
+<p>
+The most restricted sorts of iterators are \ref stldoc_InputIterator and
+\ref stldoc_OutputIterator, both of which permit &quot;single pass&quot; algorithms
+but do not necessarily support &quot;multi-pass&quot; algorithms.  
+\ref stldoc_InputIterator only guarantee read access : it is possible to
+dereference an \ref stldoc_InputIterator to obtain the value it points to,
+but not it is not necessarily possible to assign a new value through
+an input iterator.  Similarly, \ref stldoc_OutputIterator only guarantee
+write access : it is possible to assign a value through an 
+\ref stldoc_OutputIterator, but not necessarily possible to refer to that value.
+<p>
+\ref stldoc_ForwardIterator are a refinement of \ref stldoc_InputIterator and
+\ref stldoc_OutputIterator : they support the \ref stldoc_InputIterator and
+\ref stldoc_OutputIterator operations and also provide additional
+functionality.  In particular, it is possible to use &quot;multi-pass&quot;
+algorithms with \ref stldoc_ForwardIterator.  A \ref stldoc_ForwardIterator may be
+<i>constant</i>, in which case it is possible to access the object it
+points to but not to to assign a new value through it, or <i>mutable</i>,
+in which case it is possible to do both.
+<p>
+\ref stldoc_BidirectionalIterator, like \ref stldoc_ForwardIterator, allow
+multi-pass algorithms.  As the name suggests, they are different in
+that they support motion in both directions : a 
+\ref stldoc_BidirectionalIterator may be incremented to obtain the next
+element or decremented to obtain the previous element.  A 
+\ref stldoc_ForwardIterator, by contrast, is only required to support forward
+motion.  An iterator used to traverse a singly linked list, for
+example, would be a \ref stldoc_ForwardIterator, while an iterator used to
+traverse a doubly linked list would be a \ref stldoc_BidirectionalIterator.
+<p>
+Finally, \ref stldoc_RandomAccessIterator allow the operations of
+pointer arithmetic : addition of arbitrary offsets, subscripting,
+subtraction of one iterator from another to find a distance, and
+so on.
+<p>
+Most algorithms are expressed not in terms of a single iterator but in
+terms of a <i>range</i> of iterators <A href="#1">[1]</A>; the notation <code>[first,
+last)</code> refers to all of the iterators from <code>first</code> up to, but <b>not
+including</b>, <code>last</code>. <A href="#2">[2]</A> Note that a range may be empty, <i>i.e.</i>
+<code>first</code> and <code>last</code> may be the same iterator.  Note also that if there
+are <code>n</code> iterators in a range, then the notation <code>[first, last)</code>
+represents <code>n+1</code> positions.  This is crucial: algorithms that
+operate on <code>n</code> things frequently require
+<code>n+1</code> positions.  Linear search, for example (<code>\ref stldoc_find</code>) must be able
+to return some value to indicate that the search was unsuccessful.
+<p>
+Sometimes it is important to be able to infer some properties of an
+iterator : the type of object that is returned when it is dereferenced,
+for example.  There are two different mechanisms to support
+this sort of inferrence: an older mechanism called
+\ref stldoc_iterator_tags, and a newer mechanism called <code>\ref stldoc_iterator_traits</code>
+<A href="#3">[3]</A>.
+\section Concepts Concepts
+<ul>
+<li>
+ \ref stldoc_trivial
+<li>
+ \ref stldoc_InputIterator
+<li>
+ \ref stldoc_OutputIterator
+<li>
+ \ref stldoc_ForwardIterator
+<li>
+ \ref stldoc_BidirectionalIterator
+<li>
+ \ref stldoc_RandomAccessIterator
+</ul>
+\section Types Types
+<ul>
+<li>
+<code>\ref stldoc_istream_iterator</code>
+<li>
+<code>\ref stldoc_ostream_iterator</code>
+</ul>
+<ul>
+<li>
+<code>\ref stldoc_ReverseIterator</code>
+<li>
+<code>\ref stldoc_ReverseBidirectionalIterator</code>
+<li>
+<code>\ref stldoc_insert_iterator</code>
+<li>
+<code>\ref stldoc_front_insert_iterator</code>
+<li>
+<code>\ref stldoc_back_insert_iterator</code>
+</ul>
+<ul>
+<li>
+<code>\ref stldoc_iterator_traits</code>
+</ul>
+<ul>
+<li>
+<code>\ref stldoc_input_iterator_tag</code>
+<li>
+<code>\ref stldoc_output_iterator_tag</code>
+<li>
+<code>\ref stldoc_forward_iterator_tag</code>
+<li>
+<code>\ref stldoc_bidirectional_iterator_tag</code>
+<li>
+<code>\ref stldoc_random_access_iterator_tag</code>
+</ul>
+<ul>
+<li>
+<code>\ref stldoc_input_iterator</code>
+<li>
+<code>\ref stldoc_output_iterator</code>
+<li>
+<code>\ref stldoc_forward_iterator</code>
+<li>
+<code>\ref stldoc_bidirectional_iterator</code>
+<li>
+<code>\ref stldoc_random_access_iterator</code>
+</ul>
+\section Functions Functions
+<ul>
+<li>
+<code>\ref stldoc_distance_type</code>
+<li>
+<code>\ref stldoc_value_type</code>
+<li>
+<code>\ref stldoc_iterator_category</code>
+</ul>
+<ul>
+<li>
+<code>\ref stldoc_distance</code>
+<li>
+<code>\ref stldoc_advance</code>
+</ul>
+<ul>
+<li>
+<code>\ref stldoc_insert_iterator</code>
+<li>
+<code>\ref stldoc_front_insert_iterator</code>
+<li>
+<code>\ref stldoc_back_insert_iterator</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+Ranges are not a well-defined concept for \ref stldoc_trivial,
+because a \ref stldoc_trivial cannot be incremented : there is no such  
+thing as a next element.  They are also not a well-defined concept
+for \ref stldoc_OutputIterator, because it is impossible to compare two 
+\ref stldoc_OutputIterator for equality.  Equality is crucial to the
+definition of a range, because only by comparing an iterator for
+equality with the last element is it possible to step through a range.
+<p><A name="2">[2]</A>
+Sometimes the notation <code>[first, last)</code> refers to the iterators
+<code>first</code>, <code>first+1</code>, ..., <code>last-1</code> and sometimes it refers to the
+objects pointed to by those iterators : <code>*first</code>, <code>*(first+1)</code>, ...,
+<code>*(last-1)</code>.  In most cases it will be obvious from context which of
+these is meant; where the distinction is important, the notation will
+be qualified explicitly as &quot;range of iterators&quot; or &quot;range of objects&quot;.
+<p><A name="3">[3]</A>
+The <code>\ref stldoc_iterator_traits</code> class relies on a C++ feature known as
+<i>partial specialization</i>.  Many of today's compilers don't implement
+the complete standard; in particular, many compilers do not support
+partial specialization.  If your compiler does not support partial
+specialization, then you will not be able to use
+<code>\ref stldoc_iterator_traits</code>, and you will instead have to continue using the
+functions <code>\ref stldoc_iterator_category</code>, <code>\ref stldoc_distance_type</code>, and
+<code>\ref stldoc_value_type</code>.
+\section See_also See also
+
+
+*/

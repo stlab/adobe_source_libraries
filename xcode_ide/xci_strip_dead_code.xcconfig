@@ -1,0 +1,8 @@
+// Dead code stripping
+
+DEAD_CODE_STRIPPING = YES
+PRESERVE_DEAD_CODE_INITS_AND_TERMS = YES
+
+// NOT compatible with ZeroLink
+
+ZERO_LINK = NO

@@ -1,0 +1,225 @@
+/** \page stldoc_unary_compose unary_compose
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left">\image html adaptors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: functors, adaptors</td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Unary_compose</code> is a \ref stldoc_functors adaptor.  If <code>f</code> and <code>g</code> are both
+\ref stldoc_AdaptableUnaryFunction, and if <code>g</code>'s return type is convertible
+to <code>f</code>'s argument type, then <code>unary_compose</code> can be used to create a
+function object <code>h</code> such that <code>h(x)</code> is the same as <code>f(g(x))</code>. <A href="#1">[1]</A>  As
+with other function object adaptors, the easiest way to create a
+<code>unary_compose</code> is to use the helper function <code>compose1</code>.  It is
+possible to call <code>unary_compose</code>'s constructor directly, but there
+is usually no reason to do so.
+\section Example Example
+Calculates the negative of the sines of the elements in a vector, where the elements
+are angles measured in degrees.  Since the C library function <code>sin</code>
+takes its arguments in radians, this operation is the composition of
+three operations: negation, <code>sin</code>, and the conversion of degrees to radians.
+\code
+vector<double> angles;
+vector<double> sines;
+const double pi = 3.14159265358979323846;
+...
+assert(sines.size() >= angles.size());
+transform(angles.begin(), angles.end(), sines.begin(),
+          compose1(negate<double>(),
+                   compose1(ptr_fun(sin),
+                            bind2nd(times<double>(), pi / 180.))));
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.  The <code>unary_compose</code>
+class is an SGI extension; it is not part of the C++ standard.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>AdaptableUnaryFunction1</code>
+</td>
+<td valign="top">
+The type of the first operand in the function composition operation.
+   That is, if the composition is written <code>f o g</code> <A href="#1">[1]</A>, then 
+   <code>AdaptableUnaryFunction1</code> is the type of the function object <code>f</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>AdaptableUnaryFunction2</code>
+</td>
+<td valign="top">
+The type of the second operand in the function composition operation.
+   That is, if the composition is written <code>f o g</code> <A href="#1">[1]</A>, then 
+   <code>AdaptableUnaryFunction1</code> is the type of the function object <code>g</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_AdaptableUnaryFunction
+\section Type_requirements Type requirements
+<code>AdaptableUnaryFunction1</code> and <code>AdaptableUnaryFunction2</code> must both
+be models of \ref stldoc_AdaptableUnaryFunction.  
+<code>AdaptableUnaryFunction2::result_type</code> must be convertible to
+<code>AdaptableUnaryFunction1::argument_type</code>.
+\section Public_base_classes Public base classes
+\code
+unary_function<AdaptableUnaryFunction2::argument_type,
+               AdaptableUnaryFunction1::result_type>
+\endcode
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the function object's argument:
+<code>AdaptableUnaryFunction2::argument_type</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the result: <code>AdaptableUnaryFunction1::result_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+unary_compose(const AdaptableUnaryFunction1& f,
+              const AdaptableUnaryFunction2& g);
+\endcode
+</td>
+<td valign="top">
+<code>unary_compose</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class AdaptableUnaryFunction1, class AdaptableUnaryFunction2>
+unary_compose<AdaptableUnaryFunction1, AdaptableUnaryFunction2> 
+compose1(const AdaptableUnaryFunction1& op1, 
+         const AdaptableUnaryFunction2& op2);
+\endcode
+</td>
+<td valign="top">
+<code>unary_compose</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_AdaptableUnaryFunction
+requirements, but are specific to 
+<code>unary_compose</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+\code
+unary_compose(const AdaptableUnaryFunction1& f,
+              const AdaptableUnaryFunction2& g);
+\endcode
+</td>
+<td valign="top">
+The constructor.  Constructs a <code>unary_compose</code> object that represents
+the function object <code>f o g</code>. <A href="#1">[1]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class AdaptableUnaryFunction1, class AdaptableUnaryFunction2>
+unary_compose<AdaptableUnaryFunction1, AdaptableUnaryFunction2> 
+compose1(const AdaptableUnaryFunction1& op1, 
+         const AdaptableUnaryFunction2& op2);
+\endcode
+</td>
+<td valign="top">
+Creates a <code>unary_compose</code> object.  If <code>f</code> and <code>g</code> are, respectively, of classes
+<code>AdaptableUnaryFunction1</code> and <code>AdaptableUnaryFunction2</code>, then
+<code>compose1(f, g)</code> is equivalent to 
+<code>unary_compose&lt;AdaptableUnaryFunction1, AdaptableUnaryFunction2&gt;(f, g)</code>,
+but is more convenient.  This is a global function, not a member function.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+This operation is called function composition, hence
+the name <code>unary_compose</code>.  It is often represented in mathematics
+as the operation <code>f o g</code>, where <code>f o g</code> is a function such that
+<code>(f o g)(x) == f(g(x))</code>.  Function composition is a very important
+concept in algebra.  It is also extremely important as a method
+of building software components out of other components, because
+it makes it possible to construct arbitrarily complicated function
+objects out of simple ones.
+\section See_also See also
+The \ref stldoc_functors, <code>\ref stldoc_binary_compose</code>, 
+<code>\ref stldoc_binder1st</code>, <code>\ref stldoc_binder2nd</code>.
+
+
+*/

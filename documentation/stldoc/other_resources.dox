@@ -1,0 +1,129 @@
+/** \page stldoc_other_resources Other STL Web sites
+
+<ul>
+    <li>
+    <A Href="http://www.lsc.nd.edu/research/mtl/">The Matrix Template Library</A>
+    at Notre Dame.  A high-performance generic linear algebra library.        
+    <li>
+    <A HREF="http://www.cs.rpi.edu/~musser/stl.html">The Rensselaer STL site</A>
+     by David Musser
+    <li>
+    <A HREF="http://www.cs.rpi.edu/projects/STL/htdocs/stl.html">The 
+    Renssalaer STL online reference</A>
+    <li>
+     <A
+     HREF="http://www.infosys.tuwien.ac.at/Research/Component/tutorial/prwmain.htm">The 
+    STL tutorial at Technical University Vienna</A>
+    <li><A Href="http://www.stlport.org/">Port
+        of the SGI STL to other compilers</A>, by Boris Fomitchev.
+    <li>
+    <A Href="http://users.iol.it/g.govi/">Port of the SGI STL to Microsoft
+          Windows CE compilers</A>, by Giuseppe Govi.
+    <li>
+    <A
+     HREF="http://www.xraylith.wisc.edu/~khan/software/stl/STL.newbie.html">The 
+    STL Newbie Guide</A> by Mumit Khan
+    <li>
+    <A HREF="http://web.ftech.net/~honeyg/articles/tiny_stl.htm">A 
+    Tiny STL Primer</A> by David Harvey
+    <li>
+    <A
+     HREF="http://www.cs.brown.edu/people/jak/proglang/cpp/stltut/">A 
+    Very Modest STL Tutorial</A> by Jak Kirman
+    <li>
+    <A href="http://www.dinkumware.com/">The Dinkum Standard Template Library Reference</A>
+    by P. J. Plauger.
+    <li>
+    <A HREF="http://www.cs.rpi.edu/~wiseb/xrds/ovp2-3b.html">Overview 
+    of the STL</A> by G. Bowden Wise
+    <li>
+    <A HREF="http://www.accesscom.com/~iburrell/cpp/stl.html">Ian 
+    Burrell's STL page</A>
+<!--
+    <li>
+    <A HREF="http://www.corel.ca/people/patb/algo_ref.htm">STL algorithm 
+    reference</A> by Pat Beirne
+-->
+    <li>
+    <A HREF="http://www.horstmann.com/safestl.html">Cay Horstmann's 
+    &quot;Safe STL&quot;</A>
+    <li>
+    <A Href="http://www2.cs.utu.fi/BL/">The Binder Library</A>.
+    A versatile function argument binding mechanism that interoperates
+    with STL algorithms.
+    <li>
+    <A HREF="http://www.cyberport.com/~tangent/programming/stl/resources.html">The 
+    STL Resource List</A> by Warren Young
+    <li>
+    <A HREF="http://www.cpsc.ucalgary.ca/~kremer/STL/1024x768/index.html">The 
+    Standard Template Library Overview</A> by Rob Kremer
+    <li>
+    <A HREF="http://www.byte.com/art/9510/sec12/art3.htm">Alexander Stepanov's
+    Byte Magazine's article</A>
+    <li>
+    <A Href="drdobbs-interview.html">Dr. Dobb's Journal
+    interview with Alexander Stepanov</A>
+</ul>
+<H1>
+Books about the STL and generic programming</H1>
+<p>
+<A href="http://userwww.econ.hvu.nl/~ammeraal/stlcpp.html">STL 
+for C++ Programmers</A>, by Leen Ammeraal.
+John Wiley, 1996. ISBN 0-471-97181-2. 
+</P>
+<p>
+<A Href="http://cseng.aw.com/bookdetail.qry?ISBN=0-201-30956-4&ptype=0">Generic 
+Programming and the STL</A>, by Matthew Austern.  
+Addison-Wesley, 1998.  ISBN 0-201-30956-4.
+
+<p>
+<A Href="http://www.informatik.hs-bremen.de/~brey/stlbe.html">Designing
+Components with the C++ STL</A>, 
+by Ulrich Breymann. Addison Wesley  Longman, 1998. ISBN 0-201-17816-8.
+</P>
+
+<p>
+Data Structures in C++ Using the Standard Template Library,
+by Timothy Budd.  Addison-Wesley, 1997.
+</P>
+
+<p>
+ The STL Primer, by Graham Glass and Brett Schuchert. 
+Prentice-Hall, 1996. ISBN 0134549767
+</P>
+<p>
+<A Href="http://www.josuttis.com/libbook/">The C++ Standard Library - 
+A Tutorial and Reference</A>, by Nicolai Josuttis.  Addison Wesley 
+Longman, 1999. ISBN 0-201-37926-0.  (English translation of 
+Die C++-Standardbibliothek.)
+</P>
+<p>
+<A HREF="http://www.awl.com/cseng/titles/0-201-63398-1">STL Tutorial and 
+Reference Guide</A>, by David Musser 
+and Atul Saini. Addison-Wesley, 1996. ISBN 0-201-63398-1.
+</P>
+<p>
+ <A HREF="http://www.dogma.net/markn/stl/stl.htm">C++ 
+Programmer's Guide to the Standard Template Library</A>, 
+by Mark Nelson.  IDG Books, 1995. ISBN 1-56884-314-3.
+(No longer in print.)
+</P>
+<p>
+ The Standard Template Library, by P. J. Plauger, 
+Alexander Stepanov, Meng Lee, and David Musser. Prentice-Hall.
+ISBN 0-13-437633-1. (forthcoming)
+</P>
+<p>
+Using the STL, by Robert Robson.  Springer-Verlag, 1998.
+</P>
+
+<p>
+STL Programming from the Ground Up, by Herbert Schildt.
+Osborne McGraw-Hill, 1999.
+</P>
+
+<HR>
+We welcome additions to this list. Please send suggestions to <A
+ HREF="mailto:stl@sgi.com">stl@sgi.com</A>.
+
+*/

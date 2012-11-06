@@ -1,0 +1,693 @@
+/** \page stldoc_hash_multiset hash_multiset
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Hash_multiset</code> is a
+\ref stldoc_HashedAssociativeContainer
+that stores objects of type <code>Key</code>.
+<code>Hash_multiset</code> is a
+\ref stldoc_SimpleAssociativeContainer,
+meaning that its value type, as well as its key type,
+is <code>Key</code>.  It is also a
+\ref stldoc_MultipleAssociativeContainer,
+meaning that two or more elements may compare equal
+using the \ref stldoc_BinaryPredicate
+<code>EqualKey</code>.
+<p>
+<code>Hash_multiset</code> is useful in applications where it is important
+to be able to search for an element quickly.  If it is important for
+the elements to be in a particular order, however, then
+<code>\ref stldoc_multiset</code> is more appropriate.
+\section Example Example
+\code
+struct eqstr
+{
+  bool operator()(const char* s1, const char* s2) const
+  {
+    return strcmp(s1, s2) == 0;
+  }
+};
+
+void lookup(const hash_multiset<const char*, hash<const char*>, eqstr>& Set,
+            const char* word)
+{
+  int n_found = Set.count(word);
+  cout << word << ": "
+       << n_found << " "
+       << (n_found == 1 ? "instance" : "instances")
+       << endl;
+}
+
+int main()
+{
+  hash_multiset<const char*, hash<const char*>, eqstr> Set;
+  Set.insert("mango");
+  Set.insert("kiwi");
+  Set.insert("apple");
+  Set.insert("kiwi");
+  Set.insert("mango");
+  Set.insert("mango");
+  Set.insert("apricot");
+  Set.insert("banana");
+  Set.insert("mango");
+
+  lookup(Set, "mango");
+  lookup(Set, "apple");
+  lookup(Set, "durian");
+}
+\endcode
+\section Definition Definition
+Defined in the header <A href="hash_set">hash_set</A>, and in the backward-compatibility
+header <A href="hash_set.h">hash_set.h</A>.  This class is an SGI extension; it is not part
+of the C++ standard.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>Key</code>
+</td>
+<td valign="top">
+The hash_multiset's key type and value type.  This is also defined as <code>hash_multiset::key_type</code>
+   and <code>hash_multiset::value_type</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>HashFcn</code>
+</td>
+<td valign="top">
+The \ref stldoc_HashFunction used by the hash_multiset.  This is also defined
+   as <code>hash_multiset::hasher</code>.  
+</td>
+<td valign="top">
+<code>\ref stldoc_hash&lt;Key&gt;</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>EqualKey</code>
+</td>
+<td valign="top">
+The hash_multiset's key equality function: a \ref stldoc_BinaryPredicate that
+   determines whether two keys are equal.  This is also defined as
+   <code>hash_multiset::key_equal</code>.
+</td>
+<td valign="top">
+<code>\ref stldoc_equal_to&lt;Key&gt;</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Alloc</code>
+</td>
+<td valign="top">
+The <code>hash_multiset</code>'s allocator, used for all internal memory management.
+</td>
+<td valign="top">
+<code>\ref stldoc_Allocators</code>
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_MultipleHashedAssociativeContainer,
+\ref stldoc_SimpleAssociativeContainer
+\section Type_requirements Type requirements
+<ul>
+<li>
+<code>Key</code> is \ref stldoc_Assignable.
+<li>
+<code>EqualKey</code> is a \ref stldoc_BinaryPredicate whose argument type
+   is <code>Key</code>.
+<li>
+<code>EqualKey</code> is an equivalence relation.
+<li>
+<code>Alloc</code> is an \ref stldoc_Allocators.
+</ul>
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The type of object, <code>T</code>, stored in the hash_multiset.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>key_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+The key type associated with <code>value_type</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>hasher</code>
+</td>
+<td valign="top">
+ \ref stldoc_HashedAssociativeContainer
+</td>
+<td valign="top">
+The <code>hash_multiset</code>'s \ref stldoc_HashFunction.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>key_equal</code>
+</td>
+<td valign="top">
+ \ref stldoc_HashedAssociativeContainer
+</td>
+<td valign="top">
+ \ref stldoc_functors that compares keys for equality.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Pointer to <code>T</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Reference to <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const reference to <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+An unsigned integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>difference_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+A signed integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Iterator used to iterate through a <code>hash_multiset</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const iterator used to iterate through a <code>hash_multiset</code>.  (<code>Iterator</code> and
+   <code>const_iterator</code> are the same type.)
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator begin() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the beginning of the <code>hash_multiset</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator end() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the end of the <code>hash_multiset</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type size() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns the size of the <code>hash_multiset</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type max_size() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns the largest possible size of the <code>hash_multiset</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool empty() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+<code>true</code> if the <code>hash_multiset</code>'s size is <code>0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type bucket_count() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_HashedAssociativeContainer
+</td>
+<td valign="top">
+Returns the number of buckets used by the <code>hash_multiset</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void resize(size_type n)</code>
+</td>
+<td valign="top">
+ \ref stldoc_HashedAssociativeContainer
+</td>
+<td valign="top">
+Increases the bucket count to at least <code>n</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>hasher hash_funct() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_HashedAssociativeContainer
+</td>
+<td valign="top">
+Returns the <code>hasher</code> object used by the <code>hash_multiset</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>key_equal key_eq() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_HashedAssociativeContainer
+</td>
+<td valign="top">
+Returns the <code>key_equal</code> object used by the <code>hash_multiset</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>hash_multiset()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Creates an empty <code>hash_multiset</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>hash_multiset(size_type n)</code>
+</td>
+<td valign="top">
+ \ref stldoc_HashedAssociativeContainer
+</td>
+<td valign="top">
+Creates an empty <code>hash_multiset</code> with at least <code>n</code> buckets.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+hash_multiset(size_type n, 
+              const hasher& h)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_HashedAssociativeContainer
+</td>
+<td valign="top">
+Creates an empty <code>hash_multiset</code> with at least <code>n</code> buckets, using <code>h</code>
+   as the hash function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+hash_multiset(size_type n, 
+              const hasher& h, 
+              const key_equal& k)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_HashedAssociativeContainer
+</td>
+<td valign="top">
+Creates an empty <code>hash_multiset</code> with at least <code>n</code> buckets, using <code>h</code>
+   as the hash function and <code>k</code> as the key equal function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+hash_multiset(InputIterator, InputIterator)
+\endcode
+<A href="#1">[1]</A>
+</td>
+<td valign="top">
+ \ref stldoc_MultipleHashedAssociativeContainer
+</td>
+<td valign="top">
+Creates a hash_multiset with a copy of a range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+hash_multiset(InputIterator, InputIterator,
+              size_type n)
+\endcode
+<A href="#1">[1]</A>
+</td>
+<td valign="top">
+ \ref stldoc_MultipleHashedAssociativeContainer
+</td>
+<td valign="top">
+Creates a hash_multiset with a copy of a range and a bucket count of at
+   least <code>n</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+hash_multiset(InputIterator, InputIterator,
+              size_type n, const hasher& h)
+\endcode
+<A href="#1">[1]</A>
+</td>
+<td valign="top">
+ \ref stldoc_MultipleHashedAssociativeContainer
+</td>
+<td valign="top">
+Creates a hash_multiset with a copy of a range and a bucket count of at
+   least <code>n</code>, using <code>h</code> as the hash function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+hash_multiset(InputIterator, InputIterator,
+              size_type n, const hasher& h, 
+              const key_equal& k)
+\endcode
+<A href="#1">[1]</A>
+</td>
+<td valign="top">
+ \ref stldoc_MultipleHashedAssociativeContainer
+</td>
+<td valign="top">
+Creates a hash_multiset with a copy of a range and a bucket count of at
+   least <code>n</code>, using <code>h</code> as the hash function and <code>k</code> as the
+   key equal function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>hash_multiset(const hash_multiset&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The copy constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>hash_multiset&amp; operator=(const hash_multiset&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The assignment operator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void swap(hash_multiset&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Swaps the contents of two hash_multisets.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert(const value_type&amp; x)</code>
+</td>
+<td valign="top">
+ \ref stldoc_MultipleAssociativeContainer
+</td>
+<td valign="top">
+Inserts <code>x</code> into the <code>hash_multiset</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+void insert(InputIterator, InputIterator)
+\endcode
+<A href="#1">[1]</A>
+</td>
+<td valign="top">
+ \ref stldoc_MultipleAssociativeContainer
+</td>
+<td valign="top">
+Inserts a range into the <code>hash_multiset</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void erase(iterator pos)</code>
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+Erases the element pointed to by <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type erase(const key_type&amp; k)</code>
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+Erases the element whose key is <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void erase(iterator first, iterator last)</code>
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+Erases all elements in a range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void clear()</code>
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+Erases all of the elements.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator find(const key_type&amp; k) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+Finds an element whose key is <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type count(const key_type&amp; k) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+Counts the number of elements whose key is <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+pair<iterator, iterator> 
+equal_range(const key_type& k) const
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+Finds a range containing all elements whose key is <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+bool operator==(const hash_multiset&, 
+                const hash_multiset&)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_HashedAssociativeContainer
+</td>
+<td valign="top">
+Tests two hash_multisets for equality.   This is a global function,
+   not a member function.
+</td>
+</tr>
+</table>
+\section New_members New members
+All of <code>hash_multiset</code>'s members are defined in the 
+\ref stldoc_MultipleHashedAssociativeContainer and
+\ref stldoc_SimpleAssociativeContainer
+requirements.  <code>Hash_multiset</code> does not introduce
+any new members.
+\section Notes Notes
+<p><A name="1">[1]</A>
+This member function relies on <i>member template</i> functions, which
+at present (early 1998) are not supported by all compilers.  If your
+compiler supports member templates, you can call this function with
+any type of \ref stldoc_InputIterator.  If your
+compiler does not yet support member templates, though, then the
+arguments must either be of type <code>const value_type*</code> or of type
+<code>hash_multiset::const_iterator</code>.
+\section See_also See also
+\ref stldoc_AssociativeContainer,
+\ref stldoc_HashedAssociativeContainer, 
+\ref stldoc_SimpleAssociativeContainer,
+\ref stldoc_MultipleHashedAssociativeContainer, 
+<code>\ref stldoc_set</code>, 
+<code>\ref stldoc_Map</code>,
+<code>\ref stldoc_multiset</code>,
+<code>\ref stldoc_Multimap</code>,
+<code>\ref stldoc_hash_set</code>,
+<code>\ref stldoc_hash_map</code>, 
+<code>\ref stldoc_hash_multimap</code>
+
+
+*/
