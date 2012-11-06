@@ -1,0 +1,221 @@
+/**
+\defgroup stldoc_ReversibleContainer ReversibleContainer
+\ingroup asl_concepts
+
+\description
+A Reversible Container is a ForwardContainer whose iterators are
+BidirectionalIterator.  It allows backwards iteration through
+the container.
+
+\refinement_of
+ForwardContainer
+
+\associated_types
+Two new types are introduced.  In addition, the iterator type and the
+const iterator type must satisfy a more stringent requirement than
+for a ForwardContainer.  The iterator and reverse iterator types must
+be BidirectionalIterator, not merely ForwardIterator.
+<table border='1'>
+<tr>
+<td valign="top">
+Reverse iterator type
+</td>
+<td valign="top">
+<code>X::reverse_iterator</code>
+</td>
+<td valign="top">
+A ReverseIterator adaptor whose base iterator type
+   is the container's iterator type.  Incrementing an object of type 
+   <code>reverse_iterator</code> moves backwards through the container: 
+   the ReverseIterator adaptor maps <code>operator++</code> to <code>operator--</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Const reverse iterator type
+</td>
+<td valign="top">
+<code>X::const_reverse_iterator</code>
+</td>
+<td valign="top">
+A ReverseIterator adaptor whose base iterator type
+   is the container's const iterator type. <A href="#1">[1]</A>
+</td>
+</tr>
+</table>
+
+\notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Reversible Container
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>a</code>, <code>b</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+</table>
+
+\definitions
+
+\valid_expressions
+In addition to the expressions defined in ForwardContainer, the following
+expressions must be valid.
+<table border='1'>
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Beginning of range
+</td>
+<td valign="top">
+<code>a.rbegin()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>reverse_iterator</code> if <code>a</code> is mutable, <code>const_reverse_iterator</code>
+   otherwise <A href="#1">[1]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+End of range
+</td>
+<td valign="top">
+<code>a.rend()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>reverse_iterator</code> if <code>a</code> is mutable, <code>const_reverse_iterator</code>
+   otherwise <A href="#1">[1]</A>
+</td>
+</tr>
+</table>
+
+\expression_semantics
+Semantics of an expression is defined only where it is not defined in
+ForwardContainer, or where there is additional information.
+<table border='1'>
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Beginning of reverse range
+</td>
+<td valign="top">
+<code>a.rbegin()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Equivalent to <code>X::reverse_iterator(a.end())</code>.
+</td>
+<td valign="top">
+<code>a.rbegin()</code> is dereferenceable or past-the-end.  It is past-the-end
+   if and only if <code>a.size() == 0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+End of reverse range
+</td>
+<td valign="top">
+<code>a.rend()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Equivalent to <code>X::reverse_iterator(a.begin())</code>.
+</td>
+<td valign="top">
+<code>a.end()</code> is past-the-end.
+</td>
+</tr>
+</table>
+
+\complexity
+The run-time complexity of <code>rbegin()</code> and <code>rend()</code> is amortized 
+constant time.
+
+\invariants
+<table border='1'>
+<tr>
+<td valign="top">
+Valid range
+</td>
+<td valign="top">
+<code>[a.rbegin(), a.rend())</code> is a valid range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Equivalence of ranges
+</td>
+<td valign="top">
+The distance from <code>a.begin()</code> to <code>a.end()</code> is the same as the
+   distance from <code>a.rbegin()</code> to <code>a.rend()</code>.
+</td>
+</tr>
+</table>
+
+\models
+<ul>
+<li>
+ Vector
+<li>
+ List
+<li>
+ Deque
+</ul>
+
+\notes
+<p><A name="1">[1]</A>
+A Container's iterator type and const iterator type may be the
+same type: a container need not provide mutable iterators.  
+It follows from this that the reverse iterator type and
+the const reverse iterator type may also be the same.
+
+\see_also
+The Iterators, BidirectionalIterator, Sequence
+*/

@@ -1,0 +1,79 @@
+/** \page stldoc_copy_n copy_n
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class InputIterator, class Size, class OutputIterator>
+OutputIterator copy_n(InputIterator first, Size count, 
+                      OutputIterator result);
+\endcode
+\section Description Description
+<code>Copy_n</code> copies elements from the range <code>[first, first + n)</code> to the
+range <code>[result, result + n)</code>.  That is, it performs the assignments
+<code>*result = *first</code>, <code>*(result + 1) = *(first + 1)</code>, and so on.
+Generally, for every integer <code>i</code> from <code>0</code> up to (but not including)
+<code>n</code>, <code>copy_n</code> performs the assignment <code>*(result + i) = *(first + i)</code>.
+Assignments are performed in forward order, <i>i.e.</i> in order of
+increasing <code>n</code>. <A href="#1">[1]</A>
+<p>
+The return value is <code>result + n</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.  This function is an SGI
+extension; it is not part of the C++ standard.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+InputIterator is a model of \ref stldoc_InputIterator.
+<li>
+OutputIterator is a model of \ref stldoc_OutputIterator.
+<li>
+<code>Size</code> is an integral type.
+<li>
+InputIterator's value type is convertible to a type in
+   OutputIterator's set of value types.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>n &gt;= 0</code>.
+<li>
+<code>[first, first + n)</code> is a valid range.
+<li>
+<code>result</code> is not an iterator within the range <code>[first, first + n)</code>.
+<li>
+<code>[result, result + n)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>n</code> assignments are performed.
+\section Example Example
+\code
+Vector<int> V(5);
+iota(V.begin(), V.end(), 1);
+
+List<int> L(V.size());
+copy_n(V.begin(), V.size(), L.begin());
+assert(equal(V.begin(), V.end(), L.begin()));
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+<code>Copy_n</code> is almost, but not quite, redundant.  If <code>first</code> is an 
+\ref stldoc_InputIterator, as opposed to a \ref stldoc_ForwardIterator, then the 
+<code>copy_n</code> operation can't be expressed in terms of <code>\ref stldoc_copy</code>.
+\section See_also See also
+<code>\ref stldoc_copy</code>, <code>\ref stldoc_copy_backward</code>
+
+
+*/

@@ -1,0 +1,227 @@
+/** \page stldoc_ostream_iterator ostream_iterator
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+An <code>ostream_iterator</code> is an \ref stldoc_OutputIterator that performs formatted
+output of objects of type <code>T</code> to a particular <code>ostream</code>.  
+Note that all of the
+restrictions of an \ref stldoc_OutputIterator must be obeyed, including the
+restrictions on the ordering of <code>operator*</code> and <code>operator++</code>
+operations.
+\section Example Example
+Copy the elements of a <code>\ref stldoc_Vector</code> to the standard output, one per line.
+\code
+Vector<int> V;
+// ...
+copy(V.begin(), V.end(), ostream_iterator<int>(cout, "\n"));
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="iterator">iterator</A>, and in the nonstandard
+backward-compatibility header <A href="iterator.h">iterator.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The type of object that will be written to the <code>ostream</code>.  The
+   set of value types of an <code>ostream_iterator</code> consists of a
+   single type, <code>T</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_OutputIterator.
+\section Type_requirements Type requirements
+<code>T</code> must be a type such that <code>cout &lt;&lt; T</code> is a valid expression.
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>ostream_iterator(ostream&amp;)</code>
+</td>
+<td valign="top">
+<code>ostream_iterator</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>ostream_iterator(ostream&amp;, const char* s)</code>
+</td>
+<td valign="top">
+<code>ostream_iterator</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>ostream_iterator(const ostream_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+The copy constructor
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>ostream_iterator&amp; operator=(const ostream_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+The assignment operator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>ostream_iterator&amp; operator=(const T&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Used to implement the \ref stldoc_OutputIterator requirement
+   <code>*i = t</code>. <A href="#1">[1]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>ostream_iterator&amp; operator*()</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Used to implement the \ref stldoc_OutputIterator requirement
+   <code>*i = t</code>. <A href="#1">[1]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>ostream_iterator&amp; operator++()</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Preincrement
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>ostream_iterator&amp; operator++(int)</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Postincrement
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>output_iterator_tag iterator_category(const ostream_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_iterator_tags
+</td>
+<td valign="top">
+Returns the iterator's category.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined 
+in the \ref stldoc_OutputIterator requirements,
+but are specific to <code>ostream_iterator</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Function
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>ostream_iterator(ostream&amp; s)</code>
+</td>
+<td valign="top">
+Creates an <code>ostream_iterator</code> such that assignment of <code>t</code> through it
+   is equivalent to <code>s &lt;&lt; t</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>ostream_iterator(ostream&amp; s, const char* delim)</code>
+</td>
+<td valign="top">
+Creates an <code>ostream_iterator</code> such that assignment of <code>t</code> through it
+   is equivalent to <code>s &lt;&lt; t &lt;&lt; delim</code>.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note how assignment through an <code>ostream_iterator</code> is implemented.
+In general, unary <code>operator*</code> must be defined so that it returns a
+proxy object, where the proxy object defines <code>operator=</code> to perform
+the output operation.  In this case, for the sake of simplicity, the
+proxy object is the <code>ostream_iterator</code> itself.  That is, <code>*i</code> simply
+returns <code>i</code>, and <code>*i = t</code> is equivalent to <code>i = t</code>.  You should not,
+however, rely on this behavior.  It is an implementation detail,
+and it is not guaranteed to remain the same in future versions.
+\section See_also See also
+\ref stldoc_istream_iterator, \ref stldoc_OutputIterator, \ref stldoc_InputIterator.
+
+
+*/

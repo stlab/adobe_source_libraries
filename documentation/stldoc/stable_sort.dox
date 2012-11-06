@@ -1,0 +1,129 @@
+/** \page stldoc_stable_sort stable_sort
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Stable_sort</code> is an overloaded name; there are actually two <code>stable_sort</code>
+functions.
+\code
+template <class RandomAccessIterator>
+void stable_sort(RandomAccessIterator first, RandomAccessIterator last);
+
+template <class RandomAccessIterator, class StrictWeakOrdering>
+void stable_sort(RandomAccessIterator first, RandomAccessIterator last, 
+                 StrictWeakOrdering comp);
+\endcode
+\section Description Description
+<code>Stable_sort</code> is much like <code>\ref stldoc_sort</code>: it sorts the elements in
+<code>[first, last)</code> into ascending order, meaning that if <code>i</code> and <code>j</code> are
+any two valid iterators in <code>[first, last)</code> such that <code>i</code> precedes <code>j</code>,
+then <code>*j</code> is not less than <code>*i</code>.  <code>Stable_sort</code> differs from
+<code>\ref stldoc_sort</code> in two ways.  First, <code>stable_sort</code> uses an algorithm that
+has different run-time complexity than <code>\ref stldoc_sort</code>.  Second, as the
+name suggests, <code>stable_sort</code> is stable: it preserves the relative
+ordering of equivalent elements.  That is, if <code>x</code> and <code>y</code> are elements
+in <code>[first, last)</code> such that <code>x</code> precedes <code>y</code>, and if the two
+elements are equivalent (neither <code>x &lt; y</code> nor <code>y &lt; x</code>)
+then a postcondition of <code>stable_sort</code> is that <code>x</code> still precedes <code>y</code>.
+<A href="#1">[1]</A>
+<p>
+The two versions of <code>stable_sort</code> differ in how they define whether one
+element is less than another.  The first version compares
+objects using <code>operator&lt;</code>, and the second compares objects using
+a \ref stldoc_functors <code>comp</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version, the one that takes two arguments:
+<ul>
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator.
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+<code>RandomAccessIterator</code>'s value type is \ref stldoc_LessThanComparable.
+<li>
+The ordering relation on <code>RandomAccessIterator</code>'s value type is
+ a <i>strict weak ordering</i>, as defined in the \ref stldoc_LessThanComparable
+ requirements.
+</ul>
+For the second version, the one that takes three arguments:
+<ul>
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator.
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>RandomAccessIterator</code>'s value type is convertible to
+   <code>StrictWeakOrdering</code>'s argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+<code>Stable_sort</code> is an <i>adaptive</i> algorithm: it attempts to
+allocate a temporary memory buffer, and its run-time complexity depends
+on how much memory is available.  Worst-case behavior (if no auxiliary memory
+is available) is <code>N (log N)^2</code> comparisons, where <code>N</code> is <code>last -
+first</code>, and best case 
+(if a large enough auxiliary memory buffer is available)
+is <code>N (log N)</code>.  <A href="#2">[2]</A>
+\section Example Example
+Sort a sequence of characters, ignoring their case.  Note that the
+relative order of characters that differ only by case is preserved.
+\code
+inline bool lt_nocase(char c1, char c2) { return tolower(c1) < tolower(c2); }
+
+int main()
+{
+  char A[] = "fdBeACFDbEac";
+  const int N = sizeof(A) - 1;
+  stable_sort(A, A+N, lt_nocase);
+  printf("%s\n", A);
+  // The printed result is ""AaBbCcdDeEfF".
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note that two elements may be equivalent without being equal.
+One standard example is sorting a sequence of names by last name: if
+two people have the same last name but different first names, then
+they are equivalent but not equal.  This is why <code>stable_sort</code> is
+sometimes useful: if you are sorting a sequence of records that have
+several different fields, then you may want to sort it by one field
+without completely destroying the ordering that you previously 
+obtained from sorting it by a different field.  You might, for
+example, sort by first name and then do a stable sort by last name.
+<p><A name="2">[2]</A>
+<code>Stable_sort</code> uses the <i>merge sort</i> algorithm; see section
+5.2.4 of Knuth.  (D. E. Knuth, <i>The Art of Computer
+Programming.  Volume 3: Sorting and Searching</i>.  Addison-Wesley, 1975.)
+\section See_also See also
+<code>\ref stldoc_sort</code>,
+<code>\ref stldoc_partial_sort</code>,
+<code>\ref stldoc_partial_sort_copy</code>,
+<code>\ref stldoc_binary_search</code>,
+<code>\ref stldoc_lower_bound</code>,
+<code>\ref stldoc_upper_bound</code>,
+<code>\ref stldoc_less&lt;T&gt;</code>,
+\ref stldoc_StrictWeakOrdering,
+\ref stldoc_LessThanComparable
+
+
+*/

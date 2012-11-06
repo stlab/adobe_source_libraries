@@ -1,0 +1,5 @@
+// For linking against the dynamic C++ library
+
+STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = dynamic
+
+LINK_WITH_STANDARD_LIBRARIES = YES

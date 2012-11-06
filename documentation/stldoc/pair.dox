@@ -1,0 +1,342 @@
+/** \page stldoc_pair pair
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html utilities.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: utilities</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Pair&lt;T1,T2&gt;</code> is a heterogeneous pair: it holds one object of type 
+<code>T1</code> and one of type <code>T2</code>.  A pair is much like a \ref stldoc_Container,
+in that it &quot;owns&quot; its elements.  It is not actually a model of
+\ref stldoc_Container, though, because it does not support the standard
+methods (such as \ref stldoc_Iterators) for accessing the elements of a
+\ref stldoc_Container.
+<p>
+Functions that need to return two values often return a <code>pair</code>.
+\section Example Example
+\code
+pair<bool, double> result = do_a_calculation();
+if (result.first)
+  do_something_more(result.second);
+else
+  report_error();
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="utility">utility</A>, and in the nonstandard
+backward-compatibility header <A href="pair.h">pair.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T1</code>
+</td>
+<td valign="top">
+The type of the first element stored in the <code>pair</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T2</code>
+</td>
+<td valign="top">
+The type of the second element stored in the <code>pair</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_Assignable
+\section Type_requirements Type requirements
+<code>T1</code> and <code>T2</code> must both be models of \ref stldoc_Assignable.  Additional operations
+have additional requirements.  <code>Pair</code>'s default constructor may only
+be used if both <code>T1</code> and <code>T2</code> are \ref stldoc_DefaultConstructible, 
+<code>operator==</code> may only be used if both <code>T1</code> and <code>T2</code> are
+\ref stldoc_EqualityComparable, and <code>operator&lt;</code> may only be used if both
+<code>T1</code> and <code>T2</code> are \ref stldoc_LessThanComparable.
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>first_type</code>
+</td>
+<td valign="top">
+<code>pair</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>second_type</code>
+</td>
+<td valign="top">
+<code>pair</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pair()</code>
+</td>
+<td valign="top">
+<code>pair</code>
+</td>
+<td valign="top">
+The default constructor.  See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pair(const first_type&amp;, const second_type&amp;)</code>
+</td>
+<td valign="top">
+<code>pair</code>
+</td>
+<td valign="top">
+The pair constructor.  See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pair(const pair&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Assignable
+</td>
+<td valign="top">
+The copy constructor
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pair&amp; operator=(const pair&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Assignable
+</td>
+<td valign="top">
+The assignment operator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>first</code>
+</td>
+<td valign="top">
+<code>pair</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>second</code>
+</td>
+<td valign="top">
+<code>pair</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator==(const pair&amp;, const pair&amp;)</code>
+</td>
+<td valign="top">
+<code>pair</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator&lt;(const pair&amp;, const pair&amp;)</code>
+</td>
+<td valign="top">
+<code>pair</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class T1, class T2>
+pair<T1, T2> make_pair(const T1&, const T2&)
+\endcode
+</td>
+<td valign="top">
+<code>pair</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined 
+in the \ref stldoc_Assignable requirements,
+but are specific to <code>pair</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>first_type</code>
+</td>
+<td valign="top">
+The type of the pair's first component.  This is a <code>typedef</code> for
+   the template parameter <code>T1</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>second_type</code>
+</td>
+<td valign="top">
+The type of the pair's second component.  This is a <code>typedef</code> for
+   the template parameter <code>T2</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pair()</code>
+</td>
+<td valign="top">
+The default constructor.  It uses constructs objects of types
+   <code>T1</code> and <code>T2</code> using their default constructors.  This constructor
+   may only be used if both <code>T1</code> and <code>T2</code> are \ref stldoc_DefaultConstructible.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pair(const first_type&amp; x, const second_type&amp; y)</code>
+</td>
+<td valign="top">
+The pair constructor.  Constructs a pair such that <code>first</code> is constructed
+   from <code>x</code> and <code>second</code> is constructed from <code>y</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>first</code>
+</td>
+<td valign="top">
+Public member variable of type <code>first_type</code>: the first object stored in the <code>pair</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>second</code>
+</td>
+<td valign="top">
+Public member variable of type <code>second_type</code>: The second object stored in the <code>pair</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class T1, class T2>
+bool operator==(const pair<T1,T2>& x, 
+                const pair<T1,T2>& y);
+\endcode
+</td>
+<td valign="top">
+The equality operator.  The return value is <code>true</code> if and only 
+the first elements of <code>x</code> and <code>y</code> are equal, and the second
+elements of <code>x</code> and <code>y</code> are equal.  This operator may only
+be used if both <code>T1</code> and <code>T2</code> are \ref stldoc_EqualityComparable.
+This is a global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class T1, class T2>
+bool operator<(const pair<T1,T2>& x, 
+               const pair<T1,T2>& y);
+\endcode
+</td>
+<td valign="top">
+The comparison operator.  It uses lexicographic comparison:
+the return value is <code>true</code> if the
+first element of <code>x</code> is less than the first element of <code>y</code>,
+and <code>false</code> if the first element of <code>y</code> is less than the first
+element of <code>x</code>.  If neither of these is the case, then
+<code>operator&lt;</code> returns the result of comparing the second elements
+of <code>x</code> and <code>y</code>.  This operator may only
+be used if both <code>T1</code> and <code>T2</code> are \ref stldoc_LessThanComparable.
+This is a global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class T1, class T2>
+pair<T1, T2> make_pair(const T1& x, const T2& x)
+\endcode
+</td>
+<td valign="top">
+Equivalent to <code>pair&lt;T1, T2&gt;(x, y)</code>.
+This is a global function, not a member function.
+It exists only for the sake of convenience.
+</td>
+</tr>
+</table>
+\section Notes Notes
+\section See_also See also
+\ref stldoc_Assignable, \ref stldoc_DefaultConstructible, \ref stldoc_LessThanComparable
+
+
+*/

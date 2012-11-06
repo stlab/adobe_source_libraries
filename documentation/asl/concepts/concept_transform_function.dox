@@ -1,0 +1,80 @@
+/*************************************************************************************************/
+
+/*
+
+    ADOBE CONFIDENTIAL
+    ___________________
+
+    Copyright 2003 - 2003 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: All information contained herein is, and remains the property of
+    Adobe Systems Incorporated and its suppliers, if any. The intellectual and 
+    technical concepts contained herein are proprietary to Adobe Systems Incorporated 
+    and its suppliers and may be covered by U.S. and Foreign Patents, patents 
+    in process, and are protected by trade secret or copyright law. Dissemination 
+    of this information or reproduction of this material is strictly forbidden 
+    unless prior written permission is obtained from Adobe Systems Incorporated.
+ 
+*/
+
+/*************************************************************************************************/
+
+/*! \defgroup concept_transform_function TransformFunction
+\ingroup asl_concepts
+
+\description
+A transformation (or transform) function is simply a Unary Function without side effects. That is, the use of the Unary Function does not change the state of the function object. For some algorithms it is required that the transform function return a writable result - in this case it must return a reference.
+
+\refinement_of
+    - UnaryFunction
+
+\associated_types
+
+\notation
+<table>
+    <tr>
+        <td valign="top"><code>F</code></td>
+        <td valign="top">A type that is a model of TransformFunction</td>
+    </tr>
+    <tr>
+        <td valign="top"><code>X</code></td>
+        <td valign="top">Argument type of F</td>
+    </tr>
+    <tr>
+        <td valign="top"><code>Result</code></td>
+        <td valign="top">Result type of F</td>
+    </tr>
+    <tr>
+        <td valign="top"><code>f</code></td>
+        <td valign="top">Object of type <code>F</code></td>
+    </tr>
+    <tr>
+        <td valign="top"><code>x</code></td>
+        <td valign="top">Object of type <code>X</code></td>
+    </tr>
+</table>
+
+\definitions
+
+\valid_expressions
+
+\expression_semantics
+
+\complexity
+
+\invariants
+    - The expression <code>f(x)</code> is <i>not</i> permitted to change <code>f</code>'s state.
+
+\models
+
+\notes
+
+\see_also
+
+\example
+Transform functions are typically used for the conversion of one type to another. An example: transforming a 3-space point into a 2-space point through a projection matrix; the projection matrix is the transform function, and its use does not modify the matrix.
+
+\example
+Another use of transform functions is to obtain an ordinal value for a complex data type. An example: Using a single member variable as the ordinal value for a class with several member variables, and sorting a vector of instances based on this ordinal value. The transformation only obtains the ordinal value and is not modified in any way.
+*/

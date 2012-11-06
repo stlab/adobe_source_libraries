@@ -1,0 +1,51 @@
+/** \page stldoc_input_iterator_tag input_iterator_tag
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Input_iterator_tag</code> is an empty class: it has no member functions,
+member variables, or nested types.  It is used solely as a &quot;tag&quot;: a
+representation of the \ref stldoc_InputIterator concept within the C++ type
+system.  Specifically, it is used as a return value for the function
+<code>\ref stldoc_iterator_category</code>.  <code>\ref stldoc_iterator_category</code> takes a single
+argument, an iterator, and returns an object whose type depends on the
+iterator's category.  <code>\ref stldoc_iterator_category</code>'s return value is of
+type <code>input_iterator_tag</code> if its argument is an \ref stldoc_InputIterator.
+\section Example Example
+See <code>\ref stldoc_iterator_category</code>
+\section Definition Definition
+Defined in the standard header <A href="iterator">iterator</A>, and in the
+nonstandard backward-compatibility header <A href="iterator.h">iterator.h</A>.
+\section Template_parameters Template parameters
+None.
+\section Model_of Model of
+\ref stldoc_Assignable
+\section Type_requirements Type requirements
+None.
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+None.
+\section New_Members New Members
+None.
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_iterator_category</code>, \ref stldoc_iterator_tags,
+<code>\ref stldoc_iterator_traits</code>,
+<code>\ref stldoc_output_iterator_tag</code>,
+<code>\ref stldoc_forward_iterator_tag</code>, <code>\ref stldoc_bidirectional_iterator_tag</code>,
+<code>\ref stldoc_random_access_iterator_tag</code>
+
+
+*/

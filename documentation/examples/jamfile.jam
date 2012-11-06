@@ -1,0 +1,4 @@
+compile namespace.cpp ;
+compile-fail namespace_fail.cpp ;
+run enum_ops_example.cpp ;
+compile-fail enum_ops_example_fail.cpp ;

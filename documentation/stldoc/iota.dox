@@ -1,0 +1,68 @@
+/** \page stldoc_iota iota
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class ForwardIterator, class T>
+void iota(ForwardIterator first, ForwardIterator last, T value);
+\endcode
+\section Description Description
+<code>Iota</code> assigns sequentially increasing values to a range.  That is,
+it assigns <code>value</code> to <code>*first</code>, <code>value + 1</code> to <code>*(first + 1)</code>
+and so on.  In general, each iterator <code>i</code> in the range <code>[first, last)</code>
+is assigned <code>value + (i - first)</code>.  <A href="#1">[1]</A>
+\section Definition Definition
+Defined in the standard header <A href="numeric">numeric</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.  This function is an SGI
+extension; it is not part of the C++ standard.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator</code> is mutable.
+<li>
+<code>T</code> is \ref stldoc_Assignable.
+<li>
+If <code>x</code> is an object of type <code>T</code>, then <code>x++</code> is defined.
+<li>
+<code>T</code> is convertible to <code>ForwardIterator</code>'s value type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>last - first</code> assignments.
+\section Example Example
+\code
+int main()
+{
+  vector<int> V(10);
+
+  iota(V.begin(), V.end(), 7);
+  copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
+  cout << endl; 
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The name <code>iota</code> is taken from the programming language APL.
+\section See_also See also
+<code>\ref stldoc_fill</code>, <code>\ref stldoc_generate</code>, <code>\ref stldoc_partial_sum</code>
+
+
+*/

@@ -1,0 +1,60 @@
+/** \page stldoc_reverse reverse
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class BidirectionalIterator>
+void reverse(BidirectionalIterator first, BidirectionalIterator last);
+\endcode
+\section Description Description
+<code>Reverse</code> reverses a range.  That is: for every <code>i</code> such that
+<code>0 &lt;= i &lt;= (last - first) / 2)</code>, it exchanges 
+<code>*(first + i)</code> and <code>*(last - (i + 1))</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+BidirectionalIterator is a model of \ref stldoc_BidirectionalIterator.
+<li>
+BidirectionalIterator is mutable.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear: <code>reverse(first, last)</code> makes <code>(last - first) / 2</code> calls
+to <code>\ref stldoc_swap</code>.
+\section Example Example
+\code
+Vector<int> V;
+V.push_back(0);
+V.push_back(1);
+V.push_back(2);
+copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
+                // Output: 0 1 2
+reverse(V.begin(), V.end());
+copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
+                // Output: 2 1 0
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_reverse_copy</code>
+
+
+*/

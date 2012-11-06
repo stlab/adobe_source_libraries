@@ -1,0 +1,296 @@
+/** \page stldoc_UniqueAssociativeContainer UniqueAssociativeContainer
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Unique Associative Container is an \ref stldoc_AssociativeContainer with
+the property that each key in the container is unique: no two elements
+in a Unique Associative Container have the same key.
+\section Refinement_of Refinement of
+\ref stldoc_AssociativeContainer
+\section Associated_types Associated types
+None, except for those defined by \ref stldoc_AssociativeContainer.
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Unique Associative Container
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>a</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>t</code>
+</td>
+<td valign="top">
+Object of type <code>X::value_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>k</code>
+</td>
+<td valign="top">
+Object of type <code>X::key_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>p</code>, <code>q</code>
+</td>
+<td valign="top">
+Object of type <code>X::iterator</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+\section Valid_expressions Valid expressions
+In addition to the expressions defined in 
+\ref stldoc_AssociativeContainer, the
+following expressions must be valid.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Range constructor
+</td>
+<td valign="top">
+\code
+X(i, j)
+X a(i, j);
+\endcode
+</td>
+<td valign="top">
+<code>i</code> and <code>j</code> are \ref stldoc_InputIterator whose value type is convertible
+   to <code>T</code> <A href="#1">[1]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Insert element
+</td>
+<td valign="top">
+<code>a.insert(t)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>\ref stldoc_pair&lt;X::iterator, bool&gt;</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Insert range
+</td>
+<td valign="top">
+<code>a.insert(i, j)</code>
+</td>
+<td valign="top">
+<code>i</code> and <code>j</code> are \ref stldoc_InputIterator whose value type is convertible
+   to <code>X::value_type</code>. <A href="#1">[1]</A>
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Count
+</td>
+<td valign="top">
+<code>a.count(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>size_type</code>
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Range constructor
+</td>
+<td valign="top">
+\code
+X(i, j)
+X a(i, j);
+\endcode
+</td>
+<td valign="top">
+<code>[i,j)</code> is a valid range.
+</td>
+<td valign="top">
+Creates an associative container that contains all of the elements in the range <code>[i,j)</code>
+   that have unique keys.
+</td>
+<td valign="top">
+<code>size()</code> is less than or equal to the distance from <code>i</code> to <code>j</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Insert element
+</td>
+<td valign="top">
+<code>a.insert(t)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Inserts <code>t</code> into <code>a</code> if and only if <code>a</code> does not already contain an
+   element whose key is the same as the key of <code>t</code>.  The return value
+   is a <code>\ref stldoc_pair</code> <code>P</code>.  <code>P.first</code> is an iterator pointing to the
+   element whose key is the same as the key of <code>t</code>.  <code>P.second</code> is 
+   a <code>bool</code>: it is <code>true</code> if <code>t</code> was actually inserted into <code>a</code>, and
+   <code>false</code> if <code>t</code> was not inserted into <code>a</code>, <i>i.e.</i> if <code>a</code> already
+   contained an element with the same key as <code>t</code>.
+</td>
+<td valign="top">
+<code>P.first</code> is a dereferenceable iterator.  <code>*(P.first)</code> has the same
+    key as <code>t</code>.  The size of <code>a</code> is incremented by <code>1</code> if and only if
+    <code>P.second</code> is <code>true</code>.  
+</td>
+</tr>
+<tr>
+<td valign="top">
+Insert range
+</td>
+<td valign="top">
+<code>a.insert(i, j)</code>
+</td>
+<td valign="top">
+<code>[i, j)</code> is a valid range.
+</td>
+<td valign="top">
+Equivalent to <code>a.insert(t)</code> for each object <code>t</code> that is pointed to
+   by an iterator in the range <code>[i, j)</code>.  Each element is inserted into
+   <code>a</code> if and only if <code>a</code> does not already contain an element with 
+   the same key.
+</td>
+<td valign="top">
+The size of <code>a</code> is incremented by at most <code>j - i</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Count
+</td>
+<td valign="top">
+<code>a.count(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns the number of elements in <code>a</code> whose keys are the same as <code>k</code>.
+</td>
+<td valign="top">
+The return value is either <code>0</code> or <code>1</code>.
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+Average complexity for insert element is at most logarithmic.  
+<p>
+Average complexity for insert range is at most <code>O(N * log(size() + N))</code>,
+   where <code>N</code> is <code>j - i</code>.
+\section Invariants Invariants
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Uniqueness
+</td>
+<td valign="top">
+No two elements have the same key.  Equivalently, this means that
+   for every object <code>k</code> of type <code>key_type</code>, <code>a.count(k)</code> returns either 
+   <code>0</code> or <code>1</code>.
+</td>
+</tr>
+</table>
+\section Models Models
+<ul>
+<li>
+<code>\ref stldoc_set</code>
+<li>
+<code>\ref stldoc_Map</code>
+<li>
+<code>\ref stldoc_hash_set</code>
+<li>
+<code>\ref stldoc_hash_map</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+At present (early 1998), not all compilers support
+&quot;member templates&quot;.  If your compiler supports member
+templates then <code>i</code> and <code>j</code> may be of any type that
+conforms to the \ref stldoc_InputIterator
+requirements.  If your compiler does not yet support member
+templates, however, then <code>i</code> and <code>j</code> must be of type
+<code>const T*</code> or of type <code>X::const_iterator</code>.
+\section See_also See also
+\ref stldoc_AssociativeContainer, \ref stldoc_MultipleAssociativeContainer,
+\ref stldoc_UniqueSortedAssociativeContainer, 
+\ref stldoc_MultipleSortedAssociativeContainer
+
+
+*/

@@ -1,0 +1,95 @@
+/** \page stldoc_random_shuffle random_shuffle
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Random_shuffle</code> is an overloaded name; there are actually two
+<code>random_shuffle</code> functions.
+\code
+template <class RandomAccessIterator>
+void random_shuffle(RandomAccessIterator first, RandomAccessIterator last);
+
+template <class RandomAccessIterator, class RandomNumberGenerator>
+void random_shuffle(RandomAccessIterator first, RandomAccessIterator last,
+                    RandomNumberGenerator& rand)
+\endcode
+\section Description Description
+<code>Random_shuffle</code> randomly rearranges the elements in the range 
+<code>[first, last)</code>: that is, it randomly picks one of the <code>N!</code> possible
+orderings, where <code>N</code> is <code>last - first</code>. <A href="#1">[1]</A>  There are two different 
+versions of <code>random_shuffle</code>.  The first version uses an internal random
+number generator, and the second uses a \ref stldoc_RandomNumberGenerator,
+a special kind of \ref stldoc_functors, that is explicitly passed as 
+an argument.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator
+</ul>
+For the second version:
+<ul>
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator
+<li>
+<code>RandomNumberGenerator</code> is a model of \ref stldoc_RandomNumberGenerator
+<li>
+<code>RandomAccessIterator</code>'s distance type is convertible to
+   <code>RandomNumberGenerator</code>'s argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>last - first</code> is less than <code>rand</code>'s maximum value.
+</ul>
+\section Complexity Complexity
+Linear in <code>last - first</code>.  If <code>last != first</code>, exactly <code>(last - first) -
+1</code> swaps are performed.
+\section Example Example
+\code
+const int N = 8;
+int A[] = {1, 2, 3, 4, 5, 6, 7, 8};
+random_shuffle(A, A + N);
+copy(A, A + N, ostream_iterator<int>(cout, " "));
+// The printed result might be 7 1 6 3 2 5 4 8, 
+//  or any of 40,319 other possibilities.
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+This algorithm is described in section 3.4.2 of Knuth
+(D. E. Knuth, <i>The Art of Computer
+Programming.  Volume 2: Seminumerical Algorithms</i>, second edition.  
+Addison-Wesley, 1981). Knuth
+credits Moses and Oakford (1963) and Durstenfeld (1964).  Note that 
+there are N! ways of arranging a sequence of N elements.  <code>Random_shuffle</code> 
+yields uniformly distributed results; that is, the probability of any
+particular ordering is 1/N!.  The reason this comment is important is 
+that there are a number of algorithms that seem at first sight to 
+implement random shuffling of a sequence, but that do not in fact
+produce a uniform distribution over the N! possible orderings.  That
+is, it's easy to get random shuffle wrong.
+\section See_also See also
+<code>\ref stldoc_random_sample</code>, 
+<code>\ref stldoc_random_sample_n</code>,
+<code>\ref stldoc_next_permutation</code>, 
+<code>\ref stldoc_prev_permutation</code>, 
+\ref stldoc_RandomNumberGenerator
+
+
+*/

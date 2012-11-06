@@ -1,0 +1,6 @@
+// For linking against the static C++ library
+
+#include "xci_symbol_visibility_hidden.xcconfig"
+
+STANDARD_C_PLUS_PLUS_LIBRARY_TYPE = static
+LINK_WITH_STANDARD_LIBRARIES = YES

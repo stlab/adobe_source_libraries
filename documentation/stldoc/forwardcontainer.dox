@@ -1,0 +1,285 @@
+/** \page stldoc_ForwardContainer ForwardContainer
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Forward Container is a \ref stldoc_Container whose
+elements are arranged in a definite order: the ordering will not
+change spontaneously from iteration to iteration.  The requirement of
+a definite ordering allows the definition of element-by-element
+equality (if the container's element type is
+\ref stldoc_EqualityComparable) and of
+lexicographical ordering (if the container's element type is
+\ref stldoc_LessThanComparable).
+<p>
+Iterators into a Forward Container satisfy the 
+\ref stldoc_ForwardIterator requirements;
+consequently, Forward Containers support multipass algorithms and
+allow multiple iterators into the same container to be active at the
+same time.
+\section Refinement_of Refinement of
+\ref stldoc_Container,
+\ref stldoc_EqualityComparable,
+\ref stldoc_LessThanComparable
+\section Associated_types Associated types
+No additional types beyond those defined in
+\ref stldoc_Container.  However, the requirements for
+the iterator type are strengthened: the iterator type must be a model
+of \ref stldoc_ForwardIterator.
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Forward Container
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>a</code>, <code>b</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The value type of <code>X</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+\section Valid_expressions Valid expressions
+In addition to the expressions defined in
+\ref stldoc_Container,
+\ref stldoc_EqualityComparable, and 
+\ref stldoc_LessThanComparable, the following
+expressions must be valid.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Equality
+</td>
+<td valign="top">
+<code>a == b</code>
+</td>
+<td valign="top">
+<code>T</code> is \ref stldoc_EqualityComparable
+</td>
+<td valign="top">
+Convertible to <code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Inequality
+</td>
+<td valign="top">
+<code>a != b</code>
+</td>
+<td valign="top">
+<code>T</code> is \ref stldoc_EqualityComparable
+</td>
+<td valign="top">
+Convertible to <code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Less
+</td>
+<td valign="top">
+<code>a &lt; b</code>
+</td>
+<td valign="top">
+<code>T</code> is \ref stldoc_LessThanComparable
+</td>
+<td valign="top">
+Convertible to <code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Greater
+</td>
+<td valign="top">
+<code>a &gt; b</code>
+</td>
+<td valign="top">
+<code>T</code> is \ref stldoc_LessThanComparable
+</td>
+<td valign="top">
+Convertible to <code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Less or equal
+</td>
+<td valign="top">
+<code>a &lt;= b</code>
+</td>
+<td valign="top">
+<code>T</code> is \ref stldoc_LessThanComparable
+</td>
+<td valign="top">
+Convertible to <code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Greater or equal
+</td>
+<td valign="top">
+<code>a &gt;= b</code>
+</td>
+<td valign="top">
+<code>T</code> is \ref stldoc_LessThanComparable
+</td>
+<td valign="top">
+Convertible to <code>bool</code>
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+Semantics of an expression is defined only where it is not defined in
+\ref stldoc_Container,
+\ref stldoc_EqualityComparable, or
+\ref stldoc_LessThanComparable, or where there
+is additional information.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Equality
+</td>
+<td valign="top">
+<code>a == b</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns <code>true</code> if <code>a.size() == b.size()</code> and if each element of <code>a</code>
+   compares equal to the corresponding element of <code>b</code>. Otherwise
+   returns <code>false</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Less
+</td>
+<td valign="top">
+<code>a &lt; b</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Equivalent to <code>\ref stldoc_lexicographical_compare\zwj(a,b)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+The equality and inequality operations are linear in the
+   container's size.
+\section Invariants Invariants
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Ordering
+</td>
+<td valign="top">
+Two different iterations through a forward container will access
+   its elements in the same order, providing that there have been
+   no intervening mutative operations.
+</td>
+</tr>
+</table>
+\section Models Models
+<ul>
+<li>
+ \ref stldoc_Vector
+<li>
+ \ref stldoc_List
+<li>
+ \ref stldoc_Slist
+<li>
+ \ref stldoc_Deque
+<li>
+ \ref stldoc_set
+<li>
+ \ref stldoc_hash_set
+<li>
+ \ref stldoc_Map
+<li>
+ \ref stldoc_hash_map
+<li>
+ \ref stldoc_multiset
+<li>
+ \ref stldoc_hash_multiset
+<li>
+ \ref stldoc_Multimap
+<li>
+ \ref stldoc_hash_multimap
+</ul>
+\section Notes Notes
+\section See_also See also
+The \ref stldoc_Iterators,
+\ref stldoc_ForwardIterator,
+ \ref stldoc_Sequence
+
+
+*/

@@ -1,0 +1,2350 @@
+/** \page stldoc_Rope Rope
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Rope</code>s are a scalable string implementation: they are designed
+for efficient operation that involve the string as a whole.  Operations
+such as assignment, concatenation, and substring take time that is
+nearly independent of the length of the string.  Unlike C strings,
+<code>rope</code>s are a reasonable representation for very long strings such as
+edit buffers or mail messages. <A href="#1">[1]</A>
+<p>
+Though <code>rope</code>s can be treated as \ref stldoc_Container of characters, and are
+almost \ref stldoc_Sequence, this is rarely the most efficient way to
+accomplish a task.  Replacing an individual character in a <code>rope</code> is
+slow: each character replacement essentially consists of two substring
+operations followed by two concatenation operations.  <code>Rope</code>s
+primarily target a more functional programming style.
+<p>
+They differ from <code>\ref stldoc_Vector&lt;char&gt;</code> or reference-counted string
+implementations in the following ways.
+<p>
+Advantages:
+<ul>
+<li>
+Much faster concatenation and substring operations involving long
+strings.  Inserting a character in the middle of a 10 megabyte rope
+should take on the order of 10s of microseconds, even if a copy of the
+original is kept, <i>e.g.</i> as part of an edit history.  In contrast,
+this would take on the order of a second for conventional &quot;flat&quot;
+string representation.  The time required for concatenation can be
+viewed as constant for most applications.  It is perfectly reasonable
+to use a <code>rope</code> as the representation of a file inside a text editor.
+<li>
+Potentially much better space performance.  Minor modifications of a
+<code>rope</code> can share memory with the original.  <code>Rope</code>s are allocated in small
+chunks, significantly reducing memory fragmentation problems introduced
+by large blocks.
+<li>
+Assignment is simply a (possibly reference counted) pointer
+assignment.  Unlike reference-counted copy-on-write implementations,
+this remains largely true even if one of the copies is subsequently
+slightly modified. It is very inexpensive to checkpoint old versions
+of a string, <i>e.g.</i> in an edit history.
+<li>
+It is possible to view a function producing characters as a <code>rope</code>.  Thus
+a piece of a rope may be a 100MByte file, which is read only when that section
+of the string is examined.  Concatenating a string to the end of such a file
+does not involve reading the file.  (Currently the implementation of this
+facility is incomplete.)
+</ul>
+Disadvantages:
+<ul>
+<li>
+Single character replacements in a <code>rope</code> are expensive.  A character
+update requires time roughly logarithmic in the length of the string.
+It is implemented as two substring operations followed by two
+concatenations.
+<li>
+A <code>rope</code> can be examined a character at a time through a
+<code>const_iterator</code> in amortized constant time, as for
+<code>\ref stldoc_Vector&lt;char&gt;</code>.  However this is slower than for
+<code>\ref stldoc_Vector&lt;char&gt;</code> by a significant constant factor (roughly a factor
+of 5 or 10 if little processing is done on each character and the
+string is long).  Nonconst iterators involve additional checking, and
+are hence a bit slower still.  (We expect that eventually some common
+algorithms will be specialized so that this cost is not encountered.
+Currently only output, conversion to a C string, and the
+single-character find member function are treated in this way.)
+<li>
+Iterators are on the order of a dozen words in size.  This means that
+copying them, though not tremendously expensive, is not a trivial
+operation.  Avoid postincrementing iterators; use preincrement
+whenever possible. (The interface also provides primitives for
+indexing into a string using integer character positions.  Passing
+positions around is clearly much cheaper, but this makes the indexing
+operation expensive, again roughly logarithmic in the length of the
+rope.)
+</ul>
+Experience with previous implementations for other programming
+languages suggests that <code>rope</code>s are a good choice as the normal or
+default representation of strings in a program.  It will occasionally
+be necessary to use some type of character array, such as
+<code>\ref stldoc_Vector&lt;char&gt;</code>, in places that are particularly sensitive to the
+performance of traversals or in-place updates.  But the use of <code>rope</code>s
+minimizes the number of cases in which program running times become
+intolerable due to unexpectedly long string inputs.
+<p>
+A <code>rope</code> is almost, but not quite, a \ref stldoc_Sequence. It supports random
+access const_iterators.  Forward or backward traversals take constant
+time per operation.  Nonconstant iterators are also provided.
+However, assignment through a nonconst iterator is an expensive
+operation (basically logarithmic time, but with a large constant).  It
+should be avoided in frequently executed code.
+<p>
+In order to discourage accidental use of expensive operations,
+the <code>begin</code> and <code>end</code> member functions on ropes return <code>const_iterator</code>.
+If non-const iterators are desired, the member functions
+<code>mutable_begin</code> and <code>mutable_end</code> should be used.
+<p>
+Any modification of a <code>rope</code> invalidates const iterators referring to
+the rope.  Mutable iterators refer to the same position in the same
+<code>rope</code> after an update.  (This may be surprising if the iterators refers
+to a position after an insertion point.)  They remain valid unless the
+iterator refers to a position that is more than one past the end of the
+resulting <code>rope</code>.  
+\section Definition Definition
+Defined in the header <A href="rope">rope</A>, and in the backward-compatibility
+header <A href="rope.h">rope.h</A>.  The <code>rope</code> class, and the <A href="rope">rope</A> header, are SGI
+extensions; they are not part of the C++ standard.
+\section Example Example
+\code
+crope r(1000000, 'x');          // crope is rope<char>. wrope is rope<wchar_t>
+                                // Builds a rope containing a million 'x's.
+                                // Takes much less than a MB, since the
+                                // different pieces are shared.
+crope r2 = r + "abc" + r;       // concatenation; takes on the order of 100s
+                                // of machine instructions; fast
+crope r3 = r2.substr(1000000, 3);       // yields "abc"; fast.
+crope r4 = r2.substr(1000000, 1000000); // also fast.
+reverse(r2.mutable_begin(), r2.mutable_end());
+                                // correct, but slow; may take a
+                                // minute or more.
+\endcode
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The <code>rope</code>'s value type: usually <code>char</code> or <code>wchar_t</code>. <A href="#2">[2]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Alloc</code>
+</td>
+<td valign="top">
+The <code>rope</code>'s allocator, used for all internal memory management.
+</td>
+<td valign="top">
+<code>\ref stldoc_Allocators</code>
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_RandomAccessContainer.  Almost, but not quite, a model of
+\ref stldoc_FrontInsertionSequence and \ref stldoc_BackInsertionSequence.
+\section Type_requirements Type requirements
+None, except for those imposed by the requirements of 
+\ref stldoc_RandomAccessContainer.
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The <code>rope</code>'s value type <code>T</code>, usually <code>char</code> or <code>wchar_t</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>difference_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+A signed integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+An unsigned integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Reference to a <code>rope</code> element. <A href="#3">[3]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const reference to <code>T</code>. <A href="#3">[3]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Pointer to <code>T</code>. <A href="#3">[3]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_pointer</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const pointer to <code>T</code>. <A href="#3">[3]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Const iterator used to iterate backwards through a <code>rope</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Mutable iterator used to iterate backwards through a <code>rope</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Mutable \ref stldoc_RandomAccessIterator used to iterate through a <code>rope</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const \ref stldoc_RandomAccessIterator used to iterate through a <code>rope</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope(const charT* s)</code>
+</td>
+<td valign="top">
+<code>rope</code>.
+</td>
+<td valign="top">
+Constructs a <code>rope</code> from a C string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope(const charT* s, size_t n)</code>
+</td>
+<td valign="top">
+<code>rope</code>.
+</td>
+<td valign="top">
+Constructs a <code>rope</code> from a (not necessarily null-terminated)
+   array of <code>charT</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope(const const_iterator&amp; f, const const_iterator&amp; l)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Creates a <code>rope</code> with a copy of a range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope(const iterator&amp; f, const iterator&amp; l)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Creates a <code>rope</code> with a copy of a range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope(const charT* f, const charT* l)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Creates a <code>rope</code> with a copy of a range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope(charT c)</code>
+</td>
+<td valign="top">
+<code>rope</code>.
+</td>
+<td valign="top">
+Single-character constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Default constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope(\ref stldoc_char_producer&lt;charT&gt;*, size_t, bool)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope(const rope&amp; x)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The copy constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>~rope()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The destructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope&amp; operator=(const rope&amp;x)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The assignment operator.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void swap(rope&amp; x)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Swaps the contents of two <code>rope</code>s.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type size() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns the size of the <code>rope</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type length() const</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Same as <code>size</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type max_size() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Size of longest <code>rope</code> guaranteed to be representable.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool empty() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Equivalent to <code>size() == 0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator begin() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns an <code>const_iterator</code> pointing to the beginning of the <code>rope</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator end() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns an <code>const_iterator</code> pointing to the end of the <code>rope</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator mutable_begin()</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the beginning of the <code>rope</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator mutable_end()</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the end of the <code>rope</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator rbegin() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>const_reverse_iterator</code> pointing to the beginning of the
+   reversed <code>rope</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator rend() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>const_reverse_iterator</code> pointing to the end of the
+   reversed <code>rope</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator mutable_rbegin()</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Returns a <code>reverse_iterator</code> pointing to the beginning of the
+   reversed <code>rope</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator mutable_rend()</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Returns a <code>reverse_iterator</code> pointing to the end of the
+   reversed <code>rope</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>charT operator[](size_type n) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_RandomAccessContainer
+</td>
+<td valign="top">
+Returns the <code>n</code>'th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>charT at(size_type pos) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_RandomAccessContainer
+</td>
+<td valign="top">
+Returns the <code>n</code>'th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference mutable_reference_at(size_type n)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Returns a <code>reference</code> to the <code>n</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>int compare(const rope&amp;) const</code>
+</td>
+<td valign="top">
+<code>rope</code>.
+</td>
+<td valign="top">
+Three-way comparison. See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>charT front() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Returns the first element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>charT back() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_BackInsertionSequence
+</td>
+<td valign="top">
+Returns the last element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void push_front()</code>
+</td>
+<td valign="top">
+ \ref stldoc_FrontInsertionSequence
+</td>
+<td valign="top">
+Inserts a new element at the front.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void push_back(charT)</code>
+</td>
+<td valign="top">
+ \ref stldoc_BackInsertionSequence
+</td>
+<td valign="top">
+Inserts a new element at the end.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void pop_front()</code>
+</td>
+<td valign="top">
+ \ref stldoc_FrontInsertionSequence
+</td>
+<td valign="top">
+Removes the first element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void pop_back()</code>
+</td>
+<td valign="top">
+ \ref stldoc_BackInsertionSequence
+</td>
+<td valign="top">
+Removes the last element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert(const iterator&amp; p, const rope&amp; x)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Inserts the contents of <code>x</code> before <code>p</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert(const iterator&amp; p, charT c)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts <code>c</code> before <code>p</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert(const iterator&amp; p)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts <code>charT()</code> before <code>p</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert(const iterator&amp; p, size_t n, charT c)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts <code>n</code> copies of <code>c</code> before <code>p</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert(const iterator&amp; p, const charT* s)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Inserts a C string before <code>p</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert(const iterator&amp; p, const charT* s, size_t n)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Inserts a (not necessarily null-terminated)
+   array of <code>charT</code>  before <code>p</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert(const iterator&amp; p, const charT* f, const char* l)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts the range <code>[f, l)</code> before <code>p</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+iterator insert(const iterator& p, 
+                const const_iterator& f, const const_iterator& l)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts the range <code>[f, l)</code> before <code>p</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+iterator insert(const iterator& p, 
+                const iterator& f, const iterator& l)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts the range <code>[f, l)</code> before <code>p</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void insert(size_t i, const rope&amp; x)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Inserts the contents of <code>x</code> before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void insert(size_t i, charT c)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Inserts the character <code>c</code> before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void insert(size_t i)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Inserts the character <code>charT()</code> before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void insert(size_t i, size_t n, charT c)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Inserts <code>n</code> copies of <code>c</code> before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void insert(size_t i, const charT* s)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Inserts a C string before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void insert(size_t i, const charT* s, size_t n)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Inserts a (not necessarily null-terminated)
+   array of <code>charT</code> before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void insert(size_t i, const charT* f, const charT* l)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Inserts the range <code>[f, l)</code> before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void insert(size_t i, 
+            const const_iterator& f, const const_iterator& l)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Inserts the range <code>[f, l)</code> before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void insert(size_t i, 
+            const iterator& f, const iterator& l)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Inserts the range <code>[f, l)</code> before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void erase(const iterator&amp; p)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases the element pointed to by <code>p</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void erase(const iterator&amp; f, const iterator&amp; l)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases the range <code>[f, l)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void erase(size_t i, size_t n)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Erases <code>n</code> elements, starting with the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>append(const charT* s)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Appends a C string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>append(const charT* s, size_t)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Appends a (not necessarily null-terminated) array of <code>charT</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>append(const charT* f, const charT* l)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Appends a range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>append(charT c)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Appends the character <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>append()</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Appends the character <code>charT()</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>append(size_t n, charT c)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Appends <code>n</code> copies of <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>append(const rope&amp; x)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Appends the rope <code>x</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(const iterator&amp; f, const iterator&amp; l, const rope&amp;)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(const iterator&amp; f, const iterator&amp; l, charT)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(const iterator&amp; f, const iterator&amp; l, const charT* s)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(const iterator& f, const iterator& l, 
+             const charT* s, size_t n)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(const iterator& f1, const iterator& l1, 
+             const charT* f2, const charT* l2)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(const iterator& f1, const iterator& l1, 
+             const const_iterator& f2, const const_iterator& l2)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(const iterator& f1, const iterator& l1, 
+             const iterator& f2, const iterator& l2)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(const iterator&amp; p, const rope&amp; x)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(const iterator&amp; p, charT c)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(const iterator&amp; p, const charT* s)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(const iterator&amp; p, const charT* s, size_t n)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(const iterator& p, 
+             const charT* f, const charT* l)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(const iterator& p, 
+             const_iterator f, const_iterator l)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(const iterator& p, 
+             iterator f, iterator l)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, size_t n, const rope&amp; x)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, size_t n, const charT* s, size_t n)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, size_t n, charT c)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, size_t n, const charT* s)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(size_t i, size_t n, 
+             const charT* f, const charT* l)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(size_t i, size_t n, 
+             const const_iterator& f,
+             const const_iterator& l)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(size_t i, size_t n, 
+             const iterator& f,
+             const iterator& l)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, charT c)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, const rope&amp; x)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, const charT* s)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, const charT* s, size_t n)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, const charT* f, const charT* l)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(size_t i, 
+             const const_iterator& f, const const_iterator& l)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(size_t i, 
+             const iterator& f, const iterator& l)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope substr(iterator f) const</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope substr(const_iterator f) const</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope substr(iterator f, iterator l) const</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope substr(const_iterator f, const_iterator l) const</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope substr(size_t i, size_t n = 1) const</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void copy(charT* buf) const</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Copies a rope into an array of <code>charT</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+size_type copy(size_type pos, size_type n, 
+               charT* buf)
+\endcode
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Copies a rope into an array of <code>charT</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const charT* c_str() const</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void delete_c_str()</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope operator+(const rope&amp; L, const rope&amp;R)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Concatenates <code>L</code> and <code>R</code>.  This is a global function, not
+   a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope&amp; operator+=(rope&amp; L, const rope&amp; R)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Appends <code>R</code> to <code>L</code>.  This is a global function, not
+   a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope operator+(const rope&amp; L, const charT* s)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Concatenates <code>L</code> and <code>s</code>.  This is a global function, not
+   a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope&amp; operator+=(rope&amp; L, const charT* s)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Appends <code>s</code> to <code>L</code>.  This is a global function, not
+   a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope operator+(const rope&amp; L, charT c)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Concatenates <code>L</code> and <code>c</code>.  This is a global function, not
+   a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope&amp; operator+=(rope&amp; L, charT c)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Appends <code>c</code> to <code>L</code>.  This is a global function, not
+   a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator&lt;(const rope&amp;, const rope&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_ForwardContainer
+</td>
+<td valign="top">
+Lexicographical comparison.  This is a global function, not
+   a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator==(const rope&amp;, const rope*)</code>
+</td>
+<td valign="top">
+ \ref stldoc_ForwardContainer
+</td>
+<td valign="top">
+Tests two <code>rope</code>s for equality.  This is a global function, not
+   a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>ostream&amp; operator&lt;&lt;(ostream&amp; os, rope x)</code>
+</td>
+<td valign="top">
+<code>rope</code>
+</td>
+<td valign="top">
+Outputs <code>x</code> to the stream <code>os</code>.  This is a global function, not
+   a member function.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_RandomAccessContainer requirements, but are specific to <code>rope</code>:
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Function
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>rope(const charT* s)</code>
+</td>
+<td valign="top">
+Constructs a <code>rope</code> from a C string.  The rope consists of the
+   sequence of characters starting with <code>*s</code> up to, but not including,
+   the first null character.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope(const charT* s, size_t n)</code>
+</td>
+<td valign="top">
+Constructs a <code>rope</code> from an array of <code>charT</code>.  The rope consists of the
+   characters in the range <code>[s, s + n)</code>.  Note that this range 
+   is permitted to contain embedded null characters.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope(charT c)</code>
+</td>
+<td valign="top">
+Constructs a rope consisting of the single character <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope(\ref stldoc_char_producer&lt;charT&gt;* cp, size_t n, bool destroy)</code>
+</td>
+<td valign="top">
+Constructs a rope of size <code>n</code>, whose characters are computed as
+   needed by <code>cp</code>.  The object <code>*cp</code> must be valid as long as any
+   reference to the resulting <code>rope</code>, or a <code>rope</code> derived from it, may
+   be used.  If <code>destroy</code> is <code>true</code>, then <code>delete cp</code> will be executed
+   automatically once <code>cp</code> is no longer needed.  Typically <code>destroy</code>
+   will be <code>true</code> unless <code>cp</code> is a pointer to statically allocated
+   storage.  It is rarely safe to allocate <code>*cp</code> on the stack.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type length() const</code>
+</td>
+<td valign="top">
+Synonym for <code>size</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator mutable_begin()</code>
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the beginning of the <code>rope</code>.
+   This member function exists because mutable <code>rope</code> iterators are
+   much more expensive than constant <code>rope</code> iterators.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator mutable_end()</code>
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the end of the <code>rope</code>.
+   This member function exists because mutable <code>rope</code> iterators are
+   much more expensive than constant <code>rope</code> iterators.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator mutable_rbegin()</code>
+</td>
+<td valign="top">
+Returns a <code>reverse_iterator</code> pointing to the beginning of the
+   reversed <code>rope</code>.
+   This member function exists because mutable <code>rope</code> iterators are
+   much more expensive than constant <code>rope</code> iterators.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator mutable_rend()</code>
+</td>
+<td valign="top">
+Returns a <code>reverse_iterator</code> pointing to the end of the
+   reversed <code>rope</code>.
+   This member function exists because mutable <code>rope</code> iterators are
+   much more expensive than constant <code>rope</code> iterators.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference mutable_reference_at(size_type n)</code>
+</td>
+<td valign="top">
+Returns a <code>reference</code> to the <code>n</code>th element.  This member function
+   exists because mutable references to <code>rope</code> elements have fairly 
+   high overhead.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>int compare(const rope&amp; x)</code>
+</td>
+<td valign="top">
+Three-way comparison, much like the function <code>strcmp</code> from the
+   standard C library.  Returns a negative number if <code>*this</code> is
+   lexicographically less than <code>x</code>, a positive number if <code>*this</code>
+   is lexicographically greater than <code>x</code>, and zero if neither 
+   <code>rope</code> is lexicographically less than the other.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert(const iterator&amp; p, const rope&amp; x)</code>
+</td>
+<td valign="top">
+Inserts the contents of the <code>rope</code> <code>x</code> immediately before the
+   position <code>p</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert(const iterator&amp; p, const charT* s)</code>
+</td>
+<td valign="top">
+Inserts a C string immediately before the position <code>p</code>.  The
+   elements that are inserted are the sequence of characters
+   starting with <code>*s</code> and up to, but not including, the first
+   null character.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert(const iterator&amp; p, const charT* s, size_t n)</code>
+</td>
+<td valign="top">
+Inserts an array of <code>charT</code>.  The elements that are inserted
+   are the range <code>[s, s + n)</code>.  Note that this range is permitted
+   to contain embedded null characters.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void insert(size_t i, const rope&amp; x)</code>
+</td>
+<td valign="top">
+Inserts the contents of the <code>rope</code> x immediately before the <code>i</code>th
+   element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void insert(size_t i, size_t n, charT c)</code>
+</td>
+<td valign="top">
+Inserts <code>n</code> copies of <code>c</code> immediately before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void insert(size_t i, const charT* s)</code>
+</td>
+<td valign="top">
+Inserts a C string immediately before the <code>i</code>th element.  The
+   elements that are inserted are the sequence of characters
+   starting with <code>*s</code> and up to, but not including, the first
+   null character.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void insert(size_t i, const charT* s, size_t n)</code>
+</td>
+<td valign="top">
+Inserts an array of <code>charT</code> immediately before the <code>i</code>th element.  The
+   elements that are inserted are the range <code>[s, s + n)</code>.  Note 
+   that this range is permitted to contain embedded null characters.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void insert(size_t i, charT c)</code>
+</td>
+<td valign="top">
+Inserts the character <code>c</code> immediately before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void insert(size_t i)</code>
+</td>
+<td valign="top">
+Inserts the character <code>charT()</code> immediately before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void insert(size_t i, const charT* f, const charT* l)</code>
+</td>
+<td valign="top">
+Inserts the range <code>[f, l)</code> immediately before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void insert(size_t i, 
+            const const_iterator& f, const const_iterator& l)
+\endcode
+</td>
+<td valign="top">
+Inserts the range <code>[f, l)</code> immediately  before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void insert(size_t i, 
+            const iterator& f, const iterator& l)
+\endcode
+</td>
+<td valign="top">
+Inserts the range <code>[f, l)</code> immediately before the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void erase(size_t i, size_t n)</code>
+</td>
+<td valign="top">
+Erases <code>n</code> elements, starting with the <code>i</code>th element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>append(const charT* s)</code>
+</td>
+<td valign="top">
+Adds a C string to the end of the <code>rope</code>.  The
+   elements that are inserted are the sequence of characters
+   starting with <code>*s</code> and up to, but not including, the first
+   null character.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>append(const charT* s, size_ nt)</code>
+</td>
+<td valign="top">
+Adds an array of <code>charT</code> to the end of the <code>rope</code>.   The
+   elements that are inserted are the range <code>[s, s + n)</code>.  Note 
+   that this range is permitted to contain embedded null characters.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>append(const charT* f, const charT* l)</code>
+</td>
+<td valign="top">
+Adds the elements in the range <code>[f, l)</code> to the end of the <code>rope</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>append(charT c)</code>
+</td>
+<td valign="top">
+Adds the character <code>c</code> to the end of the <code>rope</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>append()</code>
+</td>
+<td valign="top">
+Adds the character <code>charT()</code> to the end of the rope.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>append(const rope&amp; x)</code>
+</td>
+<td valign="top">
+Adds the contents of the rope <code>x</code> to the end of <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>append(size_t n, charT c)</code>
+</td>
+<td valign="top">
+Adds <code>n</code> copies of <code>c</code> to the end of <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(const iterator&amp; f, const iterator&amp; l, const rope&amp; x)</code>
+</td>
+<td valign="top">
+Replaces the elements in the range <code>[f, l)</code> with the elements in <code>x</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(const iterator&amp; f, const iterator&amp; l, charT c)</code>
+</td>
+<td valign="top">
+Replaces the elements in the range <code>[f, l)</code> with the single
+   character <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(const iterator&amp; f, const iterator&amp; l, const charT* s)</code>
+</td>
+<td valign="top">
+Replaces the elements in the range <code>[f, l)</code> with a C string:
+   the sequence of characters beginning with <code>*s</code> and up to, but
+   not including, the first null character.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(const iterator& f, const iterator& l, 
+             const charT* s, size_t n)
+\endcode
+</td>
+<td valign="top">
+Replaces the elements in the range <code>[f, l)</code> with the elements
+   in the range <code>[s, s + n)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(const iterator& f1, const iterator& l1, 
+             const charT* f2, const charT* l2)
+\endcode
+</td>
+<td valign="top">
+Replaces the elements in the range <code>[f1, l1)</code> with the elements
+   in the range <code>[f2, l2)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(const iterator& f1, const iterator& l1, 
+             const const_iterator& f2, const const_iterator& l2)
+\endcode
+</td>
+<td valign="top">
+Replaces the elements in the range <code>[f1, l1)</code> with the elements
+   in the range <code>[f2, l2)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(const iterator& f1, const iterator& l1, 
+             const iterator& f2, const iterator& l2)
+\endcode
+</td>
+<td valign="top">
+Replaces the elements in the range <code>[f1, l1)</code> with the elements
+   in the range <code>[f2, l2)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(const iterator&amp; p, const rope&amp; x)</code>
+</td>
+<td valign="top">
+Replaces the element pointed to by <code>p</code> with the elements in <code>x</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(const iterator&amp; p, charT c)</code>
+</td>
+<td valign="top">
+Replaces the element pointed to by <code>p</code> with the single character <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(const iterator&amp; p, const charT* s)</code>
+</td>
+<td valign="top">
+Replaces the element pointed to by <code>p</code> with a C string:
+   the sequence of characters beginning with <code>*s</code> and up to, but
+   not including, the first null character.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(const iterator&amp; p, const charT* s, size_t n)</code>
+</td>
+<td valign="top">
+Replaces the element pointed to by <code>p</code> with the elements
+   in the range <code>[s, s + n)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(const iterator& p, 
+             const charT* f, const charT* l)
+\endcode
+</td>
+<td valign="top">
+Replaces the element pointed to by <code>p</code> with the elements in the
+   range <code>[f, l)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(const iterator& p, 
+             const_iterator f, const_iterator l)
+\endcode
+</td>
+<td valign="top">
+Replaces the element pointed to by <code>p</code> with the elements in the
+   range <code>[f, l)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(const iterator& p, 
+             iterator f, iterator l)
+\endcode
+</td>
+<td valign="top">
+Replaces the element pointed to by <code>p</code> with the elements in the
+   range <code>[f, l)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, size_t n, const rope&amp; x)</code>
+</td>
+<td valign="top">
+Replaces the <code>n</code> elements beginning with the <code>i</code>th element
+   with the elements in <code>x</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, size_t n, charT c)</code>
+</td>
+<td valign="top">
+Replaces the <code>n</code> elements beginning with the <code>i</code>th element
+   with the single character <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, size_t n, const charT* s)</code>
+</td>
+<td valign="top">
+Replaces the <code>n</code> elements beginning with the <code>i</code>th element
+   with an array of <code>charT</code>: the sequence of characters beginning with <code>*s</code> and up to, but
+   not including, the first null character.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, size_t n1, const charT* s, size_t n2)</code>
+</td>
+<td valign="top">
+Replaces the <code>n1</code> elements beginning with the <code>i</code>th element
+   with the elements in the range <code>[s, s + n2)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(size_t i, size_t n, 
+             const charT* f, const charT* l)
+\endcode
+</td>
+<td valign="top">
+Replaces the <code>n</code> elements beginning with the <code>i</code>th element with
+   the characters in the range <code>[f, l)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(size_t i, size_t n, 
+             const const_iterator& f,
+             const const_iterator& l)
+\endcode
+</td>
+<td valign="top">
+Replaces the <code>n</code> elements beginning with the <code>i</code>th element with
+   the characters in the range <code>[f, l)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(size_t i, size_t n, 
+             const iterator& f,
+             const iterator& l)
+\endcode
+</td>
+<td valign="top">
+Replaces the <code>n</code> elements beginning with the <code>i</code>th element with
+   the characters in the range <code>[f, l)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, charT c)</code>
+</td>
+<td valign="top">
+Replaces the <code>i</code>th element with the character <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, const rope&amp; x)</code>
+</td>
+<td valign="top">
+Replaces the <code>i</code>th element with elements from the <code>rope</code> x.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, const charT* s)</code>
+</td>
+<td valign="top">
+Replaces the <code>i</code>th element with a C string: the sequence of characters beginning with <code>*s</code> and up to, but
+   not including, the first null character.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, const charT* s, size_t n)</code>
+</td>
+<td valign="top">
+Replaces the <code>i</code>th element with the elements in the range <code>[s, s + n)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void replace(size_t i, const charT* f, const charT* l)</code>
+</td>
+<td valign="top">
+Replaces the <code>i</code>th element with the range <code>[f, l)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(size_t i, 
+             const const_iterator& f, const const_iterator& l)
+\endcode
+</td>
+<td valign="top">
+Replaces the <code>i</code>th element with the range <code>[f, l)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void replace(size_t i, 
+             const iterator& f, const iterator& l)
+\endcode
+</td>
+<td valign="top">
+Replaces the <code>i</code>th element with the range <code>[f, l)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope substr(iterator f) const</code>
+</td>
+<td valign="top">
+Returns a new <code>rope</code> with a single element, <code>*f</code>. <A href="#4">[4]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope substr(const_iterator f) const</code>
+</td>
+<td valign="top">
+Returns a new <code>rope</code> with a single element, <code>*f</code>. <A href="#4">[4]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope substr(iterator f, iterator l) const</code>
+</td>
+<td valign="top">
+Returns a new <code>rope</code> that consists of the range <code>[f, l)</code>. <A href="#4">[4]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope substr(const_iterator f, const_iterator l) const</code>
+</td>
+<td valign="top">
+Returns a new <code>rope</code> that consists of the range <code>[f, l)</code>. <A href="#4">[4]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope substr(size_t i, size_t n = 1) const</code>
+</td>
+<td valign="top">
+Returns a new <code>rope</code> whose elements are the <code>n</code> characters
+   starting at the position <code>i</code>. <A href="#4">[4]</A>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void copy(charT* buf) const</code>
+</td>
+<td valign="top">
+Copies the characters in a <code>rope</code> into <code>buf</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+size_type copy(size_type pos, size_type n, 
+               charT* buf)
+\endcode
+</td>
+<td valign="top">
+Copies <code>n</code> characters, starting at position <code>pos</code> in the <code>rope</code>, into
+   <code>buf</code>.  If the <code>rope</code> contains fewer than <code>pos + n</code> characters, 
+   then instead it only copies <code>size() - pos</code> characters.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const charT* c_str() const</code>
+</td>
+<td valign="top">
+Returns a pointer to a null-terminated sequence of characters that
+contains all of the characters in a <code>rope</code>.  <A href="#5">[5]</A> <A href="#6">[6]</A> The resulting sequence of
+characters is valid at least as long as the <code>rope</code> remains valid and
+unchanged.  Note that the first invocation of this operation on long
+strings is slow: it is linear in the length of the <code>rope</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void delete_c_str()</code>
+</td>
+<td valign="top">
+Reclaims the internal storage used by <code>c_str</code>.  Note that this
+   invalidates the pointer that <code>c_str</code> returns.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope operator+(const rope&amp; L, const rope&amp; R)</code>
+</td>
+<td valign="top">
+Returns a new <code>rope</code> consisting of the concatenation of <code>L</code> and <code>R</code>.
+   This is a global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope&amp; operator+=(rope&amp; L, const rope&amp; R)</code>
+</td>
+<td valign="top">
+Modifies <code>L</code> by appending <code>R</code>, and returns <code>L</code>.
+   This is a global function, not a member function. 
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope operator+(const rope&amp; L, const charT* s)</code>
+</td>
+<td valign="top">
+Returns a new <code>rope</code> consisting of the concatenation of <code>L</code> and all
+   of the characters from <code>s</code> up to, but not including, the first
+   null character.  This is a global function, not
+   a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope&amp; operator+=(rope&amp; L, const charT* s)</code>
+</td>
+<td valign="top">
+Modifies <code>L</code> by appending the characters from <code>s</code> up to, but
+   not including, the first null character.  The return value is
+   <code>L</code>. This is a global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope operator+(const rope&amp; L, charT c)</code>
+</td>
+<td valign="top">
+Returns a new <code>rope</code> consisting of <code>L</code> with the character <code>c</code>
+   appended to it. This is a global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>rope&amp; operator+=(rope&amp; L, charT c)</code>
+</td>
+<td valign="top">
+Modifies <code>L</code> by appending the character <code>c</code>. This is a global function,
+   not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>ostream&amp; operator&lt;&lt;(ostream&amp; os, rope x)</code>
+</td>
+<td valign="top">
+Outputs <code>x</code> to the stream <code>os</code>.  This is a global function, not
+   a member function.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+For a detailed discussion of the <code>rope</code> data structure, see
+H.-J. Boehm, R. Atkinson, and M. Plass, &quot;Ropes: An Alternative to
+Strings&quot;, <i>Software Practice and Experience</i> <b>25</b>(12):1315, 1995.
+<p><A name="2">[2]</A>
+Since the value type is usually either <code>char</code> or <code>wchar_t</code>, the library
+introduces two abbreviations: <code>crope</code> is a <code>typedef</code> for <code>rope&lt;char&gt;</code>,
+and <code>wrope</code> is a <code>typedef</code> for <code>rope&lt;wchar_t&gt;</code>. 
+<p><A name="3">[3]</A>
+<code>Rope::reference</code> is not <code>value_type&amp;</code>, but a proxy type.  In fact,
+<code>reference</code> is a <code>typedef</code> for the nested class <code>charT_ref_proxy</code>.
+<code>Const_reference</code>, however, is simply <code>const value_type&amp;</code>.  Similarly,
+<code>const_pointer</code> is just <code>const value_type*</code> but <code>pointer</code> is 
+a proxy type.  If <code>r</code> is an object of type <code>reference</code>, then
+<code>&amp;r</code> is of type <code>pointer</code>.
+<p><A name="4">[4]</A>
+Note that the return value of <code>substr</code> is conceptually a distinct
+<code>rope</code>: the two <code>rope</code>s may share storage, but this is a hidden
+implementation detail.  If you modify a <code>rope</code> returned by
+<code>substr</code>, this will not change the value of the original <code>rope</code>.
+<p><A name="5">[5]</A>
+The final <code>const</code> qualifier in the member function <code>c_str()</code> 
+is conceptually slightly inaccurate in the interest of conformance to
+the <code>basic_string interface</code> in the draft C++ standard; the rope is updated
+to cache the converted string.  
+<p><A name="6">[6]</A>
+Concurrent calls to <code>c_str()</code> are allowed; the cache is updated atomically. 
+\section See_also See also
+\ref stldoc_RandomAccessContainer, 
+\ref stldoc_Sequence, 
+<code>\ref stldoc_Vector</code>,
+<code>\ref stldoc_sequence_buffer</code>
+
+
+*/

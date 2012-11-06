@@ -1,0 +1,3 @@
+// For building PowerPC binaries
+
+ARCHS = ppc

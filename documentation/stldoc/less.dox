@@ -1,0 +1,153 @@
+/** \page stldoc_less less
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Less&lt;T&gt;</code> is a \ref stldoc_functors.  Specifically, it is an 
+\ref stldoc_AdaptableBinaryPredicate, which means it is a function 
+object that tests the truth or falsehood of some condition.
+If <code>f</code> is an object of class
+<code>less&lt;T&gt;</code> and <code>x</code> and <code>y</code> are objects of class <code>T</code>, then
+<code>f(x,y)</code> returns <code>true</code> if <code>x &lt; y</code> and <code>false</code> otherwise. 
+\section Example Example
+Finds the first negative element in a list.
+\code
+List<int> L;
+...
+List<int>::iterator first_negative = 
+       find_if(L.begin(), L.end(), bind2nd(less<int>(), 0));
+assert(first_negative == L.end() || *first_negative < 0);
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The type of <code>less</code>'s arguments.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_AdaptableBinaryPredicate, \ref stldoc_DefaultConstructible
+\section Type_requirements Type requirements
+<code>T</code> is \ref stldoc_LessThanComparable.
+\section Public_base_classes Public base classes
+<code>\ref stldoc_binary_function&lt;T, T, bool&gt;</code>.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>first_argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryPredicate
+</td>
+<td valign="top">
+The type of the first argument: <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>second_argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryPredicate
+</td>
+<td valign="top">
+The type of the second argument: <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryPredicate
+</td>
+<td valign="top">
+The type of the result: <code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>less()</code>
+</td>
+<td valign="top">
+ \ref stldoc_DefaultConstructible
+</td>
+<td valign="top">
+The default constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator()(const T&amp; x, const T&amp; y)</code>
+</td>
+<td valign="top">
+ \ref stldoc_BinaryFunction
+</td>
+<td valign="top">
+Function call operator.  The return value is <code>x &lt; y</code>.
+</td>
+</tr>
+</table>
+\section New_members New members
+All of <code>less</code>'s members are defined in the 
+\ref stldoc_AdaptableBinaryPredicate and  \ref stldoc_DefaultConstructible
+requirements.
+<code>less</code> does not introduce any new members.
+\section Notes Notes
+\section See_also See also
+The \ref stldoc_functors,  
+\ref stldoc_StrictWeakOrdering,
+\ref stldoc_AdaptableBinaryPredicate, 
+\ref stldoc_LessThanComparable,
+<code>\ref stldoc_equal_to</code>,
+<code>\ref stldoc_not_equal_to</code>,
+<code>\ref stldoc_greater</code>,
+<code>\ref stldoc_greater_equal</code>,
+<code>\ref stldoc_less_equal</code>
+
+
+*/

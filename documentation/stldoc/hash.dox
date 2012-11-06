@@ -1,0 +1,140 @@
+/** \page stldoc_hash hash
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left">\image html functors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: containers, functors</td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+The function object <code>hash&lt;T&gt;</code> is a \ref stldoc_HashFunction; it is used as
+the default hash function by all of the <A href="HashedAssociativeContainer.html">Hashed Associative
+Containers</A> that are included in the STL.
+<p>
+The <code>hash&lt;T&gt;</code> template is only defined for template arguments of type
+<code>char*</code>, <code>const char*</code>, <code>\ref stldoc_Rope</code>, <code>\ref stldoc_Rope</code>, and the built-in
+integral types.  <A href="#1">[1]</A> If you need a Hash Function with a different
+argument type, you must either provide your own template
+specialization or else use a different Hash Function.
+\section Example Example
+\code
+int main()
+{
+  hash<const char*> H;
+  cout << "foo -> " << H("foo") << endl;
+  cout << "bar -> " << H("bar") << endl;
+}
+\endcode
+\section Definition Definition
+Defined in the headers <A href="hash_map">hash_map</A> and <A href="hash_set">hash_set</A>, and in the
+backward-compatibility headers <A href="hash_map.h">hash_map.h</A> and <A href="hash_set.h">hash_set.h</A>.
+This class is an SGI extension; it is not part of the C++ standard.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The argument type.  That is, the type of object that is being
+   hashed.  
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_HashFunction
+\section Type_requirements Type requirements
+<code>T</code> must be a type for which a specialization of <code>hash</code> has been
+defined.  The STL defines the following specializations: 
+<ul>
+<li>
+<code>char*</code>
+<li>
+<code>const char*</code>
+<li>
+<code>\ref stldoc_Rope</code>
+<li>
+<code>\ref stldoc_Rope</code>
+<li>
+<code>char</code>
+<li>
+<code>signed char</code>
+<li>
+<code>unsigned char</code>
+<li>
+<code>short</code>
+<li>
+<code>unsigned short</code>
+<li>
+<code>int</code>
+<li>
+<code>unsigned int</code>
+<li>
+<code>long</code>
+<li>
+<code>unsigned long</code>
+</ul>
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>size_t operator()(const T&amp; x)</code>
+</td>
+<td valign="top">
+ \ref stldoc_HashFunction
+</td>
+<td valign="top">
+Returns <code>x</code>'s hash value.
+</td>
+</tr>
+</table>
+\section New_members New members
+All of <code>hash</code>'s members are defined in the 
+\ref stldoc_HashFunction
+requirements.  <code>Hash</code> does not introduce any new members.
+\section Notes Notes
+<p><A name="1">[1]</A>
+Technically, what this means is that the actual template
+<code>hash&lt;T&gt;</code> is an empty class; the member function <code>operator()</code> 
+is defined only in the various specializations.
+\section See_also See also
+\ref stldoc_HashedAssociativeContainer, \ref stldoc_HashFunction
+
+
+*/

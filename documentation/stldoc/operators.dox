@@ -1,0 +1,91 @@
+/** \page stldoc_operators operators
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html utilities.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: utilities</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class T> bool operator!=(const T& x, const T& y);
+template <class T> bool operator>(const T& x, const T& y);
+template <class T> bool operator<=(const T& x, const T& y);
+template <class T> bool operator>=(const T& x, const T& y);
+\endcode
+\section Description Description
+The \ref stldoc_EqualityComparable requirements specify that it must be
+possible to compare objects using <code>operator!=</code> as well as <code>operator==</code>;
+similarly, the \ref stldoc_LessThanComparable requirements include
+<code>operator&gt;</code>, <code>operator&lt;=</code> and <code>operator&gt;=</code> as well as <code>operator&lt;</code>.
+Logically, however, most of these operators are redundant: all of
+them can be defined in terms of <code>operator==</code> and <code>operator&lt;</code>.
+<p>
+These four templates use <code>operator==</code> and <code>operator&lt;</code> to define the other
+four relational operators.  They exist purely for the sake of convenience:
+they make it possible to write algorithms in terms of the operators
+<code>!=</code>, <code>&gt;</code>, <code>&lt;=</code>, and <code>&gt;=</code>, without requiring that those operators be
+explicitly defined for every type.
+<p>
+As specified in the \ref stldoc_EqualityComparable requirements, <code>x != y</code> is
+equivalent to <code>!(x == y)</code>.  As specified in the \ref stldoc_LessThanComparable
+requirements, <code>x &gt; y</code> is equivalent to <code>y &lt; x</code>, <code>x &gt;= y</code> is equivalent
+to <code>!(x &lt; y)</code>, and <code>x &lt;= y</code> is equivalent to <code>!(y &lt; x)</code>.
+\section Definition Definition
+Defined in the standard header <A href="utility">utility</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+\section Requirements_on_types Requirements on types
+The requirement for <code>operator!=</code> is that <code>x == y</code> is a valid expression
+for objects <code>x</code> and <code>y</code> of type <code>T</code>. 
+<p>
+The requirement for <code>operator&gt;</code> is that <code>y &lt; x</code> is a valid expression
+for objects <code>x</code> and <code>y</code> of type <code>T</code>. 
+<p>
+The requirement for <code>operator&lt;=</code> is that <code>y &lt; x</code> is a valid expression
+for objects <code>x</code> and <code>y</code> of type <code>T</code>. 
+<p>
+The requirement for <code>operator&gt;=</code> is that <code>x &lt; y</code> is a valid expression
+for objects <code>x</code> and <code>y</code> of type <code>T</code>. 
+\section Preconditions Preconditions
+The precondition for <code>operator!=</code> is that <code>x</code> and <code>y</code> are in the
+domain of <code>operator==</code>.
+<p>
+The precondition for <code>operator&gt;</code>, <code>operator&lt;=</code>, and <code>operator&gt;=</code> is
+that <code>x</code> and <code>y</code> are in the domain of <code>operator&lt;</code>.
+\section Complexity Complexity
+\section Example Example
+\code
+template <class T> void relations(T x, T y)
+{
+  if (x == y) assert(!(x != y));
+  else assert(x != y);
+
+  if (x < y) {
+    assert(x <= y);
+    assert(y > x);
+    assert(y >= x);
+  }
+  else if (y < x) {
+    assert(y <= x);
+    assert(x < y);
+    assert(x <= y);
+  }
+  else {
+    assert(x <= y);
+    assert(x >= y);
+  }
+}  
+\endcode
+\section Notes Notes
+\section See_also See also
+\ref stldoc_EqualityComparable, \ref stldoc_LessThanComparable
+
+
+*/

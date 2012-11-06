@@ -1,0 +1,273 @@
+/** \page stldoc_InputIterator InputIterator
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+An Input Iterator is an iterator that may be dereferenced to refer to some
+object, and that may be incremented to obtain the next iterator in
+a sequence.  Input Iterators are not required to be mutable.
+\section Refinement_of Refinement of
+\ref stldoc_trivial. 
+\section Associated_types Associated types
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Value type
+</td>
+<td valign="top">
+The type of the value obtained by dereferencing an Input Iterator
+</td>
+</tr>
+<tr>
+<td valign="top">
+Distance type
+</td>
+<td valign="top">
+A signed integral type used to represent the distance from one
+   iterator to another, or the number of elements in a range.
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Input Iterator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The value type of <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>i</code>, <code>j</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>t</code>
+</td>
+<td valign="top">
+Object of type <code>T</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+An iterator is <i>past-the-end</i> if it points beyond the last element
+of a container.  Past-the-end values are nonsingular and nondereferenceable.
+<p>
+An iterator is <i>valid</i> if it is dereferenceable or past-the-end.
+<p>
+An iterator <code>i</code> is <i>incrementable</i> if there is a
+&quot;next&quot; iterator, that is, if <code>++i</code> is well-defined.
+Past-the-end iterators are not incrementable.
+<p>
+An Input Iterator <code>j</code> is <i>reachable</i> from an Input
+Iterator <code>i</code> if, after applying <code>operator++</code> to
+<code>i</code> a finite number of times, <code>i == j</code>. <A href="#1">[1]</A>
+<p>
+The notation <code>[i,j)</code> refers to a <i>range</i> of iterators beginning with
+<code>i</code> and up to but not including <code>j</code>.
+<p>
+The range <code>[i,j)</code> is a <i>valid range</i> if 
+both <code>i</code> and <code>j</code> are valid iterators, 
+and <code>j</code> is reachable from <code>i</code> <A href="#2">[2]</A>.
+\section Valid_expressions Valid expressions
+In addition to the expressions defined in \ref stldoc_trivial,
+the following expressions must be valid.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Preincrement
+</td>
+<td valign="top">
+<code>++i</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X&amp;</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Postincrement
+</td>
+<td valign="top">
+<code>(void)i++</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Postincrement and dereference
+</td>
+<td valign="top">
+<code>*i++</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>T</code>
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Dereference
+</td>
+<td valign="top">
+<code>*t</code>
+</td>
+<td valign="top">
+<code>i</code> is incrementable
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Preincrement
+</td>
+<td valign="top">
+<code>++i</code>
+</td>
+<td valign="top">
+<code>i</code> is dereferenceable
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>i</code> is dereferenceable or past-the-end <A href="#3">[3]</A> <A href="#4">[4]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Postincrement
+</td>
+<td valign="top">
+<code>(void)i++</code>
+</td>
+<td valign="top">
+<code>i</code> is dereferenceable
+</td>
+<td valign="top">
+Equivalent to <code>(void)++i</code>
+</td>
+<td valign="top">
+<code>i</code> is dereferenceable or past-the-end <A href="#3">[3]</A> <A href="#4">[4]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Postincrement and dereference
+</td>
+<td valign="top">
+<code>*i++</code>
+</td>
+<td valign="top">
+<code>i</code> is dereferenceable
+</td>
+<td valign="top">
+Equivalent to <code>{T t = *i; ++i; return t;}</code>
+</td>
+<td valign="top">
+<code>i</code> is dereferenceable or past-the-end <A href="#3">[3]</A> <A href="#4">[4]</A>
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+All operations are amortized constant time.
+\section Invariants Invariants
+\section Models Models
+<ul>
+<li>
+ \ref stldoc_istream_iterator
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+<code>i == j</code> does not imply <code>++i == ++j</code>.
+<p><A name="2">[2]</A>
+Every iterator in a valid range <code>[i, j)</code> is dereferenceable,
+and <code>j</code> is either dereferenceable or past-the-end.  The fact
+that every iterator in the range is dereferenceable follows from the fact
+that incrementable iterators must be deferenceable.
+<p><A name="3">[3]</A>
+After executing <code>++i</code>, it is not required that copies of the old
+     value of <code>i</code> be dereferenceable or that they be in the domain of 
+     <code>operator==</code>.
+<p><A name="4">[4]</A>
+It is not guaranteed that it is possible to pass through the same
+     input iterator twice.
+\section See_also See also
+\ref stldoc_OutputIterator, \ref stldoc_Iterators
+
+
+*/

@@ -1,0 +1,130 @@
+/** \page stldoc_inner_product inner_product
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Inner_product</code> is an overloaded name; there are actually two
+<code>inner_product</code> functions.
+\code
+template <class InputIterator1, class InputIterator2, class T>
+T inner_product(InputIterator1 first1, InputIterator1 last1,
+                InputIterator2 first2, T init);
+
+template <class InputIterator1, class InputIterator2, class T,
+          class BinaryFunction1, class BinaryFunction2>
+T inner_product(InputIterator1 first1, InputIterator1 last1,
+                InputIterator2 first2, T init, BinaryFunction1 binary_op1,
+                BinaryFunction2 binary_op2);
+\endcode
+\section Description Description
+<code>Inner_product</code> calculates a generalized inner product of the ranges
+<code>[first1, last1)</code> and <code>[first2, last2)</code>.
+<p>
+The first version of <code>inner_product</code> returns
+<code>init</code> plus the inner product of the two ranges <A href="#1">[1]</A>.  That is,
+it first initializes the result to <code>init</code> and then, for each iterator
+<code>i</code> in <code>[first1, last1)</code>, in order from the beginning to the end 
+of the range, updates the result by <code>result = result + (*i)
+* *(first2 + (i - first1))</code>.  
+<p>
+The second version of <code>inner_product</code> is identical to the first, except
+that it uses two user-supplied \ref stldoc_functors instead of 
+<code>operator+</code> and <code>operator*</code>.  That is, 
+it first initializes the result to <code>init</code> and then, for each iterator
+<code>i</code> in <code>[first1, last1)</code>, in order from the beginning to the end 
+of the range, updates the result by <code>result = binary_op1(result, 
+binary_op2(*i, *(first2 + (i - first1)))</code>. <A href="#2">[2]</A>
+\section Definition Definition
+Defined in the standard header <A href="numeric">numeric</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>InputIterator1</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator2</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>T</code> is a model of \ref stldoc_Assignable.
+<li>
+If <code>x</code> is an object of type <code>T</code>, <code>y</code> is an object of
+   <code>InputIterator1</code>'s value type, and <code>z</code> is an object
+   of <code>InputIterator2</code>'s value type, then <code>x + y * z</code> is defined.
+<li>
+The type of <code>x + y * z</code> is convertible to <code>T</code>.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>InputIterator1</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator2</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>T</code> is a model of \ref stldoc_Assignable.
+<li>
+<code>BinaryFunction1</code> is a model of \ref stldoc_BinaryFunction.
+<li>
+<code>BinaryFunction2</code> is a model of \ref stldoc_BinaryFunction.
+<li>
+<code>InputIterator1</code>'s value type is convertible to <code>BinaryFunction2</code>'s
+   first argument type.
+<li>
+<code>InputIterator2</code>'s value type is convertible to <code>BinaryFunction2</code>'s
+   second argument type.
+<li>
+<code>T</code> is convertible to <code>BinaryFunction1</code>'s first argument type.
+<li>
+<code>BinaryFunction2</code>'s return type is convertible to <code>BinaryFunction1</code>'s
+   second argument type.
+<li>
+<code>BinaryFunction1</code>'s return type is convertible to <code>T</code>.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first2, first2 + (last1 - first1))</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>last1 - first1</code> applications of each binary operation.
+\section Example Example
+\code
+int main()
+{
+  int A1[] = {1, 2, 3};
+  int A2[] = {4, 1, -2};
+  const int N1 = sizeof(A1) / sizeof(int);
+
+  cout << "The inner product of A1 and A2 is " 
+       << inner_product(A1, A1 + N1, A2, 0)
+       << endl;
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+There are several reasons why it is important that <code>inner_product</code>
+starts with the value <code>init</code>.  One of the most basic is that this allows
+<code>inner_product</code> to have a well-defined result even if <code>[first1, last1)</code> is
+an empty range: if it is empty, the return value is <code>init</code>.
+The ordinary inner product corresponds to setting <code>init</code> to 0.
+<p><A name="2">[2]</A>
+Neither binary operation is required to be either associative or
+commutative: the order of all operations is specified.
+\section See_also See also
+<code>\ref stldoc_accumulate</code>, <code>\ref stldoc_partial_sum</code>, <code>\ref stldoc_adjacent_difference</code>,
+<code>\ref stldoc_count</code>
+
+
+*/

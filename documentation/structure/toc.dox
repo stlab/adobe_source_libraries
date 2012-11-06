@@ -1,0 +1,217 @@
+/*!
+\page asl_toc Documentation
+
+\section intro_toc Introduction
+
+Welcome to the Adobe Source Libraries (ASL). Here are some suggested
+starting points: 
+         - \ref toc_5_quickies "Five immediately useful components".  
+         - An \ref asl_overview "introduction to ASL", with a focus on the Layout Library (for automatic layout generation), and the Property Model Library (for human interface construction). 
+         - Browse through the <a href="modules.html">Module Index</a>, which gives a single-page hierarchical overview of many of the main ASL components, or one of the other the \ref toc_indices "indices".
+         - Detailed references on the \ref layout_library "Layout Library" (Eve), \ref property_model "Property Model Library" (Adam), \ref algorithm "generic algorithms", \ref container "container classes" (Forest (Tree), Hashed Containers, Etc.), \ref utility "utility classes" (Concurrency, Parsing, Move, Runtime Concepts), \ref adobe_functional "Function Objects", \ref adobe_iterator "Iterators", or the \ref abi_safe "ABI-Safe Libraries" (types and containers with definined binary representations for DLL-safe/compatible interfaces).
+         - \ref asl_tutorials "Some ASL tutorials".  
+
+\section  toc_5_quickies Five immediately useful components
+	- \ref algorithm "Algorithms"
+	- \ref forest_related (Trees)
+	    - \ref asl_tutorials_forest "Forest library tutorial"
+	- \ref move_related
+	- \ref adobe::version_1::copy_on_write "Copy on Write library"
+	- \ref adobe::table_index "Table Index library"
+    
+\section toc_libraries Adobe Source Libraries
+    - For this release, please visit the <a href="modules.html">Module Index</a> to navigate through the library components. In a future release we plan list the components here. Pardon our dust...
+
+\section toc_indices Indices
+    - <a href="hierarchy.html">Class Hierarchy</a>
+    - <a href="classes.html">Class Index</a>
+    - <a href="annotated.html">Class List</a>
+    - <a href="functions.html">Class Members</a>
+    - <a href="files.html">File List</a>
+    - <a href="globals.html">File Members</a>
+    - <a href="web_glossary.html">Glossary of Terms</a>
+    - <a href="modules.html">Modules</a>
+    - <a href="namespaces.html">Namespace List</a>
+    - <a href="namespacemembers.html">Namespace Members</a>
+    - <a href="todo.html">Todo List</a>
+
+\subpage platform_libraries_toc "Platform Libraries (and old Table of Contents)"
+*/
+/*!
+\page platform_libraries_toc Platform Libraries
+
+[ This currently is the old TOC - some items here will migrate up. ]
+
+<table width='100%' border='0'>
+<tr><td width='49%'>
+
+<h2>Libraries (Alphabetically) [move to index]</h2>
+    - \ref adam_engine
+    - \ref adamparser
+    - \ref algorithm
+    - \ref conversion
+    - \ref cmath
+    - \ref enum_ops
+    - \ref eve_engine
+        - \ref asl_tutorials_eve (Tutorial)
+    - \ref eveparser
+    - <a href='http://stlab.adobe.com/gil/'>Generic Image Library (GIL)</a>
+    - \ref adobe_final
+    - \ref forest_related
+    - \ref adobe_functional
+    - \ref adobe_iterator
+    - \ref adobe_once
+    - \ref move_related
+    - \ref type_info_related
+    - \ref poly_related
+    - \ref sequence_mvc
+    - \ref adobe_sha
+    - \ref adobe_string
+    - \ref asl_thread_id
+    - \ref asl_unicode
+    - \ref asl_xml_parser
+    - \ref asl_xstring
+    - \ref apl_widgets [Future]
+        - \ref apl_widgets_carbon
+        - \ref widget_reference (deprecated)
+
+<h2>Classes (Alphabetically) [move to index]</h2>
+    - adobe::any_regular_t
+        - \ref asl_tutorials_value_t (Tutorial)
+        - adobe::any_regular_t::transform
+    - adobe::array_t
+        - \ref asl_tutorials_array_t (Tutorial)
+        - adobe::array_t::back_insert_iterator
+    - adobe::bad_cast
+    - adobe::circular_queue
+    - adobe::copy_on_write
+    - adobe::counter_t
+    - adobe::dancing_links
+    - adobe::dictionary_t
+        - \ref asl_tutorials_dictionary_t (Tutorial)
+    - adobe::empty_t
+    - adobe::extents_t
+        - adobe::extents_t::slice_t
+        - adobe::extents_slices_t
+    - adobe::forest
+        - \ref asl_tutorials_forest (Tutorial)
+    - adobe::line_position_t
+    - adobe::md5_t
+    - adobe::name_t
+        - adobe::const_once_name_t
+        - adobe::static_name_t
+    - adobe::selection_t
+    - adobe::sequence_model_t
+    - \ref adobe_sha
+        - adobe::sha1_t
+        - adobe::sha224_t
+        - adobe::sha256_t
+        - adobe::sha384_t
+        - adobe::sha512_t
+    - adobe::static_table
+        - adobe::static_table_traits
+    - adobe::stream_error_t
+    - adobe::table_index
+    - adobe::timer_t
+    - adobe::virtual_machine_t
+        - adobe::virtual_machine_t::tracked_value_t
+    - adobe::xml_parser_t
+    - adobe::zuid_t
+</td><td width='2%'>
+</td><td width='49%'>
+<h2>Libraries and Classes (Categorically)</h2>
+
+<h3>String and Text Processing</h3>
+    - \ref adobe_string
+    - \ref asl_xstring
+    - \ref asl_unicode
+
+<h3>Containers (old section)</h3>
+    - adobe::array_t
+        - \ref asl_tutorials_array_t (Tutorial)
+        - adobe::array_t::back_insert_iterator
+    - adobe::circular_queue
+    - adobe::dictionary_t
+        - \ref asl_tutorials_dictionary_t (Tutorial)
+    - <a href='http://stlab.adobe.com/gil/'>Generic Image Library (GIL)</a>
+    - \ref forest_related
+        - adobe::forest
+        - \ref asl_tutorials_forest (Tutorial)
+    - \ref poly_related
+
+<h3>Iterators</h3>
+    - \ref adobe_iterator
+
+<h3>Algorithms</h3>
+    - \ref algorithm
+    - adobe::dancing_links
+    - adobe::md5_t
+    - \ref selection_algorithms
+    - \ref adobe_sha
+        - adobe::sha1_t
+        - adobe::sha224_t
+        - adobe::sha256_t
+        - adobe::sha384_t
+        - adobe::sha512_t
+    - \ref asl_unicode
+
+<h3>Math and Numerics</h3>
+    - \ref conversion
+    - \ref cmath
+    - \ref enum_ops
+
+<h3>Correctness and Testing</h3>
+    - adobe::bad_cast
+    - adobe::stream_error_t
+
+<h3>Data Structures</h3>
+    - adobe::any_regular_t
+        - \ref asl_tutorials_value_t (Tutorial)
+        - adobe::any_regular_t::transform
+    - adobe::attribute_set_t
+    - adobe::copy_on_write
+    - adobe::empty_t
+    - adobe::extents_t
+        - adobe::extents_t::slice_t
+        - adobe::extents_slices_t
+    - adobe::line_position_t
+    - adobe::name_t
+        - adobe::const_once_name_t
+        - adobe::static_name_t
+    - adobe::selection_t
+    - adobe::static_table
+        - adobe::static_table_traits
+    - adobe::table_index
+    - adobe::timer_t
+    - adobe::virtual_machine_t
+        - adobe::virtual_machine_t::tracked_value_t
+    - adobe::zuid_t
+
+<h3>Memory</h3>
+    - \ref adobe_functional
+
+<h3>Parsing</h3>
+    - \ref adamparser
+    - \ref eveparser
+    - \ref asl_xml_parser
+    - \ref asl_xstring
+
+<h3>Programming Interfaces</h3>
+    - \ref adam_engine
+    - \ref eve_engine
+        - \ref asl_tutorials_eve (Tutorial)
+    - \ref modal_dialog_kit [Future]
+    - \ref sequence_mvc
+    - \ref apl_widgets [Future]
+        - \ref apl_widgets_carbon
+        - \ref widget_reference (deprecated)
+    - poly_controller.hpp
+    - poly_view.hpp
+
+<h1>Concepts</h1>
+    - \ref controller_concept
+    - \ref view_concept.hpp
+    - \ref sequence_controller
+    - \ref sequence_view
+</table>
+*/

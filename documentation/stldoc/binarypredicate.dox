@@ -1,0 +1,168 @@
+/** \page stldoc_BinaryPredicate BinaryPredicate
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Binary Predicate is a \ref stldoc_BinaryFunction whose result
+represents the truth or falsehood of some condition.  A Binary Predicate
+might, for example, be a function that takes two arguments and tests
+whether they are equal.
+\section Refinement_of Refinement of
+\ref stldoc_BinaryFunction
+\section Associated_types Associated types
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Result type
+</td>
+<td valign="top">
+The type returned when the Binary Predicate is called.  The result type
+   must be convertible to <code>bool</code>.  
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>F</code>
+</td>
+<td valign="top">
+A type that is a model of Binary Predicate
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+The first argument type of <code>F</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Y</code>
+</td>
+<td valign="top">
+The second argument type of <code>F</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>f</code>
+</td>
+<td valign="top">
+Object of type <code>F</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>x</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>y</code>
+</td>
+<td valign="top">
+Object of type <code>Y</code>
+</td>
+</tr>
+</table>
+\section Valid_expressions Valid expressions
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Function call
+</td>
+<td valign="top">
+<code>f(x,y)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Convertible to <code>bool</code>
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Function call
+</td>
+<td valign="top">
+<code>f(x,y)</code>
+</td>
+<td valign="top">
+The ordered pair <code>(x,y)</code> is in the domain of <code>f</code>.
+</td>
+<td valign="top">
+Returns <code>true</code> if the condition is satisfied, <code>false</code> if it is not.
+</td>
+<td valign="top">
+The result is either <code>true</code> or <code>false</code>.
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+\section Invariants Invariants
+\section Models Models
+<ul>
+<li>
+<code>bool (*)(int,int)</code>
+<li>
+<code>\ref stldoc_equal_to</code>
+</ul>
+\section Notes Notes
+\section See_also See also
+\ref stldoc_Predicate, \ref stldoc_AdaptablePredicate, \ref stldoc_AdaptableBinaryPredicate
+
+
+*/

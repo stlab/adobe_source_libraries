@@ -1,0 +1,94 @@
+/*! \defgroup concept_documentaiton_template DocumentationTemplateForAConcept
+\ingroup asl_documentation_templates
+
+\description
+    This is the documentation template for a concept within ASL. Make sure when you instantiate the template to change the group to which the documentation belongs from <code>asl_documentation_templates</code> to <code>asl_concepts</code>.
+
+\refinement_of
+    - (example) \ref stldoc_DefaultConstructible
+    - What types are refined by this concept?
+
+\associated_types
+    A brief description of the new types and any requirements that may be laid upon them in general
+    <table>
+    <tr>
+        <td valign="top">
+            New associated type
+        </td>
+        <td valign="top">
+            <code>X::new_associated_type</code>
+        </td>
+        <td valign="top">
+            A description of the new associated type
+        </td>
+    </tr>
+    </table>
+
+\notation
+    <table>
+        <tr>
+            <td valign="top"><code>T</code></td>
+            <td valign="top">A type that is a model of DocumentationTemplateForAConcept</td>
+        </tr>
+        <tr>
+            <td valign="top"><code>t</code></td>
+            <td valign="top">Object of type <code>T</code></td>
+        </tr>
+    </table>
+
+\definitions
+    - Terminology, etc., that we should be aware of
+
+\valid_expressions
+    <table>
+        <tr>
+            <th>Name</th><th>Expression</th><th>Type requirements</th><th>Return type</th>
+        </tr>
+        <tr>
+            <td valign="top">Equality</td>
+            <td valign="top"><code>t == t</code></td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">Convertible to <code>bool</code></td>
+        </tr>
+    </table>
+
+\expression_semantics
+    <table>
+        <tr>
+            <th>Name</th><th>Expression</th><th>Precondition</th><th>Semantics</th><th>Postcondition</th>
+        </tr>
+        <tr>
+            <td valign="top">Equality</td>
+            <td valign="top"><code>x == y</code></td>
+            <td valign="top"><code>x</code> and <code>y</code> are in the domain of <code>==</code></td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">&nbsp;</td>
+        </tr>
+    </table>
+
+\complexity
+
+\invariants
+    <table>
+        <tr>
+            <td valign="top">Reflexivity</td>
+            <td valign="top"><code>x == x</code> must be true.</td>
+        </tr>
+    </table>
+
+\models
+    - Enumerate a sample of types / functions that model the concept documented here. 
+
+\notes
+    - <a name='1'>[1]</a> Any notes cited above should be enumerated in this section, and can be linked to by <code>&lt;a name='1'&gt;link&lt;/a&gt;</code>.
+
+\see_also
+    - (example) \ref stldoc_DefaultConstructible
+
+\example
+\code
+    DocumentationTemplateForAConcept t;
+
+    t.foo();
+\endcode
+*/

@@ -1,0 +1,190 @@
+/*!
+\defgroup asl_tutorials_eve Eve
+\ingroup asl_tutorials
+
+<i>Last updated June 01, 2006 -- revisions still in progress</i>
+
+\section tutorials_eve_prerequsites Prerequisites To This Tutorial
+\par
+The following list of items is a good recommendation of stuff you should know before you attempt to work through this document:
+    - boost::function
+    - boost::bind
+    - adobe::dictionary_t
+    - Cursory reading of the \ref eve_engine (Engine) and \ref eveparser documentation
+\par
+For advanced implementations, the following might be of help <i>but are not required</i>:
+    - adobe/future/assemblage.hpp
+    - adobe/test/visual/headers/optional_connect.hpp
+\par
+    The sample code found in the Adobe Begin implementation (especially <code>client_assembler.cpp</code>) shows a possible implementation using these techniques. Note that Adobe Begin is an experimental work in progress, and should be used loosely as an example only!
+
+\section tutorials_eve_overview Overview
+\par
+Eve is broken up into two distinct pieces: the parser and the engine. Note that both components exist completely independently of each other, though they are built in a way that they bind together easily. We will discuss both components in turn. There is also a third component, referred to herein as the <i>assemblage code</i>, which is the client-specified code that binds the parser to the engine.
+\par
+The general code design for the Adobe Source Libraries is one that tries to maintain true modularity between components. Each major module within the Libraries is written with only the most basic of common, shared code (adobe::array_t, adobe::dictionary_t, etc.) so they are able to communicate by means common data types. Other than that, we try to maintain a strict standard whereby no component is aware of or dependent upon any other component. This allows for the swapping in and out of a component with minimal invasiveness into other parts of your code base. In order to make this possible, there is a client-side piece of code called the <i>assemblage</i> that handles the connectivity between components. When a given component is added or removed, only the assemblage need be modified. Essentially the assemblage code is the only part of the program that knows context- that is, it alone knows what components are available across the application and how they should link together.
+
+\subsection tutorials_eve_overview_flow Program Flow
+\par
+The easiest way to see what is happening in a design that includes Eve is to enumerate the steps involved in solving a layout:
+    -# The client code specifies an Eve file for parsed, solved, and displayed.
+    -# The client code creates an <code>eve_t</code> object that is the Eve Engine instance that will manage the widgets at runtime.
+    -# The client code calls the Eve Parser with (among other parameters) an input stream and an assemblage callback.
+    -# The Eve Parser parses the input stream, notifying the assemblage callback any time a valid widget definition is found.
+    -# The assemblage callback, when it receives a hit from the Eve Parser for a valid widget, constructs a placeable_t or placeable_twopass_t and passes a reference to it (amongst other parameters) to the <code>eve_t</code> instance for layout of this new widget.
+    -# The assemblage receives a new marker for the new widget just created in the Eve Engine hierarchy, and passes it back to the Eve Parser for later use.
+    -# When the Eve Parser is finished, the client code calls the <code>evaluate</code> with the <code>eve_t</code> instance to solve for the layout.
+    -# During the course of solving the layout, the Eve Engine calls back to the client assemblage code via the layout element objects passed in for every individual widget created in the Eve Engine heirarchy.
+    -# Once a view solution has been computed, the final call to the layout element object (place) is fired for each widget to notify the client code of the positioning of every widget.
+    -# The client code goes out to the OS to create the OS-specific widgets, hierarchy, event handlers, etc.
+    -# The rest of the application takes it from there: Eve's work is done.
+
+\section tutorials_eve_parser Parser
+\par
+The interface for the parser is pretty simple. It takes a standard input file stream and a couple other parameters, including a callback by which the parser speaks to your assemblage code. Here is a sample of what it might look like:
+\par
+\code
+void parse_my_eve_file(const std::string& path_to_file)
+{
+    std::ifstream           stream(path_to_file.c_str());
+    adobe::line_position_t  result_line(adobe::eve::parse(
+                                stream,
+                                adobe::line_position_t(path_to_file.c_str()),
+                                adobe::eve::position_t(),
+                                boost::bind(&client_assemble, _1, _3,
+                                    boost::bind(adobe::eve::evaluate_arguments(), _4))));
+}
+\endcode
+\par
+Note that we have yet to define what client_assemble will be- we will get to that later. Also, the result_line is used to indicate where the parsing of the definition ceased inside the input stream.
+\par
+So what is happening here, and what does this code do? All we are doing here is asking the Eve Parser to parse the input stream, and every time it successfully parses a widget in the view definition, it will call back to the client code by means of client_assemble.
+\par
+What is going on with adobe::eve::evaluate_arguments? When the parser traverses the view definition, each element in the view can contain a parameter list. Inside the parameter list are key/value pairs, or named arguments, that assist in the definition and layout of the view being defined. However when the parser sends the information to the client assemblage code, the named argument expressions are "raw", in their unevaluated states as an adobe::array_t per expression. adobe::eve::evaluate_arguments simply takes these raw expressions and converts them to their evaluated values, packing them into an adobe::dictionary_t. As an example, if in the Eve definition the parser finds a parameter: "my_value: 5 + 2 * 3", the resulting dictionary will have the named argument "my_value: 11" stored within.
+\par
+When client_assemble is called, it should work to communicate with the Eve Engine, the details of which we will look at in a bit. For now let us take a look at the guts of client_assemble.
+
+\section tutorials_eve_assembler Assemblage Code
+\par
+In our simplified case we have a single function, client_assemble, that knows about both the Eve Parser and the Eve Engine. Note that the Eve Parser is only aware of client_assemble-- it does not know what it does, nor does it care; it merely sends the results of the parse to this callback, and expects the rest of the body of code to know what to do about it. This gives the client the ability to substitute the Eve Parser with any other parser (XML, Boost Spirit, etc). As long as the assemblage code knows how to deal with the new parser, your app can utilize the Eve Engine just as effectively.
+\par
+So the client_assemble code might look something like this:
+\par
+\code
+
+struct my_push_button
+{
+//...
+    bool             is_container() const;
+    void             measure(adobe::extents_t& result);
+    void             place(const adobe::place_data_t& place_data);
+//...
+};
+
+adobe::extents_t default_extents();
+
+adobe::layoutable_t *widget_factory(adobe::name_t widget_name)
+{
+   /* a real factory goes here instead */
+   //...
+   if (widget_name == "push_button") {
+      return boost::ref(*new adobe::placeable_t(boost::ref(*new my_push_button)));
+   else if //...
+
+}
+
+adobe::position_t client_assemble(  const adobe::eve_t::position_t& parent,
+                                    adobe::name_t                   widget_name,
+                                    const adobe::dictionary_t&      parameters)
+{
+     adobe::layoutable_t widget(widget_factory(widget_name));
+     return eve_g.add_view_element(parent.empty() ?
+                                    boost::any_cast<adobe::eve::position_t>(parent) :
+                                    adobe::eve_t::iterator(),
+                                    widget->default_extents(), //documentation update in progress
+                                    widget->is_container(),    //documentation update in progress
+                                    parameters,
+                                    widget);
+}
+\endcode
+\par
+There's a lot of new code being introduced here, so let us go through the main parts.
+
+\subsection tutorials_eve_assembler_placeable Layout Elements
+\par
+Earlier we stated that the assemblage code is the only code that knows "context"- what components are available and how they should communicate with one another. This does not mean that the components cannot communicate with one another directly, however- just that the assemblage must dictate <i>how</i> this communication is going to happen.
+\par
+Note that the layout elements are written on a per-widget-type basis: they need not be different for every instance of every widget, because the semantics of a widget should not change within the same widget type. (For instance, a push button is a push button irrespective of its dimensions or how it is labeled. Another widget, like a radio button, will have different layout parameters and different means of being measured.)
+\par
+The simplest kind of placeable is built from a class containing a collection of member functions with appropriate signatures, each of which for a particular purpose. The collection is a generic interface for the Eve engine to communicate with a given widget's backend. The Eve Engine specifies the interface, and the client code (through the assemblage) is free to flesh out the implementation any way it sees fit. In essence the Eve Engine doesn't care how a member function arrives at the values it does, all it cares about is that it arrives at something meaningful. The assemblage linking method provides for the flexibility for an implementation to use any means of arriving at meaningful values for any widget. For instance in some cases it would make sense to wrap an OS measurement routine, whereas in other cases it would make better sense to hand-code the measurements. In either case the function can be made to fit a member function signature, and thus can be used by the Eve Engine. In case it is inconvenient to provide a class with the required member functions, layout elements can be customized to use free functions. 
+
+\sa adobe::placeable_t
+
+\subsection tutorials_eve_assembler_position_t adobe::eve_t::position_t
+\par
+adobe::eve_t::position_t is a means by which the Eve Engine communicates with <i>itself</i>. Internally it maintains a heirarchy of all the view widgets so it knows the parent-child relationship of each. The client assemblage code modifies this tree by means of the adobe::eve_t::add_view_element call. In each call, the client code must pass in a marker signifying the parent under which this new widget is to be placed. Upon return of the function, the Eve Engine will hand back a marker that is the position of the new view in the internal heirarchy.
+\par
+You really do not need to know what the marker is, just that it <i>is</i>. You should pass it back to the Eve Parser by means of the client assemblage. Note that the Eve Parser just retains the value, it doesn't do anything with it. If a subview for this widget is found the callback to client_assemble happens all over again, except this time the call uses the new marker as the parent adobe::eve_t::position_t. Again, this is an example of the parser and the engine communicating through the assemblage code, though neither knows or cares about the other.
+\par
+In the case of the root node, notice that the 3rd parameter of the call to adobe::eve_t::parse is an empty position_t; a test is performed in the assembler that converts that value to an empty Eve Engine marker, which will place the element being added at the root of the heirarchy. Note that it is technically possible to put more than one root in the heirarchy (thereby creating a forest) but to do so is undefined for Eve.
+
+\subsection tutorials_eve_assembler_placeable  member functions
+\par
+The code above mentions member functions of adobe::placeable_t constructed using a factory function taking a single argument, that is the name of the widget type found by the parser. If the widget type is "push_button", the factory creates a layout element wrapping a my_push_button class whose member functions do the actual work.
+\par
+<i>Note that these member functions are all considered part of the assemblage code.</i>
+
+\par
+Above we mentioned specific functions for specific widgets that handle specific needs of the Eve Engine. As an example, let's look at what might happen inside a "push_button" widget's measure proc. The Eve Engine layout element definition provides specifies the signature for the calculate proc as:
+\par
+\code
+    void      measure(adobe::extents_t& geometry);
+\endcode
+\par
+OK, so we know what the function signature must look like, so let's flesh out what the body might look like:
+\par
+\code
+{
+    geometry.extents_m.slice_m[horizontal].length_m = 80;
+    geometry.extents_m.slice_m[vertical].length_m = 20;
+}
+\endcode
+\par
+The above code, for every push_button that is created, will tell the Eve Engine that the button's dimensions are width 80 and height 20. That all sounds well and good, but it's not very flexible. What would be really cool would be, given some sort of measure_string_width(...) proc, that the width of the button would be variable based on the width of the button name. Let's change the factory function so that we could instead have the factory function construct my_push_button using the parameters dictionary, so that we can extract and store the button name as, say, the data member button_name_m for later use by measure(), e.g.:
+\par
+\code
+
+my_push_button::my_push_button(const adobe::dictionary_t& parameters)
+  : widget_name_m(parameters[adobe::static_name_t("name")].get<std::string>())
+{}
+
+my_push_button::measure(adobe::extents_t& geometry)
+{
+    geometry.horizontal().length_m = measure_string_width(button_name_m);
+    geometry.vertical().length_m = 20;
+}
+\endcode
+\par
+(Note that it is within measure_string_width(...) that one would fold in internationalization and localization efforts to produce well-formed dialogs for any language.)
+\par
+Peeling away the layers of C++ reveals this: using the dictionary_t we obtained from adobe::eve::evaluate_arguments (remember that from earlier?) we can now figure out what, according to the parse, the "name" variable of the widget is, and we can use that value to measure some sort of pixel width. Then we can pass that to the Eve Engine, and now we have what we want: a button that is as wide as it needs to be.
+\par
+At this point a general objection could be raised: Why not avoid the constructor argument by adding another parameter in the layout elements, namely an adobe::dictionary_t, that the Engine can merely propagate but never use? Better yet, why not just some <code>void*</code> that the client can pack with whatever they like? The answer is this: <i>To do so is to require the Eve Engine to carry more of a burden than it absolutely needs in order to do its job</i>. In this case, the mere propagation of parameters is not the job of the Eve Engine. The job of the Eve Engine is to solve for the layout. In order to do that, we distill what is <i>actually needed</i> to accomplish that task, and use that to specify the Eve Engine API. Anything beyond the absolute minimum requirements for Eve to do its job would be "API sugar", and so should be eliminated from the API as unnecessary. (As an historical aside, this was the way the original Eve was implemented, as having a user-specified "tag" that could be anything. In every use of Eve1 the "tag" quickly became a spaghetti tunnel.) Thanks to boost::bind, we are able to pass extra parameters to other parts of the assemblage without requiring components that don't care about this extra information to have to shoulder it.
+
+\section tutorials_eve_engine Eve Engine
+\par
+Finally, we arrive at the Eve Engine. This tutorial will not explain the details of the engine, or the parameters one can pass in order to manipulate its execution. Rather, one should check out the \ref eve_engine documentation and the \ref widget_reference for that information. What it will explain is the general interaction between the Eve Engine and the client assemblage code.
+\par
+Recall that there were a collection of  functions that we provided for every widget we added to the Eve Engine hierarchy. Once all the widgets have been added, we call the following:
+\par
+\code
+eve_g->evaluate(adobe::eve_t::evaluate_flat);
+\endcode
+\par
+<code>evaluate</code> sets the engine in motion, at which point layout element members will start getting invoked. There are several passes Eve takes when solving the layout, and there are corresponding functions that get invoked in each one. It is important to know the order in which the functions are invoked for a given widget:
+    - measure (for placeable_t), or measure_horizontal (for placeable_twopass_t)
+    - measure_vertical (for placeable_twopass_t only)
+    - place
+\par
+Each of these function will return state to the Eve Engine, and will affect the parameters of subsequent call to the same widget. You are guaranteed that each function, if called, will be called in the order listed above for a given widget. You are not guaranteed that a function will be called. The case in which Eve will call a function is if it needs to. I know this sounds obvious, but there are cases when Eve will not require calling some of the functions. One case is in the process of resizing a dialog: all the views have already had their measurement functions called in a previous pass when the dialog was first laid out. Thus the measurement functions will not get called when a dialog is resized.  When the remaining functions are called, however, you can be sure that it will be in the order listed above.
+*/

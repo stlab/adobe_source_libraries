@@ -1,0 +1,186 @@
+/** \page stldoc_char_producer char_producer
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Char_producter&lt;charT&gt;</code> is a helper class for <code>\ref stldoc_Rope</code>.  Its only
+purpose is for the creation of <code>rope</code>s that use lazy evaluation.  A
+<code>rope</code> that uses lazy evaluation is one that does not store
+the value of the <code>n</code>th character until the value of that particular
+character is actually needed.  This is sometimes a useful 
+optimization.
+<p>
+<code>Char_producer&lt;charT&gt;</code> is an abstract base class; it provides an
+empty virtual destructor and a pure virtual <code>operator()</code>.  Only 
+subclasses of <code>char_producer</code> can be used, not <code>char_producer</code>
+directly.
+<p>
+Classes derived from <code>char_producer</code> define a method for computing the
+characters in a <code>\ref stldoc_Rope</code> lazily, whenever those characters are
+needed.  Unlike \ref stldoc_functors, <code>char_producer</code>s can be stored
+inside a <code>\ref stldoc_Rope</code> data structure.  All char producers must be derived
+from the single base class <code>char_producer</code>.
+<p>
+For performance reasons, the <code>operator()</code> inside <code>char_producer</code> is
+invoked to fill a buffer with a sequence of characters 
+rather than producing a single character at a time.  Its declaration
+is
+\code
+  virtual void operator()(size_t start_pos, size_t len, charT* buffer) = 0;
+\endcode
+<p>
+An invocation of <code>operator()</code> requests that <code>len</code> characters starting
+at <code>start_pos</code> should be deposited into <code>buffer</code>.  If
+the character at the <code>n</code>th position is requested twice, the same
+character must be returned both times. (That is, a <code>char_producer</code>
+must represent a specific, deterministic sequence of characters.)
+<p>
+The following is an example of how to use <code>char_producer</code> and lazy
+evaluation: it is a (somewhat naive implementation of a)
+<code>char_producer</code> subclass, which allows an entire file to be treated as
+a <code>\ref stldoc_Rope</code>.  A <code>rope</code> constructed from <code>file_char_prod</code> will contain the
+same character sequence as the file specified in the constructor.  The
+file will be read only when the <code>rope</code> is accessed, not when the
+<code>rope</code> is constructed.
+\code
+void fail(char* s) { 
+  fprintf(stderr, "%s errno = %d\n", s, errno); 
+  exit(1); 
+}
+
+class file_char_prod : public char_producer<char> {
+  public:
+    FILE* f;
+    file_char_prod(char *file_name) {
+      if (NULL == (f = fopen(file_name, "rb"))) 
+        fail("Open failed");
+    }
+
+    ~file_char_prod() { fclose(f); }
+
+    virtual void operator()(size_t start_pos, size_t len, char* buffer) {
+      if (fseek(f, start_pos, SEEK_SET)) fail("Seek failed");
+      if (fread(buffer, sizeof(char), len, f) < len) fail("Read failed");
+    }
+
+    long len() {
+        // Return the length of a file; this is the only
+        //   mechanism that the standard C library makes possible.
+      if (fseek(f, 0, SEEK_END)) fail("Seek failed");
+      return ftell(f);
+    }
+};
+\endcode
+<p>
+The following program uses the above class to extract and write the
+middle 200 characters of a file.  Note that even if it is invoked on a
+gigabyte file, it will still only read approximately 200 characters
+from the file.  Likewise, the <code>rope</code> will only require a small amount of
+memory.
+\code
+int main(int argc, char** argv)
+{
+  if (argc != 2) 
+    fail("wrong number of arguments");
+
+  file_char_prod* fcp = new file_char_prod(argv[1]);
+  Rope s(fcp, fcp -> len(), true);
+  size_t len = s.size();
+  Rope middle = s.substr(len/2 - 100, 200) + "\n";
+  fwrite(middle.c_str(), sizeof(char), middle.size(), stdout);
+}
+\endcode
+\section Definition Definition
+Defined in <A href="rope">rope</A>, and in the backward-compatibility header <A href="rope.h">rope.h</A>.
+The <code>char_producer</code> class is an SGI extension; it is not part of the C++
+standard.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>charT</code>
+</td>
+<td valign="top">
+The character type
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_Assignable
+\section Type_requirements Type requirements
+<code>charT</code> is a model of \ref stldoc_Assignable.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>virtual ~char_producer()</code>
+</td>
+<td valign="top">
+<code>char_producer</code>
+</td>
+<td valign="top">
+A virtual destructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+\code
+virtual void operator()(size_t start_pos, 
+                        size_t len,
+                        charT* buffer)
+\endcode
+</td>
+<td valign="top">
+Copy <code>len</code> characters starting at position <code>start_pos</code> in the
+    string into <code>buffer</code>.  If a character at a particular
+    position is requested more than once, each request must result in
+    the same character.  Note that this is a pure virtual function; it
+    must be overridden by every subclass of <code>char_producer</code>.
+</td>
+</tr>
+</table>
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_Rope</code>, \ref stldoc_functors
+
+
+*/

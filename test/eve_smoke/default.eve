@@ -1,0 +1,14 @@
+layout eve_smoke
+{
+    view dialog()
+    {
+        row()
+        {
+            button (name: "Hello");
+        }
+        column()
+        {
+            button (name: "world!");
+        }
+    }
+}

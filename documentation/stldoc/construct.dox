@@ -1,0 +1,65 @@
+/** \page stldoc_construct construct
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html allocators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: allocators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class T1, class T2> void construct(T1* p, const T2& value);
+\endcode
+\section Description Description
+In C++, the operator <code>new</code> allocates memory for an object and then
+creates an object at that location by calling a constructor.  Occasionally,
+however, it is useful to separate those two operations.  <A href="#1">[1]</A> If <code>p</code> is
+a pointer to memory that has been allocated but not initialized,
+then <code>construct(p, value)</code> creates an object of type <code>T1</code> at the location
+pointed to by <code>p</code>.  The argument <code>value</code> is passed as an argument to 
+<code>T1</code>'s constructor.
+\section Definition Definition
+Defined in the standard header <A href="memory">memory</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.  The <code>construct</code> algorithm
+is no longer part of the C++ standard; it was present in early drafts,
+and it is retained in this implementation for backward compatibility.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>T1</code> must have a constructor that takes a single argument of
+   type <code>T2</code>.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>p</code> is a valid pointer that points to a region of memory whose
+   size is at least <code>sizeof(T1)</code>.
+<li>
+The memory pointed to by <code>p</code> is uninitialized.  That is, no
+   object has been constructed at the location <code>p</code>.
+</ul>
+\section Complexity Complexity
+\section Example Example
+\code
+double* dp = (double*) malloc(sizeof(double));
+construct(dp, 3);
+assert(*dp == 3);
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+In particular, <code>construct</code>, along with other low-level memory
+allocation primitives, is used to implement container classes.
+\section See_also See also
+\ref stldoc_Allocators, <code>\ref stldoc_destroy</code>, <code>\ref stldoc_uninitialized_copy</code>, 
+<code>\ref stldoc_uninitialized_fill</code>, <code>\ref stldoc_uninitialized_fill_n</code>,
+<code>\ref stldoc_raw_storage_iterator</code>
+
+
+*/

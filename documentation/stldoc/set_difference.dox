@@ -1,0 +1,210 @@
+/** \page stldoc_set_difference set_difference
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Set_difference</code> is an overloaded name; there are actually two 
+<code>set_difference</code> functions.
+\code
+template <class InputIterator1, class InputIterator2, class OutputIterator>
+OutputIterator set_difference(InputIterator1 first1, InputIterator1 last1,
+                              InputIterator2 first2, InputIterator2 last2,
+                              OutputIterator result);
+
+template <class InputIterator1, class InputIterator2, class OutputIterator, 
+          class StrictWeakOrdering>
+OutputIterator set_difference(InputIterator1 first1, InputIterator1 last1,
+                              InputIterator2 first2, InputIterator2 last2, 
+                              OutputIterator result, 
+                              StrictWeakOrdering comp);
+\endcode
+\section Description Description
+<code>Set_difference</code> constructs a sorted range that is the set difference
+of the sorted ranges <code>[first1, last1)</code> and <code>[first2, last2)</code>.
+The return value is the end of the output range.
+<p>
+In the simplest case, <code>set_difference</code> performs the &quot;difference&quot;
+operation from set theory: the output range contains a copy of
+every element that is contained in  <code>[first1, last1)</code> 
+and not contained in <code>[first2, last2)</code>.
+The general case is more complicated, because the input ranges may
+contain duplicate elements.  The generalization is that if a value
+appears <code>m</code> times in <code>[first1, last1)</code> and <code>n</code> times in <code>[first2,
+last2)</code> (where <code>m</code> or <code>n</code> may be zero), then it appears <code>max(m-n,
+0)</code> times in the output range. <A href="#1">[1]</A> <code>Set_difference</code> is stable, meaning
+both that elements are copied from the first range rather than the
+second, and that the relative order of elements in the output range is
+the same as in the first input range. 
+<p>
+The two versions of <code>set_difference</code> differ in how they define whether one
+element is less than another.  The first version compares
+objects using <code>operator&lt;</code>, and the second compares objects using
+a \ref stldoc_functors <code>comp</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>InputIterator1</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator2</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator.
+<li>
+<code>InputIterator1</code> and <code>InputIterator2</code> have the same value type.
+<li>
+<code>InputIterator</code>'s value type is a model of \ref stldoc_LessThanComparable.
+<li>
+The ordering on objects of <code>InputIterator1</code>'s value type is a <i>strict
+   weak ordering</i>, as defined in the \ref stldoc_LessThanComparable requirements.
+<li>
+<code>InputIterator</code>'s value type is convertible to a type in
+   <code>OutputIterator</code>'s set of value types.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>InputIterator1</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator2</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>InputIterator1</code> and <code>InputIterator2</code> have the same value type.
+<li>
+<code>InputIterator1</code>'s value type is convertible to <code>StrictWeakOrdering</code>'s
+   argument type.
+<li>
+<code>InputIterator</code>'s value type is convertible to a type in
+   <code>OutputIterator</code>'s set of value types.
+</ul>
+\section Preconditions Preconditions
+For the first version:
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first2, last2)</code> is a valid range.
+<li>
+<code>[first1, last1)</code> is ordered in ascending order according to
+   <code>operator&lt;</code>.  That is, for every pair of iterators <code>i</code> and <code>j</code>
+   in <code>[first1, last1)</code> such that <code>i</code> precedes <code>j</code>, 
+   <code>*j &lt; *i</code> is <code>false</code>.
+<li>
+<code>[first2, last2)</code> is ordered in ascending order according to
+   <code>operator&lt;</code>.  That is, for every pair of iterators <code>i</code> and <code>j</code>
+   in <code>[first2, last2)</code> such that <code>i</code> precedes <code>j</code>, 
+   <code>*j &lt; *i</code> is <code>false</code>.
+<li>
+There is enough space to hold all of the elements being copied.
+   More formally, the requirement is that 
+   <code>[result, result + n)</code> is a valid range, where <code>n</code> is the number
+   of elements in the difference of the two input ranges.
+<li>
+<code>[first1, last1)</code> and <code>[result, result + n)</code> do not overlap.
+<li>
+<code>[first2, last2)</code> and <code>[result, result + n)</code> do not overlap.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first2, last2)</code> is a valid range.
+<li>
+<code>[first1, last1)</code> is ordered in ascending order according to
+   <code>comp</code>.  That is, for every pair of iterators <code>i</code> and <code>j</code>
+   in <code>[first1, last1)</code> such that <code>i</code> precedes <code>j</code>, 
+   <code>comp(*j, *i)</code> is <code>false</code>.
+<li>
+<code>[first2, last2)</code> is ordered in ascending order according to
+   <code>comp</code>.  That is, for every pair of iterators <code>i</code> and <code>j</code>
+   in <code>[first2, last2)</code> such that <code>i</code> precedes <code>j</code>, 
+   <code>comp(*j, *i)</code> is <code>false</code>.
+<li>
+There is enough space to hold all of the elements being copied.
+   More formally, the requirement is that 
+   <code>[result, result + n)</code> is a valid range, where <code>n</code> is the number
+   of elements in the difference of the two input ranges.
+<li>
+<code>[first1, last1)</code> and <code>[result, result + n)</code> do not overlap.
+<li>
+<code>[first2, last2)</code> and <code>[result, result + n)</code> do not overlap.
+</ul>
+\section Complexity Complexity
+Linear.  Zero comparisons if either <code>[first1, last1)</code> or <code>[first2, last2)</code>
+is empty, otherwise at most <code>2 * ((last1 - first1) + (last2 - first2)) - 1</code> comparisons.
+\section Example Example
+\code
+inline bool lt_nocase(char c1, char c2) { return tolower(c1) < tolower(c2); }
+
+int main()
+{
+  int A1[] = {1, 3, 5, 7, 9, 11};
+  int A2[] = {1, 1, 2, 3, 5, 8, 13};  
+  char A3[] = {'a', 'b', 'b', 'B', 'B', 'f', 'g', 'h', 'H'};
+  char A4[] = {'A', 'B', 'B', 'C', 'D', 'F', 'F', 'H' };
+
+  const int N1 = sizeof(A1) / sizeof(int);
+  const int N2 = sizeof(A2) / sizeof(int); 
+  const int N3 = sizeof(A3);
+  const int N4 = sizeof(A4);
+
+  cout << "Difference of A1 and A2: ";
+  set_difference(A1, A1 + N1, A2, A2 + N2,
+                 ostream_iterator<int>(cout, " "));
+  cout << endl 
+       << "Difference of A3 and A4: ";
+  set_difference(A3, A3 + N3, A4, A4 + N4, 
+                   ostream_iterator<char>(cout, " "),
+                   lt_nocase);
+  cout << endl;
+}
+\endcode
+<p>
+The output is
+\code
+Difference of A1 and A2: 7 9 11 
+Difference of A3 and A4: B B g H 
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Even this is not a completely precise description, because 
+the ordering by which the input ranges are sorted
+is permitted to be a strict weak ordering that is not a total ordering:
+there might be values
+<code>x</code> and <code>y</code> that are equivalent (that is, neither <code>x &lt; y</code> nor <code>y &lt; x</code>)
+but not equal.  See the \ref stldoc_LessThanComparable requirements
+for a fuller discussion. The output range consists of those elements
+from <code>[first1, last1)</code> for which equivalent elements do not exist in 
+<code>[first2, last2)</code>.  Specifically, if the range <code>[first1, last1)</code> contains <code>m</code>
+elements that are equivalent to each other and the range <code>[first2,
+last2)</code> contains <code>n</code> elements from that equivalence class (where
+either <code>m</code> or <code>n</code> may be zero), then the output range contains
+the <i>last</i> <code>max(m - n, 0)</code> of these elements from <code>[first1, last1)</code>.
+Note that this precision is only important if elements can be
+equivalent but not equal.  If you're using a total ordering
+(if you're using <code>strcmp</code>, for example, or if you're using
+ordinary arithmetic comparison on integers), then you can ignore this
+technical distinction: for a total ordering, equality and equivalence
+are the same.
+\section See_also See also
+<code>\ref stldoc_includes</code>, <code>\ref stldoc_set_union</code>, <code>\ref stldoc_set_intersection</code>, 
+<code>\ref stldoc_set_symmetric_difference</code>, <code>\ref stldoc_sort</code>
+
+*/

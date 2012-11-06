@@ -1,0 +1,456 @@
+/** \page stldoc_SortedAssociativeContainer SortedAssociativeContainer
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Sorted Associative Container is a type of \ref stldoc_AssociativeContainer.
+Sorted Associative Containers use an ordering relation on their keys;
+two keys are considered to be equivalent if neither one is less than
+the other.  (If the ordering relation is case-insensitive string
+comparison, for example, then the keys &quot;abcde&quot; and &quot;aBcDe&quot; are
+equivalent.)  
+<p>
+Sorted Associative Containers guarantee that the complexity for most
+operations is never worse than logarithmic <A href="#1">[1]</A>, and they also
+guarantee that their elements are always sorted in ascending order by
+key.
+\section Refinement_of Refinement of
+\ref stldoc_ReversibleContainer, \ref stldoc_AssociativeContainer
+\section Associated_types Associated types
+Two new types are introduced, in addition to the types defined in the
+\ref stldoc_AssociativeContainer and \ref stldoc_ReversibleContainer requirements. 
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+<code>X::key_compare</code>
+</td>
+<td valign="top">
+The type of a \ref stldoc_StrictWeakOrdering used to compare keys.
+   Its argument type must be <code>X::key_type</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>X::value_compare</code>
+</td>
+<td valign="top">
+The type of a \ref stldoc_StrictWeakOrdering used to compare values.
+   Its argument type must be <code>X::value_type</code>, and it compares two
+   objects of <code>value_type</code> by passing the keys associated with those
+   objects to a function object of type <code>key_compare</code>.
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Sorted Associative Container
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>a</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>t</code>
+</td>
+<td valign="top">
+Object of type <code>X::value_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>k</code>
+</td>
+<td valign="top">
+Object of type <code>X::key_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>p</code>, <code>q</code>
+</td>
+<td valign="top">
+Object of type <code>X::iterator</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>c</code>
+</td>
+<td valign="top">
+Object of type <code>X::key_compare</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+\section Valid_expressions Valid expressions
+In addition to the expressions defined in \ref stldoc_AssociativeContainer
+and \ref stldoc_ReversibleContainer, the following expressions must be valid.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Default constructor
+</td>
+<td valign="top">
+\code
+X()
+X a;
+\endcode
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Constructor with compare
+</td>
+<td valign="top">
+\code
+X(c)
+X a(c);
+\endcode
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Key comparison
+</td>
+<td valign="top">
+<code>a.key_comp()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X::key_compare</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Value comparison
+</td>
+<td valign="top">
+<code>a::value_compare()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X::value_compare</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Lower bound
+</td>
+<td valign="top">
+<code>a.lower_bound(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>iterator</code> if <code>a</code> is mutable, otherwise <code>const_iterator</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Upper bound
+</td>
+<td valign="top">
+<code>a.upper_bound(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>iterator</code> if <code>a</code> is mutable, otherwise <code>const_iterator</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Equal range
+</td>
+<td valign="top">
+<code>a.equal_range(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>pair&lt;iterator, iterator&gt;</code> if <code>a</code> is mutable, otherwise
+   <code>pair&lt;const_iterator, const_iterator&gt;</code>.
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Default constructor
+</td>
+<td valign="top">
+\code
+X()
+X a;
+\endcode
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Creates an empty container, using <code>key_compare()</code> as the comparison
+   object.
+</td>
+<td valign="top">
+The size of the container is <code>0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Constructor with compare
+</td>
+<td valign="top">
+\code
+X(c)
+X a(c);
+\endcode
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Creates an empty container, using <code>c</code> as the comparison
+   object.
+</td>
+<td valign="top">
+The size of the container is <code>0</code>.  <code>key_comp()</code> returns a function
+   object that is equivalent to <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Key comparison
+</td>
+<td valign="top">
+<code>a.key_comp()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns the key comparison object used by <code>a</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Value comparison
+</td>
+<td valign="top">
+<code>a::value_compare()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns the value comparison object used by <code>a</code>.
+</td>
+<td valign="top">
+If <code>t1</code> and <code>t2</code> are objects of type <code>value_type</code>, and <code>k1</code> and
+   <code>k2</code> are the keys associated with them, then <code>a.value_comp()(t1, t2)</code>
+   is equivalent to <code>a.key_comp()(k1, k2)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Lower bound
+</td>
+<td valign="top">
+<code>a.lower_bound(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns an iterator pointing to the first element whose key
+   is not less than <code>k</code>.  Returns <code>a.end()</code> if no such element exists.
+</td>
+<td valign="top">
+If <code>a</code> contains any elements that have the same key as <code>k</code>, then
+   the return value of <code>lower_bound</code> points to the first such element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Upper bound
+</td>
+<td valign="top">
+<code>a.upper_bound(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns an iterator pointing to the first element whose key
+   is greater than <code>k</code>.  Returns <code>a.end()</code> if no such element exists.
+</td>
+<td valign="top">
+If <code>a</code> contains any elements that have the same key as <code>k</code>, then
+   the return value of <code>upper_bound</code> points to one past the last such
+   element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Equal range
+</td>
+<td valign="top">
+<code>a.equal_range(k)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns a pair whose first element is <code>a.lower_bound(k)</code> and whose
+   second element is <code>a.upper_bound(k)</code>.  
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+<code>key_comp()</code> and <code>value_comp()</code> are constant time.
+<p>
+Erase element is constant time.
+<p>
+Erase key is <code>O(log(size()) + count(k))</code>. <A href="#1">[1]</A>
+<p>
+Erase range is <code>O(log(size()) + N)</code>, where <code>N</code> is the length of the
+range. <A href="#1">[1]</A>
+<p>
+Find is logarithmic. <A href="#1">[1]</A>
+<p>
+Count is <code>O(log(size()) + count(k))</code>. <A href="#1">[1]</A>
+<p>
+Lower bound, upper bound, and equal range are logarithmic. <A href="#1">[1]</A>
+\section Invariants Invariants
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Definition of <code>value_comp</code>
+</td>
+<td valign="top">
+If <code>t1</code> and <code>t2</code> are objects of type <code>X::value_type</code> and
+   <code>k1</code> and <code>k2</code> are the keys associated with those objects, then
+   <code>a.value_comp()</code> returns a \ref stldoc_functors such that
+   <code>a.value_comp()(t1, t2)</code> is equivalent to <code>a.key_comp()(k1, k2)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Ascending order
+</td>
+<td valign="top">
+The elements in a Sorted Associative Container are always arranged
+   in ascending order by key.  That is, if <code>a</code> is a Sorted Associative
+   Container, then <code>\ref stldoc_is_sorted(a.begin(), a.end(), a.value_comp())</code> 
+   is always <code>true</code>.
+</td>
+</tr>
+</table>
+\section Models Models
+<ul>
+<li>
+<code>\ref stldoc_set</code>
+<li>
+<code>\ref stldoc_multiset</code>
+<li>
+<code>\ref stldoc_Map</code>
+<li>
+<code>\ref stldoc_Multimap</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+This is a much stronger guarantee than the one provided
+by \ref stldoc_AssociativeContainer.  The guarantees in \ref stldoc_AssociativeContainer
+only apply to average complexity; worst case complexity is allowed to
+be greater.  Sorted Associative Container, however, provides an upper
+limit on worst case complexity.
+<p><A name="2">[2]</A>
+This definition is consistent with the semantics described in
+\ref stldoc_AssociativeContainer.  It is a stronger condition, though: if
+<code>a</code> contains no elements with the key <code>k</code>, then <code>a.equal_range(k)</code>
+returns an empty range that indicates the position where those elements
+would be if they did exist.  The \ref stldoc_AssociativeContainer requirements,
+however, merely state that the return value is an arbitrary empty range.
+\section See_also See also
+\ref stldoc_AssociativeContainer, \ref stldoc_HashedAssociativeContainer
+
+
+*/

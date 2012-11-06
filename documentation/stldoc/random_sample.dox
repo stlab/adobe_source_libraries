@@ -1,0 +1,131 @@
+/** \page stldoc_random_sample random_sample
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Random_sample</code> is an overloaded name; there are actually two
+<code>random_sample</code> functions.
+\code
+template <class InputIterator, class RandomAccessIterator>
+Random AccessIterator 
+random_sample(InputIterator first, InputIterator last,
+          RandomAccessIterator ofirst, RandomAccessIterator olast) 
+
+template <class InputIterator, class RandomAccessIterator,
+      class RandomNumberGenerator>
+random_sample(InputIterator first, InputIterator last,
+          RandomAccessIterator ofirst, RandomAccessIterator olast,
+          RandomNumberGenerator& rand) 
+\endcode
+\section Description Description
+<code>Random_sample</code> randomly copies a sample of the elements from
+the range <code>[first, last)</code> into the range <code>[ofirst, olast)</code>.
+Each element in the input range appears at most once in the output
+range, and samples are chosen with uniform probability.  <A href="#1">[1]</A> 
+Elements in the output range might appear in any order: relative
+order within the input range is not guaranteed to be preserved. <A href="#2">[2]</A>
+<p>
+<code>Random_sample</code> copies <code>n</code> elements from <code>[first, last)</code>
+to <code>[ofirst, olast)</code>, where <code>n</code> is <code>min(last - first, olast - ofirst)</code>.
+The return value is <code>ofirst + n</code>.
+<p>
+The first version uses an internal random number generator, and the
+second uses a \ref stldoc_RandomNumberGenerator, a special kind of
+\ref stldoc_functors, that is explicitly passed as an argument.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+This function is an SGI extension; it is not part of the C++
+standard.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+<code>InputIterator</code>'s value type is convertible to
+   <code>RandomAccessIterator</code>'s value type.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+<code>RandomNumberGenerator</code> is a model of \ref stldoc_RandomNumberGenerator
+<li>
+<code>InputIterator</code>'s value type is convertible to
+   <code>RandomAccessIterator</code>'s value type.
+<li>
+<code>RandomAccessIterator</code>'s distance type is convertible to
+   <code>RandomNumberGenerator</code>'s argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>[ofirst, olast)</code> is a valid range.
+<li>
+<code>[first, last)</code> and <code>[ofirst, olast)</code> do not overlap.
+<li>
+<code>last - first</code> is less than <code>rand</code>'s maximum value.
+</ul>
+\section Complexity Complexity
+Linear in <code>last - first</code>.  At most <code>last - first</code> elements are copied
+from the input range to the output range.
+\section Example Example
+\code
+int main()
+{
+  const int N = 10;
+  const int n = 4;
+  int A[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  int B[n];
+
+  random_sample(A, A+N, B, B+n);
+  copy(B, B + n, ostream_iterator<int>(cout, " "));
+  // The printed value might be 1 6 3 5, 
+  //  or any of 5039 other possibilities.
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+This is &quot;Algorithm R&quot; from section 3.4.2 of Knuth
+(D. E. Knuth, <i>The Art of Computer
+Programming.  Volume 2: Seminumerical Algorithms</i>, second edition.  
+Addison-Wesley, 1981). Knuth credits Alan Waterman.  Note that there
+are <code>N! / n! / (N - n)!</code> ways of selecting a sample of <code>n</code> elements
+from a range of <code>N</code> elements.  <code>Random_sample</code> yields uniformly
+distributed results; that is, the probability of selecting any
+particular element is <code>n / N</code>, and the probability of any particular
+sampling (not considering order of elements) is <code>n! * (N - n)! / N!</code>.  
+<p><A name="2">[2]</A>
+If preservation of the relative ordering within the input range
+is important for your application, you should use <code>\ref stldoc_random_sample_n</code>
+instead.  The main restriction of <code>\ref stldoc_random_sample_n</code> is that the
+input range must consist of \ref stldoc_ForwardIterator, rather than 
+\ref stldoc_InputIterator.
+\section See_also See also
+<code>\ref stldoc_random_shuffle</code>, <code>\ref stldoc_random_sample_n</code>, \ref stldoc_RandomNumberGenerator
+
+
+*/

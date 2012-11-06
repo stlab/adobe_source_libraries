@@ -1,0 +1,137 @@
+/** \page stldoc_pop_heap pop_heap
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Pop_heap</code> is an overloaded name; there are actually two 
+<code>pop_heap</code> functions.    
+\code
+template <class RandomAccessIterator>
+void pop_heap(RandomAccessIterator first, RandomAccessIterator last);
+
+template <class RandomAccessIterator, class StrictWeakOrdering>
+inline void pop_heap(RandomAccessIterator first, RandomAccessIterator last,
+                     StrictWeakOrdering comp);
+\endcode
+\section Description Description
+<code>Pop_heap</code> removes the largest element (that is, <code>*first</code>) from the
+heap <A href="#1">[1]</A> <code>[first, last)</code>. 
+The two versions of <code>pop_heap</code> differ in how they define whether one
+element is less than another.  The first version compares
+objects using <code>operator&lt;</code>, and the second compares objects using a
+\ref stldoc_functors <code>comp</code>.  
+<p>
+The postcondition for the first version of <code>pop_heap</code> is that
+<code>\ref stldoc_is_heap(first, last-1)</code> is <code>true</code> and that <code>*(last - 1)</code> is the
+element that was removed from the heap.
+The postcondition for the second version is that
+<code>\ref stldoc_is_heap(first, last-1, comp)</code> is <code>true</code> and that <code>*(last - 1)</code> is the
+element that was removed from the heap. <A href="#2">[2]</A>
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator.
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+<code>RandomAccessIterator</code>'s value type is a model of \ref stldoc_LessThanComparable.
+<li>
+The ordering on objects of <code>RandomAccessIterator</code>'s value type is a <i>strict
+   weak ordering</i>, as defined in the \ref stldoc_LessThanComparable requirements.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator.
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>RandomAccessIterator</code>'s value type is convertible to
+   <code>StrictWeakOrdering</code>'s argument type.
+</ul>
+\section Preconditions Preconditions
+For the first version:
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>[first, last - 1)</code> is a valid range.  That is, <code>[first, last)</code> is
+   nonempty.
+<li>
+<code>[first, last)</code> is a heap.  That is, <code>is_heap(first, last)</code> is <code>true</code>.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>[first, last - 1)</code> is a valid range.  That is, <code>[first, last)</code> is
+   nonempty.
+<li>
+<code>[first, last)</code> is a heap.  That is, <code>is_heap(first, last, comp)</code> is <code>true</code>.
+</ul>
+\section Complexity Complexity
+Logarithmic.  At most <code>2 * log(last - first)</code> comparisons.
+\section Example Example
+\code
+int main()
+{
+  int A[] = {1, 2, 3, 4, 5, 6};
+  const int N = sizeof(A) / sizeof(int);
+
+  make_heap(A, A+N);
+  cout << "Before pop: ";
+  copy(A, A+N, ostream_iterator<int>(cout, " "));
+
+  pop_heap(A, A+N);
+  cout << endl << "After pop: ";
+  copy(A, A+N-1, ostream_iterator<int>(cout, " "));
+  cout << endl << "A[N-1] = " << A[N-1] << endl;
+}
+\endcode
+<p>
+The output is
+\code
+Before pop: 6 5 3 4 2 1 
+After pop: 5 4 3 1 2 
+A[N-1] = 6
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+A heap is a particular way of ordering the elements in a range of
+\ref stldoc_RandomAccessIterator <code>[f, l)</code>.  The reason heaps are useful
+(especially for sorting, or as priority queues) is that they satisfy
+two important properties.  First, <code>*f</code> is the largest element in the
+heap.  Second, it is possible to add an element to a heap (using
+<code>\ref stldoc_push_heap</code>), or to remove <code>*f</code>, in logarithmic time.
+Internally, a heap is a tree represented as a sequential range.
+The tree is constructed so that that each
+node is less than or equal to its parent node.
+<p><A name="2">[2]</A>
+<code>Pop_heap</code> removes the largest element from a heap, and shrinks the heap.  
+This means that if you call keep calling <code>pop_heap</code> until only
+a single element is left in the heap, you will end up with a sorted
+range where the heap used to be.  This, in fact, is exactly how
+<code>\ref stldoc_sort_heap</code> is implemented.
+\section See_also See also
+<code>\ref stldoc_make_heap</code>, <code>\ref stldoc_push_heap</code>, <code>\ref stldoc_sort_heap</code>, <code>\ref stldoc_is_heap</code>, <code>\ref stldoc_sort</code>
+
+
+*/

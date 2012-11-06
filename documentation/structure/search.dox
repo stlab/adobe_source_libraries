@@ -1,0 +1,30 @@
+/*!
+\page asl_search Search Adobe Software Technology Lab
+
+\htmlonly
+<!-- Google CSE Search Box Begins  -->
+<form action="http://stlab.adobe.com/asl_search.html" id="searchbox_017384615846126628024:xkwa3ntixnk">
+  <input type="hidden" name="cx" value="017384615846126628024:xkwa3ntixnk" />
+  <input type="hidden" name="cof" value="FORID:9" />
+  <input type="text" name="q" size="25" />
+  <input type="submit" name="sa" value="Search" />
+</form>
+<script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_017384615846126628024%3Axkwa3ntixnk&lang=en"></script>
+<!-- Google CSE Search Box Ends -->
+\endhtmlonly
+
+\htmlonly
+<!-- Google Search Result Snippet Begins -->
+<div id="results_017384615846126628024:xkwa3ntixnk"></div>
+<script type="text/javascript">
+  var googleSearchIframeName = "results_017384615846126628024:xkwa3ntixnk";
+  var googleSearchFormName = "searchbox_017384615846126628024:xkwa3ntixnk";
+  var googleSearchFrameWidth = 600;
+  var googleSearchFrameborder = 0;
+  var googleSearchDomain = "www.google.com";
+  var googleSearchPath = "/cse";
+</script>
+<script type="text/javascript" src="http://www.google.com/afsonline/show_afs_search.js"></script>
+<!-- Google Search Result Snippet Ends -->
+\endhtmlonly
+*/

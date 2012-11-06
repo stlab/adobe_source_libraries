@@ -1,0 +1,46 @@
+/*
+    Copyright 2005-2007 Adobe Systems Incorporated
+    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
+    or a copy at http://stlab.adobe.com/licenses.html)
+*/
+
+/*************************************************************************************************/
+
+/*!
+
+\defgroup eve_evaluate Layout Library Evaluate
+\ingroup layout_library
+
+\typedef adobe::bind_layout_proc_t;
+\ingroup eve_evaluate
+
+The bind_layout_proc_t is a simplified callback which can be used with bind_layout to handle most of the aspects of assempling a view from a layout description.
+
+\par Parameters:
+\li \e parent parent can be any copyable type, and is used by the callback to associate tself with the parent.
+\li \e name the name of the view defintion to be constructed.
+\li \e arguments a dictionary of the evaluated arguments for the view defintion.
+*/
+
+/*!
+\fn eve_callback_suite_t adobe::bind_layout(const bind_layout_proc_t& proc, basic_sheet_t& layout_sheet, virtual_machine_t& evaluator);
+\ingroup eve_evaluate
+
+The bind_layout function constructs an eve_call_back_suite_t which can be passed to the parser. It handles evaluating arguments (using the evaluator) and constructing a basic_sheet_t to hold the layout state.
+
+\param proc client assembler proc.
+\param layout_sheet a basic_sheet_t associated with this layout which is used to hold the layout state.
+\param evaluator a virtual_machine_t, used to evaluate arguments during the parse.
+
+\return
+    A eve_callback_suite_t which can be passed to the parser.
+
+\example
+\code
+adobe::eve_callback_suite_t::position_t client_assembler(const adobe::eve_callback_suite_t::position_t&, adobe::name_t,
+    const adobe::dictionary_t&);
+    
+adobe::parse(in, line_position_t(file_name), adobe::eve_callback_suite_t::position_t(),
+		adobe::bind_layout(&client_assembler, window_sheet, virtual_machine));
+\endcode
+*/

@@ -1,0 +1,57 @@
+/** \page stldoc_ptr_fun ptr_fun
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left">\image html adaptors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: functors, adaptors</td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class Arg, class Result>
+pointer_to_unary_function<Arg, Result> 
+ptr_fun(Result (*x)(Arg));
+
+template <class Arg1, class Arg2, class Result>
+pointer_to_binary_function<Arg1, Arg2, Result> 
+ptr_fun(Result (*x)(Arg1, Arg2));
+\endcode
+\section Description Description
+<code>Ptr_fun</code> takes a function pointer as its argument and
+returns a function pointer adaptor, a type of \ref stldoc_functors.
+It is actually two different functions, not one (that is, the name
+<code>ptr_fun</code> is overloaded).  If its argument is of type
+<code>Result (*)(Arg)</code> then <code>ptr_fun</code> creates a 
+<code>\ref stldoc_pointer_to_unary_function</code>, and if its argument is of type
+<code>Result (*)(Arg1, Arg2)</code> then <code>ptr_fun</code> creates a
+<code>\ref stldoc_pointer_to_binary_function</code>.
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+\section Requirements_on_types Requirements on types
+The argument must be a pointer to a function that takes either 
+one or two arguments.  The argument type(s) and the return type
+of the function are arbitrary, with the restriction that the function
+must return a value; it may not be a <code>void</code> function.
+\section Preconditions Preconditions
+\section Complexity Complexity
+\section Example Example
+See the examples in the discussions of <code>\ref stldoc_pointer_to_unary_function</code>
+and <code>\ref stldoc_pointer_to_binary_function</code>.
+\section Notes Notes
+\section See_also See also
+\ref stldoc_functors, <code>\ref stldoc_pointer_to_unary_function</code>,
+<code>\ref stldoc_pointer_to_binary_function</code>, \ref stldoc_AdaptableUnaryFunction,
+\ref stldoc_AdaptableBinaryFunction 
+
+
+*/

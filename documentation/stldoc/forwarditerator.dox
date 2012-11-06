@@ -1,0 +1,197 @@
+/** \page stldoc_ForwardIterator ForwardIterator
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Forward Iterator is an iterator that corresponds to the usual
+intuitive notion of a linear sequence of values.  It is possible to use
+Forward Iterators (unlike \ref stldoc_InputIterator and \ref stldoc_OutputIterator)
+in multipass algorithms.  Forward Iterators do not, however, allow
+stepping backwards through a sequence, but only, as the
+name suggests, forward.
+<p>
+A type that is a model of Forward Iterator
+may be either <i>mutable</i> or <i>immutable</i>, as defined in the \ref stldoc_trivial
+requirements.
+\section Refinement_of Refinement of
+\ref stldoc_InputIterator, \ref stldoc_OutputIterator
+\section Associated_types Associated types
+The same as for \ref stldoc_InputIterator
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Forward Iterator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The value type of <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>i</code>, <code>j</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>t</code>
+</td>
+<td valign="top">
+Object of type <code>T</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+\section Valid_expressions Valid expressions
+Forward Iterator does not define any new expressions beyond those
+defined in \ref stldoc_InputIterator.  However, some of the restrictions
+described in \ref stldoc_InputIterator are relaxed.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Preincrement
+</td>
+<td valign="top">
+<code>++i</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X&amp;</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Postincrement
+</td>
+<td valign="top">
+<code>i++</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X</code>
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+Forward Iterator does not define any new expressions beyond those
+defined in \ref stldoc_InputIterator.  However, some of the restrictions
+described in \ref stldoc_InputIterator are relaxed.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Preincrement
+</td>
+<td valign="top">
+<code>++i</code>
+</td>
+<td valign="top">
+<code>i</code> is dereferenceable
+</td>
+<td valign="top">
+<code>i</code> points to the next value
+</td>
+<td valign="top">
+<code>i</code> is dereferenceable or past-the-end.  <code>&amp;i == &amp;++i</code>. If <code>i == j</code>, then
+   <code>++i == ++j</code>. <A href="#1">[1]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Postincrement
+</td>
+<td valign="top">
+<code>i++</code>
+</td>
+<td valign="top">
+<code>i</code> is dereferenceable
+</td>
+<td valign="top">
+Equivalent to <code>{X tmp = i; ++i; return tmp;}</code>
+</td>
+<td valign="top">
+<code>i</code> is dereferenceable or past-the-end. <A href="#1">[1]</A>
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+The complexity of operations on Forward Iterators is
+guaranteed to be amortized constant time.
+\section Invariants Invariants
+\section Models Models
+<ul>
+<li>
+<code>T*</code>
+<li>
+<code>\ref stldoc_hash_set&lt;T&gt;::iterator</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+The restrictions described in \ref stldoc_InputIterator have been
+removed.  Incrementing a forward iterator does not invalidate copies
+of the old value and it is guaranteed that, if <code>i</code> and <code>j</code> are
+dereferenceable and <code>i == j</code>, then <code>++i == ++j</code>.  As a consequence
+of these two facts, it is possible to pass through the same 
+Forward Iterator twice.
+\section See_also See also
+\ref stldoc_InputIterator, \ref stldoc_OutputIterator, \ref stldoc_BidirectionalIterator,
+\ref stldoc_RandomAccessIterator, \ref stldoc_Iterators
+
+
+*/

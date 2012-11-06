@@ -1,0 +1,376 @@
+/** \page stldoc_sequence_buffer sequence_buffer
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left">\image html adaptors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: iterators, adaptors</td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Sequence_buffer</code> is similar to <code>\ref stldoc_back_insert_iterator</code>: it is 
+an \ref stldoc_OutputIterator adaptor that appends elements to the end
+of a container. 
+<p>
+The main difference between <code>sequence_buffer</code> and 
+<code>\ref stldoc_back_insert_iterator</code> is that <code>\ref stldoc_back_insert_iterator</code> 
+inserts elements into a sequence one element at a time; 
+<code>sequence_buffer</code>, however, as the &quot;buffer&quot; part of the name 
+suggests, accumulates elements into a buffer and appends the
+entire buffer in a single operation.
+<p>
+Specifically, the expression <code>*it = v</code> adds <code>v</code>
+to the end of <code>it</code>'s internal buffer.  The buffer is automatically
+flushed when it gets full, or when <code>it</code> is destroyed; flushing the
+buffer means emptying it and appending its contents to
+<code>it</code>'s underlying container.  (It is also possible to flush the
+buffer manually, by invoking the <code>flush()</code> member function.)
+<p>
+This difference has two implications.  First, <code>sequence_buffer</code>
+is only useful if appending an array of <code>N</code> elements is much more
+efficient than inserting a single element <code>N</code> times. Second,
+<code>sequence_buffer</code> assumes that it can insert elements at the
+end of a container using an <code>append</code> member function.  This
+member function is <i>not</i> part of the \ref stldoc_Container or
+\ref stldoc_Sequence requirements.  The <code>sequence_buffer</code> adaptor can
+be used with <code>\ref stldoc_Rope</code>, but not with any of the other containers
+in the library.  (This is the reason why <code>sequence_buffer</code> is
+defined in the file <A href="rope.h">rope.h</A>, instead of in <A href="iterator.h">iterator.h</A>.)
+<p>
+If you want to build up a string one character at a time, it is
+much more efficient to use <code>sequence_buffer</code> than to repeatedly 
+add single characters to the end of a <code>rope</code>.
+\section Example Example
+\code
+int main()
+{
+  const char* const s = "this is a test";
+  const int N = strlen(s);
+
+  crope r;
+  transform(s, s + N,
+            sequence_buffer<crope>(r),
+            toupper);
+  cout << "r = " << r << endl;
+}
+\endcode
+\section Definition Definition
+Defined in the header <A href="rope">rope</A>, and in the backward-compatibility
+header <A href="rope.h">rope.h</A>.  The <code>sequence_buffer</code> class, and the <A href="rope">rope</A>
+header, are SGI extensions; they are not part of the C++ standard.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>Container</code>
+</td>
+<td valign="top">
+The type of the underlying container that elements are being
+   written to. <A href="#1">[1]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>buf_sz</code>
+</td>
+<td valign="top">
+Number of elements in the buffer.  This is a number, not a type.
+   <code>buf_sz</code> has type <code>size_t</code>.
+</td>
+<td valign="top">
+100
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_OutputIterator.
+\section Type_requirements Type requirements
+<ul>
+<li>
+<code>Container</code> is a variable-sized \ref stldoc_ForwardContainer
+<li>
+<code>Container</code>'s value type <code>T</code> is a model of \ref stldoc_DefaultConstructible,
+   as well as \ref stldoc_Assignable.
+<li>
+<code>Container</code> has a member function that appends a range.  Specifically:
+   If <code>x</code> is an object of type <code>Container</code> and <code>f</code> and <code>l</code> are of
+   type <code>T*</code>, then <code>x.append(f, l)</code> appends the range <code>[f, l)</code> to
+   <code>x</code>. <A href="#1">[1]</A>
+</ul>
+\section Public_base_classes Public base classes
+<code>output_iterator</code>
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type</code>
+</td>
+<td valign="top">
+<code>sequence_buffer</code>
+</td>
+<td valign="top">
+The underlying container's value type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>sequence_buffer(Container&amp; C)</code>
+</td>
+<td valign="top">
+<code>sequence_buffer</code>
+</td>
+<td valign="top">
+Create a <code>sequence_buffer</code> whose underlying container is <code>C</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>sequence_buffer()</code>
+</td>
+<td valign="top">
+<code>\ref stldoc_DefaultConstructible</code>
+</td>
+<td valign="top">
+The default constructor.  The resulting iterator is singular.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>sequence_buffer(const sequence_buffer&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Assignable
+</td>
+<td valign="top">
+Copy constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>sequence_buffer&amp; operator=(const sequence_buffer&amp; s)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Assignable
+</td>
+<td valign="top">
+Assignment operator.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>sequence_buffer&amp; operator=(sequence_buffer&amp; s)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Assignable
+</td>
+<td valign="top">
+Faster version of assignment operator.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>sequence_buffer&amp; operator=(const value_type&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Used to implement the \ref stldoc_OutputIterator requirement
+   <code>*i = t</code>. <A href="#2">[2]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>sequence_buffer&amp; operator*()</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Used to implement the \ref stldoc_OutputIterator requirement
+   <code>*i = t</code>. <A href="#2">[2]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>sequence_buffer&amp; operator++()</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Preincrement
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>sequence_buffer&amp; operator++(int)</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Postincrement
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void flush()</code>
+</td>
+<td valign="top">
+<code>sequence_buffer</code>
+</td>
+<td valign="top">
+Flush the buffer.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void push_back(value_type)</code>
+</td>
+<td valign="top">
+<code>sequence_buffer</code>
+</td>
+<td valign="top">
+<code>i.push_back(x)</code> is equivalent to <code>*i = x</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void append(value_type* s, size_t len)</code>
+</td>
+<td valign="top">
+<code>sequence_buffer</code>
+</td>
+<td valign="top">
+Append multiple values.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined 
+in the \ref stldoc_OutputIterator requirements,
+but are specific to <code>sequence_buffer</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Function
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type</code>
+</td>
+<td valign="top">
+The underlying container's value type.  That is,
+   <code>typename Container::value_type</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>sequence_buffer(Container&amp; C)</code>
+</td>
+<td valign="top">
+Create a <code>sequence_buffer</code> whose underlying container is <code>C</code>.
+   Elements appended to the <code>sequence_buffer</code> will be appended to
+   <code>C</code> whenever the <code>sequence_buffer</code> is flushed.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void flush()</code>
+</td>
+<td valign="top">
+Append all elements in the buffer to the underlying container, and
+   empty the buffer.  That is, make the underlying container consistent
+   with the <code>sequence_buffer</code>.  Note that <code>flush</code> is called automatically
+   whenever the buffer is full, and also by <code>sequence_buffer</code>'s destructor.
+   Sometimes, however, it is useful to be sure that the buffer is 
+   flushed at a particular time.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void push_back(value_type x)</code>
+</td>
+<td valign="top">
+Append <code>x</code> to the <code>sequence_buffer</code>.  Note that this member function is
+   strictly unnecessary: <code>i.push_back(x)</code> is just alternate syntax for 
+   <code>*i = x</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void append(value_type* s, size_t len)</code>
+</td>
+<td valign="top">
+Append the range <code>[s, s + len)</code> to the <code>sequence_buffer</code>.  Note
+   that <code>i.append(s, n)</code> is just the same as 
+   <code>\ref stldoc_copy(s, s + n, i)</code>.  The <code>append</code> member function, however,
+   is faster.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+Despite the name &quot;sequence_buffer&quot;, this adaptor cannot
+actually be used with arbitrary sequences: it requires that the
+template argument <code>Container</code> have an <code>append</code> member function that
+can insert multiple elements at the end of the container.  This
+member function is not part of the \ref stldoc_Sequence requirements.  This
+means that <code>sequence_buffer</code> can be used with <code>\ref stldoc_Rope</code>, but
+not with any of the other predefined container classes.
+<p><A name="2">[2]</A>
+Note how assignment through a <code>sequence_buffer</code> is implemented.
+In general, unary <code>operator*</code> must be defined so that it returns a
+proxy object, where the proxy object defines <code>operator=</code> to perform
+the output operation.  In this case, for the sake of simplicity, the
+proxy object is the <code>sequence_buffer</code> itself.  That is, <code>*i</code> simply
+returns <code>i</code>, and <code>*i = t</code> is equivalent to <code>i = t</code>.  You should not,
+however, rely on this behavior.  It is an implementation detail,
+and it is not guaranteed to remain the same in future versions.
+\section See_also See also
+\ref stldoc_OutputIterator, 
+<code>\ref stldoc_Rope</code>,
+<code>\ref stldoc_front_insert_iterator</code>, 
+<code>\ref stldoc_back_insert_iterator</code>,
+<code>\ref stldoc_insert_iterator</code>
+
+
+*/

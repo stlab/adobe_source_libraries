@@ -1,0 +1,97 @@
+/** \page stldoc_get_temporary_buffer get_temporary_buffer
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html allocators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: allocators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class T>
+pair<T*, ptrdiff_t> get_temporary_buffer(ptrdiff_t len, T*);
+\endcode
+\section Description Description
+Some algorithms, such as <code>\ref stldoc_stable_sort</code> and <code>\ref stldoc_inplace_merge</code>,
+are <i>adaptive</i>: they attempt to use extra temporary memory to store
+intermediate results, and their run-time complexity is better if that
+extra memory is available. 
+<p>
+The first argument to <code>get_temporary_buffer</code> specifies the 
+requested size of the temporary buffer, and the second specifies
+the type of object that will be stored in the buffer.  That is,
+<code>get_temporary_buffer(len, (T*) 0)</code> requests a buffer that is
+aligned for objects of type <code>T</code> and that is large enough to hold
+<code>len</code> objects of type <code>T</code>.  <A href="#1">[1]</A>  
+<p>
+The return value of <code>get_temporary_buffer</code> is a \ref stldoc_pair <code>P</code> whose
+first component is a pointer to the temporary buffer and whose second
+argument indicates how large the buffer is: the buffer pointed to by
+<code>P.first</code> is large enough to hold <code>P.second</code> objects of type <code>T</code>.
+<code>P.second</code> is greater than or equal to <code>0</code> <A href="#2">[2]</A>, and less than or equal
+to <code>len</code> <A href="#1">[1]</A>.  Note that <code>P.first</code> is a pointer to uninitialized
+memory, rather than to actual objects of type <code>T</code>; this memory can be
+initialized using <code>\ref stldoc_uninitialized_copy</code>, <code>\ref stldoc_uninitialized_fill</code>,
+or <code>\ref stldoc_uninitialized_fill_n</code>.
+<p>
+As the name suggests, <code>get_temporary_buffer</code> should only be used to
+obtain temporary memory.  If a function allocates memory using
+<code>get_temporary_buffer</code>, then it must deallocate that memory, using
+<code>\ref stldoc_return_temporary_buffer</code> <A href="#3">[3]</A>, before it returns.
+<p>
+<b>Note:</b> <code>get_temporary_buffer</code> and <code>\ref stldoc_return_temporary_buffer</code> are
+only provided for backward compatibility.  If you are writing new
+code, you should instead use the <code>\ref stldoc_temporary_buffer</code> class.
+\section Definition Definition
+Defined in the standard header <A href="memory">memory</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>len</code> is greater than <code>0</code>.
+</ul>
+\section Complexity Complexity
+\section Example Example
+\code
+int main()
+{
+  pair<int*, ptrdiff_t> P = get_temporary_buffer(10000, (int*) 0);
+  int* buf = P.first;
+  ptrdiff_t N = P.second;
+  uninitialized_fill_n(buf, N, 42);
+  int* result = find_if(buf, buf + N, bind2nd(not_equal_to<int>(), 42));
+  assert(result == buf + N);
+  return_temporary_buffer(buf);
+}        
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The argument <code>len</code> is a request, rather than a requirement.  The
+intention is that <code>get_temporary_buffer</code> will return as large a buffer
+as can be allocated without hurting performance.  Note that
+determining this maximum size is quite difficult: it 
+depends on cache size, physical versus virtual memory, 
+heap fragmentation, and so on.  A good implementation of
+<code>get_temporary_buffer</code> must be nonportable.
+<p><A name="2">[2]</A>
+If <code>P.second</code> is 0, this means that <code>get_temporary_buffer</code>
+was unable to allocate a temporary buffer at all.  In that case,
+<code>P.first</code> is a null pointer.
+<p><A name="3">[3]</A>
+It is unspecified whether <code>get_temporary_buffer</code> is implemented
+using <code>malloc</code>, or <code>::operator new</code>, or some other method.  The only
+portable way to return memory that was allocated using <code>get_temporary_buffer</code>
+is to use <code>\ref stldoc_return_temporary_buffer</code>.
+\section See_also See also
+<code>\ref stldoc_temporary_buffer</code>, <code>\ref stldoc_return_temporary_buffer</code>, \ref stldoc_Allocators
+
+
+*/

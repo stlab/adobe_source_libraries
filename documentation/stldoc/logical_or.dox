@@ -1,0 +1,153 @@
+/** \page stldoc_logical_or logical_or
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Logical_or&lt;T&gt;</code> is a \ref stldoc_functors; specifically, it is an 
+\ref stldoc_AdaptableBinaryPredicate, which means it is a function 
+object that tests the truth or falsehood of some condition.
+If <code>f</code> is an object of class <code>logical_and&lt;T&gt;</code>
+and <code>x</code> and <code>y</code> are objects of class <code>T</code> (where <code>T</code> is convertible
+to <code>bool</code>) then <code>f(x,y)</code> returns true if and only if either <code>x</code> or
+<code>y</code> is <code>true</code>. <A href="#1">[1]</A>
+\section Example Example
+Finds the first instance of either ' ' or '\n' in a string.
+\code
+char str[MAXLEN];
+...
+const char* wptr = find_if(str, str + MAXLEN,
+                           compose2(logical_or<bool>(),
+                                    bind2nd(equal_to<char>(), ' '),
+                                    bind2nd(equal_to<char>(), '\n')));
+assert(wptr == str + MAXLEN || *wptr == ' ' || *wptr == '\n');  
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The type of <code>logical_or</code>'s arguments
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_AdaptableBinaryPredicate, \ref stldoc_DefaultConstructible
+\section Type_requirements Type requirements
+<code>T</code> must be convertible to <code>bool</code>.
+\section Public_base_classes Public base classes
+<code>\ref stldoc_binary_function&lt;T, T, bool&gt;</code>
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>first_argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of the first argument: <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>second_argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of the second argument: <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of the result: <code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator()(const T&amp; x, const T&amp; y) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_BinaryFunction
+</td>
+<td valign="top">
+Function call operator.  The return value is <code>x || y</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>logical_or()</code>
+</td>
+<td valign="top">
+ \ref stldoc_DefaultConstructible
+</td>
+<td valign="top">
+The default constructor.
+</td>
+</tr>
+</table>
+\section New_members New members
+All of <code>logical_or</code>'s members are defined in the 
+\ref stldoc_AdaptableBinaryFunction and \ref stldoc_DefaultConstructible
+requirements.  
+<code>Logical_or</code> does not introduce any new members.
+\section Notes Notes
+<p><A name="1">[1]</A>
+<code>\ref stldoc_logical_and</code> and <code>logical_or</code> are not very useful by themselves.
+They are mainly useful because, when combined with the function object
+adaptor <code>\ref stldoc_binary_compose</code>, they perform logical operations on other
+function objects.
+\section See_also See also
+The \ref stldoc_functors, <code>\ref stldoc_logical_and</code>, <code>\ref stldoc_logical_not</code>.
+
+
+*/

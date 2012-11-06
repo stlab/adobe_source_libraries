@@ -1,0 +1,363 @@
+/*!
+\defgroup forest_related Forest
+\ingroup container
+
+adobe::forest and its related classes.
+*/
+
+/*!
+\class adobe::forest forest.hpp <adobe/forest.hpp>
+\ingroup forest_related
+
+\brief A homogeneous hierarchical structure class
+
+\par
+A <code>forest</code> is a linked structure, similiar to a list forming a number of hierarchies or trees. A <code>forest</code> can be traversed as a sequence, depth first, either pre-order or post-order, both forward and backward. Elements can be inserted and erased from any location in constant time. Inserting and splicing do not invalidate iterators to forest elements; erasing invalidates only the iterators that point to the elements that are erased.
+\par
+For information on adobe::forest utility classes see \ref forest_related.
+\par
+For additional information on the edge semantics of forest iterators, please see <http://stlab.adobe.com/wiki/index.php/Edge_Interface_For_Forest_Iterators>
+
+\model_of
+    - \ref concept_regular_type
+    - \ref stldoc_ReversibleContainer
+    - \ref stldoc_FrontInsertionSequence
+    - \ref stldoc_BackInsertionSequence
+
+\type_requirements
+Only those imposed by the requirements of ReversibleContainer, FrontInsertionSequence, and BackInsertionSequence.
+
+\definitions
+    - <b>cursor</b> : A cursor is similar to an iterator, except <code>*(cursor) == *(cursor + 1)</code> may be true. (e.g, in the case when the cursor pivots but does not move off the current forest node to which it points.)
+
+\tutorial
+    A tutorial for \ref asl_tutorials_forest is available.
+*/
+
+/*!
+\fn iterator adobe::forest::splice(iterator position, forest<T>& x)
+
+All of the elements of \c x are inserted before \c position and removed from \c x.
+
+\pre
+    \c position must be a valid iterator in <code>*this</code>
+\pre
+    \c x must be a forest that is distinct from <code>*this</code>.
+\result
+    An iterator to the spliced range. Either an iterator to the first element of \c x or \c position if \c x is empty.
+*/
+
+/*!
+\fn void adobe::pivot(I& iter)
+\relates adobe::forest
+
+\param iter the iterator whose edge will be flipped
+
+Pivots the iterator from the leading to the trailing edge, or vice versa. The iterator itself is mutated to reflect the change.
+*/
+
+/*!
+\fn I adobe::pivot_of(I iter)
+\relates adobe::forest
+
+Pivots the iterator from the leading to the trailing edge, or vice versa.
+
+\param iter the iterator whose edge will be flipped
+
+\return
+    An iterator identical to the one passed in, save that the edge has been flipped
+*/
+
+/*!
+\fn C adobe::trailing_of(C cursor)
+\relates adobe::forest
+
+\param cursor the cursor whose edge will be examined
+
+\return
+    A cursor identical to the one passed in, save that it will be on the trailing edge of the node to which it points.
+*/
+
+/*!
+\fn C adobe::leading_of(C cursor)
+\relates adobe::forest
+
+\param cursor the cursor whose edge will be examined
+
+\return
+    A cursor identical to the one passed in, save that it will be on the leading edge of the node to which it points.
+*/
+
+/*!
+\fn iterator adobe::forest::splice(iterator position, forest<T>& x, iterator i)
+
+\c splice moves the element(s) pointed to by \c i from \c x to <code>*this</code>, inserting it before
+<code>position</code>. The range denoted by \c i is <code>[leading_of(i), next(trailing_of(i)) )</code>, any children of i are also moved. If <code>position == leading_of(i)</code> then no splice occurs.
+\pre
+    \c position may not be within the range denoted by \c i.
+\post
+    If <code>&x != *this</code> and \c i has children then \c size() and \c x.size() will be invalidated.
+\result
+    An iterator to the spliced range (<code>leading_of(i)</code>).
+*/
+
+/*!
+\fn iterator adobe::forest::splice(iterator position, forest<T>& x, child_iterator first, child_iterator last)
+
+\c splice moves the elements in [first, last) from \c x to <code>*this</code>, inserting them
+before <code>position</code>. If <code>position == first.base()</code> then no splice occurs.
+
+\pre
+    \c position my not be within the range <code>[first, last)</code>.
+\post
+    If <code>&x != *this</code> and <code>[first, last)</code> is not empty then \c size() and \c x.size() will be invalidated.
+\result
+    An iterator to the spliced range. Either an iterator to \c first or \c position if <code>[first, last)</code> is empty.
+    
+*/
+
+/*!
+\fn iterator adobe::forest::splice(iterator position, forest<T>& x, child_iterator first, child_iterator last, size_type count)
+
+\c splice moves the elements in [first, last) from \c x to <code>*this</code>, inserting them
+before <code>position</code>. If <code>position == first.base()</code> then no splice occurs. The \c count parameter optionally specifies the distance <code>[first, last)</code> and avoids invalidating the size of the forests.
+
+\pre
+    \c position my not be within the range <code>[first, last)</code>.
+\pre
+    \c count is the distance from <code>[first, last)</code> or 0.
+\post
+    If c is 0 and <code>&x != *this</code> and <code>[first, last)</code> is not empty then \c size() and \c x.size() will be invalidated.
+\result
+    An iterator to the spliced range. Either an iterator to \c first or \c position if <code>[first, last)</code> is empty.
+    
+*/
+
+/*!
+\fn iterator adobe::forest::insert_parent(child_iterator first, child_iterator last, const T& x)
+
+\pre
+    \c last must be arriveable at from <code>first</code>.
+
+\result
+    An iterator to the leading edge of the inserted node.
+*/
+
+/*!
+\fn adobe::forest::size_type adobe::forest::size() const
+
+\return
+    The number of nodes in the forest.
+
+\complexity
+    O(1) if size is valid. O(N) if size is not valid. Some instances of splice() result in a forest where the size of the forest is not known by the end of the call. In other cases the size of the forest is cached, thus optimizing the complexity of the size() operation.
+
+\see_also
+    adobe::forest::splice
+*/
+
+/*!
+\fn adobe::forest::iterator adobe::forest::root()
+
+\return
+    An iterator to the root of the forest. Cannot be dereferenced.
+*/
+
+/*!
+\fn adobe::forest::iterator adobe::forest::begin()
+
+\return
+    An iterator to the first node in the forest.
+*/
+
+/*!
+\fn adobe::forest::iterator adobe::forest::end()
+
+\return
+    An iterator to one-past-the last node in the forest.
+*/
+
+/*!
+\fn adobe::forest::const_iterator adobe::forest::begin() const
+
+\return
+    An iterator to the first node in the forest.
+*/
+
+/*!
+\fn adobe::forest::const_iterator adobe::forest::end() const
+
+\return
+    An iterator to one-past-the last node in the forest.
+*/
+
+/*!
+\fn adobe::forest::reference adobe::forest::front()
+
+\return
+    The first node in the forest.
+*/
+
+/*!
+\fn adobe::forest::const_reference adobe::forest::front() const
+
+\return
+    The first node in the forest.
+*/
+
+/*!
+\fn adobe::forest::reference adobe::forest::back()
+
+\return
+    The last node in the forest.
+*/
+
+/*!
+\fn adobe::forest::const_reference adobe::forest::back() const
+
+\return
+    The last node in the forest.
+*/
+
+/*!
+\fn adobe::forest::iterator adobe::forest::erase(const iterator& position)
+
+\param position an iterator to the node to be erased.
+
+\return
+    An iterator to the node succeeding the node erased.
+*/
+
+/*!
+\fn adobe::forest::iterator adobe::forest::erase(const iterator& first, const iterator& last)
+
+This only erases nodes if the deletion iterator passes through the node twice. See the description below on deleting a node for a more illustrative example of range-based node deletion.
+
+\param first an iterator to the first node to be erased.
+\param last an iterator to one-past-the last node to be erased.
+
+\return
+    An iterator to the node succeeding the last node erased.
+*/
+
+/*!
+\fn adobe::forest::iterator adobe::forest::insert(const iterator& position, const T& x)
+
+\param position an iterator to the position of insertion.
+\param x a value to be copy-constructed into position.
+
+\return
+    An iterator to the new node in its new location.
+*/
+
+/*!
+\fn adobe::forest::iterator adobe::forest::insert(iterator position, const_child_iterator first, const_child_iterator last)
+
+Inserts the sub-forest <code>[first.base(), last.base())</code> at \c position.
+
+\complexity
+    Linear.
+
+\return
+    An iterator to the first new node.
+*/
+
+/*!
+\class adobe::child_iterator forest.hpp <adobe/forest.hpp>
+\ingroup forest_related
+
+\brief An iterator used to traverse the children of a specific node in a forest
+
+This is the \c child_iterator of the \c forest class.
+*/
+
+/*!
+\class adobe::edge_iterator forest.hpp <adobe/forest.hpp>
+\ingroup forest_related
+
+\brief An iterator used to traverse a specific edge type within a forest
+
+This is the \c edge_iterator of the \c forest class. See <http://stlab.adobe.com/twiki/bin/view/AdobeSource/ForestEdge> for more documentation on the edge semantics of iterators for forest.
+*/
+
+/*!
+\class adobe::filter_fullorder_cursor forest.hpp <adobe/forest.hpp>
+\ingroup forest_related
+
+\brief An iterator-like type for fullorder (pre- and post-order) traversal of a forest.
+
+This is the \c filter_fullorder_cursor of the \c forest class. Use of the filter_fullorder_cursor assumes the current element is visible.
+*/
+
+/*!
+\class adobe::reverse_fullorder_cursor forest.hpp <adobe/forest.hpp>
+\ingroup forest_related
+
+\brief An iterator-like type for reverse fullorder (pre- and post-order) traversal of a forest.
+
+This is the \c reverse_fullorder_cursor of the \c forest class.
+*/
+
+/*!
+\class adobe::depth_fullorder_cursor forest.hpp <adobe/forest.hpp>
+\ingroup forest_related
+
+\brief An iterator-like type for the depth-tracked traversal of a forest.
+
+This is the \c depth_fullorder_cursor adaptor of the \c forest class. It is used to track the depth (distance from the root of the forest) that the cursor is currently at.
+*/
+
+/*!
+\class adobe::child_adaptor forest.hpp <adobe/forest.hpp>
+\ingroup forest_related
+
+Child adapter iterator type.
+*/
+
+/*!
+\fn bool adobe::has_children(const C& cursor)
+\relates adobe::forest
+
+\param cursor The cursor that whose node will be examined for children
+
+\complexity
+    O(1)
+
+\return
+    Whether or not the node pointed to by the cursor has any children
+*/
+
+/*!
+\fn ForestTraveler adobe::find_parent(ForestTraveler traveler)
+\relates adobe::forest
+
+\param traveler an iterator over a given forest.
+
+\return
+    The parent of <code>traveler</code> or forest <code>end</code>.
+
+\complexity
+    Linear. Will traverse the siblings of traveler from <code>[traveler, last_sibling)</code>.
+
+\pre
+    <code>traveler</code> is dereferenceable (not forest <code>end</code>).
+
+\todo (sparent)
+    Open question if precondition should be checked and and function return <code>traveler</code>. This would rely on a "check root" for travelers.
+*/
+
+/*!
+\fn child_iterator<BeadIterator> adobe::child_begin(const BeadIterator& iter)
+\relates adobe::forest
+
+\return
+    the first child for the node being pointed at by the iterator
+*/
+
+/*!
+\fn child_iterator<BeadIterator> adobe::child_end(const BeadIterator& iter)
+\relates adobe::forest
+
+\return
+    one-past-the-last child for the node being pointed at by the iterator
+*/

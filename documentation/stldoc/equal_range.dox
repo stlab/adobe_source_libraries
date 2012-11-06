@@ -1,0 +1,189 @@
+/** \page stldoc_equal_range equal_range
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Equal_range</code> is an overloaded name; there are actually two <code>equal_range</code>
+functions.
+\code
+template <class ForwardIterator, class LessThanComparable>
+pair<ForwardIterator, ForwardIterator>
+equal_range(ForwardIterator first, ForwardIterator last,
+            const LessThanComparable& value);
+
+template <class ForwardIterator, class T, class StrictWeakOrdering>
+pair<ForwardIterator, ForwardIterator>
+equal_range(ForwardIterator first, ForwardIterator last, const T& value,
+            StrictWeakOrdering comp);
+
+\endcode
+\section Description Description
+<code>Equal_range</code> is a version of binary search: it attempts to find the
+element <code>value</code> in an ordered range <code>[first, last)</code> <A href="#1">[1]</A>.  The
+value returned by <code>equal_range</code> is essentially a combination of
+the values returned by <code>\ref stldoc_lower_bound</code> and <code>\ref stldoc_upper_bound</code>:
+it returns a pair of iterators <code>i</code> and <code>j</code> such that <code>i</code> is the 
+first position where <code>value</code> could be inserted without violating
+the ordering and <code>j</code> is the last position where <code>value</code> could be
+inserted without violating the ordering.  It follows that every
+element in the range <code>[i, j)</code> is equivalent to <A href="#1">[1]</A> <code>value</code>, and that
+<code>[i, j)</code> is the largest subrange of <code>[first, last)</code> that has this
+property.  The first version of <code>equal_range</code>
+uses <code>operator&lt;</code> for comparison, and the second uses the 
+\ref stldoc_functors <code>comp</code>.
+<p>
+The first version of <code>equal_range</code> returns a pair of iterators <code>[i, j)</code>.
+<code>i</code> is the furthermost iterator in <code>[first, last)</code> such that, for
+every iterator <code>k</code> in <code>[first, i)</code>, <code>*k &lt; value</code>.  <code>j</code> is the
+furthermost iterator in <code>[first, last)</code> such that, for every iterator
+<code>k</code> in <code>[first, j)</code>, <code>value &lt; *k</code> is <code>false</code>.  For every iterator 
+<code>k</code> in <code>[i, j)</code>, neither <code>value &lt; *k</code> nor <code>*k &lt; value</code> is <code>true</code>. <A href="#2">[2]</A>
+<p>
+The second version of <code>equal_range</code> returns a pair of iterators <code>[i,
+j)</code>.  <code>i</code> is the furthermost iterator in <code>[first, last)</code> such that,
+for every iterator <code>k</code> in <code>[first, i)</code>, <code>comp(*k, value)</code> is <code>true</code>.
+<code>j</code> is the furthermost iterator in <code>[first, last)</code> such that, for
+every iterator <code>k</code> in <code>[first, j)</code>, <code>comp(value, *k)</code> is <code>false</code>.  For
+every iterator <code>k</code> in <code>[i, j)</code>, neither <code>comp(value, *k)</code> nor
+<code>comp(*k, value)</code> is <code>true</code>. <A href="#2">[2]</A>
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>LessThanComparable</code> is a model of \ref stldoc_LessThanComparable.
+<li>
+The ordering on objects of type <code>LessThanComparable</code> is a <i>strict
+   weak ordering</i>, as defined in the \ref stldoc_LessThanComparable requirements.
+<li>
+<code>ForwardIterator</code>'s value type is the same type as <code>LessThanComparable</code>.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>ForwardIterator</code>'s value type is the same type as <code>T</code>.
+<li>
+<code>ForwardIterator</code>'s value type is convertible to <code>StrictWeakOrdering</code>'s
+   argument type.
+</ul>
+\section Preconditions Preconditions
+For the first version:
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>[first, last)</code> is ordered in ascending order according to
+   <code>operator&lt;</code>.  That is, for every pair of iterators <code>i</code> and <code>j</code>
+   in <code>[first, last)</code> such that <code>i</code> precedes <code>j</code>, 
+   <code>*j &lt; *i</code> is <code>false</code>.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>[first, last)</code> is ordered in ascending order according to
+   the \ref stldoc_functors <code>comp</code>.  That is, for every pair of iterators <code>i</code> and <code>j</code>
+   in <code>[first, last)</code> such that <code>i</code> precedes <code>j</code>, 
+   <code>comp(*j, *i)</code> is <code>false</code>.
+</ul>
+\section Complexity Complexity
+The number of comparisons is logarithmic: at most <code>2 * log(last - first) +
+1</code>.  If <code>ForwardIterator</code> is a \ref stldoc_RandomAccessIterator then the
+number of steps through the range is also logarithmic; otherwise, 
+the number of steps is proportional to <code>last - first</code>.  <A href="#3">[3]</A>
+\section Example Example
+\code
+int main()
+{
+  int A[] = { 1, 2, 3, 3, 3, 5, 8 };
+  const int N = sizeof(A) / sizeof(int);
+
+  for (int i = 2; i <= 4; ++i) {
+    pair<int*, int*> result = equal_range(A, A + N, i);
+
+    cout << endl;
+    cout << "Searching for " << i << endl;
+    cout << "  First position where " << i << " could be inserted: "
+         << result.first - A << endl;
+    cout << "  Last position where " << i << " could be inserted: "
+         << result.second - A << endl;
+    if (result.first < A + N)
+      cout << "  *result.first = " << *result.first << endl;
+    if (result.second < A + N)
+      cout << "  *result.second = " << *result.second << endl;
+  }
+}    
+\endcode
+The output is:
+\code
+Searching for 2
+  First position where 2 could be inserted: 1
+  Last position where 2 could be inserted: 2
+  *result.first = 2
+  *result.second = 3
+
+Searching for 3
+  First position where 3 could be inserted: 2
+  Last position where 3 could be inserted: 5
+  *result.first = 3
+  *result.second = 5
+
+Searching for 4
+  First position where 4 could be inserted: 5
+  Last position where 4 could be inserted: 5
+  *result.first = 5
+  *result.second = 5
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note that you may use an ordering that is a strict weak ordering
+but not a total ordering; that is, there might be values <code>x</code> and <code>y</code>
+such that <code>x &lt; y</code>, <code>x &gt; y</code>, and <code>x == y</code> are all <code>false</code>.  (See the
+\ref stldoc_LessThanComparable requirements for a more complete discussion.)
+Finding <code>value</code> in the range <code>[first, last)</code>, then, doesn't mean
+finding an element that is equal to <code>value</code> but rather one that is
+<i>equivalent to</i> <code>value</code>: one that is neither greater than nor less
+than <code>value</code>.  If you're using a total ordering, however (if you're
+using <code>strcmp</code>, for example, or if you're using ordinary arithmetic
+comparison on integers), then you can ignore this technical
+distinction: for a total ordering, equality and equivalence are
+the same.
+<p><A name="2">[2]</A>
+Note that <code>equal_range</code> may return an empty range; that is, it
+may return a pair both of whose elements are the same iterator.
+<code>Equal_range</code> returns an empty range if and only if the range <code>[first,
+last)</code> contains no elements equivalent to <code>value</code>.  In this case it
+follows that there is only one position where <code>value</code> could be
+inserted without violating the range's ordering, so the return value
+is a pair both of whose elements are iterators that point to that
+position.
+<p><A name="3">[3]</A>
+This difference between \ref stldoc_RandomAccessIterator and
+\ref stldoc_ForwardIterator is simply because <code>\ref stldoc_advance</code> is constant
+time for \ref stldoc_RandomAccessIterator and linear time for 
+\ref stldoc_ForwardIterator.
+\section See_also See also
+<code>\ref stldoc_lower_bound</code>, <code>\ref stldoc_upper_bound</code>, <code>\ref stldoc_binary_search</code>
+
+
+*/

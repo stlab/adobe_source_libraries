@@ -1,0 +1,879 @@
+/** \page stldoc_bitset bitset
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Bitset</code> is very similar to \ref stldoc_Vector&lt;bool&gt; (also known as
+\ref stldoc_bit_vector): it contains a collection of bits, and provides
+constant-time access to each bit.  There are two main differences
+between <code>bitset</code> and <code>vector&lt;bool&gt;</code>.  First, the size of a <code>bitset</code>
+cannot be changed: <code>bitset</code>'s template parameter <code>N</code>, which specifies
+the number of bits in the bitset, must be an integer constant.
+Second, <code>bitset</code> is not a \ref stldoc_Sequence; in fact, it is not an STL
+\ref stldoc_Container at all.  It does not have iterators, for example, or
+<code>begin()</code> and <code>end()</code> member functions.  Instead, <code>bitset</code>'s interface
+resembles that of unsigned integers.  It defines bitwise arithmetic
+operators such as <code>&amp;=</code>, <code>|=</code>, and <code>^=</code>.
+<p>
+In general, bit <code>0</code> is the least significant bit and bit <code>N-1</code> is the
+most significant bit.
+\section Example Example
+\code
+int main() {
+  const bitset<12> mask(2730ul); 
+  cout << "mask =      " << mask << endl;
+
+  bitset<12> x;
+
+  cout << "Enter a 12-bit bitset in binary: " << flush;
+  if (cin >> x) {
+    cout << "x =        " << x << endl;
+    cout << "As ulong:  " << x.to_ulong() << endl;
+    cout << "And with mask: " << (x & mask) << endl;
+    cout << "Or with mask:  " << (x | mask) << endl;
+  }
+}
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="bitset">bitset</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>N</code>
+</td>
+<td valign="top">
+A nonzero constant of type <code>size_t</code>: the number of bits that the
+   bitset contains.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_Assignable, \ref stldoc_DefaultConstructible, \ref stldoc_EqualityComparable
+\section Type_requirements Type requirements
+<code>N</code> is a constant integer expression of a type convertible to
+<code>size_t</code>, and <code>N</code> is a positive number.
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>reference</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+A proxy class that acts as a reference to a single bit.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset()</code>
+</td>
+<td valign="top">
+ \ref stldoc_DefaultConstructible
+</td>
+<td valign="top">
+The default constructor.  All bits are initially zero.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset(unsigned long val)</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Conversion from unsigned long.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset(const bitset&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Assignable
+</td>
+<td valign="top">
+Copy constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; operator=(const bitset&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Assignable
+</td>
+<td valign="top">
+Assignment operator.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template<class Char, class Traits, class Alloc>
+explicit
+bitset(const basic_string<Char,Traits,Alloc>& s,
+       size_t pos = 0,
+       size_t n = 
+         basic_string<Char,Traits,Alloc>::npos) 
+\endcode
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Conversion from string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; operator&amp;=(const bitset&amp;)</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Bitwise and.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; operator|=(const bitset&amp;)</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Bitwise inclusive or.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; operator^=(const bitset&amp;)</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Bitwise exclusive or.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; operator&lt;&lt;=(size_t)</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Left shift.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; operator&gt;&gt;=(size_t)</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Right shift.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset operator&lt;&lt;(size_t n) const</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Returns a copy of <code>*this</code> shifted left by <code>n</code> bits.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset operator&gt;&gt;(size_t n) const</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Returns a copy of <code>*this</code> shifted right by <code>n</code> bits.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; set()</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Sets every bit.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; flip()</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Flips the value of every bit.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset operator~() const</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Returns a copy of <code>*this</code> with all of its bits flipped.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; reset()</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Clears every bit.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; set(size_t n, int val = 1)</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Sets bit <code>n</code> if <code>val</code> is nonzero, and clears bit <code>n</code> if <code>val</code> is zero.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; reset(size_t n)</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Clears bit <code>n</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset flip(size_t n)</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Flips bit <code>n</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_t size() const</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Returns <code>N</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_t count() const</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Returns the number of bits that are set.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool any() const</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Returns <code>true</code> if any bits are set.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool none() const</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Returns <code>true</code> if no bits are set.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool test(size_t n) const</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Returns <code>true</code> if bit <code>n</code> is set.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference operator[](size_t n)</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Returns a <code>reference</code> to bit <code>n</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator[](size_t n) const</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Returns <code>true</code> if bit <code>n</code> is set.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>unsigned long to_ulong() const</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Returns an <code>unsigned long</code> corresponding to the bits in <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template<class Char, class Traits, class Alloc>
+basic_string<Char,Traits,Alloc> to_string() const
+\endcode
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Returns a string representation of <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator==(const bitset&amp;) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_EqualityComparable
+</td>
+<td valign="top">
+The equality operator.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator!=(const bitset&amp;) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_EqualityComparable
+</td>
+<td valign="top">
+The inequality operator.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset operator&amp;(const bitset&amp;, const bitset&amp;)</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Bitwise and of two bitsets.  This is a global function,
+   not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset operator|(const bitset&amp;, const bitset&amp;)</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Bitwise or of two bitsets.  This is a global function,
+   not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset operator^(const bitset&amp;, const bitset&amp;)</code>
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Bitwise exclusive or of two bitsets.  This is a global function,
+   not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class Char, class Traits, 
+          size_t N>
+basic_istream<Char,Traits>&
+operator>>(basic_istream<Char,Traits>&, 
+           bitset<N>&)
+\endcode
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Extract a <code>bitset</code> from an input stream.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class Char, class Traits, 
+          size_t N>
+basic_ostream<Char,Traits>&
+operator>>(basic_ostream<Char,Traits>&, 
+           const bitset<N>&)
+\endcode
+</td>
+<td valign="top">
+<code>bitset</code>
+</td>
+<td valign="top">
+Output a <code>bitset</code> to an output stream.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_Assignable, \ref stldoc_DefaultConstructible, or \ref stldoc_EqualityComparable
+requirements, but are specific to <code>bitset</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>reference</code>
+</td>
+<td valign="top">
+A proxy class that acts as a reference to a single bit.  It contains
+   an assignment operator, a conversion to <code>bool</code>, an <code>operator~</code>, and
+   a member function <code>flip</code>.  It exists only as a helper class for 
+   <code>bitset</code>'s <code>operator[]</code>.  That is, it supports the expressions
+   <code>x = b[i]</code>, <code>b[i] = x</code>, <code>b[i] = b[j]</code>, <code>x = ~b[i]</code>, and 
+   <code>b[i].flip()</code>.  (Where <code>b</code> is a <code>bitset</code> and <code>x</code> is a <code>bool</code>.)
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset(unsigned long val)</code>
+</td>
+<td valign="top">
+Conversion from unsigned long.  Constructs a bitset, initializing
+   the first <code>min(N, sizeof(unsigned long) * CHAR_BIT)</code> bits to the
+   corresponding bits in <code>val</code> and all other bits, if any, to zero.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template<class Char, class Traits, class Alloc>
+explicit 
+bitset(const basic_string<Char,Traits,Alloc>& s,
+       size_t pos = 0,
+       size_t n = 
+         basic_string<Char,Traits,Alloc>::npos) 
+\endcode
+</td>
+<td valign="top">
+Conversion from string.  Constructs a bitset, initializing the
+   first <code>M</code> bits to the corresponding   characters in <code>s</code>, where
+   <code>M</code> is defined as <code>min(N, min(s.size() - pos, n))</code>.
+   Note that the <i>highest</i> character position in <code>s</code>, not the
+   lowest, corresponds to the least significant bit.
+   That is, character position <code>pos + M - 1 - i</code> corresponds to bit <code>i</code>.
+   So, for example, <code>bitset(string(&quot;1101&quot;))</code> is the same as
+   <code>bitset(13ul)</code>.  This function throws <code>out_of_range</code> if 
+   <code>pos &gt; s.size()</code>, and <code>invalid_argument</code> if any of the characters
+   used to initialize the bits are anything other than <code>0</code> or <code>1</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; operator&amp;=(const bitset&amp;)</code>
+</td>
+<td valign="top">
+Bitwise and.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; operator|=(const bitset&amp;)</code>
+</td>
+<td valign="top">
+Bitwise inclusive or.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; operator^=(const bitset&amp;)</code>
+</td>
+<td valign="top">
+Bitwise exclusive or.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; operator&lt;&lt;=(size_t n)</code>
+</td>
+<td valign="top">
+Left shift, where bit <code>0</code> is considered the least significant bit.
+   Bit <code>i</code> takes on the previous value of bit <code>i - n</code>, or zero if no
+   such bit exists.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; operator&gt;&gt;=(size_t n)</code>
+</td>
+<td valign="top">
+Right shift, where bit <code>0</code> is considered the least significant bit.
+   Bit <code>i</code> takes on the previous value of bit <code>i + n</code>, or zero if no
+   such bit exists.   
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset operator&lt;&lt;(size_t n) const</code>
+</td>
+<td valign="top">
+Returns a copy of <code>*this</code> shifted left by <code>n</code> bits.
+   Note that the expression <code>b &lt;&lt; n</code> is equivalent to 
+   constructing a temporary copy of <code>b</code>
+   and then using <code>operator&lt;&lt;=</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset operator&gt;&gt;(size_t n) const</code>
+</td>
+<td valign="top">
+Returns a copy of <code>*this</code> shifted right by <code>n</code> bits.
+   Note that the expression <code>b &gt;&gt; n</code> is equivalent to 
+   constructing a temporary copy of <code>b</code>
+   and then using <code>operator&gt;&gt;=</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; set()</code>
+</td>
+<td valign="top">
+Sets every bit.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; flip()</code>
+</td>
+<td valign="top">
+Flips the value of every bit.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset operator~() const</code>
+</td>
+<td valign="top">
+Returns a copy of <code>*this</code> with all of its bits flipped.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; reset()</code>
+</td>
+<td valign="top">
+Clears every bit.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; set(size_t n, int val = 1)</code>
+</td>
+<td valign="top">
+Sets bit <code>n</code> if <code>val</code> is nonzero, and clears bit <code>n</code> if <code>val</code> is zero.
+   Throws <code>out_of_range</code> if <code>n &gt;= N</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset&amp; reset(size_t n)</code>
+</td>
+<td valign="top">
+Clears bit <code>n</code>.
+   Throws <code>out_of_range</code> if <code>n &gt;= N</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset flip(size_t n)</code>
+</td>
+<td valign="top">
+Flips bit <code>n</code>.
+   Throws <code>out_of_range</code> if <code>n &gt;= N</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_t size() const</code>
+</td>
+<td valign="top">
+Returns <code>N</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_t count() const</code>
+</td>
+<td valign="top">
+Returns the number of bits that are set.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool any() const</code>
+</td>
+<td valign="top">
+Returns <code>true</code> if any bits are set.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool none() const</code>
+</td>
+<td valign="top">
+Returns <code>true</code> if no bits are set.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool test(size_t n) const</code>
+</td>
+<td valign="top">
+Returns <code>true</code> if bit <code>n</code> is set.
+   Throws <code>out_of_range</code> if <code>n &gt;= N</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference operator[](size_t n)</code>
+</td>
+<td valign="top">
+Returns a <code>reference</code> to bit <code>n</code>.  Note that <code>reference</code> is a
+   proxy class with an assignment operator and a conversion to <code>bool</code>,
+   which allows you to use <code>operator[]</code> for assignment.  That is, you
+   can write both <code>x = b[n]</code> and <code>b[n] = x</code>.  
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator[](size_t n) const</code>
+</td>
+<td valign="top">
+Returns <code>true</code> if bit <code>n</code> is set.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>unsigned long to_ulong() const</code>
+</td>
+<td valign="top">
+Returns an <code>unsigned long</code> corresponding to the bits in <code>*this</code>.
+   Throws <code>overflow_error</code> if it is impossible to represent <code>*this</code> as
+   an <code>unsigned long</code>.  (That is, if <code>N</code> is larger than the number of
+   bits in an <code>unsigned long</code> and if any of the high-order bits are set.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template<class Char, class Traits, class Alloc>
+basic_string<Char,Traits,Alloc> to_string() const
+\endcode
+</td>
+<td valign="top">
+Returns a string representation of <code>*this</code>: each character is
+   <code>1</code> if the corresponding bit is set, and <code>0</code> if it is not.
+   In general, character position <code>i</code> corresponds to bit position
+   <code>N - 1 - i</code>.  Note that this member function relies on two 
+   language features, <i>member templates</i> and <i>explicit function
+   template argument specification</i>, that are not yet universally
+   available; this member function is disabled for compilers that do
+   not support those features.  Note also that the syntax for calling
+   this member function is somewhat cumbersome.  To convert a bitset <code>b</code>
+   to an ordinary string, you must write 
+\code
+b.template to_string<char, char_traits<char>, allocator<char> >()
+\endcode
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset operator&amp;(const bitset&amp;, const bitset&amp;)</code>
+</td>
+<td valign="top">
+Bitwise and of two bitsets.  This is a global function,
+   not a member function.  Note that the expression <code>b1 &amp; b2</code>
+   is equivalent to creating a temporary copy of <code>b1</code>, using
+   <code>operator&amp;=</code>, and returning the temporary copy.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset operator|(const bitset&amp;, const bitset&amp;)</code>
+</td>
+<td valign="top">
+Bitwise or of two bitsets.  This is a global function,
+   not a member function.  Note that the expression <code>b1 | b2</code>
+   is equivalent to creating a temporary copy of <code>b1</code>, using
+   <code>operator|=</code>, and returning the temporary copy.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bitset operator^(const bitset&amp;, const bitset&amp;)</code>
+</td>
+<td valign="top">
+Bitwise exclusive or of two bitsets.  This is a global function,
+   not a member function.  Note that the expression <code>b1 ^ b2</code>
+   is equivalent to creating a temporary copy of <code>b1</code>, using
+   <code>operator^=</code>, and returning the temporary copy.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class Char, class Traits, 
+          size_t N>
+basic_istream<Char, Traits>&
+operator>>(basic_istream<Char,Traits>& is, 
+           bitset<N>& x)
+\endcode
+</td>
+<td valign="top">
+Extract a <code>bitset</code> from an input stream.  This function first
+   skips whitespace, then extracts up to <code>N</code> characters from the
+   input stream.  It stops either when it has successfully 
+   extracted <code>N</code> character, or when extraction fails, or when
+   it sees a character that is something other than <code>1</code> (in which 
+   case it does not extract that character).  It then assigns a
+   value to the <code>bitset</code> in the same way as if it were initializing
+   the <code>bitset</code> from a string.  So, for example, if the input stream
+   contains the characters <code>"1100abc"</code>, it will assign the value
+   <code>12ul</code> to the <code>bitset</code>, and the next character read from the input
+   stream will be <code>a</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class Char, class Traits, 
+          size_t N>
+basic_ostream<Char,Traits>&
+operator>>(basic_ostream<Char,Traits>& os, 
+           const bitset<N>& x)
+\endcode
+</td>
+<td valign="top">
+Output a <code>bitset</code> to an output stream.  This function behaves as
+   if it converts the <code>bitset</code> to a string and then writes that string
+   to the output stream.  That is, it is equivalent to
+\code
+os << x.template to_string<Char,Traits,allocator<Char> >()
+\endcode
+</td>
+</tr>
+</table>
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_Vector</code>, <code>\ref stldoc_bit_vector</code>, <code>\ref stldoc_basic_string</code>
+
+
+*/

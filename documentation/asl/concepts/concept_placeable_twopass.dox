@@ -1,0 +1,129 @@
+/*! \defgroup concept_placeable_twopass PlaceableTwopass
+\ingroup layout_library
+
+\description
+A model of the PlaceableTwopass concept is an item that can be measured and placed within a visual space.
+
+\refinement_of
+
+\associated_types
+    <table>
+    <tr>
+        <td valign="top">
+            Extents Type
+        </td>
+        <td valign="top">
+            <code>typename placeable_extents_type<PlaceableTwopass>::type</code>
+        </td>
+        <td valign="top">
+            Models adobe::extents_t. Used by the PlaceableTwopass to relate the minimum visual extents it requires in order to be placed correctly.
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">
+            Placement Data Type
+        </td>
+        <td valign="top">
+            <code>typename placement_data_type<PlaceableTwopass>::type</code>
+        </td>
+        <td valign="top">
+            Models adobe::place_data_t. Contains the derived information necessary for the PlaceableTwopass to position itself within the visual space
+        </td>
+    </tr>
+    </table>
+
+\todo
+ Need concepts for extents and placement data
+
+\notation
+    <table>
+        <tr>
+            <td valign="top"><code>T</code></td>
+            <td valign="top">A type that is a model of PlaceableTwopass</td>
+        </tr>
+        <tr>
+            <td valign="top"><code>t</code></td>
+            <td valign="top">Object of type <code>T</code></td>
+        </tr>
+        <tr>
+            <td valign="top"><code>e</code></td>
+            <td valign="top">Object of type <code>typename placeable_extents_type<PlaceableTwopass>::type</code></td>
+        </tr>
+        <tr>
+            <td valign="top"><code>p</code></td>
+            <td valign="top">Object of type <code>typename placement_data_type<PlaceableTwopass>::type</code></td>
+        </tr>
+    </table>
+
+\definitions
+
+\valid_expressions
+    <table>
+        <tr>
+            <th>Name</th><th>Expression</th><th>Type requirements</th><th>Return type</th>
+        </tr>
+        <tr>
+            <td valign="top">Measure Horizontal</td>
+            <td valign="top"><code>measure_horizontal(t, e);</code></td>
+            <td valign="top">e is a reference parameter that on return must contain the calculated horizontal extents of <code>t</code> within the visual space</td>
+            <td valign="top">void</td>
+        </tr>
+        <tr>
+            <td valign="top">Measure Vertical</td>
+            <td valign="top"><code>measure_vertical(t, e, p);</code></td>
+            <td valign="top">p contains the calculated place_data_t of <code>t</code> within the visual space. e is a ouput only reference parameter that on return must contain the minimum visual vertical properties required by this visual element </td>
+            <td valign="top">void</td>
+        </tr>
+        <tr>
+            <td valign="top">Place</td>
+            <td valign="top"><code>place(t, p);</code></td>
+            <td valign="top">p contains the calculated horizontal and vertical extents of <code>t</code> within the visual space</td>
+            <td valign="top"><code>void</code></td>
+        </tr>
+    </table>
+
+\expression_semantics
+    <table>
+        <tr>
+            <th>Name</th><th>Expression</th><th>Precondition</th><th>Semantics</th><th>Postcondition</th>
+        </tr>
+        <tr>
+            <td valign="top">Place</td>
+            <td valign="top"><code>place(t, p);</code></td>
+            <td valign="top"><code>p</code> must not be less than the minimum extents specified by <code>measure_horizontal</code> and <code>measure_vertical</code></td>
+            <td valign="top">Places <code>t</code> within the visual space according to <code>p</code></td>
+            <td valign="top"><code>t</code> is properly placed within the visual space</td>
+        </tr>
+    </table>
+
+\complexity
+
+\invariants
+
+\models
+    - Most text-based user interface elements are PlaceableTwopass, in that they need to be measured before they can be placed appropriately within the dialog to which they belong.
+
+\notes
+
+\see_also
+   concept_placeable_twopass, measure_horizontal, measure_vertical, place
+\example
+\code
+    PlaceableTwopass_t             p;
+
+    using adobe::measure_horizontal;
+    using adobe::measure_vertical;
+    using adobe::place;
+
+    adobe::extents_t h;
+    measure_horizontal(p, h);
+
+    adobe::extents_t v;
+    adobe::place_data_t(/*initialized with h and actual placement location*/);
+
+    measure_vertical(p, v, d);
+
+    /* update place data, d, with vertical info returned in v, then call: */
+    place(p, d);
+\endcode
+*/

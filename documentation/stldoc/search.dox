@@ -1,0 +1,118 @@
+/** \page stldoc_search search
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Search</code> is an overloaded name; there are actually two <code>search</code>
+functions.
+\code
+template <class ForwardIterator1, class ForwardIterator2>
+ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1,
+                        ForwardIterator2 first2, ForwardIterator2 last2);
+
+template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
+ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1,
+                        ForwardIterator2 first2, ForwardIterator2 last2,
+                        BinaryPredicate binary_pred);
+\endcode
+\section Description Description
+<code>Search</code> finds a subsequence within the range <code>[first1, last1)</code>
+that is identical to <code>[first2, last2)</code> when compared element-by-element.
+It returns an iterator pointing to the beginning of that subsequence,
+or else <code>last1</code> if no such subsequence exists.  The two versions of 
+<code>search</code> differ in how they determine whether two elements are the same:
+the first uses <code>operator==</code>, and the second uses the user-supplied
+\ref stldoc_functors <code>binary_pred</code>.
+<p>
+The first version of <code>search</code> returns the first iterator
+<code>i</code> in the range <code>[first1, last1 - (last2 - first2))</code> <A href="#1">[1]</A> such that, for
+every iterator <code>j</code> in the range <code>[first2, last2)</code>, 
+<code>*(i + (j - first2)) == *j</code>.  The second version 
+returns the first iterator
+<code>i</code> in <code>[first1, last1 - (last2 - first2))</code> such that, for
+every iterator <code>j</code> in <code>[first2, last2)</code>, 
+<code>binary_pred(*(i + (j - first2)), *j)</code> is <code>true</code>.  These conditions
+simply mean that every element in the subrange beginning with <code>i</code>
+must be the same as the corresponding element in <code>[first2, last2)</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>ForwardIterator1</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator2</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator1</code>'s value type is a model of \ref stldoc_EqualityComparable.
+<li>
+<code>ForwardIterator2</code>'s value type is a model of \ref stldoc_EqualityComparable.
+<li>
+Objects of <code>ForwardIterator1</code>'s value type can be compared for
+   equality with Objects of <code>ForwardIterator2</code>'s value type.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>ForwardIterator1</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator2</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>BinaryPredicate</code> is a model of \ref stldoc_BinaryPredicate.
+<li>
+<code>ForwardIterator1</code>'s value type is convertible to <code>BinaryPredicate</code>'s
+   first argument type.
+<li>
+<code>ForwardIterator2</code>'s value type is convertible to <code>BinaryPredicate</code>'s
+   second argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first2, last2)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Worst case behavior is quadratic: at most <code>(last1 - first1) *
+(last2 - first2)</code> comparisons.  This worst case, however, is
+rare.  Average complexity is linear.
+\section Example Example
+\code
+  const char S1[] = "Hello, world!";
+  const char S2[] = "world";
+  const int N1 = sizeof(S1) - 1;
+  const int N2 = sizeof(S2) - 1;
+
+  const char* p = search(S1, S1 + N1, S2, S2 + N2);
+  printf("Found subsequence \"%s\" at character %d of sequence \"%s\".\n",
+         S2, p - S1, S1);
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The reason that this range is  <code>[first1, last1 - (last2 - first2))</code>,
+instead of simply <code>[first1, last1)</code>, is that we are looking for a
+subsequence that is equal to the <i>complete</i> sequence <code>[first2,
+last2)</code>.  An iterator <code>i</code> can't be the beginning of such a subsequence
+unless <code>last1 - i</code> is greater than or equal to <code>last2 - first2</code>.
+Note the implication of this: you may call <code>search</code> with arguments
+such that <code>last1 - first1</code> is less than <code>last2 - first2</code>, but such a
+search will always fail.
+\section See_also See also
+<code>\ref stldoc_find</code>, <code>\ref stldoc_find_if</code>, <code>\ref stldoc_find_end</code>, <code>\ref stldoc_search_n</code>,
+<code>\ref stldoc_mismatch</code>, <code>\ref stldoc_equal</code>
+
+
+*/

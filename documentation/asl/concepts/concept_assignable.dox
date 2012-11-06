@@ -1,0 +1,159 @@
+/*************************************************************************************************/
+
+/*
+
+    ADOBE CONFIDENTIAL
+    ___________________
+
+    Copyright 2003 - 2003 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: All information contained herein is, and remains the property of
+    Adobe Systems Incorporated and its suppliers, if any. The intellectual and 
+    technical concepts contained herein are proprietary to Adobe Systems Incorporated 
+    and its suppliers and may be covered by U.S. and Foreign Patents, patents 
+    in process, and are protected by trade secret or copyright law. Dissemination 
+    of this information or reproduction of this material is strictly forbidden 
+    unless prior written permission is obtained from Adobe Systems Incorporated.
+ 
+*/
+
+/*************************************************************************************************/
+
+/*! \defgroup stldoc_Assignable Assignable
+\ingroup asl_concepts
+
+\description
+A type is Assignable if it is possible to copy objects of that type and to assign values to variables.
+
+\refinement_of
+
+\associated_types
+
+\notation
+<table>
+    <tr>
+        <td valign="top"><code>X</code></td>
+        <td valign="top">A type that is a model of Assignable</td>
+    </tr>
+    <tr>
+        <td valign="top"><code>x</code>, <code>y</code></td>
+        <td valign="top">Object of type <code>X</code></td>
+    </tr>
+</table>
+
+\definitions
+
+\valid_expressions
+<table border="1" cellpadding="3" cellspacing="3">
+    <tr>
+        <th>Name</th><th>Expression</th><th>Type requirements</th><th>Return type</th>
+    </tr>
+    <tr>
+        <td valign="top">Copy constructor</td>
+        <td valign="top"><code>X(x)</code></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"><code>X</code></td>
+    </tr>
+    <tr>
+        <td valign="top">Copy constructor</td>
+        <td valign="top">
+<pre>X x(y);
+X x = y;
+</pre>
+        </td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top">Assignment</td>
+        <td valign="top"><code>x = y</code> <A href="#1">[1]</A></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"><code>X&amp;</code></td>
+    </tr>
+    <tr>
+        <td valign="top">Swap</td>
+        <td valign="top"><code>adobe::swap(x,y)</code></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"><code>void</code></td>
+    </tr>
+</table>
+
+\expression_semantics
+<table border="1" cellpadding="3" cellspacing="3">
+    <tr>
+        <th>Name</th><th>Expression</th><th>Precondition</th><th>Semantics</th><th>Postcondition</th>
+    </tr>
+    <tr>
+        <td valign="top">Copy constructor</td>
+        <td valign="top"><code>X(x)</code></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"><code>X(x)</code> is a copy of <code>x</code> <A href="#2">[2]</A></td>
+    </tr>
+    <tr>
+        <td valign="top">Copy constructor</td>
+        <td valign="top"><code>X(x)</code></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"><code>X(x)</code> is a copy of <code>x</code> <A href="#2">[2]</A></td>
+    </tr>
+    <tr>
+        <td valign="top">Copy constructor</td>
+        <td valign="top">
+<pre>X x(y);
+X x = y;
+</pre>
+        </td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"><code>x</code> is a copy of <code>y</code> <A href="#2">[2]</A></td>
+    </tr>
+    <tr>
+        <td valign="top">Assignment</td>
+        <td valign="top"><code>x</code> = <code>y</code> <A href="#1">[1]</A></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"><code>x</code> is a copy of <code>y</code> <A href="#2">[2]</A></td>
+    </tr>
+    <tr>
+        <td valign="top">Swap</td>
+        <td valign="top"><code>adobe::swap(x,y)</code><A href="#3">[3]</A></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"> Equivalent to
+<pre>{
+  X tmp = x;
+  x = y;
+  y = tmp;
+}
+</pre>
+        </td>
+        <td valign="top">&nbsp;</td>
+    </tr>
+</table>
+
+\complexity
+
+\invariants
+
+\models
+    - int
+
+\notes
+<A name="1">[1]</A>
+One implication of this requirement is that a <code>const</code> type is not Assignable. For example, <code>const int</code> is not Assignable: if <code>x</code> is declared to be of type <code>const int</code>, then <code>x = 7</code> is illegal.  Similarly, the type <code>pair&lt;const int, int&gt;</code> is not Assignable.
+\par
+<A name="2">[2]</A>
+The reason this says &quot;<code>x</code> is a copy of <code>y</code>&quot;, rather than &quot;<code>x == y</code>&quot;, is that <code>operator==</code> is not necessarily defined: equality is not a requirement of Assignable.  If the type <code>X</code> is \ref stldoc_EqualityComparable as well as Assignable, then a copy of <code>x</code> should compare equal to <code>x</code>.
+\par
+<A name="3">[3]</A>
+\c adobe::swap will not throw an exception for an assignable type. For types with remote parts, \c adobe::swap must be specialized to swap the remote parts. <!--Please see the documentation on adobe::swap for more information.-->
+\par
+<A name="4">[4]</A>
+It is assumed that adobe::swap() will not throw an exception. Items with remote parts much specialize swap as described in \ref swap.
+
+\see_also
+    - \ref stldoc_DefaultConstructible
+    - \ref stldoc_EqualityComparable
+
+*/

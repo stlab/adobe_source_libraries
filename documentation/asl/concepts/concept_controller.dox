@@ -1,0 +1,83 @@
+/*! \defgroup concept_controller Controller
+\ingroup asl_concepts
+
+\description
+A Controller is a one-way channel for information to travel from outside a model/view/controller system into the system. It is intended to send notifications into the system of events outside the system. A controller is not allowed to display anything about the system to which it belongs -- that is the responsibility of a \ref concept_view <a href='#1'>[1]</a>.
+
+\refinement_of
+
+\associated_types
+    The only type associated with the controller is the data structure that view is intended to represent. This is the value_type of the controller, and is used when setting the view to a new value of that type. In order to set a value within a model, a notification callback must be bound to the controller from the model.
+    <table>
+    <tr>
+        <td valign="top">
+            Value Type
+        </td>
+        <td valign="top">
+            <code>typename controller_model_type<Controller>::type</code>
+        </td>
+        <td valign="top">
+            The value type for the data for which the controller is sending notifications
+        </td>
+    </tr>
+    </table>
+
+\notation
+    <table>
+        <tr>
+            <td valign="top"><code>T</code></td>
+            <td valign="top">A type that is a model of View</td>
+        </tr>
+        <tr>
+            <td valign="top"><code>t</code></td>
+            <td valign="top">Object of type <code>T</code></td>
+        </tr>
+    </table>
+
+\definitions
+
+\valid_expressions
+    <table>
+        <tr>
+            <th>Name</th><th>Expression</th><th>Type requirements</th><th>Return type</th>
+        </tr>
+        <tr>
+            <td valign="top">Monitor</td>
+            <td valign="top"><code>monitor(t, p);</code></td>
+            <td valign="top">See \ref monitor for requirements on<code>p</code></td>
+            <td valign="top">void</td>
+        </tr>
+    </table>
+
+\expression_semantics
+    <table>
+        <tr>
+            <th>Name</th><th>Expression</th><th>Precondition</th><th>Semantics</th><th>Postcondition</th>
+        </tr>
+    </table>
+
+\complexity
+
+\invariants
+
+\models
+    - Any device that sends information from outside a system into the system itself. An example might be an audio microphone or a checkbox when it is selected (however, its visual updating is a \ref concept_view property, not part of its functionality as a controller).
+
+\notes
+    - <a name='1'>[1]</a> It is legal for any one implementation to model both a Controller and a \ref concept_view at the same time.
+
+\see_also
+
+\example
+\code
+    void my_notification_proc(const typename controller_model_type<Controller>::type& x)
+    {
+        std::cout << "the value of the controller changed to " << x << std::endl;
+    }
+
+    Controller t;
+
+    using adobe::monitor;
+    monitor(t, &my_notification_proc);
+\endcode
+*/

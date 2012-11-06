@@ -1,0 +1,102 @@
+/** \page stldoc_uninitialized_copy_n uninitialized_copy_n
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html allocators.gif</td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: allocators, algorithms</td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class InputIterator, class Size, class ForwardIterator>
+ForwardIterator uninitialized_copy_n(InputIterator first, Size count,
+                                     ForwardIterator result);
+\endcode
+\section Description Description
+In C++, the operator <code>new</code> allocates memory for an object and then
+creates an object at that location by calling a constructor.  Occasionally,
+however, it is useful to separate those two operations. <A href="#1">[1]</A> If each iterator
+in the range <code>[result, result + n)</code> points to uninitialized
+memory, then <code>uninitialized_copy_n</code> creates a copy of <code>[first, first + n)</code>
+in that range.  That is, for each iterator <code>i</code> in the input range,
+<code>uninitialized_copy_n</code> creates a copy of <code>*i</code> in
+the location pointed to by the corresponding iterator in the 
+output range by calling <code>\ref stldoc_construct(&amp;*(result + (i - first)), *i)</code>.
+\section Definition Definition
+Defined in the standard header <A href="memory">memory</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+This function is an SGI extension; it is not part of the C++
+standard.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>Size</code> is an integral type.
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator</code> is mutable.
+<li>
+<code>ForwardIterator</code>'s value type has a constructor that takes a
+   single argument whose type is <code>InputIterator</code>'s value type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>n &gt;= 0</code>
+<li>
+<code>[first, first + n)</code> is a valid range.
+<li>
+<code>[result, result + n)</code> is a valid range.
+<li>
+Each iterator in <code>[result, result + n)</code> points to
+   a region of uninitialized memory that is large enough to store
+   a value of <code>ForwardIterator</code>'s value type.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>n</code> constructor calls.
+\section Example Example
+\code
+class Int {
+public:
+  Int(int x) : val(x) {}
+  int get() { return val; }
+private:
+  int val;
+};    
+
+int main()
+{
+  int A1[] = {1, 2, 3, 4, 5, 6, 7};
+  const int N = sizeof(A1) / sizeof(int);
+
+  Int* A2 = (Int*) malloc(N * sizeof(Int));
+  uninitialized_copy_n(A1, N, A2);
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+In particular, this sort of low-level memory management is used
+in the implementation of some container classes.
+<p><A name="2">[2]</A>
+<code>Uninitialized_copy_n</code> is almost, but not quite, redundant.  If <code>first</code> is an 
+\ref stldoc_InputIterator, as opposed to a \ref stldoc_ForwardIterator, then the 
+<code>uninitialized_copy_n</code> operation can't be expressed in terms of 
+<code>\ref stldoc_uninitialized_copy</code>.
+\section See_also See also
+\ref stldoc_Allocators, <code>\ref stldoc_construct</code>, <code>\ref stldoc_destroy</code>, 
+<code>\ref stldoc_uninitialized_copy</code>, <code>\ref stldoc_uninitialized_fill</code>, <code>\ref stldoc_uninitialized_fill_n</code>,
+<code>\ref stldoc_raw_storage_iterator</code>
+
+
+*/

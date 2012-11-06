@@ -1,0 +1,77 @@
+/*!
+\class adobe::my_class_t class_template.hpp <class_template.hpp>
+    \ingroup asl_documentation_templates
+
+    \brief A one-line synopsis of what the class does
+
+    This is the location of a greater description of this class. Please note that as you instantiate this template for documenting your own classes, you will need to change the group to which the class belongs from <code>asl_documentation_templates</code> to something else (most likely <code>asl_libraries</code>.)
+    
+    \model_of
+        - List all concepts this type models
+
+    \template_parameters
+        What are the class' template parameters? What concepts (if any) do they model?
+
+    \rationale
+        What other solutions exist in this domain? Why were they rejected over the creation of this class?
+
+    \example
+    \code
+        #include <adobe/my_class_t.hpp>
+
+        my_class_t my_class;
+
+        my_class.do_whizzy_thing();
+    \endcode
+
+    \see_also
+        Is there any other related documentation of which readers of this type's documentation should be made aware?
+*/
+
+/*!
+\typedef adobe::my_class_t::my_associated_type_t
+
+    This is the documentation for a typedef declared within my_class_t.
+*/
+
+/*!
+\var adobe::my_class_t::my_variable_m
+
+    This is documentation of the member variable within my_class_t
+*/
+
+/*!
+\fn adobe::my_class_t::my_class_t()
+
+    \brief Default constructor. See \ref stldoc_DefaultConstructible.
+
+\fn adobe::my_return_t adobe::my_class_t::my_function(const adobe::my_parameter_t& a, const adobe::my_parameter_t& b)
+
+    \brief A one-line synopsis of this member function
+
+    This is a more extended description of the member function. Please note that any and all types (including the class type) must be fully qualified in the <code>fn</code> Doxygen command above in order for Doxygen to match it with the correct C++ code. Also please note the complete function declaration must be on one line for the <code>fn</code> Doxygen command to parse it correctly.
+
+    \pre
+        What are the preconditions required for this function?
+
+    \param a This is the documentation for the first parameter
+    \param b This is the documentation for the second parameter
+
+    \return
+        The type of the return value is obvious, so what does it contain or do?
+
+    \post
+        What are the postconditions guaranteed for this function?
+
+    \exception std::my_exception_t Thrown when you instantiate this object.
+
+    \note
+        Are there any other miscellaneous notes for this function?
+
+\fn adobe::my_return_t related_non_member_function()
+    \relates adobe::my_class_t
+
+    \brief A one-line synopsis of this member function
+
+    This function is somehow related to adobe::my_class_t, but isn't a member function for the class itself.
+*/

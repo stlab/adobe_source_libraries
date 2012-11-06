@@ -1,0 +1,20 @@
+/*!
+\defgroup abi_safe ABI-Safe Libraries
+\ingroup asl_libraries
+
+The ABI-Safe Libraries are a collection of versioned types with defined binary layouts. The layout
+of these types does not depend on compiler settings, build settings, or compiler version.
+
+The API of the ABI-Safe types, that is the functions, including member functions, which operate on the types, are subject to change although any change will not effecting the representation or interpretation of the type.
+
+\note
+Many of the ABI-Safe types are templated types and their layout stability depends on the layout
+stability of their template parameters and may contain other restrictions. Read the documentation
+carefully.
+
+*/
+
+/*!
+\namespace adobe::version_1
+\ingroup abi_safe
+*/

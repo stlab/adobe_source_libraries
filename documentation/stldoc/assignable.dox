@@ -1,0 +1,156 @@
+/** \page stldoc_Assignable Assignable
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html utilities.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: utilities</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A type is Assignable if it is possible to copy objects of that type and to assign values to variables.
+
+\section Refinement_of Refinement of
+
+\section Associated_types Associated types
+
+\section Notation Notation
+
+<table>
+    <tr>
+        <td valign="top"><code>X</code></td>
+        <td valign="top">A type that is a model of Assignable</td>
+    </tr>
+    <tr>
+        <td valign="top"><code>x</code>, <code>y</code></td>
+        <td valign="top">Object of type <code>X</code></td>
+    </tr>
+</table>
+
+\section Definitions Definitions
+
+\section Valid_expressions Valid expressions
+
+<table border="1" cellpadding="3" cellspacing="3">
+    <tr>
+        <th>Name</th><th>Expression</th><th>Type requirements</th><th>Return type</th>
+    </tr>
+    <tr>
+        <td valign="top">Copy constructor</td>
+        <td valign="top"><code>X(x)</code></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"><code>X</code></td>
+    </tr>
+    <tr>
+        <td valign="top">Copy constructor</td>
+        <td valign="top">
+<pre>
+X x(y);
+X x = y;
+</pre>
+        </td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top">Assignment</td>
+        <td valign="top"><code>x = y</code> <A href="#1">[1]</A></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"><code>X&amp;</code></td>
+    </tr>
+    <tr>
+        <td valign="top">Swap</td>
+        <td valign="top"><code>swap(x,y)</code></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"><code>void</code></td>
+    </tr>
+</table>
+
+\section Expression_semantics Expression semantics
+
+<table border="1" cellpadding="3" cellspacing="3">
+    <tr>
+        <th>Name</th><th>Expression</th><th>Precondition</th><th>Semantics</th><th>Postcondition</th>
+    </tr>
+    <tr>
+        <td valign="top">Copy constructor</td>
+        <td valign="top"><code>X(x)</code></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"><code>X(x)</code> is a copy of <code>x</code> <A href="#2">[2]</A></td>
+    </tr>
+    <tr>
+        <td valign="top">Copy constructor</td>
+        <td valign="top"><code>X(x)</code></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"><code>X(x)</code> is a copy of <code>x</code> <A href="#2">[2]</A></td>
+    </tr>
+    <tr>
+        <td valign="top">Copy constructor</td>
+        <td valign="top">
+<pre>
+X x(y);
+X x = y;
+</pre>
+        </td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"><code>x</code> is a copy of <code>y</code> <A href="#2">[2]</A></td>
+    </tr>
+    <tr>
+        <td valign="top">Assignment</td>
+        <td valign="top"><code>x</code> = <code>y</code> <A href="#1">[1]</A></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"><code>x</code> is a copy of <code>y</code> <A href="#2">[2]</A></td>
+    </tr>
+    <tr>
+        <td valign="top">Swap</td>
+        <td valign="top"><code>adobe::swap(x,y)</code><A href="#3">[3]</A></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top"> Equivalent to
+<pre>
+{
+  X tmp = x;
+  x = y;
+  y = tmp;
+}
+</pre>
+        </td>
+        <td valign="top">&nbsp;</td>
+    </tr>
+</table>
+
+\section Complexity_guarantees Complexity guarantees
+
+\section Invariants Invariants
+
+\section Models Models
+    - int
+
+\section Notes Notes
+
+<p><A name="1">[1]</A>
+One implication of this requirement is that a <code>const</code> type is not Assignable. For example, <code>const int</code> is not Assignable: if <code>x</code> is declared to be of type <code>const int</code>, then <code>x = 7</code> is illegal.  Similarly, the type <code>\ref stldoc_pair&lt;const int, int&gt;</code> is not Assignable.
+
+<p><A name="2">[2]</A>
+The reason this says &quot;<code>x</code> is a copy of <code>y</code>&quot;, rather than &quot;<code>x == y</code>&quot;, is that <code>operator==</code> is not necessarily defined: equality is not a requirement of Assignable.  If the type <code>X</code> is \ref stldoc_EqualityComparable as well as Assignable, then a copy of <code>x</code> should compare equal to <code>x</code>.
+
+<p><A name="3">[3]</A>
+\c swap will not throw an exception for an assignable type. For types with remote parts, \c swap must be specialized to \c swap the remote parts. Please see the documentation on adobe::swap for more information.
+
+<p><A name="4">[4]</A>
+If assignment can throw an exception it must leave the value being assigned to untouched. For types with remote parts, this can be accomplished by implementing assignment as copy constructing a temp, and then swapping the temp with the value being assigned to. See the note adobe::swap().
+
+\section See_also See also
+
+\ref stldoc_DefaultConstructible
+
+*/

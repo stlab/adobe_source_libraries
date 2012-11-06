@@ -1,0 +1,7 @@
+# Jamfile for building the string_test test app
+
+project adobe/string_test ;
+
+run string_test.cpp ;
+
+

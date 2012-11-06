@@ -1,0 +1,59 @@
+/** \page stldoc_return_temporary_buffer return_temporary_buffer
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html allocators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: allocators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class T> void return_temporary_buffer(T* p);
+\endcode
+\section Description Description
+<code>Return_temporary_buffer</code> is used to deallocate memory that was allocated
+using <code>\ref stldoc_get_temporary_buffer</code>.  <A href="#1">[1]</A>
+<p>
+<b>Note:</b> <code>\ref stldoc_get_temporary_buffer</code> and <code>return_temporary_buffer</code> are
+only provided for backward compatibility.  If you are writing new
+code, you should instead use the <code>\ref stldoc_temporary_buffer</code> class.
+\section Definition Definition
+Defined in the standard header <A href="memory">memory</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+\section Preconditions Preconditions
+The argument <code>p</code> is a pointer to a block of memory that was allocated
+using <code>\ref stldoc_get_temporary_buffer\zwj(ptrdiff_t, T*)</code>.
+\section Complexity Complexity
+\section Example Example
+\code
+int main()
+{
+  pair<int*, ptrdiff_t> P = get_temporary_buffer(10000, (int*) 0);
+  int* buf = P.first;
+  ptrdiff_t N = P.second;
+  uninitialized_fill_n(buf, N, 42);
+  int* result = find_if(buf, buf + N, bind2nd(not_equal_to<int>(), 42));
+  assert(result == buf + N);
+  return_temporary_buffer(buf);
+}        
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+As is always true, memory that was allocated using a particular
+allocation function must be deallocated using the corresponding 
+deallocation function.  Memory obtained using <code>\ref stldoc_get_temporary_buffer</code>
+must be deallocated using <code>return_temporary_buffer</code>, rather than 
+using <code>free</code> or <code>::operator delete</code>.
+\section See_also See also
+<code>\ref stldoc_temporary_buffer</code>, <code>\ref stldoc_get_temporary_buffer</code>, \ref stldoc_Allocators
+
+
+*/

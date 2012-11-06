@@ -1,0 +1,67 @@
+/** \page stldoc_generate_n generate_n
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class OutputIterator, class Size, class Generator>
+OutputIterator generate_n(OutputIterator first, Size n, Generator gen);
+\endcode
+\section Description Description
+<code>Generate_n</code> assigns the result of invoking <code>gen</code>, a \ref stldoc_functors
+that takes no arguments, to each element in the range <code>[first,
+first+n)</code>. <A href="#1">[1]</A>  The return value is <code>first + n</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator.
+<li>
+<code>Size</code> is an integral type (either signed or unsigned).
+<li>
+<code>Generator</code> is a model of \ref stldoc_Generator.
+<li>
+<code>Generator</code>'s result type is convertible to a type in
+   <code>OutputIterator</code>'s set of value types.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>n &gt;= 0</code>.
+<li>
+There is enough space to hold <code>n</code> values.  That is,
+   <code>[first, first+n)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>n</code> invocations of <code>gen</code>.  <A href="#1">[1]</A>
+\section Example Example
+Print 100 random numbers, using the C standard library function <code>rand</code>.
+\code
+generate_n(ostream_iterator<int>(cout, "\n"), 100, rand);
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The \ref stldoc_functors <code>gen</code> is invoked <code>n</code> times (once for
+each iterator in the range <code>[first, first+n)</code>), as opposed to just
+being invoked a single time outside the loop.  This distinction is important
+because a \ref stldoc_Generator need not return the same result each time
+it is invoked; it is permitted to read from a file, refer to and
+modify local state, and so on.
+\section See_also See also
+<code>\ref stldoc_copy</code>, <code>\ref stldoc_fill</code>, <code>\ref stldoc_fill_n</code>, <code>\ref stldoc_generate</code>, <code>\ref stldoc_iota</code>
+
+
+*/

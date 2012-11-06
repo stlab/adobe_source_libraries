@@ -1,0 +1,64 @@
+/** \page stldoc_max max
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left">\image html utilities.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: algorithms, utilities</td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Max</code> is an overloaded name; there are actually two 
+<code>max</code> functions.    
+\code
+template <class T> const T& max(const T& a, const T& b);
+
+template <class T, class BinaryPredicate>
+const T& max(const T& a, const T& b, BinaryPredicate comp);
+\endcode
+\section Description Description
+<code>Max</code> returns the greater of its two arguments; it returns the first
+argument if neither is greater than the other.
+<p>
+The two versions of <code>max</code> differ in how they define whether one
+element is less than another.  The first version compares
+objects using <code>operator&lt;</code>, and the second compares objects using
+the \ref stldoc_functors <code>comp</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>T</code> is a model of  \ref stldoc_LessThanComparable.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>BinaryPredicate</code> is a model of \ref stldoc_BinaryPredicate.
+<li>
+<code>T</code> is convertible to <code>BinaryPredicate</code>'s first argument type and
+   to its second argument type.
+</ul>
+\section Preconditions Preconditions
+\section Complexity Complexity
+\section Example Example
+\code
+const int x = max(3, 9);
+assert(x == 9);
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_min</code>, <code>\ref stldoc_min_element</code>, <code>\ref stldoc_max_element</code>, \ref stldoc_LessThanComparable
+
+
+*/

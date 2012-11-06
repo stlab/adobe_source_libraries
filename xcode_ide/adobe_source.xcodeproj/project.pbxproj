@@ -1,0 +1,481 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		88D53C6F0BF7CE90004A77BB /* string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88D53C6E0BF7CE90004A77BB /* string.cpp */; };
+		9ABD3B4812B88746000FE4EE /* iomanip_xml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ABD3B4712B88746000FE4EE /* iomanip_xml.cpp */; };
+		CE5C20F509479C0200EB4BB6 /* adam_evaluate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20D609479C0200EB4BB6 /* adam_evaluate.cpp */; };
+		CE5C20F609479C0200EB4BB6 /* adam_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20D709479C0200EB4BB6 /* adam_parser.cpp */; };
+		CE5C20F709479C0200EB4BB6 /* adam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20D809479C0200EB4BB6 /* adam.cpp */; };
+		CE5C20FA09479C0200EB4BB6 /* eve_evaluate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20DB09479C0200EB4BB6 /* eve_evaluate.cpp */; };
+		CE5C20FB09479C0200EB4BB6 /* eve_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20DC09479C0200EB4BB6 /* eve_parser.cpp */; };
+		CE5C20FC09479C0200EB4BB6 /* eve.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20DD09479C0200EB4BB6 /* eve.cpp */; };
+		CE5C20FD09479C0200EB4BB6 /* expression_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20DE09479C0200EB4BB6 /* expression_parser.cpp */; };
+		CE5C20FE09479C0200EB4BB6 /* extents.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20DF09479C0200EB4BB6 /* extents.cpp */; };
+		CE5C20FF09479C0200EB4BB6 /* istream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20E009479C0200EB4BB6 /* istream.cpp */; };
+		CE5C210009479C0200EB4BB6 /* lex_shared.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20E109479C0200EB4BB6 /* lex_shared.cpp */; };
+		CE5C210109479C0200EB4BB6 /* lex_stream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20E209479C0200EB4BB6 /* lex_stream.cpp */; };
+		CE5C210209479C0200EB4BB6 /* md5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20E309479C0200EB4BB6 /* md5.cpp */; };
+		CE5C210309479C0200EB4BB6 /* name.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20E409479C0200EB4BB6 /* name.cpp */; };
+		CE5C210409479C0200EB4BB6 /* parser_shared.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20E509479C0200EB4BB6 /* parser_shared.cpp */; };
+		CE5C210509479C0200EB4BB6 /* string_pool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20E609479C0200EB4BB6 /* string_pool.cpp */; };
+		CE5C210609479C0200EB4BB6 /* test_configuration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20E709479C0200EB4BB6 /* test_configuration.cpp */; };
+		CE5C210709479C0200EB4BB6 /* thread_id.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20E809479C0200EB4BB6 /* thread_id.cpp */; };
+		CE5C210809479C0200EB4BB6 /* token.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20E909479C0200EB4BB6 /* token.cpp */; };
+		CE5C210909479C0200EB4BB6 /* typeinfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20EA09479C0200EB4BB6 /* typeinfo.cpp */; };
+		CE5C210A09479C0200EB4BB6 /* unicode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20EB09479C0200EB4BB6 /* unicode.cpp */; };
+		CE5C210C09479C0200EB4BB6 /* virtual_machine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20ED09479C0200EB4BB6 /* virtual_machine.cpp */; };
+		CE5C210E09479C0200EB4BB6 /* xml_lex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20EF09479C0200EB4BB6 /* xml_lex.cpp */; };
+		CE5C210F09479C0200EB4BB6 /* xml_token.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20F009479C0200EB4BB6 /* xml_token.cpp */; };
+		CE5C211009479C0200EB4BB6 /* xstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20F109479C0200EB4BB6 /* xstring.cpp */; };
+		CE5C211109479C0200EB4BB6 /* zuid_sys_dep.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20F209479C0200EB4BB6 /* zuid_sys_dep.cpp */; };
+		CE5C211209479C0200EB4BB6 /* zuid_uuid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20F309479C0200EB4BB6 /* zuid_uuid.cpp */; };
+		CE5C211309479C0200EB4BB6 /* zuid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20F409479C0200EB4BB6 /* zuid.cpp */; };
+		CE6078370A65A100008DB6B4 /* localization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE6078360A65A100008DB6B4 /* localization.cpp */; };
+		CE8878C50DF0C79100BECB23 /* expression_filter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE8878C40DF0C79100BECB23 /* expression_filter.cpp */; };
+		CE981C820A4C665E00AC53EF /* xml_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE981C810A4C665E00AC53EF /* xml_parser.cpp */; };
+		CEB874B70A1BC9A10014F4A8 /* iomanip_asl_cel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEB874B10A1BC9A10014F4A8 /* iomanip_asl_cel.cpp */; };
+		CEB874B80A1BC9A10014F4A8 /* iomanip_pdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEB874B20A1BC9A10014F4A8 /* iomanip_pdf.cpp */; };
+		CEB874B90A1BC9A10014F4A8 /* iomanip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CEB874B30A1BC9A10014F4A8 /* iomanip.cpp */; };
+		E55C741D0D5AD7780003B21E /* iomanip_javascript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E55C741C0D5AD7780003B21E /* iomanip_javascript.cpp */; };
+		E56B6F5F0FCCB2A90060C5F0 /* external_model.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E56B6F5E0FCCB2A90060C5F0 /* external_model.cpp */; };
+		E573A44C0F7C4DBF0060FF44 /* empty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E573A44B0F7C4DBF0060FF44 /* empty.cpp */; };
+		E5A49BC50ADD4511004B6741 /* any_regular.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5A49BC40ADD4511004B6741 /* any_regular.cpp */; };
+		E5BE791C0D8984E60043B19C /* memory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5BE791B0D8984E60043B19C /* memory.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		88D53C6E0BF7CE90004A77BB /* string.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = string.cpp; path = ../../adobe_source_libraries/source/string.cpp; sourceTree = SOURCE_ROOT; };
+		9ABD3B4712B88746000FE4EE /* iomanip_xml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = iomanip_xml.cpp; path = ../source/iomanip_xml.cpp; sourceTree = SOURCE_ROOT; };
+		CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = adobe_xconfig_staticlib.xcconfig; sourceTree = "<group>"; };
+		CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; path = adobe_debug.xcconfig; sourceTree = "<group>"; };
+		CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; path = adobe_release.xcconfig; sourceTree = "<group>"; };
+		CE5C20D609479C0200EB4BB6 /* adam_evaluate.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = adam_evaluate.cpp; path = ../../adobe_source_libraries/source/adam_evaluate.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20D709479C0200EB4BB6 /* adam_parser.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = adam_parser.cpp; path = ../../adobe_source_libraries/source/adam_parser.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20D809479C0200EB4BB6 /* adam.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; name = adam.cpp; path = ../../adobe_source_libraries/source/adam.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20DB09479C0200EB4BB6 /* eve_evaluate.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = eve_evaluate.cpp; path = ../../adobe_source_libraries/source/eve_evaluate.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20DC09479C0200EB4BB6 /* eve_parser.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = eve_parser.cpp; path = ../../adobe_source_libraries/source/eve_parser.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20DD09479C0200EB4BB6 /* eve.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = eve.cpp; path = ../../adobe_source_libraries/source/eve.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20DE09479C0200EB4BB6 /* expression_parser.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = expression_parser.cpp; path = ../../adobe_source_libraries/source/expression_parser.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20DF09479C0200EB4BB6 /* extents.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = extents.cpp; path = ../../adobe_source_libraries/source/extents.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20E009479C0200EB4BB6 /* istream.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = istream.cpp; path = ../../adobe_source_libraries/source/istream.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20E109479C0200EB4BB6 /* lex_shared.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = lex_shared.cpp; path = ../../adobe_source_libraries/source/lex_shared.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20E209479C0200EB4BB6 /* lex_stream.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = lex_stream.cpp; path = ../../adobe_source_libraries/source/lex_stream.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20E309479C0200EB4BB6 /* md5.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = md5.cpp; path = ../../adobe_source_libraries/source/md5.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20E409479C0200EB4BB6 /* name.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = name.cpp; path = ../../adobe_source_libraries/source/name.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20E509479C0200EB4BB6 /* parser_shared.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = parser_shared.cpp; path = ../../adobe_source_libraries/source/parser_shared.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20E609479C0200EB4BB6 /* string_pool.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = string_pool.cpp; path = ../../adobe_source_libraries/source/string_pool.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20E709479C0200EB4BB6 /* test_configuration.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = test_configuration.cpp; path = ../../adobe_source_libraries/source/test_configuration.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20E809479C0200EB4BB6 /* thread_id.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = thread_id.cpp; path = ../../adobe_source_libraries/source/thread_id.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20E909479C0200EB4BB6 /* token.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = token.cpp; path = ../../adobe_source_libraries/source/token.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20EA09479C0200EB4BB6 /* typeinfo.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = typeinfo.cpp; path = ../../adobe_source_libraries/source/typeinfo.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20EB09479C0200EB4BB6 /* unicode.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = unicode.cpp; path = ../../adobe_source_libraries/source/unicode.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20ED09479C0200EB4BB6 /* virtual_machine.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = virtual_machine.cpp; path = ../../adobe_source_libraries/source/virtual_machine.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20EF09479C0200EB4BB6 /* xml_lex.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = xml_lex.cpp; path = ../../adobe_source_libraries/source/xml_lex.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20F009479C0200EB4BB6 /* xml_token.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = xml_token.cpp; path = ../../adobe_source_libraries/source/xml_token.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20F109479C0200EB4BB6 /* xstring.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = xstring.cpp; path = ../../adobe_source_libraries/source/xstring.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20F209479C0200EB4BB6 /* zuid_sys_dep.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = zuid_sys_dep.cpp; path = ../../adobe_source_libraries/source/zuid_sys_dep.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20F309479C0200EB4BB6 /* zuid_uuid.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = zuid_uuid.cpp; path = ../../adobe_source_libraries/source/zuid_uuid.cpp; sourceTree = SOURCE_ROOT; };
+		CE5C20F409479C0200EB4BB6 /* zuid.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = zuid.cpp; path = ../../adobe_source_libraries/source/zuid.cpp; sourceTree = SOURCE_ROOT; };
+		CE6078360A65A100008DB6B4 /* localization.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = localization.cpp; path = ../../adobe_source_libraries/source/localization.cpp; sourceTree = SOURCE_ROOT; };
+		CE8878C40DF0C79100BECB23 /* expression_filter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = expression_filter.cpp; path = ../source/expression_filter.cpp; sourceTree = SOURCE_ROOT; };
+		CE981C810A4C665E00AC53EF /* xml_parser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xml_parser.cpp; path = ../../adobe_source_libraries/source/xml_parser.cpp; sourceTree = SOURCE_ROOT; };
+		CEB874B10A1BC9A10014F4A8 /* iomanip_asl_cel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = iomanip_asl_cel.cpp; path = ../../adobe_source_libraries/source/iomanip_asl_cel.cpp; sourceTree = SOURCE_ROOT; };
+		CEB874B20A1BC9A10014F4A8 /* iomanip_pdf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = iomanip_pdf.cpp; path = ../../adobe_source_libraries/source/iomanip_pdf.cpp; sourceTree = SOURCE_ROOT; };
+		CEB874B30A1BC9A10014F4A8 /* iomanip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = iomanip.cpp; path = ../../adobe_source_libraries/source/iomanip.cpp; sourceTree = SOURCE_ROOT; };
+		D2AAC046055464E500DB518D /* libadobe_source.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libadobe_source.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E55C741C0D5AD7780003B21E /* iomanip_javascript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = iomanip_javascript.cpp; path = ../source/iomanip_javascript.cpp; sourceTree = SOURCE_ROOT; };
+		E56B6F5E0FCCB2A90060C5F0 /* external_model.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = external_model.cpp; path = ../source/external_model.cpp; sourceTree = SOURCE_ROOT; };
+		E573A44B0F7C4DBF0060FF44 /* empty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = empty.cpp; path = ../source/empty.cpp; sourceTree = SOURCE_ROOT; };
+		E5A49BC40ADD4511004B6741 /* any_regular.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = any_regular.cpp; path = ../../adobe_source_libraries/source/any_regular.cpp; sourceTree = SOURCE_ROOT; };
+		E5BE791B0D8984E60043B19C /* memory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = memory.cpp; path = ../source/memory.cpp; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* boost_signals */ = {
+			isa = PBXGroup;
+			children = (
+				E573A44B0F7C4DBF0060FF44 /* empty.cpp */,
+				CE5C1FF1094795E800EB4BB6 /* xcconfigs */,
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6A0FF2B0290797F04C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+				E59413DB097CA49B009159B4 /* headers */,
+			);
+			name = boost_signals;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				E5A49BC40ADD4511004B6741 /* any_regular.cpp */,
+				CE5C20D609479C0200EB4BB6 /* adam_evaluate.cpp */,
+				CE5C20D709479C0200EB4BB6 /* adam_parser.cpp */,
+				CE5C20D809479C0200EB4BB6 /* adam.cpp */,
+				CE5C20DB09479C0200EB4BB6 /* eve_evaluate.cpp */,
+				CE5C20DC09479C0200EB4BB6 /* eve_parser.cpp */,
+				CE5C20DD09479C0200EB4BB6 /* eve.cpp */,
+				CE8878C40DF0C79100BECB23 /* expression_filter.cpp */,
+				CE5C20DE09479C0200EB4BB6 /* expression_parser.cpp */,
+				CE5C20DF09479C0200EB4BB6 /* extents.cpp */,
+				E56B6F5E0FCCB2A90060C5F0 /* external_model.cpp */,
+				CEB874B30A1BC9A10014F4A8 /* iomanip.cpp */,
+				CEB874B10A1BC9A10014F4A8 /* iomanip_asl_cel.cpp */,
+				E55C741C0D5AD7780003B21E /* iomanip_javascript.cpp */,
+				CEB874B20A1BC9A10014F4A8 /* iomanip_pdf.cpp */,
+				9ABD3B4712B88746000FE4EE /* iomanip_xml.cpp */,
+				CE5C20E009479C0200EB4BB6 /* istream.cpp */,
+				CE5C20E109479C0200EB4BB6 /* lex_shared.cpp */,
+				CE5C20E209479C0200EB4BB6 /* lex_stream.cpp */,
+				CE6078360A65A100008DB6B4 /* localization.cpp */,
+				E5BE791B0D8984E60043B19C /* memory.cpp */,
+				CE5C20E309479C0200EB4BB6 /* md5.cpp */,
+				CE5C20E409479C0200EB4BB6 /* name.cpp */,
+				CE5C20E509479C0200EB4BB6 /* parser_shared.cpp */,
+				88D53C6E0BF7CE90004A77BB /* string.cpp */,
+				CE5C20E609479C0200EB4BB6 /* string_pool.cpp */,
+				CE5C20E709479C0200EB4BB6 /* test_configuration.cpp */,
+				CE5C20E809479C0200EB4BB6 /* thread_id.cpp */,
+				CE5C20E909479C0200EB4BB6 /* token.cpp */,
+				CE5C20EA09479C0200EB4BB6 /* typeinfo.cpp */,
+				CE5C20EB09479C0200EB4BB6 /* unicode.cpp */,
+				CE5C20ED09479C0200EB4BB6 /* virtual_machine.cpp */,
+				CE5C20EF09479C0200EB4BB6 /* xml_lex.cpp */,
+				CE981C810A4C665E00AC53EF /* xml_parser.cpp */,
+				CE5C20F009479C0200EB4BB6 /* xml_token.cpp */,
+				CE5C20F109479C0200EB4BB6 /* xstring.cpp */,
+				CE5C20F209479C0200EB4BB6 /* zuid_sys_dep.cpp */,
+				CE5C20F309479C0200EB4BB6 /* zuid_uuid.cpp */,
+				CE5C20F409479C0200EB4BB6 /* zuid.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC046055464E500DB518D /* libadobe_source.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C6A0FF2B0290797F04C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+		CE5C1FF1094795E800EB4BB6 /* xcconfigs */ = {
+			isa = PBXGroup;
+			children = (
+				CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */,
+				CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */,
+				CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */,
+			);
+			name = xcconfigs;
+			sourceTree = "<group>";
+		};
+		E59413DB097CA49B009159B4 /* headers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = headers;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC045055464E500DB518D /* adobe_source */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "adobe_source" */;
+			buildPhases = (
+				D2AAC044055464E500DB518D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = adobe_source;
+			productName = boost_signals;
+			productReference = D2AAC046055464E500DB518D /* libadobe_source.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "adobe_source" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 08FB7794FE84155DC02AAC07 /* boost_signals */;
+			projectDirPath = "";
+			projectRoot = ../..;
+			targets = (
+				D2AAC045055464E500DB518D /* adobe_source */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC044055464E500DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE5C20F509479C0200EB4BB6 /* adam_evaluate.cpp in Sources */,
+				CE5C20F609479C0200EB4BB6 /* adam_parser.cpp in Sources */,
+				CE5C20F709479C0200EB4BB6 /* adam.cpp in Sources */,
+				CE5C20FA09479C0200EB4BB6 /* eve_evaluate.cpp in Sources */,
+				CE5C20FB09479C0200EB4BB6 /* eve_parser.cpp in Sources */,
+				CE5C20FC09479C0200EB4BB6 /* eve.cpp in Sources */,
+				CE5C20FD09479C0200EB4BB6 /* expression_parser.cpp in Sources */,
+				CE5C20FE09479C0200EB4BB6 /* extents.cpp in Sources */,
+				CE5C20FF09479C0200EB4BB6 /* istream.cpp in Sources */,
+				CE5C210009479C0200EB4BB6 /* lex_shared.cpp in Sources */,
+				CE5C210109479C0200EB4BB6 /* lex_stream.cpp in Sources */,
+				CE5C210209479C0200EB4BB6 /* md5.cpp in Sources */,
+				CE5C210309479C0200EB4BB6 /* name.cpp in Sources */,
+				CE5C210409479C0200EB4BB6 /* parser_shared.cpp in Sources */,
+				CE5C210509479C0200EB4BB6 /* string_pool.cpp in Sources */,
+				CE5C210609479C0200EB4BB6 /* test_configuration.cpp in Sources */,
+				CE5C210709479C0200EB4BB6 /* thread_id.cpp in Sources */,
+				CE5C210809479C0200EB4BB6 /* token.cpp in Sources */,
+				CE5C210909479C0200EB4BB6 /* typeinfo.cpp in Sources */,
+				CE5C210A09479C0200EB4BB6 /* unicode.cpp in Sources */,
+				CE5C210C09479C0200EB4BB6 /* virtual_machine.cpp in Sources */,
+				CE5C210E09479C0200EB4BB6 /* xml_lex.cpp in Sources */,
+				CE5C210F09479C0200EB4BB6 /* xml_token.cpp in Sources */,
+				CE5C211009479C0200EB4BB6 /* xstring.cpp in Sources */,
+				CE5C211109479C0200EB4BB6 /* zuid_sys_dep.cpp in Sources */,
+				CE5C211209479C0200EB4BB6 /* zuid_uuid.cpp in Sources */,
+				CE5C211309479C0200EB4BB6 /* zuid.cpp in Sources */,
+				CEB874B70A1BC9A10014F4A8 /* iomanip_asl_cel.cpp in Sources */,
+				CEB874B80A1BC9A10014F4A8 /* iomanip_pdf.cpp in Sources */,
+				CEB874B90A1BC9A10014F4A8 /* iomanip.cpp in Sources */,
+				CE981C820A4C665E00AC53EF /* xml_parser.cpp in Sources */,
+				CE6078370A65A100008DB6B4 /* localization.cpp in Sources */,
+				E5A49BC50ADD4511004B6741 /* any_regular.cpp in Sources */,
+				88D53C6F0BF7CE90004A77BB /* string.cpp in Sources */,
+				E55C741D0D5AD7780003B21E /* iomanip_javascript.cpp in Sources */,
+				E5BE791C0D8984E60043B19C /* memory.cpp in Sources */,
+				CE8878C50DF0C79100BECB23 /* expression_filter.cpp in Sources */,
+				E573A44C0F7C4DBF0060FF44 /* empty.cpp in Sources */,
+				E56B6F5F0FCCB2A90060C5F0 /* external_model.cpp in Sources */,
+				9ABD3B4812B88746000FE4EE /* iomanip_xml.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91EC08733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = adobe_source;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1DEB91ED08733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = adobe_source;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1DEB91F008733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				PRODUCT_NAME = asl_dev;
+			};
+			name = Debug;
+		};
+		1DEB91F108733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				PRODUCT_NAME = asl_dev;
+			};
+			name = Release;
+		};
+		CE9297FE0A8AA96E00D13B7B /* Debug_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = adobe_source;
+				SDKROOT = macosx;
+			};
+			name = Debug_PPC;
+		};
+		CE9297FF0A8AA96E00D13B7B /* Debug_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = adobe_source;
+				SDKROOT = macosx;
+			};
+			name = Debug_i386;
+		};
+		CE9298000A8AA96E00D13B7B /* Debug_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = adobe_source;
+				SDKROOT = macosx;
+			};
+			name = Debug_Universal;
+		};
+		CE9298010A8AA96E00D13B7B /* Release_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				ARCHS = ppc;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = adobe_source;
+				SDKROOT = macosx;
+			};
+			name = Release_PPC;
+		};
+		CE9298020A8AA96E00D13B7B /* Release_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				ARCHS = i386;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = adobe_source;
+				SDKROOT = macosx;
+			};
+			name = Release_i386;
+		};
+		CE9298030A8AA96E00D13B7B /* Release_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				PRODUCT_NAME = adobe_source;
+				SDKROOT = macosx;
+			};
+			name = Release_Universal;
+		};
+		CE9298040A8AA96E00D13B7B /* Debug_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = ppc;
+				PRODUCT_NAME = asl_dev;
+			};
+			name = Debug_PPC;
+		};
+		CE9298050A8AA96E00D13B7B /* Debug_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = i386;
+				PRODUCT_NAME = asl_dev;
+			};
+			name = Debug_i386;
+		};
+		CE9298060A8AA96E00D13B7B /* Debug_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				PRODUCT_NAME = asl_dev;
+			};
+			name = Debug_Universal;
+		};
+		CE9298070A8AA96E00D13B7B /* Release_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = ppc;
+				PRODUCT_NAME = asl_dev;
+			};
+			name = Release_PPC;
+		};
+		CE9298080A8AA96E00D13B7B /* Release_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = i386;
+				PRODUCT_NAME = asl_dev;
+			};
+			name = Release_i386;
+		};
+		CE9298090A8AA96E00D13B7B /* Release_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				PRODUCT_NAME = asl_dev;
+			};
+			name = Release_Universal;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "adobe_source" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91EC08733DB70010E9CD /* Debug */,
+				CE9297FE0A8AA96E00D13B7B /* Debug_PPC */,
+				CE9297FF0A8AA96E00D13B7B /* Debug_i386 */,
+				CE9298000A8AA96E00D13B7B /* Debug_Universal */,
+				1DEB91ED08733DB70010E9CD /* Release */,
+				CE9298010A8AA96E00D13B7B /* Release_PPC */,
+				CE9298020A8AA96E00D13B7B /* Release_i386 */,
+				CE9298030A8AA96E00D13B7B /* Release_Universal */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "adobe_source" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91F008733DB70010E9CD /* Debug */,
+				CE9298040A8AA96E00D13B7B /* Debug_PPC */,
+				CE9298050A8AA96E00D13B7B /* Debug_i386 */,
+				CE9298060A8AA96E00D13B7B /* Debug_Universal */,
+				1DEB91F108733DB70010E9CD /* Release */,
+				CE9298070A8AA96E00D13B7B /* Release_PPC */,
+				CE9298080A8AA96E00D13B7B /* Release_i386 */,
+				CE9298090A8AA96E00D13B7B /* Release_Universal */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

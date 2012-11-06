@@ -1,0 +1,71 @@
+/** \page stldoc_partition partition
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class ForwardIterator, class Predicate>
+ForwardIterator partition(ForwardIterator first,
+                          ForwardIterator last, Predicate pred) 
+\endcode
+\section Description Description
+<code>Partition</code> reorders the elements in the range <code>[first, last)</code> based
+on the \ref stldoc_functors <code>pred</code>, such that
+the elements that satisfy <code>pred</code> precede the elements
+that fail to satisfy it.  The postcondition is that, for some
+iterator <code>middle</code> in the range <code>[first, last)</code>, 
+<code>pred(*i)</code> is <code>true</code> for every iterator <code>i</code> in the range <code>[first, middle)</code> and
+<code>false</code> for every iterator <code>i</code> in the range <code>[middle, last)</code>. <A href="#1">[1]</A>  
+The return value of <code>partition</code> is <code>middle</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>Predicate</code> is a model of \ref stldoc_Predicate.
+<li>
+<code>ForwardIterator</code>'s value type is convertible to <code>Predicate</code>'s
+   argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>last - first</code> applications of <code>pred</code>. For ForwardIterator at most <code>(last - first)</code> swaps. For BidirectionalIterator at most <code>(last - first)/2</code> swaps.
+\section Example Example
+Reorder a sequence so that even numbers precede odd numbers.
+\code
+int A[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+const int N = sizeof(A)/sizeof(int);
+partition(A, A + N,
+          compose1(bind2nd(equal_to<int>(), 0),
+                   bind2nd(modulus<int>(), 2)));
+copy(A, A + N, ostream_iterator<int>(cout, " "));
+// The output is "10 2 8 4 6 5 7 3 9 1". <A href="#1">[1]</A>
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The relative order of elements in these two blocks is not necessarily
+the same as it was in the original sequence.  A different algorithm, 
+<code>\ref stldoc_stable_partition</code>, does guarantee to preserve the relative order.
+\section See_also See also
+<code>\ref stldoc_stable_partition</code>, \ref stldoc_Predicate, \ref stldoc_functors 
+
+
+*/

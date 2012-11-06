@@ -1,0 +1,100 @@
+/*
+    Copyright 2008 Adobe Systems Incorporated
+    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
+    or a copy at http://stlab.adobe.com/licenses.html)
+*/
+
+/*!
+\defgroup asl_tutorials_namespaces Namespaces
+\ingroup asl_tutorials
+
+\section namespace_usage Basic Usage
+
+Namespaces in ASL provide a "semantic space". The idea of a semantic space is that a construct
+such as:
+
+\code
+using namespace adobe;
+\endcode
+
+Implies that any unqualifed name subsequently used in the same scope will have the same semantics
+as the function defined in the adobe namespace. This may be a function which is defined in a
+different namespace but picked up through the argument dependent lookup (ADL or Koenig Lookup) feature of C++.
+
+Within the ASL library, if the semantics of a function are substantially similar to a function
+defined in the standard library or in one of the libraries upon which ASL depends, then we will
+attempt to use the same function name. At times this can create ambiguities though these ambiguities can typically be resolved by qualifying the function call.
+
+All public functions and classes in ASL are available in namespace <code>adobe</code>.
+
+\dontinclude namespace.cpp
+\skip qualified_usage
+\skip {
+\until }
+
+Namespace aliases can be used to shorten usage:
+
+\skip alias_usage
+\skip {
+\until }
+
+With a using directive, names may need to be qualified.
+
+\skip using_usage
+\skip {
+\until }
+
+Namespace using directives with unqualified names allow for argument dependent lookup. This can cause ambiguities:
+
+\dontinclude namespace_fail.cpp
+\skip incorrect_namespace
+\skip {
+\until }
+
+\section namespace_swap Providing and Calling a Swap Function
+
+Swap is a critical primitive, like copy construction and assignment. The assumption made is that swapping two elements will <i>never</i> throw an exception and will operate in time proportional to the local parts of the object. For example, if I swap two vectors, it will simply swap the pointers to the remote part of the vector, not actually do an element-by-element swap.
+
+The problem is, how do you define your own "swap()" function for your type? There are issues with name lookup ordering if you were to overload the std::swap() function - so the standard committee has decided that the way to handle it is that swap() should always be called unqualified, allowing argument dependent lookup to find the correct swap(). A conforming STL implementation has to ensure that swap is always called unqualified.
+
+This becomes a problem for generic code - because there is no swap that ADL could find for built-in types. The solution ASL recommends is to pull std::swap into your namespace with <code>"using std::swap;"</code> before calling.
+
+The swap function is a fundamental operation of regular types. ASL strengthens the requirements on an assignable type to include a callable, non-throwing, swap. The C++ standards committee recognizes the importance of swap and has proposed adding a swappable requirement to a number of standard algorithms (see <a href='http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2003/n1523.htm'>N1523=03-0106</a>).
+
+When implementing an assignable, non-POD, class a swap function should be defined in the same namespace as the class.
+
+\section namespace_specializations Providing Other Specializations
+
+ASL class templates may be specialized (partially or fully) and ASL function templates may be specialized. In both cases the type(s) for the specialization must be in a unique namespace and externally visible. For ASL algorithms which extend standard algorithms, it is recommended that only the standard version be specialized and the ASL function will invoke it. It is strongly recommended that the template be specialized using qualified names rather than reopening the namespace. Classes and functions are specialized in the <code>adobe</code> namespace. It is also strongly recommended that the template specialization appear in the same header as the type being specialized for, so as to avoid header file dependencies.
+
+\dontinclude specialization.cpp
+\skip start_recommended_specialization
+\until end_recommended_specialization
+
+Functions provided by ASL cannot be safely overloaded. ASL will attempt to provide traits classes providing needed functionality where it is suspected a function overload would be desirable and complete specialization isn't sufficient. If you have a need for overloading an ASL function please send a note to adobe-source-devel@lists.sourceforge.net.
+
+\section macros_extern_c Macros and Extern "C" Functions
+
+All macros defined in ASL are defined with all capitals and prefixed with \c ADOBE_ . Names which are intended for library internal use only are prefixed with \c ADOBE_IMPLEMENTATION_ . Any name declared \c extern \c "C" (of which there are currently no examples) will follow the same convention with lower case letters.
+
+\section namespace_details Advanced Details
+Namespaces where introduced into C++ as a mechanism to control name collisions. However, the introduction of Generic Programming complicates matters considerably.
+
+In specifying these guidelines the following goals were considered:
+
+    - Any set of libraries, even those providing overlapping functionality, with different primary namespaces, should not conflict.
+    - Any set of declarations with matching semantics should have matching names, including namespace.
+    - The C++ standard should not be violated - rather issues with the standard should be addressed through the standard committee.
+
+Unfortunately, the first two of these goals often come into conflict. Part of the problem is the lack of function partial specialization support, however, in cases of general extensions to a library it is difficult to come up with _any_ set of rules which would satisfy the first goal. Here we have tried to provide a reasonable balance which handles most cases.
+
+\subsection namespace_visibility Hiding Non-Public Details
+Implementation details are hidden using one of two mechanisms. In .cpp files, implementation details are included in an unnamed namespace[1]. In .hpp header files, implementation details are provided in the namespace <code>adobe::implementation</code>. Under no circumstances should client code refer to namespace <code>adobe::implementation</code>.
+
+\subsection namespace_adl Managing Argument Dependent Lookup
+
+[to be written]
+
+\note [1] See section 7.3.1.1 of the C++ standard.
+
+*/

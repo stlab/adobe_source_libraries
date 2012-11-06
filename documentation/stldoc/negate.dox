@@ -1,0 +1,146 @@
+/** \page stldoc_negate negate
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Negate&lt;T&gt;</code> is a \ref stldoc_functors.  Specifically, it is an 
+\ref stldoc_AdaptableUnaryFunction.  If <code>f</code> is an object of class
+<code>negate&lt;T&gt;</code> and <code>x</code> is an object of class <code>T</code>, then
+<code>f(x)</code> returns <code>-x</code>.
+\section Example Example
+Each element in <code>V2</code> will be the negative (additive inverse)
+of the corresponding element in <code>V1</code>.
+\code
+const int N = 1000;
+Vector<double> V1(N);
+Vector<double> V2(N);
+
+iota(V1.begin(), V1.end(), 1);
+
+assert(V2.size() >= V1.size());
+transform(V1.begin(), V1.end(), V2.begin(),
+          negate<int>());
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The function object's argument type and result type.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_AdaptableUnaryFunction, \ref stldoc_DefaultConstructible
+\section Type_requirements Type requirements
+<code>T</code> must be a numeric type; if <code>x</code> is an object of type <code>T</code>,
+then <code>-x</code> must be defined and must have a return type that is
+convertible to <code>T</code>.  <code>T</code> must be \ref stldoc_Assignable.
+\section Public_base_classes Public base classes
+<code>\ref stldoc_unary_function&lt;T, T&gt;</code>
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the second argument: <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the result: <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T operator()(const T&amp; x)</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+Function call operator.  The return value is <code>-x</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>negate()</code>
+</td>
+<td valign="top">
+ \ref stldoc_DefaultConstructible
+</td>
+<td valign="top">
+The default constructor.
+</td>
+</tr>
+</table>
+\section New_members New members
+All of <code>negate</code>'s members are defined in the 
+\ref stldoc_AdaptableUnaryFunction and 
+\ref stldoc_DefaultConstructible
+requirements. <code>Negate</code> does not introduce any new members.
+\section Notes Notes
+\section See_also See also
+The \ref stldoc_functors overview, 
+\ref stldoc_AdaptableUnaryFunction,
+<code>\ref stldoc_unary_function</code>, 
+<code>\ref stldoc_plus</code>, 
+<code>\ref stldoc_minus</code>,
+<code>\ref stldoc_multiplies</code>, 
+<code>\ref stldoc_divides</code>, 
+<code>\ref stldoc_modulus</code>
+
+
+*/

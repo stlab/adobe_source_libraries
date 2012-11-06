@@ -1,0 +1,15 @@
+/*! \page asl_download_perforce Obtaining ASL Via Perforce
+
+\section asl_download_perforce_overview Overview
+
+\par
+<a href='http://www.perforce.com' class="el" target="_new">Perforce</a> is the source code management system used to host the Adobe Source Libraries. Most modern operating systems have a freely available implementation of Perforce; some of them even have it pre-installed. For more information on downloading and using Perforce see:
+    - <a href="http://perforce.com/perforce/loadprog.html" class="el" target="_new">Perforce downloads</a>
+    - <a href="http://perforce.com/perforce/doc.052/manuals/p4guide/index.html" class="el" target="_new">Perforce user guide</a>
+    - <a href="http://perforce.com/perforce/doc.052/manuals/cmdref/index.html" class="el" target="_new">Perforce command reference</a>
+
+\section asl_download_perforce_access Perforce Access
+
+\par
+There are several ways to access the <code>stlab.adobe.com</code> Perforce depots. Please visit http://stlab.adobe.com/wiki/index.php/Using_Perforce_with_the_Adobe_Source_Libraries for more information.
+*/

@@ -1,0 +1,97 @@
+/*
+    Copyright 2005-2007 Adobe Systems Incorporated
+    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
+    or a copy at http://stlab.adobe.com/licenses.html)
+*/
+
+/*************************************************************************************************/
+
+/*!
+\defgroup cmath cmath Extensions
+\ingroup utility
+
+<code><adobe/cmath.hpp></code> provides type definitions and functions based on the 1999 C Standard header <code><math.h></code> wrapped in <code>namespace adobe</code>. Currently, the set of provided types and functions is limited, please request extensions to this file as needed.
+
+The C99/TR1 extensions supplied here for compatibility are:
+
+    - adobe::double_t - A type at least as wide as double.
+    - adobe::float_t - A type at least as wide as float.
+    
+    - adobe::trunc - Returns the truncated integer value.
+    - adobe::round - Returns nearest integer value in floating-point format, rounding halfway cases away from zero, regardless of the current rounding direction.
+    - adobe::lround - Same as <code>round()</code>, but returns a long int.
+
+The implementation may <code>\#include <math.h></code>.
+
+There are also additions in this file not related to the C99 but are nevertheless appropriate as cmath extensions.
+*/
+
+/*!
+\fn R adobe::nearest_cast(const A& x)
+\ingroup cmath
+
+This function addresses the problem where a value of a floating-point type is to be converted to an unknown user-defined type. If the unknown type is an integral type, the argument should be rounded. If not, the argument should be cast directly to the return type. nearest_cast performs the rounding if necessary using round_half_up().
+
+adobe::nearest_cast_fn is the function object form of adobe::nearest_cast and may be specialized to with a user defined type to customize adobe::nearest_cast.
+
+\requirements
+Type A should be convertible to type R. If R is an integral type, it should be large enough to store the value in <i>x</i> after rounding.
+
+\example
+\code
+int i = nearest_cast<int>(9.5);
+assert(i == 10);
+
+float f = nearest_cast<float>(9.5);
+assert(f == 9.5);
+
+template <typename Result, typename Argument> 
+Result half(const Argument& x) 
+{ 
+    return nearest_cast<Result>(x/2.0);
+} 
+
+template <typename II,  // II models Input Iterator 
+          typename OI>  // OI models Output Iterator
+void nearest_sequence(II first, II last, OI result)
+{ 
+    std::transform(first, last, result,
+        nearest_cast_fn<typename II::value_type, typename OI::value_type>());
+}
+\endcode
+*/
+
+/*!
+\fn double adobe::round_half_up(double x)
+\ingroup cmath
+
+\return The nearest integer value in floating-point format, rounding halfway cases towards positive infinity, regardless of the current rounding direction. 
+
+\fn float adobe::round_half_up(float x)
+\ingroup cmath
+
+\see_only
+adobe::round_half_up(double x).
+
+\fn long adobe::lround_half_up(double x)
+\ingroup cmath
+
+\return
+The nearest integer value, rounding halfway cases towards positive infinity, regardless of the current rounding direction. If the rounded value is outside the range of the return type, the numeric result is unspecified. A range error may occur if the magnitude of <i>x</i> is too large.
+
+\fn long adobe::lround_half_up(float x)
+\ingroup cmath
+
+\see_only
+adobe::lround_half_up(double x)
+
+*/
+
+/*!
+\class adobe::nearest_cast_fn cmath.hpp <adobe/cmath.hpp>
+\ingroup cmath
+
+nearest_cast_fn is the function object form of adobe::nearest_cast.
+
+\sa adobe::nearest_cast
+*/

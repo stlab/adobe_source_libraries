@@ -1,0 +1,139 @@
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+/*!
+\defgroup extents_t Extents
+\ingroup layout_library
+*/
+
+/*!
+\class adobe::extents_t extents.hpp <adobe/extents.hpp>
+\ingroup extents_t
+
+\brief An intrinsic geometry class for objects with a graphical representation.
+
+extents_t is an equality comparable class for storing intrinsic geometry about a graphical element. Each extents_t is comprised of two slices. A slice stores intrinsic geometry about a graphical element for in a single direction, either vertically or horizontally.
+
+\model_of
+    - \ref concept_regular_type
+
+\rationale
+    extents_t is intended to describe only the properties of a graphical element which it retains intrinsically. Properties that involve an element as it relates to another element (like position) should not be described here. This is intended to separate the notions of intrinsic versus extrinsic values. This seems strange at first, but is justified when considering how to make a copy of an element's geometry: the copy will not have the same relationships as the original, so extrinsic values cannot be copied, nor can they be set to default values because there is no relationship to which they relate. Any extrinsic value in that case is equally meaningless.
+
+\todo
+    (fbrereto) We need a better name than extents_t
+    
+*/
+
+/*!
+\var boost::array<adobe::extents_t::slice_t, 2> adobe::extents_t::slice_m
+
+The two slices that comprise this extents.
+*/
+
+/*!
+\fn long& adobe::extents_t::height()
+
+\return a reference to length_m in the vertical slice.
+*/
+
+/*!
+\fn long& adobe::extents_t::width()
+
+\return a reference to length_m in the horizontal slice.
+*/
+
+/*!
+\fn const long& adobe::extents_t::height() const
+
+\return a reference to length_m in the vertical slice.
+*/
+
+/*!
+\fn const long& adobe::extents_t::width() const
+
+\return a reference to length_m in the horizontal slice.
+*/
+
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*! \class adobe::extents_slices_t extents.hpp <adobe/extents.hpp>
+\ingroup extents_t
+
+\brief A utility class for referencing the two slices of a extents_t.
+*/
+
+/*!
+\var adobe::extents_slices_t::horizontal
+
+An index used to reference the horizontal extents_t::slice_t in a extents_t.
+*/
+
+/*!
+\var adobe::extents_slices_t::vertical
+
+An index used to reference the vertical extents_t::slice_t in a extents_t.
+*/
+
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*! \class adobe::extents_t::slice_t extents.hpp <adobe/extents.hpp>
+\ingroup extents_t
+
+\brief A class containing element geometry for a single orientation.
+
+\par Model Of:
+Regular Type
+
+\par Rationale
+adobe::extents_t::slice_t is intended to make iterating over a extents easier. If the notion of orientation is abstracted out when manipulating geometries, it is possible to loop once over a series of extents in one direction, then again in the other. More code can be shared at that point, no matter which way you slice it.
+*/
+
+/*!
+\fn adobe::extents_t::slice_t::slice_t
+
+Default constructor.
+*/
+
+/*!
+\var adobe::extents_t::slice_t::length_m
+
+\par
+length is the "active content" of the widget, and is also the space in which child widgets are allowed. In a container this the minimum allowable size of the container- Eve will then grow the container to contain its children if need be. Therefore, the typical value for this variable for a container is zero.
+*/
+
+/*!
+\var adobe::extents_t::slice_t::outset_m
+
+\par
+outset is a pair of values- one for either end of the slice. An outset represents an outer boundary of space taken up graphically by the widget, but is not considered when the functionality of the widget is concerned. The outset is bounded on the inside by the outside of the widget frame. An example of something defined by an outset would be a drop shadow. Outsets are allowed to bleed into the whitespace of the owning view (insets and spacings, but <i>not</i> margins), and if any outsets are left over they propagate to the parent view.
+*/
+
+/*!
+\var adobe::extents_t::slice_t::frame_m
+
+\par
+frame is a pair of values- one for either end of the slice. A frame represents a border around the widget. An example of such would be the grow-frame around a typical window in the Windows operating system. A frame is surrounded by the outset of the widget on the outside and the inset of the widget on the inside.
+*/
+
+/*!
+\var adobe::extents_t::slice_t::inset_m
+
+\par
+inset is a pair of values- one for either end of the slice. An inset represents an inner boundary of space taken up graphically by the widget, but is not considered when the functionality of the widget is concerned. An inset is bounded on the outside by the inside of the widget frame. An (seemingly nonsensical) example of something defined by the inset would be a drop shadow internal to the bounds of the window.
+
+\note
+    inset is not implemented yet.
+*/
+
+/*!
+\var adobe::extents_t::slice_t::guide_set_m
+
+\par
+guides are a vector of values relaying internal "points of interest" from the widget to the Eve engine so that these points in other widgets may "snap" into co-alignment. An example of something using guides would be colon-alignment (horizontal case) or baseline-alignment (vertical case). Note that the guides in a slice affect the position of the widget along the other orientation: to specify a horizontal guide point is to allow the widget to be shifted vertically to align with other horizontal guide points.
+*/
+

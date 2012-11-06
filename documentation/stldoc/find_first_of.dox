@@ -1,0 +1,114 @@
+/** \page stldoc_find_first_of find_first_of
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>find_first_of</code> is an overloaded name; there are actually two <code>find_first_of</code>
+functions.
+\code
+template <class InputIterator, class ForwardIterator>
+InputIterator find_first_of(InputIterator first1, InputIterator last1,
+                            ForwardIterator first2, ForwardIterator last2);
+
+template <class InputIterator, class ForwardIterator, class BinaryPredicate>
+InputIterator find_first_of(InputIterator first1, InputIterator last1,
+                            ForwardIterator first2, ForwardIterator last2,
+                            BinaryPredicate comp);
+\endcode
+\section Description Description
+<code>Find_first_of</code> is similar to <code>\ref stldoc_find</code>, in that it performs linear
+seach through a range of \ref stldoc_InputIterator.  The difference is that
+while <code>\ref stldoc_find</code> searches for one particular value, <code>find_first_of</code>
+searches for any of several values.  Specifically, <code>find_first_of</code> 
+searches for the first occurrance in the range <code>[first1, last1)</code>
+of any of the elements in <code>[first2, last2)</code>.  (Note that this 
+behavior is reminiscent of the function <code>strpbrk</code> from the standard
+C library.)
+<p>
+The two versions of <code>find_first_of</code> differ in how they compare
+elements for equality.  The first uses <code>operator==</code>, and the second
+uses and arbitrary user-supplied \ref stldoc_functors <code>comp</code>.  The
+first version returns the first iterator <code>i</code> in <code>[first1, last1)</code> such
+that, for some iterator <code>j</code> in <code>[first2, last2)</code>, <code>*i == *j</code>.  The
+second returns the first iterator <code>i</code> in <code>[first1, last1)</code> such that,
+for some iterator <code>j</code> in <code>[first2, last2)</code>, <code>comp(*i, *j)</code> is <code>true</code>.
+As usual, both versions return <code>last1</code> if no such iterator <code>i</code>
+exists.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>InputIterator</code>'s value type is \ref stldoc_EqualityComparable, and
+   can be compared for equality with \ref stldoc_ForwardIterator's
+   value type.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>BinaryPredicate</code> is a model of \ref stldoc_BinaryPredicate.
+<li>
+<code>InputIterator</code>'s value type is convertible to
+   <code>BinaryPredicate</code>'s first argument type.
+<li>
+<code>ForwardIterator</code>'s value type is convertible to
+   <code>BinaryPredicate</code>'s second argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first2, last2)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+At most <code>(last1 - first1) * (last2 - first2)</code> comparisons.
+\section Example Example
+Like <code>strpbrk</code>, one use for <code>find_first_of</code> is finding whitespace
+in a string; space, tab, and newline are all whitespace characters.
+\code
+int main()
+{
+  const char* WS = "\t\n ";
+  const int n_WS = strlen(WS);
+
+  char* s1 = "This sentence contains five words.";
+  char* s2 = "OneWord";
+
+
+  char* end1 = find_first_of(s1, s1 + strlen(s1),
+                             WS, WS + n_WS); 
+  char* end2 = find_first_of(s2, s2 + strlen(s2),
+                             WS, WS + n_WS); 
+
+  printf("First word of s1: %.*s\n", end1 - s1, s1); 
+  printf("First word of s2: %.*s\n", end2 - s2, s2); 
+}
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_find</code>, <code>\ref stldoc_find_if</code>, <code>\ref stldoc_search</code>
+
+
+*/

@@ -1,0 +1,79 @@
+/** \page stldoc_for_each for_each
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class InputIterator, class UnaryFunction>
+UnaryFunction for_each(InputIterator first, InputIterator last, UnaryFunction f);
+\endcode
+\section Description Description
+<code>For_each</code> applies the \ref stldoc_functors <code>f</code> to each element in the
+range <code>[first, last)</code>; <code>f</code>'s return value, if any, is ignored.
+Applications are performed in forward order, <i>i.e.</i> from <code>first</code> to
+<code>last</code>.  <code>For_each</code> returns the function object after it has been 
+applied to each element. <A href="#1">[1]</A>
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator
+<li>
+<code>UnaryFunction</code> is a model of \ref stldoc_UnaryFunction
+<li>
+<code>UnaryFunction</code> does not apply any non-constant operation through
+   its argument.
+<li>
+<code>InputIterator</code>'s value type is convertible to <code>UnaryFunction</code>'s
+   argument type.       
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>last - first</code> applications of <code>UnaryFunction</code>.
+\section Example Example
+\code
+template<class T> struct print : public unary_function<T, void>
+{
+  print(ostream& out) : os(out), count(0) {}
+  void operator() (T x) { os << x << ' '; ++count; }
+  ostream& os;
+  int count;
+};
+
+int main()
+{
+  int A[] = {1, 4, 2, 8, 5, 7};
+  const int N = sizeof(A) / sizeof(int);
+
+  print<int> P = for_each(A, A + N, print<int>(cout));
+  cout << endl << P.count << " objects printed." << endl;
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+This return value is sometimes useful, since a function object
+may have local state.  It might, for example, count the number of
+times that it is called, or it might have a status flag to indicate
+whether or not a call succeeded.
+\section See_also See also
+The \ref stldoc_functors, <code>\ref stldoc_count</code>, <code>\ref stldoc_copy</code>
+
+
+*/

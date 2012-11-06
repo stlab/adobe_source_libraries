@@ -1,0 +1,146 @@
+/** \page stldoc_inplace_merge inplace_merge
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Inplace_merge</code> is an overloaded name: there are actually two 
+<code>inplace_merge</code> functions.
+\code
+template <class BidirectionalIterator>
+inline void inplace_merge(BidirectionalIterator first,
+                          BidirectionalIterator middle,
+                          BidirectionalIterator last);
+
+template <class BidirectionalIterator, class StrictWeakOrdering>
+inline void inplace_merge(BidirectionalIterator first,
+                          BidirectionalIterator middle,
+                          BidirectionalIterator last, StrictWeakOrdering comp);
+\endcode
+\section Description Description
+<code>Inplace_merge</code> combines two consecutive sorted ranges <code>[first, middle)</code>
+and <code>[middle, last)</code> into a single sorted range <code>[first, last)</code>.
+That is, it starts with a range <code>[first, last)</code> that consists of 
+two pieces each of which is in ascending order, and rearranges it
+so that the entire range is in ascending order.  <code>Inplace_merge</code> is
+stable, meaning both that
+the relative order of elements within each input range is preserved, 
+and that for equivalent <A href="#1">[1]</A> elements in both input ranges the element
+from the first range precedes the element from the second.
+<p>
+The two versions of <code>inplace_merge</code> differ in how elements are compared.
+The first version uses <code>operator&lt;</code>.  That is, the input ranges and
+the output range satisfy the condition that for every pair of 
+iterators <code>i</code> and <code>j</code> such that <code>i</code> precedes <code>j</code>, <code>*j &lt; *i</code> is <code>false</code>.
+The second version uses the \ref stldoc_functors <code>comp</code>.  
+That is, the input ranges and the output range satisfy the condition 
+that for every pair of 
+iterators <code>i</code> and <code>j</code> such that <code>i</code> precedes <code>j</code>, <code>comp(*j, *i)</code> is <code>false</code>.
+\section Definition Definition
+Defined in <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>BidirectionalIterator</code> is a model of \ref stldoc_BidirectionalIterator.
+<li>
+<code>BidirectionalIterator</code> is mutable.
+<li>
+<code>BidirectionalIterator</code>'s value type is a model of \ref stldoc_LessThanComparable.
+<li>
+The ordering on objects of <code>BidirectionalIterator</code>'s value type is a
+   <i>strict weak ordering</i>, as defined in the \ref stldoc_LessThanComparable
+   requirements.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>BidirectionalIterator</code> is a model of \ref stldoc_BidirectionalIterator.
+<li>
+<code>BidirectionalIterator</code> is mutable.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>BidirectionalIterator</code>'s value type is convertible to
+   <code>StrictWeakOrdering</code>'s argument type.
+</ul>
+\section Preconditions Preconditions
+For the first version:
+<ul>
+<li>
+<code>[first, middle)</code> is a valid range.
+<li>
+<code>[middle, last)</code> is a valid range.
+<li>
+<code>[first, middle)</code> is in ascending order.  That is, for every pair
+  of iterators <code>i</code> and <code>j</code> in <code>[first, middle)</code> such that <code>i</code> precedes
+  <code>j</code>, <code>*j &lt; *i</code> is <code>false</code>.
+<li>
+<code>[middle, last)</code> is in ascending order.  That is, for every pair
+  of iterators <code>i</code> and <code>j</code> in <code>[middle, last)</code> such that <code>i</code> precedes
+  <code>j</code>, <code>*j &lt; *i</code> is <code>false</code>.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>[first, middle)</code> is a valid range.
+<li>
+<code>[middle, last)</code> is a valid range.
+<li>
+<code>[first, middle)</code> is in ascending order.  That is, for every pair
+  of iterators <code>i</code> and <code>j</code> in <code>[first, middle)</code> such that <code>i</code> precedes
+  <code>j</code>, <code>comp(*j, *i)</code> is <code>false</code>.
+<li>
+<code>[middle, last)</code> is in ascending order.  That is, for every pair
+  of iterators <code>i</code> and <code>j</code> in <code>[middle, last)</code> such that <code>i</code> precedes
+  <code>j</code>, <code>comp(*j, *i)</code> is <code>false</code>.
+</ul>
+\section Complexity Complexity
+<code>Inplace_merge</code>  
+is an <i>adaptive</i> algorithm: it attempts to
+allocate a temporary memory buffer, and its run-time complexity depends
+on how much memory is available.  
+<code>Inplace_merge</code> performs no comparisons if
+<code>[first, last)</code> is an empty range.  
+Otherwise, worst-case behavior (if no auxiliary memory is available) is
+<code>O(N log(N))</code>, where <code>N</code> is <code>last - first</code>,
+and best case (if a large enough auxiliary memory buffer is available) is
+at most <code>(last - first) - 1</code> comparisons.
+\section Example Example
+\code
+int main()
+{
+  int A[] = { 1, 3, 5, 7, 2, 4, 6, 8 };
+
+  inplace_merge(A, A + 4, A + 8);
+  copy(A, A + 8, ostream_iterator<int>(cout, " "));  
+  // The output is "1 2 3 4 5 6 7 8".
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note that you may use an ordering that is a strict weak ordering
+but not a total ordering; that is, there might be values <code>x</code> and <code>y</code>
+such that <code>x &lt; y</code>, <code>x &gt; y</code>, and <code>x == y</code> are all false.  (See the
+\ref stldoc_LessThanComparable requirements for a fuller discussion.)
+Two elements <code>x</code> and <code>y</code> are <i>equivalent</i> if neither <code>x &lt; y</code> nor
+<code>y &lt; x</code>.  If you're using a total ordering, however (if you're
+using <code>strcmp</code>, for example, or if you're using ordinary arithmetic
+comparison on integers), then you can ignore this technical
+distinction: for a total ordering, equality and equivalence are
+the same.
+\section See_also See also
+<code>\ref stldoc_merge</code>, <code>\ref stldoc_set_union</code>, <code>\ref stldoc_sort</code>
+
+
+*/

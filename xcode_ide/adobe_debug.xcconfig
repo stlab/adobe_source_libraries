@@ -1,0 +1,3 @@
+GCC_OPTIMIZATION_LEVEL = 0
+
+#include "xci_debug_symbols_dwarf.xcconfig"

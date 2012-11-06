@@ -1,0 +1,60 @@
+/** \page stldoc_iter_swap iter_swap
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class ForwardIterator1, class ForwardIterator2>
+inline void iter_swap(ForwardIterator1 a, ForwardIterator2 b);
+\endcode
+\section Description Description
+Equivalent to <code>\ref stldoc_swap\zwj(*a, *b)</code>. <A href="#1">[1]</A>
+\section Definition Definition
+Declared in <A href="algo.h">algo.h</A>.  The implementation is in  <A href="algobase.h">algobase.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>ForwardIterator1</code> and <code>ForwardIterator2</code> are models of
+   \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator1</code> and <code>ForwardIterator2</code> are mutable.
+<li>
+<code>ForwardIterator1</code> and <code>ForwardIterator2</code> have the same value type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>ForwardIterator1</code> and <code>ForwardIterator2</code> are dereferenceable.
+</ul>
+\section Complexity Complexity
+See <code>\ref stldoc_swap</code> for a discussion.
+\section Example Example
+\code
+int x = 1;
+int y = 2;
+assert(x == 1 && y == 2);
+iter_swap(&x, &y);
+assert(x == 2 && y == 1);
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Strictly speaking, <code>iter_swap</code> is redundant.  It exists only for
+technical reasons: in some circumstances, some compilers have
+difficulty performing the type deduction required to interpret
+<code>swap(*a, *b)</code>.
+\section See_also See also
+<code>\ref stldoc_swap</code>, <code>\ref stldoc_swap_ranges</code>
+
+
+*/

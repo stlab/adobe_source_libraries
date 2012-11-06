@@ -1,0 +1,153 @@
+/** \page stldoc_distance_type distance_type
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Distance_type</code> is overloaded; it is in fact five different functions.
+\code
+template <class T, class Distance> 
+inline Distance* distance_type(const input_iterator<T, Distance>&);
+
+template <class T, class Distance> 
+inline Distance* distance_type(const forward_iterator<T, Distance>&);
+
+template <class T, class Distance> 
+inline Distance* distance_type(const bidirectional_iterator<T, Distance>&);
+
+template <class T, class Distance> 
+inline Distance* distance_type(const random_access_iterator<T, Distance>&);
+
+template <class T> inline ptrdiff_t* distance_type(const T*);
+\endcode
+\section Description Description
+<code>Distance_type</code> is an \ref stldoc_iterator_tags function: it is used to
+determine the distance type associated with an iterator.  An 
+\ref stldoc_InputIterator,
+\ref stldoc_ForwardIterator, \ref stldoc_BidirectionalIterator, or
+\ref stldoc_RandomAccessIterator <A href="#1">[1]</A> must have associated with it some
+signed integral type that is used to represent the distance between
+two iterators of that type.  In some cases (such as an algorithm that must
+declare a local variable that represents the size of a range), it is
+necessary to find out an iterator's distance type.  Accordingly,
+<code>distance_type(Iter)</code> returns <code>(Distance*) 0</code>, where <code>Distance</code> is
+<code>Iter</code>'s distance type.
+<p>
+Although <code>distance_type</code> looks like a single function whose
+return type depends on its argument type, in reality it is a set
+of functions; the name <code>distance_type</code> is overloaded.  
+The function <code>distance_type</code> must be overloaded for every iterator type <A href="#1">[1]</A>.
+<p>
+In practice, ensuring that <code>distance_type</code> is defined requires
+essentially no work at all.  It is already defined for pointers, and
+for the base classes <code>\ref stldoc_input_iterator</code>,
+<code>\ref stldoc_forward_iterator</code>, <code>\ref stldoc_bidirectional_iterator</code>, and
+<code>\ref stldoc_random_access_iterator</code>.  If you are implementing a new type of
+forward iterator, for example, you can simply derive it from the base
+class <code>\ref stldoc_forward_iterator</code>; this means that <code>distance_type</code>
+(along with <code>\ref stldoc_iterator_category</code> and <code>\ref stldoc_value_type</code>) will 
+automatically be defined for your iterator.   These base classes are
+empty: they contain no member functions or member variables, but
+only type information.  Using them should therefore incur no overhead.
+<p>
+Note that, while the function <code>distance_type</code> was present in the
+original STL, it is no longer present in the most recent draft C++
+standard: it has been replaced by the <code>\ref stldoc_iterator_traits</code> class.
+At present both mechanisms are supported <A href="#2">[2]</A>, but eventually
+<code>distance_type</code> will be removed.
+\section Definition Definition
+Defined in the standard header <A href="iterator">iterator</A>, and in the
+nonstandard backward-compatibility header <A href="iterator.h">iterator.h</A>.
+This function is no longer part of the C++ standard, although
+it was present in early drafts of the standard.  It is retained
+in this implementation for backward compatibility.
+\section Requirements_on_types Requirements on types
+The argument of <code>distance_type</code> must be an \ref stldoc_InputIterator, 
+\ref stldoc_ForwardIterator, \ref stldoc_BidirectionalIterator, or
+\ref stldoc_RandomAccessIterator. <A href="#1">[1]</A>
+\section Preconditions Preconditions
+None.  <code>Distance_type</code>'s argument is even permitted to be
+a singular iterator.
+\section Complexity Complexity
+At most amortized constant time.  In many cases, a compiler should be
+able to optimize away <code>distance_type</code> entirely.
+\section Example Example
+\code
+template <class RandomAccessIterator, class LessThanComparable, 
+          class Distance>
+RandomAccessIterator __lower_bound(RandomAccessIterator first,
+                                   RandomAccessIterator last, 
+                                   const LessThanComparable& value,
+                                   Distance*)
+    Distance len = last - first;
+    Distance half;
+    RandomAccessIterator middle;
+
+    while (len > 0) {
+        half = len / 2;
+        middle = first + half;
+        if (*middle < value) {
+            first = middle + 1;
+            len = len - half - 1;
+        } else
+            len = half;
+    }
+    return first;
+}
+
+template <class RandomAccessIterator, class LessThanComparable>
+inline RandomAccessIterator lower_bound(RandomAccessIterator first,
+                                        RandomAccessIterator last,
+                                        const LessThanComparable& value) {
+    return __lower_bound(first, last, value, distance_type(first));
+}
+\endcode
+The algorithm <code>\ref stldoc_lower_bound</code> (a type of binary search) takes
+a range of iterators, and must declare a local variable whose type
+is the iterators' distance type.  It uses <code>distance type</code>, and an
+auxiliary function, so that it can declare that variable.  <A href="#3">[3]</A>
+Note: this is a simplified example.  The actual algorithm 
+<code>\ref stldoc_lower_bound</code> can operate on a range of \ref stldoc_RandomAccessIterator
+or a range of \ref stldoc_ForwardIterator.  It uses both <code>distance_type</code>
+and <code>\ref stldoc_iterator_category</code>.
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note that <code>distance_type</code> is not defined for \ref stldoc_OutputIterator
+or for \ref stldoc_trivial.  There is no meaningful definition of a
+distance for either of those concepts, so there is no need for a
+distance type.
+<p><A name="2">[2]</A>
+The <code>\ref stldoc_iterator_traits</code> class
+relies on a C++ feature known as <i>partial specialization</i>.  Many of
+today's compilers don't implement the complete standard; in
+particular, many compilers do not support partial specialization.  If
+your compiler does not support partial specialization, then you will
+not be able to use <code>\ref stldoc_iterator_traits</code>, and you will have to 
+continue using the functions <code>\ref stldoc_iterator_category</code>, <code>distance_type</code>,
+and <code>\ref stldoc_value_type</code>.  This is one reason that those functions have
+not yet been removed.
+<p><A name="3">[3]</A>
+This use of an auxiliary function is an extremely common idiom:
+<code>distance_type</code> is almost always used with auxiliary functions, simply
+because it returns type information in a form that is hard to use in
+any other way.  This is one of the reasons that <code>distance_type</code>
+is so much less convenient than <code>\ref stldoc_iterator_traits</code>.
+\section See_also See also
+The \ref stldoc_iterator_tags overview, <code>\ref stldoc_iterator_traits</code>,
+<code>\ref stldoc_iterator_category</code>, <code>\ref stldoc_value_type</code>,
+<code>\ref stldoc_output_iterator_tag</code>, <code>\ref stldoc_input_iterator_tag</code>,
+<code>\ref stldoc_forward_iterator_tag</code>, <code>\ref stldoc_bidirectional_iterator_tag</code>,
+<code>\ref stldoc_random_access_iterator_tag</code>
+
+
+*/

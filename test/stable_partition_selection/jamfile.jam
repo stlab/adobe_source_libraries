@@ -1,0 +1,7 @@
+import testing ;
+
+project adobe/stable_partition_selection
+	;
+
+run main.cpp
+	;
