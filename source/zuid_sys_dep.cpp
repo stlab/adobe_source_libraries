@@ -128,7 +128,7 @@ adobe::md5_t::digest_t get_generic_random_info()
 #endif
         {
 #if defined(BOOST_HAS_THREADS)
-            boost::xtime_get(&time_m, boost::TIME_UTC);
+            boost::xtime_get(&time_m, boost::TIME_UTC_);
 #endif
 #if defined(BOOST_HAS_UNISTD_H)
             gethostname(hostname_m, 256);
