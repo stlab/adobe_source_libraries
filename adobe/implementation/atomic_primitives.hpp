@@ -11,13 +11,10 @@
 
 #include <adobe/config.hpp>
 
+#include <atomic>
 #include <cstddef>
 #ifndef NDEBUG
     #include <iostream>
-#endif
-
-#if defined(BOOST_HAS_THREADS)
-    #include <tbb/atomic.h>
 #endif
 
 #include <boost/static_assert.hpp>
@@ -38,11 +35,7 @@ struct atomic
 {
     typedef T value_type;
 
-#if defined(BOOST_HAS_THREADS)
-    typedef tbb::atomic<T> type;
-#else
-    typedef T type;
-#endif
+    typedef std::atomic<T> type;
 };
 
 /******************************************************************************/
