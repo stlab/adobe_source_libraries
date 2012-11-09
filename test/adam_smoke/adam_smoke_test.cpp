@@ -59,13 +59,13 @@ void usage(const std::string& app_name)
 
 adobe::dictionary_t read_dictionary(const bfs::path& filepath)
 {
-    std::ifstream               input_file(filepath.native_file_string().c_str());
+    std::ifstream               input_file(filepath.native().c_str());
     adobe::expression_parser    parser(input_file, adobe::line_position_t("input dictionary"));
     adobe::array_t              expression;
 
     if (!input_file.is_open())
     {
-        std::cout << "Could not open \"" << filepath.native_file_string() << "\"!\n";
+        std::cout << "Could not open \"" << filepath.native() << "\"!\n";
 
         throw std::runtime_error("file error");
     }
@@ -84,11 +84,11 @@ return machine.back().cast<adobe::dictionary_t>();
 
 void read_sheet(const bfs::path& filepath, adobe::sheet_t& sheet)
 {
-    std::ifstream  input_file(filepath.native_file_string().c_str());
+    std::ifstream  input_file(filepath.native().c_str());
 
     if (!input_file.is_open())
     {
-        std::cout << "Could not open \"" << filepath.native_file_string() << "\"!\n";
+        std::cout << "Could not open \"" << filepath.native() << "\"!\n";
 
         throw std::runtime_error("file error");
     }
@@ -96,7 +96,7 @@ void read_sheet(const bfs::path& filepath, adobe::sheet_t& sheet)
     try
     {
         // set up adam sheet
-        adobe::parse(input_file, adobe::line_position_t(filepath.native_file_string().c_str()), adobe::bind_to_sheet(sheet));
+        adobe::parse(input_file, adobe::line_position_t(filepath.native().c_str()), adobe::bind_to_sheet(sheet));
     }
     catch (const adobe::stream_error_t& error)
     {
@@ -137,7 +137,7 @@ bool compare_arrays(const adobe::array_t& a, const adobe::array_t& b)
 bool test_sheet(const bfs::path& root)
 {
     bool                	success(true);
-    std::string         	triple_name(root.leaf());
+    std::string         	triple_name(root.leaf().string());
     bfs::path           	sheet_path(root.branch_path() / (triple_name + ".adm"));
     bfs::path           	input_path(root.branch_path() / (triple_name + ".admi"));
     adobe::sheet_t      	sheet;
@@ -208,7 +208,7 @@ int main(int argc, char* argv[])
 
     try
     {
-        bfs::path sheet(bfs::path("../rtd", bfs::native));
+        bfs::path sheet(bfs::path("../rtd"));
 
         if (argc > 1)
         {
@@ -216,7 +216,7 @@ int main(int argc, char* argv[])
                 usage(argv[0]);
             else
             {
-                sheet = bfs::path(argv[1], bfs::native);
+                sheet = bfs::path(argv[1]);
 
                 result = !test_sheet(sheet);
             }

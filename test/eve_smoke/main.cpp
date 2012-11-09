@@ -72,7 +72,7 @@ void testParse( boost::filesystem::path& fileName )
     {
         std::stringstream err;
 
-        err << "Could not open file: " << fileName.native_file_string();
+        err << "Could not open file: " << fileName.native();
 
         throw std::runtime_error(err.str());
     }
@@ -83,7 +83,7 @@ void testParse( boost::filesystem::path& fileName )
 
     adobe::sheet_t        layout_sheet;
    
-    adobe::parse(stream, adobe::line_position_t(fileName.native_file_string().c_str()),
+    adobe::parse(stream, adobe::line_position_t(fileName.native().c_str()),
         adobe::eve_callback_suite_t::position_t(), adobe::bind_layout(boost::bind(&assemble, _2, _3),
         layout_sheet, layout_sheet.machine_m));
 }
@@ -116,7 +116,7 @@ int main( int argc, char* argv[] )
     {
         boost::filesystem::path file_path("default.eve");
 
-        if( argc > 1 ) file_path = boost::filesystem::path(argv[1], boost::filesystem::native);
+        if( argc > 1 ) file_path = boost::filesystem::path(argv[1]);
 
         //
         // Call our testParse function with the selected filename.
