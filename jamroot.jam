@@ -14,34 +14,41 @@ DARWIN_SPECIFIC_FEATURES = ;
 # none is a special name--when used, no new folder name is inserted in hierarchy
 # in other ways it behaves as feature with any other name
 
-feature asl : none dev : composite ; 
+feature asl : none dev : composite ;
 feature.compose <asl>dev :
     <define>ADOBE_SERIALIZATION
     <define>ADOBE_STD_SERIALIZATION
 #   <define>BOOST_FILESYSTEM_VERSION=2
     ;
 
-switch [ os.name ]
-{
-case MACOSX :
-  {
-    DARWIN_SPECIFIC_FEATURES =
-     <toolset>darwin,<variant>release,<macosx-version>10.3.9:<architecture>power
-     <toolset>darwin,<variant>release,<macosx-version>10.4:<architecture>combined 
-#     <toolset>darwin:<c++-lib>static
-    ;
-  }
-}
+#switch [ os.name ]
+#{
+#case MACOSX :
+#  {
+#    DARWIN_SPECIFIC_FEATURES =
+#     <toolset>darwin,<variant>release,<macosx-version>10.3.9:<architecture>power
+#     <toolset>darwin,<variant>release,<macosx-version>10.4:<architecture>combined
+# #    <toolset>darwin:<c++-lib>static
+#    ;
+#  }
+#}
 
 tbb_requirements =
     <include>$(TOP)/../intel_tbb_libraries/include
     <define>__TBB_NO_IMPLICIT_LINKAGE=1
   ;
 
+boost_requirements =
+#  not certain why BOOST_NO_CXX11_NUMERIC_LIMITS is not set as part of boost/config.hpp
+    <define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
+  ;
+
 adobe_requirements =
    $(DARWIN_SPECIFIC_FEATURES)
+#  not certain why BOOST_NO_CXX11_NUMERIC_LIMITS is not set as part of boost/config.hpp
+    <define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
     <include>$(BOOST_DIR)
-    <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE 
+    <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
     <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
     <toolset>msvc:<define>ADOBE_TEST_MICROSOFT_NO_DEPRECATE=0
     <toolset>msvc,<threading>multi:<define>USE_WINTHREAD
@@ -53,7 +60,7 @@ adobe_requirements =
     <toolset>gcc-4.5.0:<define>__GXX_EXPERIMENTAL_CXX0X__
     <toolset>gcc-4.4.0:<define>__GXX_EXPERIMENTAL_CXX0X__
 
-## we'd like to play with experimental C++ 0x features, but leave this disabled for now until 
+## we'd like to play with experimental C++ 0x features, but leave this disabled for now until
 ## boost is patched (e.g. static_assert is reserved, etc.)
 
     <toolset>gcc-4.5.0:<cxxflags>"-std=c++0x -fno-strict-aliasing"
@@ -62,7 +69,9 @@ adobe_requirements =
 
 asl_requirements =
    $(adobe_requirements)
+   $(boost_requirements)
    $(tbb_requirements)
+   $(boost_requirements)
    <include>.
    <toolset>gcc:<define>NOMINMAX
    <toolset>gcc:<architecture>x86
@@ -74,7 +83,8 @@ asl_requirements =
    <threading>single:<define>BOOST_DISABLE_THREADS
    <link>static:<define>BOOST_SIGNALS_STATIC_LINK
    $(ASL_ADDITIONAL_MACROS)
-   <define>BOOST_ALL_NO_LIB 
+   <define>BOOST_ALL_NO_LIB
+   <define>BOOST_NO_CXX11_NUMERIC_LIMITS
 #   <toolset>darwin:<linkflags>"-lSystemStubs"
    <threading>multi:<library>/boost/thread//boost_thread
    <library>/boost/filesystem
@@ -132,7 +142,7 @@ use-project /boost : $(boost-path)  ;
 lib asl
   : #sources
      [ glob source/*.cpp ]
-  : #requirements 
+  : #requirements
   : #defaults
   : # usage requirements
     $(asl_requirements)
@@ -141,9 +151,9 @@ lib asl
 explicit asl ;
 
 lib asl_dev
-    : #sources 
+    : #sources
       [ glob source/*.cpp ]
-    : #requirements 
+    : #requirements
       <asl>dev
     : #defaults
     : #usage-requirements
