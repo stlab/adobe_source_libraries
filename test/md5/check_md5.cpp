@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     try
     {
       adobe::md5_t m;
-      boost::filesystem::path file_path(argv[2], boost::filesystem::native);
+      boost::filesystem::path file_path(argv[2]);
       boost::filesystem::ifstream stream(file_path, std::ios::binary | std::ios::in);
 
         while (stream.good())
@@ -56,7 +56,6 @@ int main(int argc, char* argv[])
         
 
         std::string expected(argv[1]);
-        std::string::iterator e(expected.begin());
         success = oss.str() == expected;
         if(!success)
             std::cout << "Expected: " << expected

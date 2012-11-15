@@ -20,6 +20,12 @@
 
 namespace adobe {
 
+const void* remote_address(const string_t& x)
+{
+    assert(!x.empty());
+    return x.begin();
+}
+
 // Precondition: x != T()
 
 template <typename T>
@@ -46,9 +52,9 @@ void test_movable(const T& x)
 {
     assert(x != T());
     assert(is_movable<T>::value);
-    
+
     test_regular(x);
-    
+
     T y = x;
     // move construction (and RVO)
     const void* addr = remote_address(y);
@@ -63,18 +69,12 @@ void test_movable(const T& x)
     BOOST_CHECK(remote_address(y) == addr);
 }
 
-const void* remote_address(const string_t& x)
-{
-    assert(!x.empty());
-    return x.begin();
-}
-
 } // namespace adobe
 
 void string_test()
 {
     using namespace adobe;
-    
+
     adobe::test_movable(string_t("01234"));
 
     {  // empty properties
@@ -105,7 +105,7 @@ void string_test()
         BOOST_CHECK(x.size() == 5);
         BOOST_CHECK(x.back() == 0);
     }
-    
+
     {   // iterators & indexing
         const vector_t x(5, 7);
         vector_t y(5, 8);
@@ -115,7 +115,7 @@ void string_test()
         BOOST_CHECK(y[3] == 8);
         BOOST_CHECK(x[3] == 7);
     }
-    
+
     {   // iterator based ctor
         int a[] = { 0, 1, 2, 3, 4, 5 };
         vector_t x(&a[0], &a[0] + sizeof(a) / sizeof(int));
@@ -194,7 +194,7 @@ void string_test()
         int b[] = { 7, 8, 9 };
         int c[] = { 0, 1, 7, 8, 9, 2, 3, 4, 5 };
         vector_t y(boost::begin(c), boost::end(c));
-        
+
         x.insert(x.begin() + 2, boost::begin(b), boost::end(b));
         BOOST_CHECK(x == y);
     }
@@ -270,7 +270,7 @@ void string_test()
 using namespace boost::unit_test;
 
 test_suite*
-init_unit_test_suite( int , char* [] ) 
+init_unit_test_suite( int , char* [] )
 {
     framework::master_test_suite().
         add( BOOST_TEST_CASE( &string_test ) );
