@@ -11,6 +11,7 @@
 
 #include <adobe/config.hpp>
 
+#include <atomic>
 #include <cstddef>
 #ifndef NDEBUG
     #include <iostream>
@@ -34,7 +35,8 @@ namespace implementation {
 template <typename T>
 struct atomic
 {
-    typedef T              value_type;
+    typedef T value_type;
+
     typedef std::atomic<T> type;
 };
 

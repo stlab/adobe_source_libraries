@@ -4,73 +4,74 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_UNICODE_HPP
 #define ADOBE_UNICODE_HPP
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
+
+#include <cassert>
+#include <functional>
+#include <stdexcept>
+#include <vector>
 
 #include <adobe/algorithm/for_each.hpp>
 
 #include <boost/cstdint.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <vector>
-#include <cassert>
-#include <stdexcept>
-
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 struct is_utf8_type
 { enum { value = sizeof(T) == 1 }; };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 struct is_utf16_type
 { enum { value = sizeof(T) == 2 }; };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 struct is_utf32_type
 { enum { value = sizeof(T) == 4 }; };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I>
 struct is_utf8_iterator_type
 { enum { value = is_utf8_type<typename std::iterator_traits<I>::value_type>::value }; };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I>
 struct is_utf16_iterator_type
 { enum { value = is_utf16_type<typename std::iterator_traits<I>::value_type>::value }; };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I>
 struct is_utf32_iterator_type
 { enum { value = is_utf32_type<typename std::iterator_traits<I>::value_type>::value }; };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace implementation {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 // REVISIT (fbrereto) : I don't need to INIT_ONCE these, do I?
 
@@ -94,7 +95,7 @@ const boost::uint16_t   utf16_high_surrogate_back_k(0xdbff);
 const boost::uint16_t   utf16_low_surrogate_front_k(0xdc00);
 const boost::uint16_t   utf16_low_surrogate_back_k(0xdfff);
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
     NOTE (fbrereto) : The char(...) designations are required on windows, otherwise the MSVC
                       compiler complains in the utf8_add_mask routines with the following:
@@ -110,7 +111,7 @@ template <>                     struct utf8_header_t<4> { static const char valu
 template <>                     struct utf8_header_t<5> { static const char value = '\xF8'; };
 template <>                     struct utf8_header_t<6> { static const char value = '\xFC'; };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <char Mask, typename BinaryInteger>
 inline char add_mask(BinaryInteger code)
@@ -121,13 +122,13 @@ inline char utf8_add_mask(BinaryInteger code)
 { return add_mask<utf8_header_t<Header ? NumBytes : 0>::value>(code); }
 
 
-//MM concept gcc-4.1.1 workaround 
-inline char utf8_add_mask_0_false(boost::uint32_t code) 
+//MM concept gcc-4.1.1 workaround
+inline char utf8_add_mask_0_false(boost::uint32_t code)
 {
     return utf8_add_mask<0,false>(code);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template<char Mask, typename BinaryInteger>
 inline char strip_mask(BinaryInteger code)
@@ -137,7 +138,7 @@ template <std::size_t NumBytes, bool Header, typename BinaryInteger>
 inline char utf8_strip_mask(BinaryInteger code)
 { return strip_mask<utf8_header_t<Header ? NumBytes : 0>::value>(code); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t Position>
 inline boost::uint32_t promote_fragment(char fragment)
@@ -150,7 +151,7 @@ inline boost::uint32_t promote_fragment<1>(char fragment)
 template <>
 inline boost::uint32_t promote_fragment<0>(char); // unimplemented
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t Position>
 inline char demote_fragment(boost::uint32_t fragment)
@@ -163,14 +164,14 @@ inline char demote_fragment<1>(boost::uint32_t fragment)
 template <>
 inline char demote_fragment<0>(boost::uint32_t); // unimplemented
 
-//MM concept gcc-4.1.1 workaround 
-inline char demote_fragment_1(boost::uint32_t fragment) 
+//MM concept gcc-4.1.1 workaround
+inline char demote_fragment_1(boost::uint32_t fragment)
 {
     return demote_fragment<1>(fragment);
 }
 
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t ByteCount, bool Header = true>
 struct demotion_engine_t
@@ -199,7 +200,7 @@ struct demotion_engine_t<1, false>
     }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t ByteCount, bool Header = true>
 struct promotion_engine_t
@@ -239,7 +240,7 @@ struct promotion_engine_t<1, false>
     }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename InputIterator, typename DestInteger>
 typename boost::enable_if<is_utf16_iterator_type<InputIterator>, InputIterator>::type
@@ -257,7 +258,7 @@ typename boost::enable_if<is_utf16_iterator_type<InputIterator>, InputIterator>:
         result = 0;
 
         if (first == last)
-            throw std::runtime_error("unicode: utf16 high surrogate found without low surrogate"); 
+            throw std::runtime_error("unicode: utf16 high surrogate found without low surrogate");
 
         boost::uint16_t low(static_cast<boost::uint16_t>(*first));
 
@@ -278,7 +279,7 @@ typename boost::enable_if<is_utf16_iterator_type<InputIterator>, InputIterator>:
     return first;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename InputIterator, typename DestInteger>
 typename boost::enable_if<is_utf8_iterator_type<InputIterator>, InputIterator>::type
@@ -309,7 +310,7 @@ typename boost::enable_if<is_utf8_iterator_type<InputIterator>, InputIterator>::
     return first;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename InputIterator, typename DestInteger>
 typename boost::enable_if<is_utf32_iterator_type<InputIterator>, InputIterator>::type
@@ -323,15 +324,15 @@ typename boost::enable_if<is_utf32_iterator_type<InputIterator>, InputIterator>:
     return ++first;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace implementation
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
         utf32 -> utf8
             - 1 source value
@@ -359,7 +360,7 @@ typename boost::enable_if<is_utf32_type<T>, O>::type
     return output;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
         utf16 -> utf8
             - 1 source value
@@ -374,7 +375,7 @@ typename boost::enable_if<is_utf16_type<T>, O>::type
     return value_to_utf8(static_cast<boost::uint32_t>(code), output);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
         utf8 -> utf8
             - 1 source value
@@ -391,7 +392,7 @@ typename boost::enable_if<is_utf8_type<T>, O>::type
     return output;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
         utf16 -> utf8
             - n source values
@@ -415,7 +416,7 @@ typename boost::enable_if<is_utf16_iterator_type<I>, O>::type
     return output;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
         utf32 -> utf8
             - n source values
@@ -431,12 +432,13 @@ typename boost::enable_if<is_utf32_iterator_type<I>, O>::type
 
     typedef typename std::iterator_traits<I>::value_type value_type;
 
-    adobe::for_each(first, last, boost::bind(&value_to_utf8<value_type, O>, _1, boost::ref(output)));
+    adobe::for_each(first, last, std::bind(&value_to_utf8<value_type, O>,
+    	std::placeholders::_1, std::ref(output)));
 
     return output;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
         utf8 -> utf8
             - n source values
@@ -451,7 +453,7 @@ typename boost::enable_if<is_utf8_iterator_type<I>, O>::type
     return std::copy(first, last, output);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
         utf32 -> utf16
             - 1 source value
@@ -479,7 +481,7 @@ typename boost::enable_if<is_utf32_type<T>, O>::type
     return ++output;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
         utf8 -> utf16
             - n source values
@@ -502,7 +504,7 @@ typename boost::enable_if<is_utf8_iterator_type<I>, O>::type
     return output;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
         utf16 -> utf16
             - n source values
@@ -516,7 +518,7 @@ typename boost::enable_if<is_utf16_iterator_type<I>, O>::type
     return std::copy(first, last, output);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
     Precondition: [ first, last ) must convert to exactly one UTF-16 character
 */
@@ -532,7 +534,7 @@ inline typename boost::enable_if<is_utf8_iterator_type<I>, boost::uint16_t>::typ
     return static_cast<boost::uint16_t>(result);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
         utf16 -> utf32
             - n source values
@@ -561,7 +563,7 @@ O to_utf32(I first, I last, O output)
     return output;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
     Precondition: [ first, last ) must convert to exactly one UTF-32 character
 */
@@ -576,12 +578,12 @@ inline boost::uint32_t to_utf32(I first, I last)
     return result;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
-    
-/*************************************************************************************************/
+
+/**************************************************************************************************/
