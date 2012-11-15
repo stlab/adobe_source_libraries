@@ -19,6 +19,7 @@ feature.compose <asl>dev :
     <define>ADOBE_SERIALIZATION
     <define>ADOBE_STD_SERIALIZATION
 #   <define>BOOST_FILESYSTEM_VERSION=2
+	<define>BOOST_NO_CXX11_NUMERIC_LIMITS
     ;
 
 switch [ os.name ]
@@ -26,8 +27,8 @@ switch [ os.name ]
 case MACOSX :
   {
     DARWIN_SPECIFIC_FEATURES =
-     <toolset>darwin,<variant>release,<macosx-version>10.3.9:<architecture>power
-     <toolset>darwin,<variant>release,<macosx-version>10.4:<architecture>combined 
+#     <toolset>darwin,<variant>release,<macosx-version>10.3.9:<architecture>power
+#     <toolset>darwin,<variant>release,<macosx-version>10.4:<architecture>combined 
 #     <toolset>darwin:<c++-lib>static
     ;
   }
@@ -52,6 +53,8 @@ adobe_requirements =
 #    <toolset>gcc-4.5.0:<define>_GLIBCXX_USE_C99_MATH_TR1 # apparent problems using this without using other tr1 libs
     <toolset>gcc-4.5.0:<define>__GXX_EXPERIMENTAL_CXX0X__
     <toolset>gcc-4.4.0:<define>__GXX_EXPERIMENTAL_CXX0X__
+    <toolset>clang:<cxxflags>"-stdlib=libc++ -std=c++11"
+    <toolset>clang:<linkflags>"-stdlib=libc++"
 
 ## we'd like to play with experimental C++ 0x features, but leave this disabled for now until 
 ## boost is patched (e.g. static_assert is reserved, etc.)

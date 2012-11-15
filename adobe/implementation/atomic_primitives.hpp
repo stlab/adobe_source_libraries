@@ -16,9 +16,7 @@
     #include <iostream>
 #endif
 
-#if defined(BOOST_HAS_THREADS)
-    #include <tbb/atomic.h>
-#endif
+#include <atomic>
 
 #include <boost/static_assert.hpp>
 
@@ -36,13 +34,8 @@ namespace implementation {
 template <typename T>
 struct atomic
 {
-    typedef T value_type;
-
-#if defined(BOOST_HAS_THREADS)
-    typedef tbb::atomic<T> type;
-#else
-    typedef T type;
-#endif
+    typedef T              value_type;
+    typedef std::atomic<T> type;
 };
 
 /******************************************************************************/
