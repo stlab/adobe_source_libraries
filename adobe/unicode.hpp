@@ -466,22 +466,6 @@ O to_utf8(I first, I last, O output, unicode_size_type_<4>)
 }
 
 /**************************************************************************************************/
-
-} // namespace detail
-
-/**************************************************************************************************/
-
-#endif
-
-/**************************************************************************************************/
-
-template <  typename I, // models InputIterator
-            typename O> // models OutputIterator
-O to_utf8(I f, I l, O o) {
-    return detail::to_utf8(f, l, o, typename detail::unicode_size_type<I>::type());
-}
-
-/**************************************************************************************************/
 /*
         utf8 -> utf16
             - n source values
@@ -489,8 +473,7 @@ O to_utf8(I f, I l, O o) {
 */
 template <  typename I, // I models InputIterator
             typename O> // O models OutputIterator
-typename boost::enable_if<is_utf8_iterator_type<I>, O>::type
-    to_utf16(I first, I last, O output)
+O to_utf16(I first, I last, O output, unicode_size_type_<1>)
 {
     while (first != last)
     {
@@ -512,10 +495,55 @@ typename boost::enable_if<is_utf8_iterator_type<I>, O>::type
 */
 template <  typename I, // I models InputIterator
             typename O> // O models OutputIterator
-typename boost::enable_if<is_utf16_iterator_type<I>, O>::type
-    to_utf16(I first, I last, O output)
+O to_utf16(I first, I last, O output, unicode_size_type_<2>)
 {
     return std::copy(first, last, output);
+}
+
+/**************************************************************************************************/
+/*
+        utf32 -> utf16
+            - n source values
+            - m output values
+*/
+template <  typename I, // I models InputIterator
+            typename O> // O models OutputIterator
+O to_utf16(I first, I last, O output, unicode_size_type_<4>)
+{
+    while (first != last)
+    {
+        boost::uint32_t result;
+
+        first = detail::to_utf32(first, last, result, detail::unicode_size_type_<1>());
+
+        *output++ = result;
+    }
+
+    return output;
+}
+
+/**************************************************************************************************/
+
+} // namespace detail
+
+/**************************************************************************************************/
+
+#endif
+
+/**************************************************************************************************/
+
+template <  typename I, // models InputIterator
+            typename O> // models OutputIterator
+O to_utf8(I f, I l, O o) {
+    return detail::to_utf8(f, l, o, typename detail::unicode_size_type<I>::type());
+}
+
+/**************************************************************************************************/
+
+template <  typename I, // models InputIterator
+            typename O> // models OutputIterator
+O to_utf16(I f, I l, O o) {
+    return detail::to_utf16(f, l, o, typename detail::unicode_size_type<I>::type());
 }
 
 /**************************************************************************************************/
@@ -539,9 +567,7 @@ O to_utf32(I first, I last, O output)
     {
         first = detail::to_utf32(first, last, result, typename detail::unicode_size_type<I>::type());
 
-        *output = result;
-
-        ++output;
+        *output++ = result;
     }
 
     return output;
