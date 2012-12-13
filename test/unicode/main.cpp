@@ -42,8 +42,8 @@ void roundtrip_test(boost::uint32_t code_point, bool print = true)
     utf16_buffer_t  utf16;
     utf8_buffer_t   utf8;
 
-    adobe::value_to_utf16(code_point, std::back_inserter(utf16));
-    adobe::value_to_utf8(code_point, std::back_inserter(utf8));
+    adobe::to_utf16(&code_point, &code_point + 1, std::back_inserter(utf16));
+    adobe::to_utf8(&code_point, &code_point + 1,, std::back_inserter(utf8));
 
     utf32_buffer_t  utf16_roundtrip;
     utf32_buffer_t  utf8_roundtrip;
