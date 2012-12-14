@@ -435,7 +435,7 @@ O to_utf8(I first, I last, O output, unicode_size_type_<2>)
     {
         boost::uint32_t result;
 
-        first = detail::to_utf32(first, last, result);
+        first = detail::to_utf32(first, last, result, unicode_size_type_<2>());
 
         output = detail::value_to_utf8(result, output);
     }
