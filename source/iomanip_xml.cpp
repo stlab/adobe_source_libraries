@@ -48,7 +48,6 @@ void xml_format::stack_event(stream_type& os, bool is_push)
     const format_element_t& top(stack_top());
     name_t                  self(top.tag());
     name_t                  parent(stack_depth() >= 2 ? stack_n(1).tag() : name_t());
-    name_t                  grandparent(stack_depth() >= 3 ? stack_n(2).tag() : name_t());
 
     if (is_push)
         {
