@@ -11,59 +11,15 @@
 
 /**************************************************************************************************/
 
-#include <adobe/config.hpp>
-
 #include <cassert>
 #include <stdexcept>
 #include <iterator>
 
-#include <boost/bind.hpp>
 #include <boost/cstdint.hpp>
-#include <boost/utility/enable_if.hpp>
 
 /**************************************************************************************************/
 
 namespace adobe {
-
-/**************************************************************************************************/
-
-#ifndef ADOBE_NO_DOCUMENTATION
-
-/**************************************************************************************************/
-
-template <typename T>
-struct is_utf8_type
-{ enum { value = sizeof(T) == 1 }; };
-
-/**************************************************************************************************/
-
-template <typename T>
-struct is_utf16_type
-{ enum { value = sizeof(T) == 2 }; };
-
-/**************************************************************************************************/
-
-template <typename T>
-struct is_utf32_type
-{ enum { value = sizeof(T) == 4 }; };
-
-/**************************************************************************************************/
-
-template <typename I>
-struct is_utf8_iterator_type
-{ enum { value = is_utf8_type<typename std::iterator_traits<I>::value_type>::value }; };
-
-/**************************************************************************************************/
-
-template <typename I>
-struct is_utf16_iterator_type
-{ enum { value = is_utf16_type<typename std::iterator_traits<I>::value_type>::value }; };
-
-/**************************************************************************************************/
-
-template <typename I>
-struct is_utf32_iterator_type
-{ enum { value = is_utf32_type<typename std::iterator_traits<I>::value_type>::value }; };
 
 /**************************************************************************************************/
 
@@ -330,8 +286,7 @@ InputIterator to_utf32 (InputIterator first, InputIterator last, DestInteger& re
 
 template <  typename T, // T models Integer; T must be a valid UTF32-encoded code point
             typename O> // O models OutputIterator
-typename boost::enable_if<is_utf32_type<T>, O>::type
-    value_to_utf8(T code, O output)
+O value_to_utf8(T code, O output, unicode_size_type_<4>)
 {
     if (code < detail::to_utf8_pivot_1_k) // UTF-8 is 1 byte long
         { *output = static_cast<char>(code); ++output; }
@@ -355,8 +310,7 @@ typename boost::enable_if<is_utf32_type<T>, O>::type
 
 template <  typename T, // T models Integer; T must be a valid UTF16-encoded code point
             typename O> // O models OutputIterator
-typename boost::enable_if<is_utf16_type<T>, O>::type
-    value_to_utf8(T code, O output)
+O value_to_utf8(T code, O output, unicode_size_type_<2>)
 {
     return value_to_utf8(static_cast<boost::uint32_t>(code), output);
 }
@@ -370,13 +324,19 @@ typename boost::enable_if<is_utf16_type<T>, O>::type
 
 template <  typename T, // T models Integer; T must be a valid UTF8-encoded code point
             typename O> // O models OutputIterator
-typename boost::enable_if<is_utf8_type<T>, O>::type
-    value_to_utf8(T code, O output)
+O value_to_utf8(T code, O output, unicode_size_type_<1>)
 {
     *output++ = code;
 
     return output;
 }
+
+/**************************************************************************************************/
+
+template <  typename T, // T models Integer; T must be a valid UTF8-encoded code point
+            typename O> // O models OutputIterator
+O value_to_utf8(T code, O out)
+{ return value_to_utf8(code, out, unicode_size_type_<sizeof(T)>()); }
 
 /**************************************************************************************************/
 /*
@@ -387,8 +347,7 @@ typename boost::enable_if<is_utf8_type<T>, O>::type
 
 template <  typename T, // T models Integer; sizeof(T) must equal 4; code must be valid utf32
             typename O> // O models OutputIterator
-typename boost::enable_if<is_utf32_type<T>, O>::type
-    value_to_utf16(T code, O output)
+O utf32_to_utf16(T code, O output)
 {
     if (code <= detail::to_utf16_surrogate_pivot_k)
     {
@@ -457,8 +416,11 @@ O to_utf8(I first, I last, O output, unicode_size_type_<4>)
     if (first == last) return output;
 
     typedef typename std::iterator_traits<I>::value_type value_type;
-
-    std::for_each(first, last, boost::bind(&detail::value_to_utf8<value_type, O>, _1, boost::ref(output)));
+    
+    while (first != last) {
+        output = detail::value_to_utf8(*first, output);
+        ++first;
+    }
 
     return output;
 }
@@ -479,7 +441,7 @@ O to_utf16(I first, I last, O output, unicode_size_type_<1>)
 
         first = detail::to_utf32(first, last, result, detail::unicode_size_type_<1>());
 
-        output = detail::value_to_utf16(result, output);
+        output = detail::utf32_to_utf16(result, output);
     }
 
     return output;
@@ -526,10 +488,6 @@ O to_utf16(I first, I last, O output, unicode_size_type_<4>)
 
 /**************************************************************************************************/
 
-#endif
-
-/**************************************************************************************************/
-
 template <  typename I, // models InputIterator
             typename O> // models OutputIterator
 O to_utf8(I f, I l, O o) {
@@ -545,15 +503,6 @@ O to_utf16(I f, I l, O o) {
 }
 
 /**************************************************************************************************/
-/*
-        utf16 -> utf32
-            - n source values
-            - m output values
-
-        utf8 -> utf32
-            - n source values
-            - m output values
-*/
 
 template <  typename I, // I models InputIterator
             typename O> // O models OutputIterator
