@@ -42,8 +42,8 @@ void roundtrip_test(boost::uint32_t code_point, bool print = true)
     utf16_buffer_t  utf16;
     utf8_buffer_t   utf8;
 
-    adobe::to_utf16(&code_point, &code_point + 1, std::back_inserter(utf16));
-    adobe::to_utf8(&code_point, &code_point + 1,, std::back_inserter(utf8));
+    adobe::copy_utf<boost::uint16_t>(&code_point, &code_point + 1, std::back_inserter(utf16));
+    adobe::copy_utf<boost::uint8_t>(&code_point, &code_point + 1, std::back_inserter(utf8));
 
     utf32_buffer_t  utf16_roundtrip;
     utf32_buffer_t  utf8_roundtrip;
@@ -62,8 +62,8 @@ void roundtrip_test(boost::uint32_t code_point, bool print = true)
         std::cout << std::dec;
     }
 
-    adobe::to_utf32(utf16.begin(), utf16.end(), std::back_inserter(utf16_roundtrip));
-    adobe::to_utf32(utf8.begin(), utf8.end(), std::back_inserter(utf8_roundtrip));
+    adobe::copy_utf<boost::uint32_t>(utf16.begin(), utf16.end(), std::back_inserter(utf16_roundtrip));
+    adobe::copy_utf<boost::uint32_t>(utf8.begin(), utf8.end(), std::back_inserter(utf8_roundtrip));
 
     if (utf16_roundtrip[0] != code_point)
         throw std::runtime_error("In utf32 -> utf16 -> utf32: code point mismatch");
@@ -73,13 +73,13 @@ void roundtrip_test(boost::uint32_t code_point, bool print = true)
     utf8_buffer_t   utf8_2;
     utf16_buffer_t  utf16_2;
 
-    adobe::to_utf8(utf16.begin(), utf16.end(), std::back_inserter(utf8_2));
-    adobe::to_utf16(utf8.begin(), utf8.end(), std::back_inserter(utf16_2));
+    adobe::copy_utf<boost::uint8_t>(utf16.begin(), utf16.end(), std::back_inserter(utf8_2));
+    adobe::copy_utf<boost::uint16_t>(utf8.begin(), utf8.end(), std::back_inserter(utf16_2));
 
     utf32_buffer_t  utf16_roundtrip_2;
 
-    adobe::to_utf32(utf16_2.begin(), utf16_2.end(), std::back_inserter(utf16_roundtrip_2));
-    
+    adobe::copy_utf<boost::uint32_t>(utf16_2.begin(), utf16_2.end(), std::back_inserter(utf16_roundtrip_2));
+
     if (utf16_roundtrip_2[0] != code_point)
         throw std::runtime_error("In utf16 -> utf8 -> utf16: code point mismatch");
 
@@ -116,7 +116,7 @@ void basic_roundtrip_test()
 
 void full_roundtrip_test()
 {
-    std::cout << "Performing complete range roundtrip test..." << std::ends;
+    std::cout << "Performing complete range roundtrip test..." << std::endl;
 
     boost::uint32_t first(0x0);
     boost::uint32_t last(0x10ffff);
@@ -144,7 +144,7 @@ void bug_test_from_07_27_2008()
     utf8_buffer_t   result;
     boost::uint32_t v(0x10abcd);
 
-    adobe::to_utf8(&v, boost::next(&v), back_inserter(result));    
+    adobe::copy_utf<boost::uint8_t>(&v, boost::next(&v), back_inserter(result));
 
     std::cout << std::hex;
 
