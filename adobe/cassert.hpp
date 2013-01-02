@@ -9,7 +9,7 @@
 /*!
     \file
     
-    The header \c <adobe/cassert.hpp> include \c <cassert> and defines the macro \c ADOBE_ASSERT if 
+    The header \c <adobe/cassert.hpp> includes \c <cassert> and defines the macro \c ADOBE_ASSERT if 
     it is not already defined.
     
     The header may be included multiple times with differing definitions of either \c NDEBUG or
