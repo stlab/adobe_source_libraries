@@ -182,7 +182,7 @@ public:
 #if ADOBE_PLATFORM_WIN
         (void)::QueryPerformanceCounter(&epoch_m);
 #elif defined(BOOST_HAS_THREADS)
-        boost::xtime_get(&epoch_m, boost::TIME_UTC);
+        boost::xtime_get(&epoch_m, boost::TIME_UTC_);
 #elif defined(BOOST_HAS_GETTIMEOFDAY)
         gettimeofday(&epoch_m, static_cast<struct timezone*>(0));
 #endif
@@ -206,7 +206,7 @@ public:
         (void)::QueryPerformanceCounter(&split_m);
         return (split_m.QuadPart - epoch_m.QuadPart) / static_cast<double>(frequency_m.QuadPart) * double(1e3);
 #elif defined(BOOST_HAS_THREADS)
-        boost::xtime_get(&split_m, boost::TIME_UTC);
+        boost::xtime_get(&split_m, boost::TIME_UTC_);
         return ((split_m.sec - epoch_m.sec) * double(1e3) + (split_m.nsec - epoch_m.nsec) / double(1e6));
 #elif defined(BOOST_HAS_GETTIMEOFDAY)
         gettimeofday(&split_m, static_cast<struct timezone*>(0));

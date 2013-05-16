@@ -11,13 +11,13 @@
 
 #include <adobe/config.hpp>
 
+#include <atomic>
 #include <cstddef>
 #ifndef NDEBUG
     #include <iostream>
 #endif
 
 #include <boost/static_assert.hpp>
-
 #include <adobe/typeinfo.hpp>
 
 /******************************************************************************/

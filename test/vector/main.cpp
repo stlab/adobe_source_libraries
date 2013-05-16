@@ -4,7 +4,7 @@
 	or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #define BOOST_TEST_MAIN
 
@@ -19,9 +19,16 @@
 #include <cassert>
 #include <iterator>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
+
+template <typename T>
+const void* remote_address(const vector<T>& x)
+{
+    assert(!x.empty());
+    return x.begin();
+}
 
 // Precondition: x != T()
 
@@ -64,13 +71,6 @@ void test_movable(const T& x)
     BOOST_CHECK(z == T());
     BOOST_CHECK(y == x);
     BOOST_CHECK(remote_address(y) == addr);
-}
-
-template <typename T>
-const void* remote_address(const vector<T>& x)
-{
-    assert(!x.empty());
-    return x.begin();
 }
 
 } // namespace adobe

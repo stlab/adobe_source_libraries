@@ -455,7 +455,7 @@ string_t entity_unescape(const string_t& value)
         boost::uint32_t code_point(entity_map_find(string_t(next, next_end)));
 
         if (code_point != 0)
-            adobe::to_utf8(&code_point, &code_point + 1, std::back_inserter(result));
+            adobe::copy_utf<char>(&code_point, &code_point + 1, std::back_inserter(result));
 
         iter = ++next_end;
     }

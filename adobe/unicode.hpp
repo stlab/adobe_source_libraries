@@ -11,66 +11,21 @@
 
 /**************************************************************************************************/
 
-#include <adobe/config.hpp>
-
-#include <cassert>
-#include <stdexcept>
 #include <iterator>
 
-#include <boost/bind.hpp>
 #include <boost/cstdint.hpp>
-#include <boost/utility/enable_if.hpp>
+
+#include <adobe/cassert.hpp>
 
 /**************************************************************************************************/
 
 namespace adobe {
 
-namespace detail {
-} // namespace detail
-
-/**************************************************************************************************/
-
-#ifndef ADOBE_NO_DOCUMENTATION
-
-/**************************************************************************************************/
-
-template <typename T>
-struct is_utf8_type
-{ enum { value = sizeof(T) == 1 }; };
-
-/**************************************************************************************************/
-
-template <typename T>
-struct is_utf16_type
-{ enum { value = sizeof(T) == 2 }; };
-
-/**************************************************************************************************/
-
-template <typename T>
-struct is_utf32_type
-{ enum { value = sizeof(T) == 4 }; };
-
-/**************************************************************************************************/
-
-template <typename I>
-struct is_utf8_iterator_type
-{ enum { value = is_utf8_type<typename std::iterator_traits<I>::value_type>::value }; };
-
-/**************************************************************************************************/
-
-template <typename I>
-struct is_utf16_iterator_type
-{ enum { value = is_utf16_type<typename std::iterator_traits<I>::value_type>::value }; };
-
-/**************************************************************************************************/
-
-template <typename I>
-struct is_utf32_iterator_type
-{ enum { value = is_utf32_type<typename std::iterator_traits<I>::value_type>::value }; };
-
 /**************************************************************************************************/
 
 namespace detail {
+
+/**************************************************************************************************/
 
 template <std::size_t N> struct unicode_size_type_ { };
 
@@ -92,12 +47,6 @@ const boost::uint32_t   to_utf8_pivot_2_k(1UL << 11);
 const boost::uint32_t   to_utf8_pivot_3_k(1UL << 16);
 const boost::uint32_t   to_utf8_pivot_4_k(1UL << 21);
 
-const boost::uint16_t   to_utf16_surrogate_pivot_k(65535);
-const boost::uint16_t   utf16_high_surrogate_front_k(0xd800);
-const boost::uint16_t   utf16_high_surrogate_back_k(0xdbff);
-const boost::uint16_t   utf16_low_surrogate_front_k(0xdc00);
-const boost::uint16_t   utf16_low_surrogate_back_k(0xdfff);
-
 /**************************************************************************************************/
 
 template <std::size_t NumBytes> struct utf8_header_t    { };
@@ -110,20 +59,19 @@ template <>     struct utf8_header_t<4> { static const char value = '\xF0'; };
 // template <>  struct utf8_header_t<5> { static const char value = '\xF8'; }; // illegal
 // template <>  struct utf8_header_t<6> { static const char value = '\xFC'; }; // illegal
 
-
 /**************************************************************************************************/
 
 template <char Mask, typename BinaryInteger>
 inline char add_mask(BinaryInteger code)
-{ return static_cast<char>(code | Mask); }
+{ return static_cast<char>(static_cast<char>(code) | Mask); }
 
 template <std::size_t NumBytes, bool Header, typename BinaryInteger>
 inline char utf8_add_mask(BinaryInteger code)
 { return add_mask<utf8_header_t<Header ? NumBytes : 0>::value>(code); }
 
 
-//MM concept gcc-4.1.1 workaround 
-inline char utf8_add_mask_0_false(boost::uint32_t code) 
+//MM concept gcc-4.1.1 workaround
+inline char utf8_add_mask_0_false(char code)
 {
     return utf8_add_mask<0,false>(code);
 }
@@ -173,30 +121,30 @@ inline char demote_fragment_1(boost::uint32_t fragment)
 
 /**************************************************************************************************/
 
-template <std::size_t ByteCount, bool Header = true>
+template <typename T, std::size_t ByteCount, bool Header = true>
 struct demotion_engine_t
 {
     template <typename OutputIterator>
-    inline OutputIterator operator () (boost::uint32_t code, OutputIterator i)
+    inline OutputIterator operator () (boost::uint32_t code, OutputIterator out)
     {
-        *i = utf8_add_mask<ByteCount, Header>(demote_fragment<ByteCount>(code));
+        *out = static_cast<T>(utf8_add_mask<ByteCount, Header>(demote_fragment<ByteCount>(code)));
 
-        ++i;
+        ++out;
 
-        return demotion_engine_t<ByteCount - 1, false>()(code, i);
+        return demotion_engine_t<T, ByteCount - 1, false>()(code, out);
     }
 };
 
 
-template <>
-struct demotion_engine_t<1, false>
+template <typename T>
+struct demotion_engine_t<T, 1, false>
 {
     template <typename OutputIterator>
-    inline OutputIterator operator () (boost::uint32_t code, OutputIterator i)
+    inline OutputIterator operator () (boost::uint32_t code, OutputIterator out)
     {
-        *i = utf8_add_mask_0_false(demote_fragment_1(code));
+        *out = static_cast<T>(utf8_add_mask_0_false(demote_fragment_1(code)));
 
-        return ++i;
+        return ++out;
     }
 };
 
@@ -213,14 +161,16 @@ struct promotion_engine_t
             GCC doesn't seem to have a problem.
         */
 
-        char            n(*first);
+        char            n = static_cast<char>(*first);
         char            stripped(utf8_strip_mask<ByteCount, Header>(n));
         boost::uint32_t shifted(promote_fragment<ByteCount>(stripped));
 
         ++first;
 
-        if (first == last)
-            throw std::runtime_error("unicode: utf32 conversion ran out of input");
+        if (first == last) {
+            ADOBE_ASSERT(false && "unicode: UTF-8 to UTF-32 conversion ran out of input");
+            return 0;
+        }
 
         return shifted | promotion_engine_t<ByteCount - 1, false>()(first, last);
     }
@@ -242,83 +192,71 @@ struct promotion_engine_t<1, false>
 
 /**************************************************************************************************/
 
-template <typename InputIterator, typename DestInteger>
-InputIterator to_utf32 (InputIterator first, InputIterator last, DestInteger& result, unicode_size_type_<2>)
+template <typename InputIterator, typename T>
+InputIterator to_utf32 (InputIterator first, InputIterator last, T& result, unicode_size_type_<2>)
 {
-    if (first == last) return first;
-
-    boost::uint16_t code(static_cast<boost::uint16_t>(*first));
-
+    boost::uint16_t code = static_cast<boost::uint16_t>(*first);
     ++first;
-
-    if (code >= detail::utf16_high_surrogate_front_k &&
-        code <= detail::utf16_high_surrogate_back_k)
-    {
-        result = 0;
-
-        if (first == last)
-            throw std::runtime_error("unicode: UTF-16 high surrogate found without low surrogate"); 
-
-        boost::uint16_t low(static_cast<boost::uint16_t>(*first));
-
-        assert (low >= detail::utf16_low_surrogate_front_k &&
-                low <= detail::utf16_low_surrogate_back_k);
-
+    
+    if (code < 0xD800) {
+        result = static_cast<T>(code);
+    } else if (code < 0xDC00) {
+        if (first == last) {
+            ADOBE_ASSERT(false && "unicode: UTF-16 lead surrogate found without trail surrogate");
+            return first;
+        }
+        
+        boost::uint16_t trail = static_cast<boost::uint16_t>(*first);
         ++first;
-
-        result = (code - detail::utf16_high_surrogate_front_k) * 0x400 +
-                 (low - detail::utf16_low_surrogate_front_k) + 0x10000;
+        
+        ADOBE_ASSERT((0xDC00 <= trail && trail <= 0xDFFF)
+            && "unicode: UTF-16 lead surrogate found without trail surrogate");
+        
+        result = static_cast<T>(((code - 0xD800) << 10) + (trail - 0xDC00) + 0x10000);
+    } else {
+        ADOBE_ASSERT(!(code < 0xE000)
+            && "unicode: UTF-16 trail surrogate found without lead surrogate");
+        result = static_cast<T>(code);
     }
-    else if (code >= detail::utf16_low_surrogate_front_k &&
-             code <= detail::utf16_low_surrogate_back_k)
-        { throw std::runtime_error("unicode: UTF-16 low surrogate found without high surrogate"); }
-    else
-        { result = static_cast<DestInteger>(code); }
 
     return first;
 }
 
 /**************************************************************************************************/
 
-template <typename InputIterator, typename DestInteger>
-InputIterator to_utf32 (InputIterator first, InputIterator last, DestInteger& result, unicode_size_type_<1>)
+template <typename InputIterator, typename T>
+InputIterator to_utf32 (InputIterator first, InputIterator last, T& result, unicode_size_type_<1>)
 {
-    if (first == last)
-        return first;
-
     unsigned char n(static_cast<unsigned char>(*first));
 
-    if (n < detail::to_utf32_pivot_1_k)
-        { result = static_cast<DestInteger>(n); ++first; }
-    else if (n < detail::to_utf32_pivot_2_k)
-        { throw std::runtime_error("unicode: ill-defined UTF-8 (first byte is 10xxxxxx)"); }
-    else if (n < detail::to_utf32_pivot_3_k)
-        result = detail::promotion_engine_t<2>()(first, last);
-    else if (n < detail::to_utf32_pivot_4_k)
-        result = detail::promotion_engine_t<3>()(first, last);
-    else if (n < detail::to_utf32_pivot_5_k)
-        result = detail::promotion_engine_t<4>()(first, last);
-    else 
-        { throw std::runtime_error("unicode: ill-defined UTF-8 (first byte is 11111xxx)"); }
+    if (n < to_utf32_pivot_1_k) {
+        result = static_cast<T>(n); ++first;
+    } else if (n < to_utf32_pivot_3_k) {
+        ADOBE_ASSERT(!(n < to_utf32_pivot_2_k)
+            && "unicode: ill-defined UTF-8 (first byte is 10xxxxxx)");
+        result = static_cast<T>(promotion_engine_t<2>()(first, last));
+    } else if (n < to_utf32_pivot_4_k) {
+        result = static_cast<T>(promotion_engine_t<3>()(first, last));
+    } else if (n < to_utf32_pivot_5_k) {
+        result = static_cast<T>(promotion_engine_t<4>()(first, last));
+    } else {
+        ADOBE_ASSERT(false && "unicode: ill-defined UTF-8 (first byte is 11111xxx)");
+    }
     
-    if (result > 0x0010FFFF)
-        { throw std::runtime_error("unicode: ill-defined UTF-8 (code point out of range)"); }
+    ADOBE_ASSERT(!(result > 0x0010FFFF) && "unicode: ill-defined UTF-8 (code point out of range)");
     
-    if (0x0000D800 <= result && result <= 0x0000DFFF)
-        { throw std::runtime_error("unicode: ill-defined UTF-8 (surrogate code point)"); }
+    ADOBE_ASSERT(!(0x0000D800 <= result && result <= 0x0000DFFF)
+        && "unicode: ill-defined UTF-8 (surrogate code point)");
 
     return first;
 }
 
 /**************************************************************************************************/
 
-template <typename InputIterator, typename DestInteger>
-InputIterator to_utf32 (InputIterator first, InputIterator last, DestInteger& result, unicode_size_type_<4>)
+template <typename InputIterator, typename T>
+InputIterator to_utf32 (InputIterator first, InputIterator last, T& result, unicode_size_type_<4>)
 {
-    if (first == last)
-        return first;
-
-    result = *first;
+    result = static_cast<T>(*first);
 
     return ++first;
 }
@@ -330,52 +268,19 @@ InputIterator to_utf32 (InputIterator first, InputIterator last, DestInteger& re
             - n output values
 */
 
-template <  typename T, // T models Integer; T must be a valid UTF32-encoded code point
+template <  typename T,
             typename O> // O models OutputIterator
-typename boost::enable_if<is_utf32_type<T>, O>::type
-    value_to_utf8(T code, O output)
+O utf32_to_utf8(boost::uint32_t code, O output)
 {
-    if (code < detail::to_utf8_pivot_1_k) // UTF-8 is 1 byte long
-        { *output = static_cast<char>(code); ++output; }
-    else if (code < detail::to_utf8_pivot_2_k) // UTF-8 is 2 bytes long
-        output = detail::demotion_engine_t<2>()(code, output);
-    else if (code < detail::to_utf8_pivot_3_k) // UTF-8 is 3 bytes long
-        output = detail::demotion_engine_t<3>()(code, output);
-    else if (code < detail::to_utf8_pivot_4_k) // UTF-8 is 4 bytes long
-        output = detail::demotion_engine_t<4>()(code, output);
-    else throw std::runtime_error("unicode: invalid code point (out of range)");
-
-    return output;
-}
-
-/**************************************************************************************************/
-/*
-        utf16 -> utf8
-            - 1 source value
-            - n output values
-*/
-
-template <  typename T, // T models Integer; T must be a valid UTF16-encoded code point
-            typename O> // O models OutputIterator
-typename boost::enable_if<is_utf16_type<T>, O>::type
-    value_to_utf8(T code, O output)
-{
-    return value_to_utf8(static_cast<boost::uint32_t>(code), output);
-}
-
-/**************************************************************************************************/
-/*
-        utf8 -> utf8
-            - 1 source value
-            - 1 output value
-*/
-
-template <  typename T, // T models Integer; T must be a valid UTF8-encoded code point
-            typename O> // O models OutputIterator
-typename boost::enable_if<is_utf8_type<T>, O>::type
-    value_to_utf8(T code, O output)
-{
-    *output++ = code;
+    if (code < to_utf8_pivot_1_k) // UTF-8 is 1 byte long
+        { *output = static_cast<T>(code); ++output; }
+    else if (code < to_utf8_pivot_2_k) // UTF-8 is 2 bytes long
+        output = demotion_engine_t<T, 2>()(code, output);
+    else if (code < to_utf8_pivot_3_k) // UTF-8 is 3 bytes long
+        output = demotion_engine_t<T, 3>()(code, output);
+    else if (code < to_utf8_pivot_4_k) // UTF-8 is 4 bytes long
+        output = demotion_engine_t<T, 4>()(code, output);
+    else ADOBE_ASSERT(false && "unicode: invalid code point (out of range)");
 
     return output;
 }
@@ -387,22 +292,19 @@ typename boost::enable_if<is_utf8_type<T>, O>::type
             - n output values
 */
 
-template <  typename T, // T models Integer; sizeof(T) must equal 4; code must be valid utf32
-            typename O> // O models OutputIterator
-typename boost::enable_if<is_utf32_type<T>, O>::type
-    value_to_utf16(T code, O output)
+template <  typename T, // output type for O
+            typename N, // models Integer; sizeof(T) must equal 4; code must be valid utf32
+            typename O> // models OutputIterator
+O utf32_to_utf16(N code, O output)
 {
-    if (code <= detail::to_utf16_surrogate_pivot_k)
-    {
-        *output = static_cast<boost::uint16_t>(code);
-    }
-    else
-    {
-        *output = static_cast<boost::uint16_t>((code - 0x10000) / 0x400 + detail::utf16_high_surrogate_front_k);
+    if (code < 0x10000) {
+        *output = static_cast<T>(code);
+    } else {
+        *output = static_cast<T>(((code - 0x10000) >> 10) + 0xD800);
 
         ++output;
 
-        *output = static_cast<boost::uint16_t>((code - 0x10000) % 0x400 + detail::utf16_low_surrogate_front_k);
+        *output = static_cast<T>(((code - 0x10000) & 0x03FF) + 0xDC00);
     }
 
     return ++output;
@@ -415,7 +317,8 @@ typename boost::enable_if<is_utf32_type<T>, O>::type
             - m output values
 */
 
-template <  typename I, // I models InputIterator
+template <  typename T,
+            typename I, // I models InputIterator
             typename O> // O models OutputIterator
 O to_utf8(I first, I last, O output, unicode_size_type_<1>)
 {
@@ -429,17 +332,18 @@ O to_utf8(I first, I last, O output, unicode_size_type_<1>)
             - m output values
 */
 
-template <  typename I, // I models InputIterator
+template <  typename T,
+            typename I, // I models InputIterator
             typename O> // O models OutputIterator
 O to_utf8(I first, I last, O output, unicode_size_type_<2>)
 {
     while (first != last)
     {
-        boost::uint32_t result;
+        boost::uint32_t tmp;
 
-        first = detail::to_utf32(first, last, result, unicode_size_type_<2>());
+        first = to_utf32(first, last, tmp, unicode_size_type_<2>());
 
-        output = detail::value_to_utf8(result, output);
+        output = utf32_to_utf8<T>(tmp, output);
     }
 
     return output;
@@ -452,15 +356,15 @@ O to_utf8(I first, I last, O output, unicode_size_type_<2>)
             - m output values
 */
 
-template <  typename I, // I models InputIterator
+template <  typename T,
+            typename I, // I models InputIterator
             typename O> // O models OutputIterator
 O to_utf8(I first, I last, O output, unicode_size_type_<4>)
 {
-    if (first == last) return output;
-
-    typedef typename std::iterator_traits<I>::value_type value_type;
-
-    std::for_each(first, last, boost::bind(&detail::value_to_utf8<value_type, O>, _1, boost::ref(output)));
+    while (first != last) {
+        output = utf32_to_utf8<T>(static_cast<boost::uint32_t>(*first), output);
+        ++first;
+    }
 
     return output;
 }
@@ -471,7 +375,8 @@ O to_utf8(I first, I last, O output, unicode_size_type_<4>)
             - n source values
             - m output values
 */
-template <  typename I, // I models InputIterator
+template <  typename T,
+            typename I, // I models InputIterator
             typename O> // O models OutputIterator
 O to_utf16(I first, I last, O output, unicode_size_type_<1>)
 {
@@ -479,9 +384,9 @@ O to_utf16(I first, I last, O output, unicode_size_type_<1>)
     {
         boost::uint32_t result;
 
-        first = detail::to_utf32(first, last, result, detail::unicode_size_type_<1>());
+        first = to_utf32(first, last, result, unicode_size_type_<1>());
 
-        output = detail::value_to_utf16(result, output);
+        output = utf32_to_utf16<T>(result, output);
     }
 
     return output;
@@ -493,7 +398,8 @@ O to_utf16(I first, I last, O output, unicode_size_type_<1>)
             - n source values
             - n output values
 */
-template <  typename I, // I models InputIterator
+template <  typename T,
+            typename I, // I models InputIterator
             typename O> // O models OutputIterator
 O to_utf16(I first, I last, O output, unicode_size_type_<2>)
 {
@@ -506,20 +412,53 @@ O to_utf16(I first, I last, O output, unicode_size_type_<2>)
             - n source values
             - m output values
 */
-template <  typename I, // I models InputIterator
+template <  typename T,
+            typename I, // I models InputIterator
             typename O> // O models OutputIterator
 O to_utf16(I first, I last, O output, unicode_size_type_<4>)
 {
     while (first != last)
     {
-        boost::uint32_t result;
-
-        first = detail::to_utf32(first, last, result, detail::unicode_size_type_<1>());
-
-        *output++ = result;
+        output = utf32_to_utf16<T>(*first, output);
+        ++first;
     }
 
     return output;
+}
+
+/**************************************************************************************************/
+
+template <  typename T,
+            typename I,
+            typename O>
+O to_utf_(I f, I l, O o, unicode_size_type_<1>)
+{
+    return to_utf8<T>(f, l, o, typename unicode_size_type<I>::type());
+}
+
+template <  typename T,
+            typename I,
+            typename O>
+O to_utf_(I f, I l, O o, unicode_size_type_<2>)
+{
+    return to_utf16<T>(f, l, o, typename unicode_size_type<I>::type());
+}
+
+template <  typename T,
+            typename I,
+            typename O>
+O to_utf_(I f, I l, O o, unicode_size_type_<4>)
+{
+    T result;
+
+    while (f != l)
+    {
+        f = to_utf32(f, l, result, typename unicode_size_type<I>::type());
+
+        *o++ = result;
+    }
+
+    return o;
 }
 
 /**************************************************************************************************/
@@ -528,49 +467,43 @@ O to_utf16(I first, I last, O output, unicode_size_type_<4>)
 
 /**************************************************************************************************/
 
-#endif
+/*!
+\ingroup asl_unicode
 
-/**************************************************************************************************/
+\tparam T must be 8, 16, or 32 bit integral type
+\tparam I models InputIterator; value_type(I) must be 8, 16, or 32 bit integral type
+\tparam O models OutputIterator; must accept T
 
-template <  typename I, // models InputIterator
-            typename O> // models OutputIterator
-O to_utf8(I f, I l, O o) {
-    return detail::to_utf8(f, l, o, typename detail::unicode_size_type<I>::type());
-}
+\c copy_utf32 copies the text from the range <code>[f, l)</code> from UTF-8, 16, or 32 to UTF-8, 16
+or 32 and assigns the result to \c *o.
 
-/**************************************************************************************************/
+\pre <code>[f, l)</code> is a valid range of UTF-8, 16, or 32 encode text.
+\pre \c o is not an iterator within the range <code>[f, l)</code>. 
+\pre \c There is enough space to hold the text being copied. The maximum requirement on the output
+is that <code>[o, o + m(l - f))</code> is a valid range where m is determined by the following
+table:
 
-template <  typename I, // models InputIterator
-            typename O> // models OutputIterator
-O to_utf16(I f, I l, O o) {
-    return detail::to_utf16(f, l, o, typename detail::unicode_size_type<I>::type());
-}
+<table>
+    <tr><th></th><th colspan="3">result</th></tr>
+    <tr><th>source</th><th>UTF-8</th><th>UTF-16</th><th>UTF-32</th></tr>
+    <tr><th>UTF-8</th><td>1</td><td>1</td><td>1</td></tr>
+    <tr><th>UTF-16</th><td>3</td><td>1</td><td>1</td></tr>
+    <tr><th>UTF-32</th><td>4</td><td>2</td><td>1</td></tr>
+</table>
 
-/**************************************************************************************************/
-/*
-        utf16 -> utf32
-            - n source values
-            - m output values
+\note If the source contains an invalid or partial encoding then the output is undefined (debug
+builds may assert). However, the code will not read beyond the specified source range or output
+more than the maximal number of elements.
 
-        utf8 -> utf32
-            - n source values
-            - m output values
+\return An output iterator pointing to the end of the encoded text.
 */
 
-template <  typename I, // I models InputIterator
-            typename O> // O models OutputIterator
-O to_utf32(I first, I last, O output)
+template <  typename T,
+            typename I,
+            typename O>
+O copy_utf(I f, I l, O o)
 {
-    boost::uint32_t result;
-
-    while (first != last)
-    {
-        first = detail::to_utf32(first, last, result, typename detail::unicode_size_type<I>::type());
-
-        *output++ = result;
-    }
-
-    return output;
+    return detail::to_utf_<T>(f, l, o, detail::unicode_size_type_<sizeof(T)>());
 }
 
 /**************************************************************************************************/
@@ -580,5 +513,5 @@ O to_utf32(I first, I last, O output)
 /**************************************************************************************************/
 
 #endif
-    
+
 /**************************************************************************************************/

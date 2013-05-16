@@ -40,7 +40,7 @@ adobe::token_range_t to_token_range(boost::uint32_t code)
 
     utf8.reserve(8);
 
-    adobe::to_utf8(&code, &code + 1, std::back_inserter(utf8));
+    adobe::copy_utf<char>(&code, &code + 1, std::back_inserter(utf8));
 
     adobe::name_t utf8_name(utf8.c_str());
 
