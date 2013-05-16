@@ -71,7 +71,6 @@ std::ostream& operator << (std::ostream& s, const adobe::extents_t::slice_t& x)
 {
     adobe::guide_set_t::const_iterator first(x.guide_set_m.begin());
     adobe::guide_set_t::const_iterator last(x.guide_set_m.end());
-    adobe::guide_set_t::const_iterator back(last - 1);
 
     s   << adobe::begin_bag("[0]")
             << adobe::begin_sequence

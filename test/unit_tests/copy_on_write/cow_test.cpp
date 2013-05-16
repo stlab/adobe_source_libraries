@@ -10,6 +10,7 @@
 
 #include <functional>
 #include <iostream>
+#include <utility>
 
 #define BOOST_TEST_MAIN
 
@@ -201,11 +202,11 @@ void test_copy_on_write()
     {
         CowType value_1(mv(42)); // allocation
         CowType value_2(mv(21)); // allocation
-        CowType value_move(adobe::move(value_1));
+        CowType value_move(std::move(value_1));
     
         BOOST_CHECK_MESSAGE(value_move != value_1, "move failure");
 
-        value_move = adobe::move(value_2); // deallocation
+        value_move = std::move(value_2); // deallocation
     
         BOOST_CHECK_MESSAGE(value_move != value_2, "move failure");
         BOOST_CHECK_MESSAGE(value_1 == value_2, "move failure"); // both should be object_m == 0
@@ -232,7 +233,7 @@ void test_copy_on_write()
     // Test copy-assignment using null object_m
     {
         CowType foo(mv(1)); // allocation
-        CowType bar(adobe::move(foo));
+        CowType bar(std::move(foo));
 
         foo = mv(2); // allocation
     }
@@ -262,10 +263,10 @@ void test_copy_on_write()
     // Test move-assignment using null object_m
     {
         CowType                      foo(mv(1)); // allocation
-        CowType                      bar(adobe::move(foo));
+        CowType                      bar(std::move(foo));
         typename CowType::value_type value(mv(2));
 
-        foo = adobe::move(value); // allocation
+        foo = std::move(value); // allocation
     }
     // Check
     if (is_noisy) {
@@ -278,7 +279,7 @@ void test_copy_on_write()
         CowType                      foo(mv(1)); // allocation
         typename CowType::value_type value(mv(2));
 
-        foo = adobe::move(value);
+        foo = std::move(value);
     }
     // Check
     if (is_noisy) {
@@ -292,7 +293,7 @@ void test_copy_on_write()
         CowType                      bar(foo);
         typename CowType::value_type value(mv(2));
 
-        foo = adobe::move(value); // allocation
+        foo = std::move(value); // allocation
     }
     // Check
     if (is_noisy) {
