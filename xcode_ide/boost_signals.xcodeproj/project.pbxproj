@@ -121,7 +121,7 @@
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "boost_signals" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -159,6 +159,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(value)",
 					"BOOST_SIGNALS_NO_LIB=1",
@@ -173,6 +174,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(value)",
 					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
@@ -188,6 +190,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Debug;
 		};
@@ -195,6 +202,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Release;
 		};
@@ -202,6 +214,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(value)",
 					"BOOST_SIGNALS_NO_LIB=1",
@@ -216,6 +229,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(value)",
 					"BOOST_SIGNALS_NO_LIB=1",
@@ -230,6 +244,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(value)",
 					"BOOST_SIGNALS_NO_LIB=1",
@@ -245,6 +260,7 @@
 			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
 			buildSettings = {
 				ARCHS = ppc;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(value)",
 					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
@@ -261,6 +277,7 @@
 			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
 			buildSettings = {
 				ARCHS = i386;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(value)",
 					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
@@ -276,6 +293,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(value)",
 					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
@@ -292,6 +310,11 @@
 			baseConfigurationReference = CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
 				ARCHS = ppc;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Debug_PPC;
 		};
@@ -300,6 +323,11 @@
 			baseConfigurationReference = CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
 				ARCHS = i386;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Debug_i386;
 		};
@@ -311,6 +339,11 @@
 					ppc,
 					i386,
 				);
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Debug_Universal;
 		};
@@ -319,6 +352,11 @@
 			baseConfigurationReference = CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
 				ARCHS = ppc;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Release_PPC;
 		};
@@ -327,6 +365,11 @@
 			baseConfigurationReference = CE56A5D30A2FA0F3001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
 				ARCHS = i386;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Release_i386;
 		};
@@ -338,6 +381,11 @@
 					ppc,
 					i386,
 				);
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Release_Universal;
 		};

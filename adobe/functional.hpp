@@ -227,6 +227,7 @@ struct element<1, std::pair<T1, T2> >
     typedef typename std::pair<T1, T2>::second_type type;
 };
 
+#if 0
 template <typename T1, typename T2>
 struct element<0, pair<T1, T2> >
 {
@@ -238,6 +239,7 @@ struct element<1, pair<T1, T2> >
 {
     typedef typename pair<T1, T2>::second_type type;
 };
+#endif
 
 /*************************************************************************************************/
 
@@ -269,6 +271,7 @@ struct get_element<0, std::pair<T1, T2> > :
 
 /*************************************************************************************************/
 
+#if 0
 template <typename T1, typename T2> // T is pair or tuple
 struct get_element<0, pair<T1, T2> > :
         std::unary_function<pair<T1, T2>, typename pair<T1, T2>::first_type>
@@ -282,6 +285,7 @@ struct get_element<0, pair<T1, T2> > :
     const result_type& operator()(const argument_type& x) const
     { return x.first; }
 };
+#endif
 
 /*************************************************************************************************/
 
@@ -301,6 +305,7 @@ struct get_element<1, std::pair<T1, T2> > :
 
 /*************************************************************************************************/
 
+#if 0
 template <typename T1, typename T2> // T is pair or tuple
 struct get_element<1, pair<T1, T2> > :
         std::unary_function<pair<T1, T2>, typename pair<T1, T2>::second_type>
@@ -314,6 +319,7 @@ struct get_element<1, pair<T1, T2> > :
     const result_type& operator()(const argument_type& x) const
     { return x.second; }
 };
+#endif
 
 /*************************************************************************************************/
 

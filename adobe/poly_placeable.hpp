@@ -60,7 +60,7 @@ struct poly_placeable_instance : optimized_storage_type<T, poly_placeable_interf
     poly_placeable_instance(const T& x) 
         : base_t(x) {}
     poly_placeable_instance(move_from<poly_placeable_instance> x) 
-        : base_t(move_from<base_t>(x.source)) {}
+        : base_t(move(x)) {}
 
     void measure(extents_t& result)
     { 
@@ -90,7 +90,7 @@ struct placeable : public poly_base<poly_placeable_interface, poly_placeable_ins
     template <typename T>
     explicit placeable(const T& x) : base_t(x) {}
     
-    placeable(move_from<placeable> x) : base_t(move_from<base_t>(x.source)) {}
+    placeable(move_from<placeable> x) : base_t(move(x)) {}
 
     void measure(extents_t& result)
     { interface_ref().measure(result); }
@@ -142,7 +142,7 @@ struct poly_placeable_twopass_instance : optimized_storage_type<T, poly_placeabl
     poly_placeable_twopass_instance(const T& x) 
         : base_t(x) {}  
     poly_placeable_twopass_instance(move_from<poly_placeable_twopass_instance> x) 
-        : base_t(move_from<base_t>(x.source)) {}
+        : base_t(std::move(x)) {}
 
     void measure(extents_t& result)
     { 
@@ -174,7 +174,7 @@ struct placeable_twopass
     template <typename T>
     explicit placeable_twopass(const T& x) : base_t(x) {}
  
-    placeable_twopass(move_from<placeable_twopass> x) : base_t(move_from<base_t>(x.source)) {}
+    placeable_twopass(move_from<placeable_twopass> x) : base_t(move(x)) {}
 
     void measure(extents_t& result)
         { interface_ref().measure(result); }

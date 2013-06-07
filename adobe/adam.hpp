@@ -12,6 +12,7 @@
 #include <adobe/config.hpp>
 
 #include <functional>
+#include <vector>
 
 #include <boost/function.hpp>
 
@@ -33,7 +34,6 @@
 #include <adobe/istream.hpp>
 #include <adobe/move.hpp>
 #include <adobe/name_fwd.hpp>
-#include <adobe/vector.hpp>
 #include <adobe/virtual_machine.hpp>
 
 /*
@@ -568,8 +568,8 @@ struct set_monitor_t : std::unary_function<any_regular_t, void>
 struct sheet_t::relation_t
 {
     relation_t() { }
-    relation_t(vector<name_t> n, line_position_t p, array_t e) :
-        name_set_m(n),
+    relation_t(std::vector<name_t> n, line_position_t p, array_t e) :
+        name_set_m(std::begin(n), std::end(n)),
         position_m(p),
         expression_m(adobe::move(e))
     { }
@@ -582,18 +582,20 @@ struct sheet_t::relation_t
     }
     
     relation_t(move_from<relation_t> x) :
-        name_set_m(x.source.name_set_m),
-        position_m(x.source.position_m),
-        expression_m(adobe::move(x.source.expression_m))
+        name_set_m(x.name_set_m),
+        position_m(x.position_m),
+        expression_m(adobe::move(x.expression_m))
     { }
+    
+    relation_t(const relation_t&) = default;
     
     relation_t& operator=(relation_t x) 
     { swap(*this, x); return *this; }
 
 
-    vector<name_t>   name_set_m;
-    line_position_t  position_m;
-    array_t          expression_m;
+    std::vector<name_t> name_set_m;
+    line_position_t     position_m;
+    array_t             expression_m;
 };
 
 /*************************************************************************************************/

@@ -9,6 +9,10 @@
 #ifndef ADOBE_MOVE_HPP
 #define ADOBE_MOVE_HPP
 
+#include <algorithm>
+
+// REVISIT (sparent) : Many of these includes are no longer needed.
+
 #include <cassert>
 #include <iterator>
 #include <memory>
@@ -234,6 +238,14 @@ done by Dave Abrahams and Howard Hinnant.
 
 namespace adobe {
 
+using std::move;
+
+
+template <typename T>
+using move_from = T&&;
+
+#if 0
+
 /*************************************************************************************************/
 
 namespace implementation {
@@ -308,7 +320,6 @@ T move(T& x, typename boost::enable_if<boost::mpl::and_<boost::mpl::not_<is_mova
        implementation::has_default_constructor<T> >, void*>::type = 0)
 { using std::swap; T result; swap(x, result); return result; }
 
-
 /*************************************************************************************************/
 
 /*!
@@ -326,6 +337,8 @@ O move(I f, I l, O result)
     }
     return result;
 }
+
+#endif
 
 /*************************************************************************************************/
 

@@ -16,6 +16,7 @@
 #include <adobe/algorithm/lower_bound.hpp>
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
+#include <adobe/iomanip.hpp>
 #include <adobe/name.hpp>
 #include <adobe/string.hpp>
 #include <adobe/table_index.hpp>

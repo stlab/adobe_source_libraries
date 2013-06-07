@@ -11,8 +11,9 @@
 
 #include <adobe/config.hpp>
 
+#include <vector>
+
 #include <adobe/any_regular_fwd.hpp>
-#include <adobe/vector_fwd.hpp>
 
 /*************************************************************************************************/
 
@@ -22,7 +23,7 @@ namespace version_1 {
 /*************************************************************************************************/
 
 //!\ingroup abi_container
-typedef vector<any_regular_t> array_t;
+typedef std::vector<any_regular_t> array_t;
 
 /*************************************************************************************************/
 

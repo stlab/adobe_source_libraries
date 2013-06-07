@@ -6,6 +6,7 @@
 
 /*************************************************************************************************/
 
+#error Deprecated
 #ifndef ADOBE_VECTOR_FWD_HPP
 #define ADOBE_VECTOR_FWD_HPP
 

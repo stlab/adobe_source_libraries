@@ -26,6 +26,9 @@
 
 namespace adobe {
 
+using std::pair;
+using std::make_pair;
+
 /*************************************************************************************************/
 
 /*!
@@ -66,6 +69,8 @@ struct aggregate_pair
 };
 
 /*************************************************************************************************/
+
+#if 0
 
 //! \ingroup asl_pair
 template <typename T1, typename T2 = T1>
@@ -108,6 +113,8 @@ struct pair : boost::totally_ordered<pair<T1, T2>, pair<T1, T2>, empty_base<pair
 template <typename T1, typename T2>
 inline pair<T1, T2> make_pair(T1 x, T2 y)
 { return pair<T1, T2>(adobe::move(x), adobe::move(y)); }
+
+#endif
 
 /*************************************************************************************************/
 

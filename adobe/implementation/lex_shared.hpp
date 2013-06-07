@@ -288,8 +288,10 @@ struct lex_fragment_t
     { }
 
     lex_fragment_t(move_from<lex_fragment_t> x) :
-        token_value_m(adobe::move(x.source.token_value_m)), line_position_m(adobe::move(x.source.line_position_m))
+        token_value_m(adobe::move(x.token_value_m)), line_position_m(adobe::move(x.line_position_m))
     { }
+    
+    lex_fragment_t(const lex_fragment_t&) = default;
     
     lex_fragment_t& operator=(lex_fragment_t x)
     {

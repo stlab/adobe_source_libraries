@@ -254,7 +254,7 @@ InputIterator to_utf32 (InputIterator first, InputIterator last, T& result, unic
 /**************************************************************************************************/
 
 template <typename InputIterator, typename T>
-InputIterator to_utf32 (InputIterator first, InputIterator last, T& result, unicode_size_type_<4>)
+InputIterator to_utf32 (InputIterator first, InputIterator, T& result, unicode_size_type_<4>)
 {
     result = static_cast<T>(*first);
 

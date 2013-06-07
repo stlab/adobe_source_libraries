@@ -137,7 +137,7 @@
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "boost_filesystem" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -182,6 +182,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C20140947973700EB4BB6 /* adobe_debug.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				PRODUCT_NAME = boost_filesystem;
@@ -193,6 +194,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C20150947973700EB4BB6 /* adobe_release.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				PRODUCT_NAME = boost_filesystem;
 				SDKROOT = macosx;
@@ -203,8 +205,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE56A5C90A2FA0DC001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Debug;
 		};
@@ -212,8 +219,13 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE56A5C90A2FA0DC001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Release;
 		};
@@ -221,6 +233,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C20140947973700EB4BB6 /* adobe_debug.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				PRODUCT_NAME = boost_filesystem;
@@ -232,6 +245,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C20140947973700EB4BB6 /* adobe_debug.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				PRODUCT_NAME = boost_filesystem;
@@ -243,6 +257,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C20140947973700EB4BB6 /* adobe_debug.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				PRODUCT_NAME = boost_filesystem;
@@ -255,6 +270,7 @@
 			baseConfigurationReference = CE5C20150947973700EB4BB6 /* adobe_release.xcconfig */;
 			buildSettings = {
 				ARCHS = ppc;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				PRODUCT_NAME = boost_filesystem;
 				SDKROOT = macosx;
@@ -266,6 +282,7 @@
 			baseConfigurationReference = CE5C20150947973700EB4BB6 /* adobe_release.xcconfig */;
 			buildSettings = {
 				ARCHS = i386;
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				PRODUCT_NAME = boost_filesystem;
 				SDKROOT = macosx;
@@ -276,6 +293,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C20150947973700EB4BB6 /* adobe_release.xcconfig */;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				PRODUCT_NAME = boost_filesystem;
 				SDKROOT = macosx;
@@ -287,8 +305,13 @@
 			baseConfigurationReference = CE56A5C90A2FA0DC001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
 				ARCHS = ppc;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Debug_PPC;
 		};
@@ -297,8 +320,13 @@
 			baseConfigurationReference = CE56A5C90A2FA0DC001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
 				ARCHS = i386;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Debug_i386;
 		};
@@ -310,8 +338,13 @@
 					ppc,
 					i386,
 				);
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Debug_Universal;
 		};
@@ -320,8 +353,13 @@
 			baseConfigurationReference = CE56A5C90A2FA0DC001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
 				ARCHS = ppc;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Release_PPC;
 		};
@@ -330,8 +368,13 @@
 			baseConfigurationReference = CE56A5C90A2FA0DC001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
 				ARCHS = i386;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Release_i386;
 		};
@@ -343,8 +386,13 @@
 					ppc,
 					i386,
 				);
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 			};
 			name = Release_Universal;
 		};

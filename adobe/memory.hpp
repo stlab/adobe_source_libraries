@@ -765,6 +765,9 @@ class capture_allocator
 /*
     Note (sparent) : The aligned storage class is intended to pad out an item of size_t such that 
     anything following it is aligned to the max alignement on the machine - in this case, quadword.
+    
+    REVISIT (sparent) : This is a different beast than C++11 aligned storage. See if we can
+    replace usage with C++11 aligned storage.
 */
     
 //! \addtogroup memory
@@ -780,7 +783,7 @@ struct aligned_storage
     ~aligned_storage() { destroy(&get()); }
     
     aligned_storage(const aligned_storage& x) { construct(&get(), x.get()); }
-    aligned_storage(move_from<aligned_storage> x) { construct(&get(), adobe::move(x.source.get())); }
+    aligned_storage(move_from<aligned_storage> x) { construct(&get(), adobe::move(x.get())); }
     
     aligned_storage& operator=(aligned_storage x) { swap(*this, x); return *this; }
         

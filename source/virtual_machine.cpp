@@ -30,12 +30,13 @@
 #include <adobe/once.hpp>
 #include <adobe/static_table.hpp>
 #include <adobe/string.hpp>
-#include <adobe/vector.hpp>
 #include <adobe/virtual_machine.hpp>
 
 #ifndef NDEBUG
 #include <iostream>
 #endif
+
+using namespace std;
 
 /*************************************************************************************************/
 
@@ -94,7 +95,7 @@ typedef void (adobe::virtual_machine_t::implementation_t::* operator_t)();
 typedef boost::function<adobe::any_regular_t (const adobe::array_t&)>         array_function_t;
 typedef boost::function<adobe::any_regular_t (const adobe::dictionary_t&)>    dictionary_function_t;
 
-typedef adobe::vector<adobe::any_regular_t>                    stack_type; // REVISIT (sparent) : GCC 3.1 the symbol stack_t conflicts with a symbol in signal.h
+typedef vector<adobe::any_regular_t>                    stack_type; // REVISIT (sparent) : GCC 3.1 the symbol stack_t conflicts with a symbol in signal.h
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 typedef adobe::static_table<adobe::name_t, operator_t, 27>              operator_table_t;
