@@ -6,6 +6,7 @@
 
 /*************************************************************************************************/
 
+#error Deprecated
 #ifndef ADOBE_VECTOR_HPP
 #define ADOBE_VECTOR_HPP
 
@@ -186,7 +187,7 @@ class vector : boost::totally_ordered<vector<T, A>, vector<T, A> >
 
     // adobe addition
     
-    vector(move_from<vector> x) : header_m(x.source.header_m) { x.source.header_m = 0; }
+    vector(move_from<vector> x) : header_m(x.header_m) { x.header_m = 0; }
 
     allocator_type get_allocator() const
     { return header_m ? header_m->allocator() : allocator_type(); }

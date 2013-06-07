@@ -15,7 +15,6 @@
 
 #include <adobe/any_regular.hpp>
 #include <adobe/typeinfo.hpp>
-#include <adobe/vector.hpp>
 
 /**************************************************************************************************/
 

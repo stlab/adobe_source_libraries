@@ -99,7 +99,7 @@ struct poly_state_remote : Interface
     value_type& get() { return *value_ptr_m; }
 
     poly_state_remote(move_from<poly_state_remote> x)
-        : value_ptr_m(x.source.value_ptr_m){ x.source.value_ptr_m = NULL; }
+        : value_ptr_m(x.value_ptr_m){ x.value_ptr_m = NULL; }
 
     explicit poly_state_remote(value_type x)
         : value_ptr_m(::new value_type(adobe::move(x))) { }
@@ -139,7 +139,7 @@ struct poly_state_local : Interface
     value_type& get() { return value_m; }
 
     poly_state_local(move_from<poly_state_local> x)
-        : value_m(adobe::move(x.source.value_m)){ }
+        : value_m(adobe::move(x.value_m)){ }
 
     explicit poly_state_local(value_type x)
         : value_m(adobe::move(x)) { }
@@ -185,7 +185,7 @@ struct poly_instance : F {
     typedef typename F::interface_type interface_type;
 
     poly_instance(const value_type& x): F(x){ }
-    poly_instance(move_from<poly_instance> x) : F(move_from<F>(x.source)) { }
+    poly_instance(move_from<poly_instance> x) : F(std::move(x)) { }
 
     poly_copyable_interface* clone(void* storage) const
     { return ::new (storage) poly_instance(this->get()); }
@@ -276,7 +276,7 @@ struct poly_base {
 
     poly_base(const poly_base& x) { x.interface_ref().clone(storage()); }
 
-    poly_base(move_from<poly_base> x) { x.source.interface_ref().move_clone(storage()); }
+    poly_base(move_from<poly_base> x) { x.interface_ref().move_clone(storage()); }
 
     friend inline void swap(poly_base& x, poly_base& y)
     {
@@ -414,7 +414,8 @@ T must be a regular type modeling the concept represented by F
     template <typename T>
     explicit poly(const T& x) : F(x) {}
 
-    poly(move_from<poly> x) : F(move_from<F>(x.source)) {}
+    poly(move_from<poly> x) : F(std::move(x)) {}
+    poly(const poly&) = default;
 
     poly& operator=(poly x) { static_cast<F&>(*this) = adobe::move(static_cast<F&>(x)); return *this; }
 

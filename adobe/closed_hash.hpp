@@ -332,7 +332,7 @@ class closed_hash_set : boost::equality_comparable<closed_hash_set<T, KeyTransfo
     allocator_type get_allocator() const
     { return header() ? header()->allocator() : allocator_type(); }
 
-    closed_hash_set(move_from<closed_hash_set> x) : data_m(x.source.data_m) { x.source.header() = 0; }
+    closed_hash_set(move_from<closed_hash_set> x) : data_m(x.data_m) { x.header() = 0; }
 
 #if 0
     template <typename I> // I models ForwardIterator
@@ -668,7 +668,7 @@ class closed_hash_map : public closed_hash_set<pair<Key, T>,
 #endif
 
     closed_hash_map(const closed_hash_map& x) : set_type(x) { }
-    closed_hash_map(move_from<closed_hash_map> x) : set_type(move_from<set_type>(x.source)) { }
+    closed_hash_map(move_from<closed_hash_map> x) : set_type(move_from<set_type>(x)) { }
     closed_hash_map& operator=(closed_hash_map x)
     { swap(x, *this); return *this; }
 

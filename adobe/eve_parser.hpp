@@ -12,6 +12,7 @@
 #include <adobe/config.hpp>
 
 #include <string>
+#include <vector>
 
 #include <boost/any.hpp>
 #include <boost/function.hpp>
@@ -20,7 +21,6 @@
 #include <adobe/string.hpp>
 #include <adobe/istream.hpp>
 #include <adobe/name_fwd.hpp>
-#include <adobe/vector.hpp>
 
 /*************************************************************************************************/
 
@@ -165,11 +165,11 @@ struct eve_callback_suite_t
 	
     struct relation_t
     {
-        vector<name_t>  name_set_m;
-        line_position_t position_m;
-        array_t         expression_m;
-        string_t		detailed_m;
-        string_t		brief_m;
+        std::vector<name_t> name_set_m;
+        line_position_t     position_m;
+        array_t             expression_m;
+        string_t            detailed_m;
+        string_t            brief_m;
     };
     
     typedef boost::any position_t;

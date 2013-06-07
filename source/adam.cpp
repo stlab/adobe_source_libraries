@@ -9,6 +9,7 @@
 #include <adobe/adam.hpp>
 
 #include <deque>
+#include <vector>
 
 #include <boost/bind.hpp>
 #include <boost/tuple/tuple.hpp>
@@ -35,6 +36,10 @@
 #include <iostream>
 
 #endif // NDEBUG
+
+/**************************************************************************************************/
+
+using namespace std;
 
 /**************************************************************************************************/
 
@@ -215,7 +220,7 @@ private:
     struct cell_t;
 
     typedef vector<relation_cell_t*>    relation_index_t;
-    typedef std::vector<relation_t>     relation_set_t;
+    typedef vector<relation_t>          relation_set_t;
     
     struct relation_cell_t
     {
@@ -251,7 +256,7 @@ private:
         typedef empty_copy<boost::signal<void (const cell_bits_t&)> >    monitor_contributing_list_t;
 
         cell_t(access_specifier_t specifier, name_t, const calculator_t& calculator, 
-               std::size_t cell_set_pos, cell_t* = 0); // output
+               std::size_t cell_set_pos, cell_t*); // output
         cell_t(access_specifier_t specifier, name_t, any_regular_t, 
                std::size_t cell_set_pos); // constant
 
@@ -778,7 +783,7 @@ void sheet_t::implementation_t::add_output(name_t name, const line_position_t& p
     cell_set_m.push_back(cell_t(access_output, name, 
                                 boost::bind(&implementation_t::calculate_expression,
                                             boost::ref(*this), position, expression),
-                                cell_set_m.size()));
+                                cell_set_m.size(), nullptr));
 
     output_index_m.insert(cell_set_m.back());
     
@@ -895,7 +900,7 @@ void sheet_t::implementation_t::add_logic(name_t logic, const line_position_t& p
     cell_set_m.push_back(cell_t(access_logic, logic, 
                                 boost::bind(&implementation_t::calculate_expression,
                                             boost::ref(*this), position, expression),
-                                cell_set_m.size()));
+                                cell_set_m.size(), nullptr));
     
     if (!name_index_m.insert(cell_set_m.back()).second) {
         throw stream_error_t(make_string("cell named '", logic.c_str(), "'already exists."), position);
@@ -908,10 +913,10 @@ void sheet_t::implementation_t::add_invariant(name_t name, const line_position_t
         const array_t& expression)
 {
     // REVISIT (sparent) : Non-transactional on failure.
-    cell_set_m.push_back(cell_t(access_invariant, name, 
+    cell_set_m.push_back(cell_t(access_invariant, name,
                                 boost::bind(&implementation_t::calculate_expression,
                                             boost::ref(*this), position, expression),
-                                cell_set_m.size()));
+                                cell_set_m.size(), nullptr));
 
     output_index_m.insert(cell_set_m.back());
     

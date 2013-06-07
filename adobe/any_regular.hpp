@@ -301,7 +301,7 @@ struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable
         { }
 
     any_regular_model_remote(move_from<any_regular_model_remote> x)
-        : interface_type(vtable_s), object_ptr_m(x.source.object_ptr_m) { x.source.object_ptr_m = 0; }
+        : interface_type(vtable_s), object_ptr_m(x.object_ptr_m) { x.object_ptr_m = 0; }
 
     ~any_regular_model_remote()
     {
@@ -445,7 +445,7 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t>
         typedef boost::mpl::bool_<(sizeof(regular_model_local_type)
                 <= sizeof(storage_t))
                 && (boost::has_nothrow_copy<promote_type>::value
-                || is_movable<promote_type>::value)>                    use_local_type;
+                || std::is_nothrow_move_constructible<promote_type>::value)> use_local_type;
 
         typedef typename boost::mpl::if_<use_local_type,
                 regular_model_local_type,
@@ -476,7 +476,7 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t>
 
     any_regular_t(const any_regular_t& x) { x.object().clone(storage()); }
 
-    any_regular_t(move_from<any_regular_t> x) { x.source.object().move_clone(storage()); }
+    any_regular_t(move_from<any_regular_t> x) { x.object().move_clone(storage()); }
 
     any_regular_t& operator=(any_regular_t x)
     {
@@ -495,7 +495,7 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t>
     */
 
     template <typename T>
-    explicit any_regular_t(T x)
+    any_regular_t(T x)
     { ::new (storage()) typename traits<T>::model_type(adobe::move(x)); }
 
     /*!@}*/
@@ -602,7 +602,7 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t>
     friend void swap(any_regular_t& x, any_regular_t& y);
 
  private:
-    any_regular_t(move_from<interface_type> x) { x.source.move_clone(storage()); }
+    any_regular_t(move_from<interface_type> x) { x.move_clone(storage()); }
 
     interface_type& object() { return *static_cast<interface_type*>(storage()); }
     const interface_type& object() const { return *static_cast<const interface_type*>(storage()); }

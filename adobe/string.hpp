@@ -15,6 +15,7 @@
 #include <functional>
 #include <iterator>
 #include <string>
+#include <vector>
 
 #if defined(ADOBE_STD_SERIALIZATION)
 #include <iosfwd>
@@ -23,12 +24,13 @@
 #include <boost/cstdint.hpp>
 #include <boost/operators.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/type_traits.hpp>
 #include <boost/utility.hpp>
 
 #include <adobe/cstring.hpp>
+#include <adobe/move.hpp>
 #include <adobe/string_fwd.hpp>
 #include <adobe/typeinfo.hpp>
-#include <adobe/vector.hpp>
 
 #include <adobe/string/to_string.hpp>
 
@@ -207,7 +209,7 @@ class string_t : boost::totally_ordered<string_t, string_t, empty_base_t<string_
     typedef std::reverse_iterator<const char*> const_reverse_iterator;
 
  private:
-	typedef vector<value_type>				   storage_type;
+	typedef std::vector<value_type>				   storage_type;
 
 	storage_type storage_m;
 
@@ -265,7 +267,7 @@ class string_t : boost::totally_ordered<string_t, string_t, empty_base_t<string_
     /*!
         Move constructor.
     */
-    string_t(move_from<string_t> x) : storage_m(adobe::move(x.source.storage_m)) { }
+    string_t(move_from<string_t> x) : storage_m(adobe::move(x.storage_m)) { }
 
 	/*!
 		Constructs a string_t from a regular C string (including string literals).
@@ -396,13 +398,13 @@ class string_t : boost::totally_ordered<string_t, string_t, empty_base_t<string_
 		Returns an iterator to the first element of the string.
 	 */
 	const_iterator begin() const
-		{ return storage_m.begin(); }
+		{ return storage_m.empty() ? nullptr : &storage_m.front(); }
 
 	/*!
 		Returns an iterator just past the end of the string.
 	 */
 	const_iterator end() const
-		{ return storage_m.empty() ? storage_m.end() : boost::prior(storage_m.end()); }
+		{ return storage_m.empty() ? nullptr : &*boost::prior(storage_m.end()); }
 
 	/*!
 		Returns a reverse_iterator to the end of the current string.
@@ -515,7 +517,7 @@ public:
     typedef std::reverse_iterator<const boost::uint16_t*> const_reverse_iterator;
 
 private:
-	typedef vector<value_type>							  storage_type;
+	typedef std::vector<value_type>						  storage_type;
 
 	storage_type storage_m;
 
@@ -573,7 +575,7 @@ public:
     /*!
         Move constructor.
 	 */
-    string16_t(move_from<string16_t> x) : storage_m(adobe::move(x.source.storage_m)) { }
+    string16_t(move_from<string16_t> x) : storage_m(adobe::move(x.storage_m)) { }
 
 	/*!
 		Constructs a string16_t from a null-terminated sequence of 16-bit elements.
@@ -671,13 +673,13 @@ public:
 		Returns an iterator to the first element of the string.
 	 */
 	const_iterator begin() const
-		{ return storage_m.begin(); }
+		{ return storage_m.empty() ? nullptr : &storage_m.front(); }
 
 	/*!
 		Returns an iterator just past the end of the string.
 	 */
 	const_iterator end() const
-		{ return storage_m.empty() ? storage_m.end() : boost::prior(storage_m.end()); }
+		{ return storage_m.empty() ? nullptr : &*boost::prior(storage_m.end()); }
 
 	/*!
 		Returns a reverse_iterator to the end of the current string.
@@ -760,8 +762,14 @@ inline string16_t operator+(string16_t s1, const boost::uint16_t* s2) { return a
 
 /**************************************************************************************************/
 
-BOOST_STATIC_ASSERT(sizeof(string_t) == sizeof(vector<char>));
-BOOST_STATIC_ASSERT(sizeof(string16_t) == sizeof(vector<boost::uint16_t>));
+BOOST_STATIC_ASSERT(sizeof(string_t) == sizeof(std::vector<char>));
+
+
+/* REVISIT (sparent) : static assert fialing but string16_t going away. */
+
+#if 1
+BOOST_STATIC_ASSERT(sizeof(string16_t) == sizeof(std::vector<boost::uint16_t>));
+#endif
 
 /**************************************************************************************************/
 

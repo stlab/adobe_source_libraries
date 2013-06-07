@@ -13,13 +13,13 @@
 
 #include <iosfwd>
 #include <string>
+#include <vector>
 
 #include <boost/function.hpp>
 
 #include <adobe/array.hpp>
 #include <adobe/istream.hpp>
 #include <adobe/string.hpp>
-#include <adobe/vector.hpp>
 
 /*!
 \defgroup adam_reference Property Model Language Reference
@@ -143,7 +143,7 @@ struct adam_callback_suite_t
 
     struct relation_t
     {
-        vector<name_t>      name_set_m;
+        std::vector<name_t> name_set_m;
         line_position_t     position_m;
         array_t             expression_m;
         string_t            detailed_m;
