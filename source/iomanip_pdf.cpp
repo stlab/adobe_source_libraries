@@ -10,11 +10,15 @@
 
 /*************************************************************************************************/
 
+#include <string>
+
 #include <boost/cstdint.hpp>
 
 #include <adobe/iomanip_pdf.hpp>
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
+
+using namespace std;
 
 /*************************************************************************************************/
 
@@ -127,22 +131,22 @@ void pdf_format::handle_atom(stream_type& os, bool is_push)
             os << '\n' << indents(depth());
         }
 
-        if (value.type_info() == adobe::type_info<string_t>())
+        if (value.type_info() == typeid(string))
         {
-            os << '(' << value.cast<string_t>() << ')';
+            os << '(' << value.cast<string>() << ')';
         }
-        else if (value.type_info() == adobe::type_info<name_t>())
+        else if (value.type_info() == typeid(name_t))
         {
             os << '/' << value.cast<name_t>();
 
             if (outputting_bag && named_argument)
                 os << " ";
         }
-        else if (value.type_info() == adobe::type_info<bool>())
+        else if (value.type_info() == typeid(bool))
         {
             os << (value.cast<bool>() ? "true" : "false");
         }
-        else if (value.type_info() == adobe::type_info<double>())
+        else if (value.type_info() == typeid(double))
         {
             double         dbl_val(value.cast<double>());
             boost::int64_t int_val(static_cast<boost::int64_t>(dbl_val));
@@ -164,15 +168,15 @@ void pdf_format::handle_atom(stream_type& os, bool is_push)
                 os << dbl_val;
             }
         }
-        else if (value.type_info() == adobe::type_info<empty_t>())
+        else if (value.type_info() == typeid(empty_t))
         {
             os << "null";
         }
-        else if (value.type_info() == adobe::type_info<dictionary_t>())
+        else if (value.type_info() == typeid(dictionary_t))
         {
             os << value.cast<dictionary_t>();
         }
-        else if (value.type_info() == adobe::type_info<array_t>())
+        else if (value.type_info() == typeid(array_t))
         {
             os << value.cast<array_t>();
         }

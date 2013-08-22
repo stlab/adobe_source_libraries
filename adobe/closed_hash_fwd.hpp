@@ -14,6 +14,7 @@
 #include <adobe/config.hpp>
 
 #include <functional>
+#include <utility>
 
 #include <boost/functional/hash.hpp>
 
@@ -39,7 +40,7 @@ template<typename Key,
          typename T,
          typename Hash = boost::hash<Key>,
          typename Pred = std::equal_to<Key>,
-         typename A = capture_allocator<pair<Key, T> > >
+         typename A = capture_allocator<std::pair<Key, T> > >
 class closed_hash_map;
 
 /*************************************************************************************************/

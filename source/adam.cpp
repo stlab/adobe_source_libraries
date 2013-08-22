@@ -9,6 +9,8 @@
 #include <adobe/adam.hpp>
 
 #include <deque>
+#include <string>
+#include <utility>
 #include <vector>
 
 #include <boost/bind.hpp>
@@ -27,7 +29,6 @@
 
 #include <adobe/functional.hpp>
 #include <adobe/istream.hpp>
-#include <adobe/string.hpp>
 #include <adobe/table_index.hpp>
 #include <adobe/virtual_machine.hpp>
 
@@ -472,7 +473,7 @@ void sheet_t::implementation_t::cell_t::calculate()
     any_regular_t result = calculator_m();
     
     dirty_m = (result != state_m);
-    state_m = adobe::move(result);
+    state_m = std::move(result);
     evaluated_m = true;
 }
 
@@ -489,7 +490,7 @@ sheet_t::implementation_t::cell_t::cell_t(name_t name, any_regular_t x,
     relation_count_m(0),
     initial_relation_count_m(0),
     dirty_m(false),
-    state_m(adobe::move(x)),
+    state_m(std::move(x)),
     cell_set_pos_m(cell_set_pos),
     interface_input_m(0)
 {
@@ -548,7 +549,7 @@ sheet_t::implementation_t::cell_t::cell_t(access_specifier_t specifier, name_t n
     evaluated_m(true),
     relation_count_m(0),
     initial_relation_count_m(0),
-    state_m(adobe::move(x)),
+    state_m(std::move(x)),
     cell_set_pos_m(cell_set_pos),
     interface_input_m(0)
 { }
@@ -582,7 +583,7 @@ void sheet_t::add_constant(name_t constant, const line_position_t& position,
 { object_m->add_constant(constant, position, initializer); }
 
 void sheet_t::add_constant(name_t name, any_regular_t value)
-{ object_m->add_constant(name, move(value)); }
+{ object_m->add_constant(name, std::move(value)); }
 
 void sheet_t::add_logic(name_t logic, const line_position_t& position, const array_t& expression)
 { object_m->add_logic(logic, position, expression); }
@@ -597,7 +598,7 @@ void sheet_t::add_interface(name_t name, bool linked, const line_position_t& pos
 { object_m->add_interface(name, linked, position1, initializer, position2, expression); }
 
 void sheet_t::add_interface(name_t name, any_regular_t initial)
-{ object_m->add_interface(name, move(initial)); }
+{ object_m->add_interface(name, std::move(initial)); }
 
 void sheet_t::add_relation(const line_position_t& position, const array_t& conditional,
         const relation_t* first, const relation_t* last)
@@ -680,7 +681,7 @@ any_regular_t sheet_t::implementation_t::inspect(const array_t& expression)
 {
     machine_m.evaluate(expression);
     
-    any_regular_t result = adobe::move(machine_m.back());
+    any_regular_t result = std::move(machine_m.back());
     machine_m.pop_back();
     
     return result;
@@ -765,7 +766,7 @@ void sheet_t::implementation_t::add_input(name_t name, const line_position_t& po
 
     if (initializer.size()) initial_value = calculate_expression(position, initializer);
 
-    cell_set_m.push_back(cell_t(name, adobe::move(initial_value), cell_set_m.size()));
+    cell_set_m.push_back(cell_t(name, std::move(initial_value), cell_set_m.size()));
     // REVISIT (sparent) : Non-transactional on failure.
     input_index_m.insert(cell_set_m.back());
     
@@ -850,7 +851,7 @@ void sheet_t::implementation_t::add_interface(name_t name, any_regular_t initial
     
     input_index_m.insert(cell);
     
-    cell.state_m = move(initial);
+    cell.state_m = std::move(initial);
     cell.priority_m = ++priority_high_m;
     
     cell_set_m.push_back(cell_t(access_interface_output, name, 
@@ -885,7 +886,7 @@ void sheet_t::implementation_t::add_constant(name_t name, const line_position_t&
 
 void sheet_t::implementation_t::add_constant(name_t name, any_regular_t value)
 {
-    cell_set_m.push_back(cell_t(access_constant, name, move(value), cell_set_m.size()));
+    cell_set_m.push_back(cell_t(access_constant, name, std::move(value), cell_set_m.size()));
         
     if (!name_index_m.insert(cell_set_m.back()).second) {
         throw std::logic_error(make_string("cell named '", name.c_str(), "'already exists."));
@@ -967,7 +968,7 @@ any_regular_t sheet_t::implementation_t::calculate_expression(
 {
     evaluate(machine_m, position, expression);
     
-    any_regular_t result = adobe::move(machine_m.back());
+    any_regular_t result = std::move(machine_m.back());
     machine_m.pop_back();
         
     return result;

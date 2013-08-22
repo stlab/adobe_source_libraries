@@ -44,6 +44,8 @@ namespace std {
 }
 #endif
 
+using namespace std;
+
 /*************************************************************************************************/
 
 namespace adobe {
@@ -500,7 +502,7 @@ bool expression_parser::is_primary_expression(array_t& expression_stack)
             || is_token(string_k, result)
             || is_keyword(empty_k))
         {
-        expression_stack.push_back(adobe::move(result));
+        expression_stack.push_back(std::move(result));
         return true;
         }
     else if (is_array(expression_stack))
@@ -719,13 +721,13 @@ bool expression_parser::is_identifier(name_t& name_result)
     return false;
 }
 
-bool expression_parser::is_lead_comment(string_t& string_result)
+bool expression_parser::is_lead_comment(string& string_result)
 {
     const stream_lex_token_t& result (get_token());
     
     if (result.first == lead_comment_k)
     {
-        string_result = result.second.cast<string_t>();
+        string_result = result.second.cast<string>();
         return true;
     }
     
@@ -733,13 +735,13 @@ bool expression_parser::is_lead_comment(string_t& string_result)
     return false;
 }
 
-bool expression_parser::is_trail_comment(string_t& string_result)
+bool expression_parser::is_trail_comment(string& string_result)
 {
     const stream_lex_token_t& result (get_token());
     
     if (result.first == trail_comment_k)
     {
-        string_result = result.second.cast<string_t>();
+        string_result = result.second.cast<string>();
         return true;
     }
     
@@ -754,7 +756,7 @@ bool expression_parser::is_token(name_t tokenName, any_regular_t& tokenValue)
     const stream_lex_token_t& result (get_token());
     if (result.first == tokenName)
         {
-        tokenValue = move(result.second);
+        tokenValue = std::move(result.second);
         return true;
         }
     putback();

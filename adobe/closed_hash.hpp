@@ -18,6 +18,7 @@
 #include <climits>
 #include <cstddef>
 #include <limits>
+#include <utility>
 
 #include <boost/compressed_pair.hpp>
 #include <boost/functional/hash.hpp>
@@ -332,7 +333,7 @@ class closed_hash_set : boost::equality_comparable<closed_hash_set<T, KeyTransfo
     allocator_type get_allocator() const
     { return header() ? header()->allocator() : allocator_type(); }
 
-    closed_hash_set(move_from<closed_hash_set> x) : data_m(x.data_m) { x.header() = 0; }
+    closed_hash_set(closed_hash_set&& x) noexcept : data_m(x.data_m) { x.header() = 0; }
 
 #if 0
     template <typename I> // I models ForwardIterator
@@ -448,7 +449,7 @@ class closed_hash_set : boost::equality_comparable<closed_hash_set<T, KeyTransfo
 
     template <typename I> // I models ForwardIterator
     void move_insert(I first, I last)
-    { while (first != last) { insert(adobe::move(*first)); ++first; } }
+    { while (first != last) { insert(std::move(*first)); ++first; } }
 
     /*
         NOTE (sparent): If there is not enough space for one element we will reserve the space
@@ -468,12 +469,12 @@ class closed_hash_set : boost::equality_comparable<closed_hash_set<T, KeyTransfo
             {
             iterator found = find(node, end_(), key_function()(x));
             if (found != end()) {
-                *found = adobe::move(x);
+                *found = std::move(x);
                 return std::make_pair(found, false);
             }
 
             iterator free(begin_free());
-            insert_raw(free, adobe::move(x), state_misplaced);
+            insert_raw(free, std::move(x), state_misplaced);
             unsafe::splice_node_range(node, free, free);
             node = free;
             }
@@ -481,7 +482,7 @@ class closed_hash_set : boost::equality_comparable<closed_hash_set<T, KeyTransfo
         case state_misplaced:
             {
             iterator free(begin_free());
-            insert_raw(free, adobe::move(*node), state_misplaced);
+            insert_raw(free, std::move(*node), state_misplaced);
 
             unsafe::set_next(boost::prior(node), free);
             unsafe::set_next(free, boost::next(node));
@@ -491,7 +492,7 @@ class closed_hash_set : boost::equality_comparable<closed_hash_set<T, KeyTransfo
             // fall through
         default: // state_free
             {
-            insert_raw(node, adobe::move(x), state_home);
+            insert_raw(node, std::move(x), state_home);
             unsafe::splice_node_range(end(), node, node);
             }
         }
@@ -501,7 +502,7 @@ class closed_hash_set : boost::equality_comparable<closed_hash_set<T, KeyTransfo
 
     iterator insert(iterator, value_type x)
     {
-        return insert(adobe::move(x)).first;
+        return insert(std::move(x)).first;
     }
 
     ~closed_hash_set()
@@ -601,7 +602,7 @@ class closed_hash_set : boost::equality_comparable<closed_hash_set<T, KeyTransfo
     // location points to a free node
     static void insert_raw(iterator location, value_type x, std::size_t state)
     {
-        construct<value_type>(&*location, adobe::move(x));
+        construct<value_type>(&*location, std::move(x));
         location.set_state(state);
         unsafe::skip_node(location);
     }
@@ -643,14 +644,14 @@ template<typename Key,
          typename Hash,
          typename Pred,
          typename A>
-class closed_hash_map : public closed_hash_set<pair<Key, T>,
-                                               get_element<0, pair<Key, T> >,
+class closed_hash_map : public closed_hash_set<std::pair<Key, T>,
+                                               get_element<0, std::pair<Key, T> >,
                                                Hash,
                                                Pred,
                                                A>
 {
-    typedef closed_hash_set<pair<Key, T>,
-                            get_element<0, pair<Key, T> >,
+    typedef closed_hash_set<std::pair<Key, T>,
+                            get_element<0, std::pair<Key, T> >,
                             Hash,
                             Pred,
                             A> set_type;
@@ -668,7 +669,7 @@ class closed_hash_map : public closed_hash_set<pair<Key, T>,
 #endif
 
     closed_hash_map(const closed_hash_map& x) : set_type(x) { }
-    closed_hash_map(move_from<closed_hash_map> x) : set_type(move_from<set_type>(x)) { }
+    closed_hash_map(closed_hash_map&& x) noexcept : set_type(std::move(x)) { }
     closed_hash_map& operator=(closed_hash_map x)
     { swap(x, *this); return *this; }
 
@@ -697,7 +698,7 @@ class closed_hash_map : public closed_hash_set<pair<Key, T>,
     {
         typename set_type::iterator i = this->find(x);
         if (i == this->end()) {
-            return this->insert(adobe::make_pair(x, mapped_type())).first->second;
+            return this->insert(std::make_pair(x, mapped_type())).first->second;
         }
         return i->second;
     }
@@ -719,20 +720,6 @@ BOOST_STATIC_ASSERT(sizeof(closed_hash_set<int>) == sizeof(void*));
 /*************************************************************************************************/
 
 } // namespace adobe
-
-/*************************************************************************************************/
-
-ADOBE_NAME_TYPE_1("closed_hash_set:version_1:adobe",
-    adobe::version_1::closed_hash_set<T0, adobe::identity<const T0>, boost::hash<T0>, std::equal_to<T0>,
-        adobe::capture_allocator<T0> >);
-ADOBE_NAME_TYPE_2("closed_hash_map:version_1:adobe",
-    adobe::version_1::closed_hash_map<T0, T1, boost::hash<T0>, std::equal_to<T0>,
-            adobe::capture_allocator<adobe::pair<T0, T1> > >);
-
-ADOBE_NAME_TYPE_5("closed_hash_set:version_1:adobe",
-    adobe::version_1::closed_hash_set<T0, T1, T2, T3, T4 >);
-ADOBE_NAME_TYPE_5("closed_hash_map:version_1:adobe",
-    adobe::version_1::closed_hash_map<T0, T1, T2, T3, T4 >);
 
 /*************************************************************************************************/
 

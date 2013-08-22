@@ -6,6 +6,8 @@
 
 /*************************************************************************************************/
 
+#error Deprecated
+
 #ifndef ADOBE_STRING_FWD_HPP
 #define ADOBE_STRING_FWD_HPP
 

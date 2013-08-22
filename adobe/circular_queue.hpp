@@ -372,7 +372,7 @@ typename circular_queue<T>::const_reference circular_queue<T>::front() const
 template <typename T>
 void circular_queue<T>::push_back(T x)
 {
-    *end_m = adobe::move(x);
+    *end_m = std::move(x);
 
     bool was_full (full());
 

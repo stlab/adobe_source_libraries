@@ -98,11 +98,11 @@ struct poly_state_remote : Interface
     const value_type& get() const { return *value_ptr_m; }
     value_type& get() { return *value_ptr_m; }
 
-    poly_state_remote(move_from<poly_state_remote> x)
-        : value_ptr_m(x.value_ptr_m){ x.value_ptr_m = NULL; }
+    poly_state_remote(poly_state_remote&& x)
+        : value_ptr_m(x.value_ptr_m){ x.value_ptr_m = nullptr; }
 
     explicit poly_state_remote(value_type x)
-        : value_ptr_m(::new value_type(adobe::move(x))) { }
+        : value_ptr_m(::new value_type(std::move(x))) { }
 
     ~poly_state_remote()
     { delete value_ptr_m; }
@@ -138,11 +138,11 @@ struct poly_state_local : Interface
     const value_type& get() const { return value_m; }
     value_type& get() { return value_m; }
 
-    poly_state_local(move_from<poly_state_local> x)
-        : value_m(adobe::move(x.value_m)){ }
+    poly_state_local(poly_state_local&& x) noexcept
+        : value_m(std::move(x.value_m)){ }
 
     explicit poly_state_local(value_type x)
-        : value_m(adobe::move(x)) { }
+        : value_m(std::move(x)) { }
 
     // Precondition : this->type_info() == x.type_info()
     void assign(const poly_copyable_interface& x)
@@ -185,13 +185,13 @@ struct poly_instance : F {
     typedef typename F::interface_type interface_type;
 
     poly_instance(const value_type& x): F(x){ }
-    poly_instance(move_from<poly_instance> x) : F(std::move(x)) { }
+    poly_instance(poly_instance&& x) : F(std::move(x)) { }
 
     poly_copyable_interface* clone(void* storage) const
     { return ::new (storage) poly_instance(this->get()); }
 
     poly_copyable_interface* move_clone(void* storage)
-    { return ::new (storage) poly_instance(move_from<poly_instance>(*this)); }
+    { return ::new (storage) poly_instance(std::move(*this)); }
 };
 
 /*************************************************************************************************/
@@ -262,7 +262,7 @@ struct poly_base {
     template <typename T>
     explicit poly_base(T x,
         typename boost::disable_if<boost::is_base_of<poly_base, T> >::type* = 0)
-    { ::new (storage()) implementation::poly_instance<Instance<T> >(adobe::move(x)); }
+    { ::new (storage()) implementation::poly_instance<Instance<T> >(std::move(x)); }
 
     // Construct from related interface (might throw on downcast)
     template <typename J, template <typename> class K>
@@ -276,7 +276,7 @@ struct poly_base {
 
     poly_base(const poly_base& x) { x.interface_ref().clone(storage()); }
 
-    poly_base(move_from<poly_base> x) { x.interface_ref().move_clone(storage()); }
+    poly_base(poly_base&& x) { x.interface_ref().move_clone(storage()); }
 
     friend inline void swap(poly_base& x, poly_base& y)
     {
@@ -414,7 +414,7 @@ T must be a regular type modeling the concept represented by F
     template <typename T>
     explicit poly(const T& x) : F(x) {}
 
-    poly(move_from<poly> x) : F(std::move(x)) {}
+    poly(poly&& x) : F(std::move(x)) {}
     poly(const poly&) = default;
 
     poly& operator=(poly x) { static_cast<F&>(*this) = adobe::move(static_cast<F&>(x)); return *this; }

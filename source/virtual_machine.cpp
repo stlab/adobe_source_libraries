@@ -40,21 +40,15 @@ using namespace std;
 
 /*************************************************************************************************/
 
-ADOBE_ONCE_DECLARATION(adobe_virtual_machine)
-
-ADOBE_ONCE_DECLARATION(adobe_virtual_machine_get_type_name)
-
-/*************************************************************************************************/
-
 namespace adobe {
 
 /*************************************************************************************************/
 
 template<typename ValueType>
-struct static_table_traits<adobe::type_info_t, ValueType>
+struct static_table_traits<const std::type_info*, ValueType>
 {
     typedef bool                            result_type;
-    typedef adobe::type_info_t              key_type;
+    typedef const std::type_info*           key_type;
     typedef ValueType                       value_type;
     typedef std::pair<key_type, value_type> entry_type;
 
@@ -72,12 +66,12 @@ struct static_table_traits<adobe::type_info_t, ValueType>
 
     result_type operator()(const entry_type& x, const key_type& y) const
     {
-        return x.first.before(y) != 0;
+        return x.first->before(*y) != 0;
     }
 
     result_type equal(const key_type& x, const key_type& y) const
     {
-        return x == y;
+        return *x == *y;
     }
 };
 
@@ -101,7 +95,7 @@ typedef vector<adobe::any_regular_t>                    stack_type; // REVISIT (
 typedef adobe::static_table<adobe::name_t, operator_t, 27>              operator_table_t;
 typedef adobe::static_table<adobe::name_t, array_function_t, 7>         array_function_table_t;
 typedef adobe::static_table<adobe::name_t, dictionary_function_t, 1>    dictionary_function_table_t;
-typedef adobe::static_table<adobe::type_info_t, adobe::name_t, 7>       type_table_t;
+typedef adobe::static_table<const std::type_info*, adobe::name_t, 7>    type_table_t;
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 
 /*************************************************************************************************/
@@ -121,17 +115,17 @@ static type_table_t* type_table_g;
 
 /*************************************************************************************************/
 
-void get_type_name_init()
+void get_type_name_init_()
 {
     static type_table_t type_table_s =
     {{
-        type_table_t::entry_type(adobe::type_info<double>(),               adobe::static_name_t("number")),
-        type_table_t::entry_type(adobe::type_info<bool>(),                 adobe::static_name_t("boolean")),
-        type_table_t::entry_type(adobe::type_info<adobe::empty_t>(),       adobe::static_name_t("empty")),
-        type_table_t::entry_type(adobe::type_info<adobe::string_t>(),      adobe::static_name_t("string")),
-        type_table_t::entry_type(adobe::type_info<adobe::array_t>(),       adobe::static_name_t("array")),
-        type_table_t::entry_type(adobe::type_info<adobe::dictionary_t>(),  adobe::static_name_t("dictionary")),
-        type_table_t::entry_type(adobe::type_info<adobe::name_t>(),        adobe::static_name_t("name"))
+        type_table_t::entry_type(&typeid(double),               adobe::static_name_t("number")),
+        type_table_t::entry_type(&typeid(bool),                 adobe::static_name_t("boolean")),
+        type_table_t::entry_type(&typeid(adobe::empty_t),       adobe::static_name_t("empty")),
+        type_table_t::entry_type(&typeid(string),               adobe::static_name_t("string")),
+        type_table_t::entry_type(&typeid(adobe::array_t),       adobe::static_name_t("array")),
+        type_table_t::entry_type(&typeid(adobe::dictionary_t),  adobe::static_name_t("dictionary")),
+        type_table_t::entry_type(&typeid(adobe::name_t),        adobe::static_name_t("name"))
     }};
 
     type_table_s.sort();
@@ -141,13 +135,18 @@ void get_type_name_init()
 
 /*************************************************************************************************/
 
+once_flag get_type_name_flag;
+void get_type_name_init() { call_once(get_type_name_flag, &get_type_name_init_); }
+
+/*************************************************************************************************/
+
 adobe::name_t get_type_name(const adobe::any_regular_t& val)
 {
-    ADOBE_ONCE_INSTANCE(adobe_virtual_machine_get_type_name);
+    get_type_name_init();
 
     adobe::name_t result;
 
-    (*type_table_g)(val.type_info(), result);
+    (*type_table_g)(&val.type_info(), result);
 
     if (!result) result = adobe::static_name_t("unknown");
 
@@ -165,10 +164,10 @@ adobe::name_t get_type_name(const adobe::any_regular_t& val)
 adobe::any_regular_t xml_escape_function(const adobe::array_t& parameters)
 {
     if (parameters.size() != 1 ||
-        parameters[0].type_info() != adobe::type_info<adobe::string_t>())
+        parameters[0].type_info() != typeid(string))
         throw std::runtime_error("xml_escape: parameter error");
 
-    return adobe::any_regular_t(adobe::entity_escape(parameters[0].cast<adobe::string_t>()));
+    return adobe::any_regular_t(adobe::entity_escape(parameters[0].cast<string>()));
 }
 
 /*************************************************************************************************/
@@ -176,10 +175,10 @@ adobe::any_regular_t xml_escape_function(const adobe::array_t& parameters)
 adobe::any_regular_t xml_unescape_function(const adobe::array_t& parameters)
 {
     if (parameters.size() != 1 ||
-        parameters[0].type_info() != adobe::type_info<adobe::string_t>())
+        parameters[0].type_info() != typeid(string))
         throw std::runtime_error("xml_unescape: parameter error");
 
-    return adobe::any_regular_t(adobe::entity_unescape(parameters[0].cast<adobe::string_t>()));
+    return adobe::any_regular_t(adobe::entity_unescape(parameters[0].cast<string>()));
 }
 
 /*************************************************************************************************/
@@ -429,7 +428,7 @@ namespace {
 
 /*************************************************************************************************/
 
-void virtual_machine_init_once()
+void virtual_machine_init_()
 {
     typedef operator_table_t::entry_type op_entry_type;
     typedef adobe::virtual_machine_t::implementation_t implementation_t;
@@ -492,13 +491,12 @@ void virtual_machine_init_once()
 
 /*************************************************************************************************/
 
-} // namespace
+once_flag virtual_machine_init_flag;
+void virtual_machine_init() { call_once(virtual_machine_init_flag, &virtual_machine_init_); }
 
 /*************************************************************************************************/
 
-ADOBE_ONCE_DEFINITION(adobe_virtual_machine, virtual_machine_init_once)
-
-ADOBE_ONCE_DEFINITION(adobe_virtual_machine_get_type_name, get_type_name_init)
+} // namespace
 
 /*************************************************************************************************/
 
@@ -514,7 +512,7 @@ namespace adobe {
     
 virtual_machine_t::implementation_t::implementation_t()
 {
-    ADOBE_ONCE_INSTANCE(adobe_virtual_machine);
+    virtual_machine_init();
 }
 
 /*************************************************************************************************/
@@ -564,7 +562,7 @@ void virtual_machine_t::implementation_t::pop_back()
 
 operator_t virtual_machine_t::implementation_t::find_operator(adobe::name_t oper)
 {
-    ADOBE_ONCE_INSTANCE(adobe_virtual_machine);
+    virtual_machine_init();
 
     return (*operator_table_g)(oper);
 }
@@ -648,7 +646,7 @@ void virtual_machine_t::implementation_t::logical_operator(bool do_and)
         
         any_regular_t& operand2(value_stack_m.back());
 
-        if (operand2.type_info() != type_info<bool>())
+        if (operand2.type_info() != typeid(bool))
             throw std::bad_cast();
     }
 } 
@@ -678,7 +676,7 @@ void virtual_machine_t::implementation_t::index_operator()
     
     adobe::any_regular_t result;
     
-    if (operand2.type_info() == type_info<adobe::name_t>())
+    if (operand2.type_info() == typeid(adobe::name_t))
     {
         adobe::name_t index(operand2.cast<adobe::name_t>());
 
@@ -780,11 +778,11 @@ void virtual_machine_t::implementation_t::array_operator()
     for (stack_type::iterator first(value_stack_m.end() - count), last(value_stack_m.end());
         first != last; ++first)
     {
-        result.push_back(adobe::move(*first));
+        result.push_back(std::move(*first));
     }
             
     value_stack_m.resize(value_stack_m.size() - count);
-    value_stack_m.push_back(any_regular_t(adobe::move(result)));
+    value_stack_m.push_back(any_regular_t(std::move(result)));
 }
 
 /*************************************************************************************************/
@@ -803,12 +801,12 @@ void virtual_machine_t::implementation_t::dictionary_operator()
     {
         name_t name = first->cast<adobe::name_t>();
         ++first;
-        result.insert(make_pair(name, adobe::move(*first)));
+        result.insert(make_pair(name, std::move(*first)));
         ++first;
     }
         
     value_stack_m.resize(value_stack_m.size() - count);
-    value_stack_m.push_back(any_regular_t(adobe::move(result)));
+    value_stack_m.push_back(any_regular_t(std::move(result)));
 }
 
 /*************************************************************************************************/
@@ -823,7 +821,7 @@ void virtual_machine_t::implementation_t::bitwise_binary_operator()
 
     boost::uint32_t operand2_value(0); // something reasonable
 
-    if (back().type_info() == adobe::type_info<adobe::array_t>())
+    if (back().type_info() == typeid(adobe::array_t))
     {
         adobe::array_t operand2_exp(back().cast<adobe::array_t>());
         pop_back(); // pop operand2_exp
@@ -832,7 +830,7 @@ void virtual_machine_t::implementation_t::bitwise_binary_operator()
         adobe::any_regular_t operand2 = back();
         operand2_value = static_cast<boost::uint32_t>(operand2.cast<double>());
     }
-    else if (back().type_info() == adobe::type_info<double>())
+    else if (back().type_info() == typeid(double))
     {
         operand2_value = static_cast<boost::uint32_t>(back().cast<double>());
     }
@@ -866,13 +864,13 @@ void virtual_machine_t::implementation_t::bitwise_unary_operator()
 
 void virtual_machine_t::implementation_t::function_operator()
 {
-    ADOBE_ONCE_INSTANCE(adobe_virtual_machine);
+    virtual_machine_init();
 
     // pop the function name
     adobe::name_t   function_name(back().cast<adobe::name_t>());
     pop_back();
     
-    if (back().type_info() == type_info<adobe::array_t>())
+    if (back().type_info() == typeid(adobe::array_t))
     {
         // handle unnamed parameter functions
         array_function_t    array_func;

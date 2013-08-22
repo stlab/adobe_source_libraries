@@ -18,6 +18,7 @@
 #include <string>
 #include <cstdio>
 #include <memory>
+#include <mutex>
 #include <vector>
 
 /*************************************************************************************************/
@@ -76,15 +77,15 @@
 
 /*************************************************************************************************/
 
-ADOBE_ONCE_DECLARATION(zuid_once)
-
-/*************************************************************************************************/
-
 #if defined(BOOST_MSVC) && BOOST_MSVC >= 1400
     // Silence warnings about deprecated cstdio functions (sprintf,sscanf).
 
     #pragma warning ( disable : 4996 )
 #endif
+
+/*************************************************************************************************/
+
+using namespace std;
 
 /*************************************************************************************************/
 
@@ -98,11 +99,20 @@ ADOBE_THREAD_LOCAL_STORAGE(zuid_char_buffer_t, zuid_char_buffer)
 
 /*************************************************************************************************/
 
-void init_zuid_once()
+void init_zuid_once_()
 {
     // initialize the thread-specific data
 
     ADOBE_THREAD_LOCAL_STORAGE_INITIALIZE(zuid_char_buffer);
+}
+
+/*************************************************************************************************/
+
+once_flag init_zuid_flag;
+
+void init_zuid_once()
+{
+    call_once(init_zuid_flag, &init_zuid_once_);
 }
 
 /*************************************************************************************************/
@@ -251,7 +261,7 @@ std::string zuid_t::str() const
 
 char* zuid_t::c_str() const
 {
-    ADOBE_ONCE_INSTANCE(zuid_once);
+    init_zuid_once();
 
     zuid_char_buffer_t& buffer(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_char_buffer));
 
@@ -283,10 +293,6 @@ const zuid_t zuid_t::null = zuid_t(zeroed());
 /*************************************************************************************************/
 
 } // namespace adobe
-
-/*************************************************************************************************/
-
-ADOBE_ONCE_DEFINITION(zuid_once, init_zuid_once)
 
 /*************************************************************************************************/
     

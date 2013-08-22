@@ -20,7 +20,6 @@
 #include <adobe/any_regular.hpp>
 #include <adobe/closed_hash.hpp>
 #include <adobe/name.hpp>
-#include <adobe/typeinfo.hpp>
 #include <adobe/string.hpp>
 
 #ifdef ADOBE_STD_SERIALIZATION
@@ -75,10 +74,6 @@ std::ostream& operator<<(std::ostream& out, const dictionary_t& x);
 using version_1::get_value;
 
 } // namespace adobe
-
-/**************************************************************************************************/
-
-ADOBE_SHORT_NAME_TYPE('d','i','c','t', adobe::dictionary_t)
 
 /**************************************************************************************************/
 

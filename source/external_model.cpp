@@ -8,11 +8,13 @@
 
 #include <adobe/external_model.hpp>
 
+#include <stdexcept>
+#include <string>
+
 #include <adobe/algorithm/for_each.hpp>
 #include <adobe/dictionary.hpp>
-#include <adobe/string.hpp>
 
-#include <stdexcept>
+using namespace std;
 
 /*************************************************************************************************/
 
@@ -71,9 +73,7 @@ external_model_t::cell_t* external_model_t::lookup(name_t name)
 
     if (iter == index_m.end())
     {
-        std::string error("external_model_t cell does not exist: ");
-        error << name.c_str();
-        throw std::logic_error(error);
+        throw std::logic_error(string() + "external_model_t cell does not exist: " + name.c_str());
     }
     
     return iter->second;
