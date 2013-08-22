@@ -171,8 +171,8 @@ class expression_parser : public boost::noncopyable
 //  lexical tokens:
 
     bool is_identifier(name_t&);
-    bool is_lead_comment(string_t&);
-    bool is_trail_comment(string_t&);
+    bool is_lead_comment(std::string&);
+    bool is_trail_comment(std::string&);
     
 /*
     REVISIT (sparent) : We should provide a protected call to get the token stream and allow

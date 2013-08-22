@@ -10,12 +10,16 @@
 
 /*************************************************************************************************/
 
+#include <string>
+
 #include <boost/cstdint.hpp>
 
 #include <adobe/iomanip_xml.hpp>
 #include <adobe/implementation/expression_filter.hpp>
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
+
+using namespace std;
 
 /*************************************************************************************************/
 
@@ -122,19 +126,19 @@ void xml_format::handle_atom(stream_type& os, bool is_push)
         {
             os << "<key>" << value.cast<adobe::name_t>().c_str() << "</key>";
         }
-        else if (value.type_info() == adobe::type_info<string_t>())
+        else if (value.type_info() == typeid(string))
         {
-            os << "<string>" << entity_escape(value.cast<string_t>()) << "</string>";
+            os << "<string>" << entity_escape(value.cast<string>()) << "</string>";
         }
-        else if (value.type_info() == adobe::type_info<name_t>())
+        else if (value.type_info() == typeid(name_t))
         {
             os << "<ident>" << value.cast<adobe::name_t>() << "</ident>";
         }
-        else if (value.type_info() == adobe::type_info<bool>())
+        else if (value.type_info() == typeid(bool))
         {
             os << "<bool>" << (value.cast<bool>() ? "true" : "false") << "</bool>";
         }
-        else if (value.type_info() == adobe::type_info<double>())
+        else if (value.type_info() == typeid(double))
         {
             double         dbl_val(value.cast<double>());
             boost::int64_t int_val(static_cast<boost::int64_t>(dbl_val));
@@ -144,15 +148,15 @@ void xml_format::handle_atom(stream_type& os, bool is_push)
             else
                 os << "<double>" << dbl_val << "</double>";
         }
-        else if (value.type_info() == adobe::type_info<empty_t>())
+        else if (value.type_info() == typeid(empty_t))
         {
             os << "<" << value.cast<empty_t>() << "/>";
         }
-        else if (value.type_info() == adobe::type_info<dictionary_t>())
+        else if (value.type_info() == typeid(dictionary_t))
         {
             os << value.cast<dictionary_t>();
         }
-        else if (value.type_info() == adobe::type_info<array_t>())
+        else if (value.type_info() == typeid(array_t))
         {
             os << value.cast<array_t>();
         }

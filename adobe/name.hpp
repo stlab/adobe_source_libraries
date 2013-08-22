@@ -15,7 +15,6 @@
 
 #include <adobe/conversion.hpp>
 #include <adobe/cstring.hpp>
-#include <adobe/typeinfo.hpp>
 
 /*************************************************************************************************/
 
@@ -108,9 +107,6 @@ template <> struct promote<aggregate_name_t> { typedef name_t type; };
 } // namespace adobe
 
 /*************************************************************************************************/
-
-ADOBE_NAME_TYPE_0("name_t:version_1:adobe", adobe::version_1::name_t)
-ADOBE_SHORT_NAME_TYPE('n','a','m','e', adobe::version_1::name_t)
 
 #endif
 

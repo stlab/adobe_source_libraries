@@ -4,9 +4,16 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/implementation/lex_stream.hpp>
+
+#include <iostream>
+#include <sstream>
+#include <mutex>
+
+#include <boost/array.hpp>
+
 #include <adobe/once.hpp>
 #include <adobe/string.hpp>
 #include <adobe/name.hpp>
@@ -15,12 +22,11 @@
 #include <adobe/implementation/lex_shared.hpp>
 #include <adobe/istream.hpp>
 
-#include <boost/array.hpp>
+/**************************************************************************************************/
 
-#include <iostream>
-#include <sstream>
+using namespace std;
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifdef BOOST_MSVC
 namespace std
@@ -32,19 +38,15 @@ namespace std
 }
 #endif
 
-/*************************************************************************************************/
-
-ADOBE_ONCE_DECLARATION(adobe_lex_stream)
-
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 typedef boost::array<adobe::name_t, 3>  keyword_table_t;
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 const keyword_table_t*      keywords_g;
 const char*                 compound_match_g;
@@ -52,7 +54,7 @@ const adobe::name_t*        name_table_g;
 const int*                  compound_index_g;
 const int*                  simple_index_g;
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void init_once()
 {
@@ -191,26 +193,23 @@ void init_once()
     simple_index_g      = &simple_index_s[0];
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-void once_instance()
-{
-    ADOBE_ONCE_INSTANCE(adobe_lex_stream);
-}
+static once_flag once_flag;
+void once_instance() { call_once(once_flag, &init_once); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-ADOBE_ONCE_DEFINITION(adobe_lex_stream, init_once)
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 struct lex_stream_t::implementation_t : stream_lex_base_t<2, std::istream_iterator<char> >
 {
@@ -241,7 +240,7 @@ struct lex_stream_t::implementation_t : stream_lex_base_t<2, std::istream_iterat
     keyword_extension_lookup_proc_t     keyword_proc_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 lex_stream_t::lex_stream_t(std::istream& in, const line_position_t& position ) :
     object_m(new lex_stream_t::implementation_t(in, position))
@@ -273,13 +272,13 @@ const line_position_t& lex_stream_t::next_position()
 void lex_stream_t::set_keyword_extension_lookup(const keyword_extension_lookup_proc_t& proc)
     { return object_m->set_keyword_extension_lookup(proc); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 lex_stream_t::implementation_t::implementation_t(std::istream& in, const line_position_t& position) :
     _super(std::istream_iterator<char>(in), std::istream_iterator<char>(), position)
@@ -289,21 +288,21 @@ lex_stream_t::implementation_t::implementation_t(std::istream& in, const line_po
     _super::set_parse_token_proc(boost::bind(&lex_stream_t::implementation_t::parse_token, boost::ref(*this), _1));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void lex_stream_t::implementation_t::set_keyword_extension_lookup(const keyword_extension_lookup_proc_t& proc)
 {
     keyword_proc_m = proc;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool lex_stream_t::implementation_t::is_number(char c, stream_lex_token_t& result)
 {
     return is_hex_number(c, result) || is_dec_number(c, result);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool lex_stream_t::implementation_t::is_hex_number(char c, stream_lex_token_t& result)
 {
@@ -345,7 +344,7 @@ bool lex_stream_t::implementation_t::is_hex_number(char c, stream_lex_token_t& r
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool lex_stream_t::implementation_t::is_dec_number(char c, stream_lex_token_t& result)
 {
@@ -377,7 +376,7 @@ bool lex_stream_t::implementation_t::is_dec_number(char c, stream_lex_token_t& r
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool lex_stream_t::implementation_t::is_identifier_or_keyword(char c, stream_lex_token_t& result)
 {
@@ -417,7 +416,7 @@ bool lex_stream_t::implementation_t::is_identifier_or_keyword(char c, stream_lex
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool lex_stream_t::implementation_t::is_comment(char c, stream_lex_token_t& result)
 {
@@ -471,7 +470,7 @@ bool lex_stream_t::implementation_t::is_comment(char c, stream_lex_token_t& resu
     
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool lex_stream_t::implementation_t::is_string(char c, stream_lex_token_t& result)
 {
@@ -507,7 +506,7 @@ bool lex_stream_t::implementation_t::is_string(char c, stream_lex_token_t& resul
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     is_compound() works by noting that in most of the current compound tokens the token is unique
@@ -567,7 +566,7 @@ bool lex_stream_t::implementation_t::is_compound(char c, stream_lex_token_t& res
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool lex_stream_t::implementation_t::is_simple(char c, stream_lex_token_t& result)
 {
@@ -579,7 +578,7 @@ bool lex_stream_t::implementation_t::is_simple(char c, stream_lex_token_t& resul
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool lex_stream_t::implementation_t::skip_space(char& c)
 {
@@ -588,7 +587,7 @@ bool lex_stream_t::implementation_t::skip_space(char& c)
     return get_char(c);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void lex_stream_t::implementation_t::parse_token(char c)
 {
@@ -602,11 +601,11 @@ void lex_stream_t::implementation_t::parse_token(char c)
         ||  is_simple(c, result)))
         { throw_parser_exception("Syntax Error"); }
 
-    put_token(adobe::move(result));
+    put_token(std::move(result));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/

@@ -14,7 +14,6 @@
 #include <adobe/array_fwd.hpp>
 
 #include <adobe/any_regular.hpp>
-#include <adobe/typeinfo.hpp>
 
 /**************************************************************************************************/
 
@@ -25,10 +24,10 @@ namespace version_1 {
 
 template <typename T> // T models Regular
 inline void push_back(array_t& v, T x)
-{ v.push_back(any_regular_t(adobe::move(x))); }
+{ v.push_back(any_regular_t(std::move(x))); }
 
 inline void push_back(array_t& v, any_regular_t x)
-{ v.push_back(adobe::move(x)); }
+{ v.push_back(std::move(x)); }
 
 /**************************************************************************************************/
 
@@ -37,10 +36,6 @@ inline void push_back(array_t& v, any_regular_t x)
 using version_1::push_back;
 
 } // namespace adobe
-
-/**************************************************************************************************/
-
-ADOBE_SHORT_NAME_TYPE('a','r','r','y', adobe::array_t)
 
 /**************************************************************************************************/
 

@@ -29,6 +29,8 @@
 
 #include <adobe/implementation/token.hpp>
 
+using namespace std;
+
 /*************************************************************************************************/
 
 namespace {
@@ -77,7 +79,7 @@ bool keyword_lookup(const adobe::name_t& name)
     }
 #endif
     
-    return binary_search(keyword_table, name, less(), constructor<name_t>()) != boost::end(keyword_table);
+    return binary_search(keyword_table, name, adobe::less(), constructor<name_t>()) != boost::end(keyword_table);
 }
 
 /*************************************************************************************************/
@@ -243,9 +245,9 @@ bool adam_parser::is_external_set_decl()
 
     while (true)
     {
-        string_t    detailed;
-        string_t    brief;
-        name_t      cell_name;
+        string  detailed;
+        string  brief;
+        name_t  cell_name;
         
         (void)is_lead_comment(detailed);
         
@@ -262,12 +264,12 @@ bool adam_parser::is_external_set_decl()
 /*************************************************************************************************/
 
 //  interface_cell_decl     = ["unlink"] identifier [initializer] [define_expression] end_statement.
-bool adam_parser::is_interface_cell_decl(const string_t& detailed)
+bool adam_parser::is_interface_cell_decl(const string& detailed)
 {
     name_t          cell_name;
     array_t         initializer, expression;
     line_position_t initializer_position, expression_position;
-    string_t     brief;
+    string          brief;
 
     bool linked (!is_keyword(unlink_k));
     
@@ -288,12 +290,12 @@ bool adam_parser::is_interface_cell_decl(const string_t& detailed)
 /*************************************************************************************************/
 
 //  input_cell_decl         = identifier [initializer] end_statement.
-bool adam_parser::is_input_cell_decl(const string_t& detailed)
+bool adam_parser::is_input_cell_decl(const string& detailed)
 {
     name_t          cell_name;
     array_t         initializer;
     line_position_t position;
-    string_t     brief;
+    string          brief;
     
     if (!is_identifier(cell_name)) return false;
     
@@ -310,12 +312,12 @@ bool adam_parser::is_input_cell_decl(const string_t& detailed)
 /*************************************************************************************************/
 
 //  output_cell_decl        = named_decl.
-bool adam_parser::is_output_cell_decl(const string_t& detailed)
+bool adam_parser::is_output_cell_decl(const string& detailed)
 {
     name_t          cell_name;
     line_position_t position;
     array_t         expression;
-    string_t     brief; // REVISIT (fbreret) do something with me
+    string          brief; // REVISIT (fbreret) do something with me
 
     if (!is_named_decl(cell_name, position, expression, brief)) return false;
 
@@ -328,12 +330,12 @@ bool adam_parser::is_output_cell_decl(const string_t& detailed)
 /*************************************************************************************************/
 
 //  constant_cell_decl      = identifier initializer end_statement.
-bool adam_parser::is_constant_cell_decl(const string_t& detailed)
+bool adam_parser::is_constant_cell_decl(const string& detailed)
 {
     name_t          cell_name;
     line_position_t position;
     array_t         initializer;
-    string_t     brief;
+    string          brief;
 
     if (!is_identifier(cell_name)) return false;
     if (!is_initializer(position, initializer)) throw_exception("initializer required");
@@ -348,12 +350,12 @@ bool adam_parser::is_constant_cell_decl(const string_t& detailed)
 /*************************************************************************************************/
 
 //  logic_cell_decl         = named_decl | relate_decl.
-bool adam_parser::is_logic_cell_decl(const string_t& detailed)
+bool adam_parser::is_logic_cell_decl(const string& detailed)
 {
     name_t          cell_name;
     line_position_t position;
     array_t         expression;
-    string_t     brief;
+    string          brief;
 
     relation_set_t  relations;
     
@@ -376,12 +378,12 @@ bool adam_parser::is_logic_cell_decl(const string_t& detailed)
 /*************************************************************************************************/
 
 //  invariant_cell_decl     = named_decl.
-bool adam_parser::is_invariant_cell_decl(const string_t& detailed)
+bool adam_parser::is_invariant_cell_decl(const string& detailed)
 {
     name_t          cell_name;
     line_position_t position;
     array_t         expression;
-    string_t     brief;
+    string          brief;
 
     if (!is_named_decl(cell_name, position, expression, brief)) return false;
 
@@ -395,7 +397,7 @@ bool adam_parser::is_invariant_cell_decl(const string_t& detailed)
 
 //  relate_decl             = [conditional] "relate" "{" relate_expression relate_expression { relate_expression } "}" [trail_comment]
 bool adam_parser::is_relate_decl(line_position_t& position, array_t& expression,
-        relation_set_t& relation_set, string_t& brief)
+        relation_set_t& relation_set, string& brief)
 {
 /*
     REVISIT (sparent) : A relation_set_t needs a position independent of the continitional
@@ -466,7 +468,7 @@ bool adam_parser::is_relate_expression_decl(relation_t& relation)
 /*************************************************************************************************/
 
 //  named_decl              = identifier define_expression end_statement.
-bool adam_parser::is_named_decl(name_t& cell_name, line_position_t& position, array_t& expression, string_t& brief)
+bool adam_parser::is_named_decl(name_t& cell_name, line_position_t& position, array_t& expression, string& brief)
 {
     if (!is_identifier(cell_name)) return false;
     if (!is_define_expression(position, expression)) throw_exception("define_expression required"); 
@@ -520,7 +522,7 @@ bool adam_parser::is_conditional(line_position_t& position, array_t& expression)
 /*************************************************************************************************/
 
 //  end_statement           = ";" [trail_comment].
-void adam_parser::require_end_statement(string_t& brief)
+void adam_parser::require_end_statement(string& brief)
 {
     require_token(semicolon_k);
     (void)is_trail_comment(brief);
@@ -536,7 +538,7 @@ bool adam_parser::is_set_decl(name_t token, set_decl_t set_decl)
 
     while (true)
     {
-        string_t detailed;
+        string detailed;
         (void)is_lead_comment(detailed);
         if (!(this->*set_decl)(detailed)) break;
     }

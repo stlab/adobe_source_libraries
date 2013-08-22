@@ -6,6 +6,8 @@
 
 /*************************************************************************************************/
 
+#if 0
+
 #include <adobe/thread_id.hpp>
 #include <adobe/once.hpp>
 
@@ -51,3 +53,5 @@ thread_id_t thread_id()
 ADOBE_ONCE_DEFINITION(thread_id_once, init_thread_id_once)
 
 /*************************************************************************************************/
+
+#endif

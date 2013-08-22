@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdlib>
+#include <mutex>
 
 #include <boost/noncopyable.hpp>
 #include <boost/operators.hpp>
@@ -89,7 +90,7 @@ public:
     */
     copy_on_write()
     {
-		adobe::call_once(init_default, flag_s);
+		std::call_once(flag_s, init_default);
         object_m = default_s;
         object_m->header_m.get().count_m.increment();
     }
@@ -339,7 +340,7 @@ private:
 
     implementation_t* object_m;
 
-    static once_flag         flag_s;
+    static std::once_flag    flag_s;
     static implementation_t* default_s;
 
     static void release_default();
@@ -354,7 +355,7 @@ private:
 /**************************************************************************************************/
 
 template <typename T, typename A>
-once_flag copy_on_write<T, A>::flag_s = ADOBE_ONCE_INIT;
+std::once_flag copy_on_write<T, A>::flag_s;
 
 template <typename T, typename A>
 typename copy_on_write<T, A>::implementation_t* copy_on_write<T, A>::default_s;
@@ -419,11 +420,6 @@ template <typename T, typename A> struct is_movable<copy_on_write<T, A> > : boos
 /**************************************************************************************************/
 
 } // namespace adobe
-
-/**************************************************************************************************/
-
-ADOBE_NAME_TYPE_1("copy_on_write:version_1:adobe", adobe::version_1::copy_on_write<T0, adobe::capture_allocator<T0> >)
-ADOBE_NAME_TYPE_2("copy_on_write:version_1:adobe", adobe::version_1::copy_on_write<T0, T1>)
 
 /**************************************************************************************************/
 

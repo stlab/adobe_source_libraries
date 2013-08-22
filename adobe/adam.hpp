@@ -571,7 +571,7 @@ struct sheet_t::relation_t
     relation_t(std::vector<name_t> n, line_position_t p, array_t e) :
         name_set_m(std::begin(n), std::end(n)),
         position_m(p),
-        expression_m(adobe::move(e))
+        expression_m(std::move(e))
     { }
     
     friend void swap(relation_t& x, relation_t& y)
@@ -581,10 +581,10 @@ struct sheet_t::relation_t
         swap(x.expression_m, y.expression_m);
     }
     
-    relation_t(move_from<relation_t> x) :
+    relation_t(relation_t&& x) noexcept :
         name_set_m(x.name_set_m),
         position_m(x.position_m),
-        expression_m(adobe::move(x.expression_m))
+        expression_m(std::move(x.expression_m))
     { }
     
     relation_t(const relation_t&) = default;

@@ -146,8 +146,8 @@ struct adam_callback_suite_t
         std::vector<name_t> name_set_m;
         line_position_t     position_m;
         array_t             expression_m;
-        string_t            detailed_m;
-        string_t            brief_m;
+        std::string              detailed_m;
+        std::string              brief_m;
     };
 
     typedef boost::function<void (  cell_type_t             type,

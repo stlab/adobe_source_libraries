@@ -118,8 +118,8 @@ std::pair<I, O> copy_until(I first,
 
 /**************************************************************************************************/
 
-typedef pair<adobe::string_t, boost::uint32_t>  code_point_set_value_type;
-typedef vector<code_point_set_value_type>       code_point_set_t;
+typedef pair<string, boost::uint32_t>       code_point_set_value_type;
+typedef vector<code_point_set_value_type>   code_point_set_t;
 
 /**************************************************************************************************/
 
@@ -264,7 +264,7 @@ code_point_index_type::const_iterator code_point_index_find(boost::uint32_t code
 
 /**************************************************************************************************/
 
-typedef adobe::table_index<const adobe::string_t, const code_point_set_t::value_type> entity_name_index_type;
+typedef adobe::table_index<const string, const code_point_set_t::value_type> entity_name_index_type;
 
 /**************************************************************************************************/
 
@@ -290,7 +290,7 @@ const entity_name_index_type& entity_name_index()
 
 /**************************************************************************************************/
 
-entity_name_index_type::const_iterator entity_name_index_find(const adobe::string_t& entity_name)
+entity_name_index_type::const_iterator entity_name_index_find(const string& entity_name)
 {
     const entity_name_index_type&           index(entity_name_index());
     entity_name_index_type::const_iterator  found(adobe::lower_bound(index,
@@ -312,7 +312,7 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-const adobe::string_t& entity_map_find(boost::uint32_t code_point)
+const string& entity_map_find(boost::uint32_t code_point)
 {
     code_point_index_type::const_iterator found(code_point_index_find(code_point));
 
@@ -324,14 +324,14 @@ const adobe::string_t& entity_map_find(boost::uint32_t code_point)
 
 /**************************************************************************************************/
 
-boost::uint32_t entity_map_find(const adobe::string_t& entity)
+boost::uint32_t entity_map_find(const string& entity)
 {
-    adobe::string_t::const_iterator first(entity.begin());
+    string::const_iterator first(entity.begin());
 
     if (entity.size() > 1 && *first == '#')
     {
-        adobe::string_t::const_iterator last(entity.end());
-        boost::uint32_t                 result;
+        string::const_iterator last(entity.end());
+        boost::uint32_t        result;
 
         ++first;
 
@@ -353,9 +353,9 @@ boost::uint32_t entity_map_find(const adobe::string_t& entity)
 
 /**************************************************************************************************/
 
-bool needs_entity_escape(const string_t& value)
+bool needs_entity_escape(const string& value)
 {
-    for (string_t::const_iterator iter(value.begin()); iter != value.end(); ++iter)
+    for (string::const_iterator iter(value.begin()); iter != value.end(); ++iter)
     {
         unsigned char c(*iter);
 
@@ -372,13 +372,13 @@ bool needs_entity_escape(const string_t& value)
 
 /**************************************************************************************************/
 
-string_t entity_escape(const string_t& value)
+string entity_escape(const string& value)
 {
-    string_t result;
+    string result;
 
     result.reserve(value.size());
 
-    for (string_t::const_iterator iter(value.begin()); iter != value.end(); ++iter)
+    for (string::const_iterator iter(value.begin()); iter != value.end(); ++iter)
     {
         unsigned char c(*iter);
 
@@ -395,7 +395,7 @@ string_t entity_escape(const string_t& value)
             char nybble1((c >> 4) & 0x0f);
             char nybble2(c & 0x0f);
 
-            result.append(adobe::string_t("&#x"));
+            result.append(string("&#x"));
 
             result.push_back(nybble1 >= 0x0a ?
                              'A' + (nybble1 - 0x0a) :
@@ -416,31 +416,31 @@ string_t entity_escape(const string_t& value)
 
 /**************************************************************************************************/
 
-bool needs_entity_unescape(const string_t& value)
+bool needs_entity_unescape(const string& value)
 {
     /*
         This isn't ideal; it's possible for any string to have an ampersand
         followed by a semicolon, which will return true in this case but the
         string does not need unescaping.
     */
-    string_t::const_iterator first(find(value, '&'));
-    string_t::const_iterator next(std::find(first, value.end(), ';'));
+    string::const_iterator first(find(value, '&'));
+    string::const_iterator next(std::find(first, value.end(), ';'));
 
     return next != value.end();
 }
 
 /**************************************************************************************************/
 
-string_t entity_unescape(const string_t& value)
+string entity_unescape(const string& value)
 {
-    string_t                 result;
-    string_t::const_iterator iter(value.begin());
+    string                 result;
+    string::const_iterator iter(value.begin());
 
     result.reserve(value.size());
 
     while (iter != value.end())
     {
-        string_t::const_iterator next(copy_until(iter,
+        string::const_iterator next(copy_until(iter,
                                                  value.end(),
                                                  std::back_inserter(result),
                                                  boost::bind(std::not_equal_to<char>(), _1, '&')).first);
@@ -450,14 +450,14 @@ string_t entity_unescape(const string_t& value)
 
         ++next;
 
-        string_t::const_iterator next_end(std::find(next, value.end(), ';'));
+        string::const_iterator next_end(std::find(next, value.end(), ';'));
 
         if (next_end == value.end())
             return result;
 
         // snip out the entity and look it up in the map
 
-        boost::uint32_t code_point(entity_map_find(string_t(next, next_end)));
+        boost::uint32_t code_point(entity_map_find(string(next, next_end)));
 
         if (code_point != 0)
             adobe::copy_utf<char>(&code_point, &code_point + 1, std::back_inserter(result));

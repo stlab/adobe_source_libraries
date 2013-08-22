@@ -8,6 +8,8 @@
 
 #include <boost/version.hpp>
 
+#include <mutex>
+
 #include <adobe/implementation/zuid_sys_dep.hpp>
 #include <adobe/config.hpp>
 #include <adobe/once.hpp>
@@ -67,9 +69,7 @@
 
 /*************************************************************************************************/
 
-ADOBE_ONCE_DECLARATION(zuid_sys_dep_once)
-
-/*************************************************************************************************/
+using namespace std;
 
 namespace {
 
@@ -93,12 +93,21 @@ ADOBE_THREAD_LOCAL_STORAGE_1(bool, zuid_ieee_node_inited, false)
 
 /*************************************************************************************************/
 
-void init_zuid_sys_dep_once()
+void init_zuid_sys_dep_once_()
 {
     ADOBE_THREAD_LOCAL_STORAGE_INITIALIZE(zuid_uuid_state);
     ADOBE_THREAD_LOCAL_STORAGE_INITIALIZE(zuid_uuid_state_inited);
     ADOBE_THREAD_LOCAL_STORAGE_INITIALIZE(zuid_ieee_node);
     ADOBE_THREAD_LOCAL_STORAGE_INITIALIZE(zuid_ieee_node_inited);
+}
+
+/*************************************************************************************************/
+
+static once_flag init_zuid_sys_dep_flag;
+
+void init_zuid_sys_dep_once()
+{
+    call_once(init_zuid_sys_dep_flag, &init_zuid_sys_dep_once_);
 }
 
 /*************************************************************************************************/
@@ -248,7 +257,7 @@ void get_system_time(uuid_time_t* uuid_time)
 
 void get_ieee_node_identifier(uuid_node_t* node)
 {
-    ADOBE_ONCE_INSTANCE(zuid_sys_dep_once);
+    init_zuid_sys_dep_once();
     
     bool&                   inited(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_ieee_node_inited));
     adobe::uuid_node_t&     saved_node(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_ieee_node));
@@ -285,7 +294,7 @@ boost::uint64_t true_random()
 /* read_state -- read UUID generator state from non-volatile store */
 boost::int16_t read_state(boost::uint16_t* clockseq, uuid_time_t* timestamp, uuid_node_t* node)
 {
-    ADOBE_ONCE_INSTANCE(zuid_sys_dep_once);
+    init_zuid_sys_dep_once();
     
     bool& state_inited(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_uuid_state_inited));
 
@@ -303,7 +312,7 @@ boost::int16_t read_state(boost::uint16_t* clockseq, uuid_time_t* timestamp, uui
 /* write_state -- save UUID generator state back to non-volatile storage */
 void write_state(boost::uint16_t clockseq, uuid_time_t timestamp, uuid_node_t node)
 {
-    ADOBE_ONCE_INSTANCE(zuid_sys_dep_once);
+    init_zuid_sys_dep_once();
     
     bool&           state_inited(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_uuid_state_inited));
     uuid_state_t&   state(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_uuid_state));
@@ -319,9 +328,5 @@ void write_state(boost::uint16_t clockseq, uuid_time_t timestamp, uuid_node_t no
 /*************************************************************************************************/
 
 } // namespace adobe
-
-/*************************************************************************************************/
-
-ADOBE_ONCE_DEFINITION(zuid_sys_dep_once, init_zuid_sys_dep_once)
 
 /*************************************************************************************************/

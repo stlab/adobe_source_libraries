@@ -238,106 +238,11 @@ done by Dave Abrahams and Howard Hinnant.
 
 namespace adobe {
 
+#if 0
 using std::move;
-
 
 template <typename T>
 using move_from = T&&;
-
-#if 0
-
-/*************************************************************************************************/
-
-namespace implementation {
-
-/*************************************************************************************************/
-
-class test_can_convert_anything { };
-
-template <typename T>
-struct has_default_constructor : boost::mpl::false_ { };
-
-template <typename T, typename A>
-struct has_default_constructor<std::vector<T, A> > : boost::mpl::true_ { };
-
-/*************************************************************************************************/
-
-} //namespace implementation
-
-
-/*************************************************************************************************/
-
-/*!
-\ingroup move_related
-\brief move_from is used for move_ctors.
-*/
-
-template <typename T>
-struct move_from
-{
-    explicit move_from(T& x) : source(x) { }
-    T& source;
-};
-
-/*!
-\ingroup move_related
-\brief The is_movable trait can be used to identify movable types.
-*/
-template <typename T>
-struct is_movable : boost::mpl::and_<
-                        boost::is_convertible<move_from<T>, T>,
-                        boost::mpl::not_<boost::is_convertible<implementation::test_can_convert_anything, T> >
-                    > { };
-
-/*************************************************************************************************/
-
-/*!
-\ingroup move_related
-\brief This version of move is selected when T is_movable . It in turn calls the move
-constructor. This call, with the help of the return value optimization, will cause x to be moved
-instead of copied to its destination. See adobe/test/move/main.cpp for examples.
-
-*/
-template <typename T>
-T move(T& x, typename boost::enable_if<is_movable<T>, void*>::type = 0)
-{ return T(move_from<T>(x)); }
-
-/*************************************************************************************************/
-
-/*!
-\ingroup move_related
-\brief This version of move is selected when T is not movable . The net result will be that
-x gets copied.
-*/
-
-template <typename T>
-T& move(T& x, typename boost::disable_if<boost::mpl::or_<is_movable<T>,
-        implementation::has_default_constructor<T> >, void*>::type = 0)
-{ return x; }
-
-template <typename T>
-T move(T& x, typename boost::enable_if<boost::mpl::and_<boost::mpl::not_<is_movable<T> >,
-       implementation::has_default_constructor<T> >, void*>::type = 0)
-{ using std::swap; T result; swap(x, result); return result; }
-
-/*************************************************************************************************/
-
-/*!
-\ingroup move_related
-\brief Iterator pair version of move. Similar to std::copy but with move semantics,
-for movable types, otherwise with copy semantics.
-*/
-template <typename I, // I models InputIterator
-          typename O> // O models OutputIterator
-O move(I f, I l, O result)
-{
-    while (f != l) {
-        *result = adobe::move(*f);
-        ++f; ++result;
-    }
-    return result;
-}
-
 #endif
 
 /*************************************************************************************************/

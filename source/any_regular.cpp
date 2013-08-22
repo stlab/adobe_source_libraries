@@ -11,6 +11,7 @@
 #include <adobe/any_regular.hpp>
 
 #include <cassert>
+#include <string>
 
 #include <adobe/algorithm/sorted.hpp>
 #include <adobe/algorithm/lower_bound.hpp>
@@ -22,6 +23,8 @@
 #include <adobe/table_index.hpp>
 
 #include <ostream>
+
+using namespace std;
 
 /**************************************************************************************************/
 
@@ -68,28 +71,16 @@ const serializable<T> make_serializable<T, Any>::value;
 
 /**************************************************************************************************/
 
-/*
-    WARNING (sparent) : This table is in a static sorted order.
-    
-    bool
-    closed_hash_map:version_1:adobe<name_t:version_1:adobe,any_regular_t:version_1:adobe>
-    double
-    empty_t:version_1:adobe
-    name_t:version_1:adobe
-    string_t:version_1:adobe
-    vector:version_1:adobe<any_regular_t:version_1:adobe>
-*/
-
-typedef const aggregate_pair<aggregate_type_info_t, const serializable_t&> serializable_lookup_t;
+typedef aggregate_pair<const std::type_info*, const serializable_t*> serializable_lookup_t;
 
 serializable_lookup_t serializable_table[] = {
-    { { make_type_info<bool>::value }, make_serializable<bool>::value },
-    { { make_type_info<dictionary_t>::value }, make_serializable<dictionary_t>::value },
-    { { make_type_info<double>::value }, make_serializable<double>::value },
-    { { make_type_info<empty_t>::value }, make_serializable<empty_t>::value },
-    { { make_type_info<name_t>::value }, make_serializable<name_t>::value },
-    { { make_type_info<string_t>::value }, make_serializable<string_t>::value },
-    { { make_type_info<array_t>::value }, make_serializable<array_t>::value }
+    { &typeid(bool), &make_serializable<bool>::value },
+    { &typeid(dictionary_t), &make_serializable<dictionary_t>::value },
+    { &typeid(double), &make_serializable<double>::value },
+    { &typeid(empty_t), &make_serializable<empty_t>::value },
+    { &typeid(name_t), &make_serializable<name_t>::value },
+    { &typeid(string), &make_serializable<string>::value },
+    { &typeid(array_t), &make_serializable<array_t>::value }
 };
 
 /**************************************************************************************************/
@@ -104,23 +95,20 @@ std::ostream& operator<<(std::ostream& out, const any_regular_t& x)
 {
     using namespace implementation;
     
-#ifndef NDEBUG
     static bool inited = false;
     
     if (!inited) {
         inited = true;
-        assert(is_sorted(serializable_table, &type_info_t::before,
-            boost::bind(constructor<type_info_t>(),  boost::bind(&serializable_lookup_t::first, _1)))
-            && "FATAL (sparent): Serialization table is not sorted.");
+        sort(serializable_table, &std::type_info::before,
+            [](const serializable_lookup_t& x) -> const std::type_info& { return *x.first; });
     }
-#endif
     
-    serializable_lookup_t* i = binary_search(serializable_table, x.type_info(), &type_info_t::before,
-        boost::bind(constructor<type_info_t>(), boost::bind(&serializable_lookup_t::first, _1)));
+    serializable_lookup_t* i = binary_search(serializable_table, x.type_info(), &std::type_info::before,
+        [](const serializable_lookup_t& x) -> const std::type_info& { return *x.first; });
     
     if (i == boost::end(serializable_table)) throw std::logic_error("Type not serializable.");
     
-    i->second(out, x);
+    (*i->second)(out, x);
     
     return out;
 }

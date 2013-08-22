@@ -11,6 +11,8 @@
 
 #include <adobe/config.hpp>
 
+#include <functional>
+
 #include <boost/bind.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/const_iterator.hpp>
@@ -101,7 +103,7 @@ template <typename I, // I models ForwardIterator
           typename P> // P models UnaryFunction(value_type(I)) -> T
 inline I binary_search(I f, I l, const T& x, C c, P p)
 {
-    return implementation::binary_search(f, l, x, c, boost::bind(p, _1));
+    return implementation::binary_search(f, l, x, c, std::bind(p, std::placeholders::_1));
 }
 
 

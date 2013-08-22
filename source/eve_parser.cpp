@@ -23,6 +23,8 @@
 
 #include <adobe/implementation/expression_parser.hpp>
 
+using namespace std;
+
 /*************************************************************************************************/
 
 namespace {
@@ -65,7 +67,7 @@ bool keyword_lookup(const name_t& name)
     }
 #endif
     
-    return binary_search(keyword_table, name, less(), constructor<name_t>()) != boost::end(keyword_table);
+    return binary_search(keyword_table, name, adobe::less(), constructor<name_t>()) != boost::end(keyword_table);
 }
 
 /*************************************************************************************************/
@@ -98,13 +100,13 @@ private:
     bool is_constant_set_decl();
 	bool is_logic_set_decl();
 	
-	bool is_interface_cell_decl(const string_t& detailed);
-	bool is_constant_cell_decl(const string_t& detailed);
-	bool is_logic_cell_decl(const string_t& detailed);
+	bool is_interface_cell_decl(const string& detailed);
+	bool is_constant_cell_decl(const string& detailed);
+	bool is_logic_cell_decl(const string& detailed);
 	
-	bool is_relate_decl(line_position_t& position, array_t& expression, relation_set_t&, string_t&);
+	bool is_relate_decl(line_position_t& position, array_t& expression, relation_set_t&, string&);
     bool is_relate_expression_decl(relation_t&);
-    bool is_named_decl(name_t& cell_name, line_position_t& position, array_t& expression, string_t&);
+    bool is_named_decl(name_t& cell_name, line_position_t& position, array_t& expression, string&);
 	
    // bool is_cell_decl(eve_callback_suite_t::cell_type_t);
     bool is_initializer(line_position_t& position, array_t& expression);
@@ -112,13 +114,13 @@ private:
 	
 	bool is_define_expression(line_position_t&, array_t&);
 	
-    void require_end_statement(string_t&);
+    void require_end_statement(string&);
     bool is_view_definition(const position_t&);
     bool is_view_statement_sequence(const position_t&);
     bool is_view_class_decl(name_t& class_name, array_t& arguments);
     void require_view_statement_list(const position_t&);
 	
-    typedef bool (eve_parser::*set_decl_t)(const string_t& detailed);
+    typedef bool (eve_parser::*set_decl_t)(const string& detailed);
     bool is_set_decl(name_t, set_decl_t);
 
     eve_callback_suite_t     assembler_m;
@@ -174,7 +176,7 @@ bool eve_parser::is_set_decl(name_t token, set_decl_t set_decl)
 	
 	while (true)
 	{
-		string_t detailed;
+		string detailed;
 		(void)is_lead_comment(detailed);
 		if (!(this->*set_decl)(detailed)) break;
 	}
@@ -209,12 +211,12 @@ bool eve_parser::is_logic_set_decl()
 /*************************************************************************************************/
 
 //  interface_cell_decl     = ["unlink"] identifier [initializer] [define_expression] end_statement.
-bool eve_parser::is_interface_cell_decl(const string_t& detailed)
+bool eve_parser::is_interface_cell_decl(const string& detailed)
 {
 	name_t          cell_name;
 	array_t         initializer, expression;
 	line_position_t initializer_position, expression_position;
-	string_t		brief;
+	string		brief;
 	
 	bool linked (!is_keyword(unlink_k));
 	
@@ -235,12 +237,12 @@ bool eve_parser::is_interface_cell_decl(const string_t& detailed)
 /*************************************************************************************************/
 
 //  constant_cell_decl      = identifier initializer end_statement.
-bool eve_parser::is_constant_cell_decl(const string_t& detailed)
+bool eve_parser::is_constant_cell_decl(const string& detailed)
 {
 	name_t          cell_name;
 	line_position_t position;
 	array_t         initializer;
-	string_t		brief;
+	string          brief;
 	
 	if (!is_identifier(cell_name)) return false;
 	if (!is_initializer(position, initializer)) throw_exception("initializer required");
@@ -280,12 +282,12 @@ bool eve_parser::is_cell_decl(eve_callback_suite_t::cell_type_t type)
 /*************************************************************************************************/
 
 //  logic_cell_decl         = named_decl | relate_decl.
-bool eve_parser::is_logic_cell_decl(const string_t& detailed)
+bool eve_parser::is_logic_cell_decl(const string& detailed)
 {
 	name_t          cell_name;
 	line_position_t position;
 	array_t         expression;
-	string_t		brief;
+	string          brief;
 	
 	relation_set_t  relations;
 	
@@ -309,7 +311,7 @@ bool eve_parser::is_logic_cell_decl(const string_t& detailed)
 
 //  relate_decl             = [conditional] "relate" "{" relate_expression relate_expression { relate_expression } "}" [trail_comment]
 bool eve_parser::is_relate_decl(line_position_t& position, array_t& expression,
-								 relation_set_t& relation_set, string_t& brief)
+								 relation_set_t& relation_set, string& brief)
 {
 	/*
 	 REVISIT (sparent) : A relation_set_t needs a position independent of the continitional
@@ -380,7 +382,7 @@ bool eve_parser::is_relate_expression_decl(relation_t& relation)
 /*************************************************************************************************/
 
 //  named_decl              = identifier define_expression end_statement.
-bool eve_parser::is_named_decl(name_t& cell_name, line_position_t& position, array_t& expression, string_t& brief)
+bool eve_parser::is_named_decl(name_t& cell_name, line_position_t& position, array_t& expression, string& brief)
 {
 	if (!is_identifier(cell_name)) return false;
 	if (!is_define_expression(position, expression)) throw_exception("define_expression required"); 
@@ -436,7 +438,7 @@ bool eve_parser::is_conditional(line_position_t& position, array_t& expression)
 /*************************************************************************************************/
 
 // end_statement            = ";" [trail_comment].
-void eve_parser::require_end_statement(string_t& brief)
+void eve_parser::require_end_statement(string& brief)
 {
     require_token(semicolon_k);
     (void)is_trail_comment(brief);
@@ -448,10 +450,10 @@ bool eve_parser::is_view_definition(const position_t& location)
 {
     using namespace adobe;
 
-    string_t     detailed;
-    string_t     brief;
-    name_t          class_name;
-    array_t         arguments;
+    string  detailed;
+    string  brief;
+    name_t  class_name;
+    array_t arguments;
     
     (void)is_lead_comment(detailed);
     

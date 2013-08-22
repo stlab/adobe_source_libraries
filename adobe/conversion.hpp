@@ -12,8 +12,6 @@
 #include <adobe/config.hpp>
 #include <string>
 
-#include <adobe/string_fwd.hpp>
-
 /*************************************************************************************************/
 
 namespace adobe {
@@ -46,8 +44,7 @@ template <> struct promote<std::size_t>    { };
 template <> struct promote<std::ptrdiff_t> { };
 #endif
 
-template <> struct promote<const char*>     { typedef version_1::string_t type; };
-template <> struct promote<std::string>     { typedef version_1::string_t type; };
+template <> struct promote<const char*>     { typedef std::string type; };
 
 /*************************************************************************************************/
 

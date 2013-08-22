@@ -6,10 +6,13 @@
 
 /*************************************************************************************************/
 
+#include <string>
+
 #include <adobe/implementation/parser_shared.hpp>
 #include <adobe/istream.hpp>
 #include <adobe/name.hpp>
-#include <adobe/string.hpp>
+
+using namespace std;
 
 /*************************************************************************************************/
 
@@ -17,10 +20,10 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-void throw_parser_exception(const char*                     error_string,
-                            const adobe::line_position_t&   position)
+void throw_parser_exception(const char*              error_string,
+                            const line_position_t&   position)
 {
-    throw adobe::stream_error_t(error_string, position);
+    throw stream_error_t(error_string, position);
 }
 
 /*************************************************************************************************/
@@ -29,11 +32,8 @@ void throw_parser_exception(const char*                     expected,
                             const char*                     found,
                             const adobe::line_position_t&   position)
 {
-    std::string error_string;
-
-    error_string << "Expected \"" << expected << "\", Found \"" << found << "\"";
-
-    throw adobe::stream_error_t(error_string, position);
+    throw stream_error_t(string() + "Expected \"" + expected + "\", Found \"" + found + "\"",
+            position);
 }
     
 /*************************************************************************************************/

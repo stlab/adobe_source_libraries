@@ -20,8 +20,6 @@
 #include <boost/type_traits/has_trivial_constructor.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
 
-#include <adobe/typeinfo.hpp>
-
 #if defined(ADOBE_STD_SERIALIZATION)
 #include <iosfwd>
 #endif
@@ -89,11 +87,6 @@ template <> struct has_trivial_constructor<adobe::version_1::empty_t> : boost::m
 template <> struct has_trivial_destructor<adobe::version_1::empty_t> : boost::mpl::true_ { };
 
 }
-
-/*************************************************************************************************/
-
-ADOBE_NAME_TYPE_0("empty_t:version_1:adobe", adobe::version_1::empty_t)
-ADOBE_SHORT_NAME_TYPE('e','m','t','y', adobe::version_1::empty_t)
 
 /*************************************************************************************************/
 

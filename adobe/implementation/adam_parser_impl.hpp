@@ -65,24 +65,24 @@ private:
     bool is_external_set_decl();
     
 //  interface_cell_decl     = ["unlink"] identifier [initializer] [define_expression] end_statement.
-    bool is_interface_cell_decl(const string_t& detailed);
+    bool is_interface_cell_decl(const std::string& detailed);
 //  input_cell_decl         = identifier [initializer] end_statement.
-    bool is_input_cell_decl(const string_t& detailed);
+    bool is_input_cell_decl(const std::string& detailed);
 //  output_cell_decl        = named_decl.
-    bool is_output_cell_decl(const string_t& detailed);
+    bool is_output_cell_decl(const std::string& detailed);
 //  constant_cell_decl      = identifier initializer end_statement.
-    bool is_constant_cell_decl(const string_t& detailed);
+    bool is_constant_cell_decl(const std::string& detailed);
 //  logic_cell_decl         = named_decl | relate_decl.
-    bool is_logic_cell_decl(const string_t& detailed);
+    bool is_logic_cell_decl(const std::string& detailed);
 //  invariant_cell_decl     = named_decl.
-    bool is_invariant_cell_decl(const string_t& detailed);
+    bool is_invariant_cell_decl(const std::string& detailed);
 
 //  relate_decl             = [conditional] "relate" "{" relate_expression relate_expression { relate_expression } "}" [trail_comment].
-    bool is_relate_decl(line_position_t& position, array_t& expression, relation_set_t&, string_t&);
+    bool is_relate_decl(line_position_t& position, array_t& expression, relation_set_t&, std::string&);
 //  relate_expression       = [lead_comment] identifier { "," identifier } define_expression end_statement.
     bool is_relate_expression_decl(relation_t&);
 //  named_decl              = identifier define_expression end_statement.
-    bool is_named_decl(name_t& cell_name, line_position_t& position, array_t& expression, string_t&);
+    bool is_named_decl(name_t& cell_name, line_position_t& position, array_t& expression, std::string&);
 
 //  initializer             = ":" expression.
     bool is_initializer(line_position_t&, array_t& initializer);
@@ -92,10 +92,10 @@ private:
     bool is_define_expression(line_position_t&, array_t&);
  
 //  end_statement           = ";" [trail_comment].
-    void require_end_statement(string_t& brief);
+    void require_end_statement(std::string& brief);
     
     typedef void (sheet_t::*sheet_add_t)(name_t, const relation_t&);
-    typedef bool (adam_parser::*set_decl_t)(const string_t& detailed);
+    typedef bool (adam_parser::*set_decl_t)(const std::string& detailed);
 
     bool is_logic_or_invariant_cell_decl(sheet_add_t);
     bool is_set_decl(name_t, set_decl_t);

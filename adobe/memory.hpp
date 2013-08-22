@@ -778,12 +778,12 @@ struct aligned_storage
     aligned_storage() { construct(&get()); }
     
     explicit aligned_storage(T x)
-        { construct(&get(), adobe::move(x)); }
+        { construct(&get(), std::move(x)); }
         
     ~aligned_storage() { destroy(&get()); }
     
     aligned_storage(const aligned_storage& x) { construct(&get(), x.get()); }
-    aligned_storage(move_from<aligned_storage> x) { construct(&get(), adobe::move(x.get())); }
+    aligned_storage(aligned_storage&& x) { construct(&get(), std::move(x.get())); }
     
     aligned_storage& operator=(aligned_storage x) { swap(*this, x); return *this; }
         
@@ -810,8 +810,6 @@ struct aligned_storage
 /*************************************************************************************************/
 
 } // namespace adobe
-
-ADOBE_NAME_TYPE_1("capture_allocator:version_1:adobe", adobe::version_1::capture_allocator<T0>)
 
 /*************************************************************************************************/
 

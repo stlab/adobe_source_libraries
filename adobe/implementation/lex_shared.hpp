@@ -284,19 +284,19 @@ struct lex_fragment_t
 {
     lex_fragment_t( stream_lex_token_t      token = stream_lex_token_t(),
                     const line_position_t&  line_position = line_position_t()) :
-        token_value_m(adobe::move(token)), line_position_m(line_position)
+        token_value_m(std::move(token)), line_position_m(line_position)
     { }
 
-    lex_fragment_t(move_from<lex_fragment_t> x) :
-        token_value_m(adobe::move(x.token_value_m)), line_position_m(adobe::move(x.line_position_m))
+    lex_fragment_t(lex_fragment_t&& x) :
+        token_value_m(std::move(x.token_value_m)), line_position_m(std::move(x.line_position_m))
     { }
     
     lex_fragment_t(const lex_fragment_t&) = default;
     
     lex_fragment_t& operator=(lex_fragment_t x)
     {
-        token_value_m = adobe::move(x.token_value_m);
-        line_position_m = adobe::move(x.line_position_m);
+        token_value_m = std::move(x.token_value_m);
+        line_position_m = std::move(x.line_position_m);
         return *this;
     }
 
@@ -488,7 +488,7 @@ const stream_lex_token_t& stream_lex_base_t<S, I>::get_token()
 template <std::size_t S, typename I>
 void stream_lex_base_t<S, I>::put_token(stream_lex_token_t token)
 {
-    last_token_m.push_back(implementation::lex_fragment_t(adobe::move(token), line_position_m));
+    last_token_m.push_back(implementation::lex_fragment_t(std::move(token), line_position_m));
 }
 
 /*************************************************************************************************/
