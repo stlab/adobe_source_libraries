@@ -222,15 +222,18 @@ public:
             }
         }
 
+#ifndef NDEBUG
         c->covered_m = true;
+#endif
     }
 
     void uncover_column(toroid_header_t* c)
     {
         assert (finalized_m);
 
+#ifndef NDEBUG
         c->covered_m = false;
-
+#endif
         for (toroid_node_t* i(up_of(c)); i != c; i = up_of(i))
         {
             for (toroid_node_t* j(left_of(i)); j != i; j = left_of(j))
