@@ -1,0 +1,171 @@
+# Main Jamfile for building ASL
+
+path-constant TOP : . ;
+
+import testing ;
+import os ;
+import feature : feature ;
+import set ;
+
+DARWIN_SPECIFIC_FEATURES = ;
+
+# adds the asl feature to the adobe subprojects
+
+# none is a special name--when used, no new folder name is inserted in hierarchy
+# in other ways it behaves as feature with any other name
+
+feature asl : none dev : composite ;
+feature.compose <asl>dev :
+    <define>ADOBE_SERIALIZATION
+    <define>ADOBE_STD_SERIALIZATION
+#   <define>BOOST_FILESYSTEM_VERSION=2
+	<define>BOOST_NO_CXX11_NUMERIC_LIMITS
+    ;
+
+#switch [ os.name ]
+#{
+#case MACOSX :
+#  {
+#    DARWIN_SPECIFIC_FEATURES =
+#     <toolset>darwin,<variant>release,<macosx-version>10.3.9:<architecture>power
+#     <toolset>darwin,<variant>release,<macosx-version>10.4:<architecture>combined
+#     <toolset>darwin:<c++-lib>static
+#    ;
+#  }
+#}
+
+tbb_requirements =
+    <include>$(TOP)/../intel_tbb_libraries/include
+    <define>__TBB_NO_IMPLICIT_LINKAGE=1
+  ;
+
+boost_requirements =
+#  not certain why BOOST_NO_CXX11_NUMERIC_LIMITS is not set as part of boost/config.hpp
+    <define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
+  ;
+
+adobe_requirements =
+   $(DARWIN_SPECIFIC_FEATURES)
+#  not certain why BOOST_NO_CXX11_NUMERIC_LIMITS is not set as part of boost/config.hpp
+#  UPDATE (fbrereto): it appears to be a duplicate definition when using the darwin toolset,
+#					  so I suspect the clang toolset support isn't fully fleshed out in boost/config
+#				      yet. The duplicate definition is in boost/config/stdlib/libstdcpp3.hpp
+    <include>$(BOOST_DIR)
+    <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+    <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+    <toolset>msvc:<define>ADOBE_TEST_MICROSOFT_NO_DEPRECATE=0
+    <toolset>msvc,<threading>multi:<define>USE_WINTHREAD
+    <toolset>msvc:<define>_WIN32_WINNT=0x400
+    <toolset>darwin:<cxxflags>"-Werror -Wall -Wno-trigraphs -Wreturn-type -Wnon-virtual-dtor -Woverloaded-virtual -Wformat -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-parameter -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare"
+    <toolset>darwin:<linkflags>"-Xlinker -Y -Xlinker 5"
+    <toolset>gcc,<variant>debug:<cxxflags>"-Werror -Wall -Wno-trigraphs -Wreturn-type -Wnon-virtual-dtor -Woverloaded-virtual -Wformat -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-parameter -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Wno-parentheses"
+#    <toolset>gcc-4.5.0:<define>_GLIBCXX_USE_C99_MATH_TR1 # apparent problems using this without using other tr1 libs
+    <toolset>gcc-4.5.0:<define>__GXX_EXPERIMENTAL_CXX0X__
+    <toolset>gcc-4.4.0:<define>__GXX_EXPERIMENTAL_CXX0X__
+    <toolset>clang:<cxxflags>"-stdlib=libc++ -std=c++11"
+    <toolset>clang:<linkflags>"-stdlib=libc++"
+    <toolset>clang:<define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
+    <toolset>gcc-4.5.0:<cxxflags>"-std=c++0x -std=c++11 -fno-strict-aliasing"
+    <toolset>gcc-4.4.0:<cxxflags>"-std=c++0x -fno-strict-aliasing"
+  ;
+
+asl_requirements =
+   $(adobe_requirements)
+   $(boost_requirements)
+   $(tbb_requirements)
+   $(boost_requirements)
+   <include>.
+   <toolset>gcc:<define>NOMINMAX
+   <toolset>gcc:<architecture>x86
+   <toolset>gcc,<threading>multi:<instruction-set>i486
+   <toolset>msvc:<cxxflags>"-DUNICODE -D_UNICODE"
+   <toolset>msvc-8.0:<cxxflags>"/W3 /WX /Wp64 /Zc:wchar_t /Zc:forScope"
+   <toolset>msvc-9.0:<cxxflags>"/W3 /WX /Zc:wchar_t /Zc:forScope"
+   <link>static,<threading>multi:<define>BOOST_THREAD_USE_LIB
+   <threading>single:<define>BOOST_DISABLE_THREADS
+   <link>static:<define>BOOST_SIGNALS_STATIC_LINK
+   $(ASL_ADDITIONAL_MACROS)
+   <define>BOOST_ALL_NO_LIB
+   <define>BOOST_NO_CXX11_NUMERIC_LIMITS
+#   <toolset>darwin:<linkflags>"-lSystemStubs"
+   <threading>multi:<library>/boost/thread//boost_thread
+   <library>/boost/filesystem
+   <library>/boost/system
+   <library>/boost/signals
+  ;
+
+ project
+  :  requirements
+    $(asl_requirements)
+
+  :  default-build
+    <link>static
+    <threading>multi
+    <preserve-test-targets>on
+  :  build-dir
+     $(TOP)/../built_artifacts
+   ;
+
+#
+# For platform specific code in ASL we include set up the related directory
+#
+
+ASL_ADDITIONAL_MACROS = ;
+
+switch [ os.name ]
+{
+    case CYGWIN :
+    {
+        ASL_ADDITIONAL_MACROS = <define>WINVER=0x560 <define>_WIN32_WINNT=0x560 <define>_WIN32_IE=0x560 ;
+    }
+    case NT :
+    {
+        ASL_ADDITIONAL_MACROS = <define>WINVER=0x560 <define>_WIN32_WINNT=0x560 <define>_WIN32_IE=0x560 ;
+    }
+}
+
+#
+# We build two libraries, asl and asl_dev. asl_dev includes the future
+# sources and supports serialization.
+
+
+import os ;
+local boost-path = [ os.environ BOOST_PATH ] ;
+if $(boost-path)
+{
+  boost-path = $(boost-path) ;
+} else {
+  boost-path = ../boost_libraries ;
+}
+
+use-project /boost : $(boost-path)  ;
+
+
+lib asl
+  : #sources
+     [ glob source/*.cpp ]
+  : #requirements
+  : #defaults
+  : # usage requirements
+    $(asl_requirements)
+  ;
+
+explicit asl ;
+
+lib asl_dev
+    : #sources
+      [ glob source/*.cpp ]
+    : #requirements
+      <asl>dev
+    : #defaults
+    : #usage-requirements
+      $(asl_requirements)
+      <asl>dev
+    ;
+
+## build and run the tests
+
+use-project /adobe : .  ;
+build-project test ;
+build-project documentation/examples ;
+

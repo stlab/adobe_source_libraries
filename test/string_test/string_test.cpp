@@ -387,25 +387,25 @@ BOOST_AUTO_TEST_CASE( string_unicode )
 	utf8_test.clear();
 	BOOST_CHECK(utf8_test.empty());
 	utf8_test.reserve(utf16_exemplar.size());
-	adobe::to_utf8(utf16_exemplar.begin(), utf16_exemplar.end(), std::back_inserter(utf8_test));
+	adobe::copy_utf<char>(utf16_exemplar.begin(), utf16_exemplar.end(), std::back_inserter(utf8_test));
 	BOOST_CHECK(utf8_test == utf8_exemplar);
 
 	utf8_test.clear();
 	BOOST_CHECK(utf8_test.empty());
 	utf8_test.reserve(utf8_exemplar.size());
-	adobe::to_utf8(utf8_exemplar.begin(), utf8_exemplar.end(), std::back_inserter(utf8_test));
+	adobe::copy_utf<char>(utf8_exemplar.begin(), utf8_exemplar.end(), std::back_inserter(utf8_test));
 	BOOST_CHECK(utf8_test == utf8_exemplar);
 
 	utf16_test.clear();
 	BOOST_CHECK(utf16_test.empty());
 	utf16_test.reserve(utf8_exemplar.size());
-	adobe::to_utf16(utf8_exemplar.begin(), utf8_exemplar.end(), std::back_inserter(utf16_test));
+	adobe::copy_utf<boost::uint16_t>(utf8_exemplar.begin(), utf8_exemplar.end(), std::back_inserter(utf16_test));
 	BOOST_CHECK(utf16_test == utf16_exemplar);
 
 	utf16_test.clear();
 	BOOST_CHECK(utf16_test.empty());
 	utf16_test.reserve(utf16_exemplar.size());
-	adobe::to_utf16(utf16_exemplar.begin(), utf16_exemplar.end(), std::back_inserter(utf16_test));
+	adobe::copy_utf<boost::uint16_t>(utf16_exemplar.begin(), utf16_exemplar.end(), std::back_inserter(utf16_test));
 	BOOST_CHECK(utf16_test == utf16_exemplar);
 }
 
