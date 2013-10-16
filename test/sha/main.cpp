@@ -192,7 +192,7 @@ void pgmt(std::string seed)
     typedef HashT                           hash_type;
     typedef typename hash_type::digest_type digest_type;
 
-    std::cout << "*** pseudorandomly generated messages test for " << typeid(hash_type).name() << std::endl;
+    std::cout << "*** pseudorandomly generated messages test for " << typeid(hash_type).name() << '\n';
 
     std::string md[1003];
     hash_type   hash;
@@ -218,7 +218,7 @@ void pgmt(std::string seed)
 
         std::cout << "\tMD[" << static_cast<unsigned int>(j) << "]: ";
         print_binary_message(md[j], sizeof(typename digest_type::value_type));
-        std::cout << std::endl;
+        std::cout << '\n';
     }
 }
 
@@ -233,7 +233,7 @@ bool test_hash(I first, I last)
     hash_type   hash;
     std::size_t test_count(0);
 
-    std::cout << "*** " << typeid(hash).name() << " unit testing" << std::endl;
+    std::cout << "*** " << typeid(hash).name() << " unit testing\n";
 
     while (first != last)
     {
@@ -243,30 +243,36 @@ bool test_hash(I first, I last)
         std::string::const_iterator test_string_last(test_string.end());
         bool                        modified_bitsize(cur_test.bitsize_m != (std::numeric_limits<boost::uint64_t>::max)());
         adobe::timer_t              timer;
-        digest_type                 hash_digest((modified_bitsize) ?
-                                        hash.digest(test_string_first, cur_test.bitsize_m) :
-                                        hash.digest(test_string_first, test_string_last));
-        double                      time(timer.split());
-        std::string                 digest(digest_string(hash_digest));
-        bool                        test_passed(digest == cur_test.digest_m);
+        digest_type                 hash_digest = {{0}};
+
+
+        if (modified_bitsize)
+            hash_digest = hash.digest(test_string_first, cur_test.bitsize_m);
+        else
+            hash_digest = hash.digest(test_string_first, test_string_last);
+
+
+        double      time(timer.split());
+        std::string digest(digest_string(hash_digest));
+        bool        test_passed(digest == cur_test.digest_m);
 
         if (test_passed)
         {
             std::cout   << "\ttest " << static_cast<unsigned int>(++test_count) << " passed in "
                         << time << " miliseconds (" << (time / 1e3)
-                        << " seconds)" << std::endl;
+                        << " seconds)\n";
         }
         else
         {
-            std::cout   << "test " << static_cast<unsigned int>(++test_count) << ":" << std::endl
+            std::cout   << "test " << static_cast<unsigned int>(++test_count) << ":\n"
                         << "\tmessage length: " << static_cast<unsigned int>(test_string.size()) << " bytes ("
                             << static_cast<unsigned int>(modified_bitsize ? cur_test.bitsize_m : test_string.size() * 8)
-                            << " bits)" << std::endl
-                        << "\tdigest:         " << digest << std::endl
-                        << "\tknown good:     " << cur_test.digest_m << std::endl
-                        << "\tsame?:          " << (test_passed ? "Yes" : "NO") << std::endl
+                            << " bits)\n"
+                        << "\tdigest:         " << digest << '\n'
+                        << "\tknown good:     " << cur_test.digest_m << '\n'
+                        << "\tsame?:          " << (test_passed ? "Yes" : "NO") << '\n'
                         << "\ttime to digest: " << time << " miliseconds (" << (time / 1e3) << " seconds)"
-                        << std::endl;
+                        << '\n';
 
             return false;
         }
@@ -289,7 +295,7 @@ bool test_hash(I first, I last)
 
 int main()
 {
-    std::cout << "Compiled " << __DATE__ << " " << __TIME__ << std::endl;
+    std::cout << "Compiled " << __DATE__ << " " << __TIME__ << '\n';
 
 
     /************************** SHA-1 Unit Tests **************************/
