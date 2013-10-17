@@ -218,15 +218,6 @@ A <code>boost::array<boost::uint64_t, 8></code> for the 512-bit digest
 \note While the SHA standard specifies the ability to process messages of 2^128 in length, currently this SHA-512 implementation only handles messages up to 2^64 in length.
 */
 
-
-/*************************************************************************************************/
-
-class sha1_t;
-class sha224_t;
-class sha256_t;
-class sha384_t;
-class sha512_t;
-
 /*************************************************************************************************/
 
 namespace implementation {
@@ -234,11 +225,6 @@ namespace implementation {
 /*************************************************************************************************/
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
-
-/*************************************************************************************************/
-
-template <typename HashT>
-struct sha_traits;
 
 /*************************************************************************************************/
 
@@ -372,10 +358,9 @@ inline T maj(T x, T y, T z)
 template <bool UseMB14, typename HashTraits>
 struct message_block_part_14_set_t
 {
-    typedef HashTraits                                  traits_type;
-    typedef typename traits_type::hash_type             hash_type;
-    typedef typename traits_type::message_block_type    message_block_type;
-    typedef typename message_block_type::value_type     message_block_value_type;
+    typedef HashTraits                               traits_type;
+    typedef typename traits_type::message_block_type message_block_type;
+    typedef typename message_block_type::value_type  message_block_value_type;
 
     enum { half_max_message_bitsize_k = traits_type::max_message_bitsize_k / 2 };
 
@@ -403,12 +388,11 @@ struct message_block_part_14_set_t<false, HashTraits>
 /*************************************************************************************************/
 
 template <typename HashTraits, typename I>
-void block_and_digest(typename HashTraits::digest_type& digest, I first, boost::uint64_t num_bits)
+void block_and_digest(typename HashTraits::process_type& digest, I first, boost::uint64_t num_bits)
 {
-    typedef HashTraits                                  traits_type;
-    typedef typename traits_type::hash_type             hash_type;
-    typedef typename traits_type::message_block_type    message_block_type;
-    typedef typename message_block_type::value_type     message_block_value_type;
+    typedef HashTraits                               traits_type;
+    typedef typename traits_type::message_block_type message_block_type;
+    typedef typename message_block_type::value_type  message_block_value_type;
 
     enum
     {
@@ -473,7 +457,7 @@ void block_and_digest(typename HashTraits::digest_type& digest, I first, boost::
             }
         }
 
-        sha_traits<hash_type>().digest_message_block(digest, message_block);
+        traits_type().digest_message_block(digest, message_block);
 
         --num_blocks;
     }
@@ -485,7 +469,7 @@ void block_and_digest(typename HashTraits::digest_type& digest, I first, boost::
 /*************************************************************************************************/
 
 template <typename HashTraits>
-void sha_2_digest_message_block(typename HashTraits::digest_type&               digest,
+void sha_2_digest_message_block(typename HashTraits::process_type&              digest,
                                 const typename HashTraits::message_block_type&  message_block)
 {
     //  The "sha_2" in the name of this function is in
@@ -493,11 +477,10 @@ void sha_2_digest_message_block(typename HashTraits::digest_type&               
     //  (224, 256, 384, and 512), all of which have the same
     //  message block process implementation.
 
-    typedef HashTraits                                  traits_type;
-    typedef typename traits_type::hash_type             hash_type;
-    typedef typename traits_type::message_block_type    message_block_type;
-    typedef typename traits_type::schedule_type         schedule_type;
-    typedef typename hash_type::digest_type::value_type digest_value_type;
+    typedef HashTraits                                     traits_type;
+    typedef typename traits_type::message_block_type       message_block_type;
+    typedef typename traits_type::schedule_type            schedule_type;
+    typedef typename traits_type::process_type::value_type digest_value_type;
 
     schedule_type schedule;
 
@@ -550,13 +533,12 @@ void sha_2_digest_message_block(typename HashTraits::digest_type&               
 
 /*************************************************************************************************/
 
-template <>
-struct sha_traits<sha1_t>
+struct sha1_traits_t
 {
-    typedef class sha1_t                 hash_type;
-    typedef boost::array<boost::uint32_t, 5>    digest_type;
-    typedef boost::array<boost::uint32_t, 16>   message_block_type;
-    typedef boost::array<boost::uint32_t, 80>   schedule_type;
+    typedef boost::array<boost::uint32_t, 5>  process_type;
+    typedef boost::array<boost::uint32_t, 16> message_block_type;
+    typedef boost::array<boost::uint32_t, 80> schedule_type;
+    typedef process_type                      digest_type;
 
     enum
     {
@@ -564,7 +546,7 @@ struct sha_traits<sha1_t>
         message_blocksize_k = 512
     };
 
-    static void reset_digest(digest_type& digest)
+    static inline void reset_digest(process_type& digest)
     {
         digest[0] = 0x67452301;
         digest[1] = 0xefcdab89;
@@ -573,7 +555,7 @@ struct sha_traits<sha1_t>
         digest[4] = 0xc3d2e1f0;
     }
 
-    static void digest_message_block(digest_type& digest, const message_block_type& message_block)
+    static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
     {   
         schedule_type schedule;
 
@@ -613,28 +595,31 @@ struct sha_traits<sha1_t>
         std::memset(&schedule, 0, sizeof(schedule));
     }
 
+    static inline digest_type finalize(const process_type& process)
+        { return process; }
+
 private:
-    static boost::uint32_t f(   std::size_t     t,
-                                boost::uint32_t x,
-                                boost::uint32_t y,
-                                boost::uint32_t z)
+    static inline boost::uint32_t f(std::size_t     t,
+                                    boost::uint32_t x,
+                                    boost::uint32_t y,
+                                    boost::uint32_t z)
     {
         assert (t < 80);
     
-        if (t <= 19)        return implementation::ch(x, y, z);
-        else if (t <= 39)   return implementation::parity(x, y, z);
-        else if (t <= 59)   return implementation::maj(x, y, z);
+        if (t <= 19)      return implementation::ch(x, y, z);
+        else if (t <= 39) return implementation::parity(x, y, z);
+        else if (t <= 59) return implementation::maj(x, y, z);
     
         return implementation::parity(x, y, z);
     }
 
-    static boost::uint32_t k(std::size_t t)
+    static inline boost::uint32_t k(std::size_t t)
     {
         assert(t < 80);
     
-        if (t <= 19)        return 0x5a827999;
-        else if (t <= 39)   return 0x6ed9eba1;
-        else if (t <= 59)   return 0x8f1bbcdc;
+        if (t <= 19)      return 0x5a827999;
+        else if (t <= 39) return 0x6ed9eba1;
+        else if (t <= 59) return 0x8f1bbcdc;
     
         return 0xca62c1d6;
     }
@@ -642,13 +627,12 @@ private:
 
 /*************************************************************************************************/
 
-template <>
-struct sha_traits<sha256_t>
+struct sha256_traits_t
 {
-    typedef class sha256_t               hash_type;
-    typedef boost::array<boost::uint32_t, 8>    digest_type;
-    typedef boost::array<boost::uint32_t, 16>   message_block_type;
-    typedef boost::array<boost::uint32_t, 64>   schedule_type;
+    typedef boost::array<boost::uint32_t, 8>  process_type;
+    typedef boost::array<boost::uint32_t, 16> message_block_type;
+    typedef boost::array<boost::uint32_t, 64> schedule_type;
+    typedef process_type                       digest_type;
 
     enum
     {
@@ -656,7 +640,7 @@ struct sha_traits<sha256_t>
         message_blocksize_k = 512
     };
 
-    static void reset_digest(digest_type& digest)
+    static inline void reset_digest(process_type& digest)
     {
         digest[0] = 0x6a09e667;
         digest[1] = 0xbb67ae85;
@@ -668,22 +652,22 @@ struct sha_traits<sha256_t>
         digest[7] = 0x5be0cd19;
     }
 
-    static void digest_message_block(digest_type& digest, const message_block_type& message_block)
-        { sha_2_digest_message_block<sha_traits<hash_type> >(digest, message_block); }
+    static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
+        { sha_2_digest_message_block<sha256_traits_t>(digest, message_block); }
 
-    static boost::uint32_t big_sigma_0(boost::uint32_t x)
+    static inline boost::uint32_t big_sigma_0(boost::uint32_t x)
         { return implementation::rotr<2>(x) ^ implementation::rotr<13>(x) ^ implementation::rotr<22>(x); }
 
-    static boost::uint32_t big_sigma_1(boost::uint32_t x)
+    static inline boost::uint32_t big_sigma_1(boost::uint32_t x)
         { return implementation::rotr<6>(x) ^ implementation::rotr<11>(x) ^ implementation::rotr<25>(x); }
 
-    static boost::uint32_t small_sigma_0(boost::uint32_t x)
+    static inline boost::uint32_t small_sigma_0(boost::uint32_t x)
         { return implementation::rotr<7>(x) ^ implementation::rotr<18>(x) ^ implementation::shr<3>(x); }
 
-    static boost::uint32_t small_sigma_1(boost::uint32_t x)
+    static inline boost::uint32_t small_sigma_1(boost::uint32_t x)
         { return implementation::rotr<17>(x) ^ implementation::rotr<19>(x) ^ implementation::shr<10>(x); }
 
-    static boost::uint32_t k(std::size_t t)
+    static inline boost::uint32_t k(std::size_t t)
     {
         static const boost::uint32_t k_set[] =
         {
@@ -701,25 +685,27 @@ struct sha_traits<sha256_t>
 
         return k_set[t];
     }
+
+    static inline digest_type finalize(const process_type& process)
+        { return process; }
 };
 
 /*************************************************************************************************/
 
-template <>
-struct sha_traits<sha224_t>
+struct sha224_traits_t
 {
-    typedef class sha224_t                           hash_type;
-    typedef sha_traits<sha256_t>::digest_type        digest_type;
-    typedef sha_traits<sha256_t>::message_block_type message_block_type;
-    typedef sha_traits<sha256_t>::schedule_type      schedule_type;
+    typedef sha256_traits_t::process_type        process_type;
+    typedef sha256_traits_t::message_block_type message_block_type;
+    typedef sha256_traits_t::schedule_type      schedule_type;
+    typedef boost::array<boost::uint32_t, 7>    digest_type;
 
     enum
     {
-        max_message_bitsize_k = sha_traits<sha256_t>::max_message_bitsize_k,
-        message_blocksize_k = sha_traits<sha256_t>::message_blocksize_k
+        max_message_bitsize_k = sha256_traits_t::max_message_bitsize_k,
+        message_blocksize_k = sha256_traits_t::message_blocksize_k
     };
 
-    static void reset_digest(digest_type& digest)
+    static inline void reset_digest(process_type& digest)
     {
         digest[0] = 0xc1059ed8;
         digest[1] = 0x367cd507;
@@ -731,34 +717,42 @@ struct sha_traits<sha224_t>
         digest[7] = 0xbefa4fa4;
     }
 
-    static void digest_message_block(digest_type& digest, const message_block_type& message_block)
-        { sha_2_digest_message_block<sha_traits<hash_type> >(digest, message_block); }
+    static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
+        { sha_2_digest_message_block<sha224_traits_t>(digest, message_block); }
 
-    static boost::uint32_t big_sigma_0(boost::uint32_t x)
-        { return sha_traits<sha256_t>::big_sigma_0(x); }
+    static inline boost::uint32_t big_sigma_0(boost::uint32_t x)
+        { return sha256_traits_t::big_sigma_0(x); }
 
-    static boost::uint32_t big_sigma_1(boost::uint32_t x)
-        { return sha_traits<sha256_t>::big_sigma_1(x); }
+    static inline boost::uint32_t big_sigma_1(boost::uint32_t x)
+        { return sha256_traits_t::big_sigma_1(x); }
 
-    static boost::uint32_t small_sigma_0(boost::uint32_t x)
-        { return sha_traits<sha256_t>::small_sigma_0(x); }
+    static inline boost::uint32_t small_sigma_0(boost::uint32_t x)
+        { return sha256_traits_t::small_sigma_0(x); }
 
-    static boost::uint32_t small_sigma_1(boost::uint32_t x)
-        { return sha_traits<sha256_t>::small_sigma_1(x); }
+    static inline boost::uint32_t small_sigma_1(boost::uint32_t x)
+        { return sha256_traits_t::small_sigma_1(x); }
 
-    static boost::uint32_t k(std::size_t x)
-        { return sha_traits<sha256_t>::k(x); }
+    static inline boost::uint32_t k(std::size_t x)
+        { return sha256_traits_t::k(x); }
+
+    static inline digest_type finalize(const process_type& process)
+    {
+        digest_type result = {{0}};
+
+        std::copy(process.begin(), process.begin() + digest_type::static_size, &result[0]);
+
+        return result;
+    }
 };
 
 /*************************************************************************************************/
 
-template <>
-struct sha_traits<sha512_t>
+struct sha512_traits_t
 {
-    typedef class sha512_t               hash_type;
-    typedef boost::array<boost::uint64_t, 8>    digest_type;
-    typedef boost::array<boost::uint64_t, 16>   message_block_type;
-    typedef boost::array<boost::uint64_t, 80>   schedule_type;
+    typedef boost::array<boost::uint64_t, 8>  process_type;
+    typedef boost::array<boost::uint64_t, 16> message_block_type;
+    typedef boost::array<boost::uint64_t, 80> schedule_type;
+    typedef process_type                      digest_type;
 
     enum
     {
@@ -766,7 +760,7 @@ struct sha_traits<sha512_t>
         message_blocksize_k = 1024
     };
 
-    static void reset_digest(digest_type& digest)
+    static inline void reset_digest(process_type& digest)
     {
         digest[0] = 0x6a09e667f3bcc908ULL;
         digest[1] = 0xbb67ae8584caa73bULL;
@@ -778,22 +772,22 @@ struct sha_traits<sha512_t>
         digest[7] = 0x5be0cd19137e2179ULL;
     }
 
-    static void digest_message_block(digest_type& digest, const message_block_type& message_block)
-        { sha_2_digest_message_block<sha_traits<hash_type> >(digest, message_block); }
+    static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
+        { sha_2_digest_message_block<sha512_traits_t>(digest, message_block); }
 
-    static boost::uint64_t big_sigma_0(boost::uint64_t x)
+    static inline boost::uint64_t big_sigma_0(boost::uint64_t x)
         { return implementation::rotr<28>(x) ^ implementation::rotr<34>(x) ^ implementation::rotr<39>(x); }
 
-    static boost::uint64_t big_sigma_1(boost::uint64_t x)
+    static inline boost::uint64_t big_sigma_1(boost::uint64_t x)
         { return implementation::rotr<14>(x) ^ implementation::rotr<18>(x) ^ implementation::rotr<41>(x); }
 
-    static boost::uint64_t small_sigma_0(boost::uint64_t x)
+    static inline boost::uint64_t small_sigma_0(boost::uint64_t x)
         { return implementation::rotr<1>(x) ^ implementation::rotr<8>(x) ^ implementation::shr<7>(x); }
 
-    static boost::uint64_t small_sigma_1(boost::uint64_t x)
+    static inline boost::uint64_t small_sigma_1(boost::uint64_t x)
         { return implementation::rotr<19>(x) ^ implementation::rotr<61>(x) ^ implementation::shr<6>(x); }
 
-    static boost::uint64_t k(std::size_t t)
+    static inline boost::uint64_t k(std::size_t t)
     {
         static const boost::uint64_t k_set[] =
         {
@@ -823,25 +817,27 @@ struct sha_traits<sha512_t>
 
         return k_set[t];
     }
+
+    static inline digest_type finalize(const process_type& process)
+        { return process; }
 };
 
 /*************************************************************************************************/
 
-template <>
-struct sha_traits<sha384_t>
+struct sha384_traits_t
 {
-    typedef class sha384_t                           hash_type;
-    typedef sha_traits<sha512_t>::digest_type        digest_type;
-    typedef sha_traits<sha512_t>::message_block_type message_block_type;
-    typedef sha_traits<sha512_t>::schedule_type      schedule_type;
+    typedef sha512_traits_t::process_type       process_type;
+    typedef sha512_traits_t::message_block_type message_block_type;
+    typedef sha512_traits_t::schedule_type      schedule_type;
+    typedef boost::array<boost::uint64_t, 6>    digest_type;
 
     enum
     {
-        max_message_bitsize_k = sha_traits<sha512_t>::max_message_bitsize_k,
-        message_blocksize_k = sha_traits<sha512_t>::message_blocksize_k
+        max_message_bitsize_k = sha512_traits_t::max_message_bitsize_k,
+        message_blocksize_k = sha512_traits_t::message_blocksize_k
     };
 
-    static void reset_digest(digest_type& digest)
+    static inline void reset_digest(process_type& digest)
     {
         digest[0] = 0xcbbb9d5dc1059ed8ULL;
         digest[1] = 0x629a292a367cd507ULL;
@@ -853,23 +849,32 @@ struct sha_traits<sha384_t>
         digest[7] = 0x47b5481dbefa4fa4ULL;
     }
 
-    static void digest_message_block(digest_type& digest, const message_block_type& message_block)
-        { sha_2_digest_message_block<sha_traits<hash_type> >(digest, message_block); }
+    static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
+        { sha_2_digest_message_block<sha384_traits_t>(digest, message_block); }
 
-    static boost::uint64_t big_sigma_0(boost::uint64_t x)
-        { return sha_traits<sha512_t>::big_sigma_0(x); }
+    static inline boost::uint64_t big_sigma_0(boost::uint64_t x)
+        { return sha512_traits_t::big_sigma_0(x); }
 
-    static boost::uint64_t big_sigma_1(boost::uint64_t x)
-        { return sha_traits<sha512_t>::big_sigma_1(x); }
+    static inline boost::uint64_t big_sigma_1(boost::uint64_t x)
+        { return sha512_traits_t::big_sigma_1(x); }
 
-    static boost::uint64_t small_sigma_0(boost::uint64_t x)
-        { return sha_traits<sha512_t>::small_sigma_0(x); }
+    static inline boost::uint64_t small_sigma_0(boost::uint64_t x)
+        { return sha512_traits_t::small_sigma_0(x); }
 
-    static boost::uint64_t small_sigma_1(boost::uint64_t x)
-        { return sha_traits<sha512_t>::small_sigma_1(x); }
+    static inline boost::uint64_t small_sigma_1(boost::uint64_t x)
+        { return sha512_traits_t::small_sigma_1(x); }
 
-    static boost::uint64_t k(std::size_t x)
-        { return sha_traits<sha512_t>::k(x); }
+    static inline boost::uint64_t k(std::size_t x)
+        { return sha512_traits_t::k(x); }
+
+    static inline digest_type finalize(const process_type& process)
+    {
+        digest_type result = {{0}};
+
+        std::copy(process.begin(), process.begin() + digest_type::static_size, &result[0]);
+
+        return result;
+    }
 };
 
 /*************************************************************************************************/
@@ -882,16 +887,42 @@ struct sha_traits<sha384_t>
 
 /*************************************************************************************************/
 
-class sha1_t
+template <class Traits>
+class sha
 {
 public:
 #if !defined(ADOBE_NO_DOCUMENTATION)
-    typedef implementation::sha_traits<sha1_t>   traits_type;
+    typedef Traits traits_type;
 #endif
-    typedef traits_type::digest_type                    digest_type;
+
+    typedef typename traits_type::digest_type digest_type;
+
+    sha()
+    {
+        traits_type().reset_digest(process_m);
+    }
 
     template <typename I>
-    inline digest_type digest(I first, I last)
+    inline void update(I first, I last)
+    {
+        enum { ibits_k = implementation::bitsizeof<typename std::iterator_traits<I>::value_type>::value };
+
+        update(first, implementation::long_distance(first, last) * ibits_k);
+    }
+
+    template <typename I>
+    inline void update(I first, boost::uint64_t num_bits)
+    {
+        implementation::block_and_digest<traits_type>(process_m, first, num_bits);
+    }
+
+    inline digest_type finalize() const
+    {
+        return traits_type::finalize(process_m);
+    }
+
+    template <typename I>
+    static inline digest_type digest(I first, I last)
     {
         enum { ibits_k = implementation::bitsizeof<typename std::iterator_traits<I>::value_type>::value };
 
@@ -899,164 +930,26 @@ public:
     }
 
     template <typename I>
-    inline digest_type digest(I first, boost::uint64_t num_bits)
+    static inline digest_type digest(I first, boost::uint64_t num_bits)
     {
-        traits_type().reset_digest(digest_m);
+        sha instance;
 
-        implementation::block_and_digest<traits_type>(digest_m, first, num_bits);
+        instance.update(first, num_bits);
 
-        return digest_m;
+        return instance.finalize();
     }
 
 private:
-    digest_type digest_m;
+    typename traits_type::process_type process_m;
 };
 
 /*************************************************************************************************/
 
-class sha224_t
-{
-public:
-#if !defined(ADOBE_NO_DOCUMENTATION)
-    typedef implementation::sha_traits<sha224_t> traits_type;
-#endif
-    typedef boost::array<boost::uint32_t, 7>            digest_type;
-
-    template <typename I>
-    inline digest_type digest(I first, I last)
-    {
-        enum { ibits_k = implementation::bitsizeof<typename std::iterator_traits<I>::value_type>::value };
-
-        return digest(first, implementation::long_distance(first, last) * ibits_k);
-    }
-
-    template <typename I>
-    inline digest_type digest(I first, boost::uint64_t num_bits)
-    {
-        traits_type().reset_digest(digest_m);
-
-        implementation::block_and_digest<traits_type>(digest_m, first, num_bits);
-
-        return crop_digest(digest_m);
-    }
-
-private:
-    inline digest_type crop_digest(traits_type::digest_type& digest)
-    {
-        digest_type result;
-
-        std::copy(digest.begin(), digest.begin() + digest_type::static_size, &result[0]);
-
-        return result;
-    }
-
-    traits_type::digest_type digest_m;
-};
-
-/*************************************************************************************************/
-
-class sha256_t
-{
-public:
-#if !defined(ADOBE_NO_DOCUMENTATION)
-    typedef implementation::sha_traits<sha256_t> traits_type;
-#endif
-    typedef traits_type::digest_type                    digest_type;
-
-    template <typename I>
-    inline digest_type digest(I first, I last)
-    {
-        enum { ibits_k = implementation::bitsizeof<typename std::iterator_traits<I>::value_type>::value };
-
-        return digest(first, implementation::long_distance(first, last) * ibits_k);
-    }
-
-    template <typename I>
-    inline digest_type digest(I first, boost::uint64_t num_bits)
-    {
-        traits_type().reset_digest(digest_m);
-
-        implementation::block_and_digest<traits_type>(digest_m, first, num_bits);
-
-        return digest_m;
-    }
-
-private:
-    digest_type digest_m;
-};
-
-/*************************************************************************************************/
-
-class sha512_t
-{
-public:
-#if !defined(ADOBE_NO_DOCUMENTATION)
-    typedef implementation::sha_traits<sha512_t> traits_type;
-#endif
-    typedef traits_type::digest_type                    digest_type;
-
-    template <typename I>
-    inline digest_type digest(I first, I last)
-    {
-        enum { ibits_k = implementation::bitsizeof<typename std::iterator_traits<I>::value_type>::value };
-
-        return digest(first, implementation::long_distance(first, last) * ibits_k);
-    }
-
-    template <typename I>
-    inline digest_type digest(I first, boost::uint64_t num_bits)
-    {
-        traits_type().reset_digest(digest_m);
-
-        implementation::block_and_digest<traits_type>(digest_m, first, num_bits);
-
-        return digest_m;
-    }
-
-private:
-    digest_type digest_m;
-};
-
-/*************************************************************************************************/
-
-class sha384_t
-{
-public:
-#if !defined(ADOBE_NO_DOCUMENTATION)
-    typedef implementation::sha_traits<sha384_t> traits_type;
-#endif
-    typedef boost::array<boost::uint64_t, 6>            digest_type;
-
-    template <typename I>
-    inline digest_type digest(I first, I last)
-    {
-        enum { ibits_k = implementation::bitsizeof<typename std::iterator_traits<I>::value_type>::value };
-
-        return digest(first, implementation::long_distance(first, last) * ibits_k);
-    }
-
-    template <typename I>
-    inline digest_type digest(I first, boost::uint64_t num_bits)
-    {
-        traits_type().reset_digest(digest_m);
-
-        implementation::block_and_digest<traits_type>(digest_m, first, num_bits);
-
-        return crop_digest(digest_m);
-    }
-
-private:
-    inline digest_type crop_digest(traits_type::digest_type& digest)
-    {
-        digest_type result;
-
-        std::copy(digest.begin(), digest.begin() + digest_type::static_size, &result[0]);
-
-        return result;
-    }
-
-    traits_type::digest_type digest_m;
-};
+typedef sha<implementation::sha1_traits_t>   sha1_t;
+typedef sha<implementation::sha224_traits_t> sha224_t;
+typedef sha<implementation::sha256_traits_t> sha256_t;
+typedef sha<implementation::sha512_traits_t> sha512_t;
+typedef sha<implementation::sha384_traits_t> sha384_t;
 
 /*************************************************************************************************/
 
