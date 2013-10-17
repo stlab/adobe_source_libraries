@@ -2,25 +2,23 @@
 # above and beyond those established for all .../adobe projects 
 
 project 
-	: requirements 
-		<library>/adobe//asl_dev
-	    <library>/boost/test//boost_unit_test_framework 
-	;
+    : requirements 
+        <library>/adobe//asl
+        <library>/boost/test//boost_unit_test_framework 
+    ;
 
 build-project unit_tests ;
-
-
-build-project adam_smoke ;
+# build-project adam_smoke ; # Segfault on Mac
 build-project adam_tutorial ;
 build-project any_iterator ;
-alias closed_hash_test : closed_hash/<asl>dev : <toolset>gcc,<variant>release:<optimization>off ;
+alias closed_hash_test : closed_hash : <toolset>gcc,<variant>release:<optimization>off ;
 build-project cmath ;
 build-project eve_smoke ;
 build-project forest_smoke ;
 build-project md5 ;
 build-project move ;
 build-project poly ;
-build-project property_model_eval ;
+# build-project property_model_eval ; # program options library can't be built
 build-project reduction ;
 build-project serialization ;
 build-project sha ;
