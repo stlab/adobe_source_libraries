@@ -76,8 +76,7 @@ adobe::dictionary_t read_dictionary(const bfs::path& filepath)
 
     machine.evaluate(expression);
 
-    
-return machine.back().cast<adobe::dictionary_t>();
+    return machine.back().cast<adobe::dictionary_t>();
 }
 
 /****************************************************************************************************/
@@ -208,24 +207,16 @@ int main(int argc, char* argv[])
 
     try
     {
-        bfs::path sheet(bfs::path("../rtd"));
-
         if (argc > 1)
         {
             if (!std::strcmp(argv[1], "--help"))
+            {
                 usage(argv[0]);
+            }
             else
             {
-                sheet = bfs::path(argv[1]);
-
-                result = !test_sheet(sheet);
+                result = !test_sheet(bfs::path(argv[1]));
             }
-        }
-        else
-        {
-            std::cout << "No sheet specified-- using test sheet...\n";
-
-            result = !test_sheet(sheet);
         }
     }
     catch (const std::exception& error)

@@ -1,7 +1,10 @@
 # Jamfile for building the propert model evaluator
 
-SOURCES = pmeval.cpp adam_test_parser.cpp queryable_sheet.cpp iomanip_flat.cpp
-         /boost/program_options//boost_program_options
+SOURCES = pmeval.cpp
+          adam_test_parser.cpp
+          queryable_sheet.cpp
+          iomanip_flat.cpp
+          /boost/program_options//boost_program_options
          ;
 
 
