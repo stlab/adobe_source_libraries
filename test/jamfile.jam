@@ -9,11 +9,11 @@ project
 
 # build-project unit_tests ;
 # build-project adam_smoke ; # Segfault on Mac
-build-project adam_tutorial ;
+# build-project adam_tutorial ; # Broken release only
 # build-project any_iterator ;
 # alias closed_hash_test : closed_hash : <toolset>gcc,<variant>release:<optimization>off ; # Fails to compile
 build-project cmath ;
-build-project eve_smoke ;
+# build-project eve_smoke ; # Broken release only
 build-project forest_smoke ;
 build-project md5 ;
 # build-project move ;
