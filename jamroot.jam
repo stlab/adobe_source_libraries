@@ -61,15 +61,10 @@ asl_requirements =
 
     # Library dependencies
     <library>/boost/filesystem
-    <library>/boost/signals
     <library>/boost/system
-
-    # Debug-only squelching of Boost.Signals deprecation warning
-    <variant>debug:<define>BOOST_SIGNALS_NO_DEPRECATION_WARNING
 
     # Linker specializations
     <link>static,<threading>multi:<define>BOOST_THREAD_USE_LIB
-    <link>static:<define>BOOST_SIGNALS_STATIC_LINK
 
     # Threading specializations
     <threading>multi:<library>/boost/thread//boost_thread

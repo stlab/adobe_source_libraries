@@ -65,7 +65,7 @@ struct check_reentrancy
 
 /*
     REVISIT (sparent) : Move to utility? This is generally useful to provide a copy for
-    non-copyable types such as boost::signal<>.
+    non-copyable types such as boost::signals2::signal<>.
 */
 
 template <typename T> // T models default constructable
@@ -252,9 +252,9 @@ private:
     {
         typedef boost::function<any_regular_t()>            calculator_t;
         
-        typedef empty_copy<boost::signal<void (bool)> >                  monitor_invariant_list_t;
-        typedef empty_copy<boost::signal<void (const any_regular_t&)> >  monitor_value_list_t;
-        typedef empty_copy<boost::signal<void (const cell_bits_t&)> >    monitor_contributing_list_t;
+        typedef empty_copy<boost::signals2::signal<void (bool)> >                  monitor_invariant_list_t;
+        typedef empty_copy<boost::signals2::signal<void (const any_regular_t&)> >  monitor_value_list_t;
+        typedef empty_copy<boost::signals2::signal<void (const cell_bits_t&)> >    monitor_contributing_list_t;
 
         cell_t(access_specifier_t specifier, name_t, const calculator_t& calculator, 
                std::size_t cell_set_pos, cell_t*); // output
@@ -364,7 +364,7 @@ private:
     void flow(cell_bits_t& priority_accessed);
 
 /*
-    NOTE (sparent) : cell_t contains boost::signal<> which is not copyable. The cells support
+    NOTE (sparent) : cell_t contains boost::signals2::signal<> which is not copyable. The cells support
     limited copying until they have monitors attached - this allows them to be placed into a
     container prior to any connections being made. A deque is used rather than a vector because it 
     does not reallocate when it grows.
@@ -402,7 +402,7 @@ private:
     cell_bits_t         value_accessed_m; 
     cell_bits_t         active_m; 
 
-    typedef boost::signal<void (const cell_bits_t&, const cell_bits_t&)>  
+    typedef boost::signals2::signal<void (const cell_bits_t&, const cell_bits_t&)>  
                                  monitor_enabled_list_t;
     monitor_enabled_list_t    monitor_enabled_m;
     
