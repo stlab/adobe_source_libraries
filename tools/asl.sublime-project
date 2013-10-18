@@ -3,19 +3,19 @@
     [
         {
             "name" : "headers",
-            "path": "/Volumes/Atlas/git/github/legacy/adobe_source_libraries/adobe"
+            "path": "../adobe"
         },
         {
             "name" : "sources",
-            "path": "/Volumes/Atlas/git/github/legacy/adobe_source_libraries/source"
+            "path": "../source"
         },
         {
             "name" : "tests",
-            "path": "/Volumes/Atlas/git/github/legacy/adobe_source_libraries/test"
+            "path": "../test"
         },
         {
             "name" : "top",
-            "path": "/Volumes/Atlas/git/github/legacy/adobe_source_libraries/",
+            "path": "../",
             "folder_exclude_patterns": [ "source", "adobe", "test" ]
         }
     ],

@@ -9,11 +9,11 @@
 #include <boost/version.hpp>
 
 #include <mutex>
+#include <thread>
 
 #include <adobe/implementation/zuid_sys_dep.hpp>
 #include <adobe/config.hpp>
 #include <adobe/once.hpp>
-#include <adobe/thread_id.hpp>
 
 #include <cstring>
 
@@ -129,7 +129,7 @@ adobe::md5_t::digest_t get_generic_random_info()
     struct randomness
     {
         randomness() :
-            thread_id_m(thread_id())
+            thread_id_m(std::hash<std::thread::id>()(std::this_thread::get_id()))
 #if defined(BOOST_HAS_UNISTD_H)
             , pid_m(getpid()),
             uid_m(getuid()),
@@ -147,7 +147,7 @@ adobe::md5_t::digest_t get_generic_random_info()
 #endif
         }
 
-        thread_id_t     thread_id_m;
+        std::size_t     thread_id_m;
 #if defined(BOOST_HAS_THREADS)
         boost::xtime    time_m;
 #endif
