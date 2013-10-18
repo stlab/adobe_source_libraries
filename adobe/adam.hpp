@@ -21,7 +21,7 @@
     #pragma warn_unusedvar off
 #endif
 
-#include <boost/signals.hpp>
+#include <boost/signals2.hpp>
 
 #ifdef __MWERKS__
     #pragma warn_unusedarg reset
@@ -80,7 +80,7 @@ class sheet_t : boost::noncopyable
 
   An object that maintains the function callback validity between the
   Adam engine and the client code. These are simply
-  boost::signals::connection objects, and are the responsibility of
+  boost::signals2::connection objects, and are the responsibility of
   the client to maintain. They retain the same lifespans and semantics
   as described in the boost documentation. Typically the client code
   should group together all connections between and Adam sheet and
@@ -89,8 +89,8 @@ class sheet_t : boost::noncopyable
   prevent communication between objects being destroyed.
 */
 
-    typedef boost::signals::connection                   connection_t;
-     
+    typedef boost::signals2::connection connection_t;
+
  #if !defined(ADOBE_NO_DOCUMENTATION)
     sheet_t();
     ~sheet_t();
