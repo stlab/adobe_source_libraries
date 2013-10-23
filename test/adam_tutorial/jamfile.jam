@@ -1,0 +1,5 @@
+# Jamfile for building the Adam tutorial app
+
+exe adam_tutorial
+    :	main.cpp 
+	;

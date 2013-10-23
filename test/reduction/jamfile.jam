@@ -1,0 +1,7 @@
+import testing ;
+
+project adobe/reduction
+	;
+
+run main.cpp
+	;

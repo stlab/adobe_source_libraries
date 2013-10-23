@@ -1,0 +1,128 @@
+/** \page stldoc_logical_not logical_not
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Logical_not&lt;T&gt;</code> is a \ref stldoc_functors; specifically, it is an 
+\ref stldoc_AdaptablePredicate, which means it is a function 
+object that tests the truth or falsehood of some condition.
+If <code>f</code> is an object of class <code>logical_not&lt;T&gt;</code>
+and <code>x</code> is an object of class <code>T</code> (where <code>T</code> is convertible
+to <code>bool</code>) then <code>f(x)</code> returns true if and only if <code>x</code> 
+is <code>false</code>.
+\section Example Example
+Transforms a vector of <code>bool</code> into its logical complement.
+\code
+Vector<bool> V;
+...
+transform(V.begin(), V.end(), V.begin(), logical_not<bool>());
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The type of <code>logical_not</code>'s argument
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_AdaptablePredicate, \ref stldoc_DefaultConstructible
+\section Type_requirements Type requirements
+<code>T</code> must be convertible to <code>bool</code>.
+\section Public_base_classes Public base classes
+<code>\ref stldoc_unary_function&lt;T, bool&gt;</code>
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the second argument: <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the result: <code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator()(const T&amp; x) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_UnaryFunction
+</td>
+<td valign="top">
+Function call operator.  The return value is <code>!x</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>logical_not()</code>
+</td>
+<td valign="top">
+ \ref stldoc_DefaultConstructible
+</td>
+<td valign="top">
+The default constructor.
+</td>
+</tr>
+</table>
+\section Notes Notes
+\section See_also See also
+The \ref stldoc_functors, <code>\ref stldoc_logical_or</code>, <code>\ref stldoc_logical_and</code>.
+
+
+*/

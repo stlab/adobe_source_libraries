@@ -1,0 +1,121 @@
+/*!
+\defgroup asl_tutorials_array_t array_t
+\ingroup asl_tutorials
+
+<i>Last updated January 25, 2005</i>
+
+\section array_t_background Background
+
+\subsection background_regular_type Regular Type
+\par
+adobe::array_t is a model of the \ref concept_regular_type concept. Value semantics allow for it to be used like a built-in type:
+\par
+\code
+void foo(adobe::array_t param) // makes a copy of the array_t
+{
+    std::cout << param[0].get<std::string>();
+}
+
+int main(/*...*/)
+{
+    adobe::array_t my_array;
+
+    /* add elements of type adobe::value_t to my_array */
+
+    foo(my_array);
+
+    return 0;
+}
+\endcode
+
+\subsection background_copy_on_write Copy On Write
+\par
+adobe::array_t is a copy-on-write container, which means that the container (and all its contents) are duplicated only when the array is modified. This makes for very fast copies of adobe::array_t, but can make writing to one a slow process. Therefore adobe::array_t is to be used when there is a lot of copying but little writing into the container. The copy-on-write semantics are governed by a reference counter, so if there is only one adobe::array_t referring to a given internal instance, then the copy is not made when the write is performed. Writing to these containers is very explicit; see the below section on \ref usage_storage for more information.
+
+\subsection background_random_access Random Access
+\par
+Every element in an adobe::array_t can be accessed in constant time. There are also const_iterator classes that allow for random-access iteration of the class. There is no iterator class that allows for writing, however, due to the nature of the copy-on-write semantics. Writing to an adobe::array_t is further explained in the \ref array_t_usage section.
+
+\subsection background_value_t_value_type adobe::value_t Elements
+\par
+adobe::array_t stores elements of type adobe::value_t. Because of the features of adobe::value_t, this means that an adobe::array_t can store any data type that models the \ref concept_regular_type concept. These types are allowed to differ between elements in the adobe::array_t.
+
+\section array_t_usage Usage
+\par
+A key point to remember is an adobe::array_t is essentially a specialized vector. Consequently just about anything you can do with a vector you can do with an adobe::array_t. The reasons you would want to use an adobe::array_t over a std::vector<adobe::value_t> is primarily because of the copy-on-write semantics, which allow for optimized copying and passing of adobe::array_t as a function parameter.
+
+\subsection usage_initialization Initialization
+\par
+One initializes an adobe::array_t in one of several ways:
+\par
+\code
+// Method 1: Default Construction
+adobe::array_t my_first_array;
+
+// Method 2: Copy Construction
+adobe::array_t my_second_array(my_first_array);
+
+// Method 3: Initialization with elements
+std::vector<int> vec;
+// ... fill in vec with elements
+adobe::array_t my_third_array(vec.begin(), vec.end());
+
+// Method 4: Initialization with a default element
+my_regular_type my_regular_type_value(/*...*/);
+int number_of_elements(5);
+adobe::array_t my_third_array(number_of_elements, adobe::value_t(my_regular_type_value));
+\endcode
+
+\subsection usage_storage Storage
+\par
+Setting a value in an array can only be done with an adobe::array_t::write_reference. The write_reference gives the adobe::array_t the ability to manage its copy on write semantics. There are a number of member functions inside adobe::array_t that manage the write_reference automatically for you. The only instance where you need to explicitly obtain a write_reference is when using <code>operator []</code>. Here are examples of setting values where the write_references is automatically handled for you:
+\par
+\code
+adobe::array_t my_array;
+my_array.push_back(adobe::value_t(5));
+my_array.push_back(adobe::value_t("Hello, world!"));
+my_array.push_back(adobe::value_t(my_regular_type(/*...*/)));
+my_array.set(2, adobe::value_t(3.141526)); // sets my_array[2]
+\endcode
+\par
+Once an element exists in the array, it can be directly modified with a write_reference, obtained with adobe::array_t::write():
+\par
+\code
+my_array.write()[0] = adobe::value_t(std::string("This is a new value!"));
+\endcode
+\par
+In any case, when an adobe::array_t is modified the possibility of a copy arising from the assignment is likely. See the above \ref background_copy_on_write description for more information on these semantics.
+
+\subsection usage_retrieval Retrieval
+\par
+Getting values out of an adobe::array_t is easier than putting them in, because there is no "read_reference": you merely index into the adobe::array_t to access the values. The only thing to remember is that the data stored is wrapped in an adobe::value_t, so first must be extracted out of there before it can be used:
+\par
+\code
+// Singleton element retrieval
+
+adobe::array_t my_array;
+// ... fill my_array with elements
+std::string my_string_value(my_array[2].get<std::string>());
+
+// Iterative retrieval of elements
+
+adobe::array_t::const_iterator first(my_array.begin());
+adobe::array_t::const_iterator last(my_array.end());
+
+for (; first != last; ++first)
+{
+    if (first->type() == typeid(std::string))
+    {
+        std::cout << "Found a string: " << first->get<std::string>() << std::endl;
+    }
+    else if (first->type() == typeid(double))
+    {
+        std::cout << "Found a number: " << first->get<double>() << std::endl;
+    }
+    else
+    {
+        std::cout << "I have no idea what we've found!" << std::endl;
+    }
+}
+\endcode
+*/

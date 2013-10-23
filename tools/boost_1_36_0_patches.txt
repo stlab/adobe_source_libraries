@@ -1,0 +1,99 @@
+diff -wur --unidirectional-new-file -x status -x adobe_information -x bin.v2 ../diffable_boost_1_36_0/boost/test/impl/execution_monitor.ipp ../boost_libraries/boost/test/impl/execution_monitor.ipp
+--- ../diffable_boost_1_36_0/boost/test/impl/execution_monitor.ipp	2007-11-25 10:07:19.000000000 -0800
++++ ../boost_libraries/boost/test/impl/execution_monitor.ipp	2008-09-10 10:09:02.328125000 -0700
+@@ -638,6 +638,7 @@
+ #ifdef BOOST_TEST_USE_ALT_STACK
+     if( alt_stack ) {
+         stack_t sigstk;
++        std::memset( &sigstk, 0, sizeof(stack_t) );
+ 
+         BOOST_TEST_SYS_ASSERT( ::sigaltstack( 0, &sigstk ) != -1 );
+ 
+@@ -661,8 +662,9 @@
+         ::alarm( 0 );
+ 
+ #ifdef BOOST_TEST_USE_ALT_STACK
+-    stack_t sigstk;
++    stack_t sigstk = {};
+ 
++    sigstk.ss_size  = MINSIGSTKSZ;
+     sigstk.ss_flags = SS_DISABLE;
+     BOOST_TEST_SYS_ASSERT( ::sigaltstack( &sigstk, 0 ) != -1 );
+ #endif
+diff -wur --unidirectional-new-file -x status -x adobe_information -x bin.v2 ../diffable_boost_1_36_0/tools/build/v2/tools/darwin.jam ../boost_libraries/tools/build/v2/tools/darwin.jam
+--- ../diffable_boost_1_36_0/tools/build/v2/tools/darwin.jam	2008-07-15 06:53:41.000000000 -0700
++++ ../boost_libraries/tools/build/v2/tools/darwin.jam	2008-09-03 15:21:20.906250000 -0700
+@@ -142,26 +142,28 @@
+             $(condition)/<main-target-type>LIB/<link>shared/<address-model>32/<debug-symbols>off : -Wl,-x ;
+         flags darwin.link.dll OPTIONS
+             $(condition)/<main-target-type>LIB/<link>shared/<address-model>/<debug-symbols>off : -Wl,-x ;
+-        flags darwin.link OPTIONS
+-            $(condition)/<main-target-type>EXE/<address-model>32/<debug-symbols>off : -s ;
+-        flags darwin.link OPTIONS
+-            $(condition)/<main-target-type>EXE/<address-model>/<debug-symbols>off : -s ;
+-    }
+-    else
+-    {
+-        # Otherwise we need to find a strip program to use. And hence
+-        # also tell the link action that we need to use a strip
+-        # post-process.
+-        flags darwin.link NEED_STRIP $(condition)/<debug-symbols>off : "" ;        
+-        strip =
+-            [ common.get-invocation-command darwin
+-                : strip : [ feature.get-values <striper> : $(options) ] : $(bin) : search-path ] ;
+-        flags darwin.link .STRIP $(condition) : $(strip[1]) ;
+-        if $(.debug-configuration)
+-        {
+-            ECHO notice: using strip :: $(condition) :: $(strip[1]) ;
+-        }
+-    }
++## -s produces bad code on macs (release)
++#        flags darwin.link OPTIONS
++#             $(condition)/<main-target-type>EXE/<address-model>32/<debug-symbols>off : -s ;
++#         flags darwin.link OPTIONS
++#             $(condition)/<main-target-type>EXE/<address-model>/<debug-symbols>off : -s ;
++    }
++## produces bad code on macs (release). maybe different options need to be sent to strip
++#     else
++#     {
++#         # Otherwise we need to find a strip program to use. And hence
++#         # also tell the link action that we need to use a strip
++#         # post-process.
++#         flags darwin.link NEED_STRIP $(condition)/<debug-symbols>off : "" ;        
++#         strip =
++#             [ common.get-invocation-command darwin
++#                 : strip : [ feature.get-values <striper> : $(options) ] : $(bin) : search-path ] ;
++#         flags darwin.link .STRIP $(condition) : $(strip[1]) ;
++#         if $(.debug-configuration)
++#         {
++#             ECHO notice: using strip :: $(condition) :: $(strip[1]) ;
++#         }
++#     }
+ 
+     # - The archive builder (libtool is the default as creating
+     #   archives in darwin is complicated.
+diff -wur --unidirectional-new-file -x status -x adobe_information -x bin.v2 ../diffable_boost_1_36_0/tools/build/v2/tools/msvc.jam ../boost_libraries/tools/build/v2/tools/msvc.jam
+--- ../diffable_boost_1_36_0/tools/build/v2/tools/msvc.jam	2008-07-15 06:53:41.000000000 -0700
++++ ../boost_libraries/tools/build/v2/tools/msvc.jam	2008-09-02 14:45:18.234375000 -0700
+@@ -746,6 +746,11 @@
+ #
+ # Declare flags and action for compilation
+ #
++
++# Secure STL feature
++
++feature.feature stl-security-theater : off on : propagated link-incompatible ;
++
+ feature.feature debug-store : object database : propagated ;
+ 
+ flags msvc.compile CFLAGS <optimization>speed : /O2 ;
+@@ -770,6 +775,9 @@
+ flags msvc.compile C++FLAGS  <exception-handling>on/<asynch-exceptions>off/<extern-c-nothrow>on : /EHsc ;
+ flags msvc.compile C++FLAGS  <exception-handling>on/<asynch-exceptions>on/<extern-c-nothrow>off : /EHa ;
+ flags msvc.compile C++FLAGS  <exception-handling>on/<asynch-exceptions>on/<extern-c-nothrow>on : /EHac ;
++flags msvc.compile C++FLAGS  <stl-security-theater>off : /D_SECURE_SCL=0 ;
++flags msvc.compile C++FLAGS  <stl-security-theater>on : /D_SECURE_SCL=1 ;
++
+ 
+ # By default 8.0 enables rtti support while prior versions disabled it. We
+ # simply enable or disable it expliclty so we do not have to depend on this

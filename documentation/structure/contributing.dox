@@ -1,0 +1,156 @@
+/*! \page asl_contributing Contributing to ASL
+
+\section asl_contrib_overview Overview
+
+\par
+We are very excited to allow other developers the opportunity to work on the Adobe Source Libraries with us. Here we will discuss the general guidelines we will use to manage the development and release of the Adobe Source Libraries. 
+
+\par
+This process is in place to acccomplish the following goals:
+    - That no malicious, illegal, or third-party code will be submitted to mission-critical code in the depots.
+	- That more than one ASL developer has a chance to look at the design of code being submitted to ASL.
+	- That there is always a stable, working copy of the most current code in the code repository.
+
+\section asl_contrib_license_guidelines License Guidelines
+
+\par
+All code contributions must be under the MIT license and copyright of the Adobe opensource project. By contributing code you agree that we can distribute the contribution under the terms of the MIT license, that it can be distributed without any royalties, copyright, trademark, patent or other legal lock ups. Open source means no discrimination against any group or individual that may wish to use the code.
+
+\par
+The following boilerplate licensing information must be the first lines of any source file(s) submitted to stlab.adobe.com (where {year} is substituted with the appropriate value, and is the only value that can be altered in the boilerplate):
+
+\par
+\verbatim
+/*
+    Copyright 2007-{year} Adobe Systems Incorporated
+    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
+    or a copy at http://stlab.adobe.com/licenses.html)
+*/
+
+/*************************************************************************************************/
+\endverbatim
+
+\section asl_contrib_submit_guidelines Submission Guidelines
+
+\par
+The fundamental philosophy by which we will manage development and contributions to the ASL is by a sandbox-review method.
+
+\subsection asl_contrib_submit_release The release Depot
+
+\par
+The <code>release</code> depot is the official source release of the Adobe Source Libraries. It is updated every release cycle by one of Adobe's <code>stlab.adobe.com</code> developers.
+
+\subsection asl_contrib_submit_submission The submission Depot
+
+\par
+The <code>submission</code> depot is the current, stable, working release depot. Changes are committed to this depot by an authorized ASL developer pending a review (see below).
+
+\subsection asl_contrib_submit_sandbox The sandbox Depot
+ 
+\par
+The <code>sandbox</code> depot is the main location for hacking. Branches should be made into this depot from <code>submission</code> to allow for developers to code against the current (stable) development state. Developers are encouraged to collaborate with other developers on code and branching of the sandboxes is also acceptable. All branches should reside in the sandbox depot under a top-level user directory.
+
+\subsection asl_contrib_submit_review The Review Process
+
+\par
+All developers need to work out of sandboxes created by branching <code>submission</code> into the <code>sandbox</code> depot.
+
+\par
+Creating a new branch under the <code>sandbox</code> depot for multiple-developer work is fine, but it should still reside inside a user's folder to avoid too many folders at the top level.
+
+\par
+When you are ready to have code reviewed, please post a description of what you have done to <code>adobe-source-devel at lists dot sourceforge dot net</code> list with a review request. An approved review developer will contact you when reviewers are ready and it is ok to go ahead and overwrite the <code>review</code> depot with your working sources.
+
+\par
+An approved ASL review developer then engages in a review process with the developer(s) over the contents of the <code>review</code> depot. The review may or may not succeed, or may succeed pending requested changes that must be made back in the sandbox.
+
+\par
+When a chunk of code passes review, the approved ASL review developer will integrate the <code>review</code> depot into <code>submission</code>.
+
+\section asl_contrib_policies Other Enforced Policies
+
+\par
+Code formatting is a highly-debated issue between programmers. Adobe is no stranger to many seasoned developers having widely differing formatting styles and preferences. Please try to keep the format of submitted code in line with the rest of the project. We request code submissions to have as close to the same format as what is already present in the code base. Granted, there are inconsistencies in the code base already- we are trying to keep it to a minimum going forward.
+
+\par
+All new code submitted to ASL should have a compiling, linking and successfully executable test in the <code>//{depot}/adobe/test/</code> directory.
+
+\par
+All source files (code and documentation) should be named only with lowercase, 7-bit ASCII alphanumeric characters and the underscore ('_') character (<code>[0-9a-z_]</code>). This is to ensure maximum cross-platform, cross-locale compatibility.
+
+\par
+For legal reasons, no third-party code is allowed in any <code>stlab.adobe.com</code> depot. Examples of this might be the Boost or Lua library sources. Only code intended for submission to the Adobe Source Libraries is permitted.
+
+\section asl_contrib_example Example Client Setup
+
+\subsection asl_contrib_example_clientspec Client Mapping Specification (clientspec)
+
+\par
+The following might be an example of a developer's client specification set up by executing <code>p4 client</code> on the developer's machine. Note that one must first have a development account on the <code>stlab.adobe.com:10666</code> Perforce depot.
+
+\par
+\verbatim
+# A Perforce Client Specification.
+
+Client:	fbrereto
+
+Owner:	fbrereto
+
+Description:
+	This is the client specification for Foster Brereton's primary development machine.
+
+Root:	/Users/fbrereto/opensource/
+
+Options:	noallwrite noclobber compress unlocked nomodtime normdir
+
+LineEnd:	local
+
+View:
+	//release/... //fbrereto/release/...
+	//review/... //fbrereto/review/...
+	//sandbox/fbrereto/... //fbrereto/sandbox/fbrereto/...
+	//submission/... //fbrereto/submission/...
+\endverbatim
+
+\par
+Note in the above that the 'compress' flag is set. This will generally speed up transactions between your computer and the <code>stlab.adobe.com</code> Perforce depot.
+
+\subsection asl_contrib_example_branchspec Sandbox Branch Specification (branchspec)
+
+\par
+A branchspec is used to map the <code>submission</code> depot to your personal working sandbox. You create a branchspec with the <code>p4 branch {name}_sandbox</code> command, where {name} is your account name on the stlab.adobe.com Perforce server.
+
+\par
+Updates made to the <code>submission</code> depot can then be integrated with the <code>p4 integrate -1 -d -i -t -b {name}_sandbox</code> command (followed by a <code>p4 resolve</code> to merge potential conflicts).
+
+\par
+Integrating your sandbox to the <code>review</code> depot is as simple as executing <code>p4 integrate //sandbox/{name}/sandbox... //review/...</code>. Note that you should purge the contents of the <code>review</code> with a <code>p4 delete //review/...</code> first (once you are OK'd to do so by the ASL review developer).
+
+\par
+Below is a sample branchspec to map submission to a user's sandbox. Note that the map goes to a <code>sandbox</code> directory within the user's directory to allow for other directories in the sandbox (including other sandboxes):
+
+\par
+\verbatim
+# A Perforce Branch Specification.
+
+Branch:	fbrereto_sandbox
+
+Owner:	fbrereto
+
+Description:
+	Maps submission to Foster Brereton's working sandbox.
+
+Options:	locked
+
+View:
+	//submission/... //sandbox/fbrereto/sandbox/...
+\endverbatim
+
+\par
+Note in the above that the 'locked' flag is set.
+
+\section asl_contrib_conclusion Conclusion
+
+\par
+Hopefully this results in an environment in which people are comfortable working, ultimately resulting in the best code we can produce as a community. Please let us know if you have any questions or comments- we would love to hear them. Thank you again for the interest you have expressed in the Adobe Source Libraries and the contributions you have made thus far!
+*/

@@ -1,0 +1,288 @@
+/*
+\defgroup virtual_machine Virtual Machine
+\ingroup property_model
+*/
+/*
+\ingroup virtual_machine
+\@{*/
+
+/*!
+\class adobe::virtual_machine_t virtual_machine.hpp <adobe/virtual_machine.hpp>
+
+\brief Stack-based non-branching expression evaluator
+
+\par
+virtual_machine_t is a stack-based expression evaluator. There are several built-in operators as well as named- and unnamed- argument functions, as well as the capability of extending these functions within a given client. 
+\par
+An expression is simply a sequence of elements, some of which can be expressions themselves. The virtual machine iterates through the expression sequence, pushing all the elements it finds onto the evaluation stack until it runs across an <i>execute token</i>. An execute token is any adobe::name_t whose first character is a period (<code>'.'</code>). When the evaluator finds this kind of token it is used as the name of the operator, and one or more arguments are popped off the stack successively for this operator. The evaluation of the arguments is handled by recursing to evaluate. There is no branching in the evaluator. The result of the operator is then pushed onto the stack and the evaluation continues down the expression sequence. Conditionals are handled with recursive evaluates; the machine always moves forward. The evaluator is very specifically not turing complete. It has no loops, no primitive recursion within the machine model, and it is not infinite.
+
+\section opcodes Operators
+\par
+The following table describes the built-in operators available for use in the virtual machine. For each operation there is listed one or more required parameters that must be pushed onto the stack for the operation to succeed. The result of the operation is pushed onto the top of the stack. All values must meet the requirements for adobe::any_regular_t.
+\par
+<table width="100%" cellspacing="1" cellpadding="1" border="1">
+    <tr><th>Unary Operation Name</th><th colspan="4">Parameter</th><th>Result</th></tr>
+    <tr><td><code>.not</code></td><td colspan="4">boolean</td><td>logical not</td></tr>
+    <tr><td><code>.unary_negate</code></td><td colspan="4">number</td><td>unary negation</td></tr>
+
+    <tr><th>Binary Operation Name</th><th colspan="4">Parameters</th><th>Result</th></tr>
+    <tr><td><code>.add</code><td colspan="2">number_0</td><td colspan="2">number_1</td><td>number_0 + number_1</td></tr>
+    <tr><td><code>.subtract</code><td colspan="2">number_0</td><td colspan="2">number_1</td><td>number_0 - number_1</td></tr>
+    <tr><td><code>.multiply</code><td colspan="2">number_0</td><td colspan="2">number_1</td><td>number_0 * number_1</td></tr>
+    <tr><td><code>.modulus</code><td colspan="2">number_0</td><td colspan="2">number_1</td><td>number_0 \% number_1</td></tr>
+    <tr><td><code>.divide</code><td colspan="2">number_0</td><td colspan="2">number_1</td><td>number_0 / number_1</td></tr>
+
+    <tr><th>Predicate Operation Name</th><th colspan="4">Parameters</th><th>Result</th></tr>
+    <tr><td><code>.less</code><td colspan="2">number_0</td><td colspan="2">number_1</td><td>number_0 &lt; number_1</td></tr>
+    <tr><td><code>.greater</code><td colspan="2">number_0</td><td colspan="2">number_1</td><td>number_0 &gt; number_1</td></tr>
+    <tr><td><code>.less_equal</code><td colspan="2">number_0</td><td colspan="2">number_1</td><td>number_0 &lt;= number_1</td></tr>
+    <tr><td><code>.greater_equal</code><td colspan="2">number_0</td><td colspan="2">number_1</td><td>number_0 &gt;= number_1</td></tr>
+    <tr><td><code>.equal</code><td colspan="2">value_0</td><td colspan="2">value_1</td><td>value_0 == value_1</td></tr>
+    <tr><td><code>.not_equal</code><td colspan="2">value_0</td><td colspan="2">value_1</td><td>value_0 != value_1</td></tr>
+    <tr><td><code>.and_op</code><td colspan="2">boolean</td><td colspan="2">expression</td><td>boolean && expression <a href="#op_1">[1]</a> <a href="#op_3">[3]</a></td></tr>
+    <tr><td><code>.or_op</code><td colspan="2">boolean</td><td colspan="2">expression</td><td>boolean || expression <a href="#op_2">[2]</a> <a href="#op_3">[3]</a></td></tr>
+
+    <tr><th>Misc. Operation Name</th><th colspan="4">Parameters</th><th>Result</th></tr>
+    <tr><td><code>.array</code><td>number</td><td colspan="3"><code>number</code> unnamed argument(s)</td><td>an array_t containing the top <code>number</code> elements in the evaluation stack</td></tr>
+    <tr><td><code>.dictionary</code><td>number</td><td colspan="3"><code>number</code> key/value pair(s) (named argument(s))</td><td>a dictionary_t containing the top <code>number</code> key/value pairs in the evaluation stack</td></tr>
+    <tr><td><code>.ifelse</code><td>boolean</td><td colspan="2">expression_0</td><td>expression_1</td><td>evaluated expression_0 if boolean is true; evaluated expression_1 otherwise <a href="#op_4">[4]</a></td></tr>
+    <tr><td><code>.index</code><td colspan="2">array</td><td colspan="2">number</td><td>evaluated array[number]</td></tr>
+    <tr><td><code>.index</code><td colspan="2">dictionary</td><td colspan="2">name</td><td>evaluated dictionary[name]</td></tr>
+    <tr><td><code>.function</code><td colspan="2">name</td><td colspan="2">dictionary of expressions</td><td>result of calling function name with argument dictionary</td></tr>
+    <tr><td><code>.function</code><td colspan="2">name</td><td colspan="2">array of expressions</td><td>result of calling function name with argument array</td></tr>
+    <tr><td><code>.variable</code><td colspan="4">name</td><td>evaluated value of name</td></tr>
+</table>
+\notes
+    <a name="op_1">[1]</a> expression is evaluated only if boolean is true.
+\par
+    <a name="op_2">[2]</a> expression is evaluated only if boolean is false.
+\par
+    <a name="op_3">[3]</a> expression must yield a boolean.
+\par
+    <a name="op_4">[4]</a> only the pertinent expression is evaluated.
+
+\section named_functions Named Functions
+\par
+When looking up named functions in your client-side callback, the name of the function will be the adobe::name_t parameter of the callback, and any arguments to that function will be in the second parameter. You are required to return the value returned by your client-side function as a any_regular_t, which will be pushed onto the evaluation stack of the machine. Note that these do <i>not</i> have periods in their names, as they are not operations but rather the first parameter to the <code>.function</code> operator.
+\par
+<table width="100%" cellspacing="1" cellpadding="1" border="1">
+    <tr><th>Unnamed Argument Functions</th><th colspan="3">Arguments</th><th>Result</th></tr>
+    <tr><td><code>contributing</code></td><td colspan="3" rowspan="5" align="center" valign="center"><i>A sequence of unnamed arguments</i></td><td>a dictionary_t outlining the values that contributed to this value <a href="#fc_1">[5]</a></td></tr>
+    <tr><td><code>max</code></td><td>The largest of the evaluated numbers <a href="#fc_2">[6]</a></td></tr>
+    <tr><td><code>min</code></td><td>The smallest of the evaluated numbers <a href="#fc_2">[6]</a></td></tr>
+    <tr><td><code>round</code></td><td>Rounds the argument to the nearest whole number <a href="#fc_1">[5]</a></td></tr>
+    <tr><td><code>typeof</code></td><td>Specifies the type of the element <a href="#fc_1">[5]</a></td></tr>
+
+    <tr><th>Named Argument Functions</th><th>Argument Type</th><th>Argument Name</th><th>Argument Note</th><th>Result</th></tr>
+    <tr><td rowspan="3" valign="top"><code>scale</code></td><td><code>number</code></td><td>m</td><td>Linear scale slope.<br><i>Default:</i> 1</td><td rowspan="3" valign="top">Perform a linear scaling of x</td></tr>
+        <tr><td><code>number</code></td><td>b</td><td>Linear scale y-intercept.<br><i>Default:</i> 0</td></tr>
+        <tr><td><code>number</code></td><td>x</td><td>Value to scale.<br><i>Default:</i> 0</td></tr>
+</table>
+\notes
+    <a name="fc_1">[5]</a> Only operates on the first element in the argument list.
+\par
+    <a name="fc_2">[6]</a> All values in the argument list must be numbers.
+
+\section vm_example Example
+\par
+The following is a pdf-formatted expression sequence for the expression<br>&nbsp;&nbsp;<code>round(x<3 ? 2+9/5 : 7.8-2.94)</code>
+\verbatim
+% pdf output
+[
+ /x /.variable 3 /.less
+ [
+  2 9 5 /.divide /.add
+ ]
+ [
+  7.800000000000000 2.940000000000000 /.subtract
+ ]
+ /.ifelse 1 /.array /round /.function
+]
+% end pdf output
+\endverbatim
+\par
+The following is a pdf-formatted expression sequence for the expression<br>&nbsp;&nbsp;<code>{name: \@value, items: [4, "Hello"]}</code>
+\verbatim
+% pdf output
+[
+ /name /value
+ /items 4 (Hello) 2 /.array
+ 2 /.dictionary
+]
+% end pdf output
+\endverbatim
+*/
+
+/*!
+\typedef adobe::virtual_machine_t::expression_t
+
+The expression to be evaluated, broken up into elements of an adobe::array_t.
+*/
+
+/*!
+\typedef adobe::virtual_machine_t::contributing_t
+
+A bitfield for mapping the Adam input cells that contributed to the value of a virtual_machine_t::tracked_value_t
+*/
+
+/*!
+\typedef adobe::virtual_machine_t::variable_lookup_signature_t
+
+Function signature for variable lookup functions.
+*/
+
+/*!
+\typedef adobe::virtual_machine_t::simple_variable_lookup_signature_t
+
+Function signature for simple variable lookup functions.
+*/
+
+/*!
+\typedef adobe::virtual_machine_t::contributing_lookup_signature_t
+
+Function signature for contributing lookup functions.
+*/
+
+/*!
+\typedef adobe::virtual_machine_t::dictionary_function_lookup_signature_t
+
+Function signature for functions with dictionary-based (named) arguments.
+*/
+
+/*!
+\typedef adobe::virtual_machine_t::array_function_lookup_signature_t;
+
+Function signature for functions with array-based (unnamed) arguments.
+*/
+
+/*!
+\typedef adobe::virtual_machine_t::variable_lookup_t
+
+A function used to map an identifier with its underlying tracked_value_t.
+*/
+
+/*!
+\typedef adobe::virtual_machine_t::simple_variable_lookup_t
+
+A function used to map an identifier with its underlying any_regular_t.
+*/
+
+/*!
+\typedef adobe::virtual_machine_t::contributing_lookup_t
+
+A function used to map a contributing bitset with a tracked_value_t.
+*/
+
+/*!
+\typedef adobe::virtual_machine_t::dictionary_function_lookup_t
+
+A function callback used for client-side named-argument functions.
+*/
+
+/*!
+\typedef adobe::virtual_machine_t::array_function_lookup_t;
+
+A function callback used for client-side unnamed-argument functions.
+*/
+
+/*!
+\fn void adobe::virtual_machine_t::evaluate(const adobe::virtual_machine_t::expression_t&)
+
+\param expression An array_t comprising all the elements of the expression for evaluation.
+
+\note The result(s) of the expression will be pushed onto the evaluation stack of this virtual machine.
+*/
+
+/*!
+\fn const adobe::virtual_machine_t::tracked_value_t& adobe::virtual_machine_t::back() const
+
+\return
+    A reference to the top of the evaluation stack.
+*/
+
+/*!
+\fn void adobe::virtual_machine_t::pop_back()
+
+Pops the top of the evaluation stack
+*/
+
+/*!
+\fn void adobe::virtual_machine_t::set_contributing_lookup(const adobe::virtual_machine_t::contributing_lookup_t& lookup)
+
+Sets the function callback for contributing lookup.
+
+\param lookup The function to be used as the callback.
+*/
+
+/*!
+\fn void adobe::virtual_machine_t::set_variable_lookup(const adobe::virtual_machine_t::variable_lookup_t& lookup)
+
+Sets the function callback for variable lookup.
+
+\param lookup The function to be used as the callback.
+*/
+
+/*!
+\fn void adobe::virtual_machine_t::set_simple_variable_lookup(const adobe::virtual_machine_t::simple_variable_lookup_t& lookup)
+
+Sets the function callback for simple variable lookup.
+
+\param lookup The function to be used as the callback.
+*/
+
+/*!
+\fn void adobe::virtual_machine_t::set_array_function_lookup(const adobe::virtual_machine_t::array_function_lookup_t& function)
+
+Sets a client-side callback for use when looking up unnamed-argument functions.
+
+\param function The function to be used as the callback.
+*/
+
+/*!
+\fn void adobe::virtual_machine_t::set_dictionary_function_lookup(const adobe::virtual_machine_t::dictionary_function_lookup_t& function)
+
+Sets a client-side callback for use when looking up named-argument functions.
+
+\param function The function to be used as the callback.
+*/
+
+/*!
+\class adobe::virtual_machine_t::tracked_value_t virtual_machine.hpp <adobe/virtual_machine.hpp>
+
+\brief Primary element of the virtual machine evaluation stack.
+
+\model_of
+    - \ref concept_regular_type
+
+\c tracked_value_t is the stack object for \c virtual_machine_t. During the course of evaluating an expression, its results are wrapped in <code>tracked_value_t</code>s and pushed onto the virtual machine's evaluation stack. Each \c tracked_value_t also contains metadata to track how this value was derived.
+*/
+
+/*!
+\fn void adobe::virtual_machine_t::tracked_value_t::tracked_value_t(const adobe::any_regular_t& value)
+
+Initialization with no contributing bit set.
+
+\param value The initial value stored.
+*/
+
+/*!
+\fn void adobe::virtual_machine_t::tracked_value_t::tracked_value_t(const adobe::any_regular_t& value, const adobe::virtual_machine_t::contributing_t& contributing)
+
+Initialization with a value and contributing bit set.
+
+\param value The initial value stored.
+\param contributing The initial contributing bit vector stored.
+*/
+
+/*!
+\var adobe::virtual_machine_t::tracked_value_t::value_m
+
+The value stored in this object.
+*/
+
+/*!
+\var adobe::virtual_machine_t::tracked_value_t::contributing_m
+
+The contributing bit set for the value stored in this object. Every bit in the bitset corresponds to an input cell in an Adam sheet; where a bit is 1, the index for that bit is also the index for a contributing cell to this value in the Adam input cell vector.
+*/
+/*\@}*/

@@ -1,0 +1,157 @@
+/** \page stldoc_transform transform
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b> : algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Transform</code> is an overloaded name; there are actually two <code>transform</code>
+functions.
+\code
+template <class InputIterator, class OutputIterator, class UnaryFunction>
+OutputIterator transform(InputIterator first, InputIterator last,
+                         OutputIterator result, UnaryFunction op);
+
+
+template <class InputIterator1, class InputIterator2, class OutputIterator,
+          class BinaryFunction>
+OutputIterator transform(InputIterator1 first1, InputIterator1 last1,
+                         InputIterator2 first2, OutputIterator result,
+                         BinaryFunction binary_op);
+\endcode
+\section Description Description
+<code>Transform</code> performs an operation on objects; there are two versions
+of <code>transform</code>, one of which uses a single range of \ref stldoc_InputIterator
+and one of which uses two ranges of \ref stldoc_InputIterator.
+<p>
+The first version of <code>transform</code> performs the operation <code>op(*i)</code>
+for each iterator <code>i</code> in the range <code>[first, last)</code>, and assigns
+the result of that operation to <code>*o</code>, where <code>o</code> is the corresponding
+output iterator.  That is, for each <code>n</code> such that <code>0 &lt;= n &lt; last - first</code>,
+it performs the assignment <code>*(result + n) = op(*(first + n))</code>.
+The return value is <code>result + (last - first)</code>.
+<p>
+The second version of <code>transform</code> is very similar, except that it
+uses a \ref stldoc_BinaryFunction instead of a \ref stldoc_UnaryFunction :
+it performs the operation <code>op(*i1, *i2)</code> for each iterator <code>i1</code> in the
+range <code>[first1, last1)</code> and assigns the result to <code>*o</code>, where
+<code>i2</code> is the corresponding iterator in the second input range and
+where <code>o</code> is the corresponding output iterator.  That is, 
+for each <code>n</code> such that <code>0 &lt;= n &lt; last1 - first1</code>,
+it performs the assignment <code>*(result + n) = op(*(first1 + n), *(first2
++ n)</code>.  The return value is <code>result + (last1 - first1)</code>.
+<p>
+Note that <code>transform</code> may be used to modify a sequence &quot;in place&quot;:
+it is permissible for the iterators <code>first</code> and <code>result</code> to be the same. <A href="#1">[1]</A>
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first (unary) version: 
+<ul>
+<li>
+<code>InputIterator</code> must be a model of \ref stldoc_InputIterator.
+<li>
+<code>OutputIterator</code> must be a model of \ref stldoc_OutputIterator.
+<li>
+<code>UnaryFunction</code> must be a model of \ref stldoc_UnaryFunction.
+<li>
+<code>InputIterator</code>'s value type must be
+   convertible to <code>UnaryFunction</code>'s argument type.
+<li>
+<code>UnaryFunction</code>'s result type must be convertible to a type in
+   <code>OutputIterator</code>'s set of value types.
+</ul>
+For the second (binary) version :
+<ul>
+<li>
+<code>InputIterator1</code> and <code>InputIterator2</code>
+   must be models of \ref stldoc_InputIterator.
+<li>
+<code>OutputIterator</code> must be a model of \ref stldoc_OutputIterator.
+<li>
+<code>BinaryFunction</code> must be a model of \ref stldoc_BinaryFunction.
+<li>
+<code>InputIterator1</code>'s and <code>InputIterator2</code>'s value types must
+   be convertible, respectively, to <code>BinaryFunction</code>'s first and second
+   argument types.
+<li>
+<code>UnaryFunction</code>'s result type must be convertible
+   to a type in <code>OutputIterator</code>'s set of value types.
+</ul>
+\section Preconditions Preconditions
+For the first (unary) version : 
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>result</code> is not an iterator within the range <code>[first+1, last)</code>. <A href="#1">[1]</A>
+<li>
+There is enough space to hold all of the elements being copied.
+   More formally, the requirement is that 
+   <code>[result, result + (last - first))</code> is a valid range. 
+</ul>
+For the second (binary) version:
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first2, first2 + (last1 - first1))</code> is a valid range.
+<li>
+<code>result</code> is not an iterator within the range <code>[first1+1, last1)</code>
+    or <code>[first2 + 1, first2 + (last1 - first1))</code>.
+<li>
+There is enough space to hold all of the elements being copied.
+   More formally, the requirement is that 
+   <code>[result, result + (last1 - first1))</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  The operation is applied exactly <code>last - first</code> times 
+in the case of the unary version, or <code>last1 - first1</code> in the case
+of the binary version.
+\section Example Example
+Replace every number in an array with its negative.
+\code
+const int N = 1000;
+double A[N];
+iota(A, A+N, 1);
+
+transform(A, A+N, A, negate<double>());
+\endcode
+<p>
+Calculate the sum of two vectors, storing the result in a third vector.
+\code
+const int N = 1000;
+Vector<int> V1(N);
+Vector<int> V2(N);
+Vector<int> V3(N);
+
+iota(V1.begin(), V1.end(), 1);
+fill(V2.begin(), V2.end(), 75);
+
+assert(V2.size() >= V1.size() && V3.size() >= V1.size());
+transform(V1.begin(), V1.end(), V2.begin(), V3.begin(),
+          plus<int>());
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The \ref stldoc_OutputIterator <code>result</code> is not permitted to be the same as
+any of the \ref stldoc_InputIterator in the range <code>[first, last)</code>, with the
+exception of <code>first</code> itself.  That is : 
+<code>transform(V.begin(), V.end(), V.begin(), fabs)</code> is valid, but
+<code>transform(V.begin(), V.end(), V.begin() + 1, fabs)</code> is not.
+\section See_also See also
+The \ref stldoc_functors, <code>\ref stldoc_copy</code>, <code>\ref stldoc_generate</code>, 
+<code>\ref stldoc_fill</code>
+
+
+*/

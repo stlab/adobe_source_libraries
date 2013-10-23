@@ -1,0 +1,5 @@
+// Additional flags for linking an application
+
+#include "xci_libcpp_static.xcconfig"
+
+OTHER_LDFLAGS = -nodefaultlibs -lpthread -lgcc_eh -lgcc

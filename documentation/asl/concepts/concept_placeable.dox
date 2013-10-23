@@ -1,0 +1,115 @@
+/*! \defgroup concept_placeable Placeable
+\ingroup layout_library
+
+\description
+A model of the Placeable concept is an item that can be measured and placed within a visual space.
+
+\refinement_of
+
+\associated_types
+    <table>
+    <tr>
+        <td valign="top">
+            Extents Type
+        </td>
+        <td valign="top">
+            <code>typename placeable_extents_type<Placeable>::type</code>
+        </td>
+        <td valign="top">
+            Models adobe::extents_t. Used by the Placeable to relate the minimum visual extents it requires in order to be placed correctly.
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">
+            Placement Data Type
+        </td>
+        <td valign="top">
+            <code>typename placement_data_type<Placeable>::type</code>
+        </td>
+        <td valign="top">
+            Models adobe::place_data_t. Contains the derived information necessary for the Placeable to position itself within the visual space
+        </td>
+    </tr>
+    </table>
+
+\todo
+ Need concepts for extents and placement data
+
+\notation
+    <table>
+        <tr>
+            <td valign="top"><code>T</code></td>
+            <td valign="top">A type that is a model of Placeable</td>
+        </tr>
+        <tr>
+            <td valign="top"><code>t</code></td>
+            <td valign="top">Object of type <code>T</code></td>
+        </tr>
+        <tr>
+            <td valign="top"><code>e</code></td>
+            <td valign="top">Object of type <code>Placeable::extents_type</code></td>
+        </tr>
+        <tr>
+            <td valign="top"><code>p</code></td>
+            <td valign="top">Object of type <code>Placeable::placement_data_type</code></td>
+        </tr>
+    </table>
+
+\definitions
+
+\valid_expressions
+    <table>
+        <tr>
+            <th>Name</th><th>Expression</th><th>Type requirements</th><th>Return type</th>
+        </tr>
+        <tr>
+            <td valign="top">Measure</td>
+            <td valign="top"><code>measure(t, e);</code></td>
+            <td valign="top">e is a reference parameter that on return must contain the calculated horizontal and vertical extents of <code>t</code> within the visual space</td>
+            <td valign="top">void</td>
+        </tr>
+        <tr>
+            <td valign="top">Place</td>
+            <td valign="top"><code>place(t, p);</code></td>
+            <td valign="top">p contains the calculated horizontal and vertical extents of <code>t</code> within the visual space</td>
+            <td valign="top"><code>void</code></td>
+        </tr>
+    </table>
+
+\expression_semantics
+    <table>
+        <tr>
+            <th>Name</th><th>Expression</th><th>Precondition</th><th>Semantics</th><th>Postcondition</th>
+        </tr>
+        <tr>
+            <td valign="top">Place</td>
+            <td valign="top"><code>place(t, p);</code></td>
+            <td valign="top"><code>p</code> must not be less than the minimum extents specified by <code>measure</code></td>
+            <td valign="top">Places <code>t</code> within the visual space according to <code>p</code></td>
+            <td valign="top"><code>t</code> is properly placed within the visual space</td>
+        </tr>
+    </table>
+
+\complexity
+
+\invariants
+
+\models
+    - Most user interface elements are Placeable, in that they need to be measured before they can be placed appropriately within the dialog to which they belong.
+
+\notes
+
+\see_also
+    concept_placeable, measure, place
+\example
+\code
+    Placeable_t             p;
+
+    adobe::extents_t h;
+    measure(p, h);
+
+    adobe::place_data_t(/*initialized with h and actual placement location*/);
+
+    place(p, d);
+\endcode
+*/

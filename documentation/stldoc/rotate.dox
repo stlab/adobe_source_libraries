@@ -1,0 +1,68 @@
+/** \page stldoc_rotate rotate
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class ForwardIterator>
+inline ForwardIterator rotate(ForwardIterator first, ForwardIterator middle,
+                   ForwardIterator last);
+\endcode
+\section Description Description
+<code>Rotate</code> rotates the elements in a range.  That is, the element pointed
+to by <code>middle</code> is moved to the position <code>first</code>, the element pointed
+to by <code>middle + 1</code> is moved to the position <code>first + 1</code>, and so on.
+One way to think about this operation is that it exchanges the two
+ranges <code>[first, middle)</code> and <code>[middle, last)</code>.  Formally, for every
+integer <code>n</code> such that <code>0 &lt;= n &lt; last - first</code>, the element
+<code>*(first + n)</code> is assigned to <code>*(first + (n + (last - middle)) % (last - first))</code>.  <code>Rotate</code> returns <code>first + (last - middle)</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator</code> is mutable.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, middle)</code> is a valid range.
+<li>
+<code>[middle, last)</code> is a valid range. <A href="#1">[1]</A>
+</ul>
+\section Complexity Complexity
+Linear.  At most <code>last - first</code> swaps are performed. <A href="#2">[2]</A>
+\section Example Example
+\code
+char alpha[] = "abcdefghijklmnopqrstuvwxyz";
+rotate(alpha, alpha + 13, alpha + 26);
+printf("%s\n", alpha);
+// The output is nopqrstuvwxyzabcdefghijklm
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+It follows from these two requirements that <code>[first, last)</code> is
+a valid range.
+<p><A name="2">[2]</A>
+<code>Rotate</code> uses a different algorithm depending on whether its
+arguments are \ref stldoc_ForwardIterator, \ref stldoc_BidirectionalIterator,
+or \ref stldoc_RandomAccessIterator.  All three algorithms, however,
+are linear.
+\section See_also See also
+<code>\ref stldoc_rotate_copy</code>
+
+*/

@@ -1,0 +1,111 @@
+/** \page stldoc_input_iterator input_iterator
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Input_iterator</code> is an iterator base class: it is intended that an
+iterator that is a model of \ref stldoc_InputIterator, and whose value type
+and distance type are <code>T</code> and <code>Distance</code>, may be defined by inheriting from
+<code>input_iterator&lt;T, Distance&gt;</code> <A href="#1">[1]</A>.  <code>Input_iterator</code> is entirely empty: it has no
+member functions, member variables, or nested types.  It exists solely
+to simplify the definition of the functions <code>\ref stldoc_iterator_category</code>,
+<code>\ref stldoc_distance_type</code>, and <code>\ref stldoc_value_type</code>.
+\section Example Example
+\code
+class my_input_iterator : public input_iterator<double> 
+{
+  ...
+};
+\endcode
+This declares <code>my_input_iterator</code> to be an \ref stldoc_InputIterator whose
+value type is <code>double</code> and whose distance type is <code>ptrdiff_t</code>.  
+If <code>Iter</code> is an object of class <code>my_input_iterator</code>, then
+<code>\ref stldoc_iterator_category\zwj(Iter)</code> will return <code>\ref stldoc_input_iterator_tag\zwj()</code>,
+<code>\ref stldoc_value_type\zwj(Iter)</code> will return <code>(double*) 0</code>, and <code>\ref stldoc_distance_type\zwj(Iter)</code>
+will return <code>(ptrdiff_t*) 0</code>.
+\section Definition Definition
+Defined in the standard header <A href="iterator">iterator</A>, and in the
+nonstandard backward-compatibility header <A href="iterator.h">iterator.h</A>.
+This class is no longer part of the C++ standard, although
+it was present in early drafts of the standard.  It is retained
+in this implementation for backward compatibility.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The iterator's value type
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Distance</code>
+</td>
+<td valign="top">
+The iterator's distance type
+</td>
+<td valign="top">
+<code>ptrdiff_t</code>
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_Assignable
+\section Public_base_classes Public base classes
+None
+\section Type_requirements Type requirements
+The distance type must be a signed integral type.
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+None.
+\section New_Members New Members
+None.
+\section Notes Notes
+<p><A name="1">[1]</A>
+It is not required that an \ref stldoc_InputIterator inherit from the
+base <code>input_iterator</code>.  It is, however, required that the functions
+<code>\ref stldoc_iterator_category</code>, <code>\ref stldoc_distance_type</code>, and <code>\ref stldoc_value_type</code>
+be defined for every \ref stldoc_InputIterator.  
+(Or, if you are using the <code>\ref stldoc_iterator_traits</code> mechanism, that
+<code>iterator_traits</code> is properly specialized for every \ref stldoc_InputIterator.)
+Since those functions are defined for the base <code>input_iterator</code>, the
+easiest way to ensure that are defined for a new iterator class is to
+derive that class from <code>input_iterator</code> and rely on the
+derived-to-base standard conversion of function arguments.
+\section See_also See also
+The \ref stldoc_iterator_tags overview, <code>\ref stldoc_iterator_traits</code>,
+<code>\ref stldoc_iterator_category</code>,
+<code>\ref stldoc_value_type</code>, <code>\ref stldoc_distance_type</code>,
+<code>\ref stldoc_output_iterator</code>, <code>\ref stldoc_forward_iterator</code>,
+<code>\ref stldoc_bidirectional_iterator</code>, <code>\ref stldoc_random_access_iterator</code>
+
+
+*/

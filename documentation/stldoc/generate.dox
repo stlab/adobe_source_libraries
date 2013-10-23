@@ -1,0 +1,75 @@
+/** \page stldoc_generate generate
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class ForwardIterator, class Generator>
+void generate(ForwardIterator first, ForwardIterator last, Generator gen);
+\endcode
+\section Description Description
+<code>Generate</code> assigns the result of invoking <code>gen</code>, a \ref stldoc_functors
+that takes no arguments, to each element in the range <code>[first,
+last)</code>. <A href="#1">[1]</A>
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator. <A href="#2">[2]</A>
+<li>
+<code>ForwardIterator</code> is mutable.
+<li>
+<code>Generator</code> is a model of \ref stldoc_Generator.
+<li>
+<code>Generator</code>'s result type is convertible to <code>ForwardIterator</code>'s
+   value type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>last - first</code> invocations of <code>gen</code>.  <A href="#1">[1]</A>
+\section Example Example
+Fill a vector with random numbers, using the standard C library function
+<code>rand</code>.
+\code
+vector<int> V;
+...
+generate(V.begin(), V.end(), rand);
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The \ref stldoc_functors <code>gen</code> is invoked for each iterator in
+the range <code>[first, last)</code>, as opposed to just being invoked a
+single time outside the loop.  This distinction is important
+because a \ref stldoc_Generator need not return the same result each time
+it is invoked; it is permitted to read from a file, refer to and
+modify local state, and so on.
+<p><A name="2">[2]</A>
+The reason that <code>generate</code> requires its argument to be a mutable
+\ref stldoc_ForwardIterator, rather than just an \ref stldoc_OutputIterator, is that 
+it uses a range <code>[first, last)</code> of iterators.  There is no sensible
+way to describe a range of \ref stldoc_OutputIterator, because it is
+impossible to compare two \ref stldoc_OutputIterator for equality.
+The <code>\ref stldoc_generate_n</code> algorithm does have an interface that permits use of
+an \ref stldoc_OutputIterator.
+\section See_also See also
+<code>\ref stldoc_copy</code>, <code>\ref stldoc_fill</code>, <code>\ref stldoc_fill_n</code>, <code>\ref stldoc_generate_n</code>, <code>\ref stldoc_iota</code>
+
+
+*/

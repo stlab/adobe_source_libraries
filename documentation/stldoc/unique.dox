@@ -1,0 +1,148 @@
+/** \page stldoc_unique unique
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Unique</code> is an overloaded name; there are actually two <code>unique</code>
+functions.
+\code
+template <class ForwardIterator>
+ForwardIterator unique(ForwardIterator first, ForwardIterator last);
+
+template <class ForwardIterator, class BinaryPredicate>
+ForwardIterator unique(ForwardIterator first, ForwardIterator last,
+                       BinaryPredicate binary_pred);
+\endcode
+\section Description Description
+Every time a consecutive group of duplicate elements appears in the
+range <code>[first, last)</code>, the algorithm <code>unique</code> removes all but the 
+first element.  That is, <code>unique</code> returns  an iterator
+<code>new_last</code> such that the range <code>[first, new_last)</code> contains no
+two consecutive elements that are duplicates.  <A href="#1">[1]</A>
+The iterators in the range <code>[new_last, last)</code> are all still 
+dereferenceable, but the elements that they point to are unspecified.
+<code>Unique</code> is stable, meaning that the relative order of elements that 
+are not removed is unchanged.  
+<p>
+The reason there are two different versions of <code>unique</code> is that there
+are two different definitions of what it means for a consecutive group
+of elements to be duplicates.  In the first version, the test is
+simple equality: the elements in a range <code>[f, l)</code> are duplicates if,
+for every iterator <code>i</code> in the range, either <code>i == f</code> or else <code>*i == *(i-1)</code>.
+In the second, the test is an arbitrary \ref stldoc_BinaryPredicate
+<code>binary_pred</code>: the elements in <code>[f, l)</code> are duplicates if, for every 
+iterator <code>i</code> in the range, either <code>i == f</code> or else
+<code>binary_pred(*i, *(i-1))</code> is <code>true</code>. <A href="#2">[2]</A>
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator</code> is mutable.
+<li>
+<code>ForwardIterator</code>'s value type is \ref stldoc_EqualityComparable.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator</code> is mutable.
+<li>
+<code>BinaryPredicate</code> is a model of \ref stldoc_BinaryPredicate. <A href="#3">[3]</A>
+<li>
+<code>ForwardIterator</code>'s value type is convertible to <code>BinaryPredicate</code>'s
+   first argument type and to <code>BinaryPredicate</code>'s second argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>(last - first) - 1</code> applications of <code>operator==</code>
+(in the case of the first version of <code>unique</code>) or of <code>binary_pred</code>
+(in the case of the second version).
+\section Example Example
+Remove duplicates from consecutive groups of equal <code>int</code>s.
+\code
+Vector<int> V;
+V.push_back(1);
+V.push_back(3);
+V.push_back(3);
+V.push_back(3);
+V.push_back(2);
+V.push_back(2);
+V.push_back(1);
+
+Vector<int>::iterator new_end = unique(V.begin(), V.end());
+copy(V.begin(), new_end, ostream_iterator<int>(cout, " "));
+    // The output it "1 3 2 1".
+\endcode
+<p>
+Remove all duplicates from a vector of <code>char</code>s, ignoring case.  First
+sort the vector, then remove duplicates from consecutive groups.
+\code
+inline bool eq_nocase(char c1, char c2) { return tolower(c1) == tolower(c2); }
+inline bool lt_nocase(char c1, char c2) { return tolower(c1) < tolower(c2); }
+
+int main()
+{
+  const char init[] = "The Standard Template Library";
+  Vector<char> V(init, init + sizeof(init));
+  sort(V.begin(), V.end(), lt_nocase);
+  copy(V.begin(), V.end(), ostream_iterator<char>(cout));
+  cout << endl;
+  Vector<char>::iterator new_end = unique(V.begin(), V.end(), eq_nocase);
+  copy(V.begin(), new_end, ostream_iterator<char>(cout));
+  cout << endl;
+}
+// The output is:
+//    aaaabddeeehiLlmnprrrStTtTy
+//  abdehiLmnprSty
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note that the meaning of &quot;removal&quot; is somewhat subtle. <code>Unique</code>,
+like <code>\ref stldoc_remove</code>, does not destroy any iterators and does not change
+the distance between <code>first</code> and <code>last</code>.  (There's no way that it
+could do anything of the sort.)  So, for example, if <code>V</code> is a
+\ref stldoc_Vector, <code>remove(V.begin(), V.end(), 0)</code> does not change
+<code>V.size()</code>: <code>V</code> will contain just as many elements as it did before.
+<code>Unique</code> returns an iterator that points to the end of the resulting
+range after elements have been removed from it; it follows that the
+elements after that iterator are of no interest.  If you are operating
+on a \ref stldoc_Sequence, you may wish to use the \ref stldoc_Sequence's <code>erase</code>
+member function to discard those elements entirely.
+<p><A name="2">[2]</A>
+Strictly speaking, the first version of <code>unique</code> is redundant:
+you can achieve the same functionality by using an object of class
+<code>\ref stldoc_equal_to</code> as the \ref stldoc_BinaryPredicate argument.  The first version
+is provided strictly for the sake of convenience: testing for equality
+is an important special case.
+<p><A name="3">[3]</A>
+<code>BinaryPredicate</code> is not required to be an equivalence
+relation.  You should be cautious, though, about using <code>unique</code> with a
+\ref stldoc_BinaryPredicate that is not an equivalence relation: you could
+easily get unexpected results.
+\section See_also See also
+<code>\ref stldoc_BinaryPredicate</code>, <code>\ref stldoc_remove</code>, <code>\ref stldoc_remove_if</code>, <code>\ref stldoc_unique_copy</code>,
+<code>\ref stldoc_adjacent_find</code>, 
+
+
+*/

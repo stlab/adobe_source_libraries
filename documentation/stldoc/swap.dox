@@ -1,0 +1,70 @@
+/** \page stldoc_swap swap
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class Assignable> 
+void swap(Assignable& a, Assignable& b);
+\endcode
+\section Description Description
+Assigns the contents of <code>a</code> to <code>b</code> and the contents of <code>b</code> to <code>a</code>.
+This is used as a primitive operation by many other algorithms.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+Assignable is a model of \ref stldoc_Assignable.
+</ul>
+\section Preconditions Preconditions
+None.
+\section Complexity Complexity
+Amortized constant time. <A href="#1">[1]</A> <A href="#2">[2]</A>
+\section Example Example
+\code
+int x = 1;
+int y = 2;
+assert(x == 1 && y == 2);
+swap(x, y);
+assert(x == 2 && y == 1);
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The time required to <code>swap</code> two objects of type <code>T</code> will
+obviously depend on the type; &quot;constant time&quot; does not mean that
+performance will be the same for an 8-bit <code>char</code> as for a 128-bit
+<code>complex&lt;double&gt;</code>.  
+<p><A name="2">[2]</A>
+This implementation of <code>swap</code> makes one call to a copy
+constructor and two calls to an assignment operator; roughly, then, it
+should be expected to take about the same amount of time as three
+assignments.  In many cases, however, it is possible to write a
+specialized version of <code>swap</code> that is far more efficient.  Consider,
+for example, swapping two <code>\ref stldoc_Vector&lt;double&gt;</code>s each of which has <code>N</code>
+elements.  The unspecialized version requires <code>3*N</code> assignments of
+<code>double</code>, but a specialized version requires only nine
+pointer assignments.  <b>This is important</b> because <code>swap</code> is used as
+a primitive operation in many other STL algorithms, and because
+containers of containers (<code>\ref stldoc_List&lt;\ref stldoc_Vector&lt;char&gt; &gt;</code>, for example)
+are very common.  The STL includes specialized versions of <code>swap</code> for
+all container classes.  User-defined types should also provide
+specialized versions of <code>swap</code> whenever it is possible to write one
+that is more efficient than the general version.
+\section See_also See also
+<code>\ref stldoc_iter_swap</code>, <code>\ref stldoc_swap_ranges</code>
+
+
+*/

@@ -1,0 +1,212 @@
+/** \page stldoc_binder2nd binder2nd
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif
+<br>
+\image html adaptors.gif</td>
+<td width="100%"></td>
+<td align="left">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: functors, adaptors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Binder2nd</code> is a \ref stldoc_functors adaptor: it is used to transform
+an \ref stldoc_AdaptableBinaryFunction into an \ref stldoc_AdaptableUnaryFunction. 
+Specifically, if <code>f</code> is an object of class
+<code>binder2nd&lt;AdaptableBinaryFunction&gt;</code>, then <code>f(x)</code> returns 
+<code>F(x, c)</code>, where <code>F</code> is an object of class <code>AdaptableBinaryFunction</code>
+and where <code>c</code> is a constant.  Both <code>F</code> and <code>c</code> are passed as arguments to
+<code>binder2nd</code>'s constructor. <A href="#1">[1]</A>  
+<p>
+The easiest way to create a <code>binder2nd</code>
+is not to call the constructor explicitly, but instead to use the helper
+function <code>bind2nd</code>.
+\section Example Example
+Finds the first positive number in a list.
+\code
+List<int> L;
+...
+List<int>::iterator first_positive = 
+       find_if(L.begin(), L.end(), bind2nd(greater<int>(), 0));
+assert(first_positive == L.end() || *first_positive > 0);
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>AdaptableBinaryFunction</code>
+</td>
+<td valign="top">
+The type of the binary function whose second argument is being bound
+   to a constant.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_AdaptableUnaryFunction
+\section Type_requirements Type requirements
+<code>AdaptableBinaryFunction</code> must be a model of \ref stldoc_AdaptableBinaryFunction. 
+\section Public_base_classes Public base classes
+\code
+unary_function<AdaptableBinaryFunction::first_argument_type,
+               AdaptableBinaryFunction::result_type>
+\endcode
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the function object's argument, which is
+   <code>AdaptableBinaryFunction::first_argument_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the result: <code>AdaptableBinaryFunction::result_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+result_type operator()(const argument_type& x) const
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+Function call.  Returns <code>F(x, c)</code>, where <code>F</code> and <code>c</code> are the
+arguments with which this <code>binder1st</code> was constructed.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+binder2nd(const AdaptableBinaryFunction& F,
+          AdaptableBinaryFunction::second_argument_type c)
+\endcode
+</td>
+<td valign="top">
+<code>binder2nd</code>
+</td>
+<td valign="top">
+See below
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class AdaptableBinaryFunction, class T>
+binder2nd<AdaptableBinaryFunction> 
+bind2nd(const AdaptableBinaryFunction& F, const T& c);
+\endcode
+</td>
+<td valign="top">
+<code>binder2nd</code>
+</td>
+<td valign="top">
+See below
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_AdaptableUnaryFunction
+requirements, but are specific to 
+<code>binder2nd</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+\code
+binder2nd(const AdaptableBinaryFunction& F,
+          AdaptableBinaryFunction::second_argument_type c)
+\endcode
+</td>
+<td valign="top">
+The constructor.  Creates a <code>binder2nd</code> such that calling it with
+the argument <code>x</code> (where <code>x</code> is of type
+<code>AdaptableBinaryFunction::first_argument_type</code>) corresponds to the
+call <code>F(x, c)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class AdaptableBinaryFunction, class T>
+binder2nd<AdaptableBinaryFunction> 
+bind2nd(const AdaptableBinaryFunction& F, const T& c);
+\endcode
+</td>
+<td valign="top">
+If <code>F</code> is an object of type <code>AdaptableBinaryFunction</code>,
+then <code>bind2nd(F, c)</code> is equivalent to 
+<code>binder2nd<AdaptableBinaryFunction>(F, c)</code>, but is more convenient.
+The type <code>T</code> must be convertible to 
+<code>AdaptableBinaryFunction::second_argument_type</code>.
+This is a global function, not a member function.
+</td>
+</tr>
+</table>
+<p><A name="1">[1]</A>
+Intuitively, you can think of this operation as &quot;binding&quot; the
+second argument of a binary function to a constant, thus yielding
+a unary function.  This is a special case of a closure.
+\section See_also See also
+The \ref stldoc_functors, <code>\ref stldoc_binder1st</code>,
+\ref stldoc_AdaptableUnaryFunction, \ref stldoc_AdaptableBinaryFunction  
+
+
+*/

@@ -1,0 +1,145 @@
+/*!
+\defgroup expression_reference Expression Reference
+\ingroup asl_libraries
+
+\section expression_lexical_conventions Lexical Conventions
+
+The language parser operates on a C++ istream with the locale set to the standard "C" locale. Spaces, tabs, and line endings (composed of cr, lf, or (cr, lf) ) are considered white space and are ignored, except as they separate tokens.
+
+\subsection lexical_grammar Lexical Grammar
+\verbatim
+simple_token    = "+" | "-" | "*" | "/" | "%" | "?" | ":" | "=" | "!" | "{" | "}" | "<" | ">" | ";" | "@".
+compound_token  = "&&" | "||" | "<=" | ">=" | "==" | "!=".
+string          = quoted_string { quoted_string }.
+lead_comment    = "/*" {character} "*/".
+trail_comment   = "//" {character} eol.
+identifer       = (letter | "_") {letter | "_" | digit}.
+keywords        = "empty" | "true" | "false" | <extension>.
+number          = digits ["e" ["+" | "-"]] digits.
+
+quoted_string   = '"' {character} '"' | "'" {character} "'".
+digits      = digit { digit }.
+\endverbatim
+
+\subsection comments Comments
+Comments are lexical tokens to facilitate the editing and subsequent formatting of the language in alternate representations. The trail_comment is terminated by any form of line ending.
+
+\subsection strings Strings
+Strings can be quoted either with single or double quotation marks. Adjacent strings are concatenated into a single string. There are no quote characters within a string. It is expected that the text within the string represents a higher-level representation (such as XML) which can provide additional mark-up.
+
+\subsection keywords Keywords
+The \c empty, \c true, and \c false keywords represent the associated values (the \c empty value corresponds to adobe::empty_t). The list of keywords can be extended by dependent grammars.
+
+\subsection numbers Numbers:
+Numbers are always 64 bit IEEE double precision values.
+
+\todo (sparent) : Lexical conventions for hexadecimal constants may be added in the future.
+
+\section expression_expressions Expressions
+
+The expression syntax and semantics are designed to closely resemble the C language. Expressions are dynamically typed and there is no implicit type coercion between types.
+
+\subsection expression_grammar Expression Grammar
+\verbatim
+expression          = or_expression ["?" expression ":" expression].
+
+or_expression           = and_expression { "||" and_expression }.
+and_expression          = equality_expression { "&&" equality_expression }.
+equality_expression     = relational_expression { ("==" | "!=") relational_expression }.
+relational_expression       = additive_expression { ("<" | ">" | "<=" | ">=") additive_expression }.
+additive_expression     = multiplicative_expression { ("+" | "-") multiplicative_expression }.
+multiplicative_expression   = unary_expression { ("*" | "/" | "%") unary_expression }.
+
+unary_expression        = postfix_expression | (unary_operator unary_expression).
+unary_operator          = "+" | "-" | "!".
+
+postfix_expression      = primary_expression { ("[" expression "]") | ("." identifier) }.
+
+primary_expression      = name | number | boolean | string | "empty" | array | dictionary
+                    | variable_or_fuction | ( "(" expression ")" ).
+
+variable_or_function        = identifier ["(" [argument_expression_list] ")"].
+
+array               = "[" [argument_list] "]".
+dictionary          = "{" named_argument_list "}".
+
+argument_expression_list    = named_argument_list | argument_list.
+
+argument_list           = expression { "," expression }.
+named_argument_list     = named_argument { "," named_argument }.
+named_argument          = identifier ":" expression.
+
+name                = "@" identifier.
+boolean             = "true" | "false".
+\endverbatim
+
+\subsection types Types
+
+\subsubsection boolean boolean
+Values of type \c boolean are either \c true or \c false.
+
+\subsubsection name name
+A name is a literal identifier. Names are used as keys for dictionaries [see dictionary_t] and can be used as enumerations would be used in C.
+
+\subsubsection number number
+Numbers are always 64 bit IEEE double precision values.
+
+\subsubsection string string
+A value of type \c string can be any sequence of non '\\0' characters.
+
+\subsubsection empty empty
+A value of type \c empty has only the single value of \c empty.
+
+\subsubsection array array
+An \c array is a heterogeneous (any type, including arrays and dictionaries may be placed in an array) ordered sequence. Arrays support random access through the index operator. See [indexing]
+
+\subsubsection dictionary dictionary
+A \c dictionary is a heterogeneous SortedAssociativeContainer that associates objects of type \c name (the key) with objects of any type. It is also a UniqueAssociativeContainer, no two elements have the same key.
+
+\subsection operators Operators
+
+\subsubsection operator_index Index Operator
+An \c array or \c dictionary may be indexed by an expression in square brackets. For an \c array, the expression must evaluate to a \c number, the floor of which will be used as a zero based integer index. For a \c dictionary, the expression must evaluate to a \c name. If the indexed item does not exist in the container a runtime exception is thrown.
+
+A \c dictionary may also be indexed using the dot operator where the following identifier is evaluated as a name. The following two expressions are equivalent:
+\code
+dict[@my_name]
+dict.my_name
+\endcode
+
+\subsubsection operator_unary Unary Operators
+The operand for unary \c + and \c - must be of type \c number. The unary \c - operator returns the negative of the operand. The unary \c + operator is ignored, and provided for symmetry with unary \c -.
+
+The operand for \c ! must be of type \c boolean. The result is \c true if the operand is \c false. The result is \c false if the operand is \c true.
+
+\subsubsection operator_multiplicative Arithmetic Operators
+The operands for \c +, \c -, \c *, \c /, and \c \% must be of type \c number. The result of the binary operator \c + is the sum of the operands. The result of the binary operator \c - is the difference of the operands.
+
+Operators \c * and \c / respectively denote floating point multiplication and division. The \c \% operator will truncate each operand to an integer and return the remainder. It is undefined if the remainder is negative if one of the operands is negative.
+
+\todo (sparent) : The \% operator is left over from Eve1 which supported only integer arithmetic. It will likely be redefined in the future to be a proper floating point modulus.
+
+\subsubsection operator_logical Logical Operators
+The operands for \c && and \c || must be of type \c boolean. The result of the \c && and \c || operator is of type \c boolean denoting the logical-and or logical-or of the operands. The first operand is evaluated and if it is \c false for && or \c true for || then the second operand is not evaluated.
+
+\todo (sparent) : [move this discussion down to a section on evaluating sheets.] The tracking of "considered" in Adam is currently handled at too course a granularity, an item is considered if is evaluated - there are some interesting issues with short circuit booleans - for example, for logical-or if the second operand evaluates to true - the value of the first operand doesn't matter. Was it considered? Similarly, does it contribute to the result. The answer today is yes for both of these but this may be revisited.
+
+\subsubsection operator_relational Relational Operators
+The operands for \c \< (less than), \c > (greater than), \c \<= (less than or equal to), and \c >= (greater than or equal to) must be of type \c number. The result is of type \c boolean.
+
+\subsubsection operator_equality Equality Operators
+The operands for \c == (equal) and \c != (not equal) can be of any type. If the operands are not of the same type then they will compare as not equal.
+
+\subsubsection operator_conditional Conditional Operator
+The conditional operator takes three operands, separated by \c ? and \c :. The first operand must be of type \c boolean. If the first operand is \c true, then the result is the second operand. If the first operand is \c false then the result is the third operand. Only one of the second and third expressions is evaluated.
+
+\subsection precedence Precedence and Order of Evaluation
+
+\todo (sparent) : Allowing for operator overloading on external types is a possible future extension.
+
+\subsection special_functions Special Functions
+<i>intentionally empty</i>
+
+\subsection supplied_functions Supplied Functions
+<i>intentionally empty</i>
+*/

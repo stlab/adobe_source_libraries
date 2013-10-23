@@ -1,0 +1,300 @@
+/** \page stldoc_char_traits char_traits
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html utilities.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: utilities</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+The <code>char_traits</code> class is the default \ref stldoc_character_traits class used
+by the library; it is the only predefined \ref stldoc_character_traits class.
+\section Example Example
+The <code>char_traits</code> class is of no use by itself.  It is used as a
+template parameter of other classes, such as the <code>\ref stldoc_basic_string</code>
+template.  
+\section Definition Definition
+Defined in the standard header <A href="string">string</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>charT</code>
+</td>
+<td valign="top">
+<code>char_traits</code>'s value type, <i>i.e.</i> <code>char_traits&lt;&gt;::char_type</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_character_traits
+\section Type_requirements Type requirements
+<code>charT</code> is either <code>char</code> or <code>wchar_t</code>.  
+<p>
+(All of <code>char_traits</code>'s member functions are defined for arbitrary
+types, but some of <code>char_traits</code>'s members must be explicitly specialized
+if <code>char_traits</code> is to be useful for other types than <code>char</code> and
+<code>wchar_t</code>.
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+All of <code>char_traits</code>'s members are static.  There is never any reason
+to create an object of type <code>char_traits</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>char_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+<code>char_traits</code>'s value type: <code>charT</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>int_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+<code>char_traits</code>'s int type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pos_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+<code>char_traits</code>'s position type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>off_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+<code>char_traits</code>'s offset type
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>state_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+<code>char_traits</code>'s state type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>static void assign(char_type&amp; c1, const char_type&amp; c2)</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+Assigns <code>c2</code> to <code>c1</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>static bool eq(const char_type&amp; c1, const char_type&amp; c2)</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+Character equality.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>static bool lt(const char_type&amp; c1, const char_type&amp; c2)</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+Returns <code>true</code> if <code>c1</code> is less than <code>c2</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>static int compare(const char_type* p1, const char_type* p2, size_t n)</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+Three-way lexicographical comparison, much like <code>strncmp</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Length
+</td>
+<td valign="top">
+<code>static size_t length(const char* p)</code>
+</td>
+<td valign="top">
+Returns length of a null-terminated array of characters.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>static const char_type* find(const char_type* p, size_t n, const char_type&amp; c)</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+Finds <code>c</code> in <code>[p, p+n)</code>, returning 0 if not found.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>static char_type* move(char_type* s, const char_type* p, size_t n)</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+Copies characters from <code>[p, p+n)</code> to the (possibly overlapping)
+   range <code>[s, s+n)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>static char_type* copy(char_type* s, const char_type* p, size_t n)</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+Copies characters from <code>[p, p+n)</code> to the (non-overlapping)
+   range <code>[s, s+n)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>static char_type* assign(char_type* s, size_t n, char_type c)</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+Assigns the value <code>c</code> to every element in the range <code>[s, s+n)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>static int_type eof()</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+Returns the value used as an EOF indicator.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>static int_type not_eof(const int_type&amp; c)</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+Returns a value that is not equal to <code>eof()</code>.  Returns <code>c</code> unless
+   <code>c</code> is equal to <code>eof()</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>static char_type to_char_type(const int_type&amp; c)</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+Returns the <code>char_type</code> value corresponding to <code>c</code>, if such a value
+   exists.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>static int_type to_int_type(const char_type&amp; c)</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+Returns a <code>int_type</code> representation of <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>static bool eq_int_type(cosnt int_type&amp; c1, const int_type&amp; c1)</code>
+</td>
+<td valign="top">
+ \ref stldoc_character_traits
+</td>
+<td valign="top">
+Tests whether two <code>int_type</code> values are equal.  If the values can
+   also be represented as <code>char_type</code>, then <code>eq</code> and <code>eq_int_type</code> must 
+   be consistent with each other.
+</td>
+</tr>
+</table>
+\section New_members New members
+None.  All of <code>char_traits</code>'s members are defined in the 
+\ref stldoc_character_traits requirements.
+\section Notes Notes
+\section See_also See also
+\ref stldoc_character_traits, <code>\ref stldoc_basic_string</code>
+
+
+*/

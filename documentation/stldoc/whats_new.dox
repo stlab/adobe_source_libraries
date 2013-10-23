@@ -1,0 +1,197 @@
+/** \page stldoc_whats_new whats_new
+
+
+<H2>Release 3.3 : June 8, 2000</H2>
+<ul>
+<li> New feature: concept checks.  The library now does better compile-time
+     error checking to make sure that the types used to instantiate
+     library templates conform to the templates' requirements.
+<li> Removed two non-standard-conforming extensions: the second, defaulted
+     template parameter in bitset, and the third, default template
+     parameter in deque.
+<li> Many bug fixes, performance enhancements, and compatibility improvements.
+</ul>
+
+<H2>Release 3.2: April 22, 1999</H2>
+<ul>
+<li> New feature: <A Href="valarray">&lt;valarray&gt;</A> header, 
+     as defined in section 26.3 of the C++ standard.
+<li> <A Href="limits">&lt;limits&gt;</A> header is now supported
+     on compilers that lack support for constant initialization of
+     static const data members, such as Microsoft v6.0.
+<li> Performance improvements in <code>\ref stldoc_copy</code> for compilers that
+     lack support for partial specialization of templates.
+<li> Improved support for <code>\ref stldoc_insert_iterator</code> when used with
+     hash tables and <code>\ref stldoc_Slist</code>.
+<li> Documentation bug fix : documentation now makes it clear which 
+     library features are standard and which are SGI extensions.
+<li> Bug fixes.
+</ul>
+
+<H2>Release 3.13: March 11, 1999</H2>
+<p>
+<ul>
+<li>Added a \ref stldoc_FAQ list.
+<li>Bug fixes, particularly in multithreading support for non-SGI compilers.
+<li>The <code>at</code> member function is now supported for the <code>\ref stldoc_Vector</code>
+    and <code>\ref stldoc_Deque</code> classes.  (It was previously supported only for
+    <code>\ref stldoc_basic_string</code>.)
+</ul>
+
+<H2>Release 3.12 : February 2, 1999</H2>
+<p>
+<ul>
+<li> Minor bug fixes.
+<li> The <A Href="string">&lt;string&gt;</A> and 
+     <A Href="bitset">&lt;bitset&gt;</A> headers are now supported on
+     compilers that lack full support for member templates and partial 
+     specialization, such as Microsoft v6.0.
+<li> Code to support multithreading has been consolidated in a single
+     file, so that system dependences are better isolated.
+</ul>
+
+<H2>Release 3.11: July 21, 1998</H2>
+<ul>
+<li> Minor bug fixes.
+<li> Faster <code>operator[]</code> in <code>\ref stldoc_Map</code>.
+<li> Algorithmic improvements in <code>\ref stldoc_find</code>,
+     <code>\ref stldoc_find_if</code>, and <code>\ref stldoc_partition</code>.
+<li> The <A Href="stdexcept">standard exception hierarchy</A> is
+     now usable on compilers that do not provide an
+     <code>&lt;exception&gt;</code> header.
+</ul>
+
+<H2>Release 3.1 : June 9, 1998</H2>
+This release provides several new features.
+<ul>
+<li> Standard-conforming <code>\ref stldoc_basic_string</code> and 
+     <code>\ref stldoc_bitset</code> classes, and the 
+     <A Href="stdexcept">standard exception hierarchy</A>.
+<li> Standard-conforming allocators, including the default allocator
+     class <code>allocator&lt;T&gt;</code>.  All containers now use
+     standard allocators, and all containers now support allocators
+     whose instances are distinct.  Old-style allocators, like <code>alloc</code>,
+     are still supported for backward compatibility.
+<li> Algorithmic improvements in <code>\ref stldoc_search</code>.
+<li> All sequences now support the <code>resize</code> and <code>assign</code>
+     member functions.  All sequences now properly support overloaded 
+     <code>insert</code> member functions and constructors in the presence 
+     of member templates.
+<li> Bug fixes in <code>\ref stldoc_Rope</code>, and minor bug fixes elsewhere.
+     Minor changes for standard conformance.
+<li> Standard-conforming <code>auto_ptr</code> class.
+<li> Internal names, such as names of function and template
+     parameters, have been changed so that they cannot conflict with
+     user names (including user macros).
+</ul>
+
+<H2>Release 3.01 : October 31, 1997</H2> 
+This is a minor release.  It consists only of bug fixes (the most
+important ones are in <code>\ref stldoc_Rope</code>), small changes to reflect
+changes in the Final Draft International Standard (FDIS), and
+performance improvements in single-element insertion into containers.
+
+
+<H2>Release 3.0 : October 31, 1997</H2>
+<ul> 
+<li> Major reorganization of header files.  Headers now have the names
+     described in the draft C++ standard.  (Old header names are
+     provided as well for backward compatibility.)  The new-style
+     headers declare their contents in namespace <code>std</code>; the
+     old-style headers do too, but they import those declarations into
+     the global namespace with using declarations.  So, for example,
+     <code>\#include &lt;vector.h&gt;</code> is roughly equivalent to
+     <code>\#include &lt;vector&gt;</code> followed by the declaration
+     <code>using std::vector;</code>.
+<p>
+     Note that namespace <code>std</code> is only enabled for compilers
+     whose support for namespaces is sufficient; this is controlled by
+     the header <code>&lt;stl_config.h&gt;</code>.  
+
+<li> Bug fixes, and minor changes for standard conformance.
+</ul>
+
+<H2>Release 2.03: September 9, 1997</H2>
+<ul>
+<li> Bug fixes, most importantly in <code>\ref stldoc_Rope</code>.
+<li> New version of <code>reverse_iterator</code> that takes only a single
+     template parameter, as described in the draft standard.  (This 
+     relies on <code>\ref stldoc_iterator_traits</code>, so you can only use
+     the new version of <code>reverse_iterator</code> if your compiler 
+     supports partial specialization.)
+<li> New algorithms : <code>\ref stldoc_find_first_of</code>,
+     <code>\ref stldoc_search_n</code>, <code>\ref stldoc_find_end</code>
+<li> Changed the \ref stldoc_iterator_tags classes so that they form an
+     inheritance hierarchy.
+<li> Added the <code>-&gt;</code> operator to all predefined iterators 
+     (except for output iterators).
+</ul>
+
+<H2>Release 2.02 : July 31, 1997</H2>
+
+<ul>
+<li>Bug fixes, most importantly in 
+    <code>\ref stldoc_Rope</code> and
+    <code>\ref stldoc_Deque</code>.
+<li>New feature : function object adaptors for member functions.  
+    This is a family of classes: 
+    <code>\ref stldoc_mem_fun_t</code>,
+    <code>\ref stldoc_mem_fun_ref_t</code>,
+    <code>\ref stldoc_mem_fun1_t</code>,
+    <code>\ref stldoc_mem_fun1_ref_t</code>.
+</ul>
+
+<H2>Release 2.01 : June 30, 1997</H2>
+
+Bug fixes only, no new features.
+
+<H2>Release 2.0: June 13, 1997</H2>
+
+This is a major release, with many new features.  Here are some of the
+most important.
+
+<ul>
+<li>Exception safety.  All STL components are now exception safe.
+<li>New container class: <code>\ref stldoc_Rope</code>.  A scalable
+    string representation.
+<li>New container class : <code>\ref stldoc_Slist</code>.  Singly
+    linked lists.
+<li>Member templates.  If your compiler supports member templates,
+    then you will be able to use the fully general form of containers'
+    copy constructors and <code>insert</code> member functions.
+<li>New mechanism for accessing \ref stldoc_Iterators' 
+    associated type information : <code>\ref stldoc_iterator_traits</code>.
+    (Note : you can only use <code>\ref stldoc_iterator_traits</code>
+    if your compiler supports "partial specialization".)  
+    The algorithms
+    <code>\ref stldoc_count</code>, <code>\ref stldoc_count_if</code>,
+    and <code>\ref stldoc_distance</code> have been rewritten in
+    terms of <code>\ref stldoc_iterator_traits</code>.
+<li>Reimplementation of <code>\ref stldoc_Deque</code>.  
+    <code>\ref stldoc_Deque</code> has been completely rewritten,
+    for higher performance.
+<li><code>type_traits</code> mechanism, which allows omission of null
+    constructor and destructor calls.
+<li>New <code>\ref stldoc_temporary_buffer</code>
+    class.  This was partially motivated by exception safety, but it
+    is also more convenient and more efficient than the old 
+    <code>\ref stldoc_get_temporary_buffer</code>
+    and <code>\ref stldoc_return_temporary_buffer</code>
+    functions.
+<li>New allocator, <code>debug_alloc</code>, which is useful for verifying
+    the correctness of memory allocation and deallocation.
+<li>New algorithms : 
+    <code>\ref stldoc_copy_n</code>, 
+    <code>\ref stldoc_lexicographical_compare_3way</code>,
+    <code>\ref stldoc_power</code>,
+    <code>\ref stldoc_uninitialized_copy_n</code>.
+<li>Greater portability.  The SGI STL can now be compiled using
+    Microsoft Visual C++ 5.0, and Borland C++ 5.02; it should not be
+    difficult to port it to any other compiler that has good support
+    for templates.  (Specifically, any compiler that has default template
+    parameters.)  Most compiler-specific code is isolated in the file
+    <code>stl_config.h</code>.
+</ul>
+
+
+*/

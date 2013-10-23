@@ -1,0 +1,5 @@
+# Jamfile for building the cmath smoke test app
+
+project adobe/cmath ;
+
+run main.cpp ;

@@ -1,0 +1,81 @@
+/** \page stldoc_adjacent_find adjacent_find
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Adjacent_find</code> is an overloaded name; there are actually two <code>adjacent_find</code>
+functions.
+\code
+template <class ForwardIterator>
+ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last);
+
+template <class ForwardIterator, class BinaryPredicate>
+ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last,
+                              BinaryPredicate binary_pred);
+\endcode
+\section Description Description
+The first version of <code>adjacent_find</code>
+returns the first iterator <code>i</code> such that <code>i</code> and <code>i+1</code>
+are both valid iterators in <code>[first, last)</code>, and such that 
+<code>*i == *(i+1)</code>.  It returns <code>last</code> if no such iterator exists.
+<p>
+The second version of <code>adjacent_find</code>
+returns the first iterator <code>i</code> such that <code>i</code> and <code>i+1</code>
+are both valid iterators in <code>[first, last)</code>, and such that 
+<code>binary_pred(*i, *(i+1))</code> is <code>true</code>.  
+It returns <code>last</code> if no such iterator exists.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator</code>'s value type is \ref stldoc_EqualityComparable.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator</code>'s value type is convertible to <code>BinaryPredicate</code>'s
+   first argument type and to its second argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  If <code>first == last</code> then no comparison are performed;
+otherwise, at most <code>(last - first) - 1</code> comparisons.
+\section Example Example
+Find the first element that is greater than its successor.
+\code
+int A[] = {1, 2, 3, 4, 6, 5, 7, 8};
+const int N = sizeof(A) / sizeof(int);
+
+const int* p = adjacent_find(A, A + N, greater<int>());
+
+cout << "Element " << p - A << " is out of order: "
+     << *p << " > " << *(p + 1) << "." << endl;
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_find</code>, <code>\ref stldoc_mismatch</code>, <code>\ref stldoc_equal</code>, <code>\ref stldoc_search</code>
+
+
+*/

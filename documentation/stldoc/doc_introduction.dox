@@ -1,0 +1,267 @@
+/** \page stldoc_doc_introduction How to use the STL documentation
+
+This site documents all of the components (classes, functions, and 
+concepts) in the SGI Standard Template Library. Each page describes a 
+single component, and also includes links to related components. </P>
+<p>
+This documentation assumes a general familiarity with C++, especially 
+with C++ templates. Additionally, you should read <A
+ HREF="stl_introduction.html">Introduction to the Standard Template 
+Library</A> before proceeding to the pages that describe individual 
+components: the introductory page defines several terms that are used 
+throughout the documentation.</P>
+<H2>
+Classification of STL components</H2>
+<p>
+The STL components are divided into six broad categories on the basis 
+of functionality: <I>Containers</I>, <I>Iterators</I>, <I>Algorithms</I>, <I>Function 
+Objects</I>, <I>Utilities</I>, and <I>Allocators</I>; these categories 
+are defined in the \ref stldoc_stl_introduction, 
+and the \ref stldoc_table_of_contents is 
+organized according to them. </P>
+<p>
+The STL documentation contains two indices. One of them, the <A
+ HREF="stl_index.html">Main Index</A>, lists all components in 
+alphabetical order. The other, the <A HREF="stl_index_cat.html">Divided 
+Index</A>, contains a separate alphabetical listing for each category. 
+The Divided Index includes one category that is not present in the 
+Table of Contents: <I>Adaptors</I>. An adaptor is a class or a 
+function that transforms one interface into a different one. The reason 
+that adaptors don't appear in the Table of Contents is that no 
+component is merely an adaptor, but always an adaptor and something 
+else; <code>\ref stldoc_stack</code>, for example, is a container and an adaptor. 
+Accordingly, <code>\ref stldoc_stack</code> appears in two different places in the 
+Divided Index. There are several other components that appear in the 
+Divided Index in more than one place. </P>
+<p>
+The STL documentation classifies components in two ways.
+<OL>
+    <li><i>Categories</i> are a classification by functionality.
+        The categories are:
+        <ul>
+            <li>Container
+            <li>Iterator
+            <li>Algorithm
+            <li>Function Object
+            <li>Utility
+            <li>Adaptor
+            <li>Allocator.
+        </ul>
+    <li><i>Component types</i> are a structural classification: one
+        based on what kind of C++ entity (if any) a component is.  The
+        component types are:
+        <ul>
+            <li>Type (<i>i.e.</i> a <code>struct</code> or <code>class</code>)
+            <li>Function
+            <li>Concept (as defined in the 
+                \ref stldoc_stl_introduction).
+        </ul>
+</OL>
+</P>
+<p>
+These two classification schemes are independent, and each of them 
+applies to every STL component; <code>\ref stldoc_Vector</code>, for example, is a <I>type</I>
+ whose category is <I>Containers</I>, and <B>\ref stldoc_ForwardIterator</B>
+ is a <I>concept</I> whose category is <I>Iterators</I>. </P>
+<p>
+Both of these classification schemes appear at the top of every page 
+that documents an STL component. The upper left corner identifies the 
+the component's category as <I>Containers</I>,<I> Iterators</I>, <I>Algorithms</I>, <I>Function 
+Objects</I>, <I>Utilities</I>, <I>Adaptors</I>, or <I>Allocators</I>, 
+and the upper right corner identifies the component as a <I>type</I>, a <I>function</I>, 
+or a <I>concept</I>. </P>
+<H2>
+Using the STL documentation</H2>
+<p>
+The STL is a <I>generic</I> library: almost every class and function is 
+a template. Accordingly, one of the most important purposes of the STL 
+documentation is to provide a clear description of which types may be 
+used to instantiate those templates. As described in the <A
+ HREF="stl_introduction.html">Introduction</A>, a <I>concept </I>is a 
+generic set of requirements that a type must satisfy: a type is said to 
+be a <I>model of</I> a concept if it satisfies all of that concept's 
+requirements. </P>
+<p>
+Concepts are used very heavily in the STL documentation, both because 
+they directly express type requirements, and because they are a tool 
+for organizing types conceptually. (For example, the fact that <code>\ref stldoc_ostream_iterator</code>
+and <code>\ref stldoc_insert_iterator</code> are both models of <B>\ref stldoc_OutputIterator</B> 
+is an important statement about what those two classes 
+have in common.) Concepts are used for the documentation of both <I>types</I>
+ and <I>functions</I>.</P>
+<H3>
+The format of a <I>concept </I>page</H3>
+<p>
+A page that documents a <I>concept</I> has the following sections. </P>
+<ul>
+    <li>
+    <B>Summary:</B> A description of the concept's purpose.
+    <li>
+    <B>Refinement of:</B> A list of other concepts that this concept <I>refines</I>, 
+    with links to those concepts. 
+    <li>
+    <B>Associated types:</B> A concept is a set of requirements on some 
+    type. Frequently, however, some of those requirements involve some 
+    other type. For example, one of the<B> \ref stldoc_UnaryFunction</B>
+     requirements is that a <B>\ref stldoc_UnaryFunction</B> must have an <I>argument 
+    type</I>; if <code>F</code> is a type that models <B>\ref stldoc_UnaryFunction</B>
+     and <code>f</code> is an object of type <code>F</code>, then, in the 
+    expression <code>f(x)</code>, <code>x</code> must be of <code>F</code>'s 
+    argument type. If a concept does have any such associated types, then 
+    they are defined in this section.
+    <li>
+    <B>Notation</B>: The next three sections, <B>definitions</B>, <B>valid 
+    expressions</B>, and <B>expression semantics</B>, present 
+    expressions involving types that model the concept being defined. This 
+    section defines the meaning of the variables and identifiers used in 
+    those expressions.
+    <li>
+    <B>Definitions</B>: Some concepts, such as <B>\ref stldoc_LessThanComparable</B>, 
+    use specialized terminology. If a concept requires 
+    any such terminology, it is defined in this section.
+    <li>
+    <B>Valid Expressions</B>: A type that models a concept is required 
+    to support certain operations. In most cases, it doesn't make sense to 
+    describe this in terms of specific functions or member functions: it 
+    doesn't make any difference, for example, whether a type that models 
+    <B>\ref stldoc_InputIterator</B> uses a global function or a member function to 
+    provide <code>operator++</code>. This section lists the expressions 
+    that a type modeling this concept must support. It includes any 
+    special requirements (if any) on the types of the expression's 
+    operands, and the expression's return type (if any). 
+    <li>
+    <B>Expression Semantics:</B> The previous section, <B>valid 
+    expressions</B>, lists which expressions involving a type must be 
+    supported; it doesn't, however, define the meaning of those 
+    expressions. This section does: it lists the semantics, preconditions, 
+    and postconditions for the expressions defined in the previous section. 
+    <li>
+    <B>Complexity Guarantees</B>: In some cases, the run-time 
+    complexity of certain operations is an important part of a concept's 
+    requirements. For example, one of the most significant distinctions 
+    between a <B>\ref stldoc_BidirectionalIterator</B> and a 
+    <B>\ref stldoc_RandomAccessIterator</B> is that, for random access iterators, 
+    expressions like <code>p + n</code> take constant time. Any such 
+    requirements on run-time complexity are listed in this section.
+    <li>
+    <B>Invariants:</B> Many concepts require that some property is 
+    always true for objects of a type that models the concept being 
+    defined. For example, <B>\ref stldoc_LessThanComparable</B> imposes the 
+    requirement of <I>transitivity</I>: if <code>x &lt; y</code> and <code>y 
+    &lt; z</code>, then <code>x &lt; z</code>. Some such properties are 
+    &quot;axioms&quot; (that is, they are independent of any other 
+    requirements) and some are &quot;theorems&quot; (that is, they follow 
+    either from requirements in the <B>expression semantics</B> section 
+    or from other requirements in the <B>invariants</B> section). 
+    <li>
+    <B>Models</B>: A list of examples of types that are models of this 
+    concept. Note that this list is not intended to be complete: in most 
+    cases a complete list would be impossible, because there are an 
+    infinite number of types that could model the concept.
+    <li>
+    <B>Notes</B>: Footnotes (if any) that are referred to by other 
+    parts of the page. 
+    <li>
+    <B>See Also</B>: Links to other related pages.
+</ul>
+<H3>
+The format of a <I>type </I>page</H3>
+<p>
+A page that documents a <I>type</I> has the following sections. </P>
+<ul>
+    <li>
+    <B>Description</B>. A summary of the type's properties.
+    <li>
+    <B>Example of use</B>: A code fragment involving the type.
+    <li>
+    <B>Definition</B>: A link to the source code where the type is 
+    defined. 
+    <li>
+    <B>Template parameters</B>: Almost all STL structs and classes are 
+    templates. This section lists the name of each template parameter, its 
+    purpose, and its default value (if any).
+    <li>
+    <B>Model of</B>: A list of the concepts that this type is a model 
+    of, and links to those concepts. Note that a type may be a model of 
+    more than one concept: <code>\ref stldoc_Vector</code>, for example, is a model 
+    of both <B>\ref stldoc_RandomAccessContainer</B> and 
+    <B>\ref stldoc_BackInsertionSequence</B>. If a type is a model of two different concepts, that 
+    simply means that it satisfies the requirements of both.
+    <li>
+    <B>Type requirements</B>: The template parameters of a class 
+    template usually must satisfy a set of requirements. Many of these can 
+    simply be expressed by listing which concept a template parameter must 
+    conform to, but some type requirements are slightly more complicated, 
+    and involve a relationship between two different template parameters. 
+    <li>
+    <B>Public base classes</B>: If this class inherits from any other 
+    classes, they are listed in this section.
+    <li>
+    <B>Members</B>: A list of this type's nested types, member 
+    functions, member variables, and associated non-member functions. In 
+    most cases these members are simply listed, rather than defined: since 
+    the type is a model of some concept, detailed definitions aren't 
+    usually necessary. For example, <code>\ref stldoc_Vector</code> is a model of <B>\ref stldoc_Container</B>, 
+    so the description of the member function <code>begin()</code> in the <B>\ref stldoc_Container</B>
+     page applies to <code>\ref stldoc_Vector</code>, and there is no need to 
+    repeat it in the <code>\ref stldoc_Vector</code> page. Instead, the <B>Members</B>
+     section provides a very brief description of each member and a link to 
+    whatever page defines that member more fully.
+    <li>
+    <B>New Members:</B> A type might have some members that are not 
+    part of the requirements of any of the concepts that it models. For 
+    example, \ref stldoc_Vector has a member function called <code>capacity()</code>, 
+    which is not part of the <B>\ref stldoc_RandomAccessContainer</B> or 
+    <B>\ref stldoc_BackInsertionSequence</B> requirements. These members are defined in 
+    the <B>New members</B> section.
+    <li>
+    <B>Notes</B>: Footnotes (if any) that are referred to by other 
+    parts of the page. 
+    <li>
+    <B>See Also</B>: Links to other related pages.
+</ul>
+<H3>
+The format of a <I>function </I>page</H3>
+<p>
+A page that documents a <I>function</I> has the following sections. </P>
+<ul>
+    <li>
+    <B>Prototype:</B> the function's declaration. 
+    <li>
+    <B>Description:</B> A summary of what the function does.
+    <li>
+    <B>Definition</B>: A link to the source code where the function is 
+    defined. 
+    <li>
+    <B>Requirements on types:</B> Most functions in the STL are function 
+    templates. This section lists the requirements that must be satisfied 
+    by the function's template parameters. Sometimes the requirements can 
+    simply be expressed by listing which concept a template parameter must 
+    conform to, but sometimes they are more complicated and involve a 
+    relationship between two different template parameters. In the case of <code>\ref stldoc_find</code>, 
+    for example, the requirements are that the  parameter <code>InputIterator</code>
+     is a model of <B>\ref stldoc_InputIterator</B>, that the parameter <code>EqualityComparable</code>
+     is a model of <B>\ref stldoc_EqualityComparable</B>, and that comparison 
+    for equality is possible between objects of type <code>EqualityComparable</code>
+     and objects of <code>InputIterator</code>'s value types. 
+    <li>
+    <B>Preconditions:</B> Functions usually aren't guaranteed to yield 
+    a well-defined result for any possible input, but only for valid input; 
+    it is an error to call a function with invalid input. This section 
+    describes the conditions for validity. 
+    <li>
+    <B>Complexity:</B> Guarantees on the function's run-time 
+    complexity. For example, <code>\ref stldoc_find</code>'s run-time complexity is 
+    linear in the length of the input range. 
+    <li>
+    <B>Example of use:</B> A code fragment that illustrates how to use 
+    the function.
+    <li>
+    <B>Notes</B>: Footnotes (if any) that are referred to by other 
+    parts of the page. 
+    <li>
+    <B>See Also</B>: Links to other related pages.
+</ul>
+
+
+*/

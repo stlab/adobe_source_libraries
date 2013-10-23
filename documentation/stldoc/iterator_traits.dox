@@ -1,0 +1,238 @@
+/** \page stldoc_iterator_traits iterator_traits
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+As described in the \ref stldoc_Iterators, one of the most important
+facts about iterators is that they have associated types.  An iterator
+type, for example, has an associated <i>value type</i>: the type of
+object that the iterator points to.  It also has an associated
+<i>distance type</i>, or <i>difference type</i>, a signed integral type that
+can be used to represent the distance between two iterators.
+<p>
+(Pointers, for example, are iterators;  the value type of 
+<code>int*</code> is <code>int</code>.  Its distance type is <code>ptrdiff_t</code>, because, if
+<code>p1</code> and <code>p2</code> are pointers, the expression <code>p1 - p2</code> has type
+<code>ptrdiff_t</code>.)
+<p>
+Generic algorithms often need to have access to these associated
+types; an algorithm that takes a range of iterators, for example,
+might need to declare a temporary variable whose type is the
+iterators' value type.  The class <code>iterator_traits</code> is a
+mechanism that allows such declarations.
+<p>
+The most obvious way to allow declarations of that sort would
+be to require that all iterators declare nested types; an iterator
+<code>I</code>'s value type, for example, would be <code>I::value_type</code>.  That
+can't possibly work, though.  Pointers are iterators, and 
+pointers aren't classes; if <code>I</code> is (say) <code>int*</code>, then it's
+impossible to define <code>I::value_type</code> to be <code>int</code>.
+Instead, <code>I</code>'s value type is written <code>iterator_traits&lt;I&gt;::value_type</code>.
+<code>iterator_traits</code> is a template class that contains nothing but
+nested <code>typedef</code>s; in addition to <code>value_type</code>, <code>iterator_traits</code> 
+defines the nested types <code>iterator_category</code>, <code>difference_type</code>,
+<code>pointer</code>,  and <code>reference</code>.
+<p>
+The library contains two definitions of <code>iterator_traits</code>:
+a fully generic one, and a specialization that is used whenever
+the template argument is a pointer type <A href="#1">[1]</A>.  The fully 
+generic version defines <code>iterator_traits&lt;I&gt;::value_type</code> as
+a synonym for <code>I::value_type</code>, 
+<code>iterator_traits&lt;I&gt;::difference_type</code>  as a synonym for
+<code>I::difference_type</code>, and so on.  Since pointers don't have
+nested types, <code>iterator_traits&lt;T*&gt;</code> has a different definition.
+<p>
+The implementation of <code>iterator_traits</code> is actually simpler 
+than this discussion.
+\code
+  template <class Iterator>
+  struct iterator_traits {
+    typedef typename Iterator::iterator_category iterator_category;
+    typedef typename Iterator::value_type        value_type;
+    typedef typename Iterator::difference_type   difference_type;
+    typedef typename Iterator::pointer           pointer;
+    typedef typename Iterator::reference         reference;
+  };
+
+  template <class T>
+  struct iterator_traits<T*> {
+    typedef random_access_iterator_tag iterator_category;
+    typedef T                          value_type;
+    typedef ptrdiff_t                  difference_type;
+    typedef T*                         pointer;
+    typedef T&                         reference;
+  };
+\endcode
+<p>
+If you are defining a new iterator type <code>I</code>, then you must ensure
+that <code>iterator_traits&lt;I&gt;</code> is defined properly.  There are two ways
+to do this.  First, you can define your iterator so that it has
+nested types <code>I::value_type</code>, <code>I::difference_type</code>, and so on.
+Second, you can explicitly specialize <code>iterator_traits</code> for your
+type.  The first way is almost always more convenient, however,
+especially since you can easily ensure that your iterator has
+the appropriate nested types just by inheriting from one of the
+base classes <code>\ref stldoc_input_iterator</code>, <code>\ref stldoc_output_iterator</code>, 
+<code>\ref stldoc_forward_iterator</code>, <code>\ref stldoc_bidirectional_iterator</code>, or
+<code>\ref stldoc_random_access_iterator</code>.
+<p>
+Note that <code>iterator_traits</code> is new; it was added to the draft C++
+standard relatively recently.  Both the old \ref stldoc_iterator_tags
+mechanism and the new <code>iterator_traits</code> mechanism are currently
+supported <A href="#1">[1]</A>, but the old iterator tag functions are no longer
+part of the standard C++ library and they will eventually be
+removed.
+\section Example Example
+This generic function returns the last element in a non-empty range.
+Note that there is no way to define a function with this interface
+in terms of the old <code>\ref stldoc_value_type</code> function, because the function's
+return type must be declared to be the iterator's value type.
+\code
+template <class InputIterator>
+iterator_traits<InputIterator>::value_type
+last_value(InputIterator first, InputIterator last) {
+  iterator_traits<InputIterator>::value_type result = *first;
+  for (++first; first != last; ++first)
+    result = *first;
+  return result;
+}    
+\endcode
+<p>
+(Note: this is an example of how to use <code>iterator_traits</code>; it is not
+an example of good code.  There are better ways of finding the last 
+element in a range of \ref stldoc_BidirectionalIterator, or even
+\ref stldoc_ForwardIterator.)
+\section Definition Definition
+Defined in the standard header <A href="iterator">iterator</A>, and in the
+nonstandard backward-compatibility header <A href="iterator.h">iterator.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>Iterator</code>
+</td>
+<td valign="top">
+The iterator type whose associated types are being accessed.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_DefaultConstructible, \ref stldoc_Assignable
+\section Type_requirements Type requirements
+<ul>
+<li>
+<code>Iterator</code> is a model of one of the iterator concepts.
+   (\ref stldoc_InputIterator, \ref stldoc_OutputIterator, \ref stldoc_ForwardIterator,
+    \ref stldoc_BidirectionalIterator, or \ref stldoc_RandomAccessIterator.)
+</ul>
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+None, except for nested types.  
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator_category</code>
+</td>
+<td valign="top">
+One of the types <code>input_iterator_tag</code>, <code>output_iterator_tag</code>,
+   <code>forward_iterator_tag</code>, <code>bidirectional_iterator_tag</code>, or
+   <code>random_access_iterator_tag</code>.  An iterator's category is the 
+   <i>most specific</i> iterator concept that it is a model of.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type</code>
+</td>
+<td valign="top">
+<code>Iterator</code>'s value type, as defined in the \ref stldoc_trivial
+   requirements.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>difference_type</code>
+</td>
+<td valign="top">
+<code>Iterator</code>'s distance type, as defined in the \ref stldoc_InputIterator
+   requirements.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer</code>
+</td>
+<td valign="top">
+<code>Iterator</code>'s pointer type: a pointer to its value type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference</code>
+</td>
+<td valign="top">
+<code>Iterator</code>'s reference type: a reference to its value type.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="3">[3]</A>
+The <code>iterator_traits</code> class relies on a C++ feature known as
+<i>partial specialization</i>.  Many of today's compilers don't implement
+the complete standard; in particular, many compilers do not support
+partial specialization.  If your compiler does not support partial
+specialization, then you will not be able to use
+<code>iterator_traits</code>, and you will have to continue using the old
+iterator tag functions <code>\ref stldoc_iterator_category</code>, <code>\ref stldoc_distance_type</code>, and
+<code>\ref stldoc_value_type</code>.  This is one reason that those functions have not
+yet been removed.
+\section See_also See also
+The \ref stldoc_Iterators,
+\ref stldoc_iterator_tags,
+<code>\ref stldoc_input_iterator_tag,
+</code>\ref stldoc_output_iterator_tag,
+<code>\ref stldoc_forward_iterator_tag,
+</code>\ref stldoc_bidirectional_iterator_tag,
+<code>\ref stldoc_random_access_iterator_tag,
+</code>\ref stldoc_input_iterator,
+<code>\ref stldoc_output_iterator,
+</code>\ref stldoc_forward_iterator,
+<code>\ref stldoc_bidirectional_iterator,
+</code>\ref stldoc_random_access_iterator
+
+
+*/

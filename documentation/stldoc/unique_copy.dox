@@ -1,0 +1,117 @@
+/** \page stldoc_unique_copy unique_copy
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Unique_copy</code> is an overloaded name; there are
+actually two <code>unique_copy</code> functions.
+\code
+template <class InputIterator, class OutputIterator>
+OutputIterator unique_copy(InputIterator first, InputIterator last,
+                           OutputIterator result);
+
+template <class InputIterator, class OutputIterator, class BinaryPredicate>
+OutputIterator unique_copy(InputIterator first, InputIterator last,
+                           OutputIterator result,
+                           BinaryPredicate binary_pred);
+\endcode
+\section Description Description
+<code>Unique_copy</code> copies elements from the range <code>[first, last)</code> to a 
+range beginning with <code>result</code>, except that in a consecutive group of 
+duplicate elements only the first one is copied.  The return value is
+the end of the range to which the elements are copied.  This behavior 
+is similar to the Unix filter <code>uniq</code>.
+<p>
+The reason there are two different versions of <code>unique_copy</code> is that there
+are two different definitions of what it means for a consecutive group
+of elements to be duplicates.  In the first version, the test is
+simple equality: the elements in a range <code>[f, l)</code> are duplicates if,
+for every iterator <code>i</code> in the range, either <code>i == f</code> or else <code>*i == *(i-1)</code>.
+In the second, the test is an arbitrary \ref stldoc_BinaryPredicate
+<code>binary_pred</code>: the elements in <code>[f, l)</code> are duplicates if, for every 
+iterator <code>i</code> in the range, either <code>i == f</code> or else
+<code>binary_pred(*i, *(i-1))</code> is <code>true</code>. <A href="#1">[1]</A>
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator</code>'s value type is \ref stldoc_EqualityComparable.
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator.
+<li>
+<code>InputIterator</code>'s value type is convertible to a type in
+   <code>OutputIterator</code>'s set of value types.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>BinaryPredicate</code> is a model of \ref stldoc_BinaryPredicate. <A href="#2">[2]</A>
+<li>
+<code>InputIterator</code>'s value type is convertible to
+   first argument type and to <code>BinaryPredicate</code>'s second argument type.
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator.
+<li>
+<code>InputIterator</code>'s value type is convertible to a type in
+   <code>OutputIterator</code>'s set of value types.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+There is enough space to hold all of the elements being copied.
+   More formally, if there are <code>n</code> elements in the range 
+   <code>[first, last)</code> after duplicates are removed from consecutive groups,
+   then <code>[result, result + n)</code> must be a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>last - first</code> applications of <code>operator==</code>
+(in the case of the first version of <code>unique</code>) or of <code>binary_pred</code>
+(in the case of the second version), and at most <code>last - first</code>
+assignments.
+\section Example Example
+Print all of the numbers in an array, but only print the first one
+in a consecutive group of identical numbers.
+\code
+const int A[] = {2, 7, 7, 7, 1, 1, 8, 8, 8, 2, 8, 8};
+unique_copy(A, A + sizeof(A) / sizeof(int), 
+            ostream_iterator<int>(cout, " "));
+// The output is "2 7 1 8 2 8".
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Strictly speaking, the first version of <code>unique_copy</code> is redundant:
+you can achieve the same functionality by using an object of class
+<code>\ref stldoc_equal_to</code> as the \ref stldoc_BinaryPredicate argument.  The first version
+is provided strictly for the sake of convenience: testing for equality
+is an important special case.
+<p><A name="2">[2]</A>
+<code>BinaryPredicate</code> is not required to be an equivalence
+relation.  You should be cautious, though, about using <code>unique_copy</code> with a
+\ref stldoc_BinaryPredicate that is not an equivalence relation: you could
+easily get unexpected results.
+\section See_also See also
+\ref stldoc_BinaryPredicate, <code>\ref stldoc_unique</code>, <code>\ref stldoc_remove_copy</code>, <code>\ref stldoc_remove_copy_if</code>,
+<code>\ref stldoc_adjacent_find</code>
+
+
+*/

@@ -1,0 +1,160 @@
+/** \page stldoc_iterator_category iterator_category
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Iterator_category</code> is overloaded; it is in fact six different functions.
+\code
+inline output_iterator_tag iterator_category(const output_iterator&);
+
+template <class T, class Distance> 
+inline input_iterator_tag 
+iterator_category(const input_iterator<T, Distance>&);
+
+template <class T, class Distance> 
+inline forward_iterator_tag 
+iterator_category(const forward_iterator<T, Distance>&);
+
+template <class T, class Distance> 
+inline bidirectional_iterator_tag 
+iterator_category(const bidirectional_iterator<T, Distance>&);
+
+template <class T, class Distance> 
+inline random_access_iterator_tag 
+iterator_category(const random_access_iterator<T, Distance>&);
+
+template <class T>
+inline random_access_iterator_tag iterator_category(const T*);
+\endcode
+\section Description Description
+<code>Iterator_category</code> is an \ref stldoc_iterator_tags function: it is used to
+determine the category to which an iterator belongs.  Specifically,
+every iterator must belong to a type that is a model of the concept
+\ref stldoc_OutputIterator, \ref stldoc_InputIterator, \ref stldoc_ForwardIterator,
+\ref stldoc_BidirectionalIterator, or \ref stldoc_RandomAccessIterator. <A href="#1">[1]</A>
+<code>Iterator_category</code> returns an object of class
+<code>\ref stldoc_output_iterator_tag</code>, <code>\ref stldoc_input_iterator_tag</code>,
+<code>\ref stldoc_forward_iterator_tag</code>, or <code>\ref stldoc_random_access_iterator_tag</code>,
+depending on which concept the type of <code>iterator_category</code>'s 
+argument is a model of. <A href="#2">[2]</A>  This information is useful in the case of
+an algorithm that has a sensible definition for more than one category
+of iterator, but whose definition is different depending on the category.
+<p>
+Although <code>iterator_category</code> looks like a single function whose
+return type depends on its argument type, in reality it is a set
+of functions; the name <code>iterator_category</code> is overloaded.  
+The function <code>iterator_category</code> must
+be overloaded for every iterator type.
+<p>
+In practice, ensuring that <code>iterator_category</code> is defined requires
+essentially no work at all.  It is already defined for pointers, and
+for the base classes <code>\ref stldoc_input_iterator</code>, <code>\ref stldoc_output_iterator</code>,
+<code>\ref stldoc_forward_iterator</code>, <code>\ref stldoc_bidirectional_iterator</code>, and
+<code>\ref stldoc_random_access_iterator</code>.  If you are implementing a new type of
+forward iterator, for example, you can simply derive it from the base
+class <code>\ref stldoc_forward_iterator</code>; this means that <code>iterator_category</code>
+(along with <code>\ref stldoc_distance_type</code> and <code>\ref stldoc_value_type</code>) will 
+automatically be defined for your iterator.   These base classes are
+empty: they contain no member functions or member variables, but
+only type information.  Using them should therefore incur no overhead.
+<p>
+Note that, while the function <code>iterator_category</code> was present in the
+original STL, it is no longer present in the most recent draft C++
+standard: it has been replaced by the <code>\ref stldoc_iterator_traits</code> class.
+At present both mechanisms are supported <A href="#3">[3]</A>, but eventually
+<code>iterator_category</code> will be removed.
+\section Definition Definition
+Defined in the standard header <A href="iterator">iterator</A>, and in the
+nonstandard backward-compatibility header <A href="iterator.h">iterator.h</A>.
+This function is no longer part of the C++ standard, although
+it was present in early drafts of the standard.  It is retained
+in this implementation for backward compatibility.
+\section Requirements_on_types Requirements on types
+The argument of <code>iterator_category</code> must be an iterator.
+\section Preconditions Preconditions
+None.  <code>Iterator_category</code>'s argument is even permitted to be
+a singular iterator.
+\section Complexity Complexity
+At most amortized constant time.  In many cases, a compiler should be
+able to optimize away <code>iterator_category</code> entirely.
+\section Example Example
+<code>\ref stldoc_reverse</code> can be implemented for either
+\ref stldoc_BidirectionalIterator or for \ref stldoc_RandomAccessIterator,
+but the algorithm for \ref stldoc_RandomAccessIterator is more efficient.
+Consequently, <code>\ref stldoc_reverse</code> uses <code>iterator_category</code> to select 
+whichever algorithm is appropriate for the iterator type.
+This dispatch takes place at compile time, and should not
+incur any run-time penalty.
+\code
+template <class BidirectionalIterator>
+void __reverse(BidirectionalIterator first, BidirectionalIterator last, 
+               bidirectional_iterator_tag) {
+    while (true)
+        if (first == last || first == --last)
+            return;
+        else
+            iter_swap(first++, last);
+}
+
+template <class RandomAccessIterator>
+void __reverse(RandomAccessIterator first, RandomAccessIterator last,
+               random_access_iterator_tag) {
+    while (first < last) iter_swap(first++, --last);
+}
+
+template <class BidirectionalIterator>
+inline void reverse(BidirectionalIterator first, BidirectionalIterator last) {
+    __reverse(first, last, iterator_category(first));
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The STL also defines one other concept, \ref stldoc_trivial.
+This concept is introduced only for conceptual clarity, however,
+in order to separate the axioms related to an object that refers
+to another object from those related to iteration over a range.
+In fact, the STL does not define any types that are \ref stldoc_trivial.
+Although built-in C pointers may be \ref stldoc_trivial, the C
+type system does not allow a distinction between pointers that are
+\ref stldoc_trivial and pointers that are \ref stldoc_RandomAccessIterator
+into C arrays.  Consequently, there is no \ref stldoc_trivial category
+tag.
+<p><A name="2">[2]</A>
+Any type that is a model of \ref stldoc_ForwardIterator is also a model
+of \ref stldoc_InputIterator, any type that is a model of 
+\ref stldoc_BidirectionalIterator is also a model of \ref stldoc_ForwardIterator,
+and any type that is a model of \ref stldoc_RandomAccessIterator is also
+a model of \ref stldoc_BidirectionalIterator.  <code>Iterator_category</code> must
+return a tag representing the <i>most specific</i> concept that its 
+argument is a model of.  If its argument is a <code>Vector::iterator</code>,
+for example, then it must return <code>\ref stldoc_random_access_iterator_tag</code>.
+<p><A name="3">[3]</A>
+The <code>\ref stldoc_iterator_traits</code> class
+relies on a C++ feature known as <i>partial specialization</i>.  Many of
+today's compilers don't implement the complete standard; in
+particular, many compilers do not support partial specialization.  If
+your compiler does not support partial specialization, then you will
+not be able to use <code>\ref stldoc_iterator_traits</code>, and you will have to 
+continue using the functions <code>iterator_category</code>, <code>\ref stldoc_distance_type</code>,
+and <code>\ref stldoc_value_type</code>.  This is one reason that those functions have
+not yet been removed.
+\section See_also See also
+The \ref stldoc_iterator_tags overview, <code>\ref stldoc_iterator_traits</code>,
+<code>\ref stldoc_distance_type</code>, <code>\ref stldoc_value_type</code>,
+<code>\ref stldoc_output_iterator_tag</code>, <code>\ref stldoc_input_iterator_tag</code>,
+<code>\ref stldoc_forward_iterator_tag</code>, <code>\ref stldoc_bidirectional_iterator_tag</code>,
+<code>\ref stldoc_random_access_iterator_tag</code>
+
+
+*/

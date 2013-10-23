@@ -1,0 +1,7 @@
+# Jamfile for building the cmath smoke test app
+
+project adobe/dictionary_benchmark ;
+
+exe dictionary_benchmark
+    : main.cpp
+    ;

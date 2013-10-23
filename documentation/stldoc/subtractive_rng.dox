@@ -1,0 +1,191 @@
+/** \page stldoc_subtractive_rng subtractive_rng
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b> : functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Subtractive_rng</code> is a \ref stldoc_RandomNumberGenerator based on the
+subtractive method <A href="#1">[1]</A>.  It is a \ref stldoc_UnaryFunction : it takes
+a single argument <code>N</code>, an <code>unsigned int</code>, and returns an 
+<code>unsigned int</code> that is less than <code>N</code>.  Successive calls to
+the same <code>subtractive_rng</code> object <A href="#2">[2]</A> yield a pseudo-random
+sequence.
+\section Example Example
+\code
+int main()
+{
+  subtractive_rng R;
+  for (int i = 0; i < 20; ++i)
+    cout << R(5) << ' ';
+  cout << endl;
+}
+// The output is   3 2 3 2 4 3 1 1 2 2 0 3 4 4 4 4 2 1 0 0 
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+This function object is an SGI extension; it is not part of the C++
+standard.
+\section Template_parameters Template parameters
+None.
+\section Model_of Model of
+\ref stldoc_RandomNumberGenerator, \ref stldoc_AdaptableUnaryFunction
+\section Type_requirements Type requirements
+None.
+\section Public_base_classes Public base classes
+<code>\ref stldoc_unary_function&lt;unsigned int, unsigned int&gt;</code>
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of a <code>subtractive_rng</code>'s argument : <code>unsigned int</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the result : <code>unsigned int</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>subtractive_rng(unsigned int seed)</code>
+</td>
+<td valign="top">
+<code>subtractive_rng</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>subtractive_rng()</code>
+</td>
+<td valign="top">
+<code>subtractive_rng</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>unsigned int operator()(unsigned int N)</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+Function call.  Returns a pseudo-random number in the range
+   <code>[0, N)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void initialize(unsigned int seed)</code>
+</td>
+<td valign="top">
+<code>subtractive_rng</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_AdaptableUnaryFunction
+requirements, but are specific to 
+<code>subtractive_rng</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>subtractive_rng(unsigned int seed)</code>
+</td>
+<td valign="top">
+The constructor.  Creates a <code>subtractive_rng</code> whose internal state
+   is initialized using <code>seed</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>subtractive_rng()</code>
+</td>
+<td valign="top">
+The default constructor.  Creates a <code>subtractive_rng</code> initialized
+   using a default value.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void initialize(unsigned int seed)</code>
+</td>
+<td valign="top">
+Re-initializes the internal state of the <code>subtractive_rng</code>, using
+   the value <code>seed</code>.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+See section 3.6 of Knuth for an implementation of the subtractive
+method in FORTRAN.  Section 3.2.2 of Knuth analyzes this class of
+algorithms.
+(D. E. Knuth, <i>The Art of Computer
+Programming.  Volume 2 : Seminumerical Algorithms</i>, second edition.  
+Addison-Wesley, 1981.)
+<p><A name="2">[2]</A>
+Note that the sequence produced by a <code>subtractive_rng</code> is
+completely deterministic, and that the sequences produced by two
+different <code>subtractive_rng</code> objects are independent of each other.
+That is: if <code>R1</code> is a <code>subtractive_rng</code>, then the values returned when
+<code>R1</code> is called depend only on <code>R1</code>'s seed and on the number of times
+that <code>R1</code> has been called.  Calls to other <code>subtractive_rng</code> objects
+are irrelevant.  In implementation terms, this is because the class
+<code>subtractive_rng</code> contains no <code>static</code> members.
+\section See_also See also
+\ref stldoc_RandomNumberGenerator
+
+
+*/

@@ -1,0 +1,400 @@
+/** \page stldoc_stack stack
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left">\image html adaptors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: containers, adaptors</td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+A <code>stack</code> is an adaptor that provides a restricted subset of
+\ref stldoc_Container functionality: it provides insertion, removal, and
+inspection of the element at the top of the stack.  <code>Stack</code> is a
+&quot;last in first out&quot; (LIFO) data structure: the element at the 
+top of a <code>stack</code> is the one that was most recently added. <A href="#1">[1]</A>
+<code>Stack</code> does not allow iteration through its elements.  <A href="#2">[2]</A>
+<p>
+<code>Stack</code> is a container adaptor, meaning that it is implemented on
+top of some underlying container type.  By default that underlying
+type is <code>\ref stldoc_Deque</code>, but a different type may be selected explicitly.
+\section Example Example
+\code
+int main() {
+  stack<int> S;
+  S.push(8);
+  S.push(7);
+  S.push(4);
+  assert(S.size() == 3);
+
+  assert(S.top() == 4);
+  S.pop();
+
+  assert(S.top() == 7);
+  S.pop();
+
+  assert(S.top() == 8);
+  S.pop();
+
+  assert(S.empty());
+}
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="stack">stack</A>, and in the nonstandard
+backward-compatibility header <A href="stack.h">stack.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The type of object stored in the stack.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Sequence</code>
+</td>
+<td valign="top">
+The type of the underlying container used to implement the stack.
+</td>
+<td valign="top">
+<code>\ref stldoc_Deque&lt;T&gt;</code>
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_Assignable, \ref stldoc_DefaultConstructible
+\section Type_requirements Type requirements
+<ul>
+<li>
+<code>T</code> is a model of \ref stldoc_Assignable.
+<li>
+<code>Sequence</code> is a model of \ref stldoc_BackInsertionSequence.
+<li>
+<code>Sequence::value_type</code> is the same type as <code>T</code>.
+<li>
+If <code>operator==</code> is used, then <code>T</code> is a model of
+   \ref stldoc_EqualityComparable
+<li>
+If <code>operator&lt;</code> is used, then <code>T</code> is a model of \ref stldoc_LessThanComparable.
+</ul>
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type</code>
+</td>
+<td valign="top">
+<code>stack</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type</code>
+</td>
+<td valign="top">
+<code>stack</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>stack()</code>
+</td>
+<td valign="top">
+ \ref stldoc_DefaultConstructible
+</td>
+<td valign="top">
+The default constructor.  Creates an empty <code>stack</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>stack(const stack&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Assignable
+</td>
+<td valign="top">
+The copy constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>stack&amp; operator=(const stack&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Assignable
+</td>
+<td valign="top">
+The assignment operator.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool empty() const</code>
+</td>
+<td valign="top">
+<code>stack</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type size() const</code>
+</td>
+<td valign="top">
+<code>stack</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type&amp; top()</code>
+</td>
+<td valign="top">
+<code>stack</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const value_type&amp; top() const</code>
+</td>
+<td valign="top">
+<code>stack</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void push(const value_type&amp;)</code>
+</td>
+<td valign="top">
+<code>stack</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void pop()</code> <A href="#3">[3]</A>
+</td>
+<td valign="top">
+<code>stack</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator==(const stack&amp;, const stack&amp;)</code>
+</td>
+<td valign="top">
+<code>stack</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator&lt;(const stack&amp;, const stack&amp;)</code>
+</td>
+<td valign="top">
+<code>stack</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_Assignable and \ref stldoc_DefaultConstructible
+requirements, but are specific to <code>stack</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type</code>
+</td>
+<td valign="top">
+The type of object stored in the <code>stack</code>.  This is the same as
+   <code>T</code> and <code>Sequence::value_type</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type</code>
+</td>
+<td valign="top">
+An unsigned integral type.  This is the same as <code>Sequence::size_type</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool empty() const</code>
+</td>
+<td valign="top">
+Returns <code>true</code> if the <code>stack</code> contains no elements, and <code>false</code>
+   otherwise.  <code>S.empty()</code> is equivalent to <code>S.size() == 0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type size() const</code>
+</td>
+<td valign="top">
+Returns the number of elements contained in the <code>stack</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type&amp; top()</code>
+</td>
+<td valign="top">
+Returns a mutable reference to the element at the top of the stack.
+   Precondition: <code>empty()</code> is <code>false</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const value_type&amp; top() const</code>
+</td>
+<td valign="top">
+Returns a const reference to the element at the top of the stack.
+   Precondition: <code>empty()</code> is <code>false</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void push(const value_type&amp; x)</code>
+</td>
+<td valign="top">
+Inserts <code>x</code> at the top of the stack.  Postconditions: <code>size()</code> will
+   be incremented by <code>1</code>, and <code>top()</code> will be equal to <code>x</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void pop()</code>
+</td>
+<td valign="top">
+Removes the element at the top of the stack. <A href="#3">[3]</A>  Precondition:
+   <code>empty()</code> is <code>false</code>.  Postcondition: <code>size()</code> will be decremented
+   by <code>1</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator==(const stack&amp;, const stack&amp;)</code>
+</td>
+<td valign="top">
+Compares two stacks for equality.  Two stacks are equal if they
+   contain the same number of elements and if they are equal
+   element-by-element.  This is a global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator&lt;(const stack&amp;, const stack&amp;)</code>
+</td>
+<td valign="top">
+Lexicographical ordering of two stacks.
+  This is a global function, not a member function.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+Stacks are a standard data structure, and are discussed in all
+algorithm books.  See, for example, section 2.2.1 of Knuth.
+(D. E. Knuth, <i>The Art of Computer
+Programming.  Volume 1: Fundamental Algorithms</i>, second edition.  
+Addison-Wesley, 1973.)
+<p><A name="2">[2]</A>
+This restriction is the only reason for <code>stack</code> to exist at all.
+Note that any \ref stldoc_FrontInsertionSequence or \ref stldoc_BackInsertionSequence 
+can be used as a stack; in the case of \ref stldoc_Vector, for
+example, the stack operations are the member functions <code>back</code>,
+<code>push_back</code>, and <code>pop_back</code>.  The only reason to use the container
+adaptor <code>stack</code> instead is to make it clear that you are performing
+only stack operations, and no other operations.
+<p><A name="3">[3]</A>
+One might wonder why <code>pop()</code> returns <code>void</code>, instead of <code>value_type</code>.
+That is, why must one use <code>top()</code> and <code>pop()</code> to examine and remove
+the top element, instead of combining the two in a single member
+function?  In fact, there is a good reason for this design.  
+If <code>pop()</code> returned the top element, it would have to return by value
+rather than by reference: return by reference would create a dangling
+pointer.  Return by value, however, is inefficient: it involves at
+least one redundant copy constructor call.  Since it is impossible for
+<code>pop()</code> to return a value in such a way as to be both efficient
+and correct, it is more sensible for it to return no value at all and
+to require clients to use <code>top()</code> to inspect the value at the top of
+the stack.
+\section See_also See also
+<code>\ref stldoc_queue</code>, <code>\ref stldoc_priority_queue</code>, \ref stldoc_Container, \ref stldoc_Sequence
+
+
+*/

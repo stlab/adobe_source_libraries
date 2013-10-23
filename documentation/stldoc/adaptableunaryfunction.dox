@@ -1,0 +1,90 @@
+/** \page stldoc_AdaptableUnaryFunction AdaptableUnaryFunction
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+An Adaptable Unary Function is a \ref stldoc_UnaryFunction with 
+nested <code>typedef</code>s that define its argument type and result type.  <A href="#1">[1]</A> <A href="#2">[2]</A>
+These nested <code>typedef</code> make it possible to use function object adaptors.
+\section Refinement_of Refinement of
+\ref stldoc_UnaryFunction
+\section Associated_types Associated types
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Argument type
+</td>
+<td valign="top">
+<code>F::argument_type</code>
+</td>
+<td valign="top">
+The type of <code>F</code>'s argument
+</td>
+</tr>
+<tr>
+<td valign="top">
+Result type
+</td>
+<td valign="top">
+<code>F::result_type</code>
+</td>
+<td valign="top">
+The type returned when the Unary Function is called
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>F</code>
+</td>
+<td valign="top">
+A type that is a model of Unary Function
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+\section Valid_expressions Valid expressions
+None, except for those defined by \ref stldoc_UnaryFunction
+\section Expression_semantics Expression semantics
+\section Complexity_guarantees Complexity guarantees
+\section Invariants Invariants
+\section Models Models
+<ul>
+<li>
+<code>\ref stldoc_negate</code>
+<li>
+<code>\ref stldoc_identity</code>
+<li>
+<code>\ref stldoc_pointer_to_unary_function</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note the implication of this: a function pointer <code>T (*f)(X)</code>
+is a \ref stldoc_UnaryFunction, but not an Adaptable Unary Function: the
+expressions <code>f::argument_type</code> and <code>f::result_type</code> are nonsensical.
+<p><A name="2">[2]</A>
+When you define a class that is a model of Adaptable Unary Function,
+you must provide these <code>typedef</code>s.  The easiest way to do this is to
+derive the class from the base class <code>\ref stldoc_unary_function</code>.  This is an 
+empty class, with no member functions or member variables; the only
+reason it exists is to make defining Adaptable Unary Functions
+more convenient.  <code>\ref stldoc_unary_function</code> is very similar to the base classes used by 
+the \ref stldoc_iterator_tags functions.
+\section See_also See also
+\ref stldoc_UnaryFunction, \ref stldoc_AdaptableGenerator, \ref stldoc_AdaptableBinaryFunction 
+
+
+*/

@@ -1,0 +1,26 @@
+{
+    "folders":
+    [
+        {
+            "name" : "headers",
+            "path": "../adobe"
+        },
+        {
+            "name" : "sources",
+            "path": "../source"
+        },
+        {
+            "name" : "tests",
+            "path": "../test"
+        },
+        {
+            "name" : "top",
+            "path": "../",
+            "folder_exclude_patterns": [ "source", "adobe", "test" ]
+        }
+    ],
+    "settings":
+    {
+        "tab_size": 4
+    }
+}

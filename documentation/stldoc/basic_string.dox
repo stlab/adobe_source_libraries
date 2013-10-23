@@ -1,0 +1,2732 @@
+/** \page stldoc_basic_string basic_string
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b> : containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+The <code>basic_string</code> class represents a \ref stldoc_Sequence of characters.  
+It contains all the usual operations of a \ref stldoc_Sequence, and, additionally,
+it contains standard string operations such as search and concatenation.
+<p>
+The <code>basic_string</code> class is parameterized by character type, and by
+that type's \ref stldoc_character_traits.  Most of the time, however, there is
+no need to use the <code>basic_string</code> template directly.  The types
+<code>string</code> and <code>wstring</code> are typedefs for, respectively,
+<code>basic_string&lt;char&gt;</code> and <code>basic_string&lt;wchar_t&gt;</code>.
+<p>
+Some of <code>basic_string</code>'s member functions use an unusual method of
+specifying positions and ranges.  In addition to the conventional
+method using iterators, many of <code>basic_string</code>'s member functions use
+a single value <code>pos</code> of type <code>size_type</code> to represent a position (in
+which case the position is <code>begin() + pos</code>, and many of
+<code>basic_string</code>'s member functions use two values, <code>pos</code> and <code>n</code>, to
+represent a range.  In that case <code>pos</code> is the beginning of the range
+and <code>n</code> is its size.  That is, the range is <code>[begin() + pos, begin() +
+pos + n)</code>.
+<p>
+Note that the C++ standard does not specify the complexity of
+<code>basic_string</code> operations.  In this implementation, <code>basic_string</code>
+has performance characteristics very similar to those of <code>\ref stldoc_Vector</code> :
+access to a single character is <i>O(1</i>), while copy and concatenation
+are <i>O(N</i>).  By contrast, <code>\ref stldoc_Rope</code> has very different performance
+characteristics : most <code>\ref stldoc_Rope</code> operations have logarithmic complexity.
+<p>
+Note also that, according to the C++ standard, <code>basic_string</code> has very
+unusual iterator invalidation semantics.  Iterators may be invalidated
+by <code>swap</code>, <code>reserve</code>, <code>insert</code>, and <code>erase</code> (and by functions that are
+equivalent to <code>insert</code> and/or <code>erase</code>, such as <code>clear</code>, <code>resize</code>,
+<code>append</code>, and <code>replace</code>).  Additionally, however, the first call to
+<i>any</i> non-const member function, including the non-const version of
+<code>begin()</code> or <code>operator[]</code>, may invalidate iterators.  (The intent of
+these iterator invalidation rules is to give implementors greater
+freedom in implementation techniques.)  In this implementation,
+<code>begin()</code>, <code>end()</code>, <code>rbegin()</code>, <code>rend()</code>, <code>operator[]</code>, <code>c_str()</code>, and
+<code>data()</code> do not invalidate iterators.  In this implementation,
+iterators are only invalidated by member functions that explicitly
+change the string's contents.
+\section Example Example
+\code
+int main() { 
+  string s(10u, ' ');           // Create a string of ten blanks.
+
+  const char* A = "this is a test";
+  s += A;
+  cout << "s = " << (s + '\n');
+  cout << "As a null-terminated sequence : " << s.c_str() << endl;
+  cout << "The sixteenth character is " << s[15] << endl;
+  
+  reverse(s.begin(), s.end());
+  s.push_back('\n');
+  cout << s;
+}
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="string">string</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>charT</code>
+</td>
+<td valign="top">
+The string's value type: the type of character it contains.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>traits</code>
+</td>
+<td valign="top">
+The \ref stldoc_character_traits type, which encapsulates basic character
+   operations.
+</td>
+<td valign="top">
+<code>char_traits&lt;charT&gt;</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Alloc</code>
+</td>
+<td valign="top">
+The string's allocator, used for internal memory management.
+</td>
+<td valign="top">
+<code>alloc</code>
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_RandomAccessContainer, 
+\ref stldoc_Sequence.
+\section Type_requirements Type requirements
+In addition to the type requirements imposed by 
+\ref stldoc_RandomAccessContainer and \ref stldoc_Sequence :
+<ul>
+<li>
+<code>charT</code> is a POD (&quot;plain ol' data&quot;) type.
+<li>
+<code>traits</code> is a \ref stldoc_character_traits type whose value type is
+   <code>charT</code>
+</ul>
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The type of object, <code>CharT</code>, stored in the string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Pointer to <code>CharT</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Reference to <code>CharT</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const reference to <code>CharT</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+An unsigned integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>difference_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+A signed integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>static const size_type npos</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+The largest possible value of type <code>size_type</code>.  That is,
+   <code>size_type(-1)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Iterator used to iterate through a string.  A <code>basic_string</code> supplies
+   \ref stldoc_RandomAccessIterator.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const iterator used to iterate through a string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Iterator used to iterate backwards through a string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Const iterator used to iterate backwards through a string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator begin()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the beginning of the string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator end()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the end of the string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator begin() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns a <code>const_iterator</code> pointing to the beginning of the string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator end() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns a <code>const_iterator</code> pointing to the end of the string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_iterator rbegin()</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>reverse_iterator</code> pointing to the beginning of the
+   reversed string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_iterator rend()</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>reverse_iterator</code> pointing to the end of the
+   reversed string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator rbegin() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>const_reverse_iterator</code> pointing to the beginning of the
+   reversed string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator rend() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>const_reverse_iterator</code> pointing to the end of the
+   reversed string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type size() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns the size of the string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type length() const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Synonym for <code>size()</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type max_size() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns the largest possible size of the string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type capacity() const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool empty() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+<code>true</code> if the string's size is <code>0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference operator[](size_type n)</code>
+</td>
+<td valign="top">
+ \ref stldoc_RandomAccessContainer
+</td>
+<td valign="top">
+Returns the <code>n</code>'th character.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference operator[](size_type n) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_RandomAccessContainer
+</td>
+<td valign="top">
+Returns the <code>n</code>'th character.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const charT* c_str() const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Returns a pointer to a null-terminated array of characters representing
+   the string's contents.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const charT* data() const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Returns a pointer to an array of characters (not necessarily
+   null-terminated) representing the string's contents.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Creates an empty string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string(const basic_string& s, 
+             size_type pos = 0, size_type n = npos)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Container, <code>basic_string</code>
+</td>
+<td valign="top">
+Generalization of the copy constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string(const charT*)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Construct a string from a null-terminated character array.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string(const charT* s, size_type n)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Construct a string from a character array and a length.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string(size_type n, charT c)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Create a string with <code>n</code> copies of <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+basic_string(InputIterator first, InputIterator last)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Create a string from a range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>~basic_string()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The destructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; operator=(const basic_string&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The assignment operator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; operator=(const charT* s)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Assign a null-terminated character array to a string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; operator=(charT c)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Assign a single character to a string.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void reserve(size_t)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void swap(basic_string&)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Swaps the contents of two strings.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+iterator insert(iterator pos,
+                const T& x)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts <code>x</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+void insert(iterator pos,
+            InputIterator f, InputIterator l)
+\endcode
+<A href="#1">[1]</A>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts the range <code>[first, last)</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void insert(iterator pos, 
+            size_type n, const T& x)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts <code>n</code> copies of <code>x</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; insert(size_type pos, const basic_string&amp; s)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Inserts <code>s</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& insert(size_type pos, 
+                     const basic_string& s, 
+                     size_type pos1, size_type n)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Inserts a substring of <code>s</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; insert(size_type pos, const charT* s)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Inserts <code>s</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; insert(size_type pos, const charT* s, size_type n)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Inserts the first n characters of <code>s</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; insert(size_type pos, size_type n, charT c)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Inserts <code>n</code> copies of <code>c</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; append(const basic_string&amp; s)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Append <code>s</code> to <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& append(const basic_string& s, 
+                     size_type pos, size_type n)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Append a substring of <code>s</code> to <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; append(const charT* s)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Append <code>s</code> to <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; append(const charT* s, size_type n)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Append the first <code>n</code> characters of <code>s</code> to <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; append(size_type n, charT c)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Append <code>n</code> copies of <code>c</code> to <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+basic_string& append(InputIterator first, InputIterator last)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Append a range to <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void push_back(charT c)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Append a single character to <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; operator+=(const basic_string&amp; s)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Equivalent to <code>append(s)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; operator+=(const charT* s)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Equivalent to <code>append(s)</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; operator+=(charT c)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Equivalent to <code>push_back(c)</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator erase(iterator p)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases the character at position <code>p</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator erase(iterator first, iterator last)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases the range <code>[first, last)</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; erase(size_type pos = 0, size_type n = npos)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Erases a range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void clear()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases the entire container.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void resize(size_type n, charT c = charT())</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Appends characters, or erases characters from the end, as necessary
+   to make the string's length exactly <code>n</code> characters.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; assign(const basic_string&amp;)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Synonym for <code>operator=</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string&amp; assign(const basic_string&amp; s, 
+                     size_type pos, size_type n)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Assigns a substring of <code>s</code> to <code>*this</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; assign(const charT* s, size_type n)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Assigns the first <code>n</code> characters of <code>s</code> to <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; assign(const charT* s)</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Assigns a null-terminated array of characters to <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; assign(size_type n, charT c)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases the existing characters and replaces them by <code>n</code> copies of <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+basic_string& assign(InputIterator first, InputIterator last)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases the existing characters and replaces them by <code>[first, last)</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(size_type pos, size_type n, 
+                      const basic_string& s)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Replaces a substring of <code>*this</code> with the string <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(size_type pos, size_type n, 
+                      const basic_string& s, 
+                      size_type pos1, size_type n1)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Replaces a substring of <code>*this</code> with a substring of <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(size_type pos, size_type n, 
+                      const charT* s, size_type n1)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Replaces a substring of <code>*this</code> with the first <code>n1</code> characters of <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(size_type pos, size_type n, 
+                      const charT* s)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Replaces a substring of <code>*this</code> with a null-terminated character array.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(size_type pos, size_type n, 
+                      size_type n1, charT c)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Replaces a substring of <code>*this</code> with <code>n1</code> copies of <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(iterator first, iterator last, 
+                      const basic_string& s)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Replaces a substring of <code>*this</code> with the string <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(iterator first, iterator last, 
+                      const charT* s, size_type n)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Replaces a substring of <code>*this</code> with the first <code>n</code> characters of <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(iterator first, iterator last, 
+                      const charT* s)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Replaces a substring of <code>*this</code> with a null-terminated character array.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(iterator first, iterator last, 
+                      size_type n, charT c)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Replaces a substring of <code>*this</code> with <code>n</code> copies of <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+basic_string& replace(iterator first, iterator last, 
+                      InputIterator f, InputIterator l)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Replaces a substring of <code>*this</code> with the range <code>[f, l)</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type copy(charT* buf, size_type n, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Copies a substring of <code>*this</code> to a buffer.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find(const basic_string&amp; s, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches for <code>s</code> as a substring of <code>*this</code>, beginning at
+   character <code>pos</code> of <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find(const charT* s, size_type pos, size_type n) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches for the first <code>n</code> characters of <code>s</code> as a substring of <code>*this</code>, beginning at
+   character <code>pos</code> of <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find(const charT* s, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches for a null-terminated character array as a substring of <code>*this</code>, beginning at
+   character <code>pos</code> of <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find(charT c, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches for the character <code>c</code>, beginning at character position <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type rfind(const basic_string&amp; s, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches backward for <code>s</code> as a substring of <code>*this</code>, beginning at
+   character position <code>min(pos, size())</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type rfind(const charT* s, size_type pos, size_type n) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches backward for the first <code>n</code> characters of <code>s</code> as a substring of <code>*this</code>, beginning at
+   character position <code>min(pos, size())</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type rfind(const charT* s, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches backward for a null-terminated character array as a substring of <code>*this</code>, beginning at
+   character <code>min(pos, size())</code> 
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type rfind(charT c, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches backward for the character <code>c</code>, beginning at character position <code>min(pos, size()</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_of(const basic_string&amp; s, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches within <code>*this</code>, beginning at <code>pos</code>, for the first character
+   that is equal to any character within <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_of(const charT* s, size_type pos, size_type n) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches within <code>*this</code>, beginning at <code>pos</code>, for the first character
+   that is equal to any character within the first <code>n</code> characters of <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_of(const charT* s, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches within <code>*this</code>, beginning at <code>pos</code>, for the first character
+   that is equal to any character within <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_of(charT c, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches within <code>*this</code>, beginning at <code>pos</code>, for the first character
+   that is equal to <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_not_of(const basic_string&amp; s, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches within <code>*this</code>, beginning at <code>pos</code>, for the first character
+   that is not equal to any character within <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_not_of(const charT* s, size_type pos, size_type n) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches within <code>*this</code>, beginning at <code>pos</code>, for the first character
+   that is not equal to any character within the first <code>n</code> characters of <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_not_of(const charT* s, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches within <code>*this</code>, beginning at <code>pos</code>, for the first character
+   that is not equal to any character within <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_not_of(charT c, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches within <code>*this</code>, beginning at <code>pos</code>, for the first character
+   that is not equal to <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_of(const basic_string&amp; s, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches backward within <code>*this</code>, beginning at <code>min(pos, size())</code>, for the first character
+   that is equal to any character within <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_of(const charT* s, size_type pos, size_type n) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches backward within <code>*this</code>, beginning at <code>min(pos, size())</code>, for the first character
+   that is equal to any character within the first <code>n</code> characters of <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_of(const charT* s, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches backward <code>*this</code>, beginning at <code>min(pos, size())</code>, for the first character
+   that is equal to any character within <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_of(charT c, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches backward <code>*this</code>, beginning at <code>min(pos, size())</code>, for the first character
+   that is equal to <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_not_of(const basic_string&amp; s, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches backward within <code>*this</code>, beginning at <code>min(pos, size())</code>, for the first character
+   that is not equal to any character within <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_not_of(const charT* s, size_type pos, size_type n) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches backward within <code>*this</code>, beginning at <code>min(pos, size())</code>, for the first character
+   that is not equal to any character within the first <code>n</code> characters of <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_not_of(const charT* s, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches backward <code>*this</code>, beginning at <code>min(pos, size())</code>, for the first character
+   that is not equal to any character within <code>s</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_not_of(charT c, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Searches backward <code>*this</code>, beginning at <code>min(pos, size())</code>, for the first character
+   that is not equal to <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string substr(size_type pos = 0, size_type n = npos) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Returns a substring of <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>int compare(const basic_string&amp; s) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Three-way lexicographical comparison of <code>s</code> and <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>int compare(size_type pos, size_type n, const basic_string&amp; s) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Three-way lexicographical comparison of <code>s</code> and a substring of <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>int compare(size_type pos, size_type n, const basic_string&amp; s, size_type pos1, size_type n1) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Three-way lexicographical comparison of a substring of <code>s</code> and a substring of <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>int compare(const charT* s) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Three-way lexicographical comparison of <code>s</code> and <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>int compare(size_type pos, size_type n, const charT* s, size_type len = npos) const</code>
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Three-way lexicographical comparison of the first <code>min(len, traits ::length(s)</code>
+   characters of <code>s</code> and a substring of <code>*this</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_string<charT, traits, Alloc>
+operator+(const basic_string<charT, traits, Alloc>& s1,
+          const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+String concatenation.  A global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_string<charT, traits, Alloc>
+operator+(const charT* s1,
+          const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+String concatenation.  A global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_string<charT, traits, Alloc>
+operator+(const basic_string<charT, traits, Alloc>& s1,
+          const charT* s2)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+String concatenation.  A global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_string<charT, traits, Alloc>
+operator+(charT c,
+          const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+String concatenation.  A global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_string<charT, traits, Alloc>
+operator+(const basic_string<charT, traits, Alloc>& s1,
+          charT c)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+String concatenation.  A global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator==(const basic_string<charT, traits, Alloc>& s1,
+                const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+String equality.  A global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator==(const charT* s1, 
+                const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+String equality.  A global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator==(const basic_string<charT, traits, Alloc>& s1,
+                const charT* s2)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+String equality.  A global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator!=(const basic_string<charT, traits, Alloc>& s1,
+                const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+String inequality.  A global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator!=(const charT* s1, 
+                const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+String inequality.  A global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator!=(const basic_string<charT, traits, Alloc>& s1,
+                const charT* s2)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+String inequality.  A global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator<(const basic_string<charT, traits, Alloc>& s1,
+               const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+String comparison.  A global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator<(const charT* s1, 
+               const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+String comparison.  A global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator<(const basic_string<charT, traits, Alloc>& s1,
+               const charT* s2)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+String comparison.  A global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+void swap(basic_string<charT, traits, Alloc>& s1,
+          basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Swaps the contents of two strings.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_istream<charT, traits>&
+operator>>(basic_istream<charT, traits>& is,
+           basic_string<charT, traits, Alloc>& s)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Reads <code>s</code> from the input stream <code>is</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_ostream<charT, traits>&
+operator<<(basic_istream<charT, traits>& os,
+           const basic_string<charT, traits, Alloc>& s)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Writes <code>s</code> to the output stream <code>os</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_istream<charT, traits>&
+getline(basic_istream<charT, traits>& is,
+        basic_string<charT, traits, Alloc>& s,
+        charT delim)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Reads a string from the input stream <code>is</code>, stopping when it reaches <code>delim</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_istream<charT, traits>&
+getline(basic_istream<charT, traits>& is,
+        basic_string<charT, traits, Alloc>& s)
+\endcode
+</td>
+<td valign="top">
+<code>basic_string</code>
+</td>
+<td valign="top">
+Reads a single line from the input stream <code>is</code>
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_RandomAccessContainer and \ref stldoc_Sequence :
+requirements, but are specific to <code>basic_string</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>static const size_type npos</code>
+</td>
+<td valign="top">
+The largest possible value of type <code>size_type</code>.  That is,
+   <code>size_type(-1)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type length() const</code>
+</td>
+<td valign="top">
+Equivalent to  <code>size()</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type capacity() const</code>
+</td>
+<td valign="top">
+Number of elements for which memory has been allocated.  That is,
+   the size to which the string can grow before memory must be
+   reallocated.  <code>capacity()</code> is always greater than or equal to 
+   <code>size()</code>.   
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const charT* c_str() const</code>
+</td>
+<td valign="top">
+Returns a pointer to a null-terminated array of characters representing
+   the string's contents.  For any string <code>s</code> it is guaranteed that
+   the first <code>s.size()</code> characters in the array pointed to by <code>s.c_str()</code>
+   are equal to the character in <code>s</code>, and that <code>s.c_str()[s.size()]</code> 
+   is a null character.  Note, however, that it not necessarily the first 
+   null character.  Characters within a string are permitted to be null.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const charT* data() const</code>
+</td>
+<td valign="top">
+Returns a pointer to an array of characters, not necessarily
+   null-terminated, representing the string's contents.  <code>data()</code>
+   is permitted, but not required, to be identical to <code>c_str()</code>.
+   The first <code>size()</code> characters of that array are guaranteed to be identical
+   to the characters in <code>*this</code>.  The return value of <code>data()</code> is never
+   a null pointer, even if <code>size()</code> is zero.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string(const basic_string&amp; s, size_type pos = 0, size_type n = npos)</code>
+</td>
+<td valign="top">
+Constructs a string from a substring of <code>s</code>.  The substring begins at
+   character position <code>pos</code> and terminates at character position 
+   <code>pos + n</code> or at the end of <code>s</code>, whichever comes first.  This constructor
+   throws <code>out_of_range</code> if <code>pos &gt; s.size()</code>.  Note that when <code>pos</code> and <code>n</code>
+   have their default values, this is just a copy constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string(const charT* s)</code>
+</td>
+<td valign="top">
+Equivalent to <code>basic_string(s, s + traits::length(s))</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string(const charT* s, size_type n)</code>
+</td>
+<td valign="top">
+Equivalent to <code>basic_string(s, s + n)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; operator=(const charT* s)</code>
+</td>
+<td valign="top">
+Equivalent to <code>operator=(basic_string(s))</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; operator=(charT c)</code>
+</td>
+<td valign="top">
+Assigns to <code>*this</code> a string whose size is <code>1</code> and whose contents is
+   the single character <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void reserve(size_t n)</code>
+</td>
+<td valign="top">
+Requests that the string's capacity be changed; the postcondition
+   for this member function is that, after it is called, 
+   <code>capacity() &gt;= n</code>.  You may request that a string decrease its
+   capacity by calling <code>reserve()</code> with an argument less than the
+   current capacity.  (If you call <code>reserve()</code> with an argument less 
+   than the string's size, however, the capacity will only be reduced
+   to <code>size()</code>.  A string's size can never be greater than its capacity.)
+   <code>reserve()</code> throws <code>length_error</code> if <code>n &gt; max_size()</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; insert(size_type pos, const basic_string&amp; s)</code>
+</td>
+<td valign="top">
+If <code>pos &gt; size()</code>, throws <code>out_of_range</code>.  Otherwise, equivalent to
+   <code>insert(begin() + pos, s.begin(), s.end())</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& insert(size_type pos, 
+                     const basic_string& s, 
+                     size_type pos1, size_type n)
+\endcode
+</td>
+<td valign="top">
+If <code>pos &gt; size()</code> or <code>pos1 &gt; s.size()</code>, throws <code>out_of_range</code>.  Otherwise,
+   equivalent to <code>insert(begin() + pos, s.begin() + pos1, s.begin() + pos1 + min(n, s.size() - pos1))</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; insert(size_type pos, const charT* s)</code>
+</td>
+<td valign="top">
+If <code>pos &gt; size()</code>, throws <code>out_of_range</code>.  Otherwise, equivalent to
+   <code>insert(begin() + pos, s, s + traits::length(s))</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; insert(size_type pos, const charT* s, size_type n)</code>
+</td>
+<td valign="top">
+If <code>pos &gt; size()</code>, throws <code>out_of_range</code>.  Otherwise, equivalent to
+   <code>insert(begin() + pos, s, s + n)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; insert(size_type pos, size_type n, charT c)</code>
+</td>
+<td valign="top">
+If <code>pos &gt; size()</code>, throws <code>out_of_range</code>.  Otherwise, equivalent to
+   <code>insert(begin() + pos, n, c)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; append(const basic_string&amp; s)</code>
+</td>
+<td valign="top">
+Equivalent to <code>insert(end(), s.begin(), s.end())</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& append(const basic_string& s, 
+                     size_type pos, size_type n)
+\endcode
+</td>
+<td valign="top">
+If <code>pos &gt; s.size()</code>, throws <code>out_of_range</code>.  Otherwise, equivalent to
+   <code>insert(end(), s.begin() + pos, s.begin() + pos + min(n, s.size() - pos))</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; append(const charT* s)</code>
+</td>
+<td valign="top">
+Equivalent to <code>insert(end(), s, s + traits::length(s))</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; append(const charT* s, size_type n)</code>
+</td>
+<td valign="top">
+Equivalent to <code>insert(end(), s, s + n)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; append(size_type n, charT c)</code>
+</td>
+<td valign="top">
+Equivalent to <code>insert(end(), n, c)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+basic_string& append(InputIterator first, InputIterator last)
+\endcode
+</td>
+<td valign="top">
+Equivalent to <code>insert(end(), first, last)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void push_back(charT c)</code>
+</td>
+<td valign="top">
+Equivalent to <code>insert(end(), c)</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; operator+=(const basic_string&amp; s)</code>
+</td>
+<td valign="top">
+Equivalent to <code>append(s)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; operator+=(const charT* s)</code>
+</td>
+<td valign="top">
+Equivalent to <code>append(s)</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; operator+=(charT c)</code>
+</td>
+<td valign="top">
+Equivalent to <code>push_back(c)</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; erase(size_type pos = 0, size_type n = npos)</code>
+</td>
+<td valign="top">
+If <code>pos &gt; size()</code>, throws <code>out_of_range</code>.  Otherwise, equivalent to
+   <code>erase(begin() + pos, begin() + pos + min(n, size() - pos))</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; assign(const basic_string&amp; s)</code>
+</td>
+<td valign="top">
+Synonym for <code>operator=</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& assign(const basic_string& s, 
+                     size_type pos, size_type n)
+\endcode
+</td>
+<td valign="top">
+Equivalent to (but probably faster than) <code>clear()</code> followed by <code>insert(0, s, pos, n)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; assign(const charT* s, size_type n)</code>
+</td>
+<td valign="top">
+Equivalent to (but probably faster than) <code>clear()</code> followed by <code>insert(0, s, n)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string&amp; assign(const charT* s)</code>
+</td>
+<td valign="top">
+Equivalent to (but probably faster than) <code>clear()</code> followed by <code>insert(0, s)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(size_type pos, size_type n, 
+                      const basic_string& s)
+\endcode
+</td>
+<td valign="top">
+Equivalent to <code>erase(pos, n)</code> followed by <code>insert(pos, s)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(size_type pos, size_type n, 
+                      const basic_string& s, size_type pos1, size_type n1)
+\endcode
+</td>
+<td valign="top">
+Equivalent to <code>erase(pos, n)</code> followed by <code>insert(pos, s, pos1, n1)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(size_type pos, size_type n, 
+                      const charT* s, size_type n1)
+\endcode
+</td>
+<td valign="top">
+Equivalent to <code>erase(pos, n)</code> followed by <code>insert(pos, s, n1)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(size_type pos, size_type n, 
+                      const charT* s)
+\endcode
+</td>
+<td valign="top">
+Equivalent to <code>erase(pos, n)</code> followed by <code>insert(pos, s)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(size_type pos, size_type n, 
+                      size_type n1, charT c)
+\endcode
+</td>
+<td valign="top">
+Equivalent to <code>erase(pos, n)</code> followed by <code>insert(pos, n1, c)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(iterator first, iterator last, 
+                      const basic_string& s)
+\endcode
+</td>
+<td valign="top">
+Equivalent to <code>insert(erase(first, last), s.begin(), s.end())</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(iterator first, iterator last, 
+                      const charT* s, size_type n)
+\endcode
+</td>
+<td valign="top">
+Equivalent to <code>insert(erase(first, last), s, s + n)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(iterator first, iterator last, 
+                      const charT* s)
+\endcode
+</td>
+<td valign="top">
+Equivalent to <code>insert(erase(first, last), s, s + traits::length(s))</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+basic_string& replace(iterator first, iterator last, 
+                      size_type n, charT c)
+\endcode
+</td>
+<td valign="top">
+Equivalent to <code>insert(erase(first, last), n, c)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+basic_string& replace(iterator first, iterator last, 
+                      InputIterator f, InputIterator l)
+\endcode
+</td>
+<td valign="top">
+Equivalent to <code>insert(erase(first, last), f, l)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type copy(charT* buf, size_type n, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+Copies at most <code>n</code> characters from <code>*this</code> to a character array.
+   Throws <code>out_of_range</code> if <code>pos &gt; size()</code>.  Otherwise, equivalent to
+   <code>\ref stldoc_copy(begin() + pos, begin() + pos + min(n, size()), buf)</code>.
+   Note that this member function does nothing other than copy 
+   characters from <code>*this</code> to <code>buf</code>; in particular, it does not terminate
+   <code>buf</code> with a null character.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find(const basic_string&amp; s, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+Searches for <code>s</code> as a substring of <code>*this</code>, beginning at
+   character position <code>pos</code>.  It is almost the same as <code>\ref stldoc_search</code>,
+   except that <code>\ref stldoc_search</code> tests elements for equality using 
+   <code>operator==</code> or a user-provided function object, while this member
+   function uses <code>traits ::eq</code>.  Returns the lowest character position
+   <code>N</code> such that <code>pos &lt;= N</code> and <code>pos + s.size() &lt;= size()</code> and such that, for every 
+   <code>i</code> less than <code>s.size()</code>, <code>(*this)[N + i]</code> compares equal to <code>s[i]</code>.
+   Returns <code>npos</code> if no such position <code>N</code> exists.  Note that it is legal
+   to call this member function with arguments such that 
+   <code>s.size() &gt; size() - pos</code>, but such a search will always fail.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find(const charT* s, size_type pos, size_type n) const</code>
+</td>
+<td valign="top">
+Searches for the first <code>n</code> characters of <code>s</code> as a substring of <code>*this</code>, beginning at
+   character <code>pos</code> of <code>*this</code>.  This is equivalent to
+   <code>find(basic_string(s, n), pos)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find(const charT* s, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+Searches for a null-terminated character array as a substring of <code>*this</code>, beginning at
+   character <code>pos</code> of <code>*this</code>.  This is equivalent to 
+   <code>find(basic_string(s), pos)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find(charT c, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+Searches for the character <code>c</code>, beginning at character position <code>pos</code>.
+   That is, returns the first character position <code>N</code> greater than or equal
+   to <code>pos</code>, and less than <code>size()</code>, such that <code>(*this)[N]</code> compares equal 
+   to <code>c</code>.  Returns <code>npos</code> if no such character position <code>N</code> exists.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type rfind(const basic_string&amp; s, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+Searches backward for <code>s</code> as a substring of <code>*this</code>.
+   It is almost the same as <code>\ref stldoc_find_end</code>,
+   except that <code>\ref stldoc_find_end</code> tests elements for equality using 
+   <code>operator==</code> or a user-provided function object, while this member
+   function uses <code>traits ::eq</code>.  This member function returns the largest
+   character position <code>N</code> such that <code>N &lt;= pos</code> and <code>N + s.size() &lt;= size()</code>,
+   and such that, for every <code>i</code> less than <code>s.size()</code>, <code>(*this)[N + i]</code>
+   compares equal to <code>s[i]</code>.  
+   Returns <code>npos</code> if no such position <code>N</code> exists.  Note that it is legal
+   to call this member function with arguments such that 
+   <code>s.size() &gt; size()</code>, but such a search will always fail.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type rfind(const charT* s, size_type pos, size_type n) const</code>
+</td>
+<td valign="top">
+Searches backward for the first <code>n</code> characters of <code>s</code> as a substring of <code>*this</code>.
+   Equivalent to <code>rfind(basic_string(s, n), pos)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type rfind(const charT* s, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+Searches backward for a null-terminated character array as a substring of <code>*this</code>.
+   Equivalent to <code>rfind(basic_string(s), pos)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type rfind(charT c, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+Searches backward for the character <code>c</code>.  That is, returns the largest
+   character position <code>N</code> such that <code>N &lt;= pos</code> and <code>N &lt; size()</code>, and
+   such that <code>(*this)[N]</code> compares equal to <code>c</code>.  Returns <code>npos</code> if
+   no such character position exists.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_of(const basic_string&amp; s, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+Searches within <code>*this</code>, beginning at <code>pos</code>, for the first character
+   that is equal to any character within <code>s</code>.  This is similar to the
+   standard algorithm <code>\ref stldoc_find_first_of</code>, but differs because 
+   <code>\ref stldoc_find_first_of</code> compares characters using <code>operator==</code> or a 
+   user-provided function object, while this member function uses
+   <code>traits ::eq</code>.  Returns the smallest character position <code>N</code> 
+   such that <code>pos &lt;= N &lt; size()</code>, and such that <code>(*this)[N]</code>
+   compares equal to some character within <code>s</code>.  
+   Returns <code>npos</code> if no such character position exists.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_of(const charT* s, size_type pos, size_type n) const</code>
+</td>
+<td valign="top">
+Searches within <code>*this</code>, beginning at <code>pos</code>, for the first character
+   that is equal to any character within the range <code>[s, s+n)</code>.  That is,
+   returns the smallest character position <code>N</code> 
+   such that <code>pos &lt;= N &lt; size()</code>, and such that <code>(*this)[N]</code>
+   compares equal to some character in <code>[s, s+n)</code>.
+   Returns <code>npos</code> if no such character position exists.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_of(const charT* s, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+Equivalent to <code>find_first_of(s, pos, traits::length(s))</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_of(charT c, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+Equivalent to <code>find(c, pos)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_not_of(const basic_string&amp; s, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+Searches within <code>*this</code>, beginning at <code>pos</code>, for the first character
+   that is not equal to any character within <code>s</code>.  
+   Returns the smallest character position <code>N</code> 
+   such that <code>pos &lt;= N &lt; size()</code>, and such that <code>(*this)[N]</code>
+   does not compare equal to any character within <code>s</code>.  
+   Returns <code>npos</code> if no such character position exists.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_not_of(const charT* s, size_type pos, size_type n) const</code>
+</td>
+<td valign="top">
+Searches within <code>*this</code>, beginning at <code>pos</code>, for the first character
+   that is not equal to any character within the range <code>[s, s+n)</code>.  That is,
+   returns the smallest character position <code>N</code> 
+   such that <code>pos &lt;= N &lt; size()</code>, and such that <code>(*this)[N]</code>
+   does not compare equal to any character in <code>[s, s+n)</code>.
+   Returns <code>npos</code> if no such character position exists.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_not_of(const charT* s, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+Equivalent to <code>find_first_not_of(s, pos, traits::length(s))</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_first_not_of(charT c, size_type pos = 0) const</code>
+</td>
+<td valign="top">
+Returns the smallest character position <code>N</code>
+   such that <code>pos &lt;= N &lt; size()</code>, and such that <code>(*this)[N]</code>
+   does not compare equal to <code>c</code>.
+   Returns <code>npos</code> if no such character position exists.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_of(const basic_string&amp; s, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+Searches backward within <code>*this</code> for the first character
+   that is equal to any character within <code>s</code>.  That is, returns the largest
+   character position <code>N</code> such that <code>N &lt;= pos</code> and <code>N &lt; size()</code>, and such
+   that <code>(*this)[N]</code> compares equal to some character within <code>s</code>.
+   Returns <code>npos</code> if no such character position exists.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_of(const charT* s, size_type pos, size_type n) const</code>
+</td>
+<td valign="top">
+Searches backward within <code>*this</code> for the first character
+   that is equal to any character within the range <code>[s, s+n)</code>.
+   That is, returns the largest
+   character position <code>N</code> such that <code>N &lt;= pos</code> and <code>N &lt; size()</code>, and such
+   that <code>(*this)[N]</code> compares equal to some character within <code>[s, s+n)</code>.
+   Returns <code>npos</code> if no such character position exists.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_of(const charT* s, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+Equivalent to <code>find_last_of(s, pos, traits::length(s))</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_of(charT c, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+Equivalent to <code>rfind(c, pos)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_not_of(const basic_string&amp; s, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+Searches backward within <code>*this</code> for the first character
+   that is not equal to any character within <code>s</code>.
+   That is, returns the largest
+   character position <code>N</code> such that <code>N &lt;= pos</code> and <code>N &lt; size()</code>, and such
+   that <code>(*this)[N]</code> does not compare equal to any character within <code>s</code>.
+   Returns <code>npos</code> if no such character position exists.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_not_of(const charT* s, size_type pos, size_type n) const</code>
+</td>
+<td valign="top">
+Searches backward within <code>*this</code> for the first character
+   that is not equal to any character within <code>[s, s+n)</code>.
+   That is, returns the largest
+   character position <code>N</code> such that <code>N &lt;= pos</code> and <code>N &lt; size()</code>, and such
+   that <code>(*this)[N]</code> does not compare equal to any character within
+   <code>[s, s+n)</code>.  Returns <code>npos</code> if no such character position exists.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_not_of(const charT* s, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+Equivalent to <code>find_last_of(s, pos, traits::length(s))</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type find_last_not_of(charT c, size_type pos = npos) const</code>
+</td>
+<td valign="top">
+Searches backward <code>*this</code> for the first character
+   that is not equal to <code>c</code>.  That is, returns the largest character
+   position <code>N</code> such that <code>N &lt;= pos</code> and <code>N &lt; size()</code>, and such 
+   that <code>(*this)[N]</code> does not compare equal to <code>c</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>basic_string substr(size_type pos = 0, size_type n = npos) const</code>
+</td>
+<td valign="top">
+Equivalent to <code>basic_string(*this, pos, n)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>int compare(const basic_string&amp; s) const</code>
+</td>
+<td valign="top">
+Three-way lexicographical comparison of <code>s</code> and <code>*this</code>, much like
+   <code>strcmp</code>.  If <code>traits::compare(data, s.data(), min(size(), s.size()))</code>
+   is nonzero, then it returns that nonzero value.  Otherwise returns a
+   negative number if <code>size() &lt; s.size()</code>, a positive number if
+   <code>size() &gt; s.size()</code>, and zero if the two are equal.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>int compare(size_type pos, size_type n, const basic_string&amp; s) const</code>
+</td>
+<td valign="top">
+Three-way lexicographical comparison of <code>s</code> and a substring of <code>*this</code>.
+   Equivalent to <code>basic_string(*this, pos, n).compare(s)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>int compare(size_type pos, size_type n, const basic_string&amp; s, size_type pos1, size_type n1) const</code>
+</td>
+<td valign="top">
+Three-way lexicographical comparison of a substring of <code>s</code> and a substring of <code>*this</code>.
+   Equivalent to <code>basic_string(*this, pos, n).compare(basic_string(s, pos1, n1))</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>int compare(const charT* s) const</code>
+</td>
+<td valign="top">
+Three-way lexicographical comparison of <code>s</code> and <code>*this</code>.
+   Equivalent to <code>compare(basic_string(s))</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>int compare(size_type pos, size_type n, const charT* s, size_type len = npos) const</code>
+</td>
+<td valign="top">
+Three-way lexicographical comparison of the first <code>min(len, traits::length(s)</code>
+   characters of <code>s</code> and a substring of <code>*this</code>.
+   Equivalent to <code>basic_string(*this, pos, n).compare(basic_string(s, min(len, traits::length(s))))</code>.   
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_string<charT, traits, Alloc>
+operator+(const basic_string<charT, traits, Alloc>& s1,
+          const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+String concatenation.  Equivalent to creating a temporary copy
+   of <code>s</code>, appending <code>s2</code>, and then returning the temporary copy.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_string<charT, traits, Alloc>
+operator+(const charT* s1,
+          const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+String concatenation.
+   Equivalent to creating a temporary <code>basic_string</code> object from <code>s1</code>,
+   appending <code>s2</code>, and then returning the temporary object.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_string<charT, traits, Alloc>
+operator+(const basic_string<charT, traits, Alloc>& s1,
+          const charT* s2)
+\endcode
+</td>
+<td valign="top">
+String concatenation.  Equivalent to creating a temporary copy
+   of <code>s</code>, appending <code>s2</code>, and then returning the temporary copy.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_string<charT, traits, Alloc>
+operator+(charT c,
+          const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+String concatenation.  Equivalent to creating a temporary
+   object with the constructor <code>basic_string(1, c)</code>, appending <code>s2</code>,
+   and then returning the temporary object.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_string<charT, traits, Alloc>
+operator+(const basic_string<charT, traits, Alloc>& s1,
+          charT c)
+\endcode
+</td>
+<td valign="top">
+String concatenation.  Equivalent to creating a temporary object,
+   appending <code>c</code> with <code>push_back</code>, and then returning the temporary
+   object.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator==(const charT* s1, 
+                const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+String equality.  Equivalent to
+   <code>basic_string(s1).compare(s2) == 0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator==(const basic_string<charT, traits, Alloc>& s1,
+                const charT* s2)
+\endcode
+</td>
+<td valign="top">
+String equality.  Equivalent to <code>basic_string(s1).compare(s2) == 0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator!=(const charT* s1, 
+                const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+String inequality.  Equivalent to <code>basic_string(s1).compare(s2) == 0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator!=(const basic_string<charT, traits, Alloc>& s1,
+                const charT* s2)
+\endcode
+</td>
+<td valign="top">
+String inequality.  Equivalent to <code>!(s1 == s2)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator<(const charT* s1, 
+               const basic_string<charT, traits, Alloc>& s2)
+\endcode
+</td>
+<td valign="top">
+String comparison.  Equivalent to <code>!(s1 == s2)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+bool operator<(const basic_string<charT, traits, Alloc>& s1,
+               const charT* s2)
+\endcode
+</td>
+<td valign="top">
+String comparison.  Equivalent to <code>!(s1 == s2)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_istream<charT, traits>&
+operator>>(basic_istream<charT, traits>& is,
+           basic_string<charT, traits, Alloc>& s)
+\endcode
+</td>
+<td valign="top">
+Reads <code>s</code> from the input stream <code>is</code>.  Specifically, it skips
+   whitespace, and then replaces the contents of <code>s</code> with characters
+   read from the input stream.  It continues reading characters until
+   it encounters a whitespace character (in which case that character is
+   not extracted), or until end-of-file, or, if <code>is.width()</code> is nonzero,
+   until it has read <code>is.width()</code> characters.  This member function
+   resets <code>is.width()</code> to zero.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_ostream<charT, traits>&
+operator>>(basic_istream<charT, traits>& is,
+           const basic_string<charT, traits, Alloc>& s)
+\endcode
+</td>
+<td valign="top">
+Writes <code>s</code> to the output stream <code>is</code>.  It writes
+   <code>max(s.size(), is.width())</code> characters, padding as necessary.
+   This member function resets <code>is.width()</code> to zero.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_istream<charT, traits>&
+getline(basic_istream<charT, traits>& is,
+        basic_string<charT, traits, Alloc>& s,
+        charT delim)
+\endcode
+</td>
+<td valign="top">
+Replaces the contents of <code>s</code> with characters read from the input
+   stream.  It continues reading characters until it encounters
+   the character <code>delim</code> (in which case that character is extracted
+   but not stored in <code>s</code>), or until end of file.  Note that <code>getline</code>,
+   unlike <code>operator&gt;&gt;</code>, does not skip whitespace.  As the name suggests,
+   it is most commonly used to read an entire line of text precisely as
+   the line appears in an input file.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class charT, class traits, class Alloc>
+basic_istream<charT, traits>&
+getline(basic_istream<charT, traits>& is,
+        basic_string<charT, traits, Alloc>& s)
+\endcode
+</td>
+<td valign="top">
+Equivalent to <code>getline(is, s, is.widen('\n\))</code>.
+</td>
+</tr>
+</table>
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_Rope</code>, <code>\ref stldoc_Vector</code>, \ref stldoc_character_traits
+
+
+*/

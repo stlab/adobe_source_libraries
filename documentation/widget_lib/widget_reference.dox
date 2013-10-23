@@ -1,0 +1,828 @@
+/*!
+\defgroup widget_reference Widget Reference
+\ingroup apl_widgets
+
+\author Sean Parent, Adobe Systems Incorporated
+\author Foster Brereton, Adobe Systems Incorporated
+
+\date January 7, 2005
+
+\section wr_widget_reference_abstract Abstract
+\par
+This document serves as a reference guide for the widgets one can define for the current implementation of Adobe Begin.
+
+\section wr_toc Table of Contents
+    -# \ref wr_overview
+    -# \ref wr_views_reference
+        -# \ref wr_view_common_attributes
+        -# \ref wr_view_classes
+            -# bevel_button
+                -# \ref wr_bevel_button "button_beveled"
+                -# \ref wr_bevel_button "checkbox_beveled"
+                -# \ref wr_bevel_button "radio_button_beveled"
+                -# \ref wr_bevel_button "popup_beveled"
+            -# \ref wr_button
+            -# \ref wr_checkbox
+            -# \ref wr_edit_number
+            -# \ref wr_edit_text
+            -# \ref wr_link
+            -# \ref wr_popup
+            -# \ref wr_progress_bar
+            -# \ref wr_radio_button
+            -# \ref wr_separator
+            -# \ref wr_slider
+            -# \ref wr_static_text
+    -# \ref wr_containers_reference
+        -# \ref wr_container_common_attributes
+        -# \ref wr_container_classes
+            -# Root-Level Containers
+                -# \ref wr_dialog
+                -# \ref wr_palette
+            -# Nestable Containers
+                -# \ref wr_column
+                -# \ref wr_group
+                -# \ref wr_overlay
+                -# \ref wr_panel
+                -# \ref wr_row
+                -# \ref wr_tab_group
+
+\section wr_overview Widget Set Overview
+\par
+The widget set is best split into two categories: views and containers.
+\par
+A View is a "leaf node" widget like a button or a separator. A view cannot contain any views inside of it. Views define interface elements presented to the user.
+\par
+Containers are also views (and inherit all the attributes of a view), but can have subviews within themselves, including other containers. Containment denotes the layout relationships between subviews. Containers do not necessarily add interface elements to the dialog (though they can).
+\par
+There is also a set of root container classes. Only one root container is allowed per dialog, and it must be the topmost container in the defintion, otherwise the resulting dialog is undefined.
+
+\section wr_views_reference Views Reference
+
+\subsection wr_view_common_attributes Common View Attributes
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>indent</code></td>
+        <td><code>number</code></td>
+        <td><code>0</code></td>
+        <td>Cross-stream indentation in pixels.</td>
+    </tr>
+    <tr>
+        <td><code>horizontal</code></td>
+        <td><code>alignment</code></td>
+        <td><code>align_left</code></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td><code>vertical</code></td>
+        <td><code>alignment</code></td>
+        <td><code>align_top</code></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td><code>guide_mask</code></td>
+        <td><code>array</code></td>
+        <td><code>[ ]</code></td>
+        <td>guides to suppress - current values are <code>guide_baseline</code>, <code>guide_label</code>.</td>
+    </tr>
+    <tr>
+        <td><code>name</code></td>
+        <td><code>string</code></td>
+        <td><code>""</code></td>
+        <td>displayed name of view</td>
+    </tr>
+    <tr>
+        <td><code>bind</code></td>
+        <td><code>name</code></td>
+        <td><i>empty</i></td>
+        <td>attached Adam cell</td>
+    </tr>
+    <tr>
+        <td><code>bind_indirect</code></td>
+        <td><code>name</code></td>
+        <td><i>empty</i></td>
+        <td>Adam cell containing the name of the Adam cell to attach</td>
+    </tr>
+    <tr>
+        <td><code>touch</code></td>
+        <td><code>array</code></td>
+        <td>[ ]</td>
+        <td>Adam cells to touch when set</td>
+    </tr>
+    <tr>
+        <td><code>identifier</code></td>
+        <td><code>name</code></td>
+        <td><i>empty</i></td>
+        <td>identifier for this widget</td>
+    </tr>
+    <tr>
+        <td><code>size</code></td>
+        <td>enumeration</td>
+        <td><code>\@size_normal</code></td>
+        <td>Valid values are one of <code>\@size_mini</code>, <code>\@size_small</code>, <code>\@size_normal</code>. Specifies the size of the text used for the widget.</td>
+    </tr>
+    <tr>
+        <td><code>focus</code></td>
+        <td><code>name</code></td>
+        <td><i>empty</i></td>
+        <td>attaches Adam cell to keyboard focus (identifier is value)</td>
+    </tr>
+</table>
+
+\subsection wr_view_classes View Classes
+
+\subsubsection wr_bevel_button bevel_button
+\par
+The bevel button is a multi-use widget, and can emulate several other types of widgets. In fact, you cannot specify a <code>bevel_button</code> directly, but must invoke it as emulating another widget. The possible <code>bevel_button</code> variants are:
+    - <code>button_beveled</code>
+    - <code>checkbox_beveled</code>
+    - <code>radio_button_beveled</code>
+    - <code>popup_beveled</code>
+
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>name</code></td>
+        <td><code>string</code></td>
+        <td>""</td>
+        <td>Name of the button</td>
+    </tr>
+    <tr>
+        <td><code>value_on</code></td>
+        <td><code>anything</code></td>
+        <td><code>n/a</code></td>
+        <td>Value to set the bound cell to when clicking the button in the off/neutral state. Useful when behaving as a radio button and checkbox.</td>
+    </tr>
+    <tr>
+        <td><code>value_off</code></td>
+        <td><code>anything</code></td>
+        <td><code>n/a</code></td>
+        <td>value to set the bound cell to when clicking the button in the on state. Useful when behaving as a radio button and checkbox.</td>
+    </tr>
+    <tr>
+        <td><code>popup_bind</code></td>
+        <td><code>name</code></td>
+        <td><i>empty</i></td>
+        <td>name of cell to which bevel button is bound. Useful when behaving as a popup.</td>
+    </tr>
+    <tr>
+        <td><code>items</code></td>
+        <td><code>array</code></td>
+        <td><code>[ ]</code></td>
+        <td>Specifies menu contents. Useful when behaving as a popup.</td>
+    </tr>
+    <tr>
+        <td><code>items[]</code></td>
+        <td><code>dictionary</code></td>
+        <td><code>{ }</code></td>
+        <td>Single menu item specification. Useful when behaving as a popup.</td>
+    </tr>
+    <tr>
+        <td><code>items[].name</code></td>
+        <td><code>string</code></td>
+        <td>""</td>
+        <td>Name of a given menu item. Useful when behaving as a popup.</td>
+    </tr>
+    <tr>
+        <td><code>items[].value</code></td>
+        <td><code>name</code></td>
+        <td><i>empty</i></td>
+        <td>Value to set the popup_bind cell to when this item is selected. Useful when behaving as a popup.</td>
+    </tr>
+    <tr>
+        <td><code>popup_placement</code></td>
+        <td><code>enumeration</code></td>
+        <td><code>\@right</code></td>
+        <td>Valid values are one of <code>\@right</code> or <code>\@down</code>. Arrow direction and menu location. Useful when behaving as a popup.</td>
+    </tr>
+    <tr>
+        <td><code>bevel_thickness</code></td>
+        <td><code>enumeration</code></td>
+        <td><code>\@normal</code></td>
+        <td>Valid values are one of <code>\@small</code>, <code>\@normal</code>, <code>\@large</code>, <code>\@rounded</code>. Specifies bevel button bevel style</td>
+    </tr>
+</table>
+
+\subsubsection wr_button button
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>default</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>set to true for default button behavior</td>
+    </tr>
+    <tr>
+        <td><code>cancel</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>set to true for cancel button behavior</td>
+    </tr>
+    <tr>
+        <td><code>action</code></td>
+        <td><code>enumeration</code></td>
+        <td><i>required</i></td>
+        <td>Valid values are one of <code>\@reset</code>, <code>\@cancel</code>, or <code>\@dialog</code>. Action for button to perform in the default state</td>
+    </tr>
+    <tr>
+        <td><code>bind_output</code></td>
+        <td><code>name</code></td>
+        <td><i>empty</i></td>
+        <td>If set, imposes value to the bound cell. <i>bind_output and action are mutually exclusive. If both are set for a widget then bind_output will take precedence.</i></td>
+    </tr>
+    <tr>
+        <td><code>value</code></td>
+        <td><code>string</code></td>
+        <td>""</td>
+        <td>When the action is <code>\@dialog</code>, specifies the name of the subdialog to open. When bind_output is set, it is the value imposed onto the cell.</td>
+    </tr>
+    <tr>
+        <td><code>items</code></td>
+        <td><code>array</code></td>
+        <td><code>[ ]</code></td>
+        <td>Specifies alternate namings of button based on modifier key states</td>
+    </tr>
+    <tr>
+        <td><code>items[]</code></td>
+        <td><code>dictionary</code></td>
+        <td><code>{ }</code></td>
+        <td>Alternate button state specification</td>
+    </tr>
+    <tr>
+        <td><code>items[].name</code></td>
+        <td><code>string</code></td>
+        <td><code>""</code></td>
+        <td>Name of button for given modifier key state</td>
+    </tr>
+    <tr>
+        <td><code>items[].action</code></td>
+        <td><code>enumeration</code></td>
+        <td><i>required</i></td>
+        <td>Valid values are one of <code>\@reset</code>, <code>\@cancel</code>, or <code>\@dialog</code>. Action button for given modifier key state</td>
+    </tr>
+    <tr>
+        <td><code>items[].value</code></td>
+        <td><code>string</code></td>
+        <td><code>""</code></td>
+        <td>When the action is <code>\@dialog</code> for this state, specifies the name of the subdialog to open</td>
+    </tr>
+    <tr>
+        <td><code>items[].modifiers</code></td>
+        <td><code>enumeration</code></td>
+        <td><i>no modifiers</i></td>
+        <td>
+            Valid values are some name which is a combination of "opt", "ctl", "cmd" <i>in that order</i>. Specification of the button modifier keys that need to be held down for this state to be in effect. For example, <code>\@optctl</code> would set the state to this one when the option and control keys are pressed. Note that the order matters, so <code>\@optctl</code> is valid while <code>\@ctlopt</code> is not.
+        </td>
+    </tr>
+</table>
+
+\subsubsection wr_checkbox checkbox
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>value</code></td>
+        <td><i>any</i></td>
+        <td><i>required</i></td>
+        <td>Value to impose upon the cell when the checkbox is clicked; also the value the cell must
+            be set to in order for the checkbox to display selected.
+        </td>
+    </tr>
+    <tr>
+        <td><code>touch</code></td>
+        <td><code>array of cell names</code></td>
+        <td><code>[ ]</code></td>
+        <td>When a checkbox is hit, specifies the other cells that should be made recently changed as well</td>
+    </tr>
+</table>
+
+\subsubsection wr_edit_number edit_number
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>digits</code></td>
+        <td><code>number</code></td>
+        <td><code>5</code></td>
+        <td>specifies width as approximate number of characters</td>
+    </tr>
+    <tr>
+        <td><code>display_disable</code></td>
+        <td><code>bool</code></td>
+        <td><code>false</code></td>
+        <td>When field is disabled, this will replace the edit text field with a static text field</td>
+    </tr>
+    <tr>
+        <td><code>touch</code></td>
+        <td><code>array of cell names</code></td>
+        <td><code>[ ]</code></td>
+        <td>When a field is modified, specifies the other cells that should be made recently changed as well</td>
+    </tr>
+    <tr>
+        <td><code>format</code></td>
+        <td><code>string</code> or <code>name</code></td>
+        <td><code>"#.00"</code></td>
+        <td>printf style format for Adam cell containing format</td>
+    </tr>
+    <tr>
+        <td><code>units</code></td>
+        <td><code>array</code></td>
+        <td><code>[ ]</code></td>
+        <td>Specifies unit popup contents (See adobe::unit_t)</td>
+    </tr>
+</table>
+
+\subsubsection wr_edit_text edit_text
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>characters</code></td>
+        <td><code>number</code></td>
+        <td><code>10</code></td>
+        <td>Specifies width as approximate number of characters (columns)</td>
+    </tr>
+    <tr>
+        <td><code>lines</code></td>
+        <td><code>int</code></td>
+        <td><code>1</code></td>
+        <td>Number of lines (rows) tall the edit text field should be</td>
+    </tr>
+    <tr>
+        <td><code>monospaced</code></td>
+        <td><code>bool</code></td>
+        <td><code>false</code></td>
+        <td>Specifies whether or not to use a monospaced 10-point font in this control</td>
+    </tr>
+    <tr>
+        <td><code>scrollable</code></td>
+        <td><code>bool</code></td>
+        <td><code>false</code></td>
+        <td>Specifies whether or not to attach horizontal and vertical scrollers to this text field.</td>
+    </tr>
+    <tr>
+        <td><code>password</code></td>
+        <td><code>bool</code></td>
+        <td><code>false</code></td>
+        <td>Specifies whether or not to hide the characters entered into this text field.</td>
+    </tr>
+</table>
+
+\subsubsection wr_link link
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>count</code></td>
+        <td><code>number</code></td>
+        <td><code>2</code></td>
+        <td>number of prongs drawn in linkage</td>
+    </tr>
+    <tr>
+        <td><code>value_on</code></td>
+        <td><i>any</i></td>
+        <td><i>n/a</i></td>
+        <td>Value that must be set in cell for link to be displayed</td>
+    </tr>
+    <tr>
+        <td><code>value_off</code></td>
+        <td><i>any</i></td>
+        <td><i>n/a</i></td>
+        <td>Value to impose upon bound cell when the link is clicked on</td>
+    </tr>
+</table>
+
+\subsubsection wr_popup popup
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>items</code></td>
+        <td><code>array</code></td>
+        <td><code>[ ]</code></td>
+        <td>array of menu item elements</td>
+    </tr>
+    <tr>
+        <td><code>items[]</code></td>
+        <td><code>dictionary</code></td>
+        <td><i>n/a</i></td>
+        <td>menu item element</td>
+    </tr>
+    <tr>
+        <td><code>items[].name</code></td>
+        <td><code>string</code></td>
+        <td><i>n/a</i></td>
+        <td>name of menu item</td>
+    </tr>
+    <tr>
+        <td><code>items[].value</code></td>
+        <td><i>any</i></td>
+        <td><i>n/a</i></td>
+        <td>value of menu item</td>
+    </tr>
+</table>
+
+\subsubsection wr_progress_bar progress_bar
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>format</code></td>
+        <td><code>dictionary</code></td>
+        <td><code>{ }</code></td>
+        <td>Semantic specification of the progress bar</td>
+    </tr>
+    <tr>
+        <td><code>format.first</code></td>
+        <td><code>long</code></td>
+        <td><code>0</code></td>
+        <td>minimum value allowed</td>
+    </tr>
+    <tr>
+        <td><code>format.last</code></td>
+        <td><code>long</code></td>
+        <td><code>100</code></td>
+        <td>maximum value allowed</td>
+    </tr>
+    <tr>
+        <td><code>format.interval</code></td>
+        <td><code>long</code></td>
+        <td><code>1</code></td>
+        <td>Step value for increments between first and last</td>
+    </tr>
+    <tr>
+        <td><code>is_indeterminate</code></td>
+        <td><code>bool</code></td>
+        <td><code>false</code></td>
+        <td>Specifies an indeterminate (aka barber-pole) progress bar style</td>
+    </tr>
+    <tr>
+        <td><code>is_relevance</code></td>
+        <td><code>bool</code></td>
+        <td><code>false</code></td>
+        <td>Specifies an relevance bar style</td>
+    </tr>
+    <tr>
+        <td><code>orientation</code></td>
+        <td><code>identifier</code></td>
+        <td><code>\@horizontal</code></td>
+        <td>Could also be <code>\@vertical</code>. Specifies the direction of the progress bar.</td>
+    </tr>
+</table>
+
+\subsubsection wr_radio_button radio_button
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>value</code></td>
+        <td><i>any</i></td>
+        <td><i>required</i></td>
+        <td>Value to impose upon the cell when the button is clicked; also the value the cell must
+            be set to in order for the button to display selected.
+        </td>
+    </tr>
+    <tr>
+        <td><code>touch</code></td>
+        <td><code>array of cell names</code></td>
+        <td><code>[ ]</code></td>
+        <td>When a radio button is hit, specifies the other cells that should be made recently changed as well</td>
+    </tr>
+</table>
+
+\subsubsection wr_separator separator
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>orientation</code></td>
+        <td>enumeration</td>
+        <td><code>\@horizontal</code></td>
+        <td>(could also be <code>\@vertical</code>). Specifies the direction of the separator's growth.
+            Alignment for that direction will be set to <code>align_fill</code>.</td>
+    </tr>
+</table>
+
+\subsubsection wr_slider slider
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>format</code></td>
+        <td><code>dictionary</code></td>
+        <td><code>{ }</code></td>
+        <td>Semantic specification of the slider</td>
+    </tr>
+    <tr>
+        <td><code>format.first</code></td>
+        <td><code>long</code></td>
+        <td><code>0</code></td>
+        <td>minimum value allowed</td>
+    </tr>
+    <tr>
+        <td><code>format.last</code></td>
+        <td><code>long</code></td>
+        <td><code>100</code></td>
+        <td>maximum value allowed</td>
+    </tr>
+    <tr>
+        <td><code>format.interval</code></td>
+        <td><code>long</code></td>
+        <td><code>1</code></td>
+        <td>Step value for increments between first and last</td>
+    </tr>
+</table>
+
+\subsubsection wr_static_text static_text
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>wrap</code></td>
+        <td><code>boolean</code></td>
+        <td><code>false</code></td>
+        <td>if true, text is wrapped to available space</td>
+    </tr>
+</table>
+
+\section wr_containers_reference Containers Reference
+
+\subsection wr_container_common_attributes Common Container Attributes
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>placement</code></td>
+        <td><code>placement</code></td>
+        <td><code>place_column</code></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td><code>child_horizontal</code></td>
+        <td><code>alignment</code></td>
+        <td><code>align_left</code></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td><code>child_vertical</code></td>
+        <td><code>alignment</code></td>
+        <td><code>align_top</code></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td><code>spacing</code></td>
+        <td><code>number</code> or <code>array</code></td>
+        <td><code>space_normal</code></td>
+        <td></td>
+    </tr>
+</table>
+
+\subsection wr_container_classes Container Classes
+
+\subsubsection wr_dialog dialog
+\par
+This is a root container class.\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>placement</code></td>
+        <td><code>placement</code></td>
+        <td><code>place_row</code></td>
+        <td>different default than container</td>
+    </tr>
+    <tr>
+        <td><code>metal</code></td>
+        <td><code>bool</code></td>
+        <td><code>false</code></td>
+        <td>Allows for the metallic look on a dialog</td>
+    </tr>
+    <tr>
+        <td><code>grow</code></td>
+        <td><code>bool</code></td>
+        <td><code>false</code></td>
+        <td>allows for the dialog to be resized by the user</td>
+    </tr>
+</table>
+
+\subsubsection wr_palette palette
+\par
+This is a root container class.\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>metal</code></td>
+        <td><code>bool</code></td>
+        <td><code>false</code></td>
+        <td>Allows for the metallic look on a dialog</td>
+    </tr>
+    <tr>
+        <td><code>grow</code></td>
+        <td><code>bool</code></td>
+        <td><code>false</code></td>
+        <td>allows for the dialog to be resized by the user</td>
+    </tr>
+</table>
+
+\subsubsection wr_column column
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>placement</code></td>
+        <td><code>placement</code></td>
+        <td><code>place_column</code></td>
+        <td>a simple column container</td>
+    </tr>
+</table>
+
+\subsubsection wr_group group
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>name</code></td>
+        <td><code>string</code></td>
+        <td>""</td>
+        <td>Name of this group</td>
+    </tr>
+</table>
+
+\subsubsection wr_overlay overlay
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>placement</code></td>
+        <td><code>placement</code></td>
+        <td><code>place_overlay</code></td>
+        <td>a simple overlay container</td>
+    </tr>
+    <tr>
+        <td><code>horizontal</code></td>
+        <td><code>alignment</code></td>
+        <td><code>align_fill</code></td>
+        <td></td>
+    </tr>
+    <tr>
+        <td><code>vertical</code></td>
+        <td><code>alignment</code></td>
+        <td><code>align_fill</code></td>
+        <td></td>
+    </tr>
+</table>
+
+\subsubsection wr_panel panel
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+</table>
+
+\subsubsection wr_row row
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code><i>placement</i></code></td>
+        <td><code>placement</code></td>
+        <td><code>place_row</code></td>
+        <td>a simple row container</td>
+    </tr>
+</table>
+
+\subsubsection wr_tab_group tab_group
+\par
+<table width='100%'>
+    <tr>
+        <th width="20%">attribute</th>
+        <th width="20%">type</th>
+        <th width="20%">default</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td><code>items[]</code></td>
+        <td><code>dictionary</code></td>
+        <td><i>required</i></td>
+        <td>tab specification</td>
+    </tr>
+    <tr>
+        <td><code>items[].name</code></td>
+        <td><code>string</code></td>
+        <td><i>required</i></td>
+        <td>name of the tab</td>
+    </tr>
+    <tr>
+        <td><code>items[].value</code></td>
+        <td><i>any</i></td>
+        <td><i>n/a</i></td>
+        <td>value of the tab</td>
+    </tr>
+</table>
+*/

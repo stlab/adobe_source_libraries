@@ -1,0 +1,7 @@
+project adobe/eve_smoke ;
+
+run main.cpp
+    : # args
+    : default.eve #files
+    : #requirements
+  ;

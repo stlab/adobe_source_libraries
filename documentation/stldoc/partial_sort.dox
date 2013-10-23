@@ -1,0 +1,131 @@
+/** \page stldoc_partial_sort partial_sort
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Partial_sort</code> is an overloaded name; there are actually two <code>partial_sort</code>
+functions.
+\code
+template <class RandomAccessIterator>
+void partial_sort(RandomAccessIterator first, 
+                  RandomAccessIterator middle,
+                  RandomAccessIterator last);
+
+template <class RandomAccessIterator, class StrictWeakOrdering>
+void partial_sort(RandomAccessIterator first,
+                  RandomAccessIterator middle,
+                  RandomAccessIterator last, 
+                  StrictWeakOrdering comp);
+\endcode
+\section Description Description
+<code>Partial_sort</code> rearranges the elements in the range <code>[first, last)</code> so
+that they are partially in ascending order.  Specifically, it places
+the smallest <code>middle - first</code> elements, sorted in ascending order,
+into the range <code>[first, middle)</code>.  The remaining <code>last - middle</code>
+elements are placed, in an unspecified order, into the range <code>[middle,
+last)</code>. <A href="#1">[1]</A> <A href="#2">[2]</A>
+<p>
+The two versions of <code>partial_sort</code> differ in how they define whether one
+element is less than another.  The first version compares
+objects using <code>operator&lt;</code>, and the second compares objects using
+a \ref stldoc_functors <code>comp</code>.
+<p>
+The postcondition for the first version of <code>partial_sort</code> is as
+follows. If <code>i</code> and <code>j</code> are
+any two valid iterators in the range <code>[first, middle)</code> such that <code>i</code>
+precedes <code>j</code>, and if <code>k</code> is a valid iterator in the range <code>[middle,
+last)</code>, then <code>*j &lt; *i</code> and <code>*k &lt; *i</code> will both be <code>false</code>.  
+The corresponding postcondition for the second version of <code>partial_sort</code>
+is that <code>comp(*j, *i)</code> and <code>comp(*k, *i)</code>
+are both false.  Informally, this postcondition means that the first <code>middle - first</code>
+elements are in ascending order and that none of the elements in
+<code>[middle, last)</code> is less than any of the elements in <code>[first, middle)</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator.
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+<code>RandomAccessIterator</code>'s value type is \ref stldoc_LessThanComparable.
+<li>
+The ordering relation on <code>RandomAccessIterator</code>'s value type is
+ a <i>strict weak ordering</i>, as defined in the \ref stldoc_LessThanComparable
+ requirements.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator.
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>RandomAccessIterator</code>'s value type is convertible to
+   <code>StrictWeakOrdering</code>'s argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, middle)</code> is a valid range.
+<li>
+<code>[middle, last)</code> is a valid range.
+</ul>
+(It follows from these two conditions that <code>[first, last)</code> is a valid range.)
+\section Complexity Complexity
+Approximately <code>(last - first) * log(middle - first)</code> comparisons.
+\section Example Example
+\code
+int A[] = {7, 2, 6, 11, 9, 3, 12, 10, 8, 4, 1, 5};
+const int N = sizeof(A) / sizeof(int);
+
+partial_sort(A, A + 5, A + N);
+copy(A, A + N, ostream_iterator<int>(cout, " "));
+// The printed result is "1 2 3 4 5 11 12 10 9 8 7 6".
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note that the elements in the range <code>[first, middle)</code> will be the
+same (ignoring, for the moment, equivalent elements) as if you had sorted
+the entire range using <code>sort(first, last)</code>.  The reason for using
+<code>partial_sort</code> in preference to <code>sort</code> is simply efficiency: a partial
+sort, in general, takes less time.
+<p><A name="2">[2]</A>
+<code>partial_sort(first, last, last)</code> has the effect of sorting the
+entire range <code>[first, last)</code>, just like <code>\ref stldoc_sort\zwj(first, last)</code>.  They
+use different algorithms, however: <code>sort</code> uses the <i>introsort</i> algorithm
+(a variant of quicksort), and <code>partial_sort</code> uses <i>heapsort</i>. See section 5.2.3 of
+Knuth (D. E. Knuth, <i>The Art of Computer
+Programming.  Volume 3: Sorting and Searching</i>.
+Addison-Wesley, 1975.), and J. W. J. Williams (<i>CACM</i> <b>7</b>, 347, 1964).
+Both heapsort and introsort have complexity of order <code>N
+log(N)</code>, but introsort is usually faster by a factor of 2 to 5.
+\section See_also See also
+<code>\ref stldoc_partial_sort_copy</code>,
+<code>\ref stldoc_sort</code>,
+<code>\ref stldoc_stable_sort</code>,
+<code>\ref stldoc_binary_search</code>,
+<code>\ref stldoc_lower_bound</code>,
+<code>\ref stldoc_upper_bound</code>,
+<code>\ref stldoc_less&lt;T&gt;</code>,
+\ref stldoc_StrictWeakOrdering,
+\ref stldoc_LessThanComparable
+
+
+*/

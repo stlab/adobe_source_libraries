@@ -1,0 +1,692 @@
+/** \page stldoc_Sequence Sequence
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Sequence is a variable-sized \ref stldoc_Container whose
+elements are arranged in a strict linear order.  It supports insertion
+and removal of elements.
+\section Refinement_of Refinement of
+\ref stldoc_ForwardContainer, \ref stldoc_DefaultConstructible
+\section Associated_types Associated types
+None, except for those of \ref stldoc_ForwardContainer.
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Sequence
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>a</code>, <code>b</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The value type of <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>t</code>
+</td>
+<td valign="top">
+Object of type <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>p</code>, <code>q</code>
+</td>
+<td valign="top">
+Object of type <code>X::iterator</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>n</code>
+</td>
+<td valign="top">
+Object of a type convertible to <code>X::size_type</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+If <code>a</code> is a Sequence, then <code>p</code> is a
+<i>valid iterator in a</i> if it is a valid (nonsingular) iterator that is 
+reachable from <code>a.begin()</code>.
+<p>
+If <code>a</code> is a Sequence, then <code>[p, q)</code> is a <i>valid range in a</i>
+if <code>p</code> and <code>q</code> are valid iterators in <code>a</code> and if <code>q</code> is reachable
+from <code>p</code>.
+\section Valid_expressions Valid expressions
+In addition to the expressions defined in \ref stldoc_ForwardContainer, the
+following expressions must be valid.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Fill constructor
+</td>
+<td valign="top">
+<code>X(n, t)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Fill constructor
+</td>
+<td valign="top">
+<code>X a(n, t);</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Default fill constructor
+</td>
+<td valign="top">
+<code>X(n)</code>
+</td>
+<td valign="top">
+<code>T</code> is \ref stldoc_DefaultConstructible.
+</td>
+<td valign="top">
+<code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Default fill constructor
+</td>
+<td valign="top">
+<code>X a(n);</code>
+</td>
+<td valign="top">
+<code>T</code> is \ref stldoc_DefaultConstructible.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Range constructor
+</td>
+<td valign="top">
+<code>X(i, j)</code>
+</td>
+<td valign="top">
+<code>i</code> and <code>j</code> are \ref stldoc_InputIterator whose value type is convertible
+   to <code>T</code> <A href="#1">[1]</A>
+</td>
+<td valign="top">
+<code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Range constructor
+</td>
+<td valign="top">
+<code>X a(i, j);</code>
+</td>
+<td valign="top">
+<code>i</code> and <code>j</code> are \ref stldoc_InputIterator whose value type is convertible
+   to <code>T</code> <A href="#1">[1]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Front
+</td>
+<td valign="top">
+<code>a.front()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>reference</code> if <code>a</code> is mutable, <code>const_reference</code> otherwise.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Insert
+</td>
+<td valign="top">
+<code>a.insert(p, t)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X::iterator</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Fill insert
+</td>
+<td valign="top">
+<code>a.insert(p, n, t)</code>
+</td>
+<td valign="top">
+<code>a</code> is mutable
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Range insert
+</td>
+<td valign="top">
+<code>a.insert(p, i, j)</code>
+</td>
+<td valign="top">
+<code>i</code> and <code>j</code> are \ref stldoc_InputIterator whose value type is convertible
+   to <code>T</code> <A href="#1">[1]</A>.  <code>a</code> is mutable
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Erase
+</td>
+<td valign="top">
+<code>a.erase(p)</code>
+</td>
+<td valign="top">
+<code>a</code> is mutable
+</td>
+<td valign="top">
+<code>iterator</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Range erase
+</td>
+<td valign="top">
+<code>a.erase(p,q)</code>
+</td>
+<td valign="top">
+<code>a</code> is mutable
+</td>
+<td valign="top">
+<code>iterator</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Clear
+</td>
+<td valign="top">
+<code>a.clear()</code>
+</td>
+<td valign="top">
+<code>a</code> is mutable
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Resize
+</td>
+<td valign="top">
+<code>a.resize(n, t)</code>
+</td>
+<td valign="top">
+<code>a</code> is mutable
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Resize
+</td>
+<td valign="top">
+<code>a.resize(n)</code>
+</td>
+<td valign="top">
+<code>a</code> is mutable
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+Semantics of an expression is defined only where it is not defined in
+\ref stldoc_ForwardContainer, or where it differs.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Fill constructor
+</td>
+<td valign="top">
+<code>X(n, t)</code>
+</td>
+<td valign="top">
+<code>n &gt;= 0</code>
+</td>
+<td valign="top">
+Creates a sequence with <code>n</code> copies of <code>t</code>
+</td>
+<td valign="top">
+<code>size() == n</code>.  Every element is a copy of <code>t</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Fill constructor
+</td>
+<td valign="top">
+<code>X a(n, t);</code>
+</td>
+<td valign="top">
+<code>n &gt;= 0</code>
+</td>
+<td valign="top">
+Creates a sequence with <code>n</code> copies of <code>t</code>
+</td>
+<td valign="top">
+<code>a.size() == n</code>.  Every element of <code>a</code> is a copy of <code>t</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Default fill constructor
+</td>
+<td valign="top">
+<code>X(n)</code>
+</td>
+<td valign="top">
+<code>n &gt;= 0</code>
+</td>
+<td valign="top">
+Creates a sequence of <code>n</code> elements initialized to a default value.
+</td>
+<td valign="top">
+<code>size() == n</code>.  Every element is a copy of <code>T()</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Default fill  constructor
+</td>
+<td valign="top">
+<code>X a(n, t);</code>
+</td>
+<td valign="top">
+<code>n &gt;= 0</code>
+</td>
+<td valign="top">
+Creates a sequence with <code>n</code> elements initialized to a default value.
+</td>
+<td valign="top">
+<code>a.size() == n</code>.  Every element of <code>a</code> is a copy of <code>T()</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Default constructor
+</td>
+<td valign="top">
+<code>X a;</code> or <code>X()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Equivalent to <code>X(0)</code>.
+</td>
+<td valign="top">
+<code>size() == 0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Range constructor
+</td>
+<td valign="top">
+<code>X(i, j)</code>
+</td>
+<td valign="top">
+<code>[i,j)</code> is a valid range.
+</td>
+<td valign="top">
+Creates a sequence that is a copy of the range <code>[i,j)</code>
+</td>
+<td valign="top">
+<code>size()</code> is equal to the distance from <code>i</code> to <code>j</code>.  Each element
+   is a copy of the corresponding element in the
+   range <code>[i,j)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Range constructor
+</td>
+<td valign="top">
+<code>X a(i, j);</code>
+</td>
+<td valign="top">
+<code>[i,j)</code> is a valid range.
+</td>
+<td valign="top">
+Creates a sequence that is a copy of the range <code>[i,j)</code>
+</td>
+<td valign="top">
+<code>a.size()</code> is equal to the distance from <code>i</code> to <code>j</code>.  Each element
+   in <code>a</code> is a copy of the corresponding element in the
+   range <code>[i,j)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Front
+</td>
+<td valign="top">
+<code>a.front()</code>
+</td>
+<td valign="top">
+<code>!a.empty()</code>
+</td>
+<td valign="top">
+Equivalent to <code>*(a.first())</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Insert
+</td>
+<td valign="top">
+<code>a.insert(p, t)</code>
+</td>
+<td valign="top">
+<code>p</code> is a valid iterator in <code>a</code>.  <code>a.size() &lt; a.max_size()</code>
+</td>
+<td valign="top">
+A copy of <code>t</code> is inserted before <code>p</code>.  <A href="#2">[2]</A>  <A href="#3">[3]</A>
+</td>
+<td valign="top">
+<code>a.size()</code> is incremented by 1.  <code>*(a.insert(p,t))</code> is a copy of <code>t</code>.
+   The relative order of elements already in the sequence is unchanged.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Fill insert
+</td>
+<td valign="top">
+<code>a.insert(p, n, t)</code>
+</td>
+<td valign="top">
+<code>p</code> is a valid iterator in <code>a</code>.  <code>n &gt;= 0 &amp;&amp; a.size() + n &lt;= a.max_size()</code>.
+</td>
+<td valign="top">
+<code>n</code> copies of <code>t</code> are inserted before <code>p</code>. <A href="#2">[2]</A> <A href="#3">[3]</A> <A href="#4">[4]</A>
+</td>
+<td valign="top">
+<code>a.size()</code> is incremented by n.  The relative order of elements
+   already in the sequence is unchanged.  
+</td>
+</tr>
+<tr>
+<td valign="top">
+Range insert
+</td>
+<td valign="top">
+<code>a.insert(p, i, j)</code>
+</td>
+<td valign="top">
+<code>[i,j)</code> is a valid range.  <code>a.size()</code> plus the distance from <code>i</code> to
+   <code>j</code> does not exceed <code>a.max_size()</code>.
+</td>
+<td valign="top">
+Inserts a copy of the range <code>[i,j)</code> before <code>p</code>.  <A href="#1">[1]</A> <A href="#2">[2]</A> <A href="#3">[3]</A>
+</td>
+<td valign="top">
+<code>a.size()</code> is incremented by the distance from <code>i</code> to <code>j</code>.
+   The relative order of elements already in the sequence is unchanged.  
+</td>
+</tr>
+<tr>
+<td valign="top">
+Erase
+</td>
+<td valign="top">
+<code>a.erase(p)</code>
+</td>
+<td valign="top">
+<code>p</code> is a dereferenceable iterator in <code>a</code>.
+</td>
+<td valign="top">
+Destroys the element pointed to by <code>p</code> and removes it from <code>a</code>. <A href="#3">[3]</A>
+</td>
+<td valign="top">
+<code>a.size()</code> is decremented by 1.  The relative order of the other
+    elements in the sequence is unchanged.  The return value is an iterator
+    to the element immediately following the one that was erased.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Range erase
+</td>
+<td valign="top">
+<code>a.erase(p,q)</code>
+</td>
+<td valign="top">
+<code>[p,q)</code> is a valid range in <code>a</code>.
+</td>
+<td valign="top">
+Destroys the elements in the range <code>[p,q)</code> and removes them from
+   <code>a</code>. <A href="#3">[3]</A>
+</td>
+<td valign="top">
+<code>a.size()</code> is decremented by the distance from <code>i</code> to <code>j</code>.
+   The relative order of the other elements in the sequence is unchanged.  
+   The return value is an iterator to the element immediately
+   following the ones that were erased.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Clear
+</td>
+<td valign="top">
+<code>a.clear()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Equivalent to <code>a.erase(a.begin(), a.end())</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Resize
+</td>
+<td valign="top">
+<code>a.resize(n, t)</code>
+</td>
+<td valign="top">
+<code>n &lt;= a.max_size()</code>
+</td>
+<td valign="top">
+Modifies the container so that it has exactly <code>n</code> elements, inserting
+   elements at the end or erasing elements from the end if necessary.
+   If any elements are inserted, they are copies of <code>t</code>. If <code>n &gt; a.size()</code>, 
+   this expression is equivalent to <code>a.insert(a.end(), n - size(), t)</code>.
+   If <code>n &lt; a.size()</code>, it is equivalent to <code>a.erase(a.begin() + n, a.end())</code>.
+</td>
+<td valign="top">
+<code>a.size() == n</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Resize
+</td>
+<td valign="top">
+<code>a.resize(n)</code>
+</td>
+<td valign="top">
+<code>n &lt;= a.max_size()</code>
+</td>
+<td valign="top">
+Equivalent to <code>a.resize(n, T())</code>.
+</td>
+<td valign="top">
+<code>a.size() == n</code>
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+The fill constructor, default fill
+   constructor, and range constructor are linear.
+<p>
+Front is amortized constant time.
+<p>
+Fill insert, range insert, and range erase are linear.
+<p>
+The complexities of single-element insert and erase are sequence 
+   dependent.
+\section Invariants Invariants
+\section Models Models
+<ul>
+<li>
+ \ref stldoc_Vector <A href="#5">[5]</A>
+<li>
+ \ref stldoc_Deque
+<li>
+ \ref stldoc_List
+<li>
+ \ref stldoc_Slist
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+At present (early 1998), not all compilers support
+&quot;member templates&quot;.  If your compiler supports member
+templates then <code>i</code> and <code>j</code> may be of any type that
+conforms to the \ref stldoc_InputIterator
+requirements.  If your compiler does not yet support member
+templates, however, then <code>i</code> and <code>j</code> must be of type
+<code>const T*</code> or of type <code>X::const_iterator</code>.
+<p><A name="2">[2]</A>
+Note that <code>p</code> equal to <code>a.begin()</code> means to insert
+something at the beginning of <code>a</code> (that is, before any elements
+already in <code>a</code>), and <code>p</code> equal to <code>a.end()</code> means
+to append something to the end of <code>a</code>.
+<p><A name="3">[3]</A>
+<b>Warning</b>: there is no guarantee that a valid iterator on
+<code>a</code> is still valid after an insertion or an erasure.  In some
+cases iterators do remain valid, and in other cases they do not.  The
+details are different for each sequence class.
+<p><A name="4">[4]</A>
+<code>a.insert(p, n, t)</code> is guaranteed to be no slower then calling
+<code>a.insert(p, t)</code> <code>n</code> times.  In some cases it is significantly
+faster.
+<p><A name="5">[5]</A>
+\ref stldoc_Vector is usually preferable to
+\ref stldoc_Deque and \ref stldoc_List.  
+\ref stldoc_Deque is useful in the case of frequent
+insertions at both the beginning and end of the sequence, and
+\ref stldoc_List and \ref stldoc_Slist are useful in the case of frequent insertions
+in the middle of the sequence.  In almost all other situations,
+\ref stldoc_Vector is more efficient.
+\section See_also See also
+\ref stldoc_Container, 
+\ref stldoc_ForwardContainer, 
+\ref stldoc_AssociativeContainer, 
+\ref stldoc_FrontInsertionSequence, 
+\ref stldoc_BackInsertionSequence, 
+<code>\ref stldoc_Vector</code>, 
+<code>\ref stldoc_Deque</code>,
+<code>\ref stldoc_List</code>,
+<code>\ref stldoc_Slist</code>
+
+
+*/

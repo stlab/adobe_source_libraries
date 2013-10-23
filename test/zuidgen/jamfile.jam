@@ -1,0 +1,10 @@
+import testing ;
+
+project adobe/zuidgen
+	;
+
+run main.cpp 
+    : #args
+    : #input-files
+    : #requirements
+    ;

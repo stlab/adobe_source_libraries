@@ -1,0 +1,268 @@
+/** \page stldoc_pointer_to_binary_function pointer_to_binary_function
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left">\image html adaptors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: functors, adaptors</td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Pointer_to_binary_function</code> is a \ref stldoc_functors adaptor that
+allows a function pointer <code>Result (*f)(Arg1, Arg2)</code> to be treated as an
+\ref stldoc_AdaptableBinaryFunction.  That is: if <code>F</code> is a
+<code>pointer_to_binary_function&lt;Arg1, Arg2, Result&gt;</code> that was initialized
+with an underlying function pointer <code>f</code> of type
+<code>Result (*)(Arg1, Arg2)</code>, then <code>F(x, y)</code> calls the function
+<code>f(x, y)</code>.  The difference between <code>f</code> and <code>F</code> is that 
+<code>pointer_to_binary_function</code> is an \ref stldoc_AdaptableBinaryFunction,
+<i>i.e.</i> it defines the nested <code>typedef</code>s <code>first_argument_type</code>,
+<code>second_argument_type</code>, and <code>result_type</code>.  
+<p>
+Note that a function pointer of type <code>Result (*)(Arg1, Arg2)</code> is a perfectly
+good \ref stldoc_BinaryFunction object, and may be passed to an STL algorithm
+that expects an argument that is a \ref stldoc_BinaryFunction.  The only
+reason for using the <code>pointer_to_binary_function</code> class is if you need
+to use an ordinary function in a context that requires an 
+\ref stldoc_AdaptableBinaryFunction, <i>e.g.</i> as the argument of a function object
+adaptor.
+<p>
+Most of the time, you need not declare an object of type
+<code>pointer_to_binary_function</code> directly.  It is almost always easier to
+construct one using the <code>\ref stldoc_ptr_fun</code> function.
+\section Example Example
+The following code fragment finds the first string in a list
+that is equal to <code>&quot;OK&quot;</code>.  It uses the standard library function
+<code>strcmp</code> as an argument to a function object adaptor, so it must
+first use a <code>pointer_to_binary_function</code> adaptor to give <code>strcmp</code>
+the \ref stldoc_AdaptableBinaryFunction interface.
+\code
+List<char*> L;
+...
+List<char*>::iterator item = 
+              find_if(L.begin(), L.end(),
+                      not1(binder2nd(ptr_fun(strcmp), "OK")));
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>Arg1</code>
+</td>
+<td valign="top">
+The function object's first argument type
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Arg2</code>
+</td>
+<td valign="top">
+The function object's second argument type
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Result</code>
+</td>
+<td valign="top">
+The function object's result type
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_AdaptableBinaryFunction
+\section Type_requirements Type requirements
+<ul>
+<li>
+<code>Arg1</code> is \ref stldoc_Assignable.
+<li>
+<code>Arg2</code> is \ref stldoc_Assignable.
+<li>
+<code>Result</code> is \ref stldoc_Assignable.
+</ul>
+\section Public_base_classes Public base classes
+<code>\ref stldoc_binary_function&lt;Arg1, Arg2, Result&gt;</code>
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>first_argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of the first argument: <code>Arg1</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>second_argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of the second argument: <code>Arg2</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableBinaryFunction
+</td>
+<td valign="top">
+The type of the result: <code>Result</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Result operator()(Arg1 x, Arg2 y)</code>
+</td>
+<td valign="top">
+ \ref stldoc_BinaryFunction
+</td>
+<td valign="top">
+Function call operator.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer_to_binary_function(Result (*f)(Arg1, Arg2))</code>
+</td>
+<td valign="top">
+<code>pointer_to_binary_function</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer_to_binary_function()</code>
+</td>
+<td valign="top">
+<code>pointer_to_binary_function</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class Arg1, class Arg2, class Result>
+pointer_to_unary_function<Arg1, Arg2, Result> 
+ptr_fun(Result (*x)(Arg1, Arg2));
+\endcode
+</td>
+<td valign="top">
+<code>pointer_to_binary_function</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined 
+in the \ref stldoc_AdaptableBinaryFunction
+requirements, but are specific to 
+<code>pointer_to_binary_function</code>.          
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer_to_binary_function(Result (*f)(Arg1, Arg2))</code>
+</td>
+<td valign="top">
+The constructor.  Creates a <code>pointer_to_binary_function</code> whose underlying
+   function is <code>f</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer_to_binary_function()</code>
+</td>
+<td valign="top">
+The default constructor.  This creates a <code>pointer_to_binary_function</code>
+   that does not have an underlying function, and that therefore
+   cannot actually be called.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class Arg1, class Arg2, class Result>
+pointer_to_unary_function<Arg1, Arg2, Result> 
+ptr_fun(Result (*x)(Arg1, Arg2));
+\endcode
+</td>
+<td valign="top">
+If <code>f</code> is of type <code>Result (*)(Arg1, Arg2)</code> then
+<code>ptr_fun(f)</code> is equivalent to
+<code>pointer_to_binary_function&lt;Arg1,Arg2,Result&gt;(f)</code>,
+but more convenient.  This is a global function, not a member
+function.
+</td>
+</tr>
+</table>
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_pointer_to_unary_function</code>, <code>\ref stldoc_ptr_fun</code>, 
+\ref stldoc_AdaptableBinaryFunction
+
+
+*/

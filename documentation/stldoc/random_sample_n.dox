@@ -1,0 +1,137 @@
+/** \page stldoc_random_sample_n random_sample_n
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Random_sample_n</code> is an overloaded name; there are actually two
+<code>random_sample_n</code> functions.
+\code
+template <class ForwardIterator, class OutputIterator, class Distance>
+OutputIterator random_sample_n(ForwardIterator first, ForwardIterator last,
+                               OutputIterator out, Distance n)
+
+template <class ForwardIterator, class OutputIterator, class Distance,
+          class RandomNumberGenerator>
+OutputIterator random_sample_n(ForwardIterator first, ForwardIterator last,
+                               OutputIterator out, Distance n,
+                               RandomNumberGenerator& rand)
+\endcode
+\section Description Description
+<code>Random_sample_n</code> randomly copies a sample of the elements from
+the range <code>[first, last)</code> into the range <code>[out, out + n)</code>.
+Each element in the input range appears at most once in the output
+range, and samples are chosen with uniform probability.  <A href="#1">[1]</A> 
+Elements in the output range appear in the same relative order
+as their relative order within the input range. <A href="#2">[2]</A>
+<p>
+<code>Random_sample</code> copies <code>m</code> elements from <code>[first, last)</code>
+to <code>[out, out + m)</code>, where <code>m</code> is <code>min(last - first, n)</code>.
+The return value is <code>out + m</code>.
+<p>
+The first version uses an internal random number generator, and the
+second uses a \ref stldoc_RandomNumberGenerator, a special kind of
+\ref stldoc_functors, that is explicitly passed as an argument.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+This function is an SGI extension; it is not part of the C++
+standard.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator
+<li>
+<code>ForwardIterator</code>'s value type is convertible to
+   a type in <code>OutputIterator</code>'s set of value types.
+<li>
+<code>Distance</code> is an integral type that is large enough to
+   represent the value <code>last - first</code>.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator
+<li>
+<code>RandomNumberGenerator</code> is a model of \ref stldoc_RandomNumberGenerator
+<li>
+<code>Distance</code> is an integral type that is large enough to
+   represent the value <code>last - first</code>.
+<li>
+<code>ForwardIterator</code>'s value type is convertible to
+   a type in <code>OutputIterator</code>'s set of value types.
+<li>
+<code>Distance</code> is convertible to <code>RandomNumberGenerator</code>'s argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>n</code> is nonnegative.
+<li>
+<code>[first, last)</code> and <code>[out, out + n)</code> do not overlap.
+<li>
+There is enough space to hold all of the elements being copied.
+   More formally, the requirement is that 
+   <code>[out, out + min(n, last - first))</code> is a valid range.
+<li>
+<code>last - first</code> is less than <code>rand</code>'s maximum value.
+</ul>
+\section Complexity Complexity
+Linear in <code>last - first</code>.  At most <code>last - first</code> elements from the
+input range are examined, and exactly <code>min(n, last - first)</code> elements
+are copied to the output range.
+\section Example Example
+\code
+int main()
+{
+  const int N = 10;
+  int A[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+  random_sample_n(A, A+N, ostream_iterator<int>(cout, " "), 4);
+  // The printed value might be 3 5 6 10,
+  //  or any of 209 other possibilities.
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+This is &quot;Algorithm S&quot; from section 3.4.2 of Knuth
+(D. E. Knuth, <i>The Art of Computer
+Programming.  Volume 2: Seminumerical Algorithms</i>, second edition.  
+Addison-Wesley, 1981).  Knuth credits C. T. Fan, M. E. Muller, and
+I. Rezucha (1962) and T. G. Jones (1962).
+Note that there are <code>N! / n! / (N - n)!</code> ways of selecting a sample of
+<code>n</code> elements from a range of <code>N</code> elements.  <code>Random_sample_n</code> yields
+uniformly distributed results; that is, the probability of selecting
+any particular element is <code>n / N</code>, and the probability of any
+particular sampling is <code>n! * (N - n)! / N!</code>.
+<p><A name="2">[2]</A>
+In contrast, the <code>\ref stldoc_random_sample</code> algorithm does not preserve
+relative ordering within the input range.  
+The other major distinction between the two algorithms is that 
+<code>random_sample_n</code> requires its input range to be \ref stldoc_ForwardIterator
+and only requires its output range to be \ref stldoc_OutputIterator, while
+<code>\ref stldoc_random_sample</code> only requires its input range to be
+\ref stldoc_InputIterator and requires its output range to be
+\ref stldoc_RandomAccessIterator.
+\section See_also See also
+<code>\ref stldoc_random_shuffle</code>, <code>\ref stldoc_random_sample</code>, \ref stldoc_RandomNumberGenerator
+
+
+*/

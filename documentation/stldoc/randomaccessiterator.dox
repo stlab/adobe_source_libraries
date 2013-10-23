@@ -1,0 +1,455 @@
+/** \page stldoc_RandomAccessIterator RandomAccessIterator
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Random Access Iterator is an iterator that provides both
+increment and decrement (just like a \ref stldoc_BidirectionalIterator),
+and that also provides constant-time methods for moving forward
+and backward in arbitrary-sized steps.  Random Access Iterators
+provide essentially all of the operations of ordinary
+C pointer arithmetic.
+\section Refinement_of Refinement of
+\ref stldoc_BidirectionalIterator, \ref stldoc_LessThanComparable
+\section Associated_types Associated types
+The same as for \ref stldoc_BidirectionalIterator
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Random Access Iterator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The value type of <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Distance</code>
+</td>
+<td valign="top">
+The distance type of <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>i</code>, <code>j</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>t</code>
+</td>
+<td valign="top">
+Object of type <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>n</code>
+</td>
+<td valign="top">
+Object of type <code>Distance</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+\section Valid_expressions Valid expressions
+In addition to the expressions defined in \ref stldoc_BidirectionalIterator,
+the following expressions must be valid.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Iterator addition
+</td>
+<td valign="top">
+<code>i += n</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X&amp;</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Iterator addition
+</td>
+<td valign="top">
+<code>i + n</code> or <code>n + i</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Iterator subtraction
+</td>
+<td valign="top">
+<code>i -= n</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X&amp;</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Iterator subtraction
+</td>
+<td valign="top">
+<code>i - n</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Difference
+</td>
+<td valign="top">
+<code>i - j</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>Distance</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Element operator
+</td>
+<td valign="top">
+<code>i[n]</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Convertible to <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Element assignment
+</td>
+<td valign="top">
+<code>i[n] = t</code>
+</td>
+<td valign="top">
+<code>X</code> is mutable
+</td>
+<td valign="top">
+Convertible to <code>T</code>
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+Semantics of an expression is defined only where it differs from,
+or is not defined in, \ref stldoc_BidirectionalIterator or 
+\ref stldoc_LessThanComparable.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Forward motion
+</td>
+<td valign="top">
+<code>i += n</code>
+</td>
+<td valign="top">
+Including <code>i</code> itself, there must be <code>n</code> dereferenceable or
+   past-the-end iterators following or preceding <code>i</code>, depending
+   on whether <code>n</code> is positive or negative.
+</td>
+<td valign="top">
+If <code>n &gt; 0</code>, equivalent to executing <code>++i</code> <code>n</code> times.  If <code>n &lt; 0</code>,
+   equivalent to executing <code>--i</code> <code>n</code> times.  If <code>n == 0</code>, this is
+   a null operation. <A href="#1">[1]</A>
+</td>
+<td valign="top">
+<code>i</code> is dereferenceable or past-the-end.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Iterator addition
+</td>
+<td valign="top">
+<code>i + n</code> or <code>n + i</code>
+</td>
+<td valign="top">
+Same as for <code>i += n</code>
+</td>
+<td valign="top">
+Equivalent to <code>{ X tmp = i; return tmp += n; }</code>.  The two forms
+   <code>i + n</code> and <code>n + i</code> are identical.
+</td>
+<td valign="top">
+Result is dereferenceable or past-the-end
+</td>
+</tr>
+<tr>
+<td valign="top">
+Iterator subtraction
+</td>
+<td valign="top">
+<code>i -= n</code>
+</td>
+<td valign="top">
+Including <code>i</code> itself, there must be <code>n</code> dereferenceable or
+   past-the-end iterators preceding  or following <code>i</code>, depending
+   on whether <code>n</code> is positive or negative.
+</td>
+<td valign="top">
+Equivalent to <code>i += (-n)</code>.
+</td>
+<td valign="top">
+<code>i</code> is dereferenceable or past-the-end.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Iterator subtraction
+</td>
+<td valign="top">
+<code>i - n</code>
+</td>
+<td valign="top">
+Same as for <code>i -= n</code>
+</td>
+<td valign="top">
+Equivalent to <code>{ X tmp = i; return tmp -= n; }</code>.
+</td>
+<td valign="top">
+Result is dereferenceable or past-the-end
+</td>
+</tr>
+<tr>
+<td valign="top">
+Difference
+</td>
+<td valign="top">
+<code>i - j</code>
+</td>
+<td valign="top">
+Either <code>i</code> is reachable from <code>j</code> or <code>j</code> is reachable from <code>i</code>, or both.
+</td>
+<td valign="top">
+Returns a number <code>n</code> such that <code>i == j + n</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Element operator
+</td>
+<td valign="top">
+<code>i[n]</code>
+</td>
+<td valign="top">
+<code>i + n</code> exists and is dereferenceable.
+</td>
+<td valign="top">
+Equivalent to <code>*(i + n)</code> <A href="#2">[2]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Element assignment
+</td>
+<td valign="top">
+<code>i[n] = t</code>
+</td>
+<td valign="top">
+<code>i + n</code> exists and is dereferenceable.
+</td>
+<td valign="top">
+Equivalent to <code>*(i + n) = t</code> <A href="#2">[2]</A>
+</td>
+<td valign="top">
+<code>i[n]</code> is a copy of <code>t</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Less
+</td>
+<td valign="top">
+<code>i &lt; j</code>
+</td>
+<td valign="top">
+Either <code>i</code> is reachable from <code>j</code> or <code>j</code> is reachable from <code>i</code>, or both. <A href="#3">[3]</A>
+</td>
+<td valign="top">
+As described in \ref stldoc_LessThanComparable <A href="#4">[4]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+All operations on Random Access Iterators are amortized constant
+time. <A href="#5">[5]</A>
+\section Invariants Invariants
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Symmetry of addition and subtraction
+</td>
+<td valign="top">
+If <code>i + n</code> is well-defined, then <code>i += n; i -= n;</code> and <code>(i + n) - n</code>
+   are null operations.  Similarly, if <code>i - n</code> is well-defined, 
+   then <code>i -= n; i += n;</code> and <code>(i - n) + n</code> are null operations.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Relation between distance and addition
+</td>
+<td valign="top">
+If <code>i - j</code> is well-defined, then <code>i == j + (i - j)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Reachability and distance
+</td>
+<td valign="top">
+If <code>i</code> is reachable from <code>j</code>, then <code>i - j &gt;= 0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Ordering
+</td>
+<td valign="top">
+<code>operator &lt;</code> is a strict weak ordering, as defined in
+   \ref stldoc_LessThanComparable.
+</td>
+</tr>
+</table>
+\section Models Models
+<ul>
+<li>
+<code>T*</code>
+<li>
+<code>\ref stldoc_Vector&lt;T&gt;::iterator</code>
+<li>
+<code>\ref stldoc_Vector&lt;T&gt;::const_iterator</code>
+<li>
+<code>\ref stldoc_Deque&lt;T&gt;::iterator</code>
+<li>
+<code>\ref stldoc_Deque&lt;T&gt;::const_iterator</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+&quot;Equivalent to&quot; merely means that <code>i += n</code> yields the same iterator
+as if <code>i</code> had been incremented (decremented) <code>n</code> times.  It does
+not mean that this is how <code>operator+=</code> should be implemented; in fact,
+this is not a permissible implementation.  It is guaranteed that <code>i += n</code>
+is amortized constant time, regardless of the magnitude of <code>n</code>. <A href="#5">[5]</A>
+<p><A name="2">[2]</A>
+One minor syntactic oddity: in C, if <code>p</code> is a pointer and
+<code>n</code> is an int, then <code>p[n]</code> and <code>n[p]</code> are equivalent.  This equivalence
+is not guaranteed, however, for Random Access Iterators:  only 
+<code>i[n]</code> need be supported.  This isn't a terribly important restriction,
+though, since the equivalence of <code>p[n]</code> and <code>n[p]</code> has essentially
+no application except for obfuscated C contests.
+<p><A name="3">[3]</A>
+The precondition defined in \ref stldoc_LessThanComparable is that <code>i</code>
+and <code>j</code> be in the domain of <code>operator &lt;</code>.  Essentially, then, this
+is a definition of that domain: it is the set of pairs of iterators such
+that one iterator is reachable from the other.  
+<p><A name="4">[4]</A>
+All of the other comparison operators have the same domain and
+are defined in terms of <code>operator &lt;</code>, so they have exactly the same
+semantics as described in \ref stldoc_LessThanComparable.
+<p><A name="5">[5]</A>
+This complexity guarantee is in fact the only reason why
+Random Access Iterator exists as a distinct concept.  Every
+operation in iterator arithmetic can be defined for 
+\ref stldoc_BidirectionalIterator; in fact, that is exactly what the 
+algorithms <code>\ref stldoc_advance</code> and <code>\ref stldoc_distance</code> do.  The distinction is
+simply that the \ref stldoc_BidirectionalIterator implementations are
+linear time, while Random Access Iterators are required to support
+random access to elements in amortized constant time.  This has
+major implications for the sorts of algorithms that can sensibly
+be written using the two types of iterators.
+\section See_also See also
+\ref stldoc_LessThanComparable, \ref stldoc_trivial, 
+\ref stldoc_BidirectionalIterator, \ref stldoc_Iterators
+
+
+*/

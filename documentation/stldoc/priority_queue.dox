@@ -1,0 +1,467 @@
+/** \page stldoc_priority_queue priority_queue
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left">\image html adaptors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: containers, adaptors</td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+A <code>priority_queue</code> is an adaptor that provides a restricted subset of
+\ref stldoc_Container functionality: it provides insertion of elements, and
+inspection and removal of the top element.  It is guaranteed that 
+the top element is the largest element in the <code>priority_queue</code>,
+where the function object <code>Compare</code> is used for comparisons. <A href="#1">[1]</A>
+<code>Priority_queue</code> does not allow iteration through its elements.  <A href="#2">[2]</A>
+<p>
+<code>Priority_queue</code> is a container adaptor, meaning that it is implemented on
+top of some underlying container type.  By default that underlying
+type is <code>\ref stldoc_Vector</code>, but a different type may be selected explicitly.
+\section Example Example
+\code
+int main() {
+  priority_queue<int> Q;
+  Q.push(1);
+  Q.push(4);
+  Q.push(2);
+  Q.push(8);
+  Q.push(5);
+  Q.push(7);
+  
+  assert(Q.size() == 6);
+
+  assert(Q.top() == 8);
+  Q.pop();
+
+  assert(Q.top() == 7);
+  Q.pop();
+
+  assert(Q.top() == 5);
+  Q.pop();
+
+  assert(Q.top() == 4);
+  Q.pop();
+
+  assert(Q.top() == 2);
+  Q.pop();
+
+  assert(Q.top() == 1);
+  Q.pop();
+
+  assert(Q.empty());
+}
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="queue">queue</A>, and in the nonstandard
+backward-compatibility header <A href="stack.h">stack.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The type of object stored in the priority queue.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Sequence</code>
+</td>
+<td valign="top">
+The type of the underlying container used to implement the priority
+    queue.
+</td>
+<td valign="top">
+<code>\ref stldoc_Vector&lt;T&gt;</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Compare</code>
+</td>
+<td valign="top">
+The comparison function used to determine whether one element is
+   smaller than another element.  If <code>Compare(x,y)</code> is <code>true</code>, then
+   <code>x</code> is smaller than <code>y</code>.  The element returned by <code>Q.top()</code> is
+   the largest element in the priority queue.  That is, it has the
+   property that, for every other element <code>x</code> in the priority queue,
+   <code>Compare(Q.top(), x)</code> is <code>false</code>.
+</td>
+<td valign="top">
+<code>\ref stldoc_less&lt;T&gt;</code>
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_Assignable, \ref stldoc_DefaultConstructible
+\section Type_requirements Type requirements
+<ul>
+<li>
+<code>T</code> is a model of \ref stldoc_Assignable.
+<li>
+<code>Sequence</code> is a model of \ref stldoc_Sequence.
+<li>
+<code>Sequence</code> is a model of \ref stldoc_RandomAccessContainer
+<li>
+<code>Sequence::value_type</code> is the same type as <code>T</code>.
+<li>
+<code>Compare</code> is a model of \ref stldoc_BinaryPredicate
+<li>
+<code>Compare</code> induces a strict weak ordering, as defined in the
+   \ref stldoc_LessThanComparable requirements, on its argument type.
+<li>
+<code>T</code> is convertible to <code>Compare</code>'s argument type.
+</ul>
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type</code>
+</td>
+<td valign="top">
+<code>priority_queue</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type</code>
+</td>
+<td valign="top">
+<code>priority_queue</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>priority_queue()</code>
+</td>
+<td valign="top">
+ \ref stldoc_DefaultConstructible
+</td>
+<td valign="top">
+The default constructor.  Creates an empty <code>priority_queue</code>, using
+   <code>Compare()</code> as the comparison function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>priority_queue(const priority_queue&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Assignable
+</td>
+<td valign="top">
+The copy constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>priority_queue(const Compare&amp;)</code>
+</td>
+<td valign="top">
+<code>priority_queue</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+priority_queue(const value_type*, 
+               const value_type*)
+\endcode
+</td>
+<td valign="top">
+<code>priority_queue</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+priority_queue(const value_type*, 
+               const value_type*,
+               const Compare&)
+\endcode
+</td>
+<td valign="top">
+<code>priority_queue</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+priority_queue& 
+operator=(const priority_queue&)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Assignable
+</td>
+<td valign="top">
+The assignment operator.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool empty() const</code>
+</td>
+<td valign="top">
+<code>priority_queue</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type size() const</code>
+</td>
+<td valign="top">
+<code>priority_queue</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const value_type&amp; top() const</code>
+</td>
+<td valign="top">
+<code>priority_queue</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void push(const value_type&amp;)</code>
+</td>
+<td valign="top">
+<code>priority_queue</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void pop()</code> <A href="#3">[3]</A>
+</td>
+<td valign="top">
+<code>priority_queue</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_Assignable and \ref stldoc_DefaultConstructible
+requirements, but are specific to 
+<code>priority_queue</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type</code>
+</td>
+<td valign="top">
+The type of object stored in the <code>priority_queue</code>.  This is the same as
+   <code>T</code> and <code>Sequence::value_type</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type</code>
+</td>
+<td valign="top">
+An unsigned integral type.  This is the same as <code>Sequence::size_type</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>priority_queue(const Compare&amp; comp)</code>
+</td>
+<td valign="top">
+The constructor.  Creates an empty <code>priority_queue</code>, using <code>comp</code>
+   as the comparison function.  The default constructor uses
+   <code>Compare()</code> as the comparison function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+priority_queue(const value_type* first, 
+               const value_type* last)
+\endcode
+</td>
+<td valign="top">
+The constructor.  Creates a <code>priority_queue</code> initialized to contain
+   the elements in the range <code>[first, last)</code>, and using <code>Compare()</code> as
+   the comparison function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+priority_queue(const value_type* first, 
+               const value_type* last,
+               const Compare& comp)
+\endcode
+</td>
+<td valign="top">
+The constructor.  Creates a <code>priority_queue</code> initialized to contain
+   the elements in the range <code>[first, last)</code>, and using <code>comp</code> as
+   the comparison function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool empty() const</code>
+</td>
+<td valign="top">
+Returns <code>true</code> if the <code>priority_queue</code> contains no elements, and <code>false</code>
+   otherwise.  <code>S.empty()</code> is equivalent to <code>S.size() == 0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type size() const</code>
+</td>
+<td valign="top">
+Returns the number of elements contained in the <code>priority_queue</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const value_type&amp; top() const</code>
+</td>
+<td valign="top">
+Returns a const reference to the element at the top of the priority_queue.
+   The element at the top is guaranteed to be the largest element in
+   the priority queue, as determined by the comparison function <code>Compare</code>.
+   That is, for every other element <code>x</code> in the <code>priority_queue</code>, 
+   <code>Compare(Q.top(), x)</code> is <code>false</code>.
+   Precondition: <code>empty()</code> is <code>false</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void push(const value_type&amp; x)</code>
+</td>
+<td valign="top">
+Inserts <code>x</code> into the priority_queue.  Postcondition: <code>size()</code> will
+   be incremented by <code>1</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void pop()</code>
+</td>
+<td valign="top">
+Removes the element at the top of the priority_queue, that is, the
+   largest element in the priority_queue. <A href="#3">[3]</A>  Precondition:
+   <code>empty()</code> is <code>false</code>.  Postcondition: <code>size()</code> will be decremented
+   by <code>1</code>.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+Priority queues are a standard concept, and can be implemented in
+many different ways; this implementation uses heaps.  Priority queues
+are discussed in all algorithm books; see, for example, section 5.2.3
+of Knuth. (D. E. Knuth, <i>The Art of Computer
+Programming.  Volume 3: Sorting and Searching</i>.
+Addison-Wesley, 1975.)
+<p><A name="2">[2]</A>
+This restriction is the only reason for <code>priority_queue</code> to exist
+at all.  If iteration through elements is important, you can either
+use a <code>\ref stldoc_Vector</code> that is maintained in sorted order, or a <code>\ref stldoc_set</code>,
+or a <code>\ref stldoc_Vector</code> that is maintained as a heap using <code>\ref stldoc_make_heap</code>,
+<code>\ref stldoc_push_heap</code>, and <code>\ref stldoc_pop_heap</code>.  <code>Priority_queue</code> is, in fact,
+implemented as a \ref stldoc_RandomAccessContainer that is maintained as 
+a heap.  The only reason to use the container
+adaptor <code>priority_queue</code>, instead of performing the heap operations
+manually, is to make it clear that you are never performing
+any operations that might violate the heap invariant.
+<p><A name="3">[3]</A>
+One might wonder why <code>pop()</code> returns <code>void</code>, instead of
+<code>value_type</code>.  That is, why must one use <code>top()</code> and <code>pop()</code> to
+examine and remove the element at the top of the <code>priority_queue</code>, instead of
+combining the two in a single member function?  In fact, there is a
+good reason for this design.  If <code>pop()</code> returned the top element, it
+would have to return by value rather than by reference: return by
+reference would create a dangling pointer.  Return by value, however,
+is inefficient: it involves at least one redundant copy constructor
+call.  Since it is impossible for <code>pop()</code> to return a value in such a
+way as to be both efficient and correct, it is more sensible for it to
+return no value at all and to require clients to use <code>top()</code> to
+inspect the value at the top of the <code>priority_queue</code>.
+\section See_also See also
+<code>\ref stldoc_stack</code>, <code>\ref stldoc_queue</code>, <code>\ref stldoc_set</code>,
+<code>\ref stldoc_make_heap</code>, <code>\ref stldoc_push_heap</code>, <code>\ref stldoc_pop_heap</code>, <code>\ref stldoc_is_heap</code>,
+<code>\ref stldoc_sort</code>, \ref stldoc_is_sorted,
+\ref stldoc_Container, \ref stldoc_SortedAssociativeContainer, \ref stldoc_Sequence
+
+
+*/

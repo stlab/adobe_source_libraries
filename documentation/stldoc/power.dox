@@ -1,0 +1,105 @@
+/** \page stldoc_power power
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Power</code> is an overloaded name; there are actually two <code>power</code>
+functions.
+\code
+template <class T, class Integer>
+inline T power(T x, Integer n);
+
+template <class T, class Integer, class MonoidOperation>
+T power(T x, Integer n, MonoidOperation op);
+\endcode
+\section Description Description
+<code>Power</code> is generalized exponentiation: it raises the value <code>x</code>
+to the power <code>n</code>, where <code>n</code> is a non-negative integer.  
+<p>
+The first version of <code>power</code>
+returns <code>x</code> raised to the <code>n</code>th power; that is, it returns
+<code>x * x ... * x</code>, where <code>x</code> is repeated <code>n</code> times. <A href="#1">[1]</A>  If
+<code>n == 0</code>, then it returns <code>\ref stldoc_MonoidOperation(\ref stldoc_multiplies&lt;T&gt;())</code>.
+<p>
+The second version of <code>power</code> is just like the first except
+that it uses an arbitrary \ref stldoc_MonoidOperation instead of 
+<code>\ref stldoc_multiplies&lt;T&gt;</code>, returning <code>\ref stldoc_MonoidOperation\zwj(op)</code>
+when <code>n == 0</code>.
+<p>
+<b>Important note</b>: <code>power</code> does not assume that multiplication is
+commutative, but it does rely crucially on the fact that
+multiplication is associative.  If you have defined <code>*</code> or
+<code>\ref stldoc_MonoidOperation</code> to be a non-associative operation, then <code>power</code>
+<i>will give you the wrong answer</i>.  <A href="#2">[2]</A>
+\section Definition Definition
+Defined in the standard header <A href="numeric">numeric</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.  This function is an SGI
+extension; it is not part of the C++ standard.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>\ref stldoc_multiplies&lt;T&gt;</code> is a model of \ref stldoc_MonoidOperation.
+<li>
+<code>Integer</code> is an integral type.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>MonoidOperation</code> is a model of \ref stldoc_MonoidOperation.
+<li>
+<code>T</code> is <code>MonoidOperation</code>'s argument type.
+<li>
+<code>n</code> is an integral type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>n &gt;= 0</code>.
+</ul>
+\section Complexity Complexity
+The number of multiplications (or, in the case of the second version,
+the number of applications of <code>MonoidOperation</code>) is <code>lg(n) + nu(n)</code>
+where <code>lg</code> is the base 2 logarithm and <code>nu(n)</code> is the number of 
+<code>1</code>s in the binary representation of <code>n</code>. <A href="#3">[3]</A>
+\section Example Example
+\code
+int main() {
+  cout << "2 ** 30 = " << power(2, 30) << endl;
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+This is a conceptual description of what <code>power</code>'s return value 
+is; it is not how <code>power</code> is actually implemented.  If <code>power</code>
+were implemented that way then it would require <code>n-1</code> multiplications,
+which would be grossly inefficient.  <code>Power</code> is implemented using
+the &quot;Russian peasant algorithm&quot;, which requires only <code>O(log n)</code>
+multiplications.
+See section 4.6.3 of Knuth (D. E. Knuth, <i>The Art of Computer
+Programming.  Volume 2: Seminumerical Algorithms</i>, 
+Addison-Wesley, 1981) for a discussion.
+<p><A name="2">[2]</A>
+See the \ref stldoc_MonoidOperation requirements for a discussion of associativity.
+<p><A name="3">[3]</A>
+This is in fact not the minimum possible number of multiplications:
+it is possible to compute the fifteenth power of <code>x</code> using only
+five multiplications, but <code>power(x, 15)</code> uses six.  
+\section See_also See also
+\ref stldoc_MonoidOperation, 
+<code>\ref stldoc_multiplies</code>, 
+<code>\ref stldoc_plus</code>
+
+
+*/

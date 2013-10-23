@@ -1,0 +1,176 @@
+/** \page stldoc_merge merge
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Merge</code> is an overloaded name: there are actually two <code>merge</code> functions.
+\code
+template <class InputIterator1, class InputIterator2, class OutputIterator>
+OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
+                     InputIterator2 first2, InputIterator2 last2,
+                     OutputIterator result);
+
+template <class InputIterator1, class InputIterator2, class OutputIterator,
+          class StrictWeakOrdering>
+OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
+                     InputIterator2 first2, InputIterator2 last2,
+                     OutputIterator result, StrictWeakOrdering comp);
+\endcode
+\section Description Description
+<code>Merge</code> combines two sorted ranges <code>[first1, last1)</code> and 
+<code>[first2, last2)</code> into a single sorted range.  That is, it copies
+elements from <code>[first1, last1)</code> and <code>[first2, last2)</code> into
+<code>[result, result + (last1 - first1) + (last2 - first2))</code> such that
+the resulting range is in ascending order.  
+<code>Merge</code> is stable, meaning both that
+the relative order of elements within each input range is preserved, 
+and that for equivalent <A href="#1">[1]</A> elements in both input ranges the element
+from the first range precedes the element from the second.
+The return value is <code>result + (last1 - first1) + (last2 - first2)</code>.
+<p>
+The two versions of <code>merge</code> differ in how elements are compared.
+The first version uses <code>operator&lt;</code>.  That is, the input ranges and
+the output range satisfy the condition that for every pair of 
+iterators <code>i</code> and <code>j</code> such that <code>i</code> precedes <code>j</code>, <code>*j &lt; *i</code> is <code>false</code>.
+The second version uses the \ref stldoc_functors <code>comp</code>.  
+That is, the input ranges and the output range satisfy the condition 
+that for every pair of 
+iterators <code>i</code> and <code>j</code> such that <code>i</code> precedes <code>j</code>, <code>comp(*j, *i)</code> is <code>false</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>InputIterator1</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator2</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator1</code>'s value type is the same type as <code>InputIterator2</code>'s
+   value type.
+<li>
+<code>InputIterator1</code>'s value type is a model of \ref stldoc_LessThanComparable.
+<li>
+The ordering on objects of <code>InputIterator1</code>'s value type is a
+   <i>strict weak ordering</i>, as defined in the \ref stldoc_LessThanComparable
+   requirements.
+<li>
+<code>InputIterator1</code>'s value type is convertible to a type in <code>OutputIterator</code>'s
+   set of value types.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>InputIterator1</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator2</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator1</code>'s value type is the same type as <code>InputIterator2</code>'s
+   value type.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>InputIterator1</code>'s value type is convertible to <code>StrictWeakOrdering</code>'s
+   argument type.
+<li>
+<code>InputIterator1</code>'s value type is convertible to a type in <code>OutputIterator</code>'s
+   set of value types.
+</ul>
+\section Preconditions Preconditions
+For the first version:
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first1, last1)</code> is in ascending order.  That is, for every pair
+  of iterators <code>i</code> and <code>j</code> in <code>[first1, last1)</code> such that <code>i</code> precedes
+  <code>j</code>, <code>*j &lt; *i</code> is <code>false</code>.
+<li>
+<code>[first2, last2)</code> is a valid range.
+<li>
+<code>[first2, last2)</code> is in ascending order.  That is, for every pair
+  of iterators <code>i</code> and <code>j</code> in <code>[first2, last2)</code> such that <code>i</code> precedes
+  <code>j</code>, <code>*j &lt; *i</code> is <code>false</code>.
+<li>
+The ranges <code>[first1, last1)</code> and
+   <code>[result, result + (last1 - first1) + (last2 - first2))</code> do not overlap.
+<li>
+The ranges <code>[first2, last2)</code> and
+   <code>[result, result + (last1 - first1) + (last2 - first2))</code> do not overlap.
+<li>
+There is enough space to hold all of the elements being copied.
+   More formally, the requirement is that 
+   <code>[result, result + (last1 - first1) + (last2 - first2))</code> is a valid range. 
+</ul>
+For the second version:
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first1, last1)</code> is in ascending order.  That is, for every pair
+  of iterators <code>i</code> and <code>j</code> in <code>[first1, last1)</code> such that <code>i</code> precedes
+  <code>j</code>, <code>comp(*j, *i)</code> is <code>false</code>.
+<li>
+<code>[first2, last2)</code> is a valid range.
+<li>
+<code>[first2, last2)</code> is in ascending order.  That is, for every pair
+  of iterators <code>i</code> and <code>j</code> in <code>[first2, last2)</code> such that <code>i</code> precedes
+  <code>j</code>, <code>comp(*j, *i)</code> is <code>false</code>.
+<li>
+The ranges <code>[first1, last1)</code> and
+   <code>[result, result + (last1 - first1) + (last2 - first2))</code> do not overlap.
+<li>
+The ranges <code>[first2, last2)</code> and
+   <code>[result, result + (last1 - first1) + (last2 - first2))</code> do not overlap.
+<li>
+There is enough space to hold all of the elements being copied.
+   More formally, the requirement is that 
+   <code>[result, result + (last1 - first1) + (last2 - first2))</code> is a valid range. 
+</ul>
+\section Complexity Complexity
+Linear.  No comparisons if both <code>[first1, last1)</code> and <code>[first2, last2)</code>
+are empty ranges, otherwise at most <code>(last1 - first1) + (last2 -
+first2) - 1</code> comparisons.
+\section Example Example
+\code
+int main()
+{
+  int A1[] = { 1, 3, 5, 7 };
+  int A2[] = { 2, 4, 6, 8 };
+  const int N1 = sizeof(A1) / sizeof(int);
+  const int N2 = sizeof(A2) / sizeof(int);
+
+  merge(A1, A1 + N1, A2, A2 + N2, 
+        ostream_iterator<int>(cout, " "));
+  // The output is "1 2 3 4 5 6 7 8"
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note that you may use an ordering that is a strict weak ordering
+but not a total ordering; that is, there might be values <code>x</code> and <code>y</code>
+such that <code>x &lt; y</code>, <code>x &gt; y</code>, and <code>x == y</code> are all false.  (See the
+\ref stldoc_LessThanComparable requirements for a more complete discussion.)
+Two elements <code>x</code> and <code>y</code> are <i>equivalent</i> if neither <code>x &lt; y</code> nor
+<code>y &lt; x</code>.  If you're using a total ordering, however (if you're
+using <code>strcmp</code>, for example, or if you're using ordinary arithmetic
+comparison on integers), then you can ignore this technical
+distinction: for a total ordering, equality and equivalence are
+the same.
+\section See_also See also
+<code>\ref stldoc_inplace_merge</code>, <code>\ref stldoc_set_union</code>, <code>\ref stldoc_sort</code>
+
+
+*/

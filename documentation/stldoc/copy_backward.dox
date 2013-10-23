@@ -1,0 +1,83 @@
+/** \page stldoc_copy_backward copy_backward
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class BidirectionalIterator1, class BidirectionalIterator2>
+BidirectionalIterator2 copy_backward(BidirectionalIterator1 first, 
+                                     BidirectionalIterator1 last, 
+                                     BidirectionalIterator2 result);
+\endcode
+\section Description Description
+<code>Copy_backward</code> copies elements from the range <code>[first, last)</code> to the range
+<code>[result - (last - first), result)</code> <A href="#1">[1]</A>.  That is, it performs the 
+assignments <code>*(result - 1) = *(last - 1)</code>, <code>*(result - 2) = *(last - 2)</code>, 
+and so on.   Generally, for every integer <code>n</code> from <code>0</code> to <code>last - first</code>,
+<code>copy_backward</code> performs the assignment <code>*(result - n - 1) = *(last - n - 1)</code>.
+Assignments are performed from the end of the input sequence to the 
+beginning, <i>i.e.</i> in order of increasing <code>n</code>. <A href="#2">[2]</A>
+<p>
+The return value is <code>result - (last - first)</code>
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+BidirectionalIterator1 and BidirectionalIterator2 are
+   models of \ref stldoc_BidirectionalIterator.
+<li>
+BidirectionalIterator1's value type is convertible to
+   BidirectionalIterator2's value type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>result</code> is not an iterator within the range <code>[first, last)</code>.
+<li>
+There is enough space to hold all of the elements being copied.
+   More formally, the requirement is that 
+   <code>[result - (last - first), result)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>last - first</code> assignments are performed.
+\section Example Example
+\code
+Vector<int> V(15);
+iota(V.begin(), V.end(), 1);
+copy_backward(V.begin(), V.begin() + 10, V.begin() + 15);
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+<code>Result</code> is an iterator that points to the <i>end</i> of the output
+range.  This is highly unusual: in all other STL algorithms that
+denote an output range by a single iterator, that iterator points to
+the beginning of the range.
+<p><A name="2">[2]</A>
+The order of assignments matters in the case where the input and
+output ranges overlap:  <code>copy_backward</code> may not be used if <code>result</code> is
+in the range <code>[first, last)</code>.  That is, it may not be used if the
+end of the output range overlaps with the input range, but it may be
+used if the beginning of the output range overlaps with the input
+range; <code>\ref stldoc_copy</code> has opposite restrictions.
+If the two ranges are completely nonoverlapping, of course, then
+either algorithm may be used.
+\section See_also See also
+<code>\ref stldoc_copy</code>, <code>\ref stldoc_copy_n</code>
+
+
+*/

@@ -1,0 +1,32 @@
+diff -wur --unidirectional-new-file -x status -x adobe_information -xp4config -x bin.ntx86 -x bin.cygwinx86 -x bin.v2 ../diffable_boost_1_44_0/boost/filesystem/v2/operations.hpp ../boost_libraries/boost/filesystem/v2/operations.hpp
+--- ../diffable_boost_1_44_0/boost/filesystem/v2/operations.hpp	2010-07-06 04:17:54.000000000 -0700
++++ ../boost_libraries/boost/filesystem/v2/operations.hpp	2010-09-09 19:01:32.987393800 -0700
+@@ -1188,7 +1188,9 @@
+     using filesystem2::copy_file;
+     using filesystem2::copy_option;
+     using filesystem2::create_directory;
++#if defined(BOOST_FS_HARD_LINK) 
+     using filesystem2::create_hard_link;
++#endif 
+     using filesystem2::create_symlink;
+     using filesystem2::current_path;
+     using filesystem2::directory_entry;
+diff -wur --unidirectional-new-file -x status -x adobe_information -xp4config -x bin.ntx86 -x bin.cygwinx86 -x bin.v2 ../diffable_boost_1_44_0/tools/build/v2/tools/msvc.jam ../boost_libraries/tools/build/v2/tools/msvc.jam
+--- ../diffable_boost_1_44_0/tools/build/v2/tools/msvc.jam	2010-02-17 01:49:08.000000000 -0800
++++ ../boost_libraries/tools/build/v2/tools/msvc.jam	2010-11-01 14:25:00.000000000 -0700
+@@ -42,6 +42,15 @@
+ 
+ type.register PDB : pdb ;
+ 
++
++# bring in rules for testing 
++import testing ; 
++import feature ; 
++
++feature.feature stl-security-theater : off on : propagated link-incompatible ; 
++toolset.flags msvc.compile C++FLAGS <stl-security-theater>off : /D_SECURE_SCL=0 ; 
++toolset.flags msvc.compile C++FLAGS <stl-security-theater>on : /D_SECURE_SCL=1 ; 
++
+ ################################################################################
+ #
+ # Public rules.

@@ -1,0 +1,5 @@
+# Jamfile for building the unicode smoke test app
+
+project adobe/unicode ;
+
+run main.cpp ;

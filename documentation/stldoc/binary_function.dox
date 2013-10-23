@@ -1,0 +1,180 @@
+/** \page stldoc_binary_function binary_function
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Binary_function</code> is an empty base class: it contains no member
+functions or member variables, but only type information.  The
+only reason it exists is to make it more convenient to define
+types that are models of the concept \ref stldoc_AdaptableBinaryFunction.
+Specifically, any model of \ref stldoc_AdaptableBinaryFunction must define
+nested <code>typedef</code>s.  Those <code>typedef</code>s are provided by the base
+class <code>binary_function</code>.
+\section Example Example
+\code
+struct exponentiate : public binary_function<double, double, double> {
+    double operator()(double x, double y) { return pow(x, y); }
+};
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>Arg1</code>
+</td>
+<td valign="top">
+The function object's first argument type
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Arg2</code>
+</td>
+<td valign="top">
+The function object's second argument type
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Result</code>
+</td>
+<td valign="top">
+The function object's result type
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_Assignable, \ref stldoc_DefaultConstructible
+\section Type_requirements Type requirements
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>first_argument_type</code>
+</td>
+<td valign="top">
+<code>unary_function</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>second_argument_type</code>
+</td>
+<td valign="top">
+<code>unary_function</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+<code>unary_function</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_Assignable and \ref stldoc_DefaultConstructible
+requirements, but are specific to 
+<code>unary_function</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>first_argument_type</code>
+</td>
+<td valign="top">
+The function object's first argument type.  This is a <code>typedef</code> for the
+   template parameter <code>Arg1</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>second_argument_type</code>
+</td>
+<td valign="top">
+The function object's second argument type.  This is a <code>typedef</code> for the
+   template parameter <code>Arg2</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+The function object's result type.  This is a <code>typedef</code> for the
+   template parameter <code>Result</code>.
+</td>
+</tr>
+</table>
+\section Notes Notes
+\section See_also See also
+The \ref stldoc_functors overview, \ref stldoc_AdaptableBinaryFunction,
+<code>\ref stldoc_unary_function</code>
+
+
+*/

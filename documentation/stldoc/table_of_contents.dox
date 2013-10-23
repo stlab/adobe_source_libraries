@@ -1,0 +1,284 @@
+/** \page stldoc_table_of_contents SGI STL Table Of Contents
+
+- \ref stldoc_stl_introduction
+- \ref stldoc_doc_introduction
+
+- Containers
+    - Concepts
+        - General concepts
+            - \ref stldoc_Container
+            - \ref stldoc_ForwardContainer
+            - \ref stldoc_ReversibleContainer
+            - \ref stldoc_RandomAccessContainer
+        - Sequences
+            - \ref stldoc_Sequence
+            - \ref stldoc_FrontInsertionSequence
+            - \ref stldoc_BackInsertionSequence
+        - Associative Containers
+            - \ref stldoc_AssociativeContainer
+            - \ref stldoc_SimpleAssociativeContainer
+            - \ref stldoc_PairAssociativeContainer
+            - \ref stldoc_SortedAssociativeContainer
+            - \ref stldoc_HashedAssociativeContainer
+            - \ref stldoc_HashFunction
+            - \ref stldoc_UniqueAssociativeContainer
+            - \ref stldoc_MultipleAssociativeContainer
+            - \ref stldoc_UniqueSortedAssociativeContainer
+            - \ref stldoc_MultipleSortedAssociativeContainer
+            - \ref stldoc_UniqueHashedAssociativeContainer
+            - \ref stldoc_MultipleHashedAssociativeContainer
+    - Container classes
+        - Sequences
+            - \ref stldoc_Vector
+            - \ref stldoc_Deque
+            - \ref stldoc_List
+                - \ref stldoc_Slist
+            - \ref stldoc_bit_vector
+        - Associative Containers
+            - \ref stldoc_set
+            - \ref stldoc_Map
+            - \ref stldoc_multiset
+            - \ref stldoc_Multimap
+            - \ref stldoc_hash_set
+            - \ref stldoc_hash_map
+            - \ref stldoc_hash_multiset
+            - \ref stldoc_hash_multimap
+            - \ref stldoc_hash
+    - String package
+        - \ref stldoc_character_traits
+        - \ref stldoc_char_traits
+        - \ref stldoc_basic_string
+            - \ref stldoc_Rope
+    - Container adaptors
+        - \ref stldoc_stack
+        - \ref stldoc_queue
+        - \ref stldoc_priority_queue
+        - \ref stldoc_bitset
+
+- Iterators
+    - \ref stldoc_Iterators
+    - Concepts
+        - \ref stldoc_trivial
+        - \ref stldoc_InputIterator
+        - \ref stldoc_OutputIterator
+        - \ref stldoc_ForwardIterator
+        - \ref stldoc_BidirectionalIterator
+        - \ref stldoc_RandomAccessIterator
+    - Iterator Tags
+        - \ref stldoc_iterator_tags
+        - \ref stldoc_iterator_traits
+        - \ref stldoc_iterator_category
+        - \ref stldoc_distance_type
+        - \ref stldoc_value_type
+    - Iterator tag classes
+        - \ref stldoc_input_iterator_tag
+        - \ref stldoc_output_iterator_tag
+        - \ref stldoc_forward_iterator_tag
+        - \ref stldoc_bidirectional_iterator_tag
+        - \ref stldoc_random_access_iterator_tag
+    - Iterator base classes
+        - \ref stldoc_input_iterator
+        - \ref stldoc_output_iterator
+        - \ref stldoc_forward_iterator
+        - \ref stldoc_bidirectional_iterator
+        - \ref stldoc_random_access_iterator
+    - Iterator functions
+        - \ref stldoc_distance
+        - \ref stldoc_advance
+    - Iterator classes
+        - \ref stldoc_istream_iterator
+        - \ref stldoc_ostream_iterator
+        - \ref stldoc_front_insert_iterator
+        - \ref stldoc_back_insert_iterator
+        - \ref stldoc_insert_iterator
+        - \ref stldoc_ReverseIterator
+        - \ref stldoc_ReverseBidirectionalIterator
+        - \ref stldoc_raw_storage_iterator
+        - \ref stldoc_sequence_buffer
+
+- Algorithms
+    - Non-mutating algorithms
+        - \ref stldoc_for_each
+        - \ref stldoc_find
+        - \ref stldoc_find_if
+        - \ref stldoc_adjacent_find
+        - \ref stldoc_find_first_of
+        - \ref stldoc_count
+        - \ref stldoc_count_if
+        - \ref stldoc_mismatch
+        - \ref stldoc_equal
+        - \ref stldoc_search
+        - \ref stldoc_search_n
+        - \ref stldoc_find_end
+    - Mutating algorithms
+        - \ref stldoc_copy
+        - \ref stldoc_copy_n
+        - \ref stldoc_copy_backward
+        - Swap
+            - \ref stldoc_swap
+            - \ref stldoc_iter_swap
+            - \ref stldoc_swap_ranges
+        - \ref stldoc_transform
+        - Replace
+            - \ref stldoc_replace
+            - \ref stldoc_replace_if
+            - \ref stldoc_replace_copy
+            - \ref stldoc_replace_copy_if
+        - \ref stldoc_fill
+        - \ref stldoc_fill_n
+        - \ref stldoc_generate
+        - \ref stldoc_generate_n
+        - Remove
+            - \ref stldoc_remove
+            - \ref stldoc_remove_if
+            - \ref stldoc_remove_copy
+            - \ref stldoc_remove_copy_if
+        - \ref stldoc_unique
+        - \ref stldoc_unique_copy
+        - \ref stldoc_reverse
+        - \ref stldoc_reverse_copy
+        - \ref stldoc_rotate
+        - \ref stldoc_rotate_copy
+        - \ref stldoc_random_shuffle
+        - \ref stldoc_random_sample
+        - \ref stldoc_random_sample_n
+        - \ref stldoc_partition
+        - \ref stldoc_stable_partition
+    - Sorting 
+        - Sort
+            - \ref stldoc_sort
+            - \ref stldoc_stable_sort
+            - \ref stldoc_partial_sort
+            - \ref stldoc_partial_sort_copy
+            - \ref stldoc_is_sorted
+        - \ref stldoc_nth_element
+        - Binary search
+            - \ref stldoc_lower_bound
+            - \ref stldoc_upper_bound
+            - \ref stldoc_equal_range
+            - \ref stldoc_binary_search
+        - \ref stldoc_merge
+        - \ref stldoc_inplace_merge
+        - Set operations on sorted ranges
+            - \ref stldoc_includes
+            - \ref stldoc_set_union
+            - \ref stldoc_set_intersection
+            - \ref stldoc_set_difference
+            - \ref stldoc_set_symmetric_difference
+        - Heap operations
+            - \ref stldoc_push_heap
+            - \ref stldoc_pop_heap
+            - \ref stldoc_make_heap
+            - \ref stldoc_sort_heap
+            - \ref stldoc_is_heap
+        - Minimum and maximum
+            - \ref stldoc_min
+            - \ref stldoc_max
+            - \ref stldoc_min_element
+            - \ref stldoc_max_element
+        - \ref stldoc_lexicographical_compare
+        - \ref stldoc_lexicographical_compare_3way
+        - \ref stldoc_next_permutation
+        - \ref stldoc_prev_permutation
+    - Generalized numeric algorithms
+        - \ref stldoc_iota
+        - \ref stldoc_accumulate
+        - \ref stldoc_inner_product
+        - \ref stldoc_partial_sum
+        - \ref stldoc_adjacent_difference
+        - \ref stldoc_power
+
+- Function Objects
+    - \ref stldoc_functors
+    - Concepts
+        - \ref stldoc_Generator
+        - \ref stldoc_UnaryFunction
+        - \ref stldoc_BinaryFunction
+        - \ref stldoc_AdaptableGenerator
+        - \ref stldoc_AdaptableUnaryFunction
+        - \ref stldoc_AdaptableBinaryFunction
+        - Predicates
+            - \ref stldoc_Predicate
+            - \ref stldoc_BinaryPredicate
+            - \ref stldoc_AdaptablePredicate
+            - \ref stldoc_AdaptableBinaryPredicate
+            - \ref stldoc_StrictWeakOrdering
+        - \ref stldoc_MonoidOperation
+        - \ref stldoc_RandomNumberGenerator
+    - Predefined function objects
+        - Arithmetic operations
+            - \ref stldoc_plus
+            - \ref stldoc_minus
+            - \ref stldoc_multiplies (formerly called "times")
+            - \ref stldoc_divides
+            - \ref stldoc_modulus
+            - \ref stldoc_negate
+        - Comparisons
+            - \ref stldoc_equal_to
+            - \ref stldoc_not_equal_to
+            - \ref stldoc_less
+            - \ref stldoc_greater
+            - \ref stldoc_less_equal
+            - \ref stldoc_greater_equal
+        - Logical operations
+            - \ref stldoc_logical_and
+            - \ref stldoc_logical_or
+            - \ref stldoc_logical_not
+        - Generalized identity operations
+            - \ref stldoc_identity
+            - \ref stldoc_project1st
+            - \ref stldoc_project2nd
+            - \ref stldoc_select1st
+            - \ref stldoc_select2nd
+        - \ref stldoc_subtractive_rng
+        - Function object adaptors
+            - \ref stldoc_binder1st
+            - \ref stldoc_binder2nd
+            - \ref stldoc_ptr_fun
+            - \ref stldoc_pointer_to_unary_function
+            - \ref stldoc_pointer_to_binary_function
+            - \ref stldoc_unary_negate
+            - \ref stldoc_binary_negate
+            - \ref stldoc_unary_compose
+            - \ref stldoc_binary_compose
+        - Member function adaptors
+            - \ref stldoc_mem_fun_t
+            - \ref stldoc_mem_fun_ref_t
+            - \ref stldoc_mem_fun1_t
+            - \ref stldoc_mem_fun1_ref_t
+
+- Utilities
+    - Concepts
+        - \ref stldoc_Assignable
+        - \ref stldoc_DefaultConstructible
+        - \ref stldoc_EqualityComparable
+        - \ref stldoc_LessThanComparable
+    - Functions
+        - \ref stldoc_operators
+    - Classes
+        - \ref stldoc_pair
+
+- Memory Allocation
+    - Classes
+        - \ref stldoc_Allocators
+        - \ref stldoc_raw_storage_iterator
+    - Functions
+        - \ref stldoc_construct
+        - \ref stldoc_destroy
+        - \ref stldoc_uninitialized_copy
+        - \ref stldoc_uninitialized_copy_n
+        - \ref stldoc_uninitialized_fill
+        - \ref stldoc_uninitialized_fill_n
+        - \ref stldoc_temporary_buffer
+        - \ref stldoc_get_temporary_buffer
+        - \ref stldoc_return_temporary_buffer
+
+- Design documents
+    - \ref stldoc_thread_safety
+    - \ref stldoc_complexity
+    - \ref stldoc_string_discussion
+
+- \ref stldoc_stl_index_cat
+- \ref stldoc_stl_index
+
+*/

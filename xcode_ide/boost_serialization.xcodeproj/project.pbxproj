@@ -1,0 +1,497 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		E5B507EB0AD5893900488F72 /* basic_archive_impl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507C50AD5893900488F72 /* basic_archive_impl.cpp */; };
+		E5B507EC0AD5893900488F72 /* basic_archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507C60AD5893900488F72 /* basic_archive.cpp */; };
+		E5B507ED0AD5893900488F72 /* basic_iarchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507C70AD5893900488F72 /* basic_iarchive.cpp */; };
+		E5B507EE0AD5893900488F72 /* basic_iserializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507C80AD5893900488F72 /* basic_iserializer.cpp */; };
+		E5B507EF0AD5893900488F72 /* basic_oarchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507C90AD5893900488F72 /* basic_oarchive.cpp */; };
+		E5B507F00AD5893900488F72 /* basic_oserializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507CA0AD5893900488F72 /* basic_oserializer.cpp */; };
+		E5B507F10AD5893900488F72 /* basic_pointer_iserializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507CB0AD5893900488F72 /* basic_pointer_iserializer.cpp */; };
+		E5B507F20AD5893900488F72 /* basic_pointer_oserializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507CC0AD5893900488F72 /* basic_pointer_oserializer.cpp */; };
+		E5B507F30AD5893900488F72 /* basic_serializer_map.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507CD0AD5893900488F72 /* basic_serializer_map.cpp */; };
+		E5B507F40AD5893900488F72 /* basic_text_iprimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507CE0AD5893900488F72 /* basic_text_iprimitive.cpp */; };
+		E5B507F50AD5893900488F72 /* basic_text_oprimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507CF0AD5893900488F72 /* basic_text_oprimitive.cpp */; };
+		E5B507F60AD5893900488F72 /* basic_text_wiprimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507D00AD5893900488F72 /* basic_text_wiprimitive.cpp */; };
+		E5B507F70AD5893900488F72 /* basic_text_woprimitive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507D10AD5893900488F72 /* basic_text_woprimitive.cpp */; };
+		E5B507F80AD5893900488F72 /* basic_xml_archive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507D20AD5893900488F72 /* basic_xml_archive.cpp */; };
+		E5B507F90AD5893900488F72 /* binary_iarchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507D40AD5893900488F72 /* binary_iarchive.cpp */; };
+		E5B507FA0AD5893900488F72 /* binary_oarchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507D50AD5893900488F72 /* binary_oarchive.cpp */; };
+		E5B507FB0AD5893900488F72 /* binary_wiarchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507D60AD5893900488F72 /* binary_wiarchive.cpp */; };
+		E5B507FC0AD5893900488F72 /* binary_woarchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507D70AD5893900488F72 /* binary_woarchive.cpp */; };
+		E5B507FD0AD5893900488F72 /* codecvt_null.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507D80AD5893900488F72 /* codecvt_null.cpp */; };
+		E5B507FE0AD5893900488F72 /* extended_type_info_no_rtti.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507D90AD5893900488F72 /* extended_type_info_no_rtti.cpp */; };
+		E5B507FF0AD5893900488F72 /* extended_type_info_typeid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507DA0AD5893900488F72 /* extended_type_info_typeid.cpp */; };
+		E5B508000AD5893900488F72 /* extended_type_info.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507DB0AD5893900488F72 /* extended_type_info.cpp */; };
+		E5B508030AD5893900488F72 /* stl_port.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507DE0AD5893900488F72 /* stl_port.cpp */; };
+		E5B508040AD5893900488F72 /* text_iarchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507DF0AD5893900488F72 /* text_iarchive.cpp */; };
+		E5B508050AD5893900488F72 /* text_oarchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507E00AD5893900488F72 /* text_oarchive.cpp */; };
+		E5B508060AD5893900488F72 /* text_wiarchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507E10AD5893900488F72 /* text_wiarchive.cpp */; };
+		E5B508070AD5893900488F72 /* text_woarchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507E20AD5893900488F72 /* text_woarchive.cpp */; };
+		E5B508080AD5893900488F72 /* utf8_codecvt_facet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507E30AD5893900488F72 /* utf8_codecvt_facet.cpp */; };
+		E5B508090AD5893900488F72 /* void_cast.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507E40AD5893900488F72 /* void_cast.cpp */; };
+		E5B5080A0AD5893900488F72 /* xml_grammar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507E50AD5893900488F72 /* xml_grammar.cpp */; };
+		E5B5080B0AD5893900488F72 /* xml_iarchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507E60AD5893900488F72 /* xml_iarchive.cpp */; };
+		E5B5080C0AD5893900488F72 /* xml_oarchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507E70AD5893900488F72 /* xml_oarchive.cpp */; };
+		E5B5080D0AD5893900488F72 /* xml_wgrammar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507E80AD5893900488F72 /* xml_wgrammar.cpp */; };
+		E5B5080E0AD5893900488F72 /* xml_wiarchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507E90AD5893900488F72 /* xml_wiarchive.cpp */; };
+		E5B5080F0AD5893900488F72 /* xml_woarchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E5B507EA0AD5893900488F72 /* xml_woarchive.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = adobe_xconfig_staticlib.xcconfig; sourceTree = "<group>"; };
+		CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; path = adobe_debug.xcconfig; sourceTree = "<group>"; };
+		CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; path = adobe_release.xcconfig; sourceTree = "<group>"; };
+		D2AAC046055464E500DB518D /* libboost_serialization.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libboost_serialization.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5B507C50AD5893900488F72 /* basic_archive_impl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic_archive_impl.cpp; path = ../../boost_libraries/libs/serialization/src/basic_archive_impl.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507C60AD5893900488F72 /* basic_archive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic_archive.cpp; path = ../../boost_libraries/libs/serialization/src/basic_archive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507C70AD5893900488F72 /* basic_iarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic_iarchive.cpp; path = ../../boost_libraries/libs/serialization/src/basic_iarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507C80AD5893900488F72 /* basic_iserializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic_iserializer.cpp; path = ../../boost_libraries/libs/serialization/src/basic_iserializer.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507C90AD5893900488F72 /* basic_oarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic_oarchive.cpp; path = ../../boost_libraries/libs/serialization/src/basic_oarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507CA0AD5893900488F72 /* basic_oserializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic_oserializer.cpp; path = ../../boost_libraries/libs/serialization/src/basic_oserializer.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507CB0AD5893900488F72 /* basic_pointer_iserializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic_pointer_iserializer.cpp; path = ../../boost_libraries/libs/serialization/src/basic_pointer_iserializer.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507CC0AD5893900488F72 /* basic_pointer_oserializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic_pointer_oserializer.cpp; path = ../../boost_libraries/libs/serialization/src/basic_pointer_oserializer.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507CD0AD5893900488F72 /* basic_serializer_map.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic_serializer_map.cpp; path = ../../boost_libraries/libs/serialization/src/basic_serializer_map.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507CE0AD5893900488F72 /* basic_text_iprimitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic_text_iprimitive.cpp; path = ../../boost_libraries/libs/serialization/src/basic_text_iprimitive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507CF0AD5893900488F72 /* basic_text_oprimitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic_text_oprimitive.cpp; path = ../../boost_libraries/libs/serialization/src/basic_text_oprimitive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507D00AD5893900488F72 /* basic_text_wiprimitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic_text_wiprimitive.cpp; path = ../../boost_libraries/libs/serialization/src/basic_text_wiprimitive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507D10AD5893900488F72 /* basic_text_woprimitive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic_text_woprimitive.cpp; path = ../../boost_libraries/libs/serialization/src/basic_text_woprimitive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507D20AD5893900488F72 /* basic_xml_archive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = basic_xml_archive.cpp; path = ../../boost_libraries/libs/serialization/src/basic_xml_archive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507D30AD5893900488F72 /* basic_xml_grammar.ipp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = basic_xml_grammar.ipp; path = ../../boost_libraries/libs/serialization/src/basic_xml_grammar.ipp; sourceTree = SOURCE_ROOT; };
+		E5B507D40AD5893900488F72 /* binary_iarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = binary_iarchive.cpp; path = ../../boost_libraries/libs/serialization/src/binary_iarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507D50AD5893900488F72 /* binary_oarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = binary_oarchive.cpp; path = ../../boost_libraries/libs/serialization/src/binary_oarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507D60AD5893900488F72 /* binary_wiarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = binary_wiarchive.cpp; path = ../../boost_libraries/libs/serialization/src/binary_wiarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507D70AD5893900488F72 /* binary_woarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = binary_woarchive.cpp; path = ../../boost_libraries/libs/serialization/src/binary_woarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507D80AD5893900488F72 /* codecvt_null.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = codecvt_null.cpp; path = ../../boost_libraries/libs/serialization/src/codecvt_null.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507D90AD5893900488F72 /* extended_type_info_no_rtti.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = extended_type_info_no_rtti.cpp; path = ../../boost_libraries/libs/serialization/src/extended_type_info_no_rtti.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507DA0AD5893900488F72 /* extended_type_info_typeid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = extended_type_info_typeid.cpp; path = ../../boost_libraries/libs/serialization/src/extended_type_info_typeid.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507DB0AD5893900488F72 /* extended_type_info.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = extended_type_info.cpp; path = ../../boost_libraries/libs/serialization/src/extended_type_info.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507DC0AD5893900488F72 /* polymorphic_iarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = polymorphic_iarchive.cpp; path = ../../boost_libraries/libs/serialization/src/polymorphic_iarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507DD0AD5893900488F72 /* polymorphic_oarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = polymorphic_oarchive.cpp; path = ../../boost_libraries/libs/serialization/src/polymorphic_oarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507DE0AD5893900488F72 /* stl_port.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stl_port.cpp; path = ../../boost_libraries/libs/serialization/src/stl_port.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507DF0AD5893900488F72 /* text_iarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = text_iarchive.cpp; path = ../../boost_libraries/libs/serialization/src/text_iarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507E00AD5893900488F72 /* text_oarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = text_oarchive.cpp; path = ../../boost_libraries/libs/serialization/src/text_oarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507E10AD5893900488F72 /* text_wiarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = text_wiarchive.cpp; path = ../../boost_libraries/libs/serialization/src/text_wiarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507E20AD5893900488F72 /* text_woarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = text_woarchive.cpp; path = ../../boost_libraries/libs/serialization/src/text_woarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507E30AD5893900488F72 /* utf8_codecvt_facet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = utf8_codecvt_facet.cpp; path = ../../boost_libraries/libs/serialization/src/utf8_codecvt_facet.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507E40AD5893900488F72 /* void_cast.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = void_cast.cpp; path = ../../boost_libraries/libs/serialization/src/void_cast.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507E50AD5893900488F72 /* xml_grammar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xml_grammar.cpp; path = ../../boost_libraries/libs/serialization/src/xml_grammar.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507E60AD5893900488F72 /* xml_iarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xml_iarchive.cpp; path = ../../boost_libraries/libs/serialization/src/xml_iarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507E70AD5893900488F72 /* xml_oarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xml_oarchive.cpp; path = ../../boost_libraries/libs/serialization/src/xml_oarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507E80AD5893900488F72 /* xml_wgrammar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xml_wgrammar.cpp; path = ../../boost_libraries/libs/serialization/src/xml_wgrammar.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507E90AD5893900488F72 /* xml_wiarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xml_wiarchive.cpp; path = ../../boost_libraries/libs/serialization/src/xml_wiarchive.cpp; sourceTree = SOURCE_ROOT; };
+		E5B507EA0AD5893900488F72 /* xml_woarchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xml_woarchive.cpp; path = ../../boost_libraries/libs/serialization/src/xml_woarchive.cpp; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D289987405E68DCB004EDB86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* boost_signals */ = {
+			isa = PBXGroup;
+			children = (
+				CE5C1FF1094795E800EB4BB6 /* xcconfigs */,
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6A0FF2B0290797F04C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = boost_signals;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				E5B507C50AD5893900488F72 /* basic_archive_impl.cpp */,
+				E5B507C60AD5893900488F72 /* basic_archive.cpp */,
+				E5B507C70AD5893900488F72 /* basic_iarchive.cpp */,
+				E5B507C80AD5893900488F72 /* basic_iserializer.cpp */,
+				E5B507C90AD5893900488F72 /* basic_oarchive.cpp */,
+				E5B507CA0AD5893900488F72 /* basic_oserializer.cpp */,
+				E5B507CB0AD5893900488F72 /* basic_pointer_iserializer.cpp */,
+				E5B507CC0AD5893900488F72 /* basic_pointer_oserializer.cpp */,
+				E5B507CD0AD5893900488F72 /* basic_serializer_map.cpp */,
+				E5B507CE0AD5893900488F72 /* basic_text_iprimitive.cpp */,
+				E5B507CF0AD5893900488F72 /* basic_text_oprimitive.cpp */,
+				E5B507D00AD5893900488F72 /* basic_text_wiprimitive.cpp */,
+				E5B507D10AD5893900488F72 /* basic_text_woprimitive.cpp */,
+				E5B507D20AD5893900488F72 /* basic_xml_archive.cpp */,
+				E5B507D30AD5893900488F72 /* basic_xml_grammar.ipp */,
+				E5B507D40AD5893900488F72 /* binary_iarchive.cpp */,
+				E5B507D50AD5893900488F72 /* binary_oarchive.cpp */,
+				E5B507D60AD5893900488F72 /* binary_wiarchive.cpp */,
+				E5B507D70AD5893900488F72 /* binary_woarchive.cpp */,
+				E5B507D80AD5893900488F72 /* codecvt_null.cpp */,
+				E5B507D90AD5893900488F72 /* extended_type_info_no_rtti.cpp */,
+				E5B507DA0AD5893900488F72 /* extended_type_info_typeid.cpp */,
+				E5B507DB0AD5893900488F72 /* extended_type_info.cpp */,
+				E5B507DC0AD5893900488F72 /* polymorphic_iarchive.cpp */,
+				E5B507DD0AD5893900488F72 /* polymorphic_oarchive.cpp */,
+				E5B507DE0AD5893900488F72 /* stl_port.cpp */,
+				E5B507DF0AD5893900488F72 /* text_iarchive.cpp */,
+				E5B507E00AD5893900488F72 /* text_oarchive.cpp */,
+				E5B507E10AD5893900488F72 /* text_wiarchive.cpp */,
+				E5B507E20AD5893900488F72 /* text_woarchive.cpp */,
+				E5B507E30AD5893900488F72 /* utf8_codecvt_facet.cpp */,
+				E5B507E40AD5893900488F72 /* void_cast.cpp */,
+				E5B507E50AD5893900488F72 /* xml_grammar.cpp */,
+				E5B507E60AD5893900488F72 /* xml_iarchive.cpp */,
+				E5B507E70AD5893900488F72 /* xml_oarchive.cpp */,
+				E5B507E80AD5893900488F72 /* xml_wgrammar.cpp */,
+				E5B507E90AD5893900488F72 /* xml_wiarchive.cpp */,
+				E5B507EA0AD5893900488F72 /* xml_woarchive.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC046055464E500DB518D /* libboost_serialization.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C6A0FF2B0290797F04C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+		CE5C1FF1094795E800EB4BB6 /* xcconfigs */ = {
+			isa = PBXGroup;
+			children = (
+				CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */,
+				CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */,
+				CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */,
+			);
+			name = xcconfigs;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC043055464E500DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC045055464E500DB518D /* boost_serialization */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "boost_serialization" */;
+			buildPhases = (
+				D2AAC043055464E500DB518D /* Headers */,
+				D2AAC044055464E500DB518D /* Sources */,
+				D289987405E68DCB004EDB86 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = boost_serialization;
+			productName = boost_signals;
+			productReference = D2AAC046055464E500DB518D /* libboost_serialization.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "boost_serialization" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* boost_signals */;
+			projectDirPath = "";
+			targets = (
+				D2AAC045055464E500DB518D /* boost_serialization */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC044055464E500DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E5B507EB0AD5893900488F72 /* basic_archive_impl.cpp in Sources */,
+				E5B507EC0AD5893900488F72 /* basic_archive.cpp in Sources */,
+				E5B507ED0AD5893900488F72 /* basic_iarchive.cpp in Sources */,
+				E5B507EE0AD5893900488F72 /* basic_iserializer.cpp in Sources */,
+				E5B507EF0AD5893900488F72 /* basic_oarchive.cpp in Sources */,
+				E5B507F00AD5893900488F72 /* basic_oserializer.cpp in Sources */,
+				E5B507F10AD5893900488F72 /* basic_pointer_iserializer.cpp in Sources */,
+				E5B507F20AD5893900488F72 /* basic_pointer_oserializer.cpp in Sources */,
+				E5B507F30AD5893900488F72 /* basic_serializer_map.cpp in Sources */,
+				E5B507F40AD5893900488F72 /* basic_text_iprimitive.cpp in Sources */,
+				E5B507F50AD5893900488F72 /* basic_text_oprimitive.cpp in Sources */,
+				E5B507F60AD5893900488F72 /* basic_text_wiprimitive.cpp in Sources */,
+				E5B507F70AD5893900488F72 /* basic_text_woprimitive.cpp in Sources */,
+				E5B507F80AD5893900488F72 /* basic_xml_archive.cpp in Sources */,
+				E5B507F90AD5893900488F72 /* binary_iarchive.cpp in Sources */,
+				E5B507FA0AD5893900488F72 /* binary_oarchive.cpp in Sources */,
+				E5B507FB0AD5893900488F72 /* binary_wiarchive.cpp in Sources */,
+				E5B507FC0AD5893900488F72 /* binary_woarchive.cpp in Sources */,
+				E5B507FD0AD5893900488F72 /* codecvt_null.cpp in Sources */,
+				E5B507FE0AD5893900488F72 /* extended_type_info_no_rtti.cpp in Sources */,
+				E5B507FF0AD5893900488F72 /* extended_type_info_typeid.cpp in Sources */,
+				E5B508000AD5893900488F72 /* extended_type_info.cpp in Sources */,
+				E5B508030AD5893900488F72 /* stl_port.cpp in Sources */,
+				E5B508040AD5893900488F72 /* text_iarchive.cpp in Sources */,
+				E5B508050AD5893900488F72 /* text_oarchive.cpp in Sources */,
+				E5B508060AD5893900488F72 /* text_wiarchive.cpp in Sources */,
+				E5B508070AD5893900488F72 /* text_woarchive.cpp in Sources */,
+				E5B508080AD5893900488F72 /* utf8_codecvt_facet.cpp in Sources */,
+				E5B508090AD5893900488F72 /* void_cast.cpp in Sources */,
+				E5B5080A0AD5893900488F72 /* xml_grammar.cpp in Sources */,
+				E5B5080B0AD5893900488F72 /* xml_iarchive.cpp in Sources */,
+				E5B5080C0AD5893900488F72 /* xml_oarchive.cpp in Sources */,
+				E5B5080D0AD5893900488F72 /* xml_wgrammar.cpp in Sources */,
+				E5B5080E0AD5893900488F72 /* xml_wiarchive.cpp in Sources */,
+				E5B5080F0AD5893900488F72 /* xml_woarchive.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91EC08733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				PRODUCT_NAME = boost_serialization;
+			};
+			name = Debug;
+		};
+		1DEB91ED08733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				PRODUCT_NAME = boost_serialization;
+			};
+			name = Release;
+		};
+		1DEB91F008733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Debug;
+		};
+		1DEB91F108733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Release;
+		};
+		CE92977C0A8AA78800D13B7B /* Debug_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				PRODUCT_NAME = boost_serialization;
+			};
+			name = Debug_PPC;
+		};
+		CE92977D0A8AA78800D13B7B /* Debug_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				PRODUCT_NAME = boost_serialization;
+			};
+			name = Debug_i386;
+		};
+		CE92977E0A8AA78800D13B7B /* Debug_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				PRODUCT_NAME = boost_serialization;
+			};
+			name = Debug_Universal;
+		};
+		CE92977F0A8AA78800D13B7B /* Release_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				ARCHS = ppc;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				PRODUCT_NAME = boost_serialization;
+			};
+			name = Release_PPC;
+		};
+		CE9297800A8AA78800D13B7B /* Release_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				ARCHS = i386;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				PRODUCT_NAME = boost_serialization;
+			};
+			name = Release_i386;
+		};
+		CE9297810A8AA78800D13B7B /* Release_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				PRODUCT_NAME = boost_serialization;
+			};
+			name = Release_Universal;
+		};
+		CE9297820A8AA78800D13B7B /* Debug_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = ppc;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Debug_PPC;
+		};
+		CE9297830A8AA78800D13B7B /* Debug_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = i386;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Debug_i386;
+		};
+		CE9297840A8AA78800D13B7B /* Debug_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Debug_Universal;
+		};
+		CE9297850A8AA78800D13B7B /* Release_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = ppc;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Release_PPC;
+		};
+		CE9297860A8AA78800D13B7B /* Release_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = i386;
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Release_i386;
+		};
+		CE9297870A8AA78800D13B7B /* Release_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Release_Universal;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "boost_serialization" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91EC08733DB70010E9CD /* Debug */,
+				CE92977C0A8AA78800D13B7B /* Debug_PPC */,
+				CE92977D0A8AA78800D13B7B /* Debug_i386 */,
+				CE92977E0A8AA78800D13B7B /* Debug_Universal */,
+				1DEB91ED08733DB70010E9CD /* Release */,
+				CE92977F0A8AA78800D13B7B /* Release_PPC */,
+				CE9297800A8AA78800D13B7B /* Release_i386 */,
+				CE9297810A8AA78800D13B7B /* Release_Universal */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "boost_serialization" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91F008733DB70010E9CD /* Debug */,
+				CE9297820A8AA78800D13B7B /* Debug_PPC */,
+				CE9297830A8AA78800D13B7B /* Debug_i386 */,
+				CE9297840A8AA78800D13B7B /* Debug_Universal */,
+				1DEB91F108733DB70010E9CD /* Release */,
+				CE9297850A8AA78800D13B7B /* Release_PPC */,
+				CE9297860A8AA78800D13B7B /* Release_i386 */,
+				CE9297870A8AA78800D13B7B /* Release_Universal */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

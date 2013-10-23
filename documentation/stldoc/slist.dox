@@ -1,0 +1,1152 @@
+/** \page stldoc_Slist Slist
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+An <code>slist</code> is a singly linked list: a list where each element is
+linked to the next element, but not to the previous element.  <A href="#1">[1]</A> That is,
+it is a \ref stldoc_Sequence that supports forward but not backward traversal,
+and (amortized) constant time insertion and removal of elements.
+<code>Slist</code>s, like <code>\ref stldoc_List</code>s, have the important property that insertion
+and splicing do not invalidate iterators to list elements, and that
+even removal invalidates only the iterators that point to the elements
+that are removed.  The ordering of iterators may be changed (that is,
+<code>slist&lt;T&gt;::iterator</code> might have a different predecessor or successor
+after a list operation than it did before), but the iterators
+themselves will not be invalidated or made to point to different
+elements unless that invalidation or mutation is explicit. <A href="#2">[2]</A>
+<p>
+The main difference between <code>slist</code> and <code>\ref stldoc_List</code> is that <code>\ref stldoc_List</code>'s
+iterators are \ref stldoc_BidirectionalIterator, while <code>slist</code>'s iterators
+are \ref stldoc_ForwardIterator.  This means that <code>slist</code> is less versatile
+than <code>\ref stldoc_List</code>; frequently, however, \ref stldoc_BidirectionalIterator
+are unnecessary.  You should usually use <code>slist</code> unless you actually
+need the extra functionality of <code>\ref stldoc_List</code>, because singly linked
+lists are smaller and faster than double linked lists.
+<p>
+<b>Important performance note</b>: like every other \ref stldoc_Sequence, <code>slist</code>
+defines the member functions <code>insert</code> and <code>erase</code>.  Using these member
+functions carelessly, however, can result in disastrously slow
+programs.  The problem is that <code>insert</code>'s first argument is an
+iterator <code>pos</code>, and that it inserts the new element(s) <i>before</i>
+<code>pos</code>.  This means that <code>insert</code> must find the iterator just
+before <code>pos</code>;  this is a constant-time operation for <code>\ref stldoc_List</code>, 
+since <code>\ref stldoc_List</code> has bidirectional iterators, but for <code>slist</code>
+it must find that iterator by traversing the list from the beginning
+up to <code>pos</code>.  In other words: <code>insert</code> and <code>erase</code> are slow operations
+anywhere but near the beginning of the <code>slist</code>.
+<p>
+<code>Slist</code> provides the member functions <code>insert_after</code> and
+<code>erase_after</code>, which are constant time operations: you should always
+use <code>insert_after</code> and <code>erase_after</code> whenever possible.  If you find
+that <code>insert_after</code> and <code>erase_after</code> aren't adequate for your needs,
+and that you often need to use <code>insert</code> and <code>erase</code> in the middle of
+the list, then you should probably use <code>\ref stldoc_List</code> instead of <code>slist</code>.
+\section Definition Definition
+Defined in the header <A href="slist">slist</A>, and in the backward-compatibility
+header <A href="slist.h">slist.h</A>.  
+The <code>slist</code> class, and the <A href="slist">slist</A> header, are an SGI extension;
+they are not part of the C++ standard.
+\section Example Example
+\code
+int main() {
+  slist<int> L;
+  L.push_front(0);
+  L.push_front(1);
+  L.insert_after(L.begin(), 2);
+  copy(L.begin(), L.end(),        // The output is 1 2 0
+       ostream_iterator<int>(cout, " "));
+  cout << endl;
+
+  slist<int>::iterator back = L.previous(L.end());
+  back = L.insert_after(back, 3); 
+  back = L.insert_after(back, 4);
+  back = L.insert_after(back, 5);
+  copy(L.begin(), L.end(),        // The output is 1 2 0 3 4 5
+       ostream_iterator<int>(cout, " "));
+  cout << endl;
+}
+\endcode
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The <code>slist</code>'s value type: the type of object that is stored in the list.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Alloc</code>
+</td>
+<td valign="top">
+The <code>slist</code>'s allocator, used for all internal memory management.
+</td>
+<td valign="top">
+<code>\ref stldoc_Allocators</code>
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_FrontInsertionSequence
+\section Type_requirements Type requirements
+None, except for those imposed by the requirements of 
+\ref stldoc_FrontInsertionSequence.
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The type of object, <code>T</code>, stored in the <code>slist</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Pointer to <code>T</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Reference to <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const reference to <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+An unsigned integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>difference_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+A signed integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Iterator used to iterate through an <code>slist</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const iterator used to iterate through an <code>slist</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator begin()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the beginning of the <code>slist</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator end()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the end of the <code>slist</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator begin() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns a <code>const_iterator</code> pointing to the beginning of the <code>slist</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator end() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns a <code>const_iterator</code> pointing to the end of the <code>slist</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type size() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns the size of the <code>slist</code>.  Note: you should not assume that
+   this function is constant time.  It is permitted to be <i>O(N</i>), 
+   where <i>N</i> is the number of elements in the <code>slist</code>.  If you wish to
+   test whether an <code>slist</code> is empty, you should write <code>L.empty()</code> rather
+   than <code>L.size() == 0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type max_size() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns the largest possible size of the <code>slist</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool empty() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+<code>true</code> if the <code>slist</code>'s size is <code>0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>slist()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Creates an empty slist.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>slist(size_type n)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Creates an <code>slist</code> with <code>n</code> elements, each of which is a copy of <code>T()</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>slist(size_type n, const T&amp; t)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Creates an slist with <code>n</code> copies of <code>t</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>slist(const slist&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The copy constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+slist(InputIterator f, InputIterator l) 
+\endcode
+<A href="#3">[3]</A>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Creates an <code>slist</code> with a copy of a range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>~slist()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The destructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>slist&amp; operator=(const slist&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The assignment operator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void swap(slist&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Swaps the contents of two slists.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference front()</code>
+</td>
+<td valign="top">
+ \ref stldoc_FrontInsertionSequence
+</td>
+<td valign="top">
+Returns the first element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference front() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_FrontInsertionSequence
+</td>
+<td valign="top">
+Returns the first element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void push_front(const T&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_FrontInsertionSequence
+</td>
+<td valign="top">
+Inserts a new element at the beginning.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void pop_front()</code>
+</td>
+<td valign="top">
+ \ref stldoc_FrontInsertionSequence
+</td>
+<td valign="top">
+Removes the first element.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator previous(iterator pos)</code>
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator previous(const_iterator pos)</code>
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert(iterator pos, const T&amp; x)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts <code>x</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template<class InputIterator>
+void insert(iterator pos, InputIterator f, InputIterator l)
+\endcode
+<A href="#3">[3]</A>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts the range <code>[first, last)</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void insert(iterator pos,
+            size_type n, const value_type& x)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts <code>n</code> copies of <code>x</code> before <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator erase(iterator pos)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases the element at position <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator erase(iterator first, iterator last)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases the range <code>[first, last)</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void clear()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Erases all of the elements.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void resize(n, t = T())</code>
+</td>
+<td valign="top">
+ \ref stldoc_Sequence
+</td>
+<td valign="top">
+Inserts or erases elements at the end such that the size becomes <code>n</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert_after(iterator pos)</code>
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert_after(iterator pos, const value_type&amp; x)</code>
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template<class InputIterator>
+void insert_after(iterator pos,
+                  InputIterator f, InputIterator l)
+\endcode
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void insert_after(iterator pos, 
+                  size_type n, const value_type& x)
+\endcode
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator erase_after(iterator pos)</code>
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator erase_after(iterator before_first, iterator last)</code>
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void splice(iterator position, slist&amp; L)</code>
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void splice(iterator position, slist&amp; L, iterator i)</code>
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void splice(iterator position, slist&amp; L, iterator f, iterator l)</code>
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void splice_after(iterator pos, iterator prev)</code>
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void splice_after(iterator pos, 
+                  iterator before_first, 
+                  iterator before_last)
+\endcode
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void remove(const T&amp; value)</code>
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void unique()</code>
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void merge(slist&amp; L)</code>
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void sort()</code>
+</td>
+<td valign="top">
+<code>slist</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+bool operator==(const slist&, 
+                const slist&)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_ForwardContainer
+</td>
+<td valign="top">
+Tests two slists for equality.  This is a global function, not
+   a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+bool operator<(const slist&, 
+               const slist&)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_ForwardContainer
+</td>
+<td valign="top">
+Lexicographical comparison.  This is a global function, not
+   a member function.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_FrontInsertionSequence requirements, but are specific to <code>slist</code>:
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Function
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator previous(iterator pos)</code>
+</td>
+<td valign="top">
+<code>pos</code> must be a valid iterator in <code>*this</code>.  The return value is
+   an iterator <code>prev</code> such that <code>++prev == pos</code>.  Complexity:
+   linear in the number of iterators in the range <code>[begin(), pos)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator previous(const_iterator pos)</code>
+</td>
+<td valign="top">
+<code>pos</code> must be a valid iterator in <code>*this</code>.  The return value is
+   an iterator <code>prev</code> such that <code>++prev == pos</code>.  Complexity:
+   linear in the number of iterators in the range <code>[begin(), pos)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator insert_after(iterator pos)</code>
+</td>
+<td valign="top">
+<code>pos</code> must be a dereferenceable iterator in <code>*this</code>.  (That is,
+   <code>pos</code> may not be <code>end()</code>.)  Inserts a copy of <code>T()</code> immediately
+   <i>following</i> <code>pos</code>.  The return value is an iterator that points
+   to the new element.  Complexity: constant time.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+iterator insert_after(iterator pos,
+                      const value_type& x)
+\endcode
+</td>
+<td valign="top">
+<code>pos</code> must be a dereferenceable iterator in <code>*this</code>.  (That is,
+   <code>pos</code> may not be <code>end()</code>.)  Inserts a copy of <code>x</code> immediately
+   <i>following</i> <code>pos</code>.  The return value is an iterator that points
+   to the new element.  Complexity: constant time.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template<class InputIterator>
+void insert_after(iterator pos,
+                  InputIterator f, InputIterator l)
+\endcode
+</td>
+<td valign="top">
+Inserts elements from the range <code>[f, l)</code> immediately
+   <i>following</i> <code>pos</code>.  Complexity: linear in <code>last - first</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void insert_after(iterator pos, 
+                  size_type n, const value_type& x)
+\endcode
+</td>
+<td valign="top">
+Inserts <code>n</code> copies of <code>x</code> immediately <i>following</i> <code>pos</code>.
+   Complexity: linear in <code>n</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator erase_after(iterator pos)</code>
+</td>
+<td valign="top">
+Erases the element pointed to by the iterator <i>following</i> <code>pos</code>.
+   Complexity: constant time.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator erase_after(iterator before_first, iterator last)</code>
+</td>
+<td valign="top">
+Erases all elements in the range <code>[before_first + 1, last)</code>.
+   Complexity: linear in <code>last - (before_first + 1)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void splice(iterator position, 
+            slist<T, Alloc>& x);
+\endcode
+</td>
+<td valign="top">
+<code>position</code> must be a valid iterator in <code>*this</code>, and <code>x</code> must be an slist
+    that is distinct from <code>*this</code>.  (That is, it is required that
+   <code>&amp;x != this</code>.)  All of the elements of <code>x</code> are inserted before
+   <code>position</code> and removed from <code>x</code>.  All iterators remain valid, 
+   including iterators that point to elements of <code>x</code>. <A href="#4">[4]</A> Complexity:
+   proportional to <code>c1 (position - begin()) + c2(x.size())</code>, where <code>c1</code>
+   and <code>c2</code> are unknown constants.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void splice(iterator position, 
+            slist<T, Alloc>& x,
+            iterator i);
+\endcode
+</td>
+<td valign="top">
+<code>position</code> must be a valid iterator in <code>*this</code>, and <code>i</code> must be a
+   dereferenceable iterator in <code>x</code>.  <code>Splice</code> moves the element
+   pointed to by <code>i</code> from <code>x</code> to <code>*this</code>, inserting it before
+   <code>position</code>.  All iterators remain valid, including iterators that point
+   to elements of <code>x</code>. <A href="#4">[4]</A>  If <code>position == i</code> or <code>position == ++i</code>,
+   this function is a null operation.  Complexity: proportional to
+   <code>c1 (position - begin()) + c2 (i - x.begin())</code>, where <code>c1</code> and
+   <code>c2</code> are unknown constants.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void splice(iterator position, 
+            slist<T, Alloc>& x,
+            iterator f, iterator l);
+\endcode
+</td>
+<td valign="top">
+<code>position</code> must be a valid iterator in <code>*this</code>, and <code>[first, last)</code>
+   must be a valid range in <code>x</code>.  <code>position</code> may not be an iterator
+   in the range <code>[first, last)</code>.  <code>Splice</code> moves the elements 
+   in <code>[first, last)</code> from <code>x</code> to <code>*this</code>, inserting them before
+   <code>position</code>.  All iterators remain valid, including iterators that
+   point to elements of <code>x</code>. <A href="#4">[4]</A>  Complexity: proportional to
+   <code>c1 (position - begin()) + c2 (f - x.begin()) + c3 (l - f)</code>, 
+   where <code>c1</code>, <code>c2</code>, and <code>c3</code> are unknown constants.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void remove(const T&amp; val);</code>
+</td>
+<td valign="top">
+Removes all elements that compare equal to <code>val</code>.  The relative order
+   of elements that are not removed is unchanged, and iterators to 
+   elements that are not removed remain valid.  This function is 
+   linear time: it performs exactly <code>size()</code> comparisons for equality.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void splice_after(iterator pos, iterator prev)</code>
+</td>
+<td valign="top">
+<code>pos</code> must be a dereferenceable iterator in <code>*this</code>, and <code>prev</code>
+   must be a dereferenceable iterator either in <code>*this</code> or in some
+   other <code>slist</code>.  (Note: &quot;dereferenceable iterator&quot; implies that neither
+   <code>pos</code> nor <code>prev</code> may be an off-the-end iterator.)  Moves the element
+   <i>following</i> <code>prev</code> to <code>*this</code>, inserting it immediately <i>after</i>
+   <code>pos</code>.  Complexity: constant time.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+void splice_after(iterator pos, 
+                  iterator before_first, 
+                  iterator before_last)
+\endcode
+</td>
+<td valign="top">
+<code>pos</code> must be a dereferenceable iterator in <code>*this</code>, and
+   <code>before_first</code> and <code>before_last</code> must be dereferenceable iterators
+   either in <code>*this</code> or in some other <code>slist</code>.  (Note: 
+   &quot;dereferenceable iterator&quot; implies that none of these iterators may
+   be off-the-end iterators.)  Moves the elements in the range
+   <code>[before_first + 1, before_last + 1)</code> to <code>*this</code>, inserting
+   them immediately <i>after</i> <code>pos</code>.  Complexity: constant time.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template<class Predicate> 
+void remove_if(Predicate p); 
+\endcode
+<A href="#5">[5]</A>
+</td>
+<td valign="top">
+Removes all elements <code>*i</code> such that <code>p(*i)</code> is true.  The relative
+   order of elements that are not removed is unchanged, and iterators to
+   elements that are not removed remain valid.  This function is linear
+   time: it performs exactly <code>size()</code> applications of <code>p</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void unique();</code>
+</td>
+<td valign="top">
+Removes all but the first element in every consecutive group of
+   equal elements.  The relative order
+   of elements that are not removed is unchanged, and iterators to 
+   elements that are not removed remain valid.  This function is 
+   linear time: it performs exactly <code>size() - 1</code> comparisons for equality.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template<class BinaryPredicate>
+void unique(BinaryPredicate p); 
+\endcode
+<A href="#5">[5]</A>
+</td>
+<td valign="top">
+Removes all but the first element in every consecutive group of
+   equivalent elements, where two elements <code>*i</code> and <code>*j</code> are considered
+   equivalent if <code>p(*i, *j)</code> is true.  The relative order
+   of elements that are not removed is unchanged, and iterators to 
+   elements that are not removed remain valid.  This function is 
+   linear time: it performs exactly <code>size() - 1</code> comparisons for
+   equality. 
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void merge(slist&lt;T, Alloc&gt;&amp; x);</code>
+</td>
+<td valign="top">
+Both <code>*this</code> and <code>x</code> must be sorted according to <code>operator&lt;</code>, and
+   they must be distinct.
+   (That is, it is required that <code>&amp;x != this</code>.)  This function removes
+   all of <code>x</code>'s elements and inserts them in order into <code>*this</code>.  The merge is
+   stable; that is, if an element from <code>*this</code> is equivalent to one from
+   <code>x</code>, then the element from <code>*this</code> will precede the one from <code>x</code>.
+   All iterators to elements in <code>*this</code> and <code>x</code> remain valid.  
+   This function is linear time:  it performs at most <code>size() + x.size() - 1</code> comparisons.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template<class BinaryPredicate>
+void merge(slist<T, Alloc>& x, 
+           BinaryPredicate Comp); 
+\endcode
+<A href="#5">[5]</A>
+</td>
+<td valign="top">
+<code>Comp</code> must be a comparison function that induces a strict weak
+   ordering (as defined in the \ref stldoc_LessThanComparable requirements)
+   on objects of type <code>T</code>, and both <code>*this</code> and <code>x</code> must be sorted
+   according to that ordering.  The slists <code>x</code> and <code>*this</code> must be 
+   distinct.  (That is, it is required that <code>&amp;x != this</code>.)
+   This function removes
+   all of <code>x</code>'s elements and inserts them in order into <code>*this</code>.  The merge is
+   stable; that is, if an element from <code>*this</code> is equivalent to one from
+   <code>x</code>, then the element from <code>*this</code> will precede the one from <code>x</code>.
+   All iterators to elements in <code>*this</code> and <code>x</code> remain valid.  
+   This function is linear time:  it performs at most <code>size() + x.size() - 1</code> applications of <code>Comp</code>. 
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void reverse();</code>
+</td>
+<td valign="top">
+Reverses the order of elements in the slist.  All iterators remain
+   valid and continue to point to the same elements. <A href="#6">[6]</A> This function
+   is linear time.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void sort();</code>
+</td>
+<td valign="top">
+Sorts <code>*this</code> according to <code>operator&lt;</code>.  The sort is stable, that is,
+   the relative order of equivalent elements is preserved.  
+   All iterators remain 
+   valid and continue to point to the same elements. <A href="#7">[7]</A>  The number
+   of comparisons is approximately <code>N log N</code>, where <code>N</code> is the <code>slist</code>'s
+   size.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template<class BinaryPredicate>
+void sort(BinaryPredicate comp); 
+\endcode
+<A href="#5">[5]</A>
+</td>
+<td valign="top">
+<code>Comp</code> must be a comparison function that induces a strict weak
+   ordering (as defined in the \ref stldoc_LessThanComparable requirements)
+   on objects of type <code>T</code>.  This function sorts the slist
+   <code>*this</code> according to <code>Comp</code>.  The sort is stable, that is,
+   the relative order of equivalent elements is preserved.  
+   All iterators remain 
+   valid and continue to point to the same elements. <A href="#7">[7]</A>  The number
+   of comparisons is approximately <code>N log N</code>, where <code>N</code> is the <code>slist</code>'s
+   size.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+The lists in such languages as Common Lisp, Scheme, and ML are singly
+linked lists.  In some programming languages, almost all data
+structures are represented as singly linked lists.
+<p><A name="2">[2]</A>
+A comparison with <code>\ref stldoc_Vector</code> is
+instructive.  Suppose that <code>i</code> is a valid
+<code>\ref stldoc_Vector&lt;T&gt;::iterator</code>.  If an element
+is inserted or removed in a position that precedes <code>i</code>, then
+this operation will either result in <code>i</code> pointing to a
+different element than it did before, or else it will invalidate
+<code>i</code> entirely.  (A 
+<code>\ref stldoc_Vector&lt;T&gt;::iterator</code> will be
+invalidated, for example, if an insertion requires a reallocation.)
+However, suppose that <code>i</code> and <code>j</code> are both iterators
+into a \ref stldoc_Vector, and there exists some integer
+<code>n</code> such that <code>i == j + n</code>.  In that case, even if
+elements are inserted into the vector and <code>i</code> and <code>j</code>
+point to different elements, the relation between the two iterators
+will still hold.  An <code>slist</code> is exactly the opposite: iterators
+will not be invalidated, and will not be made to point to different
+elements, but, for <code>slist</code> iterators, the predecessor/successor
+relationship is not invariant.
+<p><A name="3">[3]</A>
+This member function relies on <i>member template</i> functions, which
+at present (early 1998) are not supported by all compilers.  If your
+compiler supports member templates, you can call this function with
+any type of \ref stldoc_InputIterator.  If your
+compiler does not yet support member templates, though, then the
+arguments must either be of type <code>const value_type*</code> or of type
+<code>slist::const_iterator</code>.
+<p><A name="4">[4]</A>
+A similar property holds for all versions of <code>insert()</code> and
+<code>erase()</code>.  <code>Slist&lt;T, Alloc&gt;::insert()</code> never
+invalidates any iterators, and <code>slist&lt;T, Alloc&gt;::erase()</code>
+only invalidates iterators pointing to the elements that are actually
+being erased.
+<p><A name="5">[5]</A>
+This member function relies on <i>member template</i> functions, which
+at present (early 1998) are not supported by all compilers.  You can
+only use this member function if your compiler supports member
+templates.
+<p><A name="6">[6]</A>
+The <code>\ref stldoc_reverse</code> algorithm works only
+for \ref stldoc_BidirectionalIterator.
+Even if <code>\ref stldoc_reverse</code> were extended to
+work with \ref stldoc_ForwardIterator,
+however, it would still be useful to have the <code>reverse</code> member
+function: it has different iterator invalidation semantics.  That is,
+the <code>reverse</code> member function preserves the value that each
+iterator points to.  Note also that the algorithm
+<code>\ref stldoc_reverse(L.begin(), L.end())</code> uses 
+<code>T</code>'s assignment operator, but the member function
+<code>L.reverse()</code> does not.
+<p><A name="7">[7]</A>
+The <code>\ref stldoc_sort</code> algorithm  works only for
+\ref stldoc_RandomAccessIterator.  In
+principle, however, it would be possible to write a sort algorithm
+that also accepted
+\ref stldoc_ForwardIterator.  Even if there were such a version
+of <code>\ref stldoc_sort</code>, it would still be useful for
+<code>slist</code> to have a <code>sort</code> member function.  That is,
+<code>sort</code> is provided as a member function not only for the sake
+of efficiency, but also because of the property that it preserves the
+values that list iterators point to.
+\section See_also See also
+\ref stldoc_BidirectionalIterator,
+\ref stldoc_ReversibleContainer,
+\ref stldoc_Sequence,
+<code>\ref stldoc_List</code>,
+<code>\ref stldoc_Vector</code>
+
+*/

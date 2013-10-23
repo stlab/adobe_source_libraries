@@ -1,0 +1,420 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		89E3D81A0DA5BAB70082A724 /* once.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89E3D8170DA5BAB70082A724 /* once.cpp */; };
+		89E3D81B0DA5BAB70082A724 /* thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89E3D8180DA5BAB70082A724 /* thread.cpp */; };
+		89E3D81D0DA5BAD10082A724 /* tss_null.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 89E3D81C0DA5BAD10082A724 /* tss_null.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		89E3D8170DA5BAB70082A724 /* once.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = once.cpp; path = ../../boost_libraries/libs/thread/src/pthread/once.cpp; sourceTree = SOURCE_ROOT; };
+		89E3D8180DA5BAB70082A724 /* thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = thread.cpp; path = ../../boost_libraries/libs/thread/src/pthread/thread.cpp; sourceTree = SOURCE_ROOT; };
+		89E3D81C0DA5BAD10082A724 /* tss_null.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tss_null.cpp; path = ../../boost_libraries/libs/thread/src/tss_null.cpp; sourceTree = SOURCE_ROOT; };
+		CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = adobe_xconfig_staticlib.xcconfig; sourceTree = "<group>"; };
+		CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; path = adobe_debug.xcconfig; sourceTree = "<group>"; };
+		CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; path = adobe_release.xcconfig; sourceTree = "<group>"; };
+		D2AAC046055464E500DB518D /* libboost_threads.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libboost_threads.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D289987405E68DCB004EDB86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* boost_signals */ = {
+			isa = PBXGroup;
+			children = (
+				CE5C1FF1094795E800EB4BB6 /* xcconfigs */,
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6A0FF2B0290797F04C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = boost_signals;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				89E3D81C0DA5BAD10082A724 /* tss_null.cpp */,
+				89E3D8170DA5BAB70082A724 /* once.cpp */,
+				89E3D8180DA5BAB70082A724 /* thread.cpp */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC046055464E500DB518D /* libboost_threads.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C6A0FF2B0290797F04C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+		CE5C1FF1094795E800EB4BB6 /* xcconfigs */ = {
+			isa = PBXGroup;
+			children = (
+				CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */,
+				CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */,
+				CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */,
+			);
+			name = xcconfigs;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC043055464E500DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC045055464E500DB518D /* boost_threads */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "boost_threads" */;
+			buildPhases = (
+				D2AAC043055464E500DB518D /* Headers */,
+				D2AAC044055464E500DB518D /* Sources */,
+				D289987405E68DCB004EDB86 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = boost_threads;
+			productName = boost_signals;
+			productReference = D2AAC046055464E500DB518D /* libboost_threads.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0460;
+			};
+			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "boost_threads" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 08FB7794FE84155DC02AAC07 /* boost_signals */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC045055464E500DB518D /* boost_threads */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC044055464E500DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89E3D81A0DA5BAB70082A724 /* once.cpp in Sources */,
+				89E3D81B0DA5BAB70082A724 /* thread.cpp in Sources */,
+				89E3D81D0DA5BAD10082A724 /* tss_null.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91EC08733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		1DEB91ED08733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1DEB91F008733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Debug;
+		};
+		1DEB91F108733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Release;
+		};
+		CE92977C0A8AA78800D13B7B /* Debug_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				SDKROOT = macosx;
+			};
+			name = Debug_PPC;
+		};
+		CE92977D0A8AA78800D13B7B /* Debug_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				SDKROOT = macosx;
+			};
+			name = Debug_i386;
+		};
+		CE92977E0A8AA78800D13B7B /* Debug_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				SDKROOT = macosx;
+			};
+			name = Debug_Universal;
+		};
+		CE92977F0A8AA78800D13B7B /* Release_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				ARCHS = ppc;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				SDKROOT = macosx;
+			};
+			name = Release_PPC;
+		};
+		CE9297800A8AA78800D13B7B /* Release_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				ARCHS = i386;
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				SDKROOT = macosx;
+			};
+			name = Release_i386;
+		};
+		CE9297810A8AA78800D13B7B /* Release_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(value)",
+					"$(ADOBE_RELEASE_PREPROCESSOR_DEFINITIONS)",
+					"BOOST_SIGNALS_NO_LIB=1",
+				);
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				SDKROOT = macosx;
+			};
+			name = Release_Universal;
+		};
+		CE9297820A8AA78800D13B7B /* Debug_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = ppc;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Debug_PPC;
+		};
+		CE9297830A8AA78800D13B7B /* Debug_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = i386;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Debug_i386;
+		};
+		CE9297840A8AA78800D13B7B /* Debug_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Debug_Universal;
+		};
+		CE9297850A8AA78800D13B7B /* Release_PPC */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = ppc;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Release_PPC;
+		};
+		CE9297860A8AA78800D13B7B /* Release_i386 */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = i386;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Release_i386;
+		};
+		CE9297870A8AA78800D13B7B /* Release_Universal */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = CE56A5DF0A2FA105001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
+			buildSettings = {
+				ARCHS = (
+					ppc,
+					i386,
+				);
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				PRODUCT_NAME = boost_threads;
+			};
+			name = Release_Universal;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "boost_threads" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91EC08733DB70010E9CD /* Debug */,
+				CE92977C0A8AA78800D13B7B /* Debug_PPC */,
+				CE92977D0A8AA78800D13B7B /* Debug_i386 */,
+				CE92977E0A8AA78800D13B7B /* Debug_Universal */,
+				1DEB91ED08733DB70010E9CD /* Release */,
+				CE92977F0A8AA78800D13B7B /* Release_PPC */,
+				CE9297800A8AA78800D13B7B /* Release_i386 */,
+				CE9297810A8AA78800D13B7B /* Release_Universal */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "boost_threads" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91F008733DB70010E9CD /* Debug */,
+				CE9297820A8AA78800D13B7B /* Debug_PPC */,
+				CE9297830A8AA78800D13B7B /* Debug_i386 */,
+				CE9297840A8AA78800D13B7B /* Debug_Universal */,
+				1DEB91F108733DB70010E9CD /* Release */,
+				CE9297850A8AA78800D13B7B /* Release_PPC */,
+				CE9297860A8AA78800D13B7B /* Release_i386 */,
+				CE9297870A8AA78800D13B7B /* Release_Universal */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

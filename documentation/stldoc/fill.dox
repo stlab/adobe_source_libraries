@@ -1,0 +1,65 @@
+/** \page stldoc_fill fill
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class ForwardIterator, class T>
+void fill(ForwardIterator first, ForwardIterator last, const T& value); 
+\endcode
+\section Description Description
+<code>Fill</code> assigns the value <code>value</code> to every element in the range
+<code>[first, last)</code>.  That is, for every iterator <code>i</code> in <code>[first, last)</code>,
+it performs the assignment <code>*i = value</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator. <A href="#1">[1]</A>
+<li>
+<code>ForwardIterator</code> is mutable.
+<li>
+<code>T</code> is a model of \ref stldoc_Assignable.
+<li>
+<code>T</code> is convertible to \ref stldoc_ForwardIterator's value type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear. <code>Fill</code> performs exactly <code>last - first</code> assignments.
+\section Example Example
+\code
+Vector<double> V(4);
+fill(V.begin(), V.end(), 137);
+assert(V[0] == 137 && V[1] == 137 && V[2] == 137 && V[3] == 137);
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The reason that <code>fill</code> requires its argument to be a mutable
+\ref stldoc_ForwardIterator, rather than merely an \ref stldoc_OutputIterator, is that 
+it uses a range <code>[first, last)</code> of iterators.  There is no sensible
+way to describe a range of \ref stldoc_OutputIterator, because it is
+impossible to compare two \ref stldoc_OutputIterator for equality.
+The <code>\ref stldoc_fill_n</code> algorithm does have an interface that permits use of
+an \ref stldoc_OutputIterator.
+\section See_also See also
+<code>\ref stldoc_copy</code>, <code>\ref stldoc_fill_n</code>, <code>\ref stldoc_generate</code>, <code>\ref stldoc_generate_n</code>, <code>\ref stldoc_iota</code>
+
+
+*/

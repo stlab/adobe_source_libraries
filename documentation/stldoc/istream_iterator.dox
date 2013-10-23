@@ -1,0 +1,258 @@
+/** \page stldoc_istream_iterator istream_iterator
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+An <code>istream_iterator</code> is an \ref stldoc_InputIterator that performs formatted
+input of objects of type <code>T</code> from a particular <code>istream</code>.  When end of
+stream is reached, the <code>istream_iterator</code> takes on a special <i>end of
+stream</i> value, which is a past-the-end iterator.  Note that all of the
+restrictions of an \ref stldoc_InputIterator must be obeyed, including the
+restrictions on the ordering of <code>operator*</code> and <code>operator++</code>
+operations.
+\section Example Example
+Fill a <code>\ref stldoc_Vector</code> with values read from standard input.
+\code
+Vector<int> V;
+copy(istream_iterator<int>(cin), istream_iterator<int>(),
+     back_insert_iterator(V));   
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="iterator">iterator</A>, and in the nonstandard
+backward-compatibility header <A href="iterator.h">iterator.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The <code>istream_iterator</code>'s value type.  <code>Operator*</code> returns a <code>const T&amp;</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Distance</code>
+</td>
+<td valign="top">
+The <code>istream_iterator</code>'s distance type.
+</td>
+<td valign="top">
+<code>ptrdiff_t</code>
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_InputIterator
+\section Type_requirements Type requirements
+The value type <code>T</code> must be a type such that <code>cin &gt;&gt; T</code> is a 
+valid expression.  
+<p>
+The value type <code>T</code> must be a model of \ref stldoc_DefaultConstructible.
+<p>
+The distance type must, as described in the
+\ref stldoc_InputIterator requirements, be a signed integral type.
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>istream_iterator()</code>
+</td>
+<td valign="top">
+<code>istream_iterator</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>istream_iterator(istream&amp;)</code>
+</td>
+<td valign="top">
+<code>istream_iterator</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>istream_iterator(const istream_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_trivial
+</td>
+<td valign="top">
+The copy constructor
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>istream_iterator&amp; operator=(const istream_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_trivial
+</td>
+<td valign="top">
+The assignment operator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const T&amp; operator*() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_InputIterator
+</td>
+<td valign="top">
+Returns the next object in the stream.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>istream_iterator&amp; operator++()</code>
+</td>
+<td valign="top">
+ \ref stldoc_InputIterator
+</td>
+<td valign="top">
+Preincrement.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>istream_iterator&amp; operator++(int)</code>
+</td>
+<td valign="top">
+ \ref stldoc_InputIterator
+</td>
+<td valign="top">
+Postincrement.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator==(const istream_iterator&amp;, const istream_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_trivial
+</td>
+<td valign="top">
+The equality operator.  This is a global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>input_iterator_tag iterator_category(const istream_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_iterator_tags
+</td>
+<td valign="top">
+Returns the iterator's category.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T* value_type(const istream_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_iterator_tags
+</td>
+<td valign="top">
+Returns the iterator's value type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Distance* distance_type(const istream_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_iterator_tags
+</td>
+<td valign="top">
+Returns the iterator's distance type.
+&lt;
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined 
+in the \ref stldoc_InputIterator requirements,
+but are specific to <code>istream_iterator</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Function
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>istream_iterator()</code>
+</td>
+<td valign="top">
+The default constructor:  Constructs an end-of-stream iterator.
+   This is a past-the-end iterator, and it is useful when constructing
+   a &quot;range&quot;.  
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>istream_iterator(istream&amp; s)</code>
+</td>
+<td valign="top">
+Creates an <code>istream_iterator</code> that reads values from the input
+   stream <code>s</code>.  When <code>s</code> reaches end of stream, this iterator will
+   compare equal to an end-of-stream iterator created using the
+   default constructor.
+</td>
+</tr>
+</table>
+\section Notes Notes
+\section See_also See also
+\ref stldoc_ostream_iterator, \ref stldoc_InputIterator, \ref stldoc_OutputIterator.
+
+
+*/

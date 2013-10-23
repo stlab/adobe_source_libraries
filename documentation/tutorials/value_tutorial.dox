@@ -1,0 +1,212 @@
+/*!
+\defgroup asl_tutorials_value_t any_regular_t
+\ingroup asl_tutorials
+
+<i>Last updated November 2, 2006</i>
+
+\section value_t_background Background
+
+\subsection background_discriminated_types Discriminated Types and Unions
+\par
+adobe::any_regular_t is a pseudo-discriminated union. Before we can go any further we must first understand what a discriminated type is. Kevin Henney best describes discriminated types in his documentation of <a href="http://www.boost.org/doc/html/any.html#id447427">boost::any</a>:
+    - <i>Discriminated types ... contain values of different types but do not attempt conversion between them, i.e. <code>5</code> is held strictly as an <code>int</code> and is not implicitly convertible either to <code>"5"</code> or to <code>5.0</code>. Their indifference to interpretation but awareness of type effectively makes them safe, generic containers of single values, with no scope for surprises from ambiguous conversions.</i>
+\par
+A discriminated union, then, is a type that can retain any one of a collection of discriminated types, but then only one at a time. In the case of adobe::any_regular_t its storable type range is limited to any type modeling the \ref background_data_type_requirements.
+
+\subsubsection discriminated_types_similarities Similarities
+\par
+adobe::any_regular_t being a discriminated union means it is capable of holding any of:
+\par
+\code
+adobe::any_regular_t  my_int(5);
+adobe::any_regular_t  my_string(std::string("Hello, world!"));
+adobe::any_regular_t  my_whizzy_class(whizzy_class(/*...*/));
+adobe::any_regular_t  my_some_other_regular_type(/*...*/);
+\endcode
+\par
+An adobe::any_regular_t may also store a different type of data at different points in time: for example it can start out storing \ref adobe::empty_t "'nothing'":
+\par
+\code
+adobe::any_regular_t my_value; // my_value now holds adobe::empty_t
+\endcode
+\par
+... then store a std::string at a later time:
+\par
+\code
+my_value = std::string("Hello, world!"); // my_value now holds a std::string
+\endcode
+\par
+... then store another arbitrary data type even later:
+\par
+\code
+my_value = my_whizzy_class; // adobe::any_regular_t to adobe::any_regular_t assignments are OK
+\endcode
+\par
+Note that in the last case the type stored within <code>my_value</code> is not adobe::any_regular_t, but the type stored within the adobe::any_regular_t from which it was assigned. In the case above, <code>my_value</code> now retains data of type <code>whizzy_class</code> because <code>my_whizzy_class</code> stored data of that type.
+
+\subsubsection discriminated_types_differences Differences
+\par Type Promotion
+Unless otherwise specified, adobe::any_regular_t makes no attempt to store data in any other than its original type. (This follows the behavior of a discriminated union). However it is possible to specify an explicit coersion from one data type to another. In order to ensure preservation of data the coersion should always be from a type of smaller resolution to one of greater resolution. That is to say there should be no data loss during the type coersion. This restricted type conversion is thus called <i>type promotion</i>.
+\par
+adobe::any_regular_t takes advantage of type promotion to allow for an explicit, well-defined means of converting values between different types. adobe::any_regular_t uses adobe::promote to accomplish type promotion. For a data type passed, adobe::promote specifies its promoted data type. By default this is merely the original type itself (i.e., no coersion takes place):
+\par
+\code
+template <typename T>
+struct promote
+{
+    typedef T type; // promote<T>::type is, by default, T
+};
+\endcode
+\par
+It is possible to specialize adobe::promote for any type, specifying an alternate type for coersion:
+\par
+\code
+template <>
+struct promote<int>
+{
+    typedef double type; // promote<int>::type is now a double
+};
+\endcode
+\par
+Note the restriction specified above (that one should only coerce from a "smaller" to a "bigger" type) is not enforced at either compile time or runtime:
+\par
+\code
+template <>
+struct promote<double>
+{
+    typedef int type; // Legal, but bad: possible data loss
+};
+\endcode
+\par
+Therefore you should be very carfeul when specifying your own type promotions. In general it is not necessary to do so. By default there are several type promotions already defined: see the documentation for adobe::promote for more information.
+\par
+Whenever data is stored in a adobe::any_regular_t, it is always type-promoted before storage. Similarly, when a data is retrieved from a adobe::any_regular_t the data is "type-demoted" to the requested type at the time of the retrieval. If the requested type is not specified to be promoted to the stored type, an exception is thrown (more on this later.)
+
+\subsection background_data_type_requirements Data Type Concept Requirements
+\par
+In order for adobe::any_regular_t to be assigned from a given type and value, the type must model the concept of a \ref concept_regular_type. All built-in data types model this concept, as do many of the classes found in both the STL and the ASL. adobe::any_regular_t may store any user-defined data type as well, as long as that data type is a model of \ref concept_regular_type.
+
+\section value_t_usage Usage
+
+\subsection usage_initialization_and_storage Initialization and Storage
+\par
+As we have seen in some of the previous examples, using adobe::any_regular_t is pretty straightforward. adobe::any_regular_t can be constructed with anything that is a \ref concept_regular_type, including default construction:
+\par
+\code
+adobe::any_regular_t my_empty_value;
+adobe::any_regular_t my_int_value(5);
+adobe::any_regular_t my_other_int_value(my_int_value);
+\endcode
+\par
+As mentioned above, the last adobe::any_regular_t in this code snippet inherits the data type from the adobe::any_regular_t from which it was assigned; adobe::any_regular_t's cannot be directly nested. They can, however, be indirectly nested:
+\par
+\code
+    typedef std::vector<adobe::any_regular_t> my_vector_value_type;
+
+    my_vector_value_type my_vector_value;
+
+    my_vector_value.push_back(adobe::any_regular_t(5));
+    my_vector_value.push_back(adobe::any_regular_t('A'));
+    my_vector_value.push_back(adobe::any_regular_t(std::string("hello, world!"));
+
+    adobe::any_regular_t my_vector_value_value(my_vector_value);
+\endcode
+
+\subsection usage_query Data Type Querying
+\par
+It is possible to check the type of data stored within an adobe::any_regular_t with <code>type()</code>:
+\par
+\code
+adobe::any_regular_t my_value(std::string("hello, world!"));
+
+// ...
+
+if (my_value.type() == typeid(std::string))
+{
+    // ... 
+}
+else if (my_value.type() == typeid(double))
+{
+    // ...
+}
+\endcode
+\par
+Note that when checking for the type contained within the adobe::any_regular_t, you want to check it against the promoted data type, not the data type from which the adobe::any_regular_t was assigned:
+\par
+\code
+adobe::any_regular_t my_int_value(5);
+
+if (my_int_value.type() == typeid(int))
+{
+    // not here!
+}
+else if (my_int_value.type() == typeid(double))
+{
+    // you'll end up in here
+}
+\endcode
+
+\subsection usage_retrieval Retrieval
+\par
+Data is extracted from the adobe::any_regular_t by means of adobe::any_regular_t::cast<>:
+\par
+\code
+adobe::any_regular_t my_value(5);
+
+// ...
+
+double my_double(my_value.cast<double>()); // my_double now contains 5.0
+\endcode
+\par
+Note in the above example the type conversion is legal because adobe::promote explicitly allows it. Value retrieval can be serialized in the case when one has indirectly nested adobe::any_regular_t instances. Here is an example using <code>my_vector_value</code> from above:
+\par
+\code
+char my_char = my_vector_value_value.cast<my_vector_value_type>()[1].template cast<char>();
+// my_char now contains 'A'
+\endcode
+\par
+If the requested data type does not match the stored data type, and if the stored data type is not the promoted type of the requested data type, adobe::any_regular_t::cast<> will throw an exception:
+\par
+\code
+adobe::any_regular_t my_value(std::string("hello, world!"));
+
+try
+{
+    int x = my_value.cast<int>();
+}
+catch(const std::exception& err)
+{
+    std::cerr << err.what() << std::endl;
+}
+catch(...)
+{
+    std::cerr << "don't know what happened!" << std::endl;
+}
+\endcode
+
+\section value_t_experimental_features Experimental Features
+
+\subsection experimental_features_serialization Serialization
+\par
+It is possible to extend adobe::any_regular_t's functionality in such a way that the contained data can be serialized from within adobe::any_regular_t. This is activated by defining a macro:
+\par
+\code
+#define ADOBE_SERIALIZATION
+\endcode
+When this code is enabled, the data type requirements of adobe::any_regular_t are extended: now the elements must not only be a model of the \ref concept_regular_type concept, but they must also have <code>operator &lt;&lt;</code> defined for them to allow for the serialization of their value to a stream. Note this is true whether or not you ever serialize an adobe::any_regular_t with a particular type. Note too that this is only for output streams, not input streams. With the macro defined one now has the ability to serialize adobe::any_regular_t:
+\par
+\code
+#define ADOBE_SERIALIZATION
+
+// include adobe/value.hpp at some point
+
+int main(/*...*/)
+{
+    adobe::any_regular_t my_value(std::string("Hello, world!");
+
+    std::cout << my_value << std::endl; // Prints "Hello, world!"
+
+    return 0;
+}
+\endcode
+*/

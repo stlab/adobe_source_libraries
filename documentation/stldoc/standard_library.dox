@@ -1,0 +1,443 @@
+/** \page stldoc_standard_library C++ I/O library (experimental)
+
+This is an <em>experimental</em> snapshot of SGI's standard C++
+library.  You should <A Href="#snapshot">download</A> it if you are 
+interested in contributing to an ongoing development effort, but not
+(yet) if you are looking for a library implementation that is
+guaranteed to work &quot;out of the box&quot;.
+
+<p>
+This snapshot includes the entire standard C++ library : STL,
+iostream/locale, and numerics (<code>valarray</code> and
+<code>complex</code>).  It does not include a standard C library
+implementation; it is intended to interoperate with an existing C
+library.
+
+<p>
+Please note that some aspects of an I/O library are inherently
+platform-specific.  (See below for more details.)  This library has
+been tested on IRIX 6.x using the SGI MIPSpro 7.3 compiler, and on
+Linux, using glibc 2.0 and the egcs 1.1.2 compilers.  It passes simple
+tests on Microsoft Windows NT using the Microsoft Visual C++ 6.0
+compiler (with Service Pack 3).  Compiling it on other platforms will
+almost certainly require at least some work.  Porting to another
+version of Unix, using a relatively recent C++ compiler, should not be
+difficult.
+
+<p>
+We welcome suggestions, patches, and bug fixes.  Please send 
+comments to <A Href="mailto:stl@sgi.com">stl@sgi.com</A>.
+
+<h2>Some notes on the structure of the I/O library</h2>
+
+<ul>
+<li>
+    It shares some files, such as char_traits.h, with our STL.  These
+    snapshots include the full STL distribution as well as the
+    iostreams implementation, since it's hard to draw a line between
+    these two parts of the standard C++ library.
+    
+<p><li>
+    Certain parts of the STL depend on the I/O library, and they
+    behave differently depending on whether they use &quot;classic&quot;
+    AT&amp;T cfront iostreams or a standard-conforming I/O
+    implementation with templatized iostreams.  To use the new iostreams
+    library you must tell the compiler where to find the headers,
+    add the I/O library to the link line, and tell the STL that it should
+    use standard-conforming iostreams.  A compilation line may look something
+    like this:
+    \code
+g++  -I.  -D__STL_USE_NEW_IOSTREAMS -g hello.cxx libCio.a
+    \endcode
+    Alternatively, you can edit the <code>stl_config.h</code> header so
+    that the macro <code>__STL_USE_NEW_IOSTREAMS</code> gets defined
+    automatically.
+<p><li>
+    Locales are a tricky point.  It is impossible to layer C++ locales
+    on top of the C library locales.  The problem is that the standard
+    C library only has one active locale at a time, as determined by
+    the global <code>setlocale</code> function.  In C++, though, locales
+    are objects, and there can be any number of active locales at the
+    same time.  In a single-threaded world it would be possible
+    (although horribly inefficient) to implement this with
+    <code>setlocale</code>, but there's no safe way to do that in a
+    multithreaded environment.
+
+    <p>
+    This iostream/locale library is intended to coexist with a
+    preexisting C library.  It assumes that for any C library
+    implementation there is some way---just not a portable way---to
+    get at the underlying data files so that we can have multiple
+    active locales.  We defined an interface, found in in
+    <code>c_locale.h</code>, for this functionality.  Our C++ I/O library
+    requires some implementation for the <code>c_locale.h</code>
+    interface.  We believe that implementing the <code>c_locale.h</code>
+    interface is the major work involved in porting the I/O library to
+    a new platform.
+
+    <p>
+    We have implemented the c_locale interface for the IRIX C library
+    (it is not included here because it includes code that, for legal
+    reasons, SGI can't release as open source), and for the GNU glibc
+    2.x library.
+    
+    <p>
+    Additionally, we provide a stub implementation of the c_locale
+    interface.  This interface is used only for named locales that the
+    OS knows about, such as (in IRIX) &quot;de&quot;,
+    &quot;es_MX&quot;, and &quot;fr_BE&quot;.  It isn't used for
+    user-defined locales, or for the classic locale.  So the stub
+    implementation takes any string, and returns a failure indication
+    when the user attempts to create a named locale.  That's perfectly
+    conforming, according to the C++ standard, and it's even useful.
+    (At least for people who don't have a pressing need for
+    internationalization.)  This can serve as a stopgap for platforms 
+    where we don't yet have a real c_locale implementation.
+
+<p><li>
+    There are a couple of smaller places where we have
+    system-dependent code.  One, of course, is in
+    <code>basic_filebuf</code> (see especially <code>fstream.cxx</code>),
+    which makes system calls for reading and writing.  (On Unix, it
+    uses such system calls as <code>open</code>, <code>close</code>,
+    <code>read</code>, <code>write</code>, <code>fcntl</code>, <code>lseek</code>,
+    <code>mmap</code>, and <code>munmap</code>.)
+
+    <p>
+    We have tried to abstract out as much system-dependent stuff as
+    possible into the <code>_Filebuf_base</code> class.  At present it
+    supports IRIX and Linux; porting to other versions of Unix should
+    be easy.  There is also some incomplete support for NT; issues
+    there include the '\n' &lt;-&gt; CRLF translation in text mode,
+    and the use of native Win32 system calls, especially for memory 
+    mapped I/O.
+
+<p><li>
+    Another place where we've got system dependent code is syncing
+    with stdio.  The C++ standard requires that there be a mode in
+    which iostreams and stdio are synchronized (the C++ standard is
+    imprecise about just what synchronization means, but, after
+    talking to the people who wrote that part of the standard, it's
+    clear that it means a very close coupling), and it requires that
+    synchronized mode be the default.  We could have satisfied this
+    requirement by implementing things in terms of <code>putc</code> and
+    <code>getc</code>, but that would have been horribly inefficient.
+    Instead we did something uglier, but more efficient: we directly
+    manipulate the pointers inside a <code>FILE</code> object.  We've
+    encapsulated knowledge of struct <code>FILE</code> into the header
+    <code>&lt;stl_stdio_file.h&gt;</code>, which defines a few inline functions
+    for this manipulation.  Again, this header has to be modified for
+    every OS that we target.  This has not proven to be a serious problem
+    in practice, since most stdio implementations appear to be very 
+    similar to each other.
+<p>
+    (An aside: the C++ standard does not say what type of streambuf is
+    used by the standard streams, <code>cin</code>, <code>cout</code>,
+    <code>cerr</code>, etc.  Our choice: the wide streams, and in
+    unsynchronized mode the narrow streams as well, use
+    <code>basic_filebuf</code>.  In synchronized mode the narrow streams
+    instead use <code>SGI::stdio_istreambuf</code> or
+    <code>SGI::stdio_ostreambuf</code>.  Those classes are defined in the
+    header <code>&lt;stdio_streambuf&gt;</code>, and, of course, they are extensions.)
+
+<p><li>
+    Initialization of iostreams is tricky.  The standard specifies how
+    it's supposed to work in some detail, and it doesn't seem to be
+    possible to do it portably.  Our solution, which is admittedly
+    a ghastly hack, is in <code>iostream.cxx</code>.  It's nonportable, but
+    it will work on many platforms.  On some platforms there are better
+    ways of doing this.
+</ul>
+
+
+<h2>Areas that need more work</h2>
+
+<ul>
+<li> Portability to other platforms
+  <ul>
+  <li> Workarounds for compilers that don't support the full C++ language
+  <li> Writing a low-level locale implementation for other C libraries.
+  <li> Use native file I/O system calls for non-Unix operating systems.
+  <li> Testing on other configurations
+  </ul>
+<li> The <code>basic_fstream</code> class sometimes uses memory-mapped I/O 
+     for file input.  It should also use memory-mapped I/O for output 
+     when possible.
+<li> Testing of nontrivial code conversions from wide to narrow characters,
+     especially with variable-width and state-dependent encodings, has
+     been sporadic; it's likely that there are still bugs in this area.
+     Most of the relevant code is in <code>&lt;fstream&gt;</code>.
+<li> The numeric input facets handle <code>istreambuf_iterator</code>
+     naively.  They should look directly at the buffer inside the
+     streambuf, rather than using <code>sgetc</code>, <code>sbumpc</code>,
+     and <code>snextc</code> to get one character at a time.  (See the 
+     header <code>&lt;istream&gt;</code> for an example of how this can be done.)
+     The same optimization applies to the time and monetary facets, but 
+     they're less important.
+<li> There has been some performance tuning for better execution speed,
+     but there has been very little performance tuning for code size
+     or compilation speed.
+</ul>
+
+<hr>
+<A Name="snapshot"><h1>Snapshots</h1></A>
+    
+<table Border Width="100%">
+
+<tr>
+<td> June 8, 2000</td>
+<td><A Href="stdlib_20000608.tar.gz">stdlib_20000608.tar.gz</A>
+    <br>
+    <A Href="stdlib_20000608.zip">stdlib_20000608.zip</A>
+</td>
+<td>
+Many small bug fixes and compatibility patches.  Change to the
+low-level locale API to improve handling of locale "", which 
+indicates that we are to use a locale that corresponds to the user's
+preference.  (The major changes are in c_locale.h and locale.cxx.)
+This change is probably a performance improvement in the common case.
+</td>
+</tr>
+
+
+<tr>
+<td> May 5, 2000</td>
+<td><A Href="stdlib_20000505.tar.gz">stdlib_20000505.tar.gz</A>
+    <br>
+    <A Href="stdlib_20000505.zip">stdlib_20000505.zip</A>
+</td>
+<td>
+Changed <code>deque</code> to remove the extension of a third, default
+template parameter by which the user can control the node size.  The
+extension does not appear to be standard-conforming.
+</td>
+</tr>
+
+<tr>
+<td> April 18, 2000</td>
+<td><A Href="stdlib_20000418.tar.gz">stdlib_20000418.tar.gz</A>
+    <br>
+    <A Href="stdlib_20000418.zip">stdlib_20000418.zip</A>
+</td>
+<td>
+Changed <code>basic_istream::seekg</code> and <code>basic_ostream::seekp</code>
+so that they conform to the resolution to library issue 136 
+adopted in Tokyo.  (<code>seekg</code> should set only the get pointer,
+and <code>seekp</code> should set only get put pointer.)  Fixed a bug that
+affects string output when the width is nonzero; thanks to Volker
+H. Simonis for a bug report and patch.  Changed <code>bitset</code> to
+remove the extension of a second template parameter.  The extension
+does not appear to be standard-conforming (see library issue 94), 
+and it isn't very useful anyway.
+</td>
+</tr>
+
+<tr>
+<td> April 14, 2000</td>
+<td><A Href="stdlib_20000414.tar.gz">stdlib_20000414.tar.gz</A>
+    <br>
+    <A Href="stdlib_20000414.zip">stdlib_20000414.zip</A>
+</td>
+<td>
+Small bug fixes.  Thanks to Alain Miniussi for patches to satisfy
+compiler that perform certain strict error checks, and to 
+Boris Fomitchev for a Sun compatibility patch.
+</td>
+</tr>
+
+<tr>
+<td> April 3, 2000</td>
+<td><A Href="stdlib_20000403.tar.gz">stdlib_20000403.tar.gz</A>
+    <br>
+    <A Href="stdlib_20000403.zip">stdlib_20000403.zip</A>
+</td>
+<td>
+Numeric I/O bug fixes.  Thanks to Dave Abrahams for a hex input patch.
+</td>
+</tr>
+
+<tr>
+<td> March 28, 2000</td>
+<td><A Href="stdlib_20000328.tar.gz">stdlib_20000328.tar.gz</A>
+    <br>
+    <A Href="stdlib_20000328.zip">stdlib_20000328.zip</A>
+</td>
+<td>
+Various bug fixes.  Thanks to Kevin Shepherd for Sun and Win32
+patches, and Dan Tsafrir for a g++ 2.91 patch.
+</td>
+</tr>
+
+<tr>
+<td> March 21, 2000</td>
+<td><A Href="stdlib_20000321.tar.gz">stdlib_20000321.tar.gz</A>
+    <br>
+    <A Href="stdlib_20000321.zip">stdlib_20000321.zip</A>
+</td>
+<td>
+Various bug fixes, including workarounds for Microsoft C++ 5.0
+limitations.  Thanks to Jan Mikkelsen for changes for Intel C++
+compatibility patches, and Jochen Schlick for UnixWare 7 
+compatibility patches.
+</td>
+</tr>
+
+<tr>
+<td> February 18, 2000</td>
+<td><A Href="stdlib_20000218.tar.gz">stdlib_20000218.tar.gz</A>
+    <br>
+    <A Href="stdlib_20000218.zip">stdlib_20000218.zip</A>
+</td>
+<td>
+Fixed another native Win32 API problem; thanks again to Kevin
+Shepherd.  Algorithmic improvement to make list&lt;&gt;::reverse()
+smaller and faster; thanks to John D. Valois.
+</td>
+</tr>
+
+<tr>
+<td>January 28, 2000</td>
+<td><A Href="stdlib_20000128.tar.gz">stdlib_20000128.tar.gz</A>
+    <br>
+    <A Href="stdlib_20000128.zip">stdlib_20000128.zip</A>
+</td>
+<td>
+Fixed a memory leak in <code>basic_filebuf</code>.  Fixed another
+native Win32 API problem; thanks again to Kevin Shepherd and 
+Boris Fomitchev.
+</td>
+</tr>
+
+<tr>
+<td>January 25, 2000</td>
+<td><A Href="stdlib_20000125.tar.gz">stdlib_20000125.tar.gz</A>
+    <br>
+    <A Href="stdlib_20000125.zip">stdlib_20000125.zip</A>
+</td>
+<td>
+Bug fixes.  Thanks to Kevin Shepherd and Boris Fomitchev
+for patches that fix a Win32 initialization problem.
+</td>
+</tr>
+
+<tr>
+<td>January 10, 2000</td>
+<td><A Href="stdlib_20000110.tar.gz">stdlib_20000110.tar.gz</A>
+    <br>
+    <A Href="stdlib_20000110.zip">stdlib_20000110.zip</A>
+</td>
+<td>
+The Win32 version of this library now uses the native Win32
+API, rather than Unix emulation.  Thanks to Kevin Shepherd
+for the patch to support native Win32 calls.
+</td>
+</tr>
+
+<tr>
+<td>January 7, 2000</td>
+<td><A Href="stdlib_20000107.tar.gz">stdlib_20000107.tar.gz</A>
+    <br>
+    <A Href="stdlib_20000107.zip">stdlib_20000107.zip</A>
+</td>
+<td>
+More bug fixes and compatibility improvements.  Thanks to
+Jan Mikkelsen for an Intel C++ compatibility patch.
+</td>
+</tr>
+
+<tr>
+<td>December 28, 1999</td>
+<td><A Href="stdlib_19991228.tar.gz">stdlib_19991228.tar.gz</A>
+    <br>
+    <A Href="stdlib_19991228.zip">stdlib_19991228.zip</A>
+</td>
+<td>
+Minor bug fixes.  Thanks to Vadim Egorov for a time facets patch.
+</td>
+</tr>
+
+<tr>
+<td>December 15, 1999</td>
+<td><A Href="stdlib_19991215.tar.gz">stdlib_19991215.tar.gz</A>
+    <br>
+    <A Href="stdlib_19991215.zip">stdlib_19991215.zip</A>
+</td>
+<td>
+Changes for Microsoft compatibility.  Library now passes 
+more complete test suite using Visual C++ 6.0 SP3.
+</td>
+</tr>
+
+<tr>
+<td>December 10, 1999</td>
+<td><A Href="stdlib_19991210.tar.gz">stdlib_19991210.tar.gz</A>
+    <br>
+    <A Href="stdlib_19991210.zip">stdlib_19991210.zip</A>
+</td>
+<td>
+More small bug fixes.
+</td>
+</tr>
+
+<tr>
+<td>November 23, 1999</td>
+<td><A Href="stdlib_19991123.tar.gz">stdlib_19991123.tar.gz</A>
+    <br>
+    <A Href="stdlib_19991123.zip">stdlib_19991123.zip</A>
+</td>
+<td>
+Minor bug fixes and performance improvements.  Makefile is now
+provided for Microsoft C++ and for IRIX.
+</td>
+</tr>
+
+<tr>
+<td>October 14, 1999</td>
+<td><A Href="stdlib_19991014.tar.gz">stdlib_19991014.tar.gz</A>
+    <br>
+    <A Href="stdlib_19991014.zip">stdlib_19991014.zip</A>
+</td>
+<td>
+Library now compiles and passes simple tests using Microsoft Visual C++
+6.0 (with Service Pack 3).
+</td>
+</tr>
+
+<tr>
+<td>September 5, 1999</td>    
+<td><A Href="stdlib_19990905.tar.gz">stdlib_19990905.tar.gz</A>
+    <br>
+    <A Href="stdlib_19990905.zip">stdlib_19990905.zip</A>
+</td>
+<td>Library now includes support for class <code>complex</code>.</td>
+</tr>
+    
+<tr>
+<td>August 30, 1999</td>    
+<td><A Href="stdlib_19990830.tar.gz">stdlib_19990830.tar.gz</A>
+    <br>
+    <A Href="stdlib_19990830.zip">stdlib_19990830.zip</A>
+</td>
+<td>&nbsp;</td>
+</tr>
+
+</table>
+
+<HR>
+
+The C++ I/O library is released under the same terms as the SGI STL.
+<p>
+    
+    Copyright &copy; 1999 <br>
+    Silicon Graphics Computer Systems, Inc.
+    
+<p>
+    Permission to use, copy, modify, distribute and sell this software
+    and its documentation for any purpose is hereby granted without fee,
+    provided that the above copyright notice appear in all copies and
+    that both that copyright notice and this permission notice appear
+    in supporting documentation.  Silicon Graphics makes no
+    representations about the suitability of this software for any
+    purpose.  It is provided &quot;as is&quot; without express or implied warranty.
+
+*/

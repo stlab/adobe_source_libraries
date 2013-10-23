@@ -1,0 +1,199 @@
+/** \page stldoc_StrictWeakOrdering StrictWeakOrdering
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Strict Weak Ordering is a \ref stldoc_BinaryPredicate that compares two
+objects, returning <code>true</code> if the first precedes the second.  This
+predicate must satisfy the standard mathematical definition of
+a <i>strict weak ordering</i>.  The precise requirements are stated
+below, but what they roughly mean is that a Strict Weak Ordering has
+to behave the way that &quot;less than&quot; behaves: if <code>a</code> is less than <code>b</code>
+then <code>b</code> is not less than <code>a</code>, if <code>a</code> is less than <code>b</code> and <code>b</code> is less
+than <code>c</code> then <code>a</code> is less than <code>c</code>, and so on.
+\section Refinement_of Refinement of
+\ref stldoc_BinaryPredicate
+\section Associated_types Associated types
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+First argument type
+</td>
+<td valign="top">
+The type of the Strict Weak Ordering's first argument.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Second argument type
+</td>
+<td valign="top">
+The type of the Strict Weak Ordering's second argument.  The first
+   argument type and second argument type must be the same.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Result type
+</td>
+<td valign="top">
+The type returned when the Strict Weak Ordering is called.  The result type
+   must be convertible to <code>bool</code>.  
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>F</code>
+</td>
+<td valign="top">
+A type that is a model of Strict Weak Ordering
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+The type of Strict Weak Ordering's arguments.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>f</code>
+</td>
+<td valign="top">
+Object of type <code>F</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>x</code>, <code>y</code>, <code>z</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+<ul>
+<li>
+Two objects <code>x</code> and <code>y</code> are <i>equivalent</i> if both <code>f(x, y)</code> and
+   <code>f(y, x)</code> are false.  Note that an object is always (by the
+   irreflexivity invariant) equivalent to itself.
+</ul>
+\section Valid_expressions Valid expressions
+None, except for those defined in the \ref stldoc_BinaryPredicate requirements.
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Function call
+</td>
+<td valign="top">
+<code>f(x, y)</code>
+</td>
+<td valign="top">
+The ordered pair <code>(x,y)</code> is in the domain of <code>f</code>
+</td>
+<td valign="top">
+Returns <code>true</code> if <code>x</code> precedes <code>y</code>, and <code>false</code> otherwise
+</td>
+<td valign="top">
+The result is either <code>true</code> or <code>false</code>
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+\section Invariants Invariants
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Irreflexivity
+</td>
+<td valign="top">
+<code>f(x, x)</code> must be <code>false</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Antisymmetry
+</td>
+<td valign="top">
+<code>f(x, y)</code> implies <code>!f(y, x)</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Transitivity
+</td>
+<td valign="top">
+<code>f(x, y)</code> and <code>f(y, z)</code> imply <code>f(x, z)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Transitivity of equivalence
+</td>
+<td valign="top">
+Equivalence (as defined above) is transitive: if <code>x</code> is equivalent
+   to <code>y</code> and <code>y</code> is equivalent to <code>z</code>, then <code>x</code> is equivalent to <code>z</code>.
+   (This implies that equivalence does in fact satisfy the mathematical
+   definition of an equivalence relation.) <A href="#1">[1]</A>
+</td>
+</tr>
+</table>
+\section Models Models
+<ul>
+<li>
+<code>\ref stldoc_less&lt;int&gt;</code>
+<li>
+<code>\ref stldoc_less&lt;double&gt;</code>
+<li>
+<code>\ref stldoc_greater&lt;int&gt;</code>
+<li>
+<code>\ref stldoc_greater&lt;double&gt;</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+The first three axioms, irreflexivity, antisymmetry, and
+transitivity, are the definition of a <i>partial ordering</i>; 
+transitivity of equivalence is required by the definition of a
+<i>strict weak ordering</i>.  A <i>total ordering</i> is one that satisfies
+an even stronger condition: equivalence must be the same as equality.
+\section See_also See also
+\ref stldoc_LessThanComparable, <code>\ref stldoc_less</code>, \ref stldoc_BinaryPredicate, 
+\ref stldoc_functors
+
+
+*/

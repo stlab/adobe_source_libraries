@@ -1,0 +1,89 @@
+/*!
+\defgroup asl_tutorials_dictionary_t dictionary_t
+\ingroup asl_tutorials
+
+<i>Last updated February 21, 2008</i>
+
+\section dictionary_t_background Background
+
+\subsection background_regular_type Regular Type
+\par
+adobe::dictionary_t is a typedef for adobe::closed_hash_map<adobe::name_t, adobe::any_regular_t>.
+\par
+
+\subsection background_move Move
+\par
+adobe::dictionary_t is a movable type, which means that the container can be freely returned from
+functions without incurring unessary copies [see adobe::move].
+
+\subsection background_random_access Random Access
+\par
+Every element in an adobe::dictionary_t can be accessed in <code>constant</code> time. There are also iterator classes that allow for bidirectional iteration of the container.
+
+\subsection background_value_t_value_type adobe::value_t Elements
+\par
+adobe::dictionary_t stores key/pair elements of types &lt;adobe::name_t, adobe::any_regular_t&gt;. Because of the features of adobe::any_regular_t, this means that an adobe::dictionary_t can store any data type that models the \ref concept_regular_type concept at a given key.
+
+\section dictionary_t_usage Usage
+\par
+A key point to remember is an adobe::dictionary_t is essentially a specialized map. Consequently just about anything you can do with a map you can do with an adobe::dictionary_t. The reasons you would want to use an adobe::dictionary_t over a std::map<adobe::name_t, adobe::any_regular_t> is primarily because of the move semantics and because the storage characteristics of a closed_hash_map, which allow for optimized copying when returned from a functions. It is also much more lightweight than a std::map.
+
+\subsection usage_initialization Initialization
+\par
+One initializes an adobe::dictionary_t in one of several ways:
+\par
+\code
+// Method 1: Default Construction
+adobe::dictionary_t my_first_dictionary;
+
+// Method 2: Copy Construction
+adobe::dictionary_t my_second_dictionary(my_first_dictionary);
+\endcode
+\par
+Constructing an empty dictionary will never throw an exception - no allocations are required until something is stored into it.
+
+\subsection usage_storage Storage
+\par
+Setting a value in an dictionary can only be done just as with a map:
+\par
+\code
+adobe::dictionary_t my_dictionary;
+my_dictionary[adobe::static_name_t("pi")] = adobe::any_regular_t(3.141526);
+my_dictionary[adobe::static_name_t("greeting")] = adobe::any_regular_t("Hello, world!");
+my_dictionary[adobe::static_name_t("my_rt")] = adobe::any_regular_t(my_regular_type(/*...*/));
+\endcode
+
+\subsection usage_retrieval Retrieval
+\par
+Getting values out of an adobe::dictionary_t is easy, you merely index into the adobe::dictionary_t to access the values. The only thing to remember is that the data stored is wrapped in an adobe::any_regular_t, so it must first be extracted out of there before it can be used:
+\par
+\code
+// Singleton element retrieval
+
+adobe::dictionary_t my_dictionary;
+// ... fill my_dictionary with elements
+std::string my_string_value(my_dictionary[adobe::name_t("key_string")].cast<std::string>());
+
+// Iterative retrieval of elements
+
+adobe::dictionary_t::const_iterator first(my_dictionary.begin());
+adobe::dictionary_t::const_iterator last(my_dictionary.end());
+
+for (; first != last; ++first)
+{
+    if (first->second.type_info() == adobe::type_info<std::string>())
+    {
+        std::cout << "Found a string: " << first->second.cast<std::string>() << std::endl;
+    }
+    else if (first->second.type_info() == adobe::type_info<double>())
+    {
+        std::cout << "Found a number: " << first->second.cast<double>() << std::endl;
+    }
+    else
+    {
+        std::cout << "I have no idea what we've found!" << std::endl;
+    }
+}
+\endcode
+Note that iterative retrieval of elements will not take place in key-sorted order. Use a table_index<> if key-sorted order is needed.
+*/

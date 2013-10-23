@@ -1,0 +1,408 @@
+/*!
+\defgroup asl_xstring xstring Glossary System
+\ingroup parsing
+
+\brief A context-sensitive string lookup system
+
+\note
+The xstring implementation is thread safe when compiled with BOOST_HAS_THREADS defined.
+
+\todo (fbrereto) The language code should be obtained at runtime instead of hard-coded to 'en-us'
+
+\section xstring_grammar xstring Grammar
+The xstring grammar is based on the XML 1.1 grammar specification (http://www.w3.org/TR/2004/REC-xml11-20040204/)
+\verbatim
+S                   =   (#x20 | #x09 | #x0D | #x0A)+
+
+Char                =   [#x1-#xD7FF] | [#xE000-#xFFFD] | [#x10000-#x10FFFF]
+
+CharData            =   [^<&]*
+
+CharRef             =   '&#' [0-9]+ ';' | '&#x' [0-9a-fA-F]+ ';'
+
+NameStartChar       =   ":" | [A-Z] | "_" | [a-z] | [#xC0-#xD6] | [#xD8-#xF6] |
+                        [#xF8-#x2FF] | [#x370-#x37D] | [#x37F-#x1FFF] |
+                        [#x200C-#x200D] | [#x2070-#x218F] | [#x2C00-#x2FEF] |
+                        [#x3001-#xD7FF] | [#xF900-#xFDCF] | [#xFDF0-#xFFFD] |
+                        [#x10000-#xEFFFF]
+
+NameChar            =   NameStartChar | "-" | "." | [0-9] | #xB7 |
+                        [#x0300-#x036F] | [#x203F-#x2040]
+
+Name                =   NameStartChar (NameChar)*
+
+EntityRef           =   '&' Name ';'
+
+Reference           =   EntityRef | CharRef
+
+AttValue            =   '"' ([^<&"] | Reference)* '"' |
+                        "'" ([^<&'] | Reference)* "'"
+
+Eq                  =   S? '=' S?
+
+Attribute           =   Name Eq AttValue
+
+EmptyElemTag        =   '<' Name (S Attribute)* S? '/>'
+
+STag                =   '<' Name (S Attribute)* S? '>'
+
+ETag                =   '</' Name S? '>'
+
+content             =   CharData? ((element | Reference | Comment) CharData?)*
+
+element             =   EmptyElemTag | STag content ETag
+
+translation_unit    =   element*
+\endverbatim
+
+\section xstring_context Context
+
+\subsection xstring_context_overview Overview
+
+The context of a string is a runtime evaluated collection of information about the state of the machine and the xstring that we currently care about. This context is gathered from several locations:
+
+    -# the runtime context of the xstring system (which includes some defaults)
+    -# the static attributes of the xstring definition
+
+The runtime context of the xstring system can be manipulated with the adobe::xstring_context_t class. The runtime context has several pieces of information set by default. These pieces are:
+    - lang      :   defaults to 'en-us'
+    - platform  :   defaults to one of several target platform tags:
+        - "linux"
+        - "bsd"
+        - "solaris"
+        - "irix"
+        - "hpux"
+        - "cygwin"
+        - "windows"
+        - "beos"
+        - "macintosh"
+        - "aix"
+        - "amiga"
+        - "unix"
+
+The static attributes of the xstring definition also provide context. Example:
+\verbatim
+<xstr id='hello_world' lang='es-sp'>Hola, mundo!</xstr>
+\endverbatim
+
+In the above example the two bits of context are 'id' and 'lang'. These override specific context information as outlined in the "Context Merging" section.
+
+\subsection xstring_context_merging Merging
+There are several context merges that take place in the use of the xstring system. Context merges are necessary because there are several places from which the context of a string is gathered, and conflicting pieces of context must be resolved before the string can be imported into or looked up in the xstring glossary. This section describes the rules by which parts of one source context overrides another to obtain the final context for an xstring.
+
+\subsubsection xstring_context_merging_import Merging During Importing Into the Glossary
+When importing into the glossary the only context taken into account is the static context defined in the xstring.
+
+\subsubsection xstring_context_merging_lookup Merging During Lookup
+When looking up an xstring in the glossary, first the xstring is parsed to obtain its static context. The runtime context defined by adobe::xstring_context_t is then merged with the static context, and the static context value takes precedence in the case of a conflict.
+
+\subsection xstring_context_lookup Lookup
+
+During lookup, the source xstring context is completely resolved first. Then the source xstring is compared to the xstrings in the glossary that have the same <code>id</code> key value. Of those xstrings with the same <code>id</code> key value, the xstring selected from the glossary is the one whose attribute set is the largest subset of the source xstring.
+
+\section xstring_marker_replacement Marker Replacement
+
+It is possible for the xstring system to handle marker replacement inside xstrings. A marker is simply an xml tag in an xstring to be removed later and replaced with another string (which itself can be the product of a previous xstring lookup). An example might be:
+\verbatim
+<xstr id='greeting'>Hello, <marker id='user_name'/></xstr>
+\endverbatim
+
+During xstring marker replacement the engine will extract all the xstrings in the glossary with the same <code>id</code> key value. Markers are matched based on their attribute sets: in order for a marker to be replaced in an xstring its attribute set must match the source marker's attribute set perfectly. If a marker in the xstring cannot be replaced by one of the supplied markers, it is an error for that xstring, and the engine moves on to the next candidate. Of the set of xstrings in the glossary with the same <code>id</code> key value, the final xstring selected is the one that had the most markers replaced without error. This means, then, that it is possible to have xstrings be selected based on the markers passed in to resolve them.
+
+\subsection xstring_marker_replacement_example Example
+
+Given the following in the xstring glossary:
+\verbatim
+<xstr id='replacement_test_1'>I think <marker id='good_thing'/> is a Good Thing</xstr>
+<xstr id='replacement_test_1'>I think <marker id='bad_thing'/> is a Bad Thing</xstr>
+<xstr id='replacement_test_1'>I don't think anything about <marker id='whatever'/></xstr>
+
+<xstr id="a_good_thing"><marker id="good_thing">ice cream</marker></xstr>
+<xstr id="a_bad_thing"><marker id="bad_thing">the Taliban</marker></xstr>
+<xstr id="a_neutral_thing"><marker id="whatever">yellow traffic lights</marker></xstr>
+\endverbatim
+
+And given the following code:
+\code
+std::string good_thing(adobe::xstring("<xstr id='a_good_thing'/>"));
+std::string bad_thing(adobe::xstring("<xstr id='a_bad_thing'/>"));
+std::string neutral_thing(adobe::xstring("<xstr id='a_neutral_thing'/>"));
+
+std::cout << "good marker: " << good_thing << std::endl;
+std::cout << "bad marker: " << bad_thing << std::endl;
+std::cout << "neutral marker: " << neutral_thing << std::endl;
+
+std::cout << "Good: " << adobe::xstring_replace(adobe::static_name_t("replacement_test_1"), good_thing) << std::endl;
+std::cout << "Bad: " << adobe::xstring_replace(adobe::static_name_t("replacement_test_1"), bad_thing) << std::endl;
+std::cout << "Neutral: " << adobe::xstring_replace(adobe::static_name_t("replacement_test_1"), neutral_thing) << std::endl;
+\endcode
+
+We get the following output:
+\verbatim
+good marker: <marker id='good_thing'>ice cream</marker>
+bad marker: <marker id='bad_thing'>the Taliban</marker>
+neutral marker: <marker id='whatever'>yellow traffic lights</marker>
+Good: I think ice cream is a Good Thing
+Bad: I think the Taliban is a Bad Thing
+Neutral: I don't think anything about yellow traffic lights
+\endverbatim
+
+Note first of all that we extracted our markers from the xstring glossary itself before we used them for marker replacement. This gives you the ability to localize your markers before you use them in marker replacement.
+
+Note also that there are three xstrings with the <code>id</code> of <code>replacement_test_1</code>. The xstring replacement engine considered all of those xstrings in every iteration of marker replacement, however the results changed because the provided markers had varying attribute sets.
+
+\subsection xstring_marker_replacement_notes Marker Replacement Notes
+
+Within a single marker replacement pass, it is illegal to have one marker directly nested within another marker, either in the source xstring or as a replacement marker, e.g.:
+
+\verbatim
+<marker id="foo"><marker id="bar"/></marker>
+\endverbatim
+
+Other XML tags, however, are allowed.
+*/
+
+/*!
+\typedef adobe::xml_element_proc_t
+\ingroup asl_xstring
+
+Callback for the XML fragment parser. When the fragment parser finds a well formed element, it will signal a function with this signature with the following parameters:
+
+\param  name            The name of the element
+\param  attribute_set   A collection of attributes for the found element (could be empty)
+\param  value           The character data contained within the element (could be empty)
+
+\return A UTF8 buffer that is the value of this element. The value is dependent on the implementation of the callback (for example, see xml_element_echo).
+*/
+
+#if 0
+/*!
+\fn void adobe::xstring_glossary(std::istream& stream)
+\ingroup asl_xstring
+
+Appends the current xstring glossary. Strings with identical contexts are stored on a first-in basis, and are not replaced by subsequent strings with the same context.
+
+\param  stream  Stream containing XML fragment to parse into the xstring glossary
+*/
+
+/*!
+\fn void adobe::xstring_glossary(std::istream& stream, const char* file, int line)
+\ingroup asl_xstring
+
+Appends the current xstring glossary. Strings with identical contexts are stored on a first-in basis, and are not replaced by subsequent strings with the same context.
+
+\param  stream  Stream containing XML fragment to parse into the xstring glossary
+\param  file    Name of the file to parse (for better error reporting)
+\param  line    Starting line number in the file to parse (for better error reporting)
+*/
+#endif
+
+/*!
+\fn void adobe::xstring_clear_glossary()
+\ingroup asl_xstring
+
+Clears the entire contents of the xstring glossary
+
+\note
+    This is available only for builds where <code>NDEBUG</code> is not defined
+*/
+
+/*!
+\fn std::string adobe::xstring(const char* xstr, std::size_t n);
+\ingroup asl_xstring
+
+\param  xstr    7-bit ASCII encoded xstring definition (an XML element fragment) to parse
+\param  n       size of the input buffer
+
+\return The glossary-obtained xstring value, or the default string if none is found in the glossary. This result will be a valid XML fragment
+
+\note When compiled without <code>NDEBUG</code> defined, if the string is not found in the glossary it will be added. This is useful for checking for duplicate entries across your application.
+*/
+
+/*!
+\fn std::string adobe::xstring(const std::string& xstr)
+\ingroup asl_xstring
+
+\param  xstr    utf-8 buffer of the xstring defintion to parse and look up
+
+\return The glossary-obtained xstring value, or the default string if none is found in the glossary. This result will be a valid XML fragment
+
+\note When compiled without <code>NDEBUG</code> defined, if the string is not found in the glossary it will be added. This is useful for checking for duplicate entries across your application.
+*/
+
+/*!
+\fn void adobe::xstring(const char* xstring, std::size_t n, O output)
+\ingroup asl_xstring
+
+\param  xstring 7-bit ASCII encoded xstring definition (an XML element fragment) to parse
+\param  n       size of the input buffer
+\param  output  Type that models OutputIterator; recieves the result of the xstring lookup.
+
+\return The glossary-obtained xstring value, or the default string if none is found in the glossary. This result will be a valid XML fragment
+
+\note When compiled without <code>NDEBUG</code> defined, if the string is not found in the glossary it will be added. This is useful for checking for duplicate entries across your application.
+*/
+
+/*!
+\fn void adobe::xstring(const char* xstring, O output)
+\ingroup asl_xstring
+
+\param  xstring Null-terminated 7-bit ASCII encoded xstring definition (an XML element fragment) to parse
+\param  output  Type that models OutputIterator; recieves the result of the xstring lookup.
+
+\return The glossary-obtained xstring value, or the default string if none is found in the glossary. This result will be a valid XML fragment
+
+\note When compiled without <code>NDEBUG</code> defined, if the string is not found in the glossary it will be added. This is useful for checking for duplicate entries across your application.
+*/
+
+/*!
+\fn std::string adobe::parse_xml_fragment(uchar_ptr_t fragment, std::size_t n, O output)
+\ingroup asl_xstring
+
+Parses a fragment of XML, outputting the result to an OutputIterator instance.
+
+\param  fragment    utf-8 encoded fragment of XML to parse
+\param  n           Number of bytes in the fragment
+\param  output      OutputIterator implementation that receives the result of the parse
+
+\return The value of the parsed fragment
+*/
+
+/*!
+\fn std::string adobe::parse_xml_fragment(const std::string& fragment, O output)
+\ingroup asl_xstring
+
+Parses a fragment of XML, outputting the result to an OutputIterator instance.
+
+\param  fragment    utf-8 encoded fragment of XML to parse
+\param  output      OutputIterator implementation that receives the result of the parse
+
+\return The value of the parsed fragment
+*/
+
+/*!
+\fn std::string adobe::parse_xml_fragment(const char* fragment, O output)
+\ingroup asl_xstring
+
+Parses a fragment of XML, outputting the result to an OutputIterator instance.
+
+\param  fragment    Null-terminated 7-bit ASCII encoded fragment of XML to parse
+\param  output      OutputIterator implementation that receives the result of the parse
+
+\return The value of the parsed fragment
+*/
+
+/*!
+\fn std::string adobe::xstring_replace(const std::string& xstr, const std::string& marker)
+\ingroup asl_xstring
+
+\param xstr xstring to parse
+\param marker marker to be used to replace those found in best-fitting xstring
+
+\note
+The only piece of information used from this source xstring is the <code>id</code> attribute value. If you have access to this value without needing to parse the xstring, use the alternate form of xstring_replace that takes just the xstring id.
+
+\return The glossary-obtained xstring value with the markers appropriately replaced. This result will be a valid XML fragment
+
+\exception std::runtime_error Thrown when marker replacement attempts on all of the candidate xstrings resulted in an error.
+*/
+
+/*!
+\fn std::string adobe::xstring_replace(const std::string& xstr, const std::string* first, const std::string* last)
+\ingroup asl_xstring
+
+\param xstr xstring to parse
+\param first first marker to be used to replace those found in best-fitting xstring
+\param last one-past the last marker
+
+\note
+The only piece of information used from this source xstring is the <code>id</code> attribute value. If you have access to this value without needing to parse the xstring, use the alternate form of xstring_replace that takes just the xstring id.
+
+\return The glossary-obtained xstring value with the markers appropriately replaced. This result will be a valid XML fragment
+
+\exception std::runtime_error Thrown when marker replacement attempts on all of the candidate xstrings resulted in an error.
+*/
+
+/*!
+\fn std::string adobe::xstring_replace(const adobe::name_t& xstr_id, const std::string& marker)
+\ingroup asl_xstring
+
+\param xstr_id xstring to parse
+\param marker marker to be used to replace those found in best-fitting xstring
+
+\return The glossary-obtained xstring value with the markers appropriately replaced. This result will be a valid XML fragment
+
+\exception std::runtime_error Thrown when marker replacement attempts on all of the candidate xstrings resulted in an error.
+*/
+
+/*!
+\fn std::string adobe::xstring_replace(const adobe::name_t& xstr_id, const std::string* first, const std::string* last)
+\ingroup asl_xstring
+
+\param xstr_id xstring to parse
+\param first first marker to be used to replace those found in best-fitting xstring
+\param last one-past the last marker
+
+\return The glossary-obtained xstring value with the markers appropriately replaced. This result will be a valid XML fragment
+
+\exception std::runtime_error Thrown when marker replacement attempts on all of the candidate xstrings resulted in an error.
+*/
+
+/*!
+\class adobe::xstring_context_t xstring.hpp <adobe/xstring.hpp>
+\ingroup asl_xstring
+
+\brief Scope-based runtime context stack for glossary lookups
+
+The xstring_context_t class is used to add context sensitivity to xstring lookups. Example:
+\code
+{
+    adobe::attribute_set_t attribute_set;
+
+    attribute_set.push_back(std::make_pair(adobe::static_name_t("context"), adobe::static_name_t("some_view")));
+
+    adobe::xstring_context_t mycontext(attribute_set);
+
+    // anything here is looked up with the context='some_view'; other attributes remain unchanged
+}
+// now our context is out scope and we go back to what we had before.
+\endcode
+
+There is also a constructor that takes a name/value pair for simple context construction. Example:
+\code
+{
+    adobe::xstring_context_t mycontext(adobe::static_name_t("context"), adobe::static_name_t("some_view"));
+
+    // anything here is looked up with the context='some_view'; other attributes remain unchanged
+}
+// now our context is out scope and we go back to what we had before.
+\endcode
+
+There is also a constructor that takes a set of std::pair<adobe::name_t, adobe::name_t> for simple context construction. Example:
+\code
+{
+    std::vector<std::pair<adobe::name_t, adobe::name_t> > my_set;
+
+    // fill in my_set ...
+
+    adobe::xstring_context_t mycontext(&my_set[0], &my_set[my_set.size()]);
+
+    // anything here is looked up with a context affected by my_set
+}
+// now our context is out scope and we go back to what we had before.
+\endcode
+*/
+
+#if 0
+
+/*!
+
+\fn std::string xml_xstr_echo(const adobe::name_t &name, const adobe::attribute_set_t &attribute_set, const std::string &value)
+\ingroup asl_xstring
+
+This is a default element processing proc for use with the adobe::xml_element_proc_t parameter in some APIs.
+
+\return The exact element information as a well-formatted XML fragment.
+*/
+
+#endif

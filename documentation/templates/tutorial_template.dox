@@ -1,0 +1,67 @@
+/*!
+\defgroup tutorial_documentation_template Tutorial Template
+\ingroup asl_documentation_templates
+
+\section template_tutorial_getting_started Getting Started
+
+\subsection template_tutorial_notes_on_impl Notes on Implementation
+    - When you go to instantiate this template, make sure you change the \c ingroup command to join this template in the \c asl_tutorials group.
+    - One of the best place to get examples is from the unit tests you write for your code (you are writing unit tests, aren't you?)
+
+\subsection template_tutorial_info Tutorial Information
+    - Author : ~Name~
+    - Last Modified : ~Date~
+
+\subsection template_tutorial_toc Table of Contents
+    It serves the readers of the tutorial effectively if they can get to significant points in a tutorial quickly, especially if it is lengthy. In order to accomplish this reasonably, provide a Table of Contents with \c ref commands to the various sections and subsections in your tutorial. Sections should be on the first level of indentation, and subsections on the second:
+    - \ref template_tutorial_getting_started
+        - \ref template_tutorial_notes_on_impl
+        - \ref template_tutorial_info
+        - \ref template_tutorial_toc
+        - \ref template_tutorial_abstract
+    - \ref template_tutorial_step_1
+        - \ref template_tutorial_step_1_part_1
+        - \ref template_tutorial_step_1_summary
+    - \ref template_tutorial_examples
+        - \ref template_tutorial_example_1
+
+\subsection template_tutorial_abstract Abstract
+    - Why is this tutorial in existence?
+    - What is the goal of the tutorial?
+        - If it is to provide an overview of a class, make sure most (if not all) of the functionality of the class is demonstrated.
+        - If it is to achieve a purpose (e.g., how to create a new widget for the widget set), outline the steps that will be necessary to go from start to finish. These bullets should serve to be the \c section and/or \c subsection portions of the tutorial.
+        - For both types of tutorial, extensive sample code should be used to demonstrate functionality.
+
+\section template_tutorial_step_1 Step 1 : Do this thing
+    - What does this step do?
+    - Why is this step necessary?
+    - Why this step now? Could it happen in some other sequence of events?
+    - Give a high-level overview of what is to be done at this step
+
+\subsection template_tutorial_step_1_part_1 Part 1 : Do this other thing
+    - Give a high-level overview of what is to be done in this part of the step
+    - Give a detailed, paragraph-based explanation of what needs to be done and why. Include inline code fragments if necessary.
+
+\subsection template_tutorial_step_1_summary Step 1 Summary : This is what you did
+    - Summarize what just happened and why it was necessary
+    - If possible, provide a code fragment for the sum of the parts for this step.
+        - referencing one of the examples ("See \ref template_tutorial_example_1") is acceptable.
+
+\section template_tutorial_examples Examples
+\subsection template_tutorial_example_1 Example 1 : What this Code Demonstrates
+\par
+\code
+    #include <iostream>
+    
+    int main(void)
+    {
+        std::cout << "Hello, world!" << std::endl;
+
+        return 0;
+    }
+\endcode
+\par Results:
+\verbatim
+    Hello, world!
+\endverbatim
+*/

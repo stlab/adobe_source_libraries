@@ -1,0 +1,128 @@
+/** \page stldoc_adjacent_difference adjacent_difference
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Adjacent_difference</code> is an overloaded name; there are actually two <code>adjacent_difference</code>
+functions.
+\code
+template <class InputIterator, class OutputIterator>
+OutputIterator adjacent_difference(InputIterator first, InputIterator last, 
+                                   OutputIterator result);
+
+template <class InputIterator, class OutputIterator, class BinaryFunction>
+OutputIterator adjacent_difference(InputIterator first, InputIterator last,
+                                   OutputIterator result,
+                                   BinaryFunction binary_op);
+\endcode
+\section Description Description
+<code>Adjacent_difference</code> calculates the differences of adjacent elements
+in the range <code>[first, last)</code>.  This is, <code>*first</code> is assigned to
+<code>*result</code> <A href="#1">[1]</A>, and, for each iterator <code>i</code> in the range <code>[first + 1,
+last)</code>, the difference of <code>*i</code> and <code>*(i - 1)</code> is assigned to
+<code>*(result + (i - first))</code>. <A href="#2">[2]</A>
+<p>
+The first version of <code>adjacent_difference</code> uses <code>operator-</code> to
+calculate differences, and the second version uses a user-supplied
+\ref stldoc_BinaryFunction.  In the first version, for each iterator
+<code>i</code> in the range <code>[first + 1, last)</code>, 
+<code>*i - *(i - 1)</code> is assigned to <code>*(result + (i - first))</code>.
+In the second version, the value that is assigned to <code>*(result + 1)</code>
+is instead <code>binary_op(*i, *(i - 1))</code>.
+\section Definition Definition
+Defined in the standard header <A href="numeric">numeric</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator.
+<li>
+If <code>x</code> and <code>y</code> are objects of <code>ForwardIterator</code>'s value type,
+   then <code>x - y</code> is defined.
+<li>
+<code>InputIterator</code>s value type is convertible to a type in
+   <code>OutputIterator</code>'s set of value types.
+<li>
+The return type of <code>x - y</code> is convertible to a type in
+   <code>OutputIterator</code>'s set of value types.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator.
+<li>
+<code>BinaryFunction</code> is a model of \ref stldoc_BinaryFunction.
+<li>
+<code>InputIterator</code>'s value type is convertible to a
+   <code>BinaryFunction</code>'s first argument type and second argument type.
+<li>
+<code>InputIterator</code>s value type is convertible to a type in
+   <code>OutputIterator</code>'s set of value types.
+<li>
+<code>BinaryFunction</code>'s result type is convertible to a type in
+   <code>OutputIterator</code>'s set of value types.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>[result, result + (last - first))</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Zero applications of the binary operation if <code>[first, last)</code>
+is an empty range, otherwise exactly <code>(last - first) - 1</code> applications.
+\section Example Example
+\code
+int main()
+{
+  int A[] = {1, 4, 9, 16, 25, 36, 49, 64, 81, 100};
+  const int N = sizeof(A) / sizeof(int);
+  int B[N];
+
+  cout << "A[]:         ";
+  copy(A, A + N, ostream_iterator<int>(cout, " "));
+  cout << endl;
+  
+  adjacent_difference(A, A + N, B);
+  cout << "Differences: ";
+  copy(B, B + N, ostream_iterator<int>(cout, " "));
+  cout << endl;
+
+  cout << "Reconstruct: ";
+  partial_sum(B, B + N, ostream_iterator<int>(cout, " "));
+  cout << endl;
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The reason it is useful to store the value of the first element,
+as well as simply storing the differences, is that this provides
+enough information to reconstruct the input range.  In particular, 
+if addition and subtraction have the usual arithmetic definitions, then
+<code>adjacent_difference</code> and <code>\ref stldoc_partial_sum</code> are inverses of each other.
+<p><A name="2">[2]</A>
+Note that <code>result</code> is permitted to be the same iterator as
+<code>first</code>.  This is useful for computing differences &quot;in place&quot;.
+\section See_also See also
+<code>\ref stldoc_partial_sum</code>, <code>\ref stldoc_accumulate</code>, <code>\ref stldoc_inner_product</code>, 
+<code>\ref stldoc_count</code>
+
+
+*/

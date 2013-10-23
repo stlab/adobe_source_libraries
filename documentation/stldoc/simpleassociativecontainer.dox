@@ -1,0 +1,127 @@
+/** \page stldoc_SimpleAssociativeContainer SimpleAssociativeContainer
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Simple Associative Container is an \ref stldoc_AssociativeContainer where
+elements are their own keys.  A key in a Simple Associative Container
+is not associated with any additional value.
+\section Refinement_of Refinement of
+\ref stldoc_AssociativeContainer
+\section Associated_types Associated types
+None, except for those described in the \ref stldoc_AssociativeContainer
+requirements.  Simple Associative Container, however, introduces two
+new type restrictions.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Key type
+</td>
+<td valign="top">
+<code>X::key_type</code>
+</td>
+<td valign="top">
+The type of the key associated with <code>X::value_type</code>.  The types
+   <code>key_type</code> and <code>value_type</code> must be the same type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Iterator
+</td>
+<td valign="top">
+<code>X::iterator</code>
+</td>
+<td valign="top">
+The type of iterator used to iterate through a Simple Associative
+   Container's elements.  The types <code>X::iterator</code> and 
+   <code>X::const_iterator</code> must be the same type.  That is, a
+   Simple Associative Container does not provide mutable iterators. <A href="#1">[1]</A>
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Simple Associative Container
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>a</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>k</code>
+</td>
+<td valign="top">
+Object of type <code>X::key_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>p</code>, <code>q</code>
+</td>
+<td valign="top">
+Object of type <code>X::iterator</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+\section Valid_expressions Valid expressions
+None, except for those defined in the \ref stldoc_AssociativeContainer requirements.
+\section Expression_semantics Expression semantics
+\section Complexity_guarantees Complexity guarantees
+\section Invariants Invariants
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Immutability of Elements
+</td>
+<td valign="top">
+Every element of a Simple Associative Container is immutable.  Objects
+   may be inserted and erased, but not modified. <A href="#1">[1]</A>
+</td>
+</tr>
+</table>
+\section Models Models
+<ul>
+<li>
+<code>\ref stldoc_set</code>
+<li>
+<code>\ref stldoc_multiset</code>
+<li>
+<code>\ref stldoc_hash_set</code>
+<li>
+<code>\ref stldoc_hash_multiset</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+This is a consequence of the Immutability of Keys invariant of
+\ref stldoc_AssociativeContainer.  Keys may never be modified; values in
+a Simple Associative Container are themselves keys, so it immediately
+follows that values in a Simple Associative Container may not be modified.
+\section See_also See also
+\ref stldoc_AssociativeContainer, \ref stldoc_PairAssociativeContainer
+
+
+*/

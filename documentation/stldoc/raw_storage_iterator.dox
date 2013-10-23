@@ -1,0 +1,257 @@
+/** \page stldoc_raw_storage_iterator raw_storage_iterator
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html allocators.gif</td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left">\image html adaptors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: allocators, iterators, adaptors</td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+In C++, the operator <code>new</code> allocates memory for an object and then
+creates an object at that location by calling a constructor.  Occasionally,
+however, it is useful to separate those two operations. <A href="#1">[1]</A>  If <code>i</code> is an
+iterator that points to a region of uninitialized memory, then you
+can use <code>\ref stldoc_construct</code> to create an object in the location pointed to
+by <code>i</code>.  <code>Raw_storage_iterator</code> is an adaptor that makes this
+procedure more convenient.  If <code>r</code> is a <code>raw_storage_iterator</code>, then
+it has some underlying iterator <code>i</code>.  The expression <code>*r = x</code> is
+equivalent to <code>\ref stldoc_construct(&amp;*i, x)</code>.
+\section Example Example
+\code
+class Int {
+public:
+  Int(int x) : val(x) {}
+  int get() { return val; }
+private:
+  int val;
+};    
+
+int main()
+{
+  int A1[] = {1, 2, 3, 4, 5, 6, 7};
+  const int N = sizeof(A1) / sizeof(int);
+
+  Int* A2 = (Int*) malloc(N * sizeof(Int));     
+  transform(A1, A1 + N, 
+            raw_storage_iterator<Int*, int>(A2),
+            negate<int>());
+}
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="memory">memory</A>, and in the nonstandard
+backward-compatibility header <A href="iterator.h">iterator.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+OutputIterator
+</td>
+<td valign="top">
+The type of the <code>raw_storage_iterator</code>'s underlying iterator.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The type that will be used as the argument to the constructor.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_OutputIterator
+\section Type_requirements Type requirements
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator
+<li>
+<code>ForwardIterator</code>'s value type has a constructor that takes a
+   single argument of type <code>T</code>.
+</ul>
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>raw_storage_iterator(ForwardIterator x)</code>
+</td>
+<td valign="top">
+<code>raw_storage_iterator</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>raw_storage_iterator(const raw_storage_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_trivial
+</td>
+<td valign="top">
+The copy constructor
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>raw_storage_iterator&amp; operator=(const raw_storage_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_trivial
+</td>
+<td valign="top">
+The assignment operator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>raw_storage_iterator&amp; operator*()</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Used to implement the \ref stldoc_OutputIterator expression <code>*i = x</code>. <A href="#2">[2]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>raw_storage_iterator&amp; operator=(const Sequence::value_type&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Used to implement the \ref stldoc_OutputIterator expression <code>*i = x</code>. <A href="#2">[2]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>raw_storage_iterator&amp; operator++()</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Preincrement.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>raw_storage_iterator&amp; operator++(int)</code>
+</td>
+<td valign="top">
+ \ref stldoc_OutputIterator
+</td>
+<td valign="top">
+Postincrement.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>output_iterator_tag iterator_category(const raw_storage_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_iterator_tags
+</td>
+<td valign="top">
+Returns the iterator's category.
+   This is a global function, not a member.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined 
+in the \ref stldoc_OutputIterator requirements,
+but are specific to <code>raw_storage_iterator</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Function
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>raw_storage_iterator(ForwardIterator i)</code>
+</td>
+<td valign="top">
+Creates a <code>raw_storage_iterator</code> whose underlying iterator is <code>i</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>raw_storage_iterator&amp; operator=(const T&amp; val)</code>
+</td>
+<td valign="top">
+Constructs an object of <code>ForwardIterator</code>'s value type at the
+   location pointed to by the iterator, using <code>val</code> as the 
+   constructor's argument.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+In particular, this sort of low-level memory management is used
+in the implementation of some container classes.
+<p><A name="2">[2]</A>
+Note how assignment through a <code>raw_storage_iterator</code> is implemented.
+In general, unary <code>operator*</code> must be defined so that it returns a
+proxy object, where the proxy object defines <code>operator=</code> to perform
+the insert operation.  In this case, for the sake of simplicity, the
+proxy object is the <code>raw_storage_iterator</code> itself.  That is, <code>*i</code> 
+returns <code>i</code>, and <code>*i = t</code> is equivalent to <code>i = t</code>.  You should not,
+however, rely on this behavior.  It is an implementation detail,
+and it is not guaranteed to remain the same in future versions.
+\section See_also See also
+\ref stldoc_Allocators, <code>\ref stldoc_construct</code>, <code>\ref stldoc_destroy</code>, <code>\ref stldoc_uninitialized_copy</code>
+<code>\ref stldoc_uninitialized_fill</code>, <code>\ref stldoc_uninitialized_fill_n</code>,
+
+
+*/

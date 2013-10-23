@@ -1,0 +1,61 @@
+/** \page stldoc_fill_n fill_n
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class OutputIterator, class Size, class T>
+OutputIterator fill_n(OutputIterator first, Size n, const T& value);
+\endcode
+\section Description Description
+<code>Fill_n</code> assigns the value <code>value</code> to every element in the range
+<code>[first, first+n)</code>.  That is, for every iterator <code>i</code> in <code>[first, first+n)</code>,
+it performs the assignment <code>*i = value</code>.  The return value is <code>first +
+n</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator.
+<li>
+<code>Size</code> is an integral type (either signed or unsigned).
+<li>
+<code>T</code> is a model of \ref stldoc_Assignable.
+<li>
+<code>T</code> is convertible to a type in <code>OutputIterator</code>'s set of value types.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>n &gt;= 0</code>.
+<li>
+There is enough space to hold <code>n</code> values.  That is,
+   <code>[first, first+n)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear. <code>Fill_n</code> performs exactly <code>n</code> assignments.
+\section Example Example
+\code
+Vector<double> V;
+fill_n(back_inserter(V), 4, 137);
+assert(V.size() == 4 && V[0] == 42 && V[1] == 42 && V[2] == 42 && V[3] == 42);
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_copy</code>, <code>\ref stldoc_fill</code>, <code>\ref stldoc_generate</code>, <code>\ref stldoc_generate_n</code>, <code>\ref stldoc_iota</code>
+
+
+*/
