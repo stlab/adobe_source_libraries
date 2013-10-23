@@ -59,15 +59,10 @@ asl_requirements =
     <include>$(boost-path)
     <include>.
 
-    # Library dependencies
-    <library>/boost/filesystem
-    <library>/boost/system
-
     # Linker specializations
     <link>static,<threading>multi:<define>BOOST_THREAD_USE_LIB
 
     # Threading specializations
-    <threading>multi:<library>/boost/thread//boost_thread
     <threading>single:<define>BOOST_DISABLE_THREADS
 
     # Clang toolset specializations
@@ -128,6 +123,28 @@ project
         $(TOP)/../built_artifacts
     ;
 
+# Build ASL dependencies as a library
+#
+# asl_deps is a set of globbed files from third-party locations (currently
+# just Boost). I would have used the <library> bjam feature to auto-link in
+# the Boost libraries like filesystem and system however I do not know of
+# a way to pass in the flags we specify here to those dependencies - indeed
+# it would seem the <library> feature is a link-time feature anyhow, so
+# e.g., compiler flags would never pass from ASL to Boost. The problem with
+# that is Boost is not being compiled with clang's c++11 flags by default,
+# resulting in binary incompatibilities between Boost's library object files
+# and ASLs. This is the only workaround I can currently think of.
+#
+lib asl_deps
+    : #sources
+        [ glob ../boost_libraries/libs/filesystem/src/*.cpp ]
+        [ glob ../boost_libraries/libs/system/src/*.cpp ]
+    : #requirements
+        $(asl_requirements)
+    : #defaults
+    : #usage requirements
+    ;
+
 # Build ASL as a library
 
 lib asl
@@ -145,9 +162,11 @@ lib asl
 
 explicit asl ;
 
+explicit asl_deps ;
+
 # Build and run the tests
 
-use-project /adobe : .  ;
+use-project /adobe : . ;
 
 build-project test ;
 
