@@ -7,4 +7,3 @@ build-project erase ;
 build-project forest ;
 build-project lower_bound ;
 build-project name ;
-build-project string ;

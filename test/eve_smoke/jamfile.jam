@@ -1,7 +1,12 @@
-project adobe/eve_smoke ;
+# Jamfile for building the Eve smoke test app
+
+project adobe/eve_smoke
+    : requirements 
+        <library>/adobe//asl_deps
+    ;
 
 run main.cpp
     : # args
     : default.eve #files
     : #requirements
-  ;
+    ;

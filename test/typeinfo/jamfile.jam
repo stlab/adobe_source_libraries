@@ -1,7 +1,0 @@
-import testing ;
-
-project adobe/typeinfo ;
-
-run main.cpp ;
-
-
