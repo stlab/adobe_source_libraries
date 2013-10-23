@@ -1,0 +1,18 @@
+language: objective-c
+compiler:
+    - clang
+branches:
+    only:
+        - master
+notifications:
+  recipients:
+    - adobe-source-build@lists.sourceforge.net
+  email:
+    on_success: change
+    on_failure: always
+install:
+    - ./configure.sh
+env:
+    - BUILDTOOL=bjam BUILDMODE=debug
+    - BUILDTOOL=bjam BUILDMODE=release
+script: ./build.sh

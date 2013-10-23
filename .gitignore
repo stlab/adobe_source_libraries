@@ -1,3 +1,5 @@
-project.xcworkspace/
+.DS_Store
 build/
+project.xcworkspace/
 tools/asl.sublime-workspace
+xcuserdata
