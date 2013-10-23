@@ -1,0 +1,118 @@
+/*! \page licenses License Information
+
+\section license_aos MIT License
+
+The <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a> specifies the terms and conditions of use for those Adobe Open Source libraries that it covers:
+
+\verbatim
+Copyright (c) 2005 Adobe Systems Incorporated
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+\endverbatim
+
+\section license_faq Frequently Asked Questions
+
+\par Why MIT License?
+The MIT License is an existing Open Source Initiative (OSI) approved license, and it covers the needs of the Adobe Source Libraries. We feel OSI approval is important and that there was not a need to introduce yet another license; the MIT License is sufficient.
+
+\par Does this license cover all Adobe Open Source efforts?
+No. This license only applies to the Adobe Source Libraries. Other Open Source efforts (such as XMP) are covered by their own licenses (found under each <a href="http://sourceforge.net/adobe/wiki">project page</a>).
+
+\par
+The original Adobe Open Source License as it relates to historical projects once posted at opensource.adobe.com and stlab.adobe.com can be found <a href="http://stlab.adobe.com/historical/aoslic.shtml">here</a>. Please note that this license no longer applies to anything currently found on the Software Technology Lab website.
+
+\section license_other Other Licenses
+
+\subsection license_other_stl SGI STL
+
+Some of the pages in the documentation of the Adobe Source Libraries were copied from the <a href="http://www.sgi.com/tech/stl/">SGI STL documentation</a>. Those pages are held under the following copyrights as well as copyrights held by Adobe Systems Incorporated:
+
+\verbatim
+Copyright (c) 1996-1999
+Silicon Graphics Computer Systems, Inc.
+
+Permission to use, copy, modify, distribute and sell this software
+and its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appears in all copies and
+that both that copyright notice and this permission notice appear
+in supporting documentation.  Silicon Graphics makes no
+representations about the suitability of this software for any
+purpose.  It is provided "as is" without express or implied warranty.
+
+Copyright (c) 1994
+Hewlett-Packard Company
+
+Permission to use, copy, modify, distribute and sell this software
+and its documentation for any purpose is hereby granted without fee,
+provided that the above copyright notice appears in all copies and
+that both that copyright notice and this permission notice appear
+in supporting documentation.  Hewlett-Packard Company makes no
+representations about the suitability of this software for any
+purpose.  It is provided "as is" without express or implied warranty.
+\endverbatim
+
+\subsection license_other_md5 MD5
+
+Some of the code in the Adobe Source Libraries leverages third-party code for use in MD5 message-digest generation (adobe::md5_t). Such code is held under the following copyrights as well as copyrights held by Adobe Systems Incorporated:
+
+\verbatim
+MD5C.C - RSA Data Security, Inc., MD5 message-digest algorithm
+
+Copyright (C) 1991-2, RSA Data Security, Inc. Created 1991. All rights
+reserved.
+
+License to copy and use this software is granted provided that it is
+identified as the "RSA Data Security, Inc. MD5 Message-Digest Algorithm" in
+all material mentioning or referencing this software or this function.
+
+License is also granted to make and use derivative works provided that such
+works are identified as "derived from the RSA Data Security, Inc. MD5
+Message-Digest Algorithm" in all material mentioning or referencing the
+derived work.
+
+RSA Data Security, Inc. makes no representations concerning either the
+merchantability of this software or the suitability of this software for
+any particular purpose. It is provided "as is" without express or implied
+warranty of any kind.
+
+These notices must be retained in any copies of any part of this
+documentation and/or software.
+\endverbatim
+
+\subsection license_other_uuid UUID
+
+Some of the code in the Adobe Source Libraries leverages third-party code for use in psuedo-UUID generation (adobe::zuid_t). Such code is held under the following copyrights as well as copyrights held by Adobe Systems Incorporated:
+
+\verbatim
+Copyright (c) 1990 - 1993, 1996 Open Software Foundation, Inc.
+Copyright (c) 1989 by Hewlett-Packard Company, Palo Alto, Ca. &
+Digital Equipment Corporation, Maynard, Mass.
+Copyright (c) 1998 Microsoft.
+
+To anyone who acknowledges that this file is provided "AS IS" without any
+express or implied warranty: permission to use, copy, modify, and
+distribute this file for any purpose is hereby granted without fee,
+provided that the above copyright notices and this notice appears in all
+source code copies, and that none of the names of Open Software Foundation,
+Inc., Hewlett-Packard Company, or Digital Equipment Corporation be used in
+advertising or publicity pertaining to distribution of the software without
+specific, written prior permission. Neither Open Software Foundation, Inc.,
+Hewlett-Packard Company, Microsoft, nor Digital Equipment Corporation makes
+any representations about the suitability of this software for any purpose.
+\endverbatim
+*/

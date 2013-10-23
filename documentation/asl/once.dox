@@ -1,0 +1,214 @@
+/*!
+\defgroup thread Concurrent Programming
+\ingroup utility
+*/
+
+/*!
+\defgroup adobe_once Once
+\ingroup thread
+
+\brief Thread safety code for compilation in environments both with and without thread support
+
+\par
+The adobe/once collection provides threadsafe functionality for code that can be built in environments that are either thread-aware or have no thread support. The code automatically detects the environment in which it is being built, and compiles the proper code for that environment. In a thread-aware environment the code utilizes the boost thread codebase, while in a environments without thread support it uses booleans. Thread support is determined by BOOST_HAS_THREADS and can be explicitly disabled by defining BOOST_DISABLE_THREADS.
+
+<hr>
+
+\section adobe_once_macros ADOBE_ONCE Macro Documentation
+
+\par
+The ADOBE_ONCE suite of macros is intended to provide boilerplate code that is common in thread-aware environments to support thread safety for intialization of translation unit globals, static variables, and shared variables across multiple translation units. The macros, like the rest of the adobe/once suite, can be used in environments without thread support environments to achieve similar one-time execution guarantees the thread-aware environment leverages.
+
+\par
+The <code>signature</code> parameter in all of these macros ties multiple macros together and provides for a distinguishing tag that prevents multiple ADOBE_ONCE instance collisions. This tag will be appended to utility structs and variables within the macro, so is not a string: just a tag.
+
+There are three (four) cases for which the ADOBE_ONCE macros are written:
+
+\par 1a) ADOBE_ONCE_DECLARATION/STATIC_INSTANCE/DEFINITION (Globally Shared)
+Used to initialize items before first function call in the compilation unit (static initialization). These should be used sparingly as most compilers will initialize prior to main, which may add to launch times. Items initialized this way can be used by other objects at static initialization time which are declared after the STATIC_INSTANCE. This is a similar technique to the one used by most standard libraries to initialize <code>std::cin</code> and <code>std::cout</code>.
+\example
+In <code>sample_header_1a.hpp</code>:
+\code
+#include <adobe/once.hpp>
+
+ADOBE_ONCE_DECLARATION(signature_1a)
+ADOBE_ONCE_STATIC_INSTANCE(signature_1a)
+
+// ... rest of shared header file content
+\endcode
+In <code>sample_source_1a.cpp</code>:
+\code
+void init_once_1a()
+{
+    // initialization of global variables to initial values
+}
+
+// ...
+
+ADOBE_ONCE_DEFINITION(signature_1a, init_once_1a)
+\endcode
+
+\par 1b) ADOBE_ONCE_DECLARATION/STATIC_INSTANCE/DEFINITION (Globally Unshared)
+Identical to (1a) except the declaration and instance are placed in the source file rather than in a header file.
+\example
+In <code>sample_source_1b.cpp</code>:
+\code
+#include <adobe/once.hpp>
+
+ADOBE_ONCE_DECLARATION(signature_1b)
+ADOBE_ONCE_STATIC_INSTANCE(signature_1b)
+
+// ...
+
+void init_once_1b()
+{
+    // initialization of global variables to initial values
+}
+
+// ...
+
+ADOBE_ONCE_DEFINITION(signature_1b, init_once_1b)
+\endcode
+
+\par 2) ADOBE_ONCE_DECLARATION/INSTANCE/DEFINITION
+Used when you have a piece of code that can serve as a bottleneck for the call to the init_once function. For example, use this in a source file when you have unshared global variables supporting a pimpl class. Place <code>ADOBE_ONCE_INSTANCE(sig);</code> inside the pimpl constructor(s).
+\example
+In <code>sample_source_2.cpp</code>:
+\code
+#include <adobe/once.hpp>
+
+ADOBE_ONCE_DECLARATION(signature_2)
+
+// ... 
+
+void init_once_2()
+{
+    // initialization of global variables to initial values
+}
+
+// ... 
+
+my_foo_t::implementation_t::implementation_t()
+{
+    ADOBE_ONCE_INSTANCE(signature_2); // note the semicolon!
+
+    // ... 
+}
+
+// ... 
+
+ADOBE_ONCE_DEFINITION(signature_2, init_once_2)
+\endcode
+
+\par 3) ADOBE_GLOBAL_MUTEX_DEFINITION/GLOBAL_MUTEX_INSTANCE
+Used when you have a suite of data you want to initialize then protect in a multithreaded environment. This macro uses an additional mutex to control access to the data during initialization and successive modification. Any code from the instance macro to the end of the scope in which the macro is placed is thread safe.
+\example
+In <code>sample_source_3.cpp</code>:
+\code
+#include <adobe/once.hpp>
+
+ADOBE_GLOBAL_MUTEX_DEFINITION(signature_3)
+
+// ... 
+
+my_function_requiring_thread_safety()
+{
+    ADOBE_GLOBAL_MUTEX_INSTANCE(signature_3); // note the semicolon!
+
+    // ...
+}
+\endcode
+*/
+
+/*!
+\typedef adobe::once_flag
+\ingroup adobe_once
+
+A flag used to guarantee the one-time execution of code. In a thread-aware environment this is the same as a <code>boost::once_flag</code>, otherwise it is simply a <code>bool</code>.
+*/
+
+/*!
+\def ADOBE_ONCE_INIT
+\ingroup adobe_once
+
+Default setting for the <code>adobe::once_flag</code>. In a thread-aware environment this is the same as <code>BOOST_ONCE_INIT</code>, otherwise it is simply <code>false</code>.
+*/
+
+/*!
+\fn void adobe::call_once(void (*func)(), adobe::once_flag& flag)
+\ingroup adobe_once
+
+\param func The function guaranteed to be executed only one time
+\param flag The flag to monitor onetime execution of the function
+
+\exception Unknown Propagates anything <code>func</code> throws
+
+In a thread-aware environment adobe::call_once is the same as boost::call_once. Otherwise it is a simple support function that executes <code>func</code> only once as flagged by <code>flag</code>.
+*/
+
+/*!
+\def ADOBE_ONCE_DECLARATION
+\ingroup adobe_once
+
+Used in cases (1a), (1b), (2) above.
+
+Declares a utility struct for supporting a call to adobe::call_once
+
+\param signature The unique signature used to relation this macro to other ADOBE_ONCE macros
+*/
+
+/*!
+\def ADOBE_ONCE_DEFINITION
+\ingroup adobe_once
+
+Used in cases (1a), (1b), (2) above.
+
+Defines a utility struct for supporting a call to adobe::call_once with the specified function
+
+\param signature The unique signature used to relation this macro to other ADOBE_ONCE macros
+\param func The function to be called only once
+*/
+
+/*!
+\def ADOBE_ONCE_STATIC_INSTANCE
+\ingroup adobe_once
+
+Used in cases (1a), (1b) above.
+
+Creates a tanslation-unit global instance of the ADOBE_ONCE utility struct. Use only once in a single translation-unit for the binary per macro signature.
+
+\param signature The unique signature used to relation this macro to other ADOBE_ONCE macros
+*/
+
+/*!
+\def ADOBE_ONCE_INSTANCE
+\ingroup adobe_once
+
+Used in cases (2) above.
+
+Creates an instance of the ADOBE_ONCE utility struct. During construction each instance of this struct will check to see if the one-time function has already been called, and calls it if necessary.
+
+\param signature The unique signature used to relation this macro to other ADOBE_ONCE macros
+*/
+
+/*!
+\def ADOBE_GLOBAL_MUTEX_DEFINITION
+\ingroup adobe_once
+
+Used in case (3) above.
+
+Creates a translation-unit global mutex that is initialized in a threadsafe manner. In a environments without thread support environment, this macro is empty.
+
+\param signature The unique signature used to relation this macro to other ADOBE_ONCE macros
+*/
+
+/*!
+\def ADOBE_GLOBAL_MUTEX_INSTANCE
+\ingroup adobe_once
+
+Used in case (3) above.
+
+Locks a scope with the mutex created from ADOBE_GLOBAL_MUTEX_DEFINITION to ensure thread safety of the code contained within said scope. In a environments without thread support environment, this macro is empty.
+
+\param signature The unique signature used to relation this macro to other ADOBE_ONCE macros
+*/

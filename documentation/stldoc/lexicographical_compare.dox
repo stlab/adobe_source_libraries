@@ -1,0 +1,120 @@
+/** \page stldoc_lexicographical_compare lexicographical_compare
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Lexicographical_compare</code> is an overloaded name; there are actually
+two <code>lexicographical_compare</code> functions.
+\code
+template <class InputIterator1, class InputIterator2>
+bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
+                             InputIterator2 first2, InputIterator2 last2);
+
+template <class InputIterator1, class InputIterator2, class BinaryPredicate>
+bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
+                             InputIterator2 first2, InputIterator2 last2,
+                             BinaryPredicate comp);
+\endcode
+\section Description Description
+<code>Lexicographical_compare</code> returns <code>true</code> if the range of elements
+<code>[first1, last1)</code> is lexicographically less than the range of
+elements <code>[first2, last2)</code>, and <code>false</code> otherwise.  Lexicographical
+comparison means &quot;dictionary&quot; (element-by-element) ordering.  That is, 
+<code>[first1, last1)</code> is less than <code>[first2, last2)</code> if <code>*first1</code> is
+less than <code>*first2</code>, and greater if <code>*first1</code> is greater than <code>*first2</code>.
+If the two first elements are equivalent then <code>lexicographical_compare</code>
+compares the two second elements, and so on.  As with ordinary 
+dictionary order, the first range is considered to be less than 
+the second if every element in the first range is equal to the
+corresponding element in the second but the second contains more elements.
+<p>
+The two versions of <code>lexicographical_compare</code> differ in how they define whether one
+element is less than another.  The first version compares
+objects using <code>operator&lt;</code>, and the second compares objects using
+a \ref stldoc_functors <code>comp</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>InputIterator1</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator2</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator1</code>'s value type is a model of \ref stldoc_LessThanComparable.
+<li>
+<code>InputIterator2</code>'s value type is a model of \ref stldoc_LessThanComparable.
+<li>
+If <code>v1</code> is an object of <code>InputIterator1</code>'s value type and <code>v2</code>
+   is an object of <code>InputIterator2</code>'s value type, then both <code>v1 &lt; v2</code>
+   and <code>v2 &lt; v1</code> are defined.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>InputIterator1</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator2</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>BinaryPredicate</code> is a model of \ref stldoc_BinaryPredicate.
+<li>
+<code>InputIterator1</code>'s value type is convertible to <code>BinaryPredicate</code>'s
+   first argument type and second argument type.
+<li>
+<code>InputIterator2</code>'s value type is convertible to <code>BinaryPredicate</code>'s
+   first argument type and second argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first2, last2)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  At most <code>2 * min(last1 - first1, last2 - first2)</code> comparisons.
+\section Example Example
+\code
+int main()
+{
+  int A1[] = {3, 1, 4, 1, 5, 9, 3};
+  int A2[] = {3, 1, 4, 2, 8, 5, 7};
+  int A3[] = {1, 2, 3, 4};
+  int A4[] = {1, 2, 3, 4, 5};
+
+  const int N1 = sizeof(A1) / sizeof(int);
+  const int N2 = sizeof(A2) / sizeof(int);
+  const int N3 = sizeof(A3) / sizeof(int);
+  const int N4 = sizeof(A4) / sizeof(int);
+
+  bool C12 = lexicographical_compare(A1, A1 + N1, A2, A2 + N2);
+  bool C34 = lexicographical_compare(A3, A3 + N3, A4, A4 + N4);
+
+  cout << "A1[] < A2[]: " << (C12 ? "true" : "false") << endl;
+  cout << "A3[] < A4[]: " << (C34 ? "true" : "false") << endl;
+}
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_equal</code>, <code>\ref stldoc_mismatch</code>, 
+<code>\ref stldoc_lexicographical_compare_3way</code>,
+<code>\ref stldoc_search</code>,
+\ref stldoc_LessThanComparable, 
+\ref stldoc_StrictWeakOrdering, 
+<code>\ref stldoc_sort</code>
+
+
+*/

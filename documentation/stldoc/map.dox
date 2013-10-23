@@ -1,0 +1,847 @@
+/** \page stldoc_Map Map
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Map</code> is a \ref stldoc_SortedAssociativeContainer that associates objects of
+type <code>Key</code> with objects of type <code>Data</code>.  <code>Map</code> is a 
+\ref stldoc_PairAssociativeContainer, meaning that its value type is
+<code>\ref stldoc_pair&lt;const Key, Data&gt;</code>.  It is also a 
+\ref stldoc_UniqueAssociativeContainer, meaning that no two elements have
+the same key.
+<p>
+<code>Map</code> has the important property that inserting a new element
+into a <code>map</code> does not invalidate iterators that point to existing
+elements.  Erasing an element from a <code>map</code> also does not invalidate
+any iterators, except, of course, for iterators that actually point 
+to the element that is being erased.
+\section Example Example
+\code
+struct ltstr
+{
+  bool operator()(const char* s1, const char* s2) const
+  {
+    return strcmp(s1, s2) < 0;
+  }
+};
+
+int main()
+{
+  map<const char*, int, ltstr> months;
+  
+  months["january"] = 31;
+  months["february"] = 28;
+  months["march"] = 31;
+  months["april"] = 30;
+  months["may"] = 31;
+  months["june"] = 30;
+  months["july"] = 31;
+  months["august"] = 31;
+  months["september"] = 30;
+  months["october"] = 31;
+  months["november"] = 30;
+  months["december"] = 31;
+  
+  cout << "june -> " << months["june"] << endl;
+  map<const char*, int, ltstr>::iterator cur  = months.find("june");
+  map<const char*, int, ltstr>::iterator prev = cur;
+  map<const char*, int, ltstr>::iterator next = cur;    
+  ++next;
+  --prev;
+  cout << "Previous (in alphabetical order) is " << (*prev).first << endl;
+  cout << "Next (in alphabetical order) is " << (*next).first << endl;
+}
+
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="map">map</A>, and in the nonstandard
+backward-compatibility header <A href="map.h">map.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>Key</code>
+</td>
+<td valign="top">
+The map's key type.  This is also defined as <code>map::key_type</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Data</code>
+</td>
+<td valign="top">
+The map's data type.  This is also defined as <code>map::data_type</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Compare</code>
+</td>
+<td valign="top">
+The key comparison function, a \ref stldoc_StrictWeakOrdering whose
+   argument type is <code>key_type</code>; it returns <code>true</code> if its first 
+   argument is less than its second argument, and <code>false</code> otherwise.
+   This is also defined as <code>map::key_compare</code>.
+</td>
+<td valign="top">
+<code>\ref stldoc_less&lt;Key&gt;</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Alloc</code>
+</td>
+<td valign="top">
+The <code>map</code>'s allocator, used for all internal memory management.
+</td>
+<td valign="top">
+<code>\ref stldoc_Allocators</code>
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_UniqueSortedAssociativeContainer, \ref stldoc_PairAssociativeContainer
+\section Type_requirements Type requirements
+<ul>
+<li>
+<code>Data</code> is \ref stldoc_Assignable.
+<li>
+<code>Compare</code> is a \ref stldoc_StrictWeakOrdering whose argument type
+   is <code>Key</code>.
+<li>
+<code>Alloc</code> is an \ref stldoc_Allocators.
+</ul>
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>key_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+The <code>map</code>'s key type, <code>Key</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>data_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_PairAssociativeContainer
+</td>
+<td valign="top">
+The type of object associated with the keys.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>value_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_PairAssociativeContainer
+</td>
+<td valign="top">
+The type of object, <code>pair&lt;const key_type, data_type&gt;</code>, stored in the map.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>key_compare</code>
+</td>
+<td valign="top">
+ \ref stldoc_SortedAssociativeContainer
+</td>
+<td valign="top">
+ \ref stldoc_functors that compares two keys for ordering.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>value_compare</code>
+</td>
+<td valign="top">
+ \ref stldoc_SortedAssociativeContainer
+</td>
+<td valign="top">
+ \ref stldoc_functors that compares two values for ordering.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Pointer to <code>T</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reference</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Reference to <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reference</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const reference to <code>T</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+An unsigned integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>difference_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+A signed integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Iterator used to iterate through a <code>map</code>. <A href="#1">[1]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Const iterator used to iterate through a <code>map</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Iterator used to iterate backwards through a <code>map</code>. <A href="#1">[1]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Const iterator used to iterate backwards through a <code>map</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator begin()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the beginning of the <code>map</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator end()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns an <code>iterator</code> pointing to the end of the <code>map</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator begin() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns a <code>const_iterator</code> pointing to the beginning of the <code>map</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator end() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns a <code>const_iterator</code> pointing to the end of the <code>map</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_iterator rbegin()</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>reverse_iterator</code> pointing to the beginning of the
+   reversed map.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_iterator rend()</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>reverse_iterator</code> pointing to the end of the
+   reversed map.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator rbegin() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>const_reverse_iterator</code> pointing to the beginning of the
+   reversed map.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_reverse_iterator rend() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_ReversibleContainer
+</td>
+<td valign="top">
+Returns a <code>const_reverse_iterator</code> pointing to the end of the
+   reversed map.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type size() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns the size of the <code>map</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type max_size() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Returns the largest possible size of the <code>map</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool empty() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+<code>true</code> if the <code>map</code>'s size is <code>0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>key_compare key_comp() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_SortedAssociativeContainer
+</td>
+<td valign="top">
+Returns the <code>key_compare</code> object used by the <code>map</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>value_compare value_comp() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_SortedAssociativeContainer
+</td>
+<td valign="top">
+Returns the <code>value_compare</code> object used by the <code>map</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>map()</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Creates an empty <code>map</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>map(const key_compare&amp; comp)</code>
+</td>
+<td valign="top">
+ \ref stldoc_SortedAssociativeContainer
+</td>
+<td valign="top">
+Creates an empty <code>map</code>, using <code>comp</code> as the <code>key_compare</code> object.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+map(InputIterator f, InputIterator l)
+\endcode
+<A href="#2">[2]</A>
+</td>
+<td valign="top">
+ \ref stldoc_UniqueSortedAssociativeContainer
+</td>
+<td valign="top">
+Creates a map with a copy of a range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+map(InputIterator f, InputIterator l,
+    const key_compare& comp)
+\endcode
+<A href="#2">[2]</A>
+</td>
+<td valign="top">
+ \ref stldoc_UniqueSortedAssociativeContainer
+</td>
+<td valign="top">
+Creates a map with a copy of a range, using <code>comp</code> as the <code>key_compare</code>
+   object.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>map(const map&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The copy constructor.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>map&amp; operator=(const map&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+The assignment operator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void swap(map&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_Container
+</td>
+<td valign="top">
+Swaps the contents of two maps.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+pair<iterator, bool>
+insert(const value_type& x)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_UniqueAssociativeContainer
+</td>
+<td valign="top">
+Inserts <code>x</code> into the <code>map</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+iterator insert(iterator pos,
+                const value_type& x)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_UniqueSortedAssociativeContainer
+</td>
+<td valign="top">
+Inserts <code>x</code> into the <code>map</code>, using <code>pos</code> as a hint to where it will be
+   inserted.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class InputIterator>
+void insert(InputIterator, InputIterator)
+\endcode
+<A href="#2">[2]</A>
+</td>
+<td valign="top">
+ \ref stldoc_UniqueSortedAssociativeContainer
+</td>
+<td valign="top">
+Inserts a range into the <code>map</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void erase(iterator pos)</code>
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+Erases the element pointed to by <code>pos</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type erase(const key_type&amp; k)</code>
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+Erases the element whose key is <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void erase(iterator first, iterator last)</code>
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+Erases all elements in a range.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>void clear()</code>
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+Erases all of the elements.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator find(const key_type&amp; k)</code>
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+Finds an element whose key is <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator find(const key_type&amp; k) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_AssociativeContainer
+</td>
+<td valign="top">
+Finds an element whose key is <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>size_type count(const key_type&amp; k)</code>
+</td>
+<td valign="top">
+ \ref stldoc_UniqueAssociativeContainer
+</td>
+<td valign="top">
+Counts the number of elements whose key is <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator lower_bound(const key_type&amp; k)</code>
+</td>
+<td valign="top">
+ \ref stldoc_SortedAssociativeContainer
+</td>
+<td valign="top">
+Finds the first element whose key is not less than <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator lower_bound(const key_type&amp; k) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_SortedAssociativeContainer
+</td>
+<td valign="top">
+Finds the first element whose key is not less than <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>iterator upper_bound(const key_type&amp; k)</code>
+</td>
+<td valign="top">
+ \ref stldoc_SortedAssociativeContainer
+</td>
+<td valign="top">
+Finds the first element whose key greater than <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>const_iterator upper_bound(const key_type&amp; k) const</code>
+</td>
+<td valign="top">
+ \ref stldoc_SortedAssociativeContainer
+</td>
+<td valign="top">
+Finds the first element whose key greater than <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+pair<iterator, iterator> 
+equal_range(const key_type& k)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_SortedAssociativeContainer
+</td>
+<td valign="top">
+Finds a range containing all elements whose key is <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+pair<const_iterator, const_iterator> 
+equal_range(const key_type& k) const
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_SortedAssociativeContainer
+</td>
+<td valign="top">
+Finds a range containing all elements whose key is <code>k</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+data_type& 
+operator[](const key_type& k)
+\endcode
+<A href="#3">[3]</A>
+</td>
+<td valign="top">
+<code>map</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+bool operator==(const map&, 
+                const map&)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_ForwardContainer
+</td>
+<td valign="top">
+Tests two maps for equality.  This is a global function, not
+   a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+bool operator<(const map&, 
+               const map&)
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_ForwardContainer
+</td>
+<td valign="top">
+Lexicographical comparison.  This is a global function, not
+   a member function.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_UniqueSortedAssociativeContainer and \ref stldoc_PairAssociativeContainer
+requirements, but are unique to <code>map</code>:
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member function
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+\code
+data_type& 
+operator[](const key_type& k)
+\endcode
+<A href="#3">[3]</A>
+</td>
+<td valign="top">
+Returns a reference to the object that is associated with
+   a particular key.  If the <code>map</code> does not already contain such
+   an object, <code>operator[]</code> inserts the default object <code>data_type()</code>. <A href="#3">[3]</A>
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+<code>Map::iterator</code> is not a mutable iterator, because
+<code>map::value_type</code> is not \ref stldoc_Assignable.  That is, if <code>i</code> is of
+type <code>map::iterator</code> and <code>p</code> is of type
+<code>map::value_type</code>, then <code>*i = p</code> is not a valid
+expression.  However, <code>map::iterator</code> isn't a constant iterator
+either, because it can be used to modify the object that it points to.
+Using the same notation as above, <code>(*i).second = p</code> is a valid
+expression.  The same point applies to <code>map::reverse_iterator</code>.
+<p><A name="2">[2]</A>
+This member function relies on <i>member template</i> functions, which
+at present (early 1998) are not supported by all compilers.  If your
+compiler supports member templates, you can call this function with
+any type of \ref stldoc_InputIterator.  If your
+compiler does not yet support member templates, though, then the
+arguments must either be of type <code>const value_type*</code> or of type
+<code>map::const_iterator</code>.
+<p><A name="3">[3]</A>
+Since <code>operator[]</code> might insert a new element into the <code>map</code>,
+it can't possibly be a <code>const</code> member function.  Note that the 
+definition of <code>operator[]</code> is extremely simple: <code>m[k]</code> is equivalent
+to <code>(*((m.insert(value_type(k, data_type()))).first)).second</code>.
+Strictly speaking, this member function is unnecessary: it exists
+only for convenience.
+\section See_also See also
+\ref stldoc_AssociativeContainer, \ref stldoc_SortedAssociativeContainer, 
+\ref stldoc_PairAssociativeContainer, \ref stldoc_UniqueSortedAssociativeContainer, 
+<code>\ref stldoc_set</code>
+<code>\ref stldoc_multiset</code>, <code>\ref stldoc_Multimap</code>,
+<code>\ref stldoc_hash_set</code>, <code>\ref stldoc_hash_map</code>, 
+<code>\ref stldoc_hash_multiset</code>, <code>\ref stldoc_hash_multimap</code>,
+
+
+*/

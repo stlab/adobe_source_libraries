@@ -1,0 +1,153 @@
+/** \page stldoc_binary_search binary_search
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Binary_search</code> is an overloaded name; there are actually two <code>binary_search</code>
+functions.
+\code
+template <class ForwardIterator, class LessThanComparable>
+bool binary_search(ForwardIterator first, ForwardIterator last,
+                   const LessThanComparable& value);
+
+template <class ForwardIterator, class T, class StrictWeakOrdering>
+bool binary_search(ForwardIterator first, ForwardIterator last, const T& value,
+                   StrictWeakOrdering comp);
+\endcode
+\section Description Description
+<code>Binary_search</code> is a version of binary search: it attempts to find the
+element <code>value</code> in an ordered range <code>[first, last)</code>  It returns 
+<code>true</code> if an element that is equivalent to <A href="#1">[1]</A> <code>value</code> is present in
+<code>[first, last)</code> and <code>false</code> if no such element exists.  <A href="#2">[2]</A>
+The first version of <code>binary_search</code>
+uses <code>operator&lt;</code> for comparison, and the second uses the 
+\ref stldoc_functors <code>comp</code>.
+<p>
+Specifically, the first version returns <code>true</code> if
+and only if there exists an iterator <code>i</code> in <code>[first, last)</code> such that
+<code>*i &lt; value</code> and <code>value &lt; *i</code> are both <code>false</code>.  
+The second version returns <code>true</code> if
+and only if there exists an iterator <code>i</code> in <code>[first, last)</code> such that
+<code>comp(*i, value)</code> and <code>comp(value, *i)</code> are both <code>false</code>.  
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>LessThanComparable</code> is a model of \ref stldoc_LessThanComparable.
+<li>
+The ordering on objects of type <code>LessThanComparable</code> is a <i>strict
+   weak ordering</i>, as defined in the \ref stldoc_LessThanComparable requirements.
+<li>
+<code>ForwardIterator</code>'s value type is the same type as <code>LessThanComparable</code>.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>ForwardIterator</code>'s value type is the same type as <code>T</code>.
+<li>
+<code>ForwardIterator</code>'s value type is convertible to <code>StrictWeakOrdering</code>'s
+   argument type.
+</ul>
+\section Preconditions Preconditions
+For the first version:
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>[first, last)</code> is ordered in ascending order according to
+   <code>operator&lt;</code>.  That is, for every pair of iterators <code>i</code> and <code>j</code>
+   in <code>[first, last)</code> such that <code>i</code> precedes <code>j</code>, 
+   <code>*j &lt; *i</code> is <code>false</code>.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>[first, last)</code> is ordered in ascending order according to
+   the \ref stldoc_functors <code>comp</code>.  That is, for every pair of iterators <code>i</code> and <code>j</code>
+   in <code>[first, last)</code> such that <code>i</code> precedes <code>j</code>, 
+   <code>comp(*j, *i)</code> is <code>false</code>.
+</ul>
+\section Complexity Complexity
+The number of comparisons is logarithmic: at most <code>log(last - first) +
+2</code>.  If <code>ForwardIterator</code> is a \ref stldoc_RandomAccessIterator then the
+number of steps through the range is also logarithmic; otherwise, 
+the number of steps is proportional to <code>last - first</code>.  <A href="#3">[3]</A>
+\section Example Example
+\code
+int main()
+{
+  int A[] = { 1, 2, 3, 3, 3, 5, 8 };
+  const int N = sizeof(A) / sizeof(int);
+
+  for (int i = 1; i <= 10; ++i) {
+    cout << "Searching for " << i << ": "
+         << (binary_search(A, A + N, i) ? "present" : "not present") << endl;
+  }
+}
+\endcode
+The output is:
+\code
+Searching for 1: present
+Searching for 2: present
+Searching for 3: present
+Searching for 4: not present
+Searching for 5: present
+Searching for 6: not present
+Searching for 7: not present
+Searching for 8: present
+Searching for 9: not present
+Searching for 10: not present
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note that you may use an ordering that is a strict weak ordering
+but not a total ordering; that is, there might be values <code>x</code> and <code>y</code>
+such that <code>x &lt; y</code>, <code>x &gt; y</code>, and <code>x == y</code> are all <code>false</code>.  (See the
+\ref stldoc_LessThanComparable requirements for a more complete discussion.)
+Finding <code>value</code> in the range <code>[first, last)</code>, then, doesn't mean
+finding an element that is equal to <code>value</code> but rather one that is
+<i>equivalent to</i> <code>value</code>: one that is neither greater than nor less
+than <code>value</code>.  If you're using a total ordering, however (if you're
+using <code>strcmp</code>, for example, or if you're using ordinary arithmetic
+comparison on integers), then you can ignore this technical
+distinction: for a total ordering, equality and equivalence are
+the same.
+<p><A name="2">[2]</A>
+Note that this is not necessarily the information you are
+interested in!  Usually, if you're testing whether an element is
+present in a range, you'd like to know where it is (if it's present), 
+or where it should be inserted (if it's not present).  The functions
+<code>\ref stldoc_lower_bound</code>, <code>\ref stldoc_upper_bound</code>, and <code>\ref stldoc_equal_range</code> provide
+this information.
+<p><A name="3">[3]</A>
+This difference between \ref stldoc_RandomAccessIterator and
+\ref stldoc_ForwardIterator is simply because <code>\ref stldoc_advance</code> is constant
+time for \ref stldoc_RandomAccessIterator and linear time for 
+\ref stldoc_ForwardIterator.
+\section See_also See also
+<code>\ref stldoc_lower_bound</code>, <code>\ref stldoc_upper_bound</code>, <code>\ref stldoc_equal_range</code>
+
+
+*/

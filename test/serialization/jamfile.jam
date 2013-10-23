@@ -1,0 +1,12 @@
+project adobe/serialization
+    ;
+
+SOURCES =
+    main.cpp
+    ;
+
+# exe serialization
+#    : $(SOURCES)
+#    ;
+
+run $(SOURCES) ;

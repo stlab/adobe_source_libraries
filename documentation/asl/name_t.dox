@@ -1,0 +1,102 @@
+/*!
+\class adobe::name_t name.hpp <adobe/name.hpp>
+\ingroup abi_string
+
+\brief A character string class for immutable strings.
+
+A name_t is a string class for immutable strings. The storage for name_t is globally pooled and strings are reused. Although an adobe::name_t can be somewhat expensive to construct, copying assignment, and equality comparisons are very fast.
+
+\par Model Of:
+    - \ref concept_regular_type
+    - \ref stldoc_LessThanComparable
+    - \ref concept_convertible_to_bool
+
+\par Rationale:
+
+\note
+The name_t class is thread safe when compiled with BOOST_HAS_THREADS defined.
+
+\todo
+The complexity of construction of a name_t is currently O(log(n)). An efficient hash implementation may improve efficiency.
+
+\todo
+Serialization support for name_t is not complete, but can be enabled by defining ADOBE_SERIALIZATION.
+*/
+
+/*!
+\fn adobe::name_t::name_t(const char* string_name = "")
+
+Constructs a name_t associated with string_name. If this is the first instance of this string, then the string will be copied to a pool with static storage duration.
+
+\pre \c string_name is a '\\0' terminated character sequence.
+*/
+
+/*!
+\fn adobe::name_t::name_t(const char* string_name, std::size_t length)
+
+Constructs a name_t associated with string_name. If this is the first instance of this string, then the string will be copied to a pool with static storage duration.
+
+\pre <code> [string_name, string_name + length) </code> is a sequence of non '\\0' characters.
+*/
+
+/*!
+\fn const char* adobe::name_t::c_str() const
+
+\return the associated '\\0' terminated string.
+
+*/
+
+/*!
+\class adobe::static_name_t name.hpp <adobe/name.hpp>
+\ingroup abi_string
+
+\brief Utility wrapper to construct name_t with strings of static storage duration.
+
+\promotes_to
+    adobe::name_t
+*/
+
+/*!
+\fn adobe::static_name_t::static_name_t(const char* string_name = "")
+
+Constructs a static_name_t associated with string_name. The string will not be copied to the pool, however, it is not guaranteed that the associated string will be the identity of string_name.
+
+\pre \c string_name is a '\\0' terminated character sequence.
+\pre \c string_name is immutable, and has static storage duration \ref note_1 "[1]".
+
+
+\note
+\anchor note_1 [1] C++ Standard, second edition, (ISO/IEC 14882, 2003-04-01), section 3.7.1.
+*/
+
+/*!
+\class adobe::const_once_name_t name.hpp <adobe/name.hpp>
+\ingroup abi_string
+
+\brief Utility wrapper to construct name_t without initializing the string pointer.
+
+\promotes_to
+    adobe::name_t
+
+\rationale
+    The primary purpose of const_once_name_t is to provide a name_t implementation that can be used in a multithreaded environment as a static variable. Because its construction does nothing to initialize the value of the name_t, such initialization must take place during a threadsafe intialization function (boost::call_once, for instance).
+*/
+
+/*!
+\fn adobe::const_once_name_t::const_once_name_t()
+
+Constructs an uninitialized name_t. Must initialize proior to use.
+
+\fn adobe::const_once_name_t::initialize(const char* name)
+
+\pre \c name is a '\\0' terminated character sequence.
+
+\fn adobe::const_once_name_t::initialize(const char* name, std::size_t length)
+
+\pre <code> [string_name, string_name + length) </code> is a sequence of non '\\0' characters.
+
+\fn adobe::const_once_name_t::initialize(name_t name)
+
+\fn adobe::const_once_name_t::operator const name_t& () const
+
+*/

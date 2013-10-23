@@ -1,0 +1,200 @@
+/** \page stldoc_BinaryFunction BinaryFunction
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b> : functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Binary Function is a kind of \ref stldoc_functors : an object that is called
+as if it were an ordinary C++ function.  A Binary Function is called with 
+two arguments.
+\section Refinement_of Refinement of
+\ref stldoc_Assignable
+\section Associated_types Associated types
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+First argument type
+</td>
+<td valign="top">
+The type of the Binary Function's first argument.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Second argument type
+</td>
+<td valign="top">
+The type of the Binary Function's second argument.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Result type
+</td>
+<td valign="top">
+The type returned when the Binary Function is called
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>F</code>
+</td>
+<td valign="top">
+A type that is a model of BinaryFunction
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+The first argument type of <code>F</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Y</code>
+</td>
+<td valign="top">
+The second argument type of <code>F</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Result</code>
+</td>
+<td valign="top">
+The result type of <code>F</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>f</code>
+</td>
+<td valign="top">
+Object of type <code>F</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>x</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>y</code>
+</td>
+<td valign="top">
+Object of type <code>Y</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+The <i>domain</i> of a Binary Function is the set of all ordered
+pairs <code>(x, y)</code> that are permissible values for its arguments.
+<p>
+The <i>range</i> of a Binary Function is the set of all possible value that it
+may return.
+\section Valid_expressions Valid expressions
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Function call
+</td>
+<td valign="top">
+<code>f(x,y)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>Result</code>
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Function call
+</td>
+<td valign="top">
+<code>f(x,y)</code>
+</td>
+<td valign="top">
+The ordered pair <code>(x,y)</code>  is in <code>f</code>'s domain
+</td>
+<td valign="top">
+Calls <code>f</code> with <code>x</code> and <code>y</code> as arguments, and returns a value of type <code>Result</code> <A href="#1">[1]</A>
+</td>
+<td valign="top">
+The return value is in <code>f</code>'s range
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+\section Invariants Invariants
+\section Models Models
+<ul>
+<li>
+<code>Result (*)(X,Y)</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+Two different invocations of <code>f</code> may return different results, even
+if <code>f</code> is called with the same arguments both times.
+A Binary Function may refer to local state, perform I/O,
+and so on.  The expression <code>f(x,y)</code> is permitted to change <code>f</code>'s state.
+\section See_also See also
+\ref stldoc_functors, \ref stldoc_Generator, \ref stldoc_UnaryFunction
+\ref stldoc_AdaptableBinaryFunction
+
+
+*/

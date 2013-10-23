@@ -1,0 +1,159 @@
+/** \page stldoc_RandomNumberGenerator RandomNumberGenerator
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Random Number Generator is a \ref stldoc_functors that can be used to 
+generate a random sequence of integers.  That is: if <code>f</code> is a Random
+Number Generator and <code>N</code> is a positive integer, then <code>f(N)</code> will return
+an integer less than <code>N</code> and greater than or equal to <code>0</code>.  If <code>f</code> is 
+called many times with the same value of <code>N</code>, it will yield a sequence
+of numbers that is uniformly distributed <A href="#1">[1]</A> in the range <code>[0, N)</code>. <A href="#2">[2]</A>
+\section Refinement_of Refinement of
+\ref stldoc_UnaryFunction
+\section Associated_types Associated types
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Argument type
+</td>
+<td valign="top">
+The type of the Random Number Generator's argument.  This must
+   be an integral type.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Result type
+</td>
+<td valign="top">
+The type returned when the Random Number Generator is called.  It must
+   be the same as the argument type.
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>F</code>
+</td>
+<td valign="top">
+A type that is a model of Random Number Generator.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Integer</code>
+</td>
+<td valign="top">
+The argument type of <code>F</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>f</code>
+</td>
+<td valign="top">
+Object of type <code>F</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>N</code>
+</td>
+<td valign="top">
+Object of type <code>Integer</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+The <i>domain</i> of a Random Number Generator (<i>i.e.</i> the set
+of permissible values for its argument) is the set of numbers that are
+greater than zero and less than some maximum value.
+<p>
+The <i>range</i> of a Random Number Generator is the set of nonnegative
+integers that are less than the Random Number Generator's argument.
+\section Valid_expressions Valid expressions
+None, except for those defined by \ref stldoc_UnaryFunction.
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Function call
+</td>
+<td valign="top">
+<code>f(N)</code>
+</td>
+<td valign="top">
+<code>N</code> is positive.
+</td>
+<td valign="top">
+Returns a pseudo-random number of type <code>Integer</code>. <A href="#2">[2]</A>
+</td>
+<td valign="top">
+The return value is less than <code>N</code>, and greater than or equal to 0.
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+\section Invariants Invariants
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Uniformity
+</td>
+<td valign="top">
+In the limit as <code>f</code> is called many times with the same argument
+<code>N</code>, every integer in the range <code>[0, N)</code> will appear an equal number
+of times.
+</td>
+</tr>
+</table>
+\section Models Models
+\section Notes Notes
+<p><A name="1">[1]</A>
+Uniform distribution means that all of the numbers in the range
+<code>[0, N)</code> appear with equal frequency.  Or, to put it differently,
+the probability for obtaining any particular value is <code>1/N</code>.
+<p><A name="2">[2]</A>
+Random number generators are a very subtle subject: a good random
+number generator must satisfy many statistical properties beyond
+uniform distribution.  See section 3.4 of Knuth for a discussion of
+what it means for a sequence to be random, and section 3.2 for several
+algorithms that may be used to write random number generators.
+(D. E. Knuth, <i>The Art of Computer
+Programming.  Volume 2: Seminumerical Algorithms</i>, third edition.  
+Addison-Wesley, 1998.)
+\section See_also See also
+
+
+*/

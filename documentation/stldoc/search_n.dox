@@ -1,0 +1,171 @@
+/** \page stldoc_search_n search_n
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Search_n</code> is an overloaded name; there are actually two <code>search_n</code>
+functions.
+\code
+template <class ForwardIterator, class Integer, class T>
+ForwardIterator search_n(ForwardIterator first, ForwardIterator last,
+                         Integer count, const T& value);
+
+template <class ForwardIterator, class Integer, 
+          class T, class BinaryPredicate>
+ForwardIterator search_n(ForwardIterator first, ForwardIterator last,
+                         Integer count, const T& value,
+                         BinaryPredicate binary_pred);
+\endcode
+\section Description Description
+<code>Search_n</code> searches for a subsequence of <code>count</code> consecutive elements 
+in the range <code>[first, last)</code>, all of which are equal to <code>value</code>. <A href="#1">[1]</A>
+It returns an iterator pointing to the beginning of that subsequence,
+or else <code>last</code> if no such subsequence exists.  The two versions of 
+<code>search_n</code> differ in how they determine whether two elements are the same:
+the first uses <code>operator==</code>, and the second uses the user-supplied
+\ref stldoc_functors <code>binary_pred</code>.
+<p>
+The first version of <code>search</code> returns the first iterator <code>i</code> in the
+range <code>[first, last - count)</code> <A href="#2">[2]</A> such that, for every iterator <code>j</code> in
+the range <code>[i, i + count)</code>, <code>*j == value</code>.  The second version 
+returns the first iterator <code>i</code> in the
+range <code>[first, last - count)</code> such that, for every iterator <code>j</code> in
+the range <code>[i, i + count)</code>, <code>binary_pred(*j, value)</code> is <code>true</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>Integer</code> is an integral type.
+<li>
+<code>T</code> is a model of \ref stldoc_EqualityComparable.
+<li>
+<code>ForwardIterator</code>'s value type is a model of \ref stldoc_EqualityComparable.
+<li>
+Objects of <code>ForwardIterator</code>'s value type can be compared for
+   equality with Objects of type <code>T</code>.
+</ul>
+For the first version:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>Integer</code> is an integral type.
+<li>
+<code>T</code> is a model of \ref stldoc_EqualityComparable.
+<li>
+<code>BinaryPredicate</code> is a model of \ref stldoc_BinaryPredicate.
+<li>
+<code>ForwardIterator</code>'s value type is convertible to <code>BinaryPredicate</code>'s
+   first argument type.
+<li>
+<code>T</code> is convertible to <code>BinaryPredicate</code>'s second argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>count</code> is non-negative <A href="#1">[1]</A>.
+</ul>
+\section Complexity Complexity
+Linear.  <code>Search_n</code> performs at most <code>last - first</code> comparisons.
+<p>
+(The C++ standard permits the complexity to be <i>O</i>(<code>n</code> (<code>last</code> - <code>first</code>)),
+but this is unnecessarily lax.  There is no reason for <code>search_n</code> to
+examine any element more than once.)
+\section Example Example
+\code
+bool eq_nosign(int x, int y) { return abs(x) == abs(y); }
+
+void lookup(int* first, int* last, size_t count, int val) {
+  cout << "Searching for a sequence of "
+       << count
+       << " '" << val << "'"
+       << (count != 1 ? "s: " : ":  ");
+  int* result = search_n(first, last, count, val);
+  if (result == last)
+    cout << "Not found" << endl;
+  else
+    cout << "Index = " << result - first << endl;
+}
+
+void lookup_nosign(int* first, int* last, size_t count, int val) {
+  cout << "Searching for a (sign-insensitive) sequence of "
+       << count
+       << " '" << val << "'"
+       << (count != 1 ? "s: " : ":  ");
+  int* result = search_n(first, last, count, val, eq_nosign);
+  if (result == last)
+    cout << "Not found" << endl;
+  else
+    cout << "Index = " << result - first << endl;
+}
+
+int main() {
+  const int N = 10;
+  int A[N] = {1, 2, 1, 1, 3, -3, 1, 1, 1, 1};
+
+  lookup(A, A+N, 1, 4);
+  lookup(A, A+N, 0, 4);
+  lookup(A, A+N, 1, 1);
+  lookup(A, A+N, 2, 1);
+  lookup(A, A+N, 3, 1);
+  lookup(A, A+N, 4, 1);
+
+  lookup(A, A+N, 1, 3);
+  lookup(A, A+N, 2, 3);
+  lookup_nosign(A, A+N, 1, 3);
+  lookup_nosign(A, A+N, 2, 3);
+}
+\endcode
+<p>
+The output is
+\code
+Searching for a sequence of 1 '4':  Not found
+Searching for a sequence of 0 '4's: Index = 0
+Searching for a sequence of 1 '1':  Index = 0
+Searching for a sequence of 2 '1's: Index = 2
+Searching for a sequence of 3 '1's: Index = 6
+Searching for a sequence of 4 '1's: Index = 6
+Searching for a sequence of 1 '3':  Index = 4
+Searching for a sequence of 2 '3's: Not found
+Searching for a (sign-insensitive) sequence of 1 '3':  Index = 4
+Searching for a (sign-insensitive) sequence of 2 '3's: Index = 4
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note that <code>count</code> is permitted to be zero: a subsequence of zero
+elements is well defined.  If you call <code>search_n</code> with <code>count</code> equal
+to zero, then the search will always succeed: no matter what <code>value</code>
+is, every range contains a subrange of zero consecutive elements that
+are equal to <code>value</code>.  When <code>search_n</code> is called with <code>count</code> equal to
+zero, the return value is always <code>first</code>.
+<p><A name="2">[2]</A>
+The reason that this range is <code>[first, last - count)</code>, rather than
+just <code>[first, last)</code>, is that we are looking for a subsequence whose
+length is <code>count</code>; an iterator <code>i</code> can't be the beginning of such a
+subsequence unless <code>last - count</code> is greater than or equal to <code>count</code>.
+Note the implication of this: you may call <code>search_n</code> with arguments
+such that <code>last - first</code> is less than <code>count</code>, but such a search will
+always fail.
+\section See_also See also
+<code>\ref stldoc_search</code>, <code>\ref stldoc_find_end</code>, <code>\ref stldoc_find</code>, <code>\ref stldoc_find_if</code>
+
+
+*/

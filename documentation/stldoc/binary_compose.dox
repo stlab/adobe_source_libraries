@@ -1,0 +1,263 @@
+/** \page stldoc_binary_compose binary_compose
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left">\image html adaptors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: functors, adaptors</td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Binary_compose</code> is a \ref stldoc_functors adaptor. 
+If <code>f</code> is an \ref stldoc_AdaptableBinaryFunction and <code>g1</code> and <code>g2</code> are both
+\ref stldoc_AdaptableUnaryFunction, and if <code>g1</code>'s and <code>g2</code>'s return types
+are convertible to <code>f</code>'s argument types, then <code>binary_compose</code> can be 
+used to create a function object <code>h</code> such that <code>h(x)</code> is the same as 
+<code>f(g1(x), g2(x))</code>. <A href="#1">[1]</A> <A href="#2">[2]</A>
+\section Example Example
+Finds the first element in a list that lies in the range from 1 to 10.
+\code
+List<int> L;
+...
+List<int>::iterator in_range = 
+     find_if(L.begin(), L.end(),
+             compose2(logical_and<bool>(),
+                      bind2nd(greater_equal<int>(), 1),
+                      bind2nd(less_equal<int>(), 10)));
+assert(in_range == L.end() || (*in_range >= 1 && *in_range <= 10));
+\endcode
+<p>
+Computes <code>sin(x)/(x + DBL_MIN)</code> for each element of a range.
+\code
+transform(first, last, first,
+          compose2(divides<double>(),
+                   ptr_fun(sin),
+                   bind2nd(plus<double>(), DBL_MIN)));
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.  The <code>binary_compose</code>
+class is an SGI extension; it is not part of the C++ standard.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>AdaptableBinaryFunction</code>
+</td>
+<td valign="top">
+The type of the &quot;outer&quot; function in the function composition
+   operation.  That is, if the <code>binary_compose</code> is a function object
+   <code>h</code> such that <code>h(x) = f(g1(x), g2(x))</code>, then <code>AdaptableBinaryFunction</code>
+   is the type of <code>f</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>AdaptableUnaryFunction1</code>
+</td>
+<td valign="top">
+The type of the first &quot;inner&quot; function in the function composition
+   operation.  That is, if the <code>binary_compose</code> is a function object
+   <code>h</code> such that <code>h(x) = f(g1(x), g2(x))</code>, then <code>AdaptableBinaryFunction</code>
+   is the type of <code>g1</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>AdaptableUnaryFunction2</code>
+</td>
+<td valign="top">
+The type of the second &quot;inner&quot; function in the function composition
+   operation.  That is, if the <code>binary_compose</code> is a function object
+   <code>h</code> such that <code>h(x) = f(g1(x), g2(x))</code>, then <code>AdaptableBinaryFunction</code>
+   is the type of <code>g2</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_AdaptableUnaryFunction
+\section Type_requirements Type requirements
+<code>AdaptableBinaryFunction</code> must be a model of \ref stldoc_AdaptableBinaryFunction.
+<code>AdaptableUnaryFunction1</code> and <code>AdaptableUnaryFunction2</code> must both
+be models of \ref stldoc_AdaptableUnaryFunction.  
+The argument types of <code>AdaptableUnaryFunction1</code> and 
+<code>AdaptableUnaryFunction2</code> must be convertible to each other.
+The result types of <code>AdaptableUnaryFunction1</code> and
+<code>AdaptableUnaryFunction2</code> must be convertible, respectively, to
+the first and second argument types of <code>AdaptableBinaryFunction</code>.
+\section Public_base_classes Public base classes
+\code
+unary_function<AdaptableUnaryFunction1::argument_type,
+               AdaptableBinaryFunction::result_type>
+\endcode
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the function object's argument:
+<code>AdaptableUnaryFunction::argument_type</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the result: <code>AdaptableBinaryFunction::result_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+binary_compose(const AdaptableBinaryFunction& f, 
+               const AdaptableUnaryFunction1& g1, 
+               const AdaptableUnaryFunction1& g2); 
+\endcode
+</td>
+<td valign="top">
+<code>binary_compose</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class AdaptableBinaryFunction, 
+          class AdaptableUnaryFunction1,
+          class AdaptableUnaryFunction2>
+binary_compose<AdaptableBinaryFunction, 
+               AdaptableUnaryFunction1,
+               AdaptableUnaryFunction2>
+compose2(const AdaptableBinaryFunction&, 
+         const AdaptableUnaryFunction1&,
+         const AdaptableUnaryFunction2&);
+\endcode
+</td>
+<td valign="top">
+<code>binary_compose</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_AdaptableUnaryFunction
+requirements, but are specific to 
+<code>binary_compose</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+\code
+binary_compose(const AdaptableBinaryFunction& f, 
+               const AdaptableUnaryFunction1& g1, 
+               const AdaptableUnaryFunction1& g2); 
+\endcode
+</td>
+<td valign="top">
+The constructor.  Constructs a <code>binary_compose</code> object such that
+calling that object with the argument <code>x</code> returns 
+<code>f(g1(x), g2(x))</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class AdaptableBinaryFunction, 
+          class AdaptableUnaryFunction1,
+          class AdaptableUnaryFunction2>
+binary_compose<AdaptableBinaryFunction, 
+               AdaptableUnaryFunction1,
+               AdaptableUnaryFunction2>
+compose2(const AdaptableBinaryFunction&, 
+         const AdaptableUnaryFunction1&,
+         const AdaptableUnaryFunction2&);
+\endcode
+</td>
+<td valign="top">
+Creates a <code>binary_compose</code> object.  If <code>f</code>, <code>g</code>, and <code>g2</code> are, respectively,
+of classes <code>AdaptableBinaryFunction</code>, <code>AdaptableUnaryFunction1</code>, and
+<code>AdaptableUnaryFunction2</code>, then <code>compose2(f, g1, g2)</code> is equivalent to
+<code>binary_compose&lt;AdaptableBinaryFunction, AdaptableUnaryFunction1, 
+AdaptableUnaryFunction2&gt;(f, g1, g2)</code>, but is more convenient.
+This is a global function, not a member function.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+This is a form of function composition.  The <code>\ref stldoc_unary_compose</code>
+adaptor allows composition of \ref stldoc_AdaptableUnaryFunction; note,
+however, that once binary functions are introduced, there are several
+possible patterns of function composition.  The <code>binary_compose</code>
+allows you to form a unary function by putting together two unary
+functions and a binary function, but you could also, for example,
+imagine putting together two unary functions and a binary function to
+form a binary function.  In that case, <code>f</code>, <code>g1</code>, and <code>g2</code> would be
+combined into a function object <code>h</code> such that <code>h(x,y) = f(g1(x),
+g2(y))</code>.
+\section See_also See also
+The \ref stldoc_functors, <code>\ref stldoc_unary_compose</code>, 
+<code>\ref stldoc_binder1st</code>, <code>\ref stldoc_binder2nd</code>.
+
+
+*/

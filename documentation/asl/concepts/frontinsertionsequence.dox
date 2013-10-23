@@ -1,0 +1,235 @@
+/**
+\defgroup stldoc_FrontInsertionSequence FrontInsertionSequence
+\ingroup asl_concepts
+
+\description
+A Front Insertion Sequence is a Sequence
+where it is possible to insert an element at the beginning, or to
+access the first element, in amortized constant time.  Front Insertion
+Sequences have special member functions as a shorthand for those
+operations.
+
+\refinement_of
+Sequence
+
+\associated_types
+None, except for those of Sequence.
+
+\notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Front Insertion Sequence
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>a</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The value type of <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>t</code>
+</td>
+<td valign="top">
+Object of type <code>T</code>
+</td>
+</tr>
+</table>
+
+\definitions
+
+\valid_expressions
+In addition to the expressions defined in
+Sequence, the following expressions must be
+valid.
+<table border='1'>
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Front
+</td>
+<td valign="top">
+<code>a.front()</code> <A href="#1">[1]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>reference</code> if <code>a</code> is mutable, otherwise <code>const_reference</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Push front
+</td>
+<td valign="top">
+<code>a.push_front(t)</code>
+</td>
+<td valign="top">
+<code>a</code> is mutable.
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Pop front
+</td>
+<td valign="top">
+<code>a.pop_front()</code>
+</td>
+<td valign="top">
+<code>a</code> is mutable.
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+</table>
+
+\expression_semantics
+<table border='1'>
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Front
+</td>
+<td valign="top">
+<code>a.front()</code> <A href="#1">[1]</A>
+</td>
+<td valign="top">
+<code>!a.empty()</code>
+</td>
+<td valign="top">
+Equivalent to <code>*(a.begin())</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Push front
+</td>
+<td valign="top">
+<code>a.push_front(t)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Equivalent to <code>a.insert(a.begin(), t)</code>
+</td>
+<td valign="top">
+<code>a.size</code> is incremented by 1. <code>a.front()</code> is a copy of <code>t</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Pop front
+</td>
+<td valign="top">
+<code>a.pop_front()</code>
+</td>
+<td valign="top">
+<code>!a.empty()</code>
+</td>
+<td valign="top">
+Equivalent to <code>a.erase(a.begin())</code>
+</td>
+<td valign="top">
+<code>a.size()</code> is decremented by 1.
+</td>
+</tr>
+</table>
+
+\complexity
+Front, push front, and pop front are amortized constant time.
+<A href="#2">[2]</A>
+
+\invariants
+<table border='1'>
+<tr>
+<td valign="top">
+Symmetry of push and pop
+</td>
+<td valign="top">
+<code>push_front()</code> followed by <code>pop_front()</code> is a null operation.
+</td>
+</tr>
+</table>
+
+\models
+<ul>
+<li>
+ List
+<li>
+ Deque
+</ul>
+
+\notes
+<p><A name="1">[1]</A>
+Front is actually defined in Sequence,
+since it is always possible to implement it in amortized constant
+time.  Its definition is repeated here, along with push front and pop
+front, in the interest of clarity.
+<p><A name="2">[2]</A>
+This complexity guarantee is the only reason that <code>front()</code>,
+<code>push_front()</code>, and <code>pop_front()</code> are defined: they
+provide no additional functionality.  Not every sequence must define
+these operations, but it is guaranteed that they are efficient if they
+exist at all.
+
+\see_also
+Container,
+Sequence,
+BackInsertionSequence,
+<code>Deque</code>,
+<code>List</code>,
+<code>Slist</code>
+*/

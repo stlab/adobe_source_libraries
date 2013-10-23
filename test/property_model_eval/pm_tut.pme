@@ -1,0 +1,379 @@
+/* 
+    
+   Copyright 2005-2007 Adobe Systems Incorporated
+
+   Distributed under the MIT License (see accompanying file
+   LICENSE_1_0_0.txt or a copy at
+   http://stlab.adobe.com/licenses.html)
+
+   Comments or suggestions should go to mmarcus@adobe.com
+
+
+
+   This is a short tutorial introduction to the property model library
+   (adam). This tutorial takes a hands on approach, and focuses
+   exclusively on the property modeling. I avoid the layout library
+   (eve), and most theory/diagramming. Instead I wrote a new tool, the
+   property model evaluator tool (pmeval), which allows us to
+   construct a property model (sheet) and update values, make
+   assertions about results, etc. In fact, this tutorial is an
+   executable script for pmeval e.g., pmeval pm_tut.pme . The tone is
+   informal, and not all of the property model is covered. For a more
+   formal treatment, see http://emarcus.org/#gpce_2008
+
+   A primary use case for property modeling is Command Parameter
+   Synthesis. Modern GUI applications are often built using the
+   command pattern. One could argue that the purpose of a User
+   Interface is to assist the user in generating (synthesizing)
+   appropriate parameters for constructing a command object.
+
+   For this tutorial, we take an example from the image processing
+   domain. We will use the property modeling to synthesize parameters
+   for an image-resizing command. Let's say that the image resizing
+   command's constructor is declared as:
+
+     ResizeImageCommand::ResizeImageCommand(Image&, 
+                                            size_t new_width,
+                                            size_t new_height);
+
+   That is, the resize command expects a reference to an image, and
+   the new values for the width and height. The user interface of our
+   application will be somewhat richer. We envision a dialog-based UI,
+   where the dialog provides the following:
+      
+      static fields indicating the original values of the image's
+      width and height
+
+      editable fields indicating the desired new values for width and
+      height, in pixels
+
+      editable fields indicating the desired new values for width and
+      height, as a percent of the original values.
+
+      a "constrain" checkbox, indicating whether the new image
+      dimensions should be constrained to the same relative
+      proportions as the original image size.
+
+  We note that while the command's C++ constructor is only interested
+  in the resulting width and height in pixels, the user interface
+  offers alternate ways for the user to adjust the dimensions. For
+  this to work, certain relationships between the dialog fields must
+  be enforced. In what follows we will explore the mechanics, and
+  demonstrate some of the benefits of the property modeling approach:
+  synthesizing the parameters of the ResizeImageCommand constructor
+  from the user interface specified above.
+  
+  We will not go into the art of designing sheets in this
+  tutorial. Instead, we will analyze one way of modeling this set of
+  command parameters. We begin with a sheet:
+*/
+
+sheet mini_image_size
+{
+ input:
+    original_width     : 1 ;
+    original_height    : 1 ;    
+ interface:
+    constrain           : false;     
+
+    width_pixels        : original_width    <== round(width_pixels);
+    height_pixels       : original_height   <== round(height_pixels);
+    width_percent;
+    height_percent;
+
+ logic:
+    relate {
+      width_pixels  <== round(width_percent * original_width / 100);
+      width_percent <== width_pixels * 100 / original_width;
+    }
+    
+    relate {
+      height_pixels  <== round(height_percent * original_height / 100);
+      height_percent <== height_pixels * 100 / original_height;
+    }
+
+    when (constrain) relate {
+      width_percent  <== height_percent;
+      height_percent <== width_percent;
+    }
+
+ output:
+    result <== { height: height_pixels, width: width_pixels };
+}
+
+/* The mini_image_size sheet exists to explicitly model a set of
+   variables involved in resizing the image. In the input section of
+   the sheet, we establish the original document dimensions. In the
+   interface section of the sheet, we include the user-settable
+   variables, i.e. whether to constrain proportions, and the desired
+   new width/height in pixels (and as a percent of original). These
+   variables are not all independent--they are related. Our sheet
+   expresses these relationships in the logic section. Finally, in the
+   output section, we gather the variables that the
+   ResizeImageCommand's constructor actually cares about into a result
+   structure. We will examine these sections of the sheet in what
+   follows.
+
+   But first, it is not very likely that our original document
+   dimensions are 1x1 pixels. So we begin by initializing the original
+   dimensions to those of our document, say, 5 inches by 7 inches at
+   300 dpi;
+*/
+
+
+reinitialize (mini_image_size,
+{
+    original_width  : 5 * 300,
+    original_height : 7 * 300
+});
+ 
+
+/* We just reinitialized the sheet with appropriate original
+   dimensions. Let's check to make sure that the other (non-input)
+   variables have their expected values. Using pmeval's check
+   facility. 
+*/
+
+check (mini_image_size,
+{
+        constrain: false,
+        height_percent: 100,
+        height_pixels: 2100,
+        result: {
+                height: 2100,
+                width: 1500
+        },
+        width_percent: 100,
+        width_pixels: 1500
+});
+
+
+/* pmeval will complain if check fails. We can explore our property
+   model's behavior, simulating a user-interface by updating the
+   values for our variables with the update facility. For example, we
+   now explore what would happen when a user sets the new width_pixels
+   to 3000:
+*/
+
+update (mini_image_size,
+{
+    width_pixels : 10 * 300
+});
+
+
+/* We now expect the state of the sheet's interface and output
+   to be:
+ */
+
+check (mini_image_size,
+{
+	constrain: false,
+	height_percent: 100,
+	height_pixels: 2100,
+	result: {
+		height: 2100,
+		width: 3000
+	},
+	width_percent: 200,
+	width_pixels: 3000
+});
+
+
+/* It is worth noting at this point that, when asked to double the
+   width_pixels, the property model engine must also double the
+   width_percent, to maintain the required relationships. When we look
+   at the logic section of our sheet a little more closely, we find:
+
+   relate {
+       width_pixels    <== round(width_percent * original_width / 100);
+       width_percent   <== width_pixels * 100 / original_width;
+   }
+
+   When a sheet is updated, the property model engine will select
+   *exactly one* line from each relate clause. How does it know which
+   one to use above? The engine remembers the relative order in which
+   variables were touched by the user. Since we just updated
+   width_pixels, it is marked as having the highest priority--higher
+   priority than width_percent. The engine favors preservation of the
+   highest priority variables, so the second function is selected,
+   i.e. we maintain the required relationships by recalculating
+   width_percent in terms of the new value for width_pixels.
+
+   Let's explore what happens if the user now sets the constrain
+   variable to true.
+
+*/
+
+update (mini_image_size,
+{
+   constrain : true 
+});
+
+check (mini_image_size,
+{
+	constrain: true,
+	height_percent: 200,
+	height_pixels: 4200,
+	result: {
+		height: 4200,
+		width: 3000
+	},
+	width_percent: 200,
+	width_pixels: 3000
+});
+
+
+/* We assert in our check statement that we expect this to result in
+   the doubling of both height variables (pixels and percent), and in
+   the result dictionary. Why is this? To answer, we must take another
+   look inside of the logic section of our sheet, at this conditional
+   relate clause:
+
+   when (constrain) relate {
+       width_percent   <== height_percent;
+       height_percent  <== width_percent;
+   }
+
+   When constrain is false, the above relate clause is inactive. Now
+   that constrain is true, as with unconditional relate clauses, the
+   engine must select exactly one function to execute to maintain the
+   required relationships. Here, neither height_percent nor
+   width_percent was directly touched by the user. However,
+   width_percent depends on width_pixels. That is, width_pixels has a
+   "contributes" to width_percent. In the process of solving a
+   property model graph, the engine must select one function from each
+   relation. When a user asks the engine to update a variable, the
+   preferred outcome is to actually set that variable, and recalculate
+   other related variables. More generally, if the user updates a
+   series of variables, the variables that were most recently touched
+   by the user are given highest priority. For calculated variables,
+   relative priorities are determined by the priorities of their
+   contributors. In this case, since width_pixels contributes to
+   width_percent, the latter is treated as having a higher priority
+   than height_percent, and the engine selects the second function of
+   the relate clause for execution. This causes height_percent to be
+   updated. 
+
+   Finally, the engine must choose which function to fire from the
+   last remaining relate clause:
+
+   relate {
+       height_pixels  <== round(height_percent * original_height / 100);
+       height_percent <== height_pixels * 100 / original_height;
+   }
+
+   We saw above how width_pixels contributed to width_percent. But
+   since width_percent was used to calculate height_percent, we see
+   that width_pixels also contributes to height_percent. This results
+   in height_percent being treated as having higher priority than
+   height_pixels, and so this time it will be the first function in
+   our relate clause that fires. 
+
+   To summarize, based on the user actions, the highest priority
+   variable is constrain, followed by width_pixels. Since width_pixels
+   contributes to width_percent, when constrain was set to true the
+   engine used width_percent to calculate height_percent. Finally,
+   height_percent was used to calculate height_pixels. 
+
+   Our user now changes their mind, and sets height_percent to 300%.
+
+*/
+
+update (mini_image_size,
+{
+    height_percent : 300 
+});
+
+/* Now the highest priority variable is height_percent, followed by
+   constrain, followed by width_pixels.  We re-examine our relate
+   clauses:
+
+   relate {
+       width_pixels   <== round(width_percent * original_width / 100);
+       width_percent  <== width_pixels * 100 / original_width;
+   }
+   
+   relate {
+       height_pixels  <== round(height_percent * original_height / 100);
+       height_percent <== height_pixels * 100 / original_height;
+   }
+
+   when (constrain) relate {
+       width_percent  <== height_percent;
+       height_percent <== width_percent;
+   }
+
+
+   height_percent is highest priority, and constrain is true, so in
+   the third relate clause, the first function will fire. That is, the
+   engine will calculate width_percent in terms of height_percent. The
+   same is true of the second relate clause: height_pixels is
+   calculated in terms of height_percent. In the first relate clause,
+   we also fire the first function, calculating width_pixels in terms
+   of the updated width_percent.
+
+   We put the above together into a pmeval check statement, to make
+   sure that we have reasoned correctly:
+*/
+
+check (mini_image_size,
+{
+	constrain: true,
+	height_percent: 300,
+	height_pixels: 6300,
+	result: {
+		height: 6300,
+		width: 4500
+	},
+	width_percent: 300,
+	width_pixels: 4500
+});
+
+/* When the user eventually hits the OK button in the ResizeImage
+   dialog, we can extract the values necessary for our command's
+   constructor from the result variable. We don't need to care how the
+   user synthesized those values--the relations in the sheet relieved
+   our C++ code from having to consider percents or constrain
+   proportions.
+
+   However, when writing applications that offer recordable scripting
+   (or actions), we *do* care about how the user chose the new image
+   size. If we only considered the final height and width when
+   recording, we'd end up with a script which recorded an action such
+   as: Set the new dimensions to 6300 by 4500. But our user's
+   intention above was ultimately to constrain proportions and to
+   triple the height. In other words, we want the recorded script to
+   triple both the width and the height, not to always set them the
+   dimensions to 6300 by 4500. The property model engine is able to
+   keep track of user "intent" by remembering which variables actually
+   contribute to the output. In this case, we can ask the pmeval to
+   tell us which variables are currently contributing to the result:
+*/
+
+contributing (mini_image_size);
+
+/* This yields:
+    {
+	constrain: true,
+	height_percent: 300
+    }
+
+    When recording a script, we save the contributing variables and
+    their values. When playing back the script, we first initialize a
+    sheet with the correct initial dimensions of the image which we
+    will be resizing. Then we update the sheet with the contributing
+    variable values that we stored in the script. When the engine
+    updates the sheet, it will calculate the result width and height
+    appropriate to the new target image.
+
+    There are other features of the property model engine and the
+    pmeval tool that are not covered in this tutorial. pmeval --help
+    gives further info on using the tool. pmeval can serve as a
+    learning tool, to supplement diagramming and the Adobe Begin
+    application. It can also be used as a regression tester, for
+    property models and for the engine itself.
+*/
+
+
+
+

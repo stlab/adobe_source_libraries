@@ -1,0 +1,303 @@
+/** \page stldoc_trivial trivial
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Trivial Iterator is an object that may be dereferenced to refer to
+some other object.  Arithmetic operations (such as increment and
+comparison) are not guaranteed to be supported.
+\section Refinement_of Refinement of
+\ref stldoc_Assignable,
+\ref stldoc_EqualityComparable,
+\ref stldoc_DefaultConstructible
+\section Associated_types Associated types
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Value type
+</td>
+<td valign="top">
+The type of the value obtained by dereferencing a Trivial Iterator
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Trivial Iterator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The value type of <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>x</code>, <code>y</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>t</code>
+</td>
+<td valign="top">
+Object of type <code>T</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+A type that is a model of Trivial Iterator may be <i>mutable</i>,
+meaning that the values referred to by objects of that type may be
+modified, or <i>constant</i>, meaning that they may not.  For example,
+<code>int*</code> is a mutable iterator type and <code>const int*</code> is a
+constant iterator type.  If an iterator type is mutable, this implies
+that its value type is a model of
+\ref stldoc_Assignable; the converse, though, is not
+necessarily true.
+<p>
+A Trivial Iterator may have a <i>singular</i> value, meaning that the
+results of most operations, including comparison for equality, are
+undefined.  The only operation that a is guaranteed to be supported is
+assigning a nonsingular iterator to a singular iterator.
+<p>
+A Trivial Iterator may have a <i>dereferenceable</i> value, meaning
+that dereferencing it yields a well-defined value.  Dereferenceable
+iterators are always nonsingular, but the converse is not true.  For
+example, a null pointer is nonsingular (there are well defined
+operations involving null pointers) even thought it is not
+dereferenceable.
+<p>
+<i>Invalidating</i> a dereferenceable iterator means performing an
+operation after which the iterator might be nondereferenceable or
+singular.  For example, if <code>p</code> is a pointer, then <code>delete
+p</code> invalidates <code>p</code>.
+\section Valid_expressions Valid expressions
+In addition to the expressions defined in
+\ref stldoc_Assignable,
+\ref stldoc_EqualityComparable, and 
+\ref stldoc_DefaultConstructible, the
+following expressions must be valid.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Default constructor
+</td>
+<td valign="top">
+<code>X x</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Dereference
+</td>
+<td valign="top">
+<code>*x</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Convertible to <code>T</code> <A href="#1">[1]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Dereference assignment
+</td>
+<td valign="top">
+<code>*x = t</code>
+</td>
+<td valign="top">
+<code>X</code> is mutable
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Member access
+</td>
+<td valign="top">
+<code>x-&gt;m</code> <A href="#2">[2]</A>
+</td>
+<td valign="top">
+<code>T</code> is a type for which <code>x.m</code> is defined
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Default constructor
+</td>
+<td valign="top">
+<code>X x</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>x</code> is singular
+</td>
+</tr>
+<tr>
+<td valign="top">
+Dereference
+</td>
+<td valign="top">
+<code>*x</code>
+</td>
+<td valign="top">
+<code>x</code> is dereferenceable
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Dereference assignment
+</td>
+<td valign="top">
+<code>*x = t</code>
+</td>
+<td valign="top">
+<code>x</code> is dereferenceable
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>*x</code> is a copy of t
+</td>
+</tr>
+<tr>
+<td valign="top">
+Member access
+</td>
+<td valign="top">
+<code>x-&gt;m</code>
+</td>
+<td valign="top">
+<code>x</code> is dereferenceable
+</td>
+<td valign="top">
+Equivalent to <code>(*x).m</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+The complexity of operations on trivial iterators is
+guaranteed to be amortized constant time.
+\section Invariants Invariants
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Identity
+</td>
+<td valign="top">
+<code>x == y</code> if and only if <code>&amp;*x == &amp;*y</code>
+</td>
+</tr>
+</table>
+\section Models Models
+<ul>
+<li>
+A pointer to an object that is not part of an array.
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+The requirement for the return type of <code>*x</code> is specified as
+&quot;convertible to <code>T</code>&quot;, rather than simply <code>T</code>,
+because it sometimes makes sense for an iterator to return some sort
+of proxy object instead of the object that the iterator conceptually
+points to.  Proxy objects are implementation details rather than part
+of an interface (one use of them, for example, is to allow an iterator
+to behave differently depending on whether its value is being read or
+written), so the value type of an iterator that returns a proxy is
+still <code>T</code>.
+<p><A name="2">[2]</A>
+Defining <code>operator-&gt;</code> for iterators depends on a feature that is part
+of the C++ language but that is not yet implemented by all C++
+compilers.  If your compiler does not yet support this feature, the
+workaround is to use <code>(*it).m</code> instead of <code>it-&gt;m</code>.
+\section See_also See also
+\ref stldoc_InputIterator, \ref stldoc_OutputIterator, \ref stldoc_ForwardIterator,
+\ref stldoc_BidirectionalIterator, \ref stldoc_RandomAccessIterator,
+\ref stldoc_Iterators
+
+
+*/

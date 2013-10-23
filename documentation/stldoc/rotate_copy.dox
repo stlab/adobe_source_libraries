@@ -1,0 +1,74 @@
+/** \page stldoc_rotate_copy rotate_copy
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class ForwardIterator, class OutputIterator>
+OutputIterator rotate_copy(ForwardIterator first, ForwardIterator middle,
+                           ForwardIterator last, OutputIterator result);
+\endcode
+\section Description Description
+<code>Rotate_copy</code> copies elements from the range <code>[first, last)</code> to the
+range <code>[result, result + (last - first))</code> such that <code>*middle</code> is
+copied to <code>*result</code>, <code>*(middle + 1)</code> is copied to <code>*(result + 1)</code>, and
+so on.  Formally, for every integer <code>n</code> such that <code>0 &lt;= n &lt; last -
+first</code>, <code>rotate_copy</code> performs the assignment <code>*(result + (n + (last -
+middle)) % (last - first)) = *(first + n)</code>.  <code>Rotate_copy</code> is similar
+to <code>\ref stldoc_copy</code> followed by <code>\ref stldoc_rotate</code>, but is more efficient.  The
+return value is <code>result + (last - first)</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>OutputIterator</code> is a model of \ref stldoc_OutputIterator.
+<li>
+<code>ForwardIterator</code>'s value type is convertible to a type in
+   <code>OutputIterator</code>'s set of value types.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, middle)</code> is a valid range.
+<li>
+<code>[middle, last)</code> is a valid range. <A href="#1">[1]</A>
+<li>
+There is enough space to hold all of the elements being copied.
+   More formally, the requirement is that 
+   <code>[result, result + (last - first))</code> is a valid range. 
+<li>
+The ranges <code>[first, last)</code> and <code>[result, result + (last - first))</code>
+   do not overlap.
+</ul>
+\section Complexity Complexity
+Linear.  <code>Rotate_copy</code> performs exactly <code>last - first</code> assignments.
+\section Example Example
+\code
+const char alpha[] = "abcdefghijklmnopqrstuvwxyz";
+rotate_copy(alpha, alpha + 13, alpha + 26, ostream_iterator<char>(cout));
+// The output is nopqrstuvwxyzabcdefghijklm
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+It follows from these two requirements that <code>[first, last)</code> is
+a valid range.
+\section See_also See also
+<code>\ref stldoc_rotate</code>, <code>\ref stldoc_copy</code>.
+
+
+*/

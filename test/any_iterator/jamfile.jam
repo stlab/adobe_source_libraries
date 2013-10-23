@@ -1,0 +1,5 @@
+# Jamfile for building the cmath smoke test app
+
+project adobe/any_iterator ;
+
+run main.cpp ;

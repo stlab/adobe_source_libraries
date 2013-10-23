@@ -1,0 +1,135 @@
+/** \page stldoc_value_type value_type
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Value_type</code> is overloaded; it is in fact five different functions.
+\code
+template <class T, class Distance> 
+inline T* value_type(const input_iterator<T, Distance>&);
+
+template <class T, class Distance> 
+inline T* value_type(const forward_iterator<T, Distance>&);
+
+template <class T, class Distance> 
+inline T* value_type(const bidirectional_iterator<T, Distance>&);
+
+template <class T, class Distance> 
+inline T* value_type(const random_access_iterator<T, Distance>&);
+
+template <class T> inline T* value_type(const T*);
+\endcode
+\section Description Description
+<code>Value_type</code> is an \ref stldoc_iterator_tags function: it is used to
+determine the value type associated with an iterator.  An iterator's
+value type is the type of object returned when the iterator is
+dereferenced; \ref stldoc_OutputIterator do not have value types 
+(\ref stldoc_OutputIterator may only be used for storing values, not for
+accessing values), but \ref stldoc_InputIterator, \ref stldoc_ForwardIterator,
+\ref stldoc_BidirectionalIterator, and \ref stldoc_RandomAccessIterator do. <A href="#1">[1]</A>
+In some cases, such as an algorithm that must
+declare a local variable that holds a value returned from
+dereferencing an iterator, it is necessary to find out an iterator's
+value  type.  Accordingly, <code>value_type(Iter)</code> returns <code>(T*) 0</code>, where <code>T</code> is
+<code>Iter</code>'s value type.
+<p>
+Although <code>value_type</code> looks like a single function whose
+return type depends on its argument type, in reality it is a set
+of functions; the name <code>value_type</code> is overloaded.  
+The function <code>value_type</code> must be overloaded for every iterator type <A href="#1">[1]</A>.
+<p>
+In practice, ensuring that <code>value_type</code> is defined requires
+essentially no work at all.  It is already defined for pointers, and
+for the base classes <code>\ref stldoc_input_iterator</code>,
+<code>\ref stldoc_forward_iterator</code>, <code>\ref stldoc_bidirectional_iterator</code>, and
+<code>\ref stldoc_random_access_iterator</code>.  If you are implementing a new type of
+forward iterator, for example, you can simply derive it from the base
+class <code>\ref stldoc_forward_iterator</code>; this means that <code>value_type</code>
+(along with <code>\ref stldoc_iterator_category</code> and <code>\ref stldoc_distance_type</code>) will 
+automatically be defined for your iterator.   These base classes are
+empty: they contain no member functions or member variables, but
+only type information.  Using them should therefore incur no overhead.
+<p>
+Note that, while the function <code>value_type</code> was present in the
+original STL, it is no longer present in the most recent draft C++
+standard: it has been replaced by the <code>\ref stldoc_iterator_traits</code> class
+At present both mechanisms are supported <A href="#2">[2]</A>, but eventually
+<code>value_type</code> will be removed.
+\section Definition Definition
+Defined in the standard header <A href="iterator">iterator</A>, and in the
+nonstandard backward-compatibility header <A href="iterator.h">iterator.h</A>.
+This function is no longer part of the C++ standard, although
+it was present in early drafts of the standard.  It is retained
+in this implementation for backward compatibility.
+\section Requirements_on_types Requirements on types
+The argument of <code>value_type</code> must be an \ref stldoc_InputIterator, 
+\ref stldoc_ForwardIterator, \ref stldoc_BidirectionalIterator, or
+\ref stldoc_RandomAccessIterator. <A href="#1">[1]</A>
+\section Preconditions Preconditions
+None.  <code>Value_type</code>'s argument is even permitted to be
+a singular iterator.
+\section Complexity Complexity
+At most amortized constant time.  In many cases, a compiler should be
+able to optimize away <code>value_type</code> entirely.
+\section Example Example
+This example uses the <code>\ref stldoc_value_type</code> iterator tag function in order to
+declare a temporary variable of an iterator's value type.
+\code
+template <class ForwardIterator1, class ForwardIterator2, class ValueType>
+inline void __iter_swap(ForwardIterator1 a, ForwardIterator2 b, ValueType*) {
+    T tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+template <class ForwardIterator1, class ForwardIterator2>
+inline void iter_swap(ForwardIterator1 a, ForwardIterator2 b) {
+    __iter_swap(a, b, value_type(a));
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note that <code>distance_type</code> is not defined for \ref stldoc_OutputIterator
+or for \ref stldoc_trivial.  In the case of \ref stldoc_OutputIterator,
+this is because an \ref stldoc_OutputIterator does not have a value type:
+it is not possible to dereference an \ref stldoc_OutputIterator and obtain
+a value.  In the case of \ref stldoc_trivial, this is because 
+the concept was introduced only for conceptual clarity,
+in order to separate the axioms related to an object that refers
+to another object from those related to iteration over a range.
+In fact, the STL does not define any types that are \ref stldoc_trivial.
+Although built-in C pointers may be \ref stldoc_trivial, the C
+type system does not allow a distinction between pointers that are
+\ref stldoc_trivial and pointers that are \ref stldoc_RandomAccessIterator
+into C arrays.  Consequently, there is no \ref stldoc_trivial category
+tag or iterator base.
+<p><A name="2">[2]</A>
+The <code>\ref stldoc_iterator_traits</code> class
+relies on a C++ feature known as <i>partial specialization</i>.  Many of
+today's compilers don't implement the complete standard; in
+particular, many compilers do not support partial specialization.  If
+your compiler does not support partial specialization, then you will
+not be able to use <code>\ref stldoc_iterator_traits</code>, and you will have to 
+continue using the functions <code>\ref stldoc_iterator_category</code>, <code>\ref stldoc_distance_type</code>,
+and <code>value_type</code>.  This is one reason that those functions have
+not yet been removed.
+\section See_also See also
+The \ref stldoc_iterator_tags overview, <code>\ref stldoc_iterator_traits</code>,
+<code>\ref stldoc_iterator_category</code>, <code>\ref stldoc_distance_type</code>,
+<code>\ref stldoc_output_iterator_tag</code>, <code>\ref stldoc_input_iterator_tag</code>,
+<code>\ref stldoc_forward_iterator_tag</code>, <code>\ref stldoc_bidirectional_iterator_tag</code>,
+<code>\ref stldoc_random_access_iterator_tag</code>
+
+
+*/

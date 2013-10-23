@@ -1,0 +1,2 @@
+run name_test.cpp ;
+compile-fail fail_int_test.cpp ;

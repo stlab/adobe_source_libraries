@@ -1,0 +1,92 @@
+<!--
+    Copyright 2005-2008 Adobe Systems Incorporated
+    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
+    or a copy at http://stlab.adobe.com/licenses.html)
+
+    Some files are held under additional license.
+    Please see "http://stlab.adobe.com/licenses.html" for more information.
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+    <TITLE>$title</TITLE>
+    <META HTTP-EQUIV="content-type" CONTENT="text/html;charset=ISO-8859-1"/>
+    <LINK TYPE="text/css" REL="stylesheet" HREF="adobe_source.css"/>
+    <LINK REL="alternate" TITLE="stlab.adobe.com RSS" HREF="http://sourceforge.net/export/rss2_projnews.php?group_id=132417&amp;rss_fulltext=1" TYPE="application/rss+xml"/>
+    <script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+</head>
+<body>
+<div id='content'>
+<table><tr>
+<td colspan='5'>
+    <div id='opensource_banner'>
+    <table style='width: 100%; padding: 5px;'><tr>
+    <td align='left'>
+        <a href='index.html' style='border: none'><img src='stlab2007.jpg' alt="stlab.adobe.com"/></a>
+    </td>
+    <td align='right'>
+        <a href='http://www.adobe.com' style='border: none'><img src='adobe_hlogo.gif' alt="Adobe Systems Incorporated"/></a>
+    </td>
+    </tr></table>
+    </div>
+</td></tr><tr>
+<td valign="top">
+    <div id='navtable' height='100%'>
+    <div style='margin: 5px'>
+        <h4>Documentation</h4>
+
+        <a href="group__asl__overview.html">Overview</a><br/>
+        <a href="asl_readme.html">Building ASL</a><br/>
+        <a href="asl_toc.html">Documentation</a><br/>
+        <a href="http://stlab.adobe.com/wiki/index.php/Supplementary_ASL_Documentation">Library Wiki Docs</a><br/>
+        <a href="asl_indices.html">Indices</a><br/>
+        <a href="http://stlab.adobe.com/perforce/">Browse Perforce</a><br/>
+
+        <h4>More Info</h4>
+
+        <a href="asl_release_notes.html">Release Notes</a><br/>
+        <a href="http://stlab.adobe.com/wiki/">Wiki</a><br/>
+        <a href="asl_search.html">Site Search</a><br/>
+        <a href="licenses.html">License</a><br/>
+        <a href="success_stories.html">Success Stories</a><br/>
+        <a href="asl_contributors.html">Contributors</a><br/>
+
+        <h4>Media</h4>
+
+        <a href="http://sourceforge.net/project/showfiles.php?group_id=132417&amp;package_id=145420">Download</a><br/>
+        <a href="asl_download_perforce.html">Perforce Depots</a><br/>
+
+        <h4>Support</h4>
+
+        <a href="http://sourceforge.net/projects/adobe-source/">ASL SourceForge Home</a><br/>
+        <a href="http://sourceforge.net/mail/?group_id=132417">Mailing Lists</a><br/>
+        <a href="http://sourceforge.net/forum/?group_id=132417">Discussion Forums</a><br/>
+        <a href="http://sourceforge.net/tracker/?atid=724218&amp;group_id=132417&amp;func=browse">Report Bugs</a><br/>
+        <a href="http://sourceforge.net/tracker/?atid=724221&amp;group_id=132417&amp;func=browse">Suggest Features</a><br/>
+        <a href="asl_contributing.html">Contribute to ASL</a><br/>
+
+        <h4>RSS</h4>
+
+        <a href="http://sourceforge.net/export/rss2_projnews.php?group_id=132417">Short-text news</a><br/>
+        <a href="http://sourceforge.net/export/rss2_projnews.php?group_id=132417&amp;rss_fulltext=1">Full-text news</a><br/>
+        <a href="http://sourceforge.net/export/rss2_projfiles.php?group_id=132417">File releases</a><br/>
+
+        <h4>Other Adobe Projects</h4>
+
+        <a href="http://sourceforge.net/adobe/">Open @ Adobe</a><br/>
+        <a href="http://opensource.adobe.com/">Adobe Open Source</a><br/>
+        <a href="http://labs.adobe.com/">Adobe Labs</a><br/>
+        <a href="http://stlab.adobe.com/amg/">Adobe Media Gallery</a><br/>
+        <a href="http://stlab.adobe.com/performance/">C++ Benchmarks</a><br/>
+
+        <h4>Other Resources</h4>
+
+        <a href="http://boost.org">Boost</a><br/>
+        <a href="http://www.riaforge.com/">RIAForge</a><br/>
+        <a href="http://www.sgi.com/tech/stl">SGI STL</a><br/>
+    </div>
+    </div>
+</td>
+<td id='maintable' width="100%" valign="top">
+
+<!-- End Header -->

@@ -1,0 +1,108 @@
+/** \page stldoc_destroy destroy
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html allocators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: allocators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Destroy</code> is an overloaded name; there are actually two <code>destroy</code>
+functions.
+\code
+template <class T> void destroy(T* pointer);
+
+template <class ForwardIterator>
+void destroy(ForwardIterator first, ForwardIterator last);
+\endcode
+\section Description Description
+In C++, the operator <code>delete</code> destroys an object by calling its
+destructor, and then deallocates the memory where that object was
+stored.  Occasionally, however, it is useful to separate those two
+operations.  <A href="#1">[1]</A>  <code>Destroy</code> calls an object's destructor without 
+deallocating the memory where the object was stored.
+<p>
+The first version of <code>destroy</code>
+destroys the object pointed to by <code>pointer</code> by calling the 
+destructor <code>T::~T()</code>.  The memory pointed to by <code>pointer</code> is not
+deallocated, and can be reused for some other object.
+<p>
+The second version of <code>destroy</code>
+destroys all of the objects in the range of elements <code>[first, last)</code>.
+It is equivalent to calling <code>destroy(&amp;*i)</code> for each iterator <code>i</code>
+in the range <code>[first, last)</code>.
+\section Definition Definition
+Defined in the standard header <A href="memory">memory</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.  The <code>destroy</code> algorithms
+are no longer part of the C++ standard; they were present in early drafts,
+and they are retained in this implementation for backward compatibility.
+\section Requirements_on_types Requirements on types
+For the first version of <code>destroy</code>:
+<ul>
+<li>
+<code>T</code>'s destructor, <code>~T</code>, is accessible.
+</ul>
+For the second version of <code>destroy</code>:
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator</code> is mutable.
+<li>
+<code>ForwardIterator</code>'s value type has an accessible destructor.
+</ul>
+\section Preconditions Preconditions
+For the first version of <code>destroy</code>:
+<ul>
+<li>
+<code>pointer</code> points to a valid object of type <code>T</code>.
+</ul>
+For the second version of <code>destroy</code>:
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+Each iterator <code>i</code> in <code>[first, last)</code> points to a valid object.
+</ul>
+\section Complexity Complexity
+The run-time complexity of the second version is linear: it calls 
+the destructor exactly <code>last - first</code> times.
+\section Example Example
+\code
+class Int {
+public:
+  Int(int x) : val(x) {}
+  int get() { return val; }
+private:
+  int val;
+};
+
+int main()
+{
+  Int A[] = { Int(1), Int(2), Int(3), Int(4) };
+
+  destroy(A, A + 4);
+  construct(A,     Int(10));
+  construct(A + 1, Int(11));
+  construct(A + 2, Int(12));
+  construct(A + 3,  Int(13));
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+In particular, <code>destroy</code>, along with other low-level memory 
+allocation primitives, is used to implement container classes.
+\section See_also See also
+\ref stldoc_Allocators, <code>\ref stldoc_construct</code>, <code>\ref stldoc_uninitialized_copy</code>, 
+<code>\ref stldoc_uninitialized_fill</code>, <code>\ref stldoc_uninitialized_fill_n</code>,
+<code>\ref stldoc_raw_storage_iterator</code>
+
+
+*/

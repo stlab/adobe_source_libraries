@@ -1,0 +1,129 @@
+/** \page stldoc_push_heap push_heap
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Push_heap</code> is an overloaded name; there are actually two 
+<code>push_heap</code> functions.    
+\code
+template <class RandomAccessIterator>
+void push_heap(RandomAccessIterator first, RandomAccessIterator last);
+
+template <class RandomAccessIterator, class StrictWeakOrdering>
+void push_heap(RandomAccessIterator first, RandomAccessIterator last,
+               StrictWeakOrdering comp);
+\endcode
+\section Description Description
+<code>Push_heap</code> adds an element to a heap <A href="#1">[1]</A>.  It is assumed that 
+<code>[first, last - 1)</code> is already a heap; the element to be added to
+the heap is <code>*(last - 1)</code>.  
+<p>
+The two versions of <code>push_heap</code> differ in how they define whether one
+element is less than another.  The first version compares objects
+using <code>operator&lt;</code>, and the second compares objects using a 
+\ref stldoc_functors <code>comp</code>.  The postcondition for the first version
+is that <code>\ref stldoc_is_heap\zwj(first, last)</code> is <code>true</code>, and the postcondition
+for the second version is that <code>\ref stldoc_is_heap\zwj(first, last, comp)</code> is
+<code>true</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator.
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+<code>RandomAccessIterator</code>'s value type is a model of \ref stldoc_LessThanComparable.
+<li>
+The ordering on objects of <code>RandomAccessIterator</code>'s value type is a <i>strict
+   weak ordering</i>, as defined in the \ref stldoc_LessThanComparable requirements.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator.
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>RandomAccessIterator</code>'s value type is convertible to
+   <code>StrictWeakOrdering</code>'s argument type.
+</ul>
+\section Preconditions Preconditions
+For the first version:
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>[first, last - 1)</code> is a valid range.  That is, <code>[first, last)</code> is
+   nonempty.
+<li>
+<code>[first, last - 1)</code> is a heap.  That is, <code>\ref stldoc_is_heap\zwj(first, last - 1)</code>
+   is <code>true</code>.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>[first, last - 1)</code> is a valid range.  That is, <code>[first, last)</code> is
+   nonempty.
+<li>
+<code>[first, last)</code> is a heap.  That is, <code>\ref stldoc_is_heap\zwj(first, last - 1, comp)</code>
+   is <code>true</code>.
+</ul>
+\section Complexity Complexity
+Logarithmic.  At most <code>log(last - first)</code> comparisons.
+\section Example Example
+\code
+int main()
+{
+  int A[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+  make_heap(A, A + 9);
+  cout << "[A, A + 9)  = ";
+  copy(A, A + 9, ostream_iterator<int>(cout, " "));
+  
+  push_heap(A, A + 10);
+  cout << endl << "[A, A + 10) = ";
+  copy(A, A + 10, ostream_iterator<int>(cout, " "));
+  cout << endl;
+}
+\endcode
+<p>
+The output is 
+\code
+[A, A + 9)  = 8 7 6 3 4 5 2 1 0 
+[A, A + 10) = 9 8 6 3 7 5 2 1 0 4 
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+A heap is a particular way of ordering the elements in a range of
+\ref stldoc_RandomAccessIterator <code>[f, l)</code>.  The reason heaps are useful
+(especially for sorting, or as priority queues) is that they satisfy
+two important properties.  First, <code>*f</code> is the largest element in the
+heap.  Second, it is possible to add an element to a heap (using
+<code>push_heap</code>), or to remove <code>*f</code>, in logarithmic time.
+Internally, a heap is  a tree represented as a sequential range.
+The tree is constructed so that that each
+node is less than or equal to its parent node.
+\section See_also See also
+<code>\ref stldoc_make_heap</code>, <code>\ref stldoc_pop_heap</code>, <code>\ref stldoc_sort_heap</code>, <code>\ref stldoc_is_heap</code>, <code>\ref stldoc_sort</code>
+
+
+*/

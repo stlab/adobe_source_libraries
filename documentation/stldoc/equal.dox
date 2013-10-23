@@ -1,0 +1,102 @@
+/** \page stldoc_equal equal
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Equal</code> is an overloaded name; there are actually two <code>equal</code>
+functions.
+\code
+template <class InputIterator1, class InputIterator2>
+bool equal(InputIterator1 first1, InputIterator1 last1,
+           InputIterator2 first2);
+
+template <class InputIterator1, class InputIterator2, 
+          class BinaryPredicate>
+bool equal(InputIterator1 first1, InputIterator1 last1,
+           InputIterator2 first2, BinaryPredicate binary_pred);
+\endcode
+\section Description Description
+<code>Equal</code> returns <code>true</code> if the two ranges <code>[first1, last1)</code> and
+<code>[first2, first2 + (last1 - first1))</code> are identical when compared
+element-by-element, and otherwise returns <code>false</code>. <A href="#1">[1]</A>  
+<p>
+The first version of <code>equal</code> returns <code>true</code> if and only if
+for every iterator <code>i</code> in <code>[first1, last1)</code>, 
+<code>*i == *(first2 + (i - first1))</code>.  
+The second version of <code>equal</code> returns <code>true</code> if and only if
+for every iterator <code>i</code> in <code>[first1, last1)</code>, 
+<code>binary_pred(*i, *(first2 + (i - first1))</code> is <code>true</code>.  
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>InputIterator1</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator2</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator1</code>'s value type is a model of \ref stldoc_EqualityComparable.
+<li>
+<code>InputIterator2</code>'s value type is a model of \ref stldoc_EqualityComparable.
+<li>
+<code>InputIterator1</code>'s value type can be compared for equality with
+   <code>InputIterator2</code>'s value type. 
+</ul>
+For the second version:
+<ul>
+<li>
+<code>InputIterator1</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>InputIterator2</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>BinaryPredicate</code> is a model of \ref stldoc_BinaryPredicate.
+<li>
+<code>InputIterator1</code>'s value type is convertible to <code>BinaryPredicate</code>'s
+   first argument type.
+<li>
+<code>InputIterator2</code>'s value type is convertible to <code>BinaryPredicate</code>'s
+   second argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first2, first2 + (last2 - last1))</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  At most <code>last1 - first1</code> comparisons.
+\section Example Example
+\code
+int A1[] = { 3, 1, 4, 1, 5, 9, 3 };
+int A2[] = { 3, 1, 4, 2, 8, 5, 7 };
+const int N = sizeof(A1) / sizeof(int);
+
+cout << "Result of comparison: " << equal(A1, A1 + N, A2) << endl;
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note that this is very similar to the behavior of <code>\ref stldoc_mismatch</code>:  The
+only real difference is that while <code>equal</code> will simply return <code>false</code>
+if the two ranges differ, <code>\ref stldoc_mismatch</code> returns the first location where
+they do differ.  The expression <code>equal(f1, l1, f2)</code> is precisely equivalent
+to the expression <code>mismatch(f1, l1, f2).first == l1</code>, and this is in
+fact how <code>equal</code> could be implemented.
+\section See_also See also
+<code>\ref stldoc_mismatch</code>, <code>\ref stldoc_search</code>, <code>\ref stldoc_find</code>, <code>\ref stldoc_find_if</code>
+
+
+*/

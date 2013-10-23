@@ -1,0 +1,154 @@
+# Main Jamfile for building ASL
+
+path-constant TOP : . ;
+
+import testing ;
+import os ;
+import feature : feature ;
+import set ;
+
+#
+# Necessary overrides, I believe, to support building out the widget set in the
+# specified OS. Not sure if this is still relevant on Windows anymore.
+#
+
+asl_additional_macros = ;
+
+switch [ os.name ]
+{
+    case CYGWIN :
+        asl_additional_macros = <define>WINVER=0x560 <define>_WIN32_WINNT=0x560 <define>_WIN32_IE=0x560 ;
+
+    case NT :
+        asl_additional_macros = <define>WINVER=0x560 <define>_WIN32_WINNT=0x560 <define>_WIN32_IE=0x560 ;
+}
+
+#
+# Permits overriding the Boost directory by specifying BOOST_PATH in the OS
+# environment table.
+#
+
+local boost-path = [ os.environ BOOST_PATH ] ;
+
+if $(boost-path)
+{
+    boost-path = $(boost-path) ;
+}
+else
+{
+    boost-path = ../boost_libraries ;
+}
+
+use-project /boost : $(boost-path)  ;
+
+#
+# The overarching set of requirements and settings to build ASL with the
+# platform/compiler of your choosing.
+#
+
+asl_requirements =
+    $(asl_additional_macros)
+
+    # Definitions
+    <define>BOOST_ALL_NO_LIB
+    <define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
+    <define>ADOBE_SERIALIZATION
+    <define>ADOBE_STD_SERIALIZATION
+
+    # Include directories
+    <include>$(boost-path)
+    <include>.
+
+    # Library dependencies
+    <library>/boost/filesystem
+    <library>/boost/system
+
+    # Linker specializations
+    <link>static,<threading>multi:<define>BOOST_THREAD_USE_LIB
+
+    # Threading specializations
+    <threading>multi:<library>/boost/thread//boost_thread
+    <threading>single:<define>BOOST_DISABLE_THREADS
+
+    # Clang toolset specializations
+    <toolset>clang:<cxxflags>"-stdlib=libc++ -std=c++11"
+    <toolset>clang:<define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
+    <toolset>clang:<linkflags>"-lc++"
+    <toolset>clang:<runtime-link>shared
+
+    # Darwin (Mac OS X gcc) toolset specializations
+    <toolset>darwin:<cxxflags>"-Werror -Wall -Wno-trigraphs -Wreturn-type -Wnon-virtual-dtor -Woverloaded-virtual -Wformat -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-parameter -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare"
+    <toolset>darwin:<linkflags>"-Xlinker -Y -Xlinker 5"
+
+    # GCC toolset specializations
+    <toolset>gcc:<architecture>x86
+    <toolset>gcc:<define>NOMINMAX
+
+    # GCC threading specializations
+    <toolset>gcc,<threading>multi:<instruction-set>i486
+
+    # GCC debug specializations
+    <toolset>gcc,<variant>debug:<cxxflags>"-Werror -Wall -Wno-trigraphs -Wreturn-type -Wnon-virtual-dtor -Woverloaded-virtual -Wformat -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-parameter -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Wno-parentheses"
+
+    # GCC 4.4 specializations
+    <toolset>gcc-4.4.0:<cxxflags>"-std=c++0x -fno-strict-aliasing"
+    <toolset>gcc-4.4.0:<define>__GXX_EXPERIMENTAL_CXX0X__
+
+    # GCC 4.5 specializations
+    <toolset>gcc-4.5.0:<cxxflags>"-std=c++0x -std=c++11 -fno-strict-aliasing"
+    <toolset>gcc-4.5.0:<define>__GXX_EXPERIMENTAL_CXX0X__
+
+    # MSVC specializations
+    <toolset>msvc:<cxxflags>"-DUNICODE -D_UNICODE"
+    <toolset>msvc:<define>_CRT_SECURE_NO_DEPRECATE
+    <toolset>msvc:<define>_SCL_SECURE_NO_DEPRECATE
+    <toolset>msvc:<define>_WIN32_WINNT=0x400
+    <toolset>msvc:<define>ADOBE_TEST_MICROSOFT_NO_DEPRECATE=0
+
+    # MSVC threading specializations
+    <toolset>msvc,<threading>multi:<define>USE_WINTHREAD
+
+    # MSVC 8 specializations
+    <toolset>msvc-8.0:<cxxflags>"/W3 /WX /Wp64 /Zc:wchar_t /Zc:forScope"
+
+    # MSVC 9 specializations
+    <toolset>msvc-9.0:<cxxflags>"/W3 /WX /Zc:wchar_t /Zc:forScope"
+    ;
+
+# Set up ASL as a Boost project
+
+project
+    : requirements
+        $(asl_requirements)
+    : default-build
+        <link>static
+        <threading>multi
+        <preserve-test-targets>on
+    : build-dir
+        $(TOP)/../built_artifacts
+    ;
+
+# Build ASL as a library
+
+lib asl
+    : #sources
+        [ glob source/*.cpp ]
+    : #requirements
+    : #defaults
+    : #usage requirements
+        $(asl_requirements)
+    ;
+
+# Explicit requires 'bjam asl' from the command line in order to build ASL
+# by itself. Otherwise it won't get built, or will get built only as a
+# dependency of another project.
+
+explicit asl ;
+
+# Build and run the tests
+
+use-project /adobe : .  ;
+
+build-project test ;
+
+# build-project documentation/examples ;

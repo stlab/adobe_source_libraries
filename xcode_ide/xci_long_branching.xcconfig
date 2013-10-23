@@ -1,0 +1,4 @@
+// Long branch CFLAG
+
+OTHER_CFLAGS = -mlong-branch
+OTHER_CPLUSPLUSFLAGS = -mlong-branch

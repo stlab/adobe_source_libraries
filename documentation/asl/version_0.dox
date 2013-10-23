@@ -1,0 +1,17 @@
+namespace adobe {
+
+/*!
+\ingroup abi_safe
+
+\brief The version_0 libraries have defined binary layout and will be supported going forward.
+
+Types in the version_0 namespace are intended for use in DLL interfaces when the object layout must be supported going forward, including across compiler version and vendor changes. The binary layout of each type is carefully defined in a manner which doesn't depend on compiler versions or features. The version_0 types currently consist of those nessary for communicating with the runtime languages in ASL and as such form a reasonable foundation for any messaging system.
+
+Note that the version_0 interfaces themselves are not intended to be DLL "safe" - they are largely templated, rely on exception handling (minimaly), and may include non-version_0 types in their definition. However, they can be wrapped into a DLL interface quite simply and the object layout itself is well defined so different variants of the same version_0 interface will be compatible at the object code level.
+
+The interfaces should generally be stable across library releases and are likely only to include small bug fixes and improvements going forward.
+
+*/
+
+namespace version_0 {
+} }

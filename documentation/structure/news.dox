@@ -1,0 +1,847 @@
+/*!
+\page news News
+
+\copydoc top_news
+\copydoc previous_news
+
+\page top_news Top News
+
+\par November 4, 2010 ASL - 1.0.43 Release
+
+This release is source only, no binary packages and no net setup scripts.
+
+I've recently returned to Adobe as architect for mobile imaging applications.
+The Software Technology Lab remains a "virtual group." We have a collection
+of improvements, fixes, updates, and additions that we've gathered over the last
+year and a half since the last release. We are working to simplify the release
+process to something more managable and to get back to more frequent releases.
+That is why we've dropped the binary distribution and net setup scripts.
+Suggestions for further simplification welcome.
+
+A huge thanks to Foster and Mat who have continued to contribute to the libraries.
+Thanks much for your continued support!
+
+ Sean
+
+Highlights of this release include:
+    ASL:
+        - Updated projects to support Boost 1.44.0
+        - Simplified move library. Removed move_sink and copy_sink in favor of
+            always using RVO.
+        - Added the "to" token ("->") to the lexer
+        - Added support for hexadecimal numbers to the lexer (0xDEADBEEF,
+            0xffe0, etc.)
+        - Removed gil from ASL (clients can use boost version instead)
+        - Added support for gcc 4.5.0 with -std=C++0x.
+        - Updated to Visual Studio 2010, older versions not supported.
+        - Extended the dancing links algorithm to include colorized nodes;
+            updated test cases as well.
+        - gcc 4.2 and OS X 10.5 SDK support (deprecated function warnings
+            selectively disabled).
+        - Replaced of basic_sheet_t with sheet_t in layouts and associated Eve
+            grammar updates.
+        - New external_model_t with support for cell creation in Adam parser.
+        - once.hpp fix (Thanks John (Eljay) Love-Jensen)
+        - Added support for overriding the index operator in the virtual machine.
+        - Miscellaneous bug fixes.
+
+        - Property model library
+
+            Added support for multi-out relate terms. For example:
+            ---
+            logic:
+                relate {
+                    x, y <== [a, b];
+                    a, b <== [x, y];
+                }
+            ---
+            The rhs value must be an array with the same arity as the number of
+            cells named on the left. A cell can appear more than once on the
+            left so long as the term can be uniquely selected.
+
+    User supported libs (APL):
+        - Binary file format debugger (bffd) submitted
+
+\par May 13, 2009 ASL - 1.0.42 Release
+
+Highlights of this release include:
+        - Property model library (Adam)
+            - Changed filters (self referential expression on an interface cell)
+              so they aren't ignored when the cell is derived from a relate clause
+              (see \ref asl_release_notes for details).
+        	- Fixed issue introduced in 1.0.41 with incorrect poison set being
+        	    calculated for invariants.
+	        - Reworked invariant cells they now behave more like output cells
+	          and can be refered to in expressions.
+	        - Updated the image_size example to demonstrate an ignored/disabled
+	          control (resample method when not resampling).
+        - Some 64 bit fixes and cleanup.
+        - Minor cleanup, performance improvements and bug fixes.
+
+
+\par February 13, 2009 ASL - 1.0.41 Release
+
+Highlights of this release include:
+
+    ASL:
+        - Property model library (Adam) - rewrote main solver
+	        - no longer uses exceptions as flow control.
+	        - fixed bug with initializers that refer to cells with
+              define_expressions has causing the define_expressions to evaluate
+              which could refer to cells which had not been declared.
+	        - exported get() member, it is now the client responsibility to wire
+              sheet_t::get() to the variable lookup in the VM (this also allows the
+              clients to hook the variable lookup for supporting custom variables).
+              In the future the VM will be separated entirely from the property
+              model library.
+	        - added some more error reporting including reporting duplicate cell
+              names.
+        - virtual machine library
+            - removed the contributing buts which were tracked through
+              calculations. The VM stack is now just a stack of any_regular_t.
+            - removed the use of storing size_t in an any_regular_t in the VM
+              (was breaking serialization among other things because size_t is not a
+              C++ basic type on Win64).
+        - any_regular_t
+            - improved serialization by removing one heap alloc/dealloc per item
+              serialized, also uses logN search for type instead of linear search.
+                - removed the hack to handle size_t serialization on Win64.
+            - serialization will now throw an exception when it encounters a
+              type other than one of the 7 CEL types (it used to assert).
+            - in debug builds, the version field of the any_regular_t vtable
+              contains a short type name for debugging purposes only.
+              See the <a href='http://stlab.adobe.com/wiki/index.php/Debugging_any_regular_t_and_short_names'>
+              wiki documentation.</a>
+
+\par December 23, 2008 ASL - 1.0.40 Release
+
+I have left Adobe and will be pursuing other opportunities.  This
+release is my first as an "external" opensource contributor.  Please
+use my mmarcus <at> emarcus <dot> org address instead of my former
+adobe.com address.
+
+ Mat
+
+
+Highlights of this release include:
+
+    ASL:
+        - The pmeval (property model evaluator) interpreter is ready
+          for general purpose use. It has been enhanced to allow
+          flexible exploration and testing of property models.
+          Commands include check assertions, print statements, update,
+          reinitialize, and property model dumps (showing enablement,
+          contributing/intent). pmeval can be built from source (all
+          platforms, including cygwinand *N*X) or downloaded from
+          sourceforge for Mac or Windows.
+        - Property models can also be evaluated via an experimental
+          web form-based interface to pmeval.  The service, along with
+          an intermediate property modeling tutorial is available
+          through http://emarcus.org/#pmeval .
+        - Rewrote enablement for the property model engine.  Enabled
+          status is set to a conservative approximation of enablement
+          detection (erring towards enablement): it is set to false if
+          a change to the cell cannot affect the output of a correct
+          sheet, and true if it *may* effect the output.
+        - Replaced monitor_active with monitor_enabled (conservative
+          enablement, touch_set support).  See the documentation for
+          monitor_enabled in adam.hpp, and the calls to
+          monitor_enabled in (APL's) widget_factory.hpp for details.
+          (Note that it is incorrect to unconditionally pass NULLs to
+          monitor_enabled.  The bug will manifest as incorrect
+          enablement behavior in the presence of touch sets in eve
+          sheets.)
+        - Fixed bug where interface cells appearing in a when clause
+	      condition were not contributing.
+        - New papers and presnetations at
+          http://stlab.adobe.com/wiki/index.php/Papers_and_Presentations
+        - Patched boost to allow preservation of test targets (now the
+          default).
+        - Patched to serializes std::size_t on MSVC when compiling for
+          64 bit architecture.
+        - Added qualification to binary_search algorithm to remove
+          ambiguity.
+        - Refactored pmeval, introduced (test-only) queryable_sheet_t.
+          pmeval now supports multiple input files, sheet separate
+          from commands, multiple simultaneous sheets.
+        - Allow monitoring of invariants under monitor_value.
+        - Improved release notes and build scripts for *N*X/cygwin
+
+    User supported libs (APL):
+
+        - Updated widget factory so that widgets monitor_considered
+          instead of monitor_active, to properly enable in presence of
+          touch sets.
+        - Fixed reveal widget bug
+        - Update so that both stlab and internal adobe frameworks can
+          leverage widget_factory.hpp; also rolled in updates from
+          other teams within adobe
+
+\page previous_news Previous News
+
+\par November 6, 2008 ASL - 1.0.39 Release
+
+    ASL:
+        - Added sheet_t::reinitialize(). "Input cells are
+          re-initialized, in sheet order, and interface cell
+          initializers are re-evaluated. Priorities are updated, but
+          no callbacks are triggered. Calls to reinitialize should be
+          followed by calls to update must be called, just as if the
+          cells were updated by set operations on sorted ranges."
+        - Adam documentaion improvements
+        - Updated to (patched) boost 1.37.0
+        - Added a command line property model evaluator tool, and
+          programmer-oriented tutorial at:
+          http://easyurl.net/pm_tutorial
+        - New (theoretical) paper on Property Models from ACM GPCE
+          2008 added to: http://easyurl.net/stlab_publications
+        - Regressions now also run under Vista 64-bit
+        - Regressions now also run under Mac OS X 64-bit
+        - Deprecated pin library. Replaced with clamp library. Also
+          added median(of 3) and some select algorithms.
+
+    User supported libs (APL):
+        - Formatter improvements.
+
+\par September 10, 2008 ASL - 1.0.38 Release
+Highlights of this release include:
+
+    ASL:
+        - New papers and presnetations at
+          http://stlab.adobe.com/wiki/index.php/Papers_and_Presentations
+        - Major improvements to documentation structure
+        - Updated to boost 1.36.0, with patches to fix some boost bugs
+        - Updated to intel tbb 2.1 (tbb21_009oss)
+	    - Fix 64-bit poly_test issue
+        - Fixes for identity<> and pointer_to<> and their use.
+        - Eliminated concept macros
+        - Minor fix for static_table.hpp to include stdexcept
+        - Fix for lexer to allow keywords as names, i.e. @empty.
+        - Fix for MSVC compiler warning in memory.hpp (from Jon
+           Clauson)
+        - Predicates for conditional relate declarations are now
+          calculated up-front and cannot be dependent themselves on a
+          relate declaration.
+        - Raising limit on number of interface cells to 256.
+        - Added parameter to final to avoid misuse.
+    	- Added -L to curl commands in net setup scripts to protect
+          against redirects
+        - Made selection_t equality_comparable
+        - Added bool has_input(name) and bool has_output(name) to the
+          property model library.
+        - removed outdated expression_filter routines; updated
+          adam_tutorial output format; deleting some unnecessary
+          sources
+        - Cleaned out static intializers
+        - Collapsed entity lookup to a single place -- removed the
+          once stuff from xml_parser
+        - Fixed issue with implicit casts of enum node state in
+          closed_hash.hpp
+	    - Fixed bug in property model library where an active monitor
+          wasn't called on connect.
+	    - Added code to layout library to reset metrics prior to
+          calling client measure function to avoid errors where client
+          code assumes defaulted value.
+        - Fixed bug with active monitor not being called on connection
+          in Adam.
+
+    User supported libs (APL):
+        - Improvements to the expression, property model, and layout
+          formatters. they print are much more readably now,
+          especially with arrays and dictionaries with many items.
+	    - Added shift as a modifier key to the new modifier key
+          functionality
+	    - Move controller and view concepts (compile and runtime) to
+          APL
+	    - BBedit language modules
+        - xml_to_forest test app
+        - Added xml_element_forest, a utility header that round-trips
+          an XML file to a forest of dictionaries; also gives the user
+          the ability to hand-generate a forest of dictionaries with a
+          specific format and stream out a resulting XML file.
+	    - Moved functions_as_controller to widget_proxies.hpp in APL
+	    - Renamed to_utf* to value_to_utf* in the singleton code point
+        - Removed subview factory
+ 	    - Gave behaviors the ability to have their verbs pointed to
+          another callback once they've been established. This gives
+          clients the ability to do more than just resize the eve layout
+          at the appropriate time (e.g., to resize a parent container
+          not managed by eve.)
+ 	    - sequence_model and associated view and controller concepts
+          and implementations. Multiple changes and to improve the
+          overall mvc architecture of the system. Also added a
+          multiplexer/demultiplexer system to allow for the routing of
+          commands between the sequence_model and any attached
+          sequence views and controllers.
+        - dictionary_set migration from obscure widgets lib location
+          to APL
+        - Added breakpoint-compatible formatting to some of the
+          casting type checks
+	    - Logic fix for one of the selection algorithms
+        - Fixed error reporting code in Begin.
+	    - Added formatter_tokens to eliminate duplicate symbols when
+          both formatters are included in a single project
+	    - Cleaned up a lot of the serialization code, pulled out
+          dynamic memory allocations, etc
+	    - Added expression_filter, for the escaping and unescaping of
+          xml entities in a string; useful for serialization work
+	    - Fixed some of the image_t leaks under win32. Problems run
+	      deeper though, since the architecture fails to store
+	      platform resources for cleanup when bitmaps updated or when
+	      window closes. Deeper fixes will be required to plug the
+	      rest of the leaks
+        - Added the ability to add 'raw' functions to the function
+          pack, bypassing all the function pack magic in case you'd like
+          to do the work yourself.
+        - Update example code. inlined some function_pack routines,
+          and added an nbitpath helper routine to the bitpath structure
+
+\par May 5, 2008 - ASL 1.0.37 Release
+
+Highlights of this release include:
+
+    ASL:
+        - Update ASL to depend on boost 1.35.0
+        - Patch boost 1.35.0 to fix bugs in boost threads and boost
+          filesystem
+        - Patch boost build to add a link-incompatible feature
+          allowing _SECURE_SCL to be disabled, thus avoiding
+          unjustifiable performance penalty on release builds.
+        - Multiple net setup and build improvements.
+        - Workaround the bjam MkDir bug that was causing build errors
+          and the need for multiple invocations of bjam.
+        - Tested against gcc 4.3.0.
+        - Update ASL to depend on Intel Thread Building Blocks
+          2008.04.08 stable release, now supporting atomics under ppc 32bit.
+        - Patch TBB to support windows/cygwin-based gcc 4.1.1 and
+          later.
+        - Fix bug on 64 bit little-endian machines in closed_hash
+        - Documentation improvements and corrections for any_regular_t
+          and some algorithms
+        - Fixed a potential memory leak in any_regular_t
+        - Fixed thread safety issue with forest<>::size()
+        - New binary_search (unlike std::binary_search, this is useful)
+        - Added gather algorithm (thanks to Marshall Clow)
+        - Started to break-up functional -
+            functional/operator.hpp
+            functional/is_member.hpp
+        - Deleted find_first_of_set.hpp - use find_if with is_member
+          instead
+        - Change sheet and basic sheet API to remove
+          attach_view/detach_view in favor of signals
+          mechanism. Remove function_as_view since function/bind
+          results can once again be used directly. poly_view is now
+          optional for clients who find it more convenient.
+        - Change adam API to remove
+          attach_controller/detach_controller in favor of signals
+          mechanism. poly_controller is now optional for clients who
+          find it convenient.
+        - Remove dependence of adam_tutorial on APL and move to
+          ASL. Add visual project for adam_tutorial.
+        - Rewrite copy_on_write to use a well-defined binary
+          representation, add custom allocator support, move to
+          version1 namespace.
+        - Added script to update a directory in p4 based on "offline"
+          changes, and other scripts to automate documentation update
+          process.
+        - Fixes to vector and string for windows min/max problems,
+          thanks to Jesper.
+        - Add check ensuring operator== interoperability of forest
+          iters and const iters.
+
+    APL:
+        - Add property_model_formatter.hpp and layout_formatter.hpp
+          for parsing layout and property model descriptions into a
+          data structure instead of to the widget factory.
+        - Add layout_tidy and property_model_tidy which check layout
+          and property model definitions validity.
+
+\par March 21, 2008 - ASL 1.0.36 Release
+
+Highlights of this release include:
+
+    ASL:
+        - version_1 types (replace version_0 types) - better, defined binary
+        layout and carry allocator for applications with replaced new/delete.
+	    - capture_allocator, an std::allocator compatible allocator which
+	    carries a paired new/delete.
+	    - Allocator support in closed_hash_set<>, closed_hash_map<>, and
+	    vector<>.
+	    - Vastly improved move library (Thanks to Dave Abrahams!).
+	    - Vastly improved copy-on-write library (now uses move library to
+	    reduce number of increment/decrements).
+        - Bug fix in layout library that caused containers with the width
+        driven by the frame width to layout children incorrectly.
+        - Bug fix in forest::erase where the beginning of the erased range has
+        a lower depth then the end of the range.
+        - Forest test cases and minor fixes to forest types.
+        - Misc bug fixes.
+        - Fixes to build and distribution tools.
+        - Fixed search on documentation site to point to stlab and not
+        opensource domain.
+
+\par January 28, 2008 - ASL 1.0.35 Release
+
+Highlights of this release include:
+
+    ASL:
+        - More property model library simplifications and the removal
+        of "weak" which never worked.
+        - Bug fix for copy-on-write assignment which was leaking.
+        - Work on runtime_cast<> for any_regular_t.
+        - Fixed a bug with edit_number and disabled items with multiple units.
+        - Fixed a bug with image_size (introduced in some recent cleanup).
+        - removed adobe/algorithm/assign.hpp
+        - improved rvalue assignment in some classes
+        - renamed copy_bound to copy_bounded
+        - minor improvements to operator+() for strings
+        - updated doxyfile for latest doxygen
+        - More algorithm documentation clean-up. Greately improved erase/erase_if
+        container algorithms and container storage type function.
+        - Templatize erase_if test cases
+        - Initial work on forest unit_test
+
+
+\par January 3, 2008 - ASL 1.0.34 Release
+
+Highlights of this release include:
+
+    ASL:
+        - Lots of clean up and removed defered initialization of
+        property model cells.
+        - changes to the initializers for the property model library
+        you must now call upate() prior to monitoring or attaching a
+        view (you'll get an assert if you don't) and the monitor
+        function (or view) is called immeditely when attached with the
+        current state.
+        - support for stateful function object (hash, key function,
+        and compare) to closed_hash_set
+        - hash_index class which is similar to table_index but
+        implemented with a hash_set instead of a vector -
+        there is stills some room here to generalize the two.
+        -  Changed ordering in compressed_pair so it actually
+        compresses on Windows
+        - GIL: Makefile and documentation fixes. Intel fixes.
+
+
+\par December 12, 2007 - opensource.adobe.com moving to stlab.adobe.com
+Adobe's Software Technology Lab has moved to a new domain, stlab.adobe.com. The main website is now at http://stlab.adobe.com . Please update any references/bookmarks to our site. For the next few weeks, opensource.adobe.com will be redirected to the stlab site. Then opensource.adobe.com will be used re-purposed.
+
+
+\par December 6, 2007 - ASL 1.0.33 Release
+
+Highlights of this release include:
+    - Microsoft Visual Studio 2008 support
+    - ASL now uses Intel Thread Building Blocks Atomics
+    - XCode 3.0 Support
+    - ASL 64 bit Mac support (APL still Carbon)
+    - Mac shared library support
+    - More darwin.jam updates (to appear in boost 1.35)
+    - ASL Command Shell environment for windows
+    - Ongoing algorithm cleanup
+
+\par November 1, 2007 - ASL 1.0.32 Release
+
+Highlights of this release include:
+    - Minor bug fixes and documentation restructuring.
+    - For more information and changes see the \ref asl_release_notes.
+    - New Papers Published:
+        - <a href='http://www.emarcus.org/papers/gpce2007f-authors-version.pdf'>Library Composition and Adaptation using C++ Concepts</a><br>Jaakko J&auml;rvi, Texas A&M University, Mat Marcus, Adobe Systems, Inc., Jacob N. Smith, Texas A&M University.<br>From: Proceedings of the 6th international conference on Generative programming and component engineering, 2007. Copyright ACM, 2007. <em>This is the author's version of the work. It is posted here by permission of ACM for your personal use. Not for redistribution. The definitive version was published in the Proceedings of the 6th International Conference on Generative Programming and Component Engineering (Salzburg, Austria, October 01 - 03, 2007). GPCE '07 <a href='http://doi.acm.org/10.1145/1289971.1289984'>http://doi.acm.org/10.1145/1289971.1289984</a></em>
+	    - <a href='http://www.emarcus.org/papers/MPOOL2007-marcus.pdf'>Runtime Polymorphic Generic Programming--Mixing Objects and Concepts in ConceptC++</a><br>Mat Marcus, Adobe Systems, Inc., Jaakko J&auml;rvi, Texas A&M University, Sean Parent, Adobe Systems, Inc.<br>From: The 6th International Workshop on Multiparadigm Programming with Object-Oriented Languages at the ECOOP 2007. <a href='http://www.emarcus.org/papers/MPOOL2007-slides-marcus.pdf'>Slides</a>
+
+\par September 6, 2007 - ASL 1.0.31 Release
+
+Highlights of this release include:
+    - Major refactoring of the libraries (and supporting scripts/projects, etc.) so that adobe_source_libraries (ASL/GIL), adobe_platform_libraries (APL), and boost_libraries (Boost) are all peers at the top level directory. In upcoming releases we will be focusing on "completing" the core ASL portion of the library, with full documentation and test suites. ASL contains the layout engine, property model, algorithms, poly library and other components.  APL contains the "platform" widget code and other miscellaneous pieces. APL depends on ASL depends on Boost.
+    - For more information and changes see the \ref asl_release_notes.
+
+\par August 2, 2007 - ASL 1.0.30 Release
+
+Highlights of this release include:
+    - This is a light release, a few minor bug fixes, some improved docs on the \ref move_related including a tutorial. And some minor reorganization including moving GIL out of the third_party directory.
+    - For more information and changes see the \ref asl_release_notes.
+
+\par July 5, 2007 - ASL 1.0.29 Release
+
+Highlights of this release include:
+    - This release is mostly to pickup bug fixes (including some for 64 bit Windows), a few string additions to version_0::string_t, removal of const_once_name_t, and GIL 2.1. Vacations and the holiday got in the way of a richer release.
+    - For more information and more changes see the \ref asl_release_notes.
+
+\par June 14, 2007 - ASL 1.0.28 Released
+
+Highlights of this release include:
+    - Pardon our dust with this release. We've been very busy with the version_0 libraries and believe the code is complete but not all the docs are in place yet. We'll be continue that work for 1.0.29. See the  \ref asl_release_notes for an overview of what libraries are in version_0. <em>Always feel free to ask questions on the forums - until the docs are complete for version_0 there may be a few more questions than usual but we're always happy to answer and questions help improve our documentation. -- Sean</em>
+    - The poly<> library has many improvements and is now easier to use.
+    - Other minor bug additions, bug fixes, and improvements.
+    - For more information and more changes see the \ref asl_release_notes.
+
+\par May 03, 2007 - ASL 1.0.27 Released
+
+Highlights of this release include:
+    - The \c any library had been renamed to the \c poly library and much work has been done to eliminate unnecessary heap allocations.
+    - Lots of work to make it easier to define widgets and connect them up and improvements to the image widget.
+    - We've started work on a \c version_0 library which will contain a collection of containers and types with well defined binary representations. These form the basis for supportable dynamic library interfaces but the types will also be usable on their own. Check out the new \c adobe/vector.hpp and \c adobe/closed_hash.hpp. More info to come in the 1.0.28 release.
+    - New algorithm - \c find_first_of_set.
+    - GIL performance improvements.
+    - For more information and more changes see the \ref asl_release_notes
+
+\par April 05, 2007 - ASL 1.0.26 Released
+
+Highlights of this release include:
+    - GIL 2.0 release! (GIL was recently accepted as a Boost library; congratulations to the GIL team!)
+    - Addition of the poly<> class, allowing for a generic means of specifying runtime-polymorphic objects based on a provided concept specification.
+    - algorithm.hpp was completely refactored into smaller, more digestable algorithm subfamily headers
+    - Widget implementation improvement (primarily for the list widget) including supporting code in selection_t and sequence_model_t.
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+\par
+In related news, Foster Brereton is leaving the Software Technology Lab to pursue other
+opportunities within Adobe. <em>It has been a distinct honor for me to work with colleagues of such high caliber, and I will regard my time at STLab as a highlight in my career. Thank you all for the
+opportunity to serve, not just Adobe, but the open source community at large in the position I have
+held for almost 4 years. Soli Deo Gloria! -- Foster</em>
+
+\par April 05, 2007 - Sean Parent to Deliver BoostCon Keynote
+<a href='http://boostcon.org'>BoostCon '07</a> is taking place May 14-18 2007 in Aspen, Colorado.
+Adobe Principal Scientist Sean Parent has been asked to deliver the conference's keynote address. In
+the address Sean will be talking about the OO paradigm and will advance a viewpoint in which the
+design principles of Generic Programming (as expressed in the standard library and supported by
+Boost) offer a way toward quality, scalable, software.
+
+
+\par March 20, 2007 - Adobe "Apollo" WebKit Sources Released
+\par
+    Adobe "Apollo" is a platform for creating desktop apps using web technologies. Apollo will use
+    the WebKit library to render HTML to an Apollo window. Our plan is to contribute our changes
+    back to the WebKit community in the near future. We are working to get the code smoothly
+    integrated into the WebKit source tree. We hope to make our contributions to the WebKit open
+    source project soon. In the meantime, we are participating in the conversation at
+    <http://webkit.org/contact.html>. So, if you have any questions or concerns, please email us at
+    the "webkit-dev" mailing list.
+\par Plans:
+        - We hope to integrate our changes back into the WebKit source repository at webkit.org soon.
+        - In the long term we expect that the WebKit shared library will not contain any platform specific code. For the near term, WebKit will have platform specific code to rasterize vector graphics generated by the HTML renderer to bitmaps. On OSX we use CoreGraphics and on Windows we use Cairo.
+        - Source for WebKit with our modification can be found at <http://stlab.adobe.com/perforce/>.
+\par
+    Thanks, the Adobe Apollo team
+
+\par March 01, 2007 - ASL 1.0.25 Released
+Highlights of this release include:
+    - adobe::sequence_model_t was added. This included supporting sources, and a list implementation for Mac and Win32
+    - adobe::selection_t was added, along with a set of selection-based algorithms
+    - Added changes to support gcc-4.1.1 and conceptgcc a5
+    - Simplify assemblage to be a collection of nullary function objects invoked in LIFO order upon destruction
+    - Boost patchfile updated; please repatch your boost distribution
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par February 01, 2007 - ASL 1.0.24 Released
+Highlights of this release include:
+    - Added adobe::rotate and adobe::reduce_balanced, based on Alex Stepanov's work. See http://www.stepanovpapers.com/notes.pdf
+    - Added adobe::partition_selection_copy, adobe::split_selection, and adobe::stable_partition_selection
+    - Simplified overloading and namespace strategy
+    - Rewrote the build instructions in hopes of making them easier to grasp
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par January 04, 2007 - ASL 1.0.23 Released
+Highlights of this release include:
+    - Implemented an updated namespace strategy for the widget library
+    - Migrated some widget layout attributes from measure() to a table lookup system
+    - GIL bug fixes and updates
+    - Other minor bug updates
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par December 07, 2006 - ASL 1.0.22 Released
+Highlights of this release include:
+    - Massive refactoring of the widget library to make each widget a standalone component
+    - Delayed creation of the platform-widget to display::insert<> time, allowing proper subwindow ownership to take place on win32
+    - Removed more files than you can shake a stick at
+    - Began the documentation process of the individual widgets under \ref asl_widgets
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par November 07, 2006 - Tamarin Project Announced
+Get involved in Tamarin, a new open source project hosted by the Mozilla Foundation that uses code powering the ActionScript Virtual Machine.
+\par
+Related links:
+    - Resource: <a href="http://www.mozilla.org/projects/tamarin">Tamarin project home page</a> (Mozilla Foundation)
+    - Announcement: Tamarin <a href="http://www.adobe.com/aboutadobe/pressroom/pressreleases/200611/110706Mozilla.html">press release</a>
+    - FAQ: <a href="http://www.mozilla.org/projects/tamarin/faq.html">Tamarin FAQ</a> (Mozilla Foundation)
+    - Article: <a href="http://www.adobe.com/devnet/logged_in/ehuang_tamarin.html">What Tamarin means to developers</a>
+
+\par November 02, 2006 - ASL 1.0.21 Released
+Highlights of this release include:
+    - Replaced value_t with a superior any_regular_t implementation
+    - Significant improvements have been made to numerous widget implementations on both platforms, as well as improved modal dialog behavior
+    - Significant GIL updates; please see the \ref asl_release_notes
+    - Added a Cocoa <-> Carbon bridge to allow for Cocoa routines within the widget library
+    - Internationalization support for edit_number widget -- automatic formatting based on your machine locale
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par October 04, 2006 - ASL 1.0.21 Postponed
+The release of 1.0.21 has been delayed as we are working to hit an internal milestone. We will resume our regular release schedule and plan to release 1.0.21 on 11/2/06.
+
+\par September 07, 2006 - ASL 1.0.20 Released
+Highlights of this release include:
+    - Introduced the controller, view and placeable headers, their any_* counterparts, and concept checking
+    - Significant overhaul of some widget APIs to model the new controller, view, and placeable concepts
+    - Significant GIL updates; please see the \ref asl_release_notes
+    - Functionality additions and corrections to many of the concrete widgets
+    - Many other bug fixes, updates, and additional documentation
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par August 03, 2006 - ASL 1.0.19 Released
+Highlights of this release include:
+    - Major refinements of individual module APIs to better reflect a Model/View/Controller system
+    - Additional small behaviors added to several widgets (transparent scrubby sliders & value incrementing)
+    - Extracted adobe::debounce_t to a general standalone utility
+    - Created adobe/future/carbon, a directory with some utilities that came out of the widgets work that might be useful elsewhere.
+    - Many other bug fixes and updates
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par July 07, 2006 - ASL 1.0.18 Released
+Highlights of this release include:
+    - Eric Berdahl has refined some private implementation code which has become the \ref asl_xml_parser library
+    - Several new widgets have been added for Mac and Win32, including a <a href='http://stlab.adobe.com/wiki/index.php/Reveal_Widget'>reveal widget</a>, a <a href='http://stlab.adobe.com/wiki/index.php/Preset_Widget'>preset widget</a>, and <a href='http://stlab.adobe.com/wiki/index.php/Tooltips'>tooltip support</a> for both platforms
+    - Many <a href='http://stlab.adobe.com/gil/'>GIL</a> updates and fixes
+    - We have a <a href='http://stlab.adobe.com/wiki/'>new Wiki</a>. In order to crub vandalism and spam we are creating accounts on a per-request basis, which you need only to edit the pages on the wiki; viewing the wiki is still available to everyone
+    - Many other bug fixes and updates
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par June 09, 2006 - ASL 1.0.17a Update
+A bug was found in Adobe Begin that would cause dialogs to resize incorrectly when optional panels were toggled. While not a major design flaw, its effect on the examples warranted an update be issued. Hence, the \c release depot on the Perforce server has been updated with this patch. The next distribution to see the fix will be ASL 1.0.18. Thanks for your patience.
+
+\par June 01, 2006 - ASL 1.0.17 Released
+Highlights of this release include:
+    - We have migrated to Perforce as our source code server. The SourceForge CVS server is no longer being maintained for ASL. You can still perform CVS-like \c checkout commands with the p4checkout (<a href="http://prdownloads.sourceforge.net/adobe-source/p4checkout.sh?download" target="_new">Mac and *nix</a> | <a href="http://prdownloads.sourceforge.net/adobe-source/p4checkout.bat?download" target="_new">Win32</a>) scripts.
+    - XCode IDE projects have been upgraded to 2.3
+    - Significant overhaul in the way the Mac apps build and link
+    - The primary interface for the layout engine (Eve) has been radically redesigned, taking advantage of adobe::regular_object.
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par May 04, 2006 - ASL 1.0.16 Released
+Highlights of this release include:
+    - adobe::filter algorithm added which is similar to adobe::transform but the op function is passed an instance of an output_iterator and can generate more than (or fewer than) a single result.
+    - Added adobe::file_monitor_t, a utility for being notified of when a file is modified on-disk by a 3rd party.
+    - Many updates to the Generic Image Library (GIL)
+    - Significant updates to the ASL documentation (forest, eve, filter, several new concepts, eliminated Doxygen errors, etc.)
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par April 24, 2006 - Relate Your Success
+The Adobe Source Libraries have been used with success within Adobe applications to increase robustness and correctness of code. As developers of an open source project, we are confident that there are other success stories outside of Adobe as well. We encourage you to contribute a success story of your own:
+\par
+    - What is the name of your project?
+    - What is the purpose of the project?
+    - What led you to choose ASL?
+    - Was ASL used from the start of the project? If not, how did its inclusion impact your project? How does using ASL affect your project development as a whole?
+    - How large is your project?
+    - How would you rate the success of your project?
+    - Is there any other interesting information worth sharing?
+\par
+Submissions will be included in a \ref success_stories page. You can submit a success story by emailing Foster Brereton at <code>fbrereto _at_ adobe _dot_ com</code>.
+
+\par April 10, 2006 - ASL 1.0.15 Released
+Highlights of this release include:
+    - Significant overhaul of guides in the auto layout engine (Eve) to support mixed right-to-left (RTL) and left-to-right layouts as well as adding support for constructing reversed layouts
+    - Added adobe::behavior_t, a tree based deferred processing mechanism used for queuing functions in a predefined order of execution
+    - Significant updates to the Generic Image Library (GIL)
+    - Improvements to the UI core layout element concept design and implementation
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par April 06, 2006 - ASL 1.0.15 Delayed
+One of the features due to be released with 1.0.15 is right-to-left support for the layout engine (Eve). Unfortunately the work is not yet finished, and the release will be delayed pending its completion. Please check back soon for updates on the upcoming release.
+
+\par March 02, 2006 - ASL 1.0.14 Released
+Highlights of this release include:
+    - Added adobe::alert(), a one-function API to display an alert to the user with a consistent look and feel
+    - Added a GIL image detection/import/export factory to provide for a generic method of interfacing with external image files on disk
+    - Added adobe::image_t as a standalone UI core picture/icon/visual "label" widget
+    - Replaced adobe::static_text_t with a superior successor, adobe::label_t
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par February 25, 2006 - ASL Turns 3.1556926e16 Nanoseconds Old
+\htmlonly
+<table><tr><td align='center' valign='top'>
+<img src="cake.png"/>
+</td><td valign='top'>
+\endhtmlonly
+Amid all the chaos of preparing to get a release out the door, we overlooked the fact that the Adobe Source Libraries were released one year ago today. Now how about a little <a target="_new" href="http://en.wikipedia.org/wiki/Happy_Birthday%2C_Mr._President"><i>Happy Birthday, ASL</i></a>...
+\htmlonly
+</td></tr></table>
+\endhtmlonly
+
+\par February 02, 2006 - ASL 1.0.13 Released
+Highlights of the 1.0.13 changes include:
+    - Added a <code>adobe::nearest_cast</code> by Mark Ruzon
+    - Added <code>adobe::handle_dialog()</code>, a self-contained API used to manage a modal dialog instance
+    - <code>adobe/cmath.hpp</code> has been augmented to include support for C99/TR1 extensions
+    - Improvements to the function modeling engine (Adam)
+    - A complete rewrite of the widgets library for the Mac
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par January 16, 2006 - GIL Tutorial and Design Guide Released
+<a href='http://stlab.adobe.com/gil/'>Generic Image Library (GIL)</a> tutorial and design guide is now available. Thanks to Lubomir Bourdev and Hailin Jin for all the work.
+\par
+Head over to <a href="http://stlab.adobe.com/gil">stlab.adobe.com/gil</a> for this extended documentation.
+
+\par January 05, 2006 - ASL 1.0.12 Released
+Highlights of the 1.0.12 changes include:
+    - The <a href='http://stlab.adobe.com/gil/'>Generic Image Library (GIL)</a> has been added. This library allows for writing generic imaging algorithms with performance comparable to hand-coding for a particular image type
+        - Lubomir has been hard at work getting the GIL tutorial and design guide ready for release. We anticipate it within a couple weeks.
+    - ASL now compiles against Boost 1.33.1
+    - IDE projects have been added for XCode 2.2
+    - Many improvements to Adobe Begin and Win32's ui_core
+    - A significant overhaul of adobe::forest.
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par January 05, 2006 - In Memory of Grant Munsey
+\htmlonly
+<table><tr><td align='center' valign='top'>
+<img src="grant_munsey.jpg"/>
+<br/>
+<b>Grant and his wife Sandy in 2000</b>
+</td><td valign='top'>
+\endhtmlonly
+On the morning of December 25, 2005, we lost a great friend and brilliant computer scientist. Grant Munsey joined Adobe in 1997 and convinced Adobe senior management that it was time the company started to give back to the open-source community. Among other achievements, he went on to found the original stlab.adobe.com web site. Through his efforts both Adobe and the community as a whole were changed for the better. In April 2001 Grant was struck by a serious illness from which he never fully recovered. For the foundation he laid and the basis upon which stlab.adobe.com stands, it is our honor to dedicate this release to him.
+\htmlonly
+</td></tr></table>
+\endhtmlonly
+
+\par December 01, 2005 - ASL 1.0.11 Released
+Highlights of the 1.0.11 changes include:
+    - MSVC 8 IDE projects for ASL and Begin have been released to take advantage of the new IDE features
+    - Many compiler compatibility fixes for MSVC and Darwin (GCC)
+    - Project updates for compatibility with XCode 2.2
+    - Work in the Win32 ui_core to bring parity between it and the Mac implementation
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par November 14, 2005 - ASL Wiki Goes Live
+stlab.adobe.com now sports a <a href="http://stlab.adobe.com/wiki/" target="_new">Wiki</a>. The purpose of the Wiki is to provide an environment where anyone can get insight, help, feedback, and collaboration on all things pertaining to the Adobe Open Source initiative and the ASL.
+\par
+Take advantage of this resource -- it is our hope that through this new community you will have the tools to make the most of what ASL has to offer you and your projects.
+\par
+http://stlab.adobe.com/wiki/
+
+\par November 03, 2005 - ASL 1.0.10 Released
+Highlights of the 1.0.10 changes include:
+    - Updates for compatibility with the upcoming MSVC 8 (Visual Studio 2005) release
+    - Updates for compatibility with the upcoming Boost 1.33.1 release
+    - Localization support integrated into Adobe Begin with a sample language glossary
+    - Support for creating polymorphic regular objects as an alternative to object oriented programming (adobe::regular_object)
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par October 06, 2005 - ASL 1.0.9 Released
+Highlights of the 1.0.9 changes include:
+    - Added adobe::sha1_t, adobe::sha224_t, adobe::sha256_t, adobe::sha384_t, and adobe::sha512_t
+    - Added adobe::dancing_links, an implementation of Knuth's Dancing Links Algorithm
+    - BBv2 now builds a double-clickable Adobe Begin on MacOS X and Win32 - no IDE needed!
+    - Updated Boost patch file; please re-patch your Boost distribution
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par September 01, 2005 - ASL 1.0.8 Released
+Highlights of the 1.0.8 changes include:
+    - Updated ASL to use Boost 1.33.0
+    - 4x speed increase in the xstring engine, both in parsing and lookups
+    - Rewrote enum_ops to follow its original intent
+    - Releasing All-In-One scripts that download all ASL dependencies, perform the necessary setup, and build the libraries
+    - Updated Boost patch file; please re-patch your Boost distribution
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par August 04, 2005 - ASL 1.0.7 Released
+Highlights of the 1.0.7 changes include:
+    - Dynamic visibility (hide/show) support in eve layout engine
+    - adobe::index_iterator, adobe::any_iterator, adobe::reverse_fullorder_cursor, and adobe::filter_fullorder_cursor
+    - adobe::const_once_name_t replaces adobe::once_name_t.
+    - Updated Boost patch file; please re-patch your Boost distribution
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par July 07, 2005 - ASL 1.0.6 Released
+Highlights of the 1.0.6 changes include:
+    - MacTel (Mac OS X on Intel) support
+    - Automated building of libraries for IDE-based projects using BBv2
+    - Added <code>\<adobe/numeric.hpp\></code>, beginning similar support for <code>\<numeric\></code> as we have for <code>\<algorithm\></code>
+    - Separation of the <code>adobe_widgets</code> UI library from Adobe Begin
+    - For more information and more changes see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par June 03, 2005 - ASL 1.0.5 Released
+There were enough problems with the 1.0.4 release that a 1.0.5 release has been rolled. Among the changes:
+    - Added adobe/test/xstr_test and adobe/test/md5, directories for testing those respective parts of ASL, which the Boost Build system was expecting
+    - Added adobe/test/Jamfile.v2, without which none of the test binaries would have built via the Boost Build system
+    - Much more - see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par June 02, 2005 - ASL 1.0.4 Released
+The Adobe Source Libraries 1.0.4 release contains a lot of bug fixes and changes:
+    - We now support fully automated builds and regression tests using Boost Build version 2 project files.
+    - Windows builds now fully supported.
+    - Win32 Adobe Begin now has the Editor palette, allowing you to explore various aspects of the dialog you are viewing
+    - Added an Adam smoke test application for command-line validity testing of Adam sheets
+    - ZUID: UUID-like identifiers that do not contain personal information in them (like MAC addresses)
+    - Much more - see the \ref asl_release_notes
+\par
+Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
+
+\par June 02, 2005 - Calling All ASL Developers and Users
+We would like to build a case for Adobe to do more in the open source arena, and so would like to know more about who you are and what your plans are for using the Adobe Source Libraries in your software development. Please contact <a href="http://sourceforge.net/users/sean_parent/">Sean Parent</a> with any and all comments (including those on how to improve the Adobe Source Libraries as they stand -- we need feedback, too!)
+
+\par May 03, 2005 - ASL 1.0.3 Released
+I'm pleased to announce the arrival of Adobe Source Libraries 1.0.3. This is mostly a maintenance release but it also boasts a small set of new features, including a threadsafe, context-sensitive string lookup system for internationalization/localization. There are also a slew of bug fixes that make this release well worth the download. Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417&package_id=145420">download</a> section and check it out.
+
+\par April 01, 2005 - ASL 1.0.2 Released
+The Adobe Source Libraries 1.0.2 is now available for <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a>. Changes include a budding Win32 implementation of Adobe Begin, increased compiler compatibility, and extensive bug fixes and additions. The Win32 implementation of Adobe Begin does not have the same functionality as the Mac version, however it is in a place where it demonstrates the functionality of Adam and Eve well enough to warrant release.
+
+\par March 08, 2005 - RSS Feeds Available
+SourceForge.net has a series of RSS feeds available to update you on the latest happenings with the Adobe Source Libraries. The feeds can be found <a href="http://sourceforge.net/export/rss2_project.php?group_id=132417">here</a> or you can use the following links directly:
+\htmlonly
+<ul>
+    <li><a href="http://sourceforge.net/export/rss2_projnews.php?group_id=132417"><img src="http://images.sourceforge.net/images/xml.png" border="0" alt="RSS Feed Available" width="36" height="14" style="vertical-align: middle"></a> Latest news</li>
+    <li><a href="http://sourceforge.net/export/rss2_projnews.php?group_id=132417&amp;rss_fulltext=1"><img src="http://images.sourceforge.net/images/xml.png" border="0" alt="RSS Feed Available" width="36" height="14" style="vertical-align: middle"></a> Latest news (with full text)</li>
+    <li><a href="http://sourceforge.net/export/rss2_projfiles.php?group_id=132417"><img src="http://images.sourceforge.net/images/xml.png" border="0" alt="RSS Feed Available" width="36" height="14" style="vertical-align: middle"></a> File releases</li>
+</ul>
+\endhtmlonly
+
+\par March 07, 2005 - Adam Tutorial Posted
+A command-line application that demonstrates Adam has been added to the CVS repository. The Adam tutorial will <i>not</i> build with the ASL 1.0.1 release; you must have the current state of the CVS repository to build it. For CVS help please see { deprecated }. The Adam tutorial has been tested to build with CodeWarrior, Darwin gcc (bjam), and MSVC.
+
+\par February 25, 2005 - ASL 1.0.1 Preview Released
+We are happy to announce the release of the Adobe Open Source Libraries to the public. We have documentation and some tutorials available (\ref asl_home), as well as sources and binaries available for <a href="http://sourceforge.net/project/showfiles.php?group_id=132417&package_id=145420">download</a>. A good place to start is by reading the \ref asl_foreword and \ref asl_overview.
+*/

@@ -1,0 +1,102 @@
+/*************************************************************************************************/
+
+/*
+
+    ADOBE CONFIDENTIAL
+    ___________________
+
+    Copyright 2003 - 2003 Adobe Systems Incorporated
+    All Rights Reserved.
+
+    NOTICE: All information contained herein is, and remains the property of
+    Adobe Systems Incorporated and its suppliers, if any. The intellectual and 
+    technical concepts contained herein are proprietary to Adobe Systems Incorporated 
+    and its suppliers and may be covered by U.S. and Foreign Patents, patents 
+    in process, and are protected by trade secret or copyright law. Dissemination 
+    of this information or reproduction of this material is strictly forbidden 
+    unless prior written permission is obtained from Adobe Systems Incorporated.
+ 
+*/
+
+/*************************************************************************************************/
+
+/*! \defgroup concept_convertible_to_bool ConvertibleToBool
+\ingroup asl_concepts
+
+\description
+A type is ConvertibleToBool if it can be implicitly converted to a <code>boolean</code> value.
+
+\refinement_of
+
+\associated_types
+
+\notation
+<table>
+    <tr>
+        <td valign="top"><code>X</code></td>
+        <td valign="top">A type that is a model of ConvertibleToBool</td>
+    </tr>
+    <tr>
+        <td valign="top"><code>x</code></td>
+        <td valign="top">Object of type <code>X</code></td>
+    </tr>
+    <tr>
+        <td valign="top"><code>b</code></td>
+        <td valign="top">Object of type <code>bool</code></td>
+    </tr>
+</table>
+
+\definitions
+
+\valid_expressions
+<table>
+    <tr>
+        <th>Name</th><th>Expression</th><th>Type requirements</th><th>Return type</th>
+    </tr>
+    <tr>
+        <td valign="top">ConvertibleToBool</td>
+        <td valign="top"><code>bool b = x;</code></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">bool</td>
+    </tr>
+    <tr>
+        <td valign="top">ConvertibleToBool</td>
+        <td valign="top"><code>if (x)</code><br>-or-<br><code>if (!x)</code></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+    </tr>
+</table>
+
+\expression_semantics
+<table>
+    <tr>
+        <th>Name</th><th>Expression</th><th>Precondition</th><th>Semantics</th><th>Postcondition</th>
+    </tr>
+    <tr>
+        <td valign="top">ConvertibleToBool</td>
+        <td valign="top"><code>bool b = x;</code></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+    </tr>
+    <tr>
+        <td valign="top">ConvertibleToBool</td>
+        <td valign="top"><code>if (x)</code><br>-or-<br><code>if (!x)</code></td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+        <td valign="top">&nbsp;</td>
+    </tr>
+</table>
+
+\complexity
+
+\invariants
+
+\models
+    - a pointer
+    - adobe::name_t
+
+\notes
+
+\see_also
+*/

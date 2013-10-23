@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E7D8AE3C-D368-47D8-9029-7C8E0AC321F0}</ProjectGuid>
+    <RootNamespace>asl</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="adobe_release.props" />
+    <Import Project="adobe_source.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="adobe_debug.props" />
+    <Import Project="adobe_source.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+    <CodeAnalysisRuleSet Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRules Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+    <CodeAnalysisRuleAssemblies Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\source\adam.cpp" />
+    <ClCompile Include="..\source\adam_evaluate.cpp" />
+    <ClCompile Include="..\source\adam_parser.cpp" />
+    <ClCompile Include="..\source\any_regular.cpp" />
+    <ClCompile Include="..\source\empty.cpp" />
+    <ClCompile Include="..\source\eve.cpp" />
+    <ClCompile Include="..\source\eve_evaluate.cpp" />
+    <ClCompile Include="..\source\eve_parser.cpp" />
+    <ClCompile Include="..\source\expression_filter.cpp" />
+    <ClCompile Include="..\source\expression_parser.cpp" />
+    <ClCompile Include="..\source\extents.cpp" />
+    <ClCompile Include="..\source\external_model.cpp" />
+    <ClCompile Include="..\source\iomanip.cpp" />
+    <ClCompile Include="..\source\iomanip_asl_cel.cpp" />
+    <ClCompile Include="..\source\iomanip_pdf.cpp" />
+    <ClCompile Include="..\source\istream.cpp" />
+    <ClCompile Include="..\source\lex_shared.cpp" />
+    <ClCompile Include="..\source\lex_stream.cpp" />
+    <ClCompile Include="..\source\localization.cpp" />
+    <ClCompile Include="..\source\md5.cpp" />
+    <ClCompile Include="..\source\memory.cpp" />
+    <ClCompile Include="..\source\name.cpp" />
+    <ClCompile Include="..\source\parser_shared.cpp" />
+    <ClCompile Include="..\source\string.cpp" />
+    <ClCompile Include="..\source\string_pool.cpp" />
+    <ClCompile Include="..\source\test_configuration.cpp" />
+    <ClCompile Include="..\source\thread_id.cpp" />
+    <ClCompile Include="..\source\token.cpp" />
+    <ClCompile Include="..\source\typeinfo.cpp" />
+    <ClCompile Include="..\source\unicode.cpp" />
+    <ClCompile Include="..\source\virtual_machine.cpp" />
+    <ClCompile Include="..\source\xml_lex.cpp" />
+    <ClCompile Include="..\source\xml_parser.cpp" />
+    <ClCompile Include="..\source\xml_token.cpp" />
+    <ClCompile Include="..\source\xstring.cpp" />
+    <ClCompile Include="..\source\zuid.cpp" />
+    <ClCompile Include="..\source\zuid_sys_dep.cpp" />
+    <ClCompile Include="..\source\zuid_uuid.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\adobe\adam.hpp" />
+    <ClInclude Include="..\adobe\adam_evaluate.hpp" />
+    <ClInclude Include="..\adobe\adam_parser.hpp" />
+    <ClInclude Include="..\adobe\algorithm.hpp" />
+    <ClInclude Include="..\adobe\any_iterator.hpp" />
+    <ClInclude Include="..\adobe\any_regular.hpp" />
+    <ClInclude Include="..\adobe\any_regular_fwd.hpp" />
+    <ClInclude Include="..\adobe\array.hpp" />
+    <ClInclude Include="..\adobe\array_fwd.hpp" />
+    <ClInclude Include="..\adobe\algorithm\binary_search.hpp" />
+    <ClInclude Include="..\adobe\circular_queue.hpp" />
+    <ClInclude Include="..\adobe\algorithm\clamp.hpp" />
+    <ClInclude Include="..\adobe\closed_hash.hpp" />
+    <ClInclude Include="..\adobe\closed_hash_fwd.hpp" />
+    <ClInclude Include="..\adobe\cmath.hpp" />
+    <ClInclude Include="..\adobe\config.hpp" />
+    <ClInclude Include="..\adobe\controller_concept.hpp" />
+    <ClInclude Include="..\adobe\conversion.hpp" />
+    <ClInclude Include="..\adobe\algorithm\copy.hpp" />
+    <ClInclude Include="..\adobe\copy_on_write.hpp" />
+    <ClInclude Include="..\adobe\algorithm\count.hpp" />
+    <ClInclude Include="..\adobe\counter.hpp" />
+    <ClInclude Include="..\adobe\cstdint.hpp" />
+    <ClInclude Include="..\adobe\cstring.hpp" />
+    <ClInclude Include="..\adobe\dancing_links.hpp" />
+    <ClInclude Include="..\adobe\dictionary.hpp" />
+    <ClInclude Include="..\adobe\dictionary_fwd.hpp" />
+    <ClInclude Include="..\adobe\empty.hpp" />
+    <ClInclude Include="..\adobe\enum_ops.hpp" />
+    <ClInclude Include="..\adobe\algorithm\equal.hpp" />
+    <ClInclude Include="..\adobe\algorithm\equal_range.hpp" />
+    <ClInclude Include="..\adobe\algorithm\erase_if.hpp" />
+    <ClInclude Include="..\adobe\eve.hpp" />
+    <ClInclude Include="..\adobe\eve_evaluate.hpp" />
+    <ClInclude Include="..\adobe\eve_parser.hpp" />
+    <ClInclude Include="..\adobe\algorithm\exists.hpp" />
+    <ClInclude Include="..\adobe\implementation\expression_filter.hpp" />
+    <ClInclude Include="..\adobe\implementation\expression_parser.hpp" />
+    <ClInclude Include="..\adobe\extents.hpp" />
+    <ClInclude Include="..\adobe\algorithm\fill.hpp" />
+    <ClInclude Include="..\adobe\algorithm\filter.hpp" />
+    <ClInclude Include="..\adobe\final.hpp" />
+    <ClInclude Include="..\adobe\algorithm\find.hpp" />
+    <ClInclude Include="..\adobe\algorithm\find_match.hpp" />
+    <ClInclude Include="..\adobe\algorithm\for_each.hpp" />
+    <ClInclude Include="..\adobe\algorithm\for_each_position.hpp" />
+    <ClInclude Include="..\adobe\forest.hpp" />
+    <ClInclude Include="..\adobe\functional.hpp" />
+    <ClInclude Include="..\adobe\algorithm\gather.hpp" />
+    <ClInclude Include="..\adobe\algorithm\generate.hpp" />
+    <ClInclude Include="..\adobe\algorithm\heap.hpp" />
+    <ClInclude Include="..\adobe\algorithm\identity_element.hpp" />
+    <ClInclude Include="..\adobe\iomanip.hpp" />
+    <ClInclude Include="..\adobe\iomanip_asl_cel.hpp" />
+    <ClInclude Include="..\adobe\iomanip_fwd.hpp" />
+    <ClInclude Include="..\adobe\iomanip_javascript.hpp" />
+    <ClInclude Include="..\adobe\iomanip_pdf.hpp" />
+    <ClInclude Include="..\adobe\iomanip_xml.hpp" />
+    <ClInclude Include="..\adobe\algorithm\iota.hpp" />
+    <ClInclude Include="..\adobe\istream.hpp" />
+    <ClInclude Include="..\adobe\istream_fwd.hpp" />
+    <ClInclude Include="..\adobe\iterator.hpp" />
+    <ClInclude Include="..\adobe\layout_attributes.hpp" />
+    <ClInclude Include="..\adobe\implementation\lex_shared.hpp" />
+    <ClInclude Include="..\adobe\implementation\lex_shared_fwd.hpp" />
+    <ClInclude Include="..\adobe\implementation\lex_stream.hpp" />
+    <ClInclude Include="..\adobe\implementation\lex_stream_fwd.hpp" />
+    <ClInclude Include="..\adobe\algorithm\lexicographical_compare.hpp" />
+    <ClInclude Include="..\adobe\localization.hpp" />
+    <ClInclude Include="..\adobe\algorithm\lower_bound.hpp" />
+    <ClInclude Include="..\adobe\manip.hpp" />
+    <ClInclude Include="..\adobe\md5.hpp" />
+    <ClInclude Include="..\adobe\algorithm\median.hpp" />
+    <ClInclude Include="..\adobe\memory.hpp" />
+    <ClInclude Include="..\adobe\memory_fwd.hpp" />
+    <ClInclude Include="..\adobe\algorithm\merge.hpp" />
+    <ClInclude Include="..\adobe\implementation\metrowerks_mach_o.hpp" />
+    <ClInclude Include="..\adobe\algorithm\minmax.hpp" />
+    <ClInclude Include="..\adobe\algorithm\mismatch.hpp" />
+    <ClInclude Include="..\adobe\mismatch.hpp" />
+    <ClInclude Include="..\adobe\move.hpp" />
+    <ClInclude Include="..\adobe\name.hpp" />
+    <ClInclude Include="..\adobe\name_fwd.hpp" />
+    <ClInclude Include="..\adobe\numeric.hpp" />
+    <ClInclude Include="..\adobe\once.hpp" />
+    <ClInclude Include="..\adobe\algorithm\other_of.hpp" />
+    <ClInclude Include="..\adobe\implementation\parser_shared.hpp" />
+    <ClInclude Include="..\adobe\algorithm\partition.hpp" />
+    <ClInclude Include="..\adobe\algorithm\permutation.hpp" />
+    <ClInclude Include="..\adobe\algorithm\pin.hpp" />
+    <ClInclude Include="..\adobe\placeable_concept.hpp" />
+    <ClInclude Include="..\adobe\poly.hpp" />
+    <ClInclude Include="..\adobe\poly_controller.hpp" />
+    <ClInclude Include="..\adobe\poly_copyable.hpp" />
+    <ClInclude Include="..\adobe\poly_placeable.hpp" />
+    <ClInclude Include="..\adobe\poly_regular.hpp" />
+    <ClInclude Include="..\adobe\poly_view.hpp" />
+    <ClInclude Include="..\adobe\algorithm\random_shuffle.hpp" />
+    <ClInclude Include="..\adobe\algorithm\reduce.hpp" />
+    <ClInclude Include="..\adobe\regular_concept.hpp" />
+    <ClInclude Include="..\adobe\algorithm\remove.hpp" />
+    <ClInclude Include="..\adobe\algorithm\replace.hpp" />
+    <ClInclude Include="..\adobe\future\resources.hpp" />
+    <ClInclude Include="..\adobe\algorithm\reverse.hpp" />
+    <ClInclude Include="..\adobe\algorithm\rotate.hpp" />
+    <ClInclude Include="..\adobe\algorithm\search.hpp" />
+    <ClInclude Include="..\adobe\select.hpp" />
+    <ClInclude Include="..\adobe\algorithm\select.hpp" />
+    <ClInclude Include="..\adobe\selection.hpp" />
+    <ClInclude Include="..\adobe\algorithm\selection_algorithms.hpp" />
+    <ClInclude Include="..\adobe\algorithm\set.hpp" />
+    <ClInclude Include="..\adobe\sha.hpp" />
+    <ClInclude Include="..\adobe\sheet.hpp" />
+    <ClInclude Include="..\adobe\algorithm\sort.hpp" />
+    <ClInclude Include="..\adobe\algorithm\sorted.hpp" />
+    <ClInclude Include="..\adobe\static_table.hpp" />
+    <ClInclude Include="..\adobe\string.hpp" />
+    <ClInclude Include="..\adobe\string_fwd.hpp" />
+    <ClInclude Include="..\adobe\implementation\string_pool.hpp" />
+    <ClInclude Include="..\adobe\implementation\swap.hpp" />
+    <ClInclude Include="..\adobe\algorithm\swap_ranges.hpp" />
+    <ClInclude Include="..\adobe\table_index.hpp" />
+    <ClInclude Include="..\adobe\thread_id.hpp" />
+    <ClInclude Include="..\adobe\timer.hpp" />
+    <ClInclude Include="..\adobe\implementation\token.hpp" />
+    <ClInclude Include="..\adobe\implementation\toroid.hpp" />
+    <ClInclude Include="..\adobe\algorithm\transform.hpp" />
+    <ClInclude Include="..\adobe\typeinfo.hpp" />
+    <ClInclude Include="..\adobe\unicode.hpp" />
+    <ClInclude Include="..\adobe\algorithm\unique.hpp" />
+    <ClInclude Include="..\adobe\algorithm\upper_bound.hpp" />
+    <ClInclude Include="..\adobe\utility.hpp" />
+    <ClInclude Include="..\adobe\vector.hpp" />
+    <ClInclude Include="..\adobe\vector_fwd.hpp" />
+    <ClInclude Include="..\adobe\view_concept.hpp" />
+    <ClInclude Include="..\adobe\virtual_machine.hpp" />
+    <ClInclude Include="..\adobe\widget_attributes.hpp" />
+    <ClInclude Include="..\adobe\implementation\xml_lex.hpp" />
+    <ClInclude Include="..\adobe\implementation\xml_lex_fwd.hpp" />
+    <ClInclude Include="..\adobe\xml_parser.hpp" />
+    <ClInclude Include="..\adobe\implementation\xml_token.hpp" />
+    <ClInclude Include="..\adobe\xstring.hpp" />
+    <ClInclude Include="..\adobe\zuid.hpp" />
+    <ClInclude Include="..\adobe\implementation\zuid_sys_dep.hpp" />
+    <ClInclude Include="..\adobe\implementation\zuid_uuid.hpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

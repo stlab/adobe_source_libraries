@@ -1,0 +1,136 @@
+/** \page stldoc_select1st select1st
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Select1st</code> is a \ref stldoc_functors that takes a single argument, 
+a <code>\ref stldoc_pair</code> <A href="#1">[1]</A>, and returns the pair's first element.
+\section Example Example
+Print all of a <code>\ref stldoc_Map</code>'s keys.
+\code
+int main()
+{
+  Map<int, double> M;
+  M[1] = 0.3;
+  M[47] = 0.8;
+  M[33] = 0.1;
+
+  transform(M.begin(), M.end(), ostream_iterator<int>(cout, " "),
+            select1st<Map<int, double>::value_type>());
+  // The output is  1 33 47.
+}
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+This function object is an SGI extension; it is not part of the C++
+standard.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>Pair</code>
+</td>
+<td valign="top">
+The function object's argument type.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_AdaptableUnaryFunction\ref stldoc_AdaptableUnaryFunction\ref stldoc_AdaptableUnaryFunction
+\section Type_requirements Type requirements
+There exist some types <code>U</code> and <code>V</code> such that <code>Pair</code> provides the same
+interface as a <code>\ref stldoc_pair&lt;U,V&gt;</code>. <A href="#1">[1]</A>
+\section Public_base_classes Public base classes
+<code>\ref stldoc_unary_function&lt;Pair, Pair::first_type&gt;</code>
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of <code>select1st</code>'s argument: <code>Pair</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the result: <code>Pair::first_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+const Pair::first_type&
+operator()(const Pair& p) const
+\endcode
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+Function call.  The return value is <code>p.first</code>.
+</td>
+</tr>
+</table>
+\section New_members New members
+All of <code>select1st</code>'s members are defined in the 
+\ref stldoc_AdaptableUnaryFunction
+requirements.  <code>Select1st</code> does not introduce any new members.
+\section Notes Notes
+<p><A name="1">[1]</A>
+<code>Pair</code> is not actually required to be a <code>\ref stldoc_pair&lt;U,V&gt;</code>, but
+merely to support the same interface as <code>\ref stldoc_pair</code>.  In almost all 
+cases the template parameter will be a <code>\ref stldoc_pair</code>, but it is occasionally 
+useful for it to be something else.  One example is a <code>struct</code> that
+has the members <code>first</code>, <code>second</code>, and <code>third</code>.
+\section See_also See also
+<code>\ref stldoc_identity</code>, <code>\ref stldoc_select2nd</code>, <code>\ref stldoc_project1st</code>, <code>\ref stldoc_project2nd</code>
+
+
+*/

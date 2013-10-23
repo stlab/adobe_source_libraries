@@ -1,0 +1,8 @@
+import testing ;
+
+run check_md5.cpp
+    : aa42bedacf55a7377a2218da00cd8b1b # args
+    : binary_test #files
+    : #requirements
+  ;
+

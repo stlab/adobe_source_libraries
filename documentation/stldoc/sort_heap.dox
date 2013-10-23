@@ -1,0 +1,117 @@
+/** \page stldoc_sort_heap sort_heap
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Sort_heap</code> is an overloaded name; there are actually two 
+<code>sort_heap</code> functions.    
+\code
+template <class RandomAccessIterator>
+void sort_heap(RandomAccessIterator first, RandomAccessIterator last);
+
+template <class RandomAccessIterator, class StrictWeakOrdering>
+void sort_heap(RandomAccessIterator first, RandomAccessIterator last,
+               StrictWeakOrdering comp);
+\endcode
+\section Description Description
+<code>Sort_heap</code> turns a heap <A href="#1">[1]</A> <code>[first, last)</code> into a sorted range.  
+Note that this is not a stable sort: the relative order of equivalent
+elements is not guaranteed to be preserved.
+<p>
+The two versions of <code>sort_heap</code> differ in how they define whether one
+element is less than another.  The first version compares
+objects using <code>operator&lt;</code>, and the second compares objects using
+a \ref stldoc_functors <code>comp</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version, the one that takes two arguments:
+<ul>
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator.
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+<code>RandomAccessIterator</code>'s value type is a model of \ref stldoc_LessThanComparable.
+<li>
+The ordering on objects of <code>RandomAccessIterator</code>'s value type is a <i>strict
+   weak ordering</i>, as defined in the \ref stldoc_LessThanComparable requirements.
+</ul>
+For the second version, the one that takes three arguments:
+<ul>
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator.
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>RandomAccessIterator</code>'s value type is convertible to
+   <code>StrictWeakOrdering</code>'s argument type.
+</ul>
+\section Preconditions Preconditions
+For the first version, the one that takes two arguments:
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>[first, last)</code> is a heap.  That is, <code>\ref stldoc_is_heap\zwj(first, last)</code>
+   is <code>true</code>.
+</ul>
+For the second version, the one that takes three arguments:
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>[first, last)</code> is a heap.  That is, <code>\ref stldoc_is_heap\zwj(first, last, comp)</code>
+   is <code>true</code>.
+</ul>
+\section Complexity Complexity
+At most <code>N * log(N)</code> comparisons, where <code>N</code> is <code>last - first</code>.
+\section Example Example
+\code
+int main()
+{
+  int A[] = {1, 4, 2, 8, 5, 7};
+  const int N = sizeof(A) / sizeof(int);
+
+  make_heap(A, A+N);
+  copy(A, A+N, ostream_iterator<int>(cout, " "));
+  cout << endl;
+
+  sort_heap(A, A+N);
+  copy(A, A+N, ostream_iterator<int>(cout, " "));
+  cout << endl;
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+A heap is a particular way of ordering the elements in a range of
+\ref stldoc_RandomAccessIterator <code>[f, l)</code>.  The reason heaps are useful
+(especially for sorting, or as priority queues) is that they satisfy
+two important properties.  First, <code>*f</code> is the largest element in the
+heap.  Second, it is possible to add an element to a heap (using
+<code>push_heap</code>), or to remove <code>*f</code>, in logarithmic time.
+Internally, a heap is a tree represented as a sequential range.
+The tree is constructed so that that each
+node is less than or equal to its parent node.
+\section See_also See also
+<code>\ref stldoc_push_heap</code>, <code>\ref stldoc_pop_heap</code>, <code>\ref stldoc_make_heap</code>, <code>\ref stldoc_is_heap</code>, <code>\ref stldoc_sort</code>,
+<code>\ref stldoc_stable_sort</code>,
+<code>\ref stldoc_partial_sort</code>,
+<code>\ref stldoc_partial_sort_copy</code>
+
+
+*/

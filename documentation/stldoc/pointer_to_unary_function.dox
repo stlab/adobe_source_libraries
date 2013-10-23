@@ -1,0 +1,247 @@
+/** \page stldoc_pointer_to_unary_function pointer_to_unary_function
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left">\image html adaptors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: functors, adaptors</td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Pointer_to_unary_function</code> is a \ref stldoc_functors adaptor that
+allows a function pointer <code>Result (*f)(Arg)</code> to be treated as an
+\ref stldoc_AdaptableUnaryFunction.  That is: if <code>F</code> is a
+<code>pointer_to_unary_function&lt;Arg, Result&gt;</code> that was initialized
+with an underlying function pointer <code>f</code> of type
+<code>Result (*)(Arg)</code>, then <code>F(x)</code> calls the function <code>f(x)</code>.
+The difference between <code>f</code> and <code>F</code> is that 
+<code>pointer_to_unary_function</code> is an \ref stldoc_AdaptableUnaryFunction,
+<i>i.e.</i> it defines the nested <code>typedef</code>s <code>argument_type</code>
+and <code>result_type</code>.  
+<p>
+Note that a function pointer of type <code>Result (*)(Arg)</code> is a perfectly
+good \ref stldoc_UnaryFunction object, and may be passed to an STL algorithm
+that expects an argument that is a \ref stldoc_UnaryFunction.  The only
+reason for using the <code>pointer_to_unary_function</code> object is if you need
+to use an ordinary function in a context that requires an 
+\ref stldoc_AdaptableUnaryFunction, <i>e.g.</i> as the argument of a function object
+adaptor.
+<p>
+Most of the time, you need not declare an object of type
+<code>pointer_to_unary_function</code> directly.  It is almost always easier to
+construct one using the <code>\ref stldoc_ptr_fun</code> function.
+\section Example Example
+The following code fragment replaces all of the numbers in a range with their
+absolute values, using the standard library function <code>fabs</code>.
+There is no need to use a <code>pointer_to_unary_function</code>
+adaptor in this case.
+\code
+transform(first, last, first, fabs);
+\endcode
+The following code fragment replaces all of the numbers in a range with the
+negative of their absolute values.  In this case we are composing
+<code>fabs</code> and <code>\ref stldoc_negate</code>.  This requires that <code>fabs</code> be treated as an
+\ref stldoc_AdaptableUnaryFunction, so we do need to use a
+<code>pointer_to_unary_function</code> adaptor.
+\code
+transform(first, last, first,
+          compose1(negate<double>, ptr_fun(fabs)));
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>Arg</code>
+</td>
+<td valign="top">
+The function object's argument type
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Result</code>
+</td>
+<td valign="top">
+The function object's result type
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_AdaptableUnaryFunction
+\section Type_requirements Type requirements
+<ul>
+<li>
+<code>Arg</code> is \ref stldoc_Assignable.
+<li>
+<code>Result</code> is \ref stldoc_Assignable.
+</ul>
+\section Public_base_classes Public base classes
+<code>\ref stldoc_unary_function&lt;Arg, Result&gt;</code>
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the function object's argument: <code>Arg</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the result: <code>Result</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type operator()(argument_type x)</code>
+</td>
+<td valign="top">
+ \ref stldoc_UnaryFunction
+</td>
+<td valign="top">
+Function call operator.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer_to_unary_function(Result (*f)(Arg))</code>
+</td>
+<td valign="top">
+<code>pointer_to_unary_function</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer_to_unary_function()</code>
+</td>
+<td valign="top">
+<code>pointer_to_unary_function</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class Arg, class Result>
+pointer_to_unary_function<Arg, Result> 
+ptr_fun(Result (*x)(Arg));
+\endcode
+</td>
+<td valign="top">
+<code>pointer_to_unary_function</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined 
+in the \ref stldoc_AdaptableUnaryFunction
+requirements, but are specific to 
+<code>pointer_to_unary_function</code>.       
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer_to_unary_function(Result (*f)(Arg))</code>
+</td>
+<td valign="top">
+The constructor.  Creates a <code>pointer_to_unary_function</code> whose underlying
+   function is <code>f</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>pointer_to_unary_function()</code>
+</td>
+<td valign="top">
+The default constructor.  This creates a <code>pointer_to_unary_function</code>
+   that does not have an underlying C function, and that therefore
+   cannot actually be called.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class Arg, class Result>
+pointer_to_unary_function<Arg, Result> 
+ptr_fun(Result (*x)(Arg));
+\endcode
+</td>
+<td valign="top">
+If <code>f</code> is of type <code>Result (*)(Arg)</code> then
+<code>ptr_fun(f)</code> is equivalent to
+<code>pointer_to_unary_function&lt;Arg,Result&gt;(f)</code>,
+but more convenient.  This is a global function, not a member.
+</td>
+</tr>
+</table>
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_pointer_to_binary_function</code>, <code>\ref stldoc_ptr_fun</code>, 
+\ref stldoc_AdaptableUnaryFunction
+
+
+*/

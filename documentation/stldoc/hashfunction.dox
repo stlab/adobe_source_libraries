@@ -1,0 +1,89 @@
+/** \page stldoc_HashFunction HashFunction
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left">\image html functors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b> : containers, functors</td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Hash Function is a \ref stldoc_UnaryFunction that is used by 
+\ref stldoc_HashedAssociativeContainer : it maps its argument to a
+result of type <code>size_t</code>.  A Hash Function must be deterministic
+and stateless.  That is, the return value must depend only 
+on the argument, and equal arguments must yield equal results.
+<p>
+The performance of a \ref stldoc_HashedAssociativeContainer depends
+crucially on its hash function.  It is important for a Hash Function
+to minimize collisions, where a collision is defined as two different
+arguments that hash to the same value.  It is also important that the
+distribution of hash values be uniform; that is, the probability that
+a Hash Function returns any particular value of type <code>size_t</code> should
+be roughly the same as the probability that it returns any other
+value.  <A href="#1">[1]</A>
+\section Refinement_of Refinement of
+\ref stldoc_UnaryFunction
+\section Associated_types Associated types
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Result type
+</td>
+<td valign="top">
+The type returned when the Hash Function is called.  The result
+   type must be <code>size_t</code>.
+</td>
+</tr>
+</table>
+\section Notation Notation
+\section Definitions Definitions
+\section Valid_expressions Valid expressions
+None, except for those described in the \ref stldoc_UnaryFunction
+requirements.
+\section Expression_semantics Expression semantics
+\section Complexity_guarantees Complexity guarantees
+\section Invariants Invariants
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Deterministic function
+</td>
+<td valign="top">
+The return value depends only on the argument, as opposed to
+   the past history of the Hash Function object.  The return value
+   is always the same whenever the argument is the same.
+</td>
+</tr>
+</table>
+\section Models Models
+<ul>
+<li>
+<code>\ref stldoc_hash</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+Note that both of these requirements make sense only in the
+context of some specific distribution of input values.  To take a
+simple example, suppose that the values being hashed are the six
+strings &quot;aardvark&quot;, &quot;trombone&quot;, &quot;history&quot;, &quot;diamond&quot;, &quot;forthright&quot;,
+and &quot;solitude&quot;.  In this case, one reasonable (and efficient) hash
+function would simply be the first character of each string.  On the
+other hand, suppose that the values being hashed are &quot;aaa0001&quot;,
+&quot;aaa0010&quot;, &quot;aaa0011&quot;, &quot;aaa0100&quot;, &quot;aaa0101&quot;, and &quot;aaa0110&quot;.  In that
+case, a different hash function would be more appropriate.  This is
+why \ref stldoc_HashedAssociativeContainer are parameterized by the hash
+function : no one hash function is best for all applications.  
+\section See_also See also
+\ref stldoc_HashedAssociativeContainer, <code>\ref stldoc_hash</code>
+
+
+*/

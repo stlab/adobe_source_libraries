@@ -1,0 +1,147 @@
+/** \page stldoc_find_end find_end
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>find_end</code> is an overloaded name; there are actually two <code>find_end</code>
+functions.
+\code
+template <class ForwardIterator1, class ForwardIterator2>
+ForwardIterator1 
+find_end(ForwardIterator1 first1, ForwardIterator1 last1, 
+         ForwardIterator2 first2, ForwardIterator2 last2);
+
+template <class ForwardIterator1, class ForwardIterator2, 
+          class BinaryPredicate>
+ForwardIterator1 
+find_end(ForwardIterator1 first1, ForwardIterator1 last1, 
+         ForwardIterator2 first2, ForwardIterator2 last2,
+         BinaryPredicate comp);
+\endcode
+\section Description Description
+<code>Find_end</code> is misnamed: it is much more similar to <code>\ref stldoc_search</code>
+than to <code>\ref stldoc_find</code>, and a more accurate name would have been
+<code>search_end</code>.
+<p>
+Like <code>search</code>, <code>find_end</code> attempts to find a subsequence within
+the range <code>[first1, last1)</code> that is identical to <code>[first2, last2)</code>.
+The difference is that while <code>search</code> finds the first such
+subsequence, <code>find_end</code> finds the last such subsequence.  
+<code>Find_end</code> returns an iterator pointing to the beginning of 
+that subsequence; if no such subsequence exists, it returns <code>last1</code>.
+<p>
+The two versions of 
+<code>find_end</code> differ in how they determine whether two elements are the same:
+the first uses <code>operator==</code>, and the second uses the user-supplied
+\ref stldoc_functors <code>comp</code>.
+<p>
+The first version of <code>find_end</code> returns the last iterator
+<code>i</code> in the range <code>[first1, last1 - (last2 - first2))</code> such that, for
+every iterator <code>j</code> in the range <code>[first2, last2)</code>, 
+<code>*(i + (j - first2)) == *j</code>.  The second version 
+of <code>find_end</code> returns the last iterator
+<code>i</code> in <code>[first1, last1 - (last2 - first2))</code> such that, for
+every iterator <code>j</code> in <code>[first2, last2)</code>, 
+<code>binary_pred(*(i + (j - first2)), *j)</code> is <code>true</code>.  These conditions
+simply mean that every element in the subrange beginning with <code>i</code>
+must be the same as the corresponding element in <code>[first2, last2)</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>ForwardIterator1</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator2</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator1</code>'s value type is a model of \ref stldoc_EqualityComparable.
+<li>
+<code>ForwardIterator2</code>'s value type is a model of \ref stldoc_EqualityComparable.
+<li>
+Objects of <code>ForwardIterator1</code>'s value type can be compared for
+   equality with Objects of <code>ForwardIterator2</code>'s value type.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>ForwardIterator1</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator2</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>BinaryPredicate</code> is a model of \ref stldoc_BinaryPredicate.
+<li>
+<code>ForwardIterator1</code>'s value type is convertible to <code>BinaryPredicate</code>'s
+   first argument type.
+<li>
+<code>ForwardIterator2</code>'s value type is convertible to <code>BinaryPredicate</code>'s
+   second argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first2, last2)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+The number of comparisons is proportional to <code>(last1 - first1) *
+(last2 - first2)</code>.  If both <code>ForwardIterator1</code> and <code>ForwardIterator2</code>
+are models of \ref stldoc_BidirectionalIterator, then the average complexity
+is linear and the worst case is at most <code>(last1 - first1) *
+(last2 - first2)</code> comparisons.
+\section Example Example
+\code
+int main()
+{
+  char* s = "executable.exe";
+  char* suffix = "exe";
+
+  const int N = strlen(s);
+  const int N_suf = strlen(suffix);
+
+  char* location = find_end(s, s + N,
+                            suffix, suffix + N_suf);
+
+  if (location != s + N) {
+    cout << "Found a match for " << suffix << " within " << s << endl;
+    cout << s << endl;
+
+    int i;
+    for (i = 0; i < (location - s); ++i)
+      cout << ' ';
+    for (i = 0; i < N_suf; ++i)
+      cout << '^';
+    cout << endl;
+  }
+  else
+    cout << "No match for " << suffix << " within " << s << endl;
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The reason that this range is  <code>[first1, last1 - (last2 - first2))</code>,
+instead of simply <code>[first1, last1)</code>, is that we are looking for a
+subsequence that is equal to the <i>complete</i> sequence <code>[first2,
+last2)</code>.  An iterator <code>i</code> can't be the beginning of such a subsequence
+unless <code>last1 - i</code> is greater than or equal to <code>last2 - first2</code>.
+Note the implication of this: you may call <code>find_end</code> with arguments
+such that <code>last1 - first1</code> is less than <code>last2 - first2</code>, but such a
+search will always fail.
+\section See_also See also
+<code>\ref stldoc_search</code>
+
+
+*/

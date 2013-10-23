@@ -1,0 +1,96 @@
+/** \page stldoc_remove_if remove_if
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class ForwardIterator, class Predicate>
+ForwardIterator remove_if(ForwardIterator first, ForwardIterator last,
+                          Predicate pred);
+\endcode
+\section Description Description
+<code>Remove_if</code> removes from the range <code>[first, last)</code> every element <code>x</code> such
+that <code>pred(x)</code> is <code>true</code>.  That is, <code>remove_if</code>
+returns an iterator <code>new_last</code> such that the range <code>[first, new_last)</code>
+contains no elements for which <code>pred</code> is <code>true</code>. <A href="#1">[1]</A> The iterators in
+the range <code>[new_last, last)</code> are all still dereferenceable, but the
+elements that they point to are unspecified.  <code>Remove_if</code> is stable,
+meaning that the relative order of elements that are not removed is
+unchanged.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator</code> is mutable.
+<li>
+<code>Predicate</code> is a model of \ref stldoc_Predicate.
+<li>
+<code>ForwardIterator</code>'s value type is convertible to <code>Predicate</code>'s
+   argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  <code>Remove_if</code> performs exactly <code>last - first</code> applications
+of <code>pred</code>.
+\section Example Example
+Remove all even numbers from a vector.
+\code
+Vector<int> V;
+V.push_back(1);
+V.push_back(4);
+V.push_back(2);
+V.push_back(8);
+V.push_back(5);
+V.push_back(7);
+
+copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
+    // The output is "1 4 2 8 5 7"
+
+Vector<int>::iterator new_end = 
+        remove_if(V.begin(), V.end(), 
+                  compose1(bind2nd(equal_to<int>(), 0),
+                           bind2nd(modulus<int>(), 2)));
+V.erase(new_end, V.end()); <A href="#1">[1]</A>
+
+copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
+    // The output is "1 5 7".
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+The meaning of &quot;removal&quot; is somewhat subtle.  <code>Remove_if</code>
+does not destroy any iterators, and does not change the distance
+between <code>first</code> and <code>last</code>.  (There's no way that it could do anything
+of the sort.)  So, for example, if <code>V</code> is a \ref stldoc_Vector,
+<code>remove_if(V.begin(), V.end(), pred)</code> does not change <code>V.size()</code>: <code>V</code> will
+contain just as many elements as it did before.  <code>Remove_if</code> returns an
+iterator that points to the end of the resulting range after elements
+have been removed from it; it follows that the elements after that
+iterator are of no interest, and may be discarded.  If you are
+removing elements from a \ref stldoc_Sequence, you may simply erase them.
+That is, a reasonable way of removing elements from a \ref stldoc_Sequence
+is <code>S.erase(remove_if(S.begin(), S.end(), pred), S.end())</code>.
+\section See_also See also
+<code>\ref stldoc_remove</code>, <code>\ref stldoc_remove_copy</code>, <code>\ref stldoc_remove_copy_if</code>,
+<code>\ref stldoc_unique</code>, <code>\ref stldoc_unique_copy</code>.
+
+
+*/

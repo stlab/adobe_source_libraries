@@ -1,0 +1,600 @@
+/** \page stldoc_Container Container
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html containers.gif</td>
+<td width="100%"></td>
+<td align="right">\image html concept.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: containers</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: concept</td>
+</tr>
+</table>
+
+\section Description Description
+A Container is an object that stores other objects (its <i>elements</i>),
+and that has methods for accessing its elements.  In particular, 
+every type that is a model of Container has an associated \ref stldoc_Iterators
+type that can be used to iterate through the Container's elements.
+<p>
+There is no guarantee that the elements of a Container are stored
+in any definite order; the order might, in fact, be different upon
+each iteration through the Container.  Nor is there a guarantee that
+more than one iterator into a Container may be active at any one time.
+(Specific types of Containers, such as \ref stldoc_ForwardContainer, do 
+provide such guarantees.)
+<p>
+A Container &quot;owns&quot; its elements: the lifetime of an element stored in 
+a container cannot exceed that of the Container itself. <A href="#1">[1]</A>
+\section Refinement_of Refinement of
+\ref stldoc_Assignable
+\section Associated_types Associated types
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Value type
+</td>
+<td valign="top">
+<code>X::value_type</code>
+</td>
+<td valign="top">
+The type of the object stored in a container.  The value type
+   must be \ref stldoc_Assignable, but need not be \ref stldoc_DefaultConstructible. <A href="#2">[2]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Iterator type
+</td>
+<td valign="top">
+<code>X::iterator</code>
+</td>
+<td valign="top">
+The type of iterator used to iterate through a container's
+   elements.  The iterator's value type is expected to be the
+   container's value type.  A conversion
+   from the iterator type to the const iterator type must exist.
+   The iterator type must be an \ref stldoc_InputIterator. <A href="#3">[3]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Const iterator type
+</td>
+<td valign="top">
+<code>X::const_iterator</code>
+</td>
+<td valign="top">
+A type of iterator that may be used to examine, but not to modify,
+   a container's elements. <A href="#3">[3]</A> <A href="#4">[4]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Reference type
+</td>
+<td valign="top">
+<code>X::reference</code>
+</td>
+<td valign="top">
+A type that behaves as a reference to the container's value type. <A href="#5">[5]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Const reference type
+</td>
+<td valign="top">
+<code>X::const_reference</code>
+</td>
+<td valign="top">
+A type that behaves as a const reference to the container's value
+type. <A href="#5">[5]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Pointer type
+</td>
+<td valign="top">
+<code>X::pointer</code>
+</td>
+<td valign="top">
+A type that behaves as a pointer to the container's value type. <A href="#6">[6]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Distance type
+</td>
+<td valign="top">
+<code>X::difference_type</code>
+</td>
+<td valign="top">
+A signed integral type used to represent the distance between two
+   of the container's iterators.  This type must be the same as 
+   the iterator's distance type. <A href="#2">[2]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Size type
+</td>
+<td valign="top">
+<code>X::size_type</code>
+</td>
+<td valign="top">
+An unsigned integral type that can represent any nonnegative value
+   of the container's distance type. <A href="#2">[2]</A>
+</td>
+</tr>
+</table>
+\section Notation Notation
+<table>
+<tr>
+<td valign="top">
+<code>X</code>
+</td>
+<td valign="top">
+A type that is a model of Container
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>a</code>, <code>b</code>
+</td>
+<td valign="top">
+Object of type <code>X</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The value type of <code>X</code>
+</td>
+</tr>
+</table>
+\section Definitions Definitions
+The <i>size</i> of a container is the number of elements it contains.
+The size is a nonnegative number.
+<p>
+The <i>area</i> of a container is the total number of bytes that it
+occupies.  More specifically, it is the sum of the elements' areas
+plus whatever overhead is associated with the container itself.  If a
+container's value type <code>T</code> is a simple type (as opposed to a container
+type), then the container's area is bounded above by a constant times
+the container's size times <code>sizeof(T)</code>.  That is, if <code>a</code> is a
+container with a simple value type, then <code>a</code>'s area is <code>O(a.size())</code>.
+<p>
+A <i>variable sized</i> container is one that provides methods for
+inserting and/or removing elements; its size may vary during a
+container's lifetime.  A <i>fixed size</i> container is one where 
+the size is constant throughout the container's lifetime.  In some
+fixed-size container types, the size is determined at compile time.
+\section Valid_expressions Valid expressions
+In addition to the expressions defined in 
+\ref stldoc_Assignable, \ref stldoc_EqualityComparable, and \ref stldoc_LessThanComparable, the 
+following expressions must be valid.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Type requirements
+</TH>
+<TH>
+Return type
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Beginning of range
+</td>
+<td valign="top">
+<code>a.begin()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>iterator</code> if <code>a</code> is mutable, <code>const_iterator</code> otherwise <A href="#4">[4]</A> <A href="#7">[7]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+End of range
+</td>
+<td valign="top">
+<code>a.end()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>iterator</code> if <code>a</code> is mutable, <code>const_iterator</code> otherwise <A href="#4">[4]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Size
+</td>
+<td valign="top">
+<code>a.size()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>size_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Maximum size
+</td>
+<td valign="top">
+<code>a.max_size()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>size_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Empty container
+</td>
+<td valign="top">
+<code>a.empty()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Convertible to <code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Swap
+</td>
+<td valign="top">
+<code>a.swap(b)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>void</code>
+</td>
+</tr>
+</table>
+\section Expression_semantics Expression semantics
+Semantics of an expression is defined only where it differs from, or 
+is not defined in,
+\ref stldoc_Assignable, \ref stldoc_EqualityComparable,
+or \ref stldoc_LessThanComparable
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Name
+</TH>
+<TH>
+Expression
+</TH>
+<TH>
+Precondition
+</TH>
+<TH>
+Semantics
+</TH>
+<TH>
+Postcondition
+</TH>
+</tr>
+<tr>
+<td valign="top">
+Copy constructor
+</td>
+<td valign="top">
+<code>X(a)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>X().size() == a.size()</code>.  <code>X()</code> contains a copy of each of <code>a</code>'s elements.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Copy constructor
+</td>
+<td valign="top">
+<code>X b(a);</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>b.size() == a.size()</code>.  <code>b</code> contains a copy of each of <code>a</code>'s elements.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Assignment operator
+</td>
+<td valign="top">
+<code>b = a</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+<code>b.size() == a.size()</code>.  <code>b</code> contains a copy of each of <code>a</code>'s elements.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Destructor
+</td>
+<td valign="top">
+<code>a.~X()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Each of <code>a</code>'s elements is destroyed, and memory allocated for them
+   (if any) is deallocated.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Beginning of range
+</td>
+<td valign="top">
+<code>a.begin()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns an iterator pointing to the first element in the container. <A href="#7">[7]</A>
+</td>
+<td valign="top">
+<code>a.begin()</code> is either dereferenceable or past-the-end.  It is
+   past-the-end if and only if <code>a.size() == 0</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+End of range
+</td>
+<td valign="top">
+<code>a.end()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns an iterator pointing one past the last element in the
+   container.
+</td>
+<td valign="top">
+<code>a.end()</code> is past-the-end.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Size
+</td>
+<td valign="top">
+<code>a.size()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns the size of the container, that is, its number of elements. <A href="#8">[8]</A>
+</td>
+<td valign="top">
+<code>a.size() &gt;= 0 &amp;&amp; a.size() &lt;= max_size()</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Maximum size
+</td>
+<td valign="top">
+<code>a.max_size()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Returns the largest size that this container can ever have. <A href="#8">[8]</A>
+</td>
+<td valign="top">
+<code>a.max_size() &gt;= 0 &amp;&amp; a.max_size() &gt;= a.size()</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Empty container
+</td>
+<td valign="top">
+<code>a.empty()</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Equivalent to <code>a.size() == 0</code>.  (But possibly faster.)
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+Swap
+</td>
+<td valign="top">
+<code>a.swap(b)</code>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+<td valign="top">
+Equivalent to <code>swap(a,b)</code> <A href="#9">[9]</A>
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Complexity_guarantees Complexity guarantees
+The copy constructor, the assignment operator, and the destructor
+   are linear in the container's size.
+<p>
+<code>begin()</code> and <code>end()</code> are amortized constant time.
+<p>
+<code>size()</code> is linear in the
+   container's size. <A href="#10">[10]</A>  <code>max_size()</code> and 
+   <code>empty()</code> are amortized constant time.  If you are
+   testing whether a container is empty, you should always write
+   <code>c.empty()</code> instead of <code>c.size() == 0</code>.  The two expressions are
+   equivalent, but the former may be much faster.
+<p>
+<code>swap()</code> is amortized constant time. <A href="#9">[9]</A>
+\section Invariants Invariants
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<td valign="top">
+Valid range
+</td>
+<td valign="top">
+For any container <code>a</code>, <code>[a.begin(), a.end())</code> is a valid
+   range. <A href="#11">[11]</A>
+</td>
+</tr>
+<tr>
+<td valign="top">
+Range size
+</td>
+<td valign="top">
+<code>a.size()</code> is equal to the distance from <code>a.begin()</code> to <code>a.end()</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+Completeness
+</td>
+<td valign="top">
+An algorithm that iterates through the range <code>[a.begin(), a.end())</code>
+   will pass through every element of <code>a</code>. <A href="#11">[11]</A>
+</td>
+</tr>
+</table>
+\section Models Models
+<ul>
+<li>
+ \ref stldoc_Vector
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+The fact that the lifetime of elements cannot exceed that of of
+their container may seem like a severe restriction.  In fact, though,
+it is not.  Note that pointers and iterators are objects; like any
+other objects, they may be stored in a container.  The container, in
+that case, &quot;owns&quot; the pointers themselves, but not the objects that
+they point to.
+<p><A name="2">[2]</A>
+This expression must be a <code>typedef</code>, that is, a synonym for
+a type that already has some other name.
+<p><A name="3">[3]</A>
+This may either be a <code>typedef</code> for some other type, or else
+a unique type that is defined as a nested class within the class 
+<code>X</code>.
+<p><A name="4">[4]</A>
+A container's iterator type and const iterator type may be the
+same: there is no guarantee that every container must have an
+associated mutable iterator type.  For example, <code>\ref stldoc_set</code> and
+<code>\ref stldoc_hash_set</code> define <code>iterator</code> and <code>const_iterator</code> to be
+the same type.
+<p><A name="5">[5]</A>
+It is required that the reference type has the same semantics as
+an ordinary C++ reference, but it need not actually be an ordinary C++
+reference.  Some implementations, for example, might provide
+additional reference types to support non-standard memory models.
+Note, however, that &quot;smart references&quot; (user-defined reference types
+that provide additional functionality) are not a viable option.  It is
+impossible for a user-defined type to have the same semantics as C++
+references, because the C++ language does not support redefining the
+member access operator (<code>operator.</code>).
+<p><A name="6">[6]</A>
+As in the case of references <A href="#5">[5]</A>, the pointer type must have the
+same semantics as C++ pointers but need not actually be a C++ pointer.
+&quot;Smart pointers,&quot; however, unlike &quot;smart references&quot;, are possible.
+This is because it is possible for user-defined types to define the
+dereference operator and the pointer member access operator, 
+<code>operator*</code> and <code>operator-&gt;</code>.
+<p><A name="7">[7]</A>
+The iterator type need only be an <i>input iterator</i>, which
+provides a very weak set of guarantees; in particular, all algorithms
+on input iterators must be &quot;single pass&quot;.  It follows that only a single
+iterator into a container may be active at any one time.  This restriction
+is removed in \ref stldoc_ForwardContainer.
+<p><A name="8">[8]</A>
+In the case of a fixed-size container, <code>size() == max_size()</code>.
+<p><A name="9">[9]</A>
+For any \ref stldoc_Assignable type, \ref stldoc_swap can be defined in terms of
+assignment.  This requires three assignments, each of which, for 
+a container type, is linear in the container's size.  In a sense,
+then, <code>a.swap(b)</code> is redundant.  It exists solely for the sake of
+efficiency: for many containers, such as \ref stldoc_Vector and \ref stldoc_List,
+it is possible to implement <code>swap</code> such that its run-time complexity
+is constant rather than linear.  If this is possible for some container
+type <code>X</code>, then the template specialization <code>\ref stldoc_swap(X&amp;, X&amp;)</code> can
+simply be written in terms of <code>X::swap(X&amp;)</code>.  The implication of this
+is that <code>X::swap(X&amp;)</code> should <b>only</b> be defined if there exists such
+a constant-time implementation.  Not every container class <code>X</code> need
+have such a member function, but if the member function exists at all then
+it is guaranteed to be amortized constant time.
+<p><A name="10">[10]</A>
+For many containers, such as <code>\ref stldoc_Vector</code> and <code>\ref stldoc_Deque</code>, <code>size</code> is
+<i>O(1</i>).  This satisfies the requirement that it be <i>O(N</i>).
+<p><A name="11">[11]</A>
+Although <code>[a.begin(), a.end())</code> must be a valid range, and must
+include every element in the container, the order in which the elements
+appear in that range is unspecified.  If you iterate through a container
+twice, it is not guaranteed that the order will be the same both
+times.  This restriction is removed in \ref stldoc_ForwardContainer.
+\section See_also See also
+The \ref stldoc_Iterators, \ref stldoc_InputIterator, \ref stldoc_Sequence
+
+
+*/

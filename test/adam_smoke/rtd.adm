@@ -1,0 +1,18 @@
+sheet velocity
+{
+interface:
+    meters  : 1.0;
+    seconds : 1.0;
+    rate    : 1.0;
+
+logic:
+    relate
+    {
+        meters  <== rate * seconds;
+        rate    <== meters / seconds;
+        seconds <== meters / rate;
+    }
+
+output:
+    result      <== [ rate, seconds, meters ];
+}

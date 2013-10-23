@@ -1,0 +1,440 @@
+	<div id="globalWrapperHacked">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">New Build Documentation</h1>
+		<div id="bodyContent">
+			<div id="contentSub"></div>
+			<p><i>This documentation last updated during the ASL 1.0.40 distribution.</i>
+</p>
+            <table id="toc" class="toc" summary="Contents"><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class='toclevel-1'><a href="#Building_ASL_:_Requirements"><span class="tocnumber">1</span> <span class="toctext">Building ASL&nbsp;: Requirements</span></a></li>
+<li class='toclevel-1'><a href="#The_Easy_Way"><span class="tocnumber">2</span> <span class="toctext">The Easy Way</span></a>
+<ul>
+<li class='toclevel-2'><a href="#If_you_are_Inside_Adobe"><span class="tocnumber">2.1</span> <span class="toctext">If you are Inside Adobe</span></a></li>
+<li class='toclevel-2'><a href="#Building_the_Libraries_Automatically"><span class="tocnumber">2.2</span> <span class="toctext">Building the Libraries Automatically</span></a></li>
+</ul>
+</li>
+<li class='toclevel-1'><a href="#The_Other_Way"><span class="tocnumber">3</span> <span class="toctext">The Other Way</span></a>
+<ul>
+<li class='toclevel-2'><a href="#Obtaining_and_Patching_TBB"><span class="tocnumber">3.0</span> <span class="toctext">Obtaining and Patching Intel Thread Building Blocks</span></a></li>
+<li class='toclevel-2'><a href="#Obtaining_and_Patching_Boost"><span class="tocnumber">3.1</span> <span class="toctext">Obtaining and Patching Boost</span></a></li>
+<li class='toclevel-2'><a href="#Patching_Boost"><span class="tocnumber">3.2</span> <span class="toctext">Patching Boost</span></a>
+<ul>
+<li class='toclevel-3'><a href="#Patching_under_.2Anix"><span class="tocnumber">3.2.1</span> <span class="toctext">Patching under *N*X</span></a></li>
+<li class='toclevel-3'><a href="#Patching_under_Win32"><span class="tocnumber">3.2.2</span> <span class="toctext">Patching under Win32</span></a></li>
+</ul>
+</li>
+<li class='toclevel-2'><a href="#Build_Option_1:_Using_Boost_Build_.28bjam.29"><span class="tocnumber">3.3</span> <span class="toctext">Build Option 1: Using Boost Build (bjam)</span></a>
+<ul>
+<li class='toclevel-3'><a href="#Building_Under_Win32"><span class="tocnumber">3.3.1</span> <span class="toctext">Building Under Win32</span></a>
+<ul>
+<li class='toclevel-4'><a href="#For_MSVC_8_Express_Users"><span class="tocnumber">3.3.1.1</span> <span class="toctext">For MSVC 8 Express Users</span></a></li>
+</ul>
+</li>
+<li class='toclevel-3'><a href="#Building_for_Mac.2C_.2ANIX"><span class="tocnumber">3.3.2</span> <span class="toctext">Building for Mac, *N*X</span></a>
+<ul>
+<li class='toclevel-4'><a href="#MacOS_X_Universal_Binary_Support"><span class="tocnumber">3.3.2.1</span> <span class="toctext">MacOS X Universal Binary Support</span></a></li>
+</ul>
+</li>
+<li class='toclevel-3'><a href="#Troubleshooting_the_Build"><span class="tocnumber">3.3.3</span> <span class="toctext">Troubleshooting the Build</span></a></li>
+<li class='toclevel-3'><a href="#bjam_Details"><span class="tocnumber">3.3.4</span> <span class="toctext">bjam Details</span></a>
+<ul>
+<li class='toclevel-4'><a href="#Jamfile.v2_Miscellanea"><span class="tocnumber">3.3.4.1</span> <span class="toctext">Jamfile.v2 Miscellanea</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class='toclevel-2'><a href="#Build_Option_2:_Using_an_IDE"><span class="tocnumber">3.4</span> <span class="toctext">Build Option 2: Using an IDE</span></a>
+<ul>
+<li class='toclevel-3'><a href="#Building_with_MSVC_8"><span class="tocnumber">3.4.1</span> <span class="toctext">Building with MSVC 9</span></a></li>
+<li class='toclevel-3'><a href="#Building_with_XCode"><span class="tocnumber">3.4.2</span> <span class="toctext">Building with XCode</span></a>
+<ul>
+<li class='toclevel-4'><a href="#MacOS_X_Universal_Binary_Support_2"><span class="tocnumber">3.4.2.1</span> <span class="toctext">MacOS X Universal Binary Support</span></a></li>
+<li class='toclevel-4'><a href="#MacOS_X_Binary_Artifact_Compatibility"><span class="tocnumber">3.4.2.2</span> <span class="toctext">MacOS X Binary Artifact Compatibility</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class='toclevel-1'><a href="#Known_Issues"><span class="tocnumber">4</span> <span class="toctext">Known Issues</span></a>
+<ul>
+<li class='toclevel-2'><a href="#General_Issues"><span class="tocnumber">4.1</span> <span class="toctext">General Issues</span></a></li>
+<li class='toclevel-2'><a href="#Issues_Surrounding_MSVC_8.0.27s_.22Safe.22_Libraries"><span class="tocnumber">4.2</span> <span class="toctext">Issues Surrounding MSVC 9.0's "Safe" Libraries</span></a></li>
+<li class='toclevel-2'><a href="#Executing_Adobe_Begin_on_Windows_XP_on_a_Non-Development_Machine"><span class="tocnumber">4.3</span> <span class="toctext">Executing Adobe Begin on Windows XP on a Non-Development Machine</span></a></li>
+</ul>
+</li>
+<li class='toclevel-1'><a href="#Feedback"><span class="tocnumber">5</span> <span class="toctext">Feedback</span></a></li>
+</ul>
+</td></tr></table><script type="text/javascript"> if (window.showTocToggle) { var tocShowText = "show"; var tocHideText = "hide"; showTocToggle(); } </script>
+<a name="Building_ASL_:_Requirements"></a><h1> Building ASL&nbsp;: Requirements </h1>
+<p>In order to build ASL, the requirements are as follows:
+</p>
+<ol><li> A working installation of:
+<ol><li> GCC 4.2.0 or better (cygwin, partial build) (may still work with 3.4.x--no longer tested)
+</li><li> GCC 4.0.1 or better (MacOS X)
+</li><li> MSVC 8.0 SP1 or better (Win32)
+</li><li> MSVC 8 Express (additional instructions needed to get MSVC 8 Express ready to build ASL; Please see below.)
+</li></ol>
+</li><li> A <i>patched</i> copy of Boost 1.37.0 distribution
+</li><li> A copy of the latest ASL distribution
+</li><li> Patience
+</li></ol>
+<a name="The_Easy_Way"></a><h1> The Easy Way </h1>
+<a name="If_you_are_Inside_Adobe"></a><h2> If you are Inside Adobe </h2>
+<p>Within Adobe the Software Technology Lab maintains Perforce servers for distributions of both Boost and the Adobe Source Libraries. This is the preferred method of downloading ASL within Adobe, as the Boost sources are already patched and placed correctly. Please see the STLab website for more information on getting ASL this way.
+</p><p><i>The rest of this document is not for you.</i>
+</p>
+<a name="Building_the_Libraries_Automatically"></a><h2> Building the Libraries Automatically </h2>
+<p>Two automated net install scripts have been written to ease in the downloading and building of the Adobe Source Libraries. Given a development environment, these scripts will do all the downloading, patching and building necessary to get a working build of ASL and Adobe Begin on your computer.
+</p><p>The Windows version can be downloaded from <a href="http://easynews.dl.sourceforge.net/sourceforge/adobe-source/asl_1.0.40_net_setup.bat" class='external free' title="http://easynews.dl.sourceforge.net/sourceforge/adobe-source/asl_1.0.40_net_setup.bat" rel="nofollow">http://easynews.dl.sourceforge.net/sourceforge/adobe-source/asl_1.0.40_net_setup.bat</a>
+</p><p>The *N*X (including Mac OS X) version can be downloaded from <a href="http://easynews.dl.sourceforge.net/sourceforge/adobe-source/asl_1.0.40_net_setup.sh" class='external free' title="http://easynews.dl.sourceforge.net/sourceforge/adobe-source/asl_1.0.40_net_setup.sh" rel="nofollow">http://easynews.dl.sourceforge.net/sourceforge/adobe-source/asl_1.0.40_net_setup.sh</a>
+</p><p>Please also be aware that the script requires use of FTP and HTTP. If you are behind a firewall or cannot otherwise use FTP, the scripts will not work.
+</p><p><i>The rest of this document is not for you.</i>
+</p>
+<a name="The_Other_Way"></a><h1> The Other Way </h1>
+<a name="Obtaining_and_Patching_TBB"></a><h2> Obtaining and Patching Intel Thread Building Blocks </h2>
+<p>The Intel Thread Building Blocks tbb21_009oss source distribution can be downloaded from <a href="http://www.threadingbuildingblocks.org/ver.php?fid=122" class='external free' title="http://www.threadingbuildingblocks.org/ver.php?fid=122" rel="nofollow">http://www.threadingbuildingblocks.org/ver.php?fid=122</a></p>
+<p>Decompress the  distribution and move the resulting directory to: </p>
+<pre> ~/adobe_root/ (*N*X)
+ C:\adobe_root\ (Windows)
+</pre>
+<p>The folder should be named intel_tbb_libraries resulting in the structure: </p>
+<pre> ~/adobe_root/intel_tbb_libraries/ (*N*X)
+ C:\adobe_root\intel_tbb_libraries\ (Windows)
+</pre>
+<p>It is not necessary to build the Intel TBB library with this release. The Adobe libraries currently depend only upon the headers of the Intel Library.</p>
+<p><a name="Obtaining_and_Patching_Boost"></a>
+</p>
+<h2> Obtaining and Patching Boost </h2>
+<p>The Boost 1.37.0 distribution can be downloaded from <a href="http://sourceforge.net/project/showfiles.php?group_id=7586" class='external free' title="http://sourceforge.net/project/showfiles.php?group_id=7586" rel="nofollow">http://sourceforge.net/project/showfiles.php?group_id=7586</a></p>
+<p><a name="Patching_Boost"></a></p>
+<h2> Patching Boost </h2>
+<p>Decompress the Boost distribution and move the resulting directory to:
+</p>
+<pre> ~/adobe_root/ (*N*X)
+ C:\adobe_root\ (Windows)
+</pre>
+<p>The folder should be named boost_libraries resulting in the structure:
+</p>
+<pre> ~/adobe_root/boost_libraries/ (*N*X)
+ C:\adobe_root\boost_libraries\ (Windows)
+</pre>
+<p>Boost must be patched with a small number of minor changes. A patchfile
+with those changes can be found at:
+</p>
+<pre> ~/adobe_root/adobe_source_libraries/tools/boost_1_37_0_patch_01.txt (*N*X)
+ C:\adobe_root\adobe_source_libraries\boost_1_37_0_patch_01.txt (Windows)
+</pre>
+<a name="Patching_under_.2Anix"></a><h3> Patching under *N*X </h3>
+<p>You can use the Unix patch command to make the necessary changes, but
+first make sure all the line endings in the affected files are Unix line
+endings. To use the supplied patch under Unix issue the following
+command:
+</p>
+<pre> ~/adobe_root/adobe_source_libraries/tools/patch_boost.sh
+</pre>
+<a name="Patching_under_Win32"></a><h3> Patching under Win32 </h3>
+<p>Win32 users can use the patchfile provided, but there are some caveats. First, the patchfile is distributed with Unix line endings, which must first be converted to DOS line endings. If you do not have a program to accomplish this, there is a small command line tool called <code>leconv</code> that will do this for you. It is in:
+</p>
+<pre> C:\adobe_root\adobe_platform_libraries\tools\
+</pre>
+<p>The GNUWin32 project has made a version of patch for Win32. It
+can be obtained at <a href="http://sourceforge.net/projects/gnuwin32" class='external free' title="http://sourceforge.net/projects/gnuwin32" rel="nofollow">http://sourceforge.net/projects/gnuwin32</a>
+</p><p>If you already use boost build, please make sure that the adobe
+version of bjam will be the one found in your path, since ASL relies
+on patched support files found relative to the bjam executable.
+</p>
+<a name="Build_Option_1:_Using_Boost_Build_.28bjam.29"></a><h2> Build Option 1: Using Boost Build (bjam) </h2>
+<p>Boost 1.37.0 ships with a single version of the build tool that supports both v1 and v2 syntax. When the Adobe patch instructions are followed, boost build will be upgraded to be able to produce universal binaries on the macintosh, but only when bjam invoked using v2 syntax. V1 files are untouched by the patch. If you will be moving from v1 to v2 syntax then the guide at <a href="http://boost.sourceforge.net/boost-build2/doc/html/bbv2/vs_v1.html" class='external free' title="http://boost.sourceforge.net/boost-build2/doc/html/bbv2/vs_v1.html" rel="nofollow">http://boost.sourceforge.net/boost-build2/doc/html/bbv2/vs_v1.html</a> may be of some use.
+</p>
+<a name="Building_Under_Win32"></a><h3> Building Under Win32 </h3>
+<p>The Adobe Source Libraries have been compiled and tested under MSVC
+  9.
+Assuming you have installed ASL to the top of your C drive, the
+directory structure for setting up a build is as follows:
+</p>
+<pre> C:\adobe_root\adobe_source_libraries\
+ C:\adobe_root\adobe_platform_libraries\
+ C:\adobe_root\boost_libraries\
+</pre>
+<p>Note that the contents of the adobe directories are obtained through the
+ASL distributions, while the boost directory contains a patched release
+of Boost.
+</p><p>Building the ASL libraries is handled through a build script that will
+setup the Boost build system and then build the ASL. Open up a Win32 command line terminal and run:
+</p>
+<pre> cd C:\adobe_root\adobe_platform_libraries
+ ..\adobe_source_libraries\tools\build.bat
+</pre>
+<p>Once this batch file has completed, you don't need to run it
+again to build ASL. A more efficient way to build ASL would be to open
+up a Win32 command line terminal, and run:
+</p>
+<pre> cd C:\adobe_root\adobe_platform_libraries
+ ..\adobe_source_libraries\tools\bjam.exe
+</pre>
+<p>You must build from under
+  the <pre>C:\adobe_root\adobe_platform_libraries </pre> directory in
+  order to assure that all artifacts are built. If you only require
+  the adobe_source_libraries, but not the adobe_platform_libraries,
+  you can build from <pre>C:\adobe_root\adobe_source_libraries</pre>
+  instead.
+</p>
+<a name="For_MSVC_8_Express_Users"></a><h4> For MSVC 8 Express Users </h4>
+<p>When we last tested, VC 8 Express was not capable of building Win32
+executables out of the box and would fail to build ASL. here are some
+notes on updating MSVC 8 Express to be Win32/ASL capable:
+</p><p>1.  You must begin by downloading the platform SDK from <a href="http://www.microsoft.com/downloads/details.aspx?FamilyId=0BAF2B35-C656-4969-ACE8-E4C0C0716ADB&amp;displaylang=en" class='external free' title="http://www.microsoft.com/downloads/details.aspx?FamilyId=0BAF2B35-C656-4969-ACE8-E4C0C0716ADB&amp;displaylang=en" rel="nofollow">Microsoft's website.</a>
+</p><p>If you use the web install you can choose <i>not</i> to download most of the SDK components to save time. Only the Core SDK appears to be required.
+</p><p>2.  Copy the "bin", "include" and "lib" directory from the PSDK-installation into "%ProgramFiles%\Microsoft Visual Studio 8\VC"
+</p><p>At this point, for example, windows.h should be available within your
+MSVC installation. This would be a good time to make sure that you can
+successfully build the IDE project "Begin" located in
+...\adobe_root\adobe_platform_libraries\msvc_ide\vc8 
+</p><p>Another issue was that boost build v2 from boost 1.33.1 did not
+provide a VC 8 Express savvy msvc-config, so we must configure boost
+build manually. Follow the next steps to complete VC 8 Express
+specific preparation:
+</p><p>3.  Choose a "home" directory, and add a %HOME% environment variable
+referring to it. For example, if you chose "C:\Home", you would set
+the env var by opening the system control
+panel/advanced/environment variables and adding the variable HOME
+for all users with value C:\Home.
+</p><p>4.  Now create a file in the chosen HOME directory named
+user-config.jam . The file must contain the following contents
+(assuming that you installed VC 8 Express in the default location):
+</p>
+<pre> import toolset&nbsp;: using&nbsp;;
+ using msvc&nbsp;: 8.0&nbsp;: "C:\Program Files\Microsoft Visual Studio 8\VC\bin\cl.exe"&nbsp;;
+</pre>
+<p>5. Open a fresh command window (to pick up the new env var), cd to
+your C:\adobe_root\adobe_platform_libraries directory and invoke ..\adobe_source_libraries\tools\build.bat
+and you should be on your way.
+</p>
+<a name="Building_for_Mac.2C_.2ANIX"></a><h3> Building for Mac, *N*X </h3>
+<p>The adobe_source_libraries component has been compiled and tested
+under various versions of GCC 4.3.0. The adobe_platform_libraries
+component is currently not supported under *N*X or cygwin. If you have
+installed ASL to your home directory, the directory structure for
+setting up a build is as follows:
+</p>
+<pre> ~/adobe_root/adobe_source_libraries/
+~/adobe_root/adobe_platform_libraries/ # unused under *N*X/cygwin
+~/adobe_root/boost_libraries/
+~/adobe_root/intel_tbb_libraries/ # unused under cygwin
+</pre>
+<p>Note that the contents of the adobe directories are obtained
+through the ASL distribution, while the boost/intel directories
+contain (patched) releases of those third party libraries.
+</p><p>Building the ASL libraries is handled through a build script
+that will setup the Boost build system and then build the ASL. The
+build script is called:
+</p>
+<pre> ~/adobe_root/adobe_source_libraries/tools/build.sh
+</pre>
+<p>Running this script from a command line from the
+  <pre>~/adobe_root/adobe_platform_libraries</pre> directory will begin the build
+  process.  Once this batch file has completed, you don't need to run
+  it again to build ASL. A more efficient way to build ASL would be to
+  open up a command line terminal and run:
+</p>
+<pre> cd ~/adobe_root/adobe_platform_libraries
+ ../adobe_source_libraries/tools/bjam
+</pre>
+<p>You must build from under
+the <pre>~/adobe_root/adobe_platform_libraries </pre> directory in
+order to assure that all artifacts are built. If you only require the
+adobe_source_libraries, or if you if you are on a platform for which
+only adobe_source_libraries are supported (*N*X or cygwin), you can
+build from <pre>~/adobe_root/adobe_source_libraries</pre> instead.
+</p>
+<a name="MacOS_X_Universal_Binary_Support"></a><h4> MacOS X Universal Binary Support </h4>
+<p>By default ASL is set up to build Universal Binaries for release targets. In
+order to disable universal binary building within ASL
+</p>
+<pre> ~/adobe_root/adobe_source_libraries/Jamfile.v2
+</pre>
+<p>and edit the MACOSX case involving the &lt;architecture&gt;combined clause.
+</p>
+<a name="Troubleshooting_the_Build"></a><h3> Troubleshooting the Build </h3>
+<p>Build fails to run? Check:
+</p>
+<ul>
+  <li>Intel TBB is in the proper place</li>
+  <li> Boost is in its proper place
+  </li>
+  <li> Boost was properly patched</li><li> Permissions allow execution of the build scripts
+</li><li> Line endings of all files are correct for your platform
+</li><li> Build commands were invoked from proper directory
+</li><li> Do not try to use MSVC 8 Express without following Express-specific notes above
+</li><li> Make sure no other bjam executables will be picked up in your PATH ahead of the adobe provided version.
+</li><li> Don't try to build adobe_platform_libraries under cygwin or
+*N*X. Only adobe_source_libraries are presently tested on those platforms.
+</li></ul>
+<a name="bjam_Details"></a><h3> bjam Details </h3>
+<p>Executing the build script will build various excecutables including
+bjam (boost build, compatible with version 1 and 2) in a sub-directory
+named after the platform, and copy it into the ASL tools directory. The
+build will then cause all libraries including libasl, libasl_dev, and
+the appropriate pieces of Boost to be built. It will also build and run
+several test applications. Copious output will be produced, indicating
+the success or failure of the build and the associated tests. Debug and
+Release targets are supported. The default is to build and use static
+libraries throughout, except that DLL versions of platform runtime
+libraries are employed.
+</p><p>The "projects" used by BBv2 are always named Jamfile.v2. Each
+Jamfile.v2 inherits settings from any Jamfile.v2's that appear in its
+parent directories, so the Jamfile.v2's in the test directories are
+relatively sparse.
+</p>
+<a name="Jamfile.v2_Miscellanea"></a><h4> Jamfile.v2 Miscellanea </h4>
+<ul><li> Some Jamfile.v2's specify build requirements and settings that will be applied to all users of a library.
+</li><li> passing bjam the -d2 option will cause the commands used in the build to be displayed.
+</li><li> Adobe libs and executables are written to a sub-directory of
+</li></ul>
+<pre> ~/adobe_root/built_artifacts/ (*N*X)
+</pre>
+<p>or
+</p>
+<pre> C:\adobe_root\built_artifacts\ (Windows)
+</pre>
+<p>named according to the build settings. There are also 'bundled'
+  artifact collections that, if built explicitly via
+  <pre> bjam test/begin//install_program</pre> will appear under:
+</p>
+<pre> ~/adobe_root/built_artifacts/install/ (*N*X)
+</pre>
+<p>or
+</p>
+<pre> C:\adobe_root\built_artifacts\install\ (Windows)
+</pre>
+<ul><li> The required boost libraries, including filesystem, threads,
+    parts of test, and signal, will be built in a sub-directory of
+</li></ul>
+<pre> ~/adobe_root/boost_libraries/bin.v2/ (*N*X)
+</pre>
+<p>or
+</p>
+<pre> C:\adobe_root\boost_libraries\bin.v2\ (Windows)
+</pre>
+<ul><li> It is possible to create an IDE project for MSVC (and probably for XCode, although this has not been tested) that links to the static libs in the appropriate bin folders. In this scenario it is very important to make sure that the compiler and linker settings used in the IDE match those used for the artifacts produced using BBv2. The -d2 option above is helpful for this purpose. If you try this and receive many link errors on Windows it maybe that your C++/code generation/runtime settings are set to /MTd instead of /MDd.
+</li></ul>
+<ul><li> More information on BBv2 can be found at <a href="http://boost.sourceforge.net/boost-build2/doc/html/index.html" class='external free' title="http://boost.sourceforge.net/boost-build2/doc/html/index.html" rel="nofollow">http://boost.sourceforge.net/boost-build2/doc/html/index.html</a>
+</li></ul>
+<a name="Build_Option_2:_Using_an_IDE"></a><h2> Build Option 2: Using an IDE </h2>
+<a name="Building_with_MSVC_8"></a><h3> Building with MSVC 9 </h3>
+<p>There are MSVC 9 .sln and .vcproj files available for use at
+</p>
+<pre> C:\adobe_root\adobe_platform_librariesmsvc_ide\
+</pre>
+<p>Opening the begin.sln file and building the 'begin' project will build all the necessary library dependencies (including the needed Boost libraries.)
+</p>
+<a name="Building_with_XCode"></a><h3> Building with XCode </h3>
+<p>There are XCode .xcodeproj files available for use at
+</p>
+<pre> C:\adobe_root\adobe_platform_libraries\xcode_ide\
+</pre>
+<p>Opening the begin.xcodeproj file and building any configuration therein will build all the necessary library dependencies (including the needed Boost libraries.)
+</p>
+<a name="MacOS_X_Universal_Binary_Support_2"></a><h4> MacOS X Universal Binary Support </h4>
+<p>To disable building Universal Binaries with the XCode IDE projects, open
+the top-level xcconfig file for your respective binary. For example:
+</p>
+<pre> ~/adobe_root/adobe_platform_libraries/xcode_ide/adobe_xconfig_application.xcconfig
+</pre>
+<p>and edit the value in the "Artifact Architecture" section. Reloading the
+XCode IDE projects at that time will cause Universal Binary support to
+be dropped, building only PowerPC versions of the binaries.
+Alternatively, you can drop "ppc" if you are only interested in building
+MacTel versions of the binaries.
+</p>
+<a name="MacOS_X_Binary_Artifact_Compatibility"></a><h4> MacOS X Binary Artifact Compatibility </h4>
+<p>On Mac OS X there is an environment variable
+<code>MACOSX_DEPLOYMENT_TARGET</code> that can be optionally set to
+10.1, 10.2, 10.3, or 10.4. When this variable is set to one of those
+values, it establishes the minimum operating system version that is
+supported by your binary artifact. For the Adobe Source Libraries, all
+binaries are built by default with a minimum compatibility of Mac OS X 10.4.</p>
+<p>In bjam, this variable is set in the top level Jamfile. </p>
+<p>In XCode, this is managed with the top-level xcconfig file for the
+binary artifact.
+</p>
+<a name="Known_Issues"></a><h1> Known Issues </h1>
+<a name="General_Issues"></a><h2> General Issues </h2>
+<p>We are aware the release is generally quite cumbersome, and are still
+figuring out how to package releases more efficiently.
+</p><p>BBv2 intentionally builds the debug variant of ASL with "warnings as
+errors" turned on. The release variant is not built with this setting on
+because of warnings within some library headers in the GCC STL.
+</p>
+<a name="Issues_Surrounding_MSVC_8.0.27s_.22Safe.22_Libraries"></a><h2> Issues Surrounding MSVC 's "Safe" Libraries </h2>
+<p>ASL does not support the non-standard "Safe" C and C++ libraries
+shipping beginning with Visual C++ 8.0. This may result in many spurious warnings
+from ASL, Boost, and other standards-conforming C and C++ libraries. To
+suppress these warnings, define the macros
+</p>
+<pre> _CRT_SECURE_NO_DEPRECATE
+</pre>
+<p>and
+</p>
+<pre> _SCL_SECURE_NO_DEPRECATE
+</pre>
+<p>The MSVC command-line settings to define these macros is:
+</p>
+<pre> \D_CRT_SECURE_NO_DEPRECATE \D_SCL_SECURE_NO_DEPRECATE
+</pre>
+<p>The ASL header file <code>adobe/config.hpp</code> includes checks when compiling
+with MSVC 8.0 to make sure these macros are defined. To disable this
+check, define the following macro before including <code>adobe/config.hpp</code>:
+</p>
+<pre> ADOBE_TEST_MICROSOFT_NO_DEPRECATE=0
+</pre>
+<p>The Jamfile at the top of the ASL distribution has this macro defined by
+default. Another option to disable the warnings in your code is by
+supressing the warnings with a pragma:
+</p>
+<pre> #pragma warning ( disable&nbsp;: 4996 )
+</pre>
+<a name="Executing_Adobe_Begin_on_Windows_XP_on_a_Non-Development_Machine"></a><h2> Executing Adobe Begin on Windows XP on a Non-Development Machine </h2>
+<p>When an app is built using a version of MSVC, that version of
+Microsoft's Runtimes Libraries must be 'findable' by the OS in order to
+launch the application. Part of Microsoft's solution to this problem
+includes the embedding of an application manifest file into the
+application. On development machines, these files are automatically
+installed in C:\WINDOWS\system32\. The manifest file describes the
+binary's dependencies to external DLLs, and the OS reads the file and
+hunts down the dependencies to load them. In a clean-install XP system,
+the Runtime Libraries for MSVC 7.0, 7.1, 8, and 9 do not exist, which will
+lead ultimately to the failure to launch applications built with these
+compilers on non-development machines.
+</p><p>Our current workaround to this problem is to *not* embed the manifest
+file in the binary directly, but leave it as a sibling to the app. Then
+the necessary runtime libraries must also be placed as siblings to the
+app, along with a manifest file describing them to the OS. For some
+reason both of these steps are required, and then the app will run in a
+clean XP installation. (Thanks to Ken Silver for being the first
+one report Adobe Begin failing to load on his non-development machine.)
+</p>
+<a name="Feedback"></a><h1> Feedback </h1>
+<p>The Adobe Source Libraries have been used with success within Adobe
+applications to increase robustness and correctness of code. As
+developers of an open source project, we are confident that there are
+other success stories outside of Adobe as well. We encourage you to
+contribute a story of your own:
+</p>
+<ul><li> What is the name of your project?
+</li><li> What is the purpose of the project?
+</li><li> What led you to choose ASL?
+</li><li> Was ASL used from the start of the project? If not, how did its inclusion impact your project? How does using ASL affect your project development as a whole?
+</li><li> How large is your project?
+</li><li> How would you rate the success of your project?
+</li><li> Is there any other interesting information worth sharing?
+</li></ul>
+<p>Submissions will be included in a success stories web page on the
+stlab.adobe.com site. You can submit your story by emailing
+Mat Marcus at his adobe.com email address (mmarcus).
+</p><p>Feedback of any kind is highly valued. Please contact one of the project leads.
+</p>

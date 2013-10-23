@@ -1,0 +1,256 @@
+/** \page stldoc_functors functors
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td width="100%"></td>
+<td align="right">\image html overview.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b> : functors</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: overview</td>
+</tr>
+</table>
+
+\section Summary Summary
+A <i>Function Object</i>, or <i>Functor</i> (the two terms are synonymous)
+is simply any object that can be called as if it is a function.
+An ordinary function is a function object, and so is a function pointer;
+more generally, so is an object of a class that defines
+<code>operator()</code>.
+\section Description Description
+The basic function object concepts are \ref stldoc_Generator,
+\ref stldoc_UnaryFunction, and \ref stldoc_BinaryFunction : these describe,
+respectively, objects that can be called as <code>f()</code>, <code>f(x)</code>, and
+<code>f(x,y)</code>.  (This list could obviously be extended to <i>ternary function</i>
+and beyond, but, in practice, no STL algorithms require function
+objects of more than two arguments.)  All other function object
+concepts defined by the STL are refinements of these three.
+<p>
+Function objects that return <code>bool</code> are
+an important special case.
+A \ref stldoc_UnaryFunction whose return type is <code>bool</code> is called a
+\ref stldoc_Predicate, and a \ref stldoc_BinaryFunction whose return type is 
+<code>bool</code> is called a \ref stldoc_BinaryPredicate.
+<p>
+There is an important distinction, but a somewhat subtle one, between
+function objects and <i>adaptable function objects</i>. <A href="#1">[1]</A>  In general, a
+function object has restrictions on the type of its argument.  The
+type restrictions need not be simple, though : <code>operator()</code> may be
+overloaded, or may be a member template, or both.  Similarly, there
+need be no way for a program to determine what those restrictions are.
+An adaptable function object, however, does specify what the argument
+and return types are, and provides nested <code>typedef</code>s so that those
+types can be named and used in programs.  If a type <code>F0</code> is a model of
+\ref stldoc_AdaptableGenerator, then it must define
+<code>F0 ::result_type</code>.  Similarly, if <code>F1</code> is a model of 
+\ref stldoc_AdaptableUnaryFunction then it must define 
+<code>F1 ::argument_type</code> and <code>F1::result_type</code>, and if <code>F2</code> is a model
+of \ref stldoc_AdaptableBinaryFunction then it must define 
+<code>F2 ::first_argument_type</code>, <code>F2::second_argument_type</code>, and
+<code>F2::result_type</code>.
+The STL provides base classes <code>\ref stldoc_unary_function</code> and
+<code>\ref stldoc_binary_function</code> to simplify the definition of
+\ref stldoc_AdaptableUnaryFunction and \ref stldoc_AdaptableBinaryFunction. <A href="#2">[2]</A>
+<p>
+Adaptable function objects are important because they can be used by
+<i>function object adaptors</i> : function objects that transform or
+manipulate other function objects.  The STL provides many different
+function object adaptors, including <code>\ref stldoc_unary_negate</code> (which returns
+the logical complement of the value returned by a particular
+\ref stldoc_AdaptablePredicate), and <code>\ref stldoc_unary_compose</code> and
+<code>\ref stldoc_binary_compose</code>, which perform composition of function object.
+<p>
+Finally, the STL includes many different predefined function 
+objects, including arithmetic operations
+(<code>\ref stldoc_plus</code>, <code>\ref stldoc_minus</code>, <code>\ref stldoc_multiplies</code>, <code>\ref stldoc_divides</code>, <code>\ref stldoc_modulus</code>,
+and <code>\ref stldoc_negate</code>), comparisons (<code>\ref stldoc_equal_to</code>, <code>\ref stldoc_not_equal_to</code>
+<code>\ref stldoc_greater</code>, <code>\ref stldoc_less</code>, <code>\ref stldoc_greater_equal</code>, and <code>\ref stldoc_less_equal</code>),
+and logical operations (<code>\ref stldoc_logical_and</code>, <code>\ref stldoc_logical_or</code>, and
+<code>\ref stldoc_logical_not</code>).  It is possible to perform very sophisticated
+operations without actually writing a new function object, simply
+by combining predefined function objects and function object
+adaptors.
+\section Examples Examples
+Fill a <code>\ref stldoc_Vector</code> with random numbers.  In this example, the function object
+is simply a function pointer.
+\code
+    Vector<int> V(100);
+    generate(V.begin(), V.end(), rand);
+\endcode
+<p>
+Sort a <code>\ref stldoc_Vector</code> of <code>double</code> by magnitude, <i>i.e.</i> ignoring the elements' signs.
+In this example, the function object is an object of a user-defined
+class.
+\code
+    struct less_mag  : public binary_function<double, double, bool> {
+    bool operator()(double x, double y) { return fabs(x) < fabs(y); }
+    };
+
+    Vector<double> V;
+    ...
+    sort(V.begin(), V.end(), less_mag());
+\endcode
+<p>
+Find the sum of elements in a <code>\ref stldoc_Vector</code>.  In this example, the function
+object is of a user-defined class that has local state.
+\code
+    struct adder  : public unary_function<double, void>
+    {
+      adder() : sum(0) {}
+      double sum;
+      void operator()(double x) { sum += x; }
+    };
+
+    Vector<double> V;
+    ...
+    adder result = for_each(V.begin(), V.end(), adder()); <A href="#3">[3]</A>
+    cout << "The sum is " << result.sum << endl;
+\endcode
+<p>
+Remove all elements from a <code>\ref stldoc_List</code> that are greater than 100 and
+less than 1000.
+\code
+    List<int> L;
+    ...
+    List<int> ::iterator new_end = 
+     remove_if(L.begin(), L.end(),
+           compose2(logical_and<bool>(),
+                bind2nd(greater<int>(), 100),
+                bind2nd(less<int>(), 1000)));
+    L.erase(new_end, L.end());
+\endcode
+\section Concepts Concepts
+<ul>
+<li>
+ \ref stldoc_Generator
+<li>
+ \ref stldoc_UnaryFunction
+<li>
+ \ref stldoc_BinaryFunction
+</ul>
+<ul>
+<li>
+ \ref stldoc_Predicate
+<li>
+ \ref stldoc_BinaryPredicate
+</ul>
+<ul>
+<li>
+ \ref stldoc_AdaptableGenerator
+<li>
+ \ref stldoc_AdaptableUnaryFunction
+<li>
+ \ref stldoc_AdaptableBinaryFunction
+<li>
+ \ref stldoc_AdaptablePredicate
+<li>
+ \ref stldoc_AdaptableBinaryPredicate
+</ul>
+\section Types Types
+<ul>
+<li>
+<code>\ref stldoc_plus</code>
+<li>
+<code>\ref stldoc_minus</code>
+<li>
+<code>\ref stldoc_multiplies</code> (formerly called <code>times</code>)
+<li>
+<code>\ref stldoc_divides</code>
+<li>
+<code>\ref stldoc_modulus</code>,
+<li>
+<code>\ref stldoc_negate</code>
+<li>
+<code>\ref stldoc_equal_to</code>
+<li>
+<code>\ref stldoc_not_equal_to</code>
+<li>
+<code>\ref stldoc_greater</code>
+<li>
+<code>\ref stldoc_less</code>
+<li>
+<code>\ref stldoc_greater_equal</code>
+<li>
+<code>\ref stldoc_less_equal</code>,
+<li>
+<code>\ref stldoc_logical_and</code>
+<li>
+<code>\ref stldoc_logical_or</code>
+<li>
+<code>\ref stldoc_logical_not</code>
+<li>
+<code>\ref stldoc_subtractive_rng</code>
+</ul>
+<ul>
+<li>
+<code>\ref stldoc_identity</code>
+<li>
+<code>\ref stldoc_project1st</code>
+<li>
+<code>\ref stldoc_project2nd</code>
+<li>
+<code>\ref stldoc_select1st</code>
+<li>
+<code>\ref stldoc_select2nd</code>
+</ul>
+<ul>
+<li>
+<code>\ref stldoc_unary_function</code>
+<li>
+<code>\ref stldoc_binary_function</code>
+</ul>
+<ul>
+<li>
+<code>\ref stldoc_unary_compose</code>
+<li>
+<code>\ref stldoc_binary_compose</code>
+<li>
+<code>\ref stldoc_unary_negate</code>
+<li>
+<code>\ref stldoc_binary_negate</code>
+<li>
+<code>\ref stldoc_binder1st</code>
+<li>
+<code>\ref stldoc_binder2nd</code>
+<li>
+<code>\ref stldoc_pointer_to_unary_function</code>
+<li>
+<code>\ref stldoc_pointer_to_binary_function</code>
+</ul>
+\section Functions Functions
+<ul>
+<li>
+<code><A href="unary_compose.html">compose1</A></code>
+<li>
+<code><A href="binary_compose.html">compose2</A></code>
+<li>
+<code><A href="unary_negate.html">not1</A></code>
+<li>
+<code><A href="binary_negate.html">not2</A></code>
+<li>
+<code><A href="binder1st.html">bind1st</A></code>
+<li>
+<code><A href="binder2nd.html">bind2nd</A></code>
+<li>
+<code>\ref stldoc_ptr_fun</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+The reason for the name &quot;adaptable function object&quot; is that
+adaptable function objects may be used by function object adaptors.
+<p><A name="2">[2]</A>
+The <code>\ref stldoc_unary_function</code> and <code>\ref stldoc_binary_function</code> bases are
+similar to the <code>\ref stldoc_input_iterator</code>, <code>\ref stldoc_output_iterator</code>,
+<code>\ref stldoc_forward_iterator</code>, <code>\ref stldoc_bidirectional_iterator</code>, and
+<code>\ref stldoc_random_access_iterator</code> bases : they are completely empty,
+and serve only to provide type information.
+<p><A name="3">[3]</A>
+This is an example of how to use function objects; it is not
+the recommended way of calculating the sum of elements in a vector.
+The <code>\ref stldoc_accumulate</code> algorithm is a better way of calculating a sum.
+\section See_also See also
+
+
+*/

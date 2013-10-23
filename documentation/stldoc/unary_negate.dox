@@ -1,0 +1,201 @@
+/** \page stldoc_unary_negate unary_negate
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html functors.gif</td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left">\image html adaptors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: functors, adaptors</td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Unary_negate</code> is a \ref stldoc_functors adaptor: it is an
+\ref stldoc_AdaptablePredicate that represents the logical negation
+of some other \ref stldoc_AdaptablePredicate.  That is: if <code>f</code> is an
+object of class <code>unary_negate&lt;AdaptablePredicate&gt;</code>, then
+there exists an object <code>pred</code> of class <code>AdaptablePredicate</code>
+such that <code>f(x)</code> always returns the same value as <code>!pred(x)</code>. <A href="#1">[1]</A>
+There is rarely any reason to construct a <code>unary_negate</code>
+directly; it is almost always easier to use the helper function <code>not1</code>.
+\section Example Example
+Finds the first element in a list that does not lie in the range
+from 1 to 10.
+\code
+List<int> L;
+...
+List<int>::iterator in_range = 
+     find_if(L.begin(), L.end(),
+             not1(compose2(logical_and<bool>(),
+                           bind2nd(greater_equal<int>(), 1),
+                           bind2nd(less_equal<int>(), 10))));
+assert(in_range == L.end() || !(*in_range >= 1 && *in_range <= 10));
+\endcode
+\section Definition Definition
+Defined in the standard header <A href="functional">functional</A>, and in the nonstandard
+backward-compatibility header <A href="function.h">function.h</A>.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>AdaptablePredicate</code>
+</td>
+<td valign="top">
+The type of the function object that this <code>unary_negate</code> is the logical
+   negation of.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_AdaptablePredicate
+\section Type_requirements Type requirements
+<code>AdaptablePredicate</code> must be a model of \ref stldoc_AdaptablePredicate.
+\section Public_base_classes Public base classes
+<code>\ref stldoc_unary_function&lt;AdaptablePredicate::argument_type, bool&gt;</code>
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>argument_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the argument: <code>AdaptablePredicate::argument_type</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>result_type</code>
+</td>
+<td valign="top">
+ \ref stldoc_AdaptableUnaryFunction
+</td>
+<td valign="top">
+The type of the result: <code>bool</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator()(argument_type)</code>
+</td>
+<td valign="top">
+ \ref stldoc_UnaryFunction
+</td>
+<td valign="top">
+Function call operator.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+unary_negate(const AdaptablePredicate& pred)
+\endcode
+</td>
+<td valign="top">
+<code>unary_negate</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class AdaptablePredicate>
+unary_negate<AdaptablePredicate>
+not1(const AdaptablePredicate& pred);
+\endcode
+</td>
+<td valign="top">
+<code>unary_negate</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined in the 
+\ref stldoc_AdaptablePredicate
+requirements, but are specific to 
+<code>unary_negate</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+\code
+unary_negate(const AdaptablePredicate& pred)
+\endcode
+</td>
+<td valign="top">
+The constructor.  Creates a <code>unary_negate&lt;AdaptablePredicate&gt;</code>
+whose underlying predicate is <code>pred</code>.  
+</td>
+</tr>
+<tr>
+<td valign="top">
+\code
+template <class AdaptablePredicate>
+unary_negate<AdaptablePredicate>
+not1(const AdaptablePredicate& pred);
+\endcode
+</td>
+<td valign="top">
+If <code>p</code> is of type <code>AdaptablePredicate</code> then
+<code>not1(p)</code> is equivalent to <code>unary_negate&lt;AdaptablePredicate&gt;(p)</code>,
+but more convenient.  This is a global function, not a member
+function.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+Strictly speaking, <code>unary_negate</code> is redundant.  It can be
+constructed using the function object <code>\ref stldoc_logical_not</code> and the
+adaptor <code>\ref stldoc_unary_compose</code>.
+\section See_also See also
+The \ref stldoc_functors, \ref stldoc_AdaptablePredicate, \ref stldoc_Predicate, 
+<code>\ref stldoc_binary_negate</code>, <code>\ref stldoc_unary_compose</code>, <code>\ref stldoc_binary_compose</code>
+
+
+*/

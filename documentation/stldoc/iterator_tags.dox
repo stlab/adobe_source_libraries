@@ -1,0 +1,267 @@
+/** \page stldoc_iterator_tags iterator_tags
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td width="100%"></td>
+<td align="right">\image html overview.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: iterators</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: overview</td>
+</tr>
+</table>
+
+\section Summary Summary
+Iterator tag functions are a method for accessing information that is
+associated with iterators.  Specifically, an iterator type must, as
+discussed in the \ref stldoc_InputIterator requirements, have an
+associated <i>distance type</i> and <i>value type</i>. <A href="#1">[1]</A>  It is sometimes
+important for an algorithm parameterized by an iterator type to be
+able to determine the distance type and value type.  Iterator tags
+also allow algorithms to determine an iterator's category, so that
+they can take different actions depending on whether an iterator is an
+\ref stldoc_InputIterator, \ref stldoc_OutputIterator, \ref stldoc_ForwardIterator,
+\ref stldoc_BidirectionalIterator, or \ref stldoc_RandomAccessIterator.
+<p>
+Note that the iterator tag functions <code>\ref stldoc_distance_type</code>,
+<code>\ref stldoc_value_type</code>, and <code>\ref stldoc_iterator_category</code> are an older method of
+accessing the type information associated with iterators: they were
+defined in the original STL.  The draft C++ standard, however, defines
+a different and more convenient mechanism: <code>\ref stldoc_iterator_traits</code>.
+Both mechanisms are supported <A href="#2">[2]</A>, for reasons of backwards
+compatibility, but the older mechanism will eventually be
+removed.
+\section Description Description
+The basic idea of the iterator tag functions, and of
+<code>\ref stldoc_iterator_traits</code>, is quite simple: iterators have associated type
+information, and there must be a way to access that information.
+Specifically, iterator tag functions and <code>\ref stldoc_iterator_traits</code> are
+used to determine an iterator's value type, distance type, and
+iterator category.
+<p>
+An iterator's <i>category</i> is the most specific concept that it is a
+model of: \ref stldoc_InputIterator, \ref stldoc_OutputIterator, \ref stldoc_ForwardIterator, 
+\ref stldoc_BidirectionalIterator, or \ref stldoc_RandomAccessIterator.
+This information is expressed in the C++ type system by defining five
+category tag types, <code>\ref stldoc_input_iterator_tag</code>,
+<code>\ref stldoc_output_iterator_tag</code>, <code>\ref stldoc_forward_iterator_tag</code>,
+<code>\ref stldoc_bidirectional_iterator_tag</code>, and
+<code>\ref stldoc_random_access_iterator_tag</code>, each of which corresponds to one of
+those concepts. <A href="#3">[3]</A> 
+<p>
+The function <code>\ref stldoc_iterator_category</code> takes a single argument, an
+iterator, and returns the tag corresponding to that iterator's
+category.  That is, it returns a <code>\ref stldoc_random_access_iterator_tag</code> if
+its argument is a pointer, a <code>\ref stldoc_bidirectional_iterator_tag</code> if its
+argument is a <code>List::iterator</code>, and so on.  <code>Iterator_traits</code>
+provides the same information in a slightly different way: if <code>I</code> is
+an iterator, then <code>\ref stldoc_iterator_traits&lt;I&gt;::iterator_category</code> is a nested
+<code>typedef</code>: it is one of the five category tag types.
+<p>
+An iterator's <i>value type</i> is the type of object that is returned
+when the iterator is dereferenced.  (See the discussion in the
+\ref stldoc_InputIterator requirements.)  Ideally, one might want
+<code>\ref stldoc_value_type</code> to take a single argument, an iterator, and return
+the iterator's value type.  Unfortunately, that's impossible:
+a function must return an object, and types aren't objects.  Instead,
+<code>\ref stldoc_value_type</code> returns the value <code>(T*) 0</code>, where <code>T</code> is the 
+argument's value type.  The <code>iterator_traits</code> class, however,
+does not have this restriction: <code>iterator_traits&lt;I&gt;::value_type</code>
+is a type, not a value.  It is a nested <code>typedef</code>, and it can be
+used in declarations of variables, as an function's argument type or 
+return type, and in any other ways that C++ types can be used.
+<p>
+(Note that the function <code>\ref stldoc_value_type</code> need
+not be defined for \ref stldoc_OutputIterator, since an \ref stldoc_OutputIterator
+need not have a value type.  Similarly, <code>\ref stldoc_iterator_traits&lt;I&gt;::value_type</code>
+is typically defined as <code>void</code> when <code>I</code> is an output iterator)
+<p>
+An iterator's <i>distance type</i>, or <i>difference type</i> (the terms
+are synonymous) is the type that is used to represent the distance
+between two iterators.  (See the discussion in the \ref stldoc_InputIterator
+requirements.)  The function <code>\ref stldoc_distance_type</code> returns this
+information in the same form that <code>\ref stldoc_value_type</code> does: its argument
+is an iterator, and it returns the value <code>(Distance*) 0</code>, where
+<code>Distance</code> is the iterator's distance type.  Similarly,
+<code>\ref stldoc_iterator_traits&lt;I&gt;::difference_type</code> is <code>I</code>'s distance type.
+<p>
+Just as with <code>\ref stldoc_value_type</code>, the function <code>\ref stldoc_distance_type</code> need
+not be defined for \ref stldoc_OutputIterator, and, if <code>I</code> is an 
+\ref stldoc_OutputIterator, <code>\ref stldoc_iterator_traits&lt;I&gt;::difference_type</code>
+may be defined as <code>void</code>.  An \ref stldoc_OutputIterator
+need not have a distance type.
+<p>
+The functions <code>\ref stldoc_iterator_category</code>, <code>\ref stldoc_value_type</code>, and
+<code>\ref stldoc_distance_type</code> must be provided for every type of iterator.
+(Except, as noted above, that <code>\ref stldoc_value_type</code> and <code>\ref stldoc_distance_type</code>
+need not be provided for \ref stldoc_OutputIterator.)  In principle, this is
+simply a matter of overloading: anyone who defines a new iterator type
+must define those three functions for it.  In practice, there's a
+slightly more convenient method.  The STL defines five base classes,
+<code>\ref stldoc_output_iterator</code>, <code>\ref stldoc_input_iterator</code>, <code>\ref stldoc_forward_iterator</code>,
+<code>\ref stldoc_bidirectional_iterator</code>, and <code>\ref stldoc_random_access_iterator</code>.  The
+functions <code>\ref stldoc_iterator_category</code>, <code>\ref stldoc_value_type</code>, and
+<code>\ref stldoc_distance_type</code> are defined for those base classes.  The effect,
+then, is that if you are defining a new type of iterator you can
+simply derive it from one of those base classes, and the iterator tag
+functions will automatically be defined correctly.  These base classes
+contain no member functions or member variables, so deriving from one
+of them ought not to incur any overhead.  
+<p>
+(Again, note that base classes are provided solely for the
+convenience of people who define iterators.  If you define a class
+<code>Iter</code> that is a new kind of \ref stldoc_BidirectionalIterator, you do not
+have to derive it from the base class <code>\ref stldoc_bidirectional_iterator</code>.  You
+do, however, have to make sure that <code>\ref stldoc_iterator_category</code>,
+<code>\ref stldoc_value_type</code>, and <code>\ref stldoc_distance_type</code> are defined correctly for
+arguments of type <code>Iter</code>, and deriving <code>Iter</code> from
+<code>\ref stldoc_bidirectional_iterator</code> is usually the most convenient way to do
+that.)
+\section Examples Examples
+This example uses the <code>\ref stldoc_value_type</code> iterator tag function in order
+to declare a temporary variable of an iterator's value type.  Note the
+use of an auxiliary function, <code>__iter_swap</code>.  This is a very common
+idiom: most uses of iterator tags involve auxiliary functions.  
+\code
+    template <class ForwardIterator1, class ForwardIterator2, class ValueType>
+    inline void __iter_swap(ForwardIterator1 a, ForwardIterator2 b, ValueType*) {
+    ValueType tmp = *a;
+    *a = *b;
+    *b = tmp;
+    }
+
+    template <class ForwardIterator1, class ForwardIterator2>
+    inline void iter_swap(ForwardIterator1 a, ForwardIterator2 b) {
+    __iter_swap(a, b, value_type(a));
+    }
+\endcode
+<p>
+This example does exactly the same thing, using <code>\ref stldoc_iterator_traits</code>
+instead.  Note how much simpler it is: the auxiliary function is
+no longer required.
+\code
+    template <class ForwardIterator1, class ForwardIterator2>
+    inline void iter_swap(ForwardIterator1 a, ForwardIterator2 b) {
+        iterator_traits<ForwardIterator1>::value_type tmp = *a;
+        *a = *b;
+        *b = tmp;    
+    }
+\endcode
+<p>
+This example uses the <code>\ref stldoc_iterator_category</code>
+iterator tag function: <code>\ref stldoc_reverse</code> can be implemented for either
+\ref stldoc_BidirectionalIterator or for \ref stldoc_RandomAccessIterator,
+but the algorithm for \ref stldoc_RandomAccessIterator is more efficient.
+Consequently, <code>\ref stldoc_reverse</code> is written to dispatch on the iterator
+category.  This dispatch takes place at compile time, and should not
+incur any run-time penalty.
+\code
+    template <class BidirectionalIterator>
+    void __reverse(BidirectionalIterator first, BidirectionalIterator last, 
+           bidirectional_iterator_tag) {
+    while (true)
+        if (first == last || first == --last)
+        return;
+        else
+        iter_swap(first++, last);
+    }
+
+    template <class RandomAccessIterator>
+    void __reverse(RandomAccessIterator first, RandomAccessIterator last,
+           random_access_iterator_tag) {
+    while (first < last) iter_swap(first++, --last);
+    }
+
+    template <class BidirectionalIterator>
+    inline void reverse(BidirectionalIterator first, BidirectionalIterator last) {
+    __reverse(first, last, iterator_category(first));
+    }
+\endcode
+<p>
+In this case, <code>\ref stldoc_iterator_traits</code> would not be different in any
+substantive way: it would still be necessary to use auxiliary 
+functions to dispatch on the iterator category.  The only difference
+is changing the top-level function to 
+\code
+    template <class BidirectionalIterator>
+    inline void reverse(BidirectionalIterator first, BidirectionalIterator last) {
+    __reverse(first, last, 
+                  iterator_traits<first>::iterator_category());
+    }
+\endcode
+\section Concepts Concepts
+\section Types Types
+<ul>
+<li>
+<code>\ref stldoc_output_iterator</code>
+<li>
+<code>\ref stldoc_input_iterator</code>
+<li>
+<code>\ref stldoc_forward_iterator</code>
+<li>
+<code>\ref stldoc_bidirectional_iterator</code>
+<li>
+<code>\ref stldoc_random_access_iterator</code>
+</ul>
+<ul>
+<li>
+<code>\ref stldoc_output_iterator_tag</code>
+<li>
+<code>\ref stldoc_input_iterator_tag</code>
+<li>
+<code>\ref stldoc_forward_iterator_tag</code>
+<li>
+<code>\ref stldoc_bidirectional_iterator_tag</code>
+<li>
+<code>\ref stldoc_random_access_iterator_tag</code>
+</ul>
+<ul>
+<li>
+<code>\ref stldoc_iterator_traits</code>
+</ul>
+\section Functions Functions
+<ul>
+<li>
+<code>\ref stldoc_iterator_category</code>
+<li>
+<code>\ref stldoc_value_type</code>
+<li>
+<code>\ref stldoc_distance_type</code>
+</ul>
+\section Notes Notes
+<p><A name="1">[1]</A>
+ \ref stldoc_OutputIterator have neither a distance type nor a value
+type; in many ways, in fact, \ref stldoc_OutputIterator aren't really
+iterators.  Output iterators do not have a value type, because it is
+impossible to obtain a value from an output iterator but only to write
+a value through it.  They do not have a distance type, similarly,
+because it is impossible to find the distance from one output iterator
+to another.  Finding a distance requires a comparison for equality,
+and output iterators do not support <code>operator==</code>.
+<p><A name="2">[2]</A>
+The <code>\ref stldoc_iterator_traits</code> class
+relies on a C++ feature known as <i>partial specialization</i>.  Many of
+today's compilers don't implement the complete standard; in
+particular, many compilers do not support partial specialization.  If
+your compiler does not support partial specialization, then you will
+not be able to use <code>\ref stldoc_iterator_traits</code>, and you will have to 
+continue to use the older iterator tag functions.
+<p><A name="3">[3]</A>
+Note that \ref stldoc_trivial does not appear in this list.
+The \ref stldoc_trivial concept is introduced solely for conceptual
+clarity; the STL does not actually define any \ref stldoc_trivial
+types, so there is no need for a \ref stldoc_trivial tag.  There
+is, in fact, a strong reason not to define one: the C++ type system
+does not provide any way to distinguish between a pointer that is
+being used as a trivial iterator (that is, a pointer to an object
+that isn't part of an array) and a pointer that is being used as a
+\ref stldoc_RandomAccessIterator into an array.
+\section See_also See also
+\ref stldoc_InputIterator, \ref stldoc_OutputIterator, \ref stldoc_ForwardIterator, 
+\ref stldoc_BidirectionalIterator, \ref stldoc_RandomAccessIterator,
+<code>\ref stldoc_iterator_traits</code>, \ref stldoc_Iterators
+
+
+*/

@@ -1,0 +1,127 @@
+/** \page stldoc_partial_sort_copy partial_sort_copy
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Partial_sort_copy</code> is an overloaded name; there are actually two <code>partial_sort_copy</code>
+functions.
+\code
+template <class InputIterator, class RandomAccessIterator>
+RandomAccessIterator
+partial_sort_copy(InputIterator first, InputIterator last,
+                  RandomAccessIterator result_first,
+                  RandomAccessIterator result_last);
+
+template <class InputIterator, class RandomAccessIterator, 
+          class StrictWeakOrdering>
+RandomAccessIterator
+partial_sort_copy(InputIterator first, InputIterator last,
+                  RandomAccessIterator result_first,
+                  RandomAccessIterator result_last, Compare comp);
+\endcode
+\section Description Description
+<code>Partial_sort_copy</code> copies the smallest <code>N</code> elements from the range
+<code>[first, last)</code> to the range <code>[result_first, result_first + N)</code>, where
+<code>N</code> is the smaller of <code>last - first</code> and <code>result_last - result_first</code>.
+The elements in <code>[result_first, result_first + N)</code> will be in ascending
+order.
+<p>
+The two versions of <code>partial_sort_copy</code> differ in how they define whether one
+element is less than another.  The first version compares
+objects using <code>operator&lt;</code>, and the second compares objects using
+a \ref stldoc_functors <code>comp</code>.
+<p>
+The postcondition for the first version of <code>partial_sort_copy</code> is as follows.
+If <code>i</code> and <code>j</code> are
+any two valid iterators in the range <code>[result_first, result_first +
+N)</code> such that <code>i</code> precedes <code>j</code>, then <code>*j &lt; *i</code> will be <code>false</code>.
+The corresponding postcondition for the second version is that
+<code>comp(*j, *i)</code> will be <code>false</code>.
+<p>
+The return value is <code>result_first + N</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator.
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+The value types of <code>InputIterator</code> and <code>RandomAccessIterator</code>
+   are the same.
+<li>
+<code>RandomAccessIterator</code>'s value type is \ref stldoc_LessThanComparable.
+<li>
+The ordering relation on <code>RandomAccessIterator</code>'s value type is
+ a <i>strict weak ordering</i>, as defined in the \ref stldoc_LessThanComparable
+ requirements.
+</ul>
+For the second version:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>RandomAccessIterator</code> is a model of \ref stldoc_RandomAccessIterator.
+<li>
+<code>RandomAccessIterator</code> is mutable.
+<li>
+The value types of <code>InputIterator</code> and <code>RandomAccessIterator</code>
+   are the same.
+<li>
+<code>StrictWeakOrdering</code> is a model of \ref stldoc_StrictWeakOrdering.
+<li>
+<code>RandomAccessIterator</code>'s value type is convertible to
+   <code>StrictWeakOrdering</code>'s argument type.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+<li>
+<code>[result_first, result_last)</code> is a valid range.
+<li>
+<code>[first, last)</code> and <code>[result_first, result_last)</code> do not overlap.
+</ul>
+\section Complexity Complexity
+Approximately <code>(last - first) * log(N)</code> comparisons, where <code>N</code> is the
+smaller of <code>last - first</code> and <code>result_last - result_first</code>.
+\section Example Example
+\code
+int A[] = {7, 2, 6, 11, 9, 3, 12, 10, 8, 4, 1, 5};
+const int N = sizeof(A) / sizeof(int);
+
+vector<int> V(4);
+partial_sort_copy(A, A + N, V.begin(), V.end());
+copy(V.begin(), V.end(), ostream_iterator<int>(cout, " "));
+// The printed result is "1 2 3 4".
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_partial_sort</code>,
+<code>\ref stldoc_sort</code>,
+<code>\ref stldoc_stable_sort</code>,
+<code>\ref stldoc_binary_search</code>,
+<code>\ref stldoc_lower_bound</code>,
+<code>\ref stldoc_upper_bound</code>,
+<code>\ref stldoc_less&lt;T&gt;</code>,
+\ref stldoc_StrictWeakOrdering,
+\ref stldoc_LessThanComparable
+
+
+*/

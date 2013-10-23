@@ -1,0 +1,71 @@
+/** \page stldoc_replace_if replace_if
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class ForwardIterator, class Predicate, class T>
+void replace_if(ForwardIterator first, ForwardIterator last, Predicate pred
+                const T& new_value)
+\endcode
+\section Description Description
+<code>Replace_if</code> replaces every element in the range <code>[first, last)</code> for
+which <code>pred</code> returns <code>true</code> with <code>new_value</code>.  That is: for every
+iterator <code>i</code>, if <code>pred(*i)</code> is <code>true</code> then it performs the assignment <code>*i
+= new_value</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<ul>
+<li>
+<code>ForwardIterator</code> is a model of \ref stldoc_ForwardIterator.
+<li>
+<code>ForwardIterator</code> is mutable.
+<li>
+<code>Predicate</code> is a model of \ref stldoc_Predicate.
+<li>
+<code>ForwardIterator</code>'s value type is convertible to <code>Predicate</code>'s
+   argument type.
+<li>
+<code>T</code> is convertible to <code>Forward Iterator</code>'s value type.
+<li>
+<code>T</code> is \ref stldoc_Assignable.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  <code>Replace_if</code> performs exactly <code>last - first</code> applications of
+<code>pred</code>, and at most <code>last - first</code> assignments.
+\section Example Example
+Replace every negative number with <code>0</code>.
+\code
+Vector<int> V;
+V.push_back(1);
+V.push_back(-3);
+V.push_back(2);
+V.push_back(-1);
+
+replace_if(V.begin(), V.end(), bind2nd(less<int>(), 0), -1);
+assert(V[1] == 0 && V[3] == 0);
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_replace</code>, <code>\ref stldoc_replace_copy</code>, <code>\ref stldoc_replace_copy_if</code>
+
+
+*/

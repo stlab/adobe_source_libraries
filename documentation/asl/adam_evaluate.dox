@@ -1,0 +1,11 @@
+//***************************************************************************//
+//***************************************************************************//
+//***************************************************************************//
+
+/*!
+\fn adobe::adam_callback_suite_t adobe::bind_to_sheet(adobe::sheet_t& sheet)
+\ingroup adam_evaluate
+
+\param sheet the sheet to be bound to this parse of an adam file
+\return A callback suite for the parser to communicate to the sheet
+*/

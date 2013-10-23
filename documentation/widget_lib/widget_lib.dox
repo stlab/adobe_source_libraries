@@ -1,0 +1,15 @@
+/*!
+\defgroup apl_widgets Widget Library
+\ingroup apl_libraries
+*/
+
+/*!
+\defgroup apl_widgets_carbon Concrete Widget Library (Carbon)
+\ingroup apl_widgets
+*/
+
+/*
+\omit from the doxygen docs for now
+\defgroup apl_widgets_win32 Concrete Widget Library (Win32)
+\ingroup apl_widgets
+*/

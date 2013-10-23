@@ -1,0 +1,85 @@
+/*! \defgroup concept_view View
+\ingroup asl_concepts
+
+\description
+A View is a one-way notification element from a model/view/controller system to the client of the system. It is intended to send notifications outside the system of changes inside the system. A view is not allowed to modify the system to which it belongs -- that is the responsibility of a \ref concept_controller <a href='#1'>[1]</a>.
+
+\refinement_of
+
+\associated_types
+    The only type associated with the view is the data structure that view is intended to represent. This is the model_type of the view, and is used when setting the view to a new value of that type.
+    <table>
+    <tr>
+        <td valign="top">
+            Value Type
+        </td>
+        <td valign="top">
+            <code>typename view_model_type<View>::type</code>
+        </td>
+        <td valign="top">
+            The value type for the data for which the view is receiving notifications
+        </td>
+    </tr>
+    </table>
+
+\notation
+    <table>
+        <tr>
+            <td valign="top"><code>T</code></td>
+            <td valign="top">A type that is a model of View</td>
+        </tr>
+        <tr>
+            <td valign="top"><code>t</code></td>
+            <td valign="top">Object of type <code>T</code></td>
+        </tr>
+        <tr>
+            <td valign="top"><code>x</code></td>
+            <td valign="top">Object of type <code>typename view_model_type<View>::type</code></td>
+        </tr>
+    </table>
+
+\definitions
+
+\valid_expressions
+    <table>
+        <tr>
+            <th>Name</th><th>Expression</th><th>Type requirements</th><th>Return type</th>
+        </tr>
+        <tr>
+            <td valign="top">Set</td>
+            <td valign="top"><code>display(t, x);</code></td>
+            <td valign="top">&nbsp;</td>
+            <td valign="top">void</td>
+        </tr>
+    </table>
+
+\expression_semantics
+    <table>
+        <tr>
+            <th>Name</th><th>Expression</th><th>Precondition</th><th>Semantics</th><th>Postcondition</th>
+        </tr>
+    </table>
+
+\complexity
+
+\invariants
+
+\models
+    - Any device that sends information from the system to the outside of the system. An example might be an audio speaker or a noninteractive icon within a dialog box.
+
+\notes
+    - <a name='1'>[1]</a> It is legal for any one implementation to model both a View and a \ref concept_controller at the same time.
+
+\see_also
+
+\example
+\code
+    View             t;
+    typename view_model_type<View>::type x;
+
+    x = 5; // assuming x can be set to an ordinal value
+
+    using adobe::display;
+    display(t, x);
+\endcode
+*/

@@ -1,0 +1,64 @@
+/** \page stldoc_swap_ranges swap_ranges
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+\code
+template <class ForwardIterator1, class ForwardIterator2>
+ForwardIterator2 swap_ranges(ForwardIterator1 first1, ForwardIterator1 last1,
+                             ForwardIterator2 first2);
+\endcode
+\section Description Description
+<code>Swap_ranges</code> swaps each of the elements in the range
+<code>[first1, last1)</code> with the corresponding element in the range
+<code>[first2, first2 + (last1 - first1))</code>.  That is, for each integer <code>n</code>
+such that <code>0 &lt;= n &lt; (last1 - first1)</code>, it swaps <code>*(first1 + n)</code>
+and <code>*(first2 + n)</code>.  The return value is <code>first2 + (last1 - first1)</code>.
+\section Definition Definition
+Defined in the standard header <A href="algorithm">algorithm</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+<code>ForwardIterator1</code> and <code>ForwardIterator2</code> must both be models of
+\ref stldoc_ForwardIterator.  The value types of <code>ForwardIterator1</code> and 
+<code>ForwardIterator2</code> must be convertible to each other.
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first1, last1)</code> is a valid range.
+<li>
+<code>[first2, first2 + (last1 - first1))</code> is a valid range.
+<li>
+The two ranges <code>[first1, last1)</code> and
+   <code>[first2, first2 + (last1 - first1))</code> do not overlap.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>last1 - first1</code> swaps are performed.
+\section Example Example
+\code
+Vector<int> V1, V2;
+V1.push_back(1);
+V1.push_back(2);
+V2.push_back(3);
+V2.push_back(4);
+
+assert(V1[0] == 1 && V1[1] == 2 && V2[0] == 3 && V2[1] == 4);
+swap_ranges(V1.begin(), V1.end(), V2.begin());
+assert(V1[0] == 3 && V1[1] == 4 && V2[0] == 1 && V2[1] == 2);
+\endcode
+\section Notes Notes
+\section See_also See also
+<code>\ref stldoc_swap</code>, <code>\ref stldoc_iter_swap</code>.
+
+
+*/

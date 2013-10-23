@@ -1,0 +1,407 @@
+/** \page stldoc_ReverseBidirectionalIterator ReverseBidirectionalIterator
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html iterators.gif</td>
+<td align="right">\image html type.gif</td>
+</tr>
+<tr>
+<td align="left">\image html adaptors.gif</td>
+<td align="right"></td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Categories</b>: iterators, adaptors</td>
+<td align="right" valign="top"><b>Component type</b>: type</td>
+</tr>
+</table>
+
+\section Description Description
+<code>Reverse_bidirectional_iterator</code> is an iterator adaptor that enables 
+backwards traversal of a range.  <code>Operator++</code> applied to an object of 
+class <code>reverse_bidirectional_iterator&lt;\ref stldoc_BidirectionalIterator&gt;</code> 
+means the same thing as
+<code>operator--</code> applied to an object of class <code>\ref stldoc_BidirectionalIterator</code>.
+There are two different reverse iterator adaptors: the class
+<code>reverse_bidirectional_iterator</code>
+has a template argument that is a \ref stldoc_BidirectionalIterator,
+and the class <code>\ref stldoc_ReverseIterator</code> has a template argument that is a
+\ref stldoc_RandomAccessIterator. <A href="#1">[1]</A>
+\section Example Example
+\code
+template <class T>
+void forw(const List<T>& L)
+{
+   list<T>::iterator first = L.begin();
+   list<T>::iterator last = L.end();
+   while (first != last) 
+      cout << *first++ << endl;
+}      
+
+template <class T>
+void rev(const List<T>& L)
+{
+   typedef reverse_bidirectional_iterator<list<T>::iterator,
+                                          T,
+                                          list<T>::reference_type,
+                                          list<T>::difference_type> 
+           reverse_iterator;
+   reverse_iterator rfirst(L.end());
+   reverse_iterator rlast(L.begin());
+
+   while (rfirst != rlast) 
+      cout << *rfirst++ << endl;
+}      
+\endcode
+<A href="#2">[2]</A>
+<p>
+In the function <code>forw</code>, the elements are printed in the order
+<code>*first</code>, <code>*(first+1)</code>, ..., <code>*(last-1)</code>.  In the function 
+<code>rev</code>, they are printed in the order <code>*(last - 1)</code>, <code>*(last-2)</code>, ...,
+<code>*first</code>. <A href="#3">[3]</A>
+\section Definition Definition
+Defined in the standard header <A href="iterator">iterator</A>, and in the nonstandard
+backward-compatibility header <A href="iterator.h">iterator.h</A>.  This class is no longer
+part of the C++ standard, but it was present in early drafts, and
+it is retained in this implementation for backward compatibility.
+\section Template_parameters Template parameters
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Parameter
+</TH>
+<TH>
+Description
+</TH>
+<TH>
+Default
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>BidirectionalIterator</code>
+</td>
+<td valign="top">
+The base iterator class.  Incrementing an object of class
+   <code>reverse_bidirectional_iterator&lt;BidirectionalIterator&gt;</code> corresponds to decrementing 
+   an object of class <code>BidirectionalIterator</code>.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T</code>
+</td>
+<td valign="top">
+The reverse iterator's value type.  This should always be the same
+   as the base iterator's value type.
+</td>
+<td valign="top">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Reference</code>
+</td>
+<td valign="top">
+The reverse iterator's reference type.  This should always be the same
+   as the base iterator's reference type.
+</td>
+<td valign="top">
+<code>T&amp;</code>
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Distance</code>
+</td>
+<td valign="top">
+The reverse iterator's distance type.  This should always be the
+   same as the base iterator's distance type.
+</td>
+<td valign="top">
+<code>ptrdiff_t</code>
+</td>
+</tr>
+</table>
+\section Model_of Model of
+\ref stldoc_BidirectionalIterator.
+\section Type_requirements Type requirements
+The base iterator type (that is, the template parameter <code>BidirectionalIterator</code>)
+must be a <code>\ref stldoc_BidirectionalIterator</code>.  The <code>reverse_bidirectional_iterator</code>'s value type, 
+reference type, and distance type (that is, the template parameters
+<code>T</code>, <code>Reference</code>, and <code>Distance</code>, respectively) must be the same as the
+base iterator's value type, reference type, and distance type.
+\section Public_base_classes Public base classes
+None.
+\section Members Members
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Where defined
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>self</code>
+</td>
+<td valign="top">
+<code>reverse_bidirectional_iterator</code>
+</td>
+<td valign="top">
+See below
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_bidirectional_iterator()</code>
+</td>
+<td valign="top">
+ \ref stldoc_trivial
+</td>
+<td valign="top">
+The default constructor
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_bidirectional_iterator(const reverse_bidirectional_iterator&amp; x)</code>
+</td>
+<td valign="top">
+ \ref stldoc_trivial
+</td>
+<td valign="top">
+The copy constructor
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_bidirectional_iterator&amp; operator=(const reverse_bidirectional_iterator&amp; x)</code>
+</td>
+<td valign="top">
+ \ref stldoc_trivial
+</td>
+<td valign="top">
+The assignment operator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_bidirectional_iterator(BidirectionalIterator x)</code>
+</td>
+<td valign="top">
+<code>reverse_bidirectional_iterator</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>BidirectionalIterator base()</code>
+</td>
+<td valign="top">
+<code>reverse_bidirectional_iterator</code>
+</td>
+<td valign="top">
+See below.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Reference operator*() const</code>
+</td>
+<td valign="top">
+ \ref stldoc_trivial
+</td>
+<td valign="top">
+The dereference operator
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_bidirectional_iterator&amp; operator++()</code>
+</td>
+<td valign="top">
+ \ref stldoc_ForwardIterator
+</td>
+<td valign="top">
+Preincrement
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_bidirectional_iterator operator++(int)</code>
+</td>
+<td valign="top">
+ \ref stldoc_ForwardIterator
+</td>
+<td valign="top">
+Postincrement
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_bidirectional_iterator&amp; operator--()</code>
+</td>
+<td valign="top">
+ \ref stldoc_BidirectionalIterator
+</td>
+<td valign="top">
+Predecrement
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_bidirectional_iterator operator--(int)</code>
+</td>
+<td valign="top">
+ \ref stldoc_BidirectionalIterator
+</td>
+<td valign="top">
+Postdecrement
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bool operator==(const reverse_bidirectional_iterator&amp;, const reverse_bidirectional_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_trivial
+</td>
+<td valign="top">
+Compares two iterators for equality.
+  This is a global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>bidirectional_iterator_tag iterator_category(const reverse_bidirectional_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_iterator_tags
+</td>
+<td valign="top">
+Returns the iterator's category.
+  This is a global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>T* value_type(const reverse_bidirectional_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_iterator_tags
+</td>
+<td valign="top">
+Returns the iterator's value type.
+  This is a global function, not a member function.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>Distance* distance_type(const reverse_bidirectional_iterator&amp;)</code>
+</td>
+<td valign="top">
+ \ref stldoc_iterator_tags
+</td>
+<td valign="top">
+Returns the iterator's distance type.
+  This is a global function, not a member function.
+</td>
+</tr>
+</table>
+\section New_members New members
+These members are not defined 
+in the \ref stldoc_BidirectionalIterator requirements,
+but are specific to <code>reverse_bidirectional_iterator</code>.
+<table border="1" cellpadding="3" cellspacing="3">
+<tr>
+<TH>
+Member
+</TH>
+<TH>
+Description
+</TH>
+</tr>
+<tr>
+<td valign="top">
+<code>self</code>
+</td>
+<td valign="top">
+A typedef for <code>reverse_bidirectional_iterator&lt;\ref stldoc_BidirectionalIterator, T, Reference,
+   Distance&gt;</code>.        
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>\ref stldoc_BidirectionalIterator base()</code>
+</td>
+<td valign="top">
+Returns the current value of the <code>reverse_bidirectional_iterator</code>'s base iterator.
+   If <code>ri</code> is a reverse iterator and <code>i</code> is any iterator, 
+   the two fundamental identities of reverse iterators can be
+   written as
+   <code>reverse_bidirectional_iterator(i).base() == i</code> and <code>&amp;*ri == &amp;*(ri.base() - 1)</code>.
+</td>
+</tr>
+<tr>
+<td valign="top">
+<code>reverse_bidirectional_iterator(\ref stldoc_BidirectionalIterator i)</code>
+</td>
+<td valign="top">
+Constructs a <code>reverse_bidirectional_iterator</code> whose base iterator is <code>i</code>.
+</td>
+</tr>
+</table>
+\section Notes Notes
+<p><A name="1">[1]</A>
+There isn't really any good reason to have two separate classes:
+this separation is purely because of a technical limitation in some of
+today's C++ compilers.  If the two classes were combined into one, then there
+would be no way to declare the return types of the \ref stldoc_iterator_tags
+functions <code>\ref stldoc_iterator_category</code>, <code>\ref stldoc_distance_type</code> and
+<code>\ref stldoc_value_type</code> correctly.  The <i>iterator traits</i>
+class solves this problem: it addresses the same issues as the iterator tag
+functions, but in a cleaner and more flexible manner.  Iterator
+traits, however, rely on <i>partial specialization</i>, and many
+C++ compilers do not yet implement partial specialization.
+Once compilers that support partial specialization become more common,
+these two different reverse iterator classes will be combined into 
+a single class.
+<p><A name="2">[2]</A>
+The declarations for <code>rfirst</code> and <code>rlast</code> are written in this
+clumsy form simply as an illustration of how to declare a
+<code>reverse_bidirectional_iterator</code>.  <code>\ref stldoc_List</code> is a 
+\ref stldoc_ReversibleContainer, so it provides a typedef for the appropriate
+instantiation of <code>reverse_bidirectional_iterator</code>.  The usual way of
+declaring these variables is much simpler: 
+\code
+    list<T>::reverse_bidirectional_iterator rfirst = rbegin();
+    list<T>::reverse_bidirectional_iterator rlast = rend(); 
+\endcode
+<p><A name="3">[3]</A>
+Note the implications of this remark.  The variable <code>rfirst</code> is
+initialized as <code>reverse_bidirectional_iterator&lt;...&gt; rfirst(V.end());</code>.  The value
+obtained when it is dereferenced, however, is <code>*(V.end() - 1)</code>.  This
+is a general property: the fundamental identity of reverse iterators
+is <code>&amp;*(reverse_bidirectional_iterator(i)) == &amp;*(i - 1)</code>.  This code sample shows why
+this identity is important: if <code>[f, l)</code> is a valid range, then it
+allows <code>[reverse_bidirectional_iterator(l), reverse_bidirectional_iterator(f))</code> to be a valid
+range as well.  Note that the iterator <code>l</code> is not part of the range,
+but it is required to be dereferenceable or past-the-end.  There is no
+requirement that any such iterator precedes <code>f</code>.
+\section See_also See also
+\ref stldoc_ReversibleContainer, \ref stldoc_ReverseIterator,
+\ref stldoc_BidirectionalIterator, \ref stldoc_iterator_tags, \ref stldoc_Iterators
+
+
+*/

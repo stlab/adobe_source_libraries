@@ -1,0 +1,5 @@
+# Jamfile for building the forest smoke test app
+
+project adobe/forest_smoke_test ;
+
+run main.cpp ;

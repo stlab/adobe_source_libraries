@@ -1,0 +1,55 @@
+/*!
+\page success_stories Success Stories
+
+The Adobe Source Libraries have been used with success within Adobe applications to increase robustness and correctness of code. As developers of an open source project, we are confident that there are other success stories outside of Adobe as well. We encourage you to contribute a success story of your own:
+
+    - What is the name of your project?
+    - What is the purpose of the project?
+    - What led you to choose ASL?
+    - Was ASL used from the start of the project? If not, how did its inclusion impact your project? How does using ASL affect your project development as a whole?
+    - How large is your project?
+    - How would you rate the success of your project?
+    - Is there any other interesting information worth sharing?
+
+Submissions will be included on this page. You can submit a success story by emailing Foster Brereton at <code>fbrereto _at_ adobe _dot_ com</code>.
+
+<hr>
+
+\section success_stories_mission_code Mission Code
+    - What is the name of your project?
+
+Mission Photo
+
+    - What is the purpose of the project?
+
+Initially to develop an easy-to-use photo management application for
+the Linux desktop, but eventually to develop a platform based on ASL
+for building simple digital media applications.
+
+    - What led you to choose ASL?
+
+I have been very impressed with the quality of the ASL libraries and
+have learned a huge amount about modern C++ and software design from
+ASL.
+
+    - Was ASL used from the start of the project? If not, how did
+its inclusion impact your project? How does using ASL affect your
+project development as a whole?
+
+ASL was not used from the start of the project. It caused me to
+re-evaluate the way that I build UI software.
+
+    - How large is your project?
+
+Fairly small, probably less than one man year's work.
+
+    - How would you rate the success of your project?
+
+I have just made the first public release.
+
+    - Is there any other interesting information worth sharing?
+
+I am hoping to contribute some of the better developments I have made in Mission back to ASL.
+
+Mission Photo can be obtained from <a href='http://www.gnomefiles.org/app.php/Mission_Photo'>here</a>
+*/

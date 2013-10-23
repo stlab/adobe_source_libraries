@@ -1,0 +1,106 @@
+/** \page stldoc_accumulate accumulate
+
+<table cellpadding="0" cellspacing="0" width="100%" border="0">
+<tr>
+<td align="left">\image html algorithms.gif</td>
+<td width="100%"></td>
+<td align="right">\image html function.gif</td>
+</tr>
+<tr>
+<td align="left" valign="top"><b>Category</b>: algorithms</td>
+<td width="100%"></td>
+<td align="right" valign="top"><b>Component type</b>: function</td>
+</tr>
+</table>
+
+\section Prototype Prototype
+<code>Accumulate</code> is an overloaded name; there are actually two <code>accumulate</code>
+functions.
+\code
+template <class InputIterator, class T>
+T accumulate(InputIterator first, InputIterator last, T init);
+
+template <class InputIterator, class T, class BinaryFunction>
+T accumulate(InputIterator first, InputIterator last, T init,
+             BinaryFunction binary_op);
+\endcode
+\section Description Description
+<code>Accumulate</code> is a generalization of summation: it computes the sum
+(or some other binary operation) of <code>init</code> and all of the elements
+in the range <code>[first, last)</code>.  <A href="#1">[1]</A>  
+<p>
+The \ref stldoc_functors <code>binary_op</code> is not required to be either
+commutative or associative: the order of all of <code>accumulate</code>'s operations
+is specified.  The result is first initialized to <code>init</code>.  Then, for each
+iterator <code>i</code> in <code>[first, last)</code>, in order from beginning to end,
+it is updated by <code>result = result + *i</code> (in the first version) or
+<code>result = binary_op(result, *i)</code> (in the second version).
+\section Definition Definition
+Defined in the standard header <A href="numeric">numeric</A>, and in the nonstandard
+backward-compatibility header <A href="algo.h">algo.h</A>.
+\section Requirements_on_types Requirements on types
+For the first version, the one that takes two arguments:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>T</code> is a model of \ref stldoc_Assignable.
+<li>
+If <code>x</code> is an object of type <code>T</code> and <code>y</code> is an object of
+   <code>InputIterator</code>'s value type, then <code>x + y</code> is defined.
+<li>
+The return type of <code>x + y</code> is convertible to <code>T</code>.
+</ul>
+For the second version, the one that takes three arguments:
+<ul>
+<li>
+<code>InputIterator</code> is a model of \ref stldoc_InputIterator.
+<li>
+<code>T</code> is a model of \ref stldoc_Assignable.
+<li>
+<code>BinaryFunction</code> is a model of \ref stldoc_BinaryFunction.
+<li>
+<code>T</code> is convertible to <code>BinaryFunction</code>'s first argument type.
+<li>
+The value type of <code>InputIterator</code> is convertible to
+   <code>BinaryFunction</code>'s second argument type.
+<li>
+<code>BinaryFunction</code>'s return type is convertible to <code>T</code>.
+</ul>
+\section Preconditions Preconditions
+<ul>
+<li>
+<code>[first, last)</code> is a valid range.
+</ul>
+\section Complexity Complexity
+Linear.  Exactly <code>last - first</code> invocations of the binary operation.
+\section Example Example
+\code
+int main()
+{
+  int A[] = {1, 2, 3, 4, 5};
+  const int N = sizeof(A) / sizeof(int);
+
+  cout << "The sum of all elements in A is " 
+       << accumulate(A, A + N, 0)
+       << endl;
+
+  cout << "The product of all elements in A is "
+       << accumulate(A, A + N, 1, multiplies<int>())
+       << endl;
+}
+\endcode
+\section Notes Notes
+<p><A name="1">[1]</A>
+There are several reasons why it is important that <code>accumulate</code>
+starts with the value <code>init</code>.  One of the most basic is that this
+allows <code>accumulate</code> to have a well-defined result even if <code>[first,
+last)</code> is an empty range: if it is empty, the return value is <code>init</code>.
+If you want to find the sum of all of the elements in <code>[first, last)</code>,
+you can just pass <code>0</code> as <code>init</code>.
+\section See_also See also
+<code>\ref stldoc_inner_product</code>, <code>\ref stldoc_partial_sum</code>, <code>\ref stldoc_adjacent_difference</code>,
+<code>\ref stldoc_count</code>
+
+
+*/

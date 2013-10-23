@@ -1,0 +1,498 @@
+/*!
+\defgroup parsing Parsing, Serialization, and Strings
+\ingroup utility
+*/
+/*!
+\defgroup asl_xml_parser XML Parser (and supporting constructs)
+\ingroup parsing
+*/
+
+/*!
+\class adobe::attribute_set_t xml_parser.hpp <adobe/xml_parser.hpp>
+\ingroup asl_xml_parser
+
+\brief An associated array based on adobe::token_range_t.
+A utility class for the xml_parser_t.
+
+\model_of
+    - \ref stldoc_EqualityComparable
+
+\par Introduction
+One of the key advantages to the adobe::xml_parser_t class is its
+performance in parsing documents. It is able to achieve fast parsing
+speeds by eliminating the copying of the original data during the parse,
+and only copying information to the output streams as the client of the
+parser sees fit. This mandates a host of accomodations given that the
+source data becomes deeply shared during a parse.
+\par
+The adobe::attribute_set_t class is a collection point for attributes
+that are found while parsing elements found within an xml-based
+document. These attributes are then handed back to the xml_parser_t
+client via the client callback mechanism. The attribute_set_t storage
+implementation is copy-on-modify, so it is inexpensive to pass by value.
+*/
+
+/*!
+\class adobe::xml_parser_t xml_parser.hpp <adobe/xml_parser.hpp>
+\ingroup asl_xml_parser
+
+\brief A relatively lightweight and simple xml (subset) parser.
+
+\par Introduction
+For an interesting number of xml applications, even the most simple
+conforming xml parsers are overkill. This is not a criticism of such
+parsers. Indeed, most such systems, expat <http://expat.sourceforge.net>
+for example, are excellent solutions for processing xml documents from
+generic or unknown sources. However, there exist a number of
+applications that apply strict preconditions to the xml documents they
+process and/or tightly control the source of their documents.
+\par
+Examples of such applications include preference files (which are
+typically read and written by a program and not intended to be
+generically edited) and program configuration files (e.g. localization
+glossaries). These examples and the applications they represent have
+a number of characteristics in common:
+	\li The xml file is not intended to be generically editable or
+	processed by other xml tools.
+	\li The application does not require a validating parser.
+	\li The application can require that documents are encoded with a
+	specific character encoding (e.g. it can require utf8-encoding).
+	\li The application does not use "advanced" capabilities of xml
+	documents.
+
+For applications such as these, xml_parser_t delivers a simple and
+efficient solution.
+\par
+xml_parser_t enforces well-formedness and provides a sax-like
+interface to the application. Although xml_parser_t implements much
+of the XML 1.1 specification <http://www.w3.org/TR/xml11>, it is not
+strictly a conforming parser because of these deviations:
+	\li Validation schemes (e.g. DTDs, XML Schemas) are not supported.
+	\li Documents must be encoded in an 8-bit character encoding for
+	which US-ASCII is a proper subset (e.g. US-ASCII, UTF-8,
+	ISO-Latin-1).
+	\li The parser accepts UTF-8 and UTF-16 BOMs at the start of a
+	document stream but will throw an exception if a UTF-16 BOM is
+	encountered.
+	\li Namespaces are not supported.
+	\li The parser recognizes processing instructions but ignores
+	them, neither handling processing instructions nor passing them
+	to the application.
+	\li The parser recognizes comments but ignores them, neither
+	handling comments nor passing them to the application.
+\par
+In addition, an application can use xml_parser_t to parse some
+document fragments that may not be conforming xml documents in their
+own right.
+\par
+All strings xml_parser_t passes to the application are in the form of
+adobe::token_range_t, which are essentially const character ranges.
+These ranges refer to ranges within the xml data being parsed. This is
+a large part of how xml_parser_t delivers speed and memory efficiency,
+by eliminating data copying in the parser. The application is free to
+copy any data it requires.
+\par
+For ease of use, applications are encouraged to use a helper function,
+adobe::make_xml_parser, to create xml_parser_t objects. Because
+xml_parser_t is a template class, templatized on the type of its
+output iterator, correctly speaking the concrete name of a parser can
+be confusing or overly wordy. For most applications, the using
+make_xml_parser is significantly easier. As in:
+\verbatim
+adobe::make_xml_parser(start_of_xml_document,
+                       end_of_xml_document,
+                       line_position_t("sample document"),
+                       my_preorder_predicate,
+                       my_content_callback,
+                       my_output_iterator).parse_document();\endverbatim
+Note that in this usage, the parser is never even stored in a local
+variable. Instead, the result of make_xml_parser is immediately told
+to parse the document. This is a very common coding pattern for
+creating and using xml_parser_t.
+\par Basic Parsing Model
+xml_parser_t uses two application callbacks and one app-provided
+object, an OutputIterator, to process xml data. One app callback
+is called the content callback and allows the application to process
+the data of and in a single element. The second callback, called the
+preorder predicate, allows the application to inform the parser
+that a given element needs to be processed by the app's content
+callback, as opposed to being processed by the parser itself. In the
+following discussion, we will refer to this sample xml document:
+\verbatim
+<parent id="node1">
+	<simple-child id="node2"/>
+	<complex-child id="node3">
+		<grandchild id="node4"/>
+	</complex-child>
+</parent>\endverbatim
+\par
+xml_parser_t identifies the range corresponding to a given element and
+its contents -- in the example document above, the first element
+encountered is the parent element, which encompasses the enter
+document. The app's preorder predictate is called with the name
+of the element, "parent" in the example.
+\par
+When the preorder predicate returns true for a given element, then the
+app's content callback is invoked, passing the name of the element,
+its attributes (collected into an adobe::attribute_set_t), and its
+contents. Continuing our example, the content callback would be given
+the name "parent", an attribute set corresponding to { ("id","node1") },
+and a content range that began after the closing '>' character in the
+start tag and ending at the '<' character in the "</parent>" tag.
+\par
+When the preorder predicate returns false for a given element,
+xml_parser_t copies the element's tag to the output iterator if the
+tag is an empty tag (i.e. one closed with the "/>" sequence, as in
+<empty-tag/>). When the element contains content, xml_parser_t
+recursively creates a parser to process the contents of the element,
+reusing its same preorder predicate, content callback, and output
+iterator for the new parser.
+\par
+When it is invoked, the application's content callback is responsible
+for processing the content of the indicated element and returning the
+token_range_t that should be copied to the output iterator. This range
+can be empty if nothing should be copied to the output iterator.
+Alternatively, the callback can return the original content range or a
+completely altered range, as appropriate.
+\par
+From this basic parsing model, a wide variety of simple xml
+applications can be written, although the combinatorics of applying
+the three concepts from which the parser is built can be daunting.
+Luckily, just about all parsers fall into one of two categories for
+which we can describe a basic usage pattern that makes the job
+significantly easier. Those two categories are Document Filters and
+Command Processors.
+\par Building Document Filters
+A document filter is fundamentally an application that consumes a
+stream of characters containing markup and produces a stream of
+characters derived from that input stream. Such an application could
+be as complex as an XST Transform implementation or as simple as a
+string localization application. In fact, adobe::xstring is a good
+example of a document filter that uses xml_parser_t.
+\par
+Document filters use the parser's output iterator as the location to
+which the output (or processed) data is written. As such, it is common
+to use std::ostream_iterator or std::back_inserter(my_string) as the
+output iterator when creating parsers for filter applications.
+\par
+A filter's preorder predicate returns true for any element that the
+filter wishes to change in the output stream. The filter's content
+callback examines the content of each such element and provides
+replacement text to be output. For example, consider a simple example
+whereby an attribute of some tags are used as keys to look up
+replacement text. Such a simple application could be written like so:
+\verbatim
+static const token_range_t target_tag_k( static_token_range("replace-me") );
+
+token_range_t lookup_replacement_text(const token_range_t&);
+
+bool my_preorder_predicate(const token_range_t& tag_name)
+{
+	return token_range_equal(tag_name, target_tag_k);
+}
+
+token_range_t my_content_callback(
+	const token_range_t&     /* entire_element_range */,
+	const token_range_t&     /* name */,
+	const attribute_set_t&   attribute_set,
+	const token_range_t&     value)
+{
+	static const token_range_t id_attr_k(  static_token_range("id") );
+
+	const token_range_t id( attribute_set[id_addr_k] );
+	if (0 == boost::size(id))
+		throw std::runtime_error("replace-me tags require an id attribute");
+
+	return lookup_replacement_text(id);
+}\endverbatim
+With this application (and appropriate pre-population of a replacement
+dictionary), xml input data like this
+\verbatim
+Dear <replace-me id="their-name"/>,
+Thank you for your recent letter of <replace-me id="date"/>. Yadda Yadda Yadda.
+Sincerely,
+<replace-me id="my-name"/>\endverbatim
+might come out looking like this
+\verbatim
+Dear Mr. Smith,
+Thank you for your recent letter of 17 June. Yadda Yadda Yadda.
+Sincerely,
+John Q. Public\endverbatim
+\par
+An application like that described above might be initiated with a
+function written like this:
+\verbatim
+std::string perform_markup_replacement(const std::string& input)
+{
+	std::string result;
+	
+	make_xml_parser(
+			input.begin(), input.end(),
+			line_position_t("markup replacement string"),
+			my_preorder_predicate,
+			my_content_callback,
+			std::back_inserter(result)).parse_content();
+
+	return result;
+}\endverbatim
+\par
+Note that we use std::back_inserter(result) for the output iterator
+to which the processed output is written. This has the effect of
+storing the result in a new string to be returned from the function.
+\par
+Note also that the function calls the parser's parse_content member
+function. This is because our source code is not an xml document.
+Specifically, it is not well-formed (e.g. missing a root element).
+However, the data is valid xml content (i.e. if one wrapped it with a
+start and end tag, the result could be a well-formed document. Thus,
+the data can be processed via parse_content.
+\par Building Command Processors
+A command processor is a more generic model of an xml application than
+a document filter in which the application performs some action in
+response to each element in a document. The net result is often the
+creation or annotation of some program structure (e.g. modifying
+application preferences) or performing some structured program
+function (e.g. drawing graphics).
+\par
+By their nature, command processors are often unconcerned with the
+output iterator associated with the parser object. Similarly, command
+processors typcially perform some action with each tag in the
+document. As it happens, helpers exist to trivialize each function:
+adobe::always_true and adobe::implementation::null_output_t. [The
+author concedes that clients are encouraged to avoid direct use of
+things in the adobe::implementation namespace, but null_output_t is
+just too damned useful to avoid in this case.] Using these helpers,
+command processors can trivially ignore both the output iterator and
+preorder predicate and can concentrate on the content callback, where
+all the action of a command process typically takes
+place.
+\par
+Consider a simple document that describes a piece of graphics:
+\verbatim
+<canvas>
+	<rect sides="0 0 100 100"/>
+	<circle center="5 5" radius="10"/>
+	<polygon vertices="1 2 6 8 1 8"/>
+</canvas>\endverbatim
+Assuming that the parser's preorder predicate can be convinced to
+return true for all tags in the document (we'll do this later), this
+document can be parsed with a simple content callback.
+\verbatim
+token_range_t my_content_callback(
+	const token_range_t&     /* entire_element_range */,
+	const token_range_t&     name,
+	const attribute_set_t&   attribute_set,
+	const token_range_t&     value,
+	graphic_context_t&		 graphics)
+{
+	static const token_range_t canvas_tag_k(  static_token_range("canvas") );
+	static const token_range_t rect_tag_k(  static_token_range("rect") );
+	static const token_range_t circle_tag_k(  static_token_range("circle") );
+	static const token_range_t polygon_tag_k(  static_token_range("polygon") );
+
+	if (token_range_equal(canvas_tag_k, name))
+	{
+		make_xml_document(value.first, value.second,
+			line_position_t("canvas"),
+			adobe::always_true<token_range_t>(),
+			boost::bind(my_simple_content_callback, _1, _2, _3, _4, boost::ref(graphics)),
+			adobe::null_output_t()).parse_content();
+	}
+	else if (token_range_equal(rect_tag_k, name))
+	{
+		if (0 != boost::size(value))
+			throw std::runtime_error("rect elements must be empty");
+			
+		draw_rectangle(attribute_set, graphics);
+	}
+	else if (token_range_equal(circle_tag_k, name))
+	{
+		if (0 != boost::size(value))
+			throw std::runtime_error("circle elements must be empty");
+
+		draw_circle(attribute_set, graphics);
+	}
+	else if (token_range_equal(polygon_tag_k, name))
+	{
+		if (0 != boost::size(value))
+			throw std::runtime_error("polygon elements must be empty");
+
+		draw_polygon(attribute_set, graphics);
+	}
+	else
+	{
+		throw std::runtime_error("encountered unrecognized tag");
+	}
+
+	return token_range_t();
+}
+
+void draw_graphics(const std::string& xml_shape, graphics_context_t& graphics)
+{
+	make_xml_document(xml_shape.begin(), xml_shape.end(),
+		line_position_t("xml shape"),
+		adobe::always_true<token_range_t>(),
+		boost::bind(my_content_callback, _1, _2, _3, _4, boost::ref(graphics)),
+		adobe::null_output_t()).parse_document();
+}\endverbatim
+With this content callback function and external entry function, we
+have implemented a simple system that draws graphics based on the
+contents of an xml document and provides a modicum of error checking
+on the document contents (e.g. tags that are not allowed to have
+complex content confirm this fact). One potential problem is that this
+application does not guarantee that the root element is a canvas.
+Indeed, a document with a single <rect ... /> element is conformant
+with the application, as written above. This may either be good or
+bad, depending on the design of your specific application.
+\par
+Although the implementation above is rather simple and
+straightforward, command processors are often more complex. Documents
+processed by command processors often contain sub-structures that
+must themselves be parsed. Consider this, slightly more complex,
+version of our example graphics document:
+\verbatim
+<canvas>
+	<rect sides="0 0 100 100"/>
+	<circle center="5 5" radius="10"/>
+	<group translation="5 10">
+		<polygon>
+			<vertex xy="1 2"/>
+			<vertex xy="6 8"/>
+			<vertex xy="1 8"/>
+		</polygon>
+		<rect sides="3 3 10 10"/>
+	</group>
+</canvas>\endverbatim
+Here, the polygon element's vertices are elements within the polygon's
+content instead of attributes. This requires polygon's content to be
+parsed to create an appropriate primitive to draw. Similarly, the
+document grammar has added a group element that groups primitives
+together within a coordinate transformation.
+\par
+As it happens, these complications do not significantly complicate
+our code. Rather, it encourages us to refactor the code into sets of
+composable functions. As we modify our system to accomodate these
+changes, we will add a correctness check that the root element is what
+we expect.
+\verbatim
+token_range_t my_polygon_callback(
+	const token_range_t&     /* entire_element_range */,
+	const token_range_t&     name,
+	const attribute_set_t&   attribute_set,
+	const token_range_t&     /* value */,
+	polygon_t&				 polygon)
+{
+	static const token_range_t vertex_tag_k(  static_token_range("vertex") );
+
+	if (token_range_equal(vertex_tag_k, name))
+	{
+		polygon.add_vertex( make_vertex(attribute_set) );
+	}
+	else
+	{
+		throw std::runtime_error("encountered expected tag inside polygon content");
+	}
+
+	return token_range_t();
+}
+
+token_range_t my_group_callback(
+	const token_range_t&     /* entire_element_range */,
+	const token_range_t&     name,
+	const attribute_set_t&   attribute_set,
+	const token_range_t&     value,
+	graphic_context_t&		 graphics)
+{
+	static const token_range_t rect_tag_k(  static_token_range("rect") );
+	static const token_range_t circle_tag_k(  static_token_range("circle") );
+	static const token_range_t group_tag_k(  static_token_range("group") );
+	static const token_range_t polygon_tag_k(  static_token_range("polygon") );
+
+	if (token_range_equal(group_tag_k, name))
+	{
+		graphic_context_t translated_graphics( graphics, attribute_set );
+
+		make_xml_document(value.first, value.second,
+			line_position_t("group"),
+			adobe::always_true<token_range_t>(),
+			boost::bind(my_group_callback, _1, _2, _3, _4, boost::ref(translated_graphics)),
+			adobe::null_output_t()).parse_content();
+	}
+	else if (token_range_equal(rect_tag_k, name))
+	{
+		if (0 != boost::size(value))
+			throw std::runtime_error("rect elements must be empty");
+			
+		draw_rectangle(attribute_set, graphics);
+	}
+	else if (token_range_equal(circle_tag_k, name))
+	{
+		if (0 != boost::size(value))
+			throw std::runtime_error("circle elements must be empty");
+
+		draw_circle(attribute_set, graphics);
+	}
+	else if (token_range_equal(polygon_tag_k, name))
+	{
+		polygon_t polygon;
+
+		make_xml_document(value.first, value.second,
+			line_position_t("polygon"),
+			adobe::always_true<token_range_t>(),
+			boost::bind(my_polygon_callback, _1, _2, _3, _4, boost::ref(polygon)),
+			adobe::null_output_t()).parse_content();
+
+		draw_polygon(polygon, graphics);
+	}
+	else
+	{
+		throw std::runtime_error("encountered unrecognized tag in group");
+	}
+
+	return token_range_t();
+}
+
+token_range_t my_canvas_callback(
+	const token_range_t&     /* entire_element_range */,
+	const token_range_t&     name,
+	const attribute_set_t&   attribute_set,
+	const token_range_t&     value,
+	graphic_context_t&		 graphics)
+{
+	static const token_range_t canvas_tag_k(  static_token_range("canvas") );
+
+	if (token_range_equal(canvas_tag_k, name))
+	{
+		make_xml_document(value.first, value.second,
+			line_position_t("canvas"),
+			adobe::always_true<token_range_t>(),
+			boost::bind(my_group_callback, _1, _2, _3, _4, boost::ref(graphics)),
+			adobe::null_output_t()).parse_content();
+	}
+	else
+	{
+		throw std::runtime_error("encountered unrecognized tag in document");
+	}
+
+	return token_range_t();
+}
+
+void draw_graphics(const std::string& xml_shape, graphics_context_t& graphics)
+{
+	make_xml_document(xml_shape.begin(), xml_shape.end(),
+		line_position_t("xml shape"),
+		adobe::always_true<token_range_t>(),
+		boost::bind(my_canvas_callback, _1, _2, _3, _4, boost::ref(graphics)),
+		adobe::null_output_t()).parse_document();
+}\endverbatim
+Note that this solution guarantees that the root element is a canvas,
+accomodates groups that contain graphic primitives and other groups,
+and parses elements within polygon content as vertices. An interesting
+side effect of the refactoring that produced this system is that
+the functions tend to be smaller and more composable than the single
+monolithic function in our first example.
+\par
+And because xml_parser_t is an exceptionally lightweight object, the
+overhead of creating sub-parsers for each specific piece of content
+is trivial for all but the most stack-restricted programs.
+*/
