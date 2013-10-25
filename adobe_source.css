@@ -89,7 +89,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dee1e5', end
 {
     font-family: 'Noto Sans', sans-serif;
     font-size:large;
-    font-weight:bold;
+    font-weight:500;
     margin:auto auto;
 }
 
@@ -127,7 +127,7 @@ h1.glow,h2.glow,h3.glow,h4.glow,h5.glow,h6.glow
 
 dt
 {
-    font-weight:bold;
+    font-weight:500;
 }
 
 div.multicol
@@ -160,7 +160,7 @@ p.endtd
 
 caption
 {
-    font-weight:bold;
+    font-weight:500;
 }
 
 span.legend
@@ -196,7 +196,7 @@ div.navtab
 a
 {
     color:#3D578C;
-    font-weight:bold;
+    font-weight:500;
     text-decoration:none;
 }
 
@@ -212,7 +212,7 @@ a:hover
 
 a.qindex
 {
-    font-weight:bold;
+    font-weight:500;
 }
 
 a.qindexHL
@@ -220,7 +220,7 @@ a.qindexHL
     background-color:#9CAFD4;
     border:1px double #869DCA;
     color:#fff;
-    font-weight:bold;
+    font-weight:500;
 }
 
 .contents a.qindexHL:visited
@@ -230,7 +230,7 @@ a.qindexHL
 
 a.el
 {
-    font-weight:bold;
+    font-weight:500;
 }
 
 a.code,a.code:visited,a.line,a.line:visited
@@ -258,7 +258,7 @@ pre.fragment
     margin:4px 8px 4px 2px;
     overflow:auto;
     padding:4px 6px;
-    word-wrap:break-word;
+    word-wrap:n;
 }
 
 div.fragment
@@ -266,6 +266,7 @@ div.fragment
     background-color:white;
     border:none;
     margin:0;
+    margin-top:1em;
     padding:0;
 }
 
@@ -290,8 +291,8 @@ div.line
     text-wrap:none;
     transition-duration:none;
     transition-property:none;
-    white-space:pre-wrap;
-    word-wrap:break-word;
+    white-space:pre;
+    word-wrap:normal;
 }
 
 div.line.glow
@@ -302,21 +303,25 @@ div.line.glow
 
 span.lineno
 {
-    background-color:#E8E8E8;
-    border-right:2px solid #0D0;
+    background-color:#F3F3F3;
+    border-right:none;
     padding-right:4px;
     text-align:right;
     white-space:pre;
+    color: black;
+    color: rgba(0, 0, 0, 0.5);
 }
 
 span.lineno a
 {
-    background-color:#E8E8E8;
+    background-color:#F3F3F3;
+    color: rgba(70, 101, 162, 0.75);
 }
 
 span.lineno a:hover
 {
-    background-color:#D8D8D8;
+    background-color:#F3F3F3;
+    color: rgba(70, 101, 162, 1.0);
 }
 
 div.ah
@@ -331,7 +336,7 @@ div.ah
     border-radius:.5em;
     box-shadow:2px 2px 3px #999;
     color:#fff;
-    font-weight:bold;
+    font-weight:500;
     margin-bottom:3px;
     margin-top:3px;
     padding:.2em;
@@ -339,7 +344,7 @@ div.ah
 
 div.groupHeader
 {
-    font-weight:bold;
+    font-weight:500;
     margin-left:16px;
     margin-top:12px;
 }
@@ -368,7 +373,7 @@ td.indexkey
 {
     background-color:#EBEFF6;
     border:1px solid #C4CFE5;
-    font-weight:bold;
+    font-weight:500;
     margin:2px 0;
     padding:2px 10px;
     vertical-align:top;
@@ -501,7 +506,7 @@ td.tiny
 th.dirtab
 {
     background:#EBEFF6;
-    font-weight:bold;
+    font-weight:500;
 }
 
 hr
@@ -549,6 +554,16 @@ table.memberdecls
     border:none;
     margin:4px;
     padding:5px 0px 8px 8px;
+}
+
+.mdescLeft, .mdescRight
+{
+    font-family: 'Noto Sans', sans-serif;
+}
+
+.memTemplItemRight
+{
+    width:100%;
 }
 
 .memTemplParams
@@ -631,7 +646,8 @@ table.memberdecls
 
 .memname
 {
-    font-weight:bold;
+    font-family:'Source Code Pro', monospace, fixed;
+    font-weight:500;
     margin-left:6px;
 }
 
@@ -719,7 +735,7 @@ dl.reflist dd
 
 .params .paramname,.retval .paramname
 {
-    font-weight:bold;
+    font-weight:500;
     vertical-align:top;
 }
 
@@ -749,7 +765,7 @@ td.mlabels-left
 td.mlabels-right
 {
     padding:0;
-    vertical-align:bottom;
+    vertical-align:top;
     white-space:nowrap;
 }
 
@@ -988,7 +1004,7 @@ table.fieldtable
 .navpath li
 {
     background-image:url(bc_s.png);
-    background-position:right;
+    background-position:right center;
     background-repeat:no-repeat;
     color:#364D7C;
     float:left;
@@ -999,12 +1015,17 @@ table.fieldtable
 
 .navpath li.navelem a
 {
+    height: 2em;
+}
+
+.navpath li.navelem a
+{
     color:#283A5D;
     display:block;
-    font-family:'Noto Sans', sans-serif;
+    font-family:'Source Code Pro', monospace, fixed;
     outline:none;
     text-decoration:none;
-    text-shadow:0 1px 1px rgba(255,255,255,0.9);
+    text-shadow:none;
 }
 
 .navpath li.navelem a:hover
@@ -1149,7 +1170,7 @@ dl.section dd
 {
     font:'Noto Sans', sans-serif;
     font-size: xx-large;
-    font-weight: bold;
+    font-weight: 500;
     margin:0;
     padding:2px 0;
 }
@@ -1195,7 +1216,7 @@ dl.section dd
 
 .caption
 {
-    font-weight:bold;
+    font-weight:500;
 }
 
 div.zoom
@@ -1212,7 +1233,7 @@ dl.citelist dt
 {
     color:#334975;
     float:left;
-    font-weight:bold;
+    font-weight:500;
     margin-right:10px;
     padding:5px;
 }
@@ -1248,7 +1269,7 @@ div.toc h3
 {
     border-bottom:0 none;
     color:#4665A2;
-    font:bold 12px/1.2 Arial,FreeSans,sans-serif;
+    font:500 12px/1.2 Arial,FreeSans,sans-serif;
     margin:0;
 }
 
@@ -1288,7 +1309,7 @@ div.toc li.level4
     -webkit-user-select:none;
     color:gray;
     cursor:pointer;
-    font-weight:bold;
+    font-weight:500;
     user-select:none;
 }
 
@@ -1304,8 +1325,8 @@ div.toc li.level4
 
 tr.heading h2
 {
-    margin-bottom:4px;
-    margin-top:12px;
+    margin-bottom:.5em;
+    margin-top:.5em;
 }
 
 .ttc
@@ -1339,12 +1360,12 @@ tr.heading h2
 
 #powerTip div.ttname a
 {
-    font-weight:bold;
+    font-weight:500;
 }
 
 #powerTip div.ttname
 {
-    font-weight:bold;
+    font-weight:500;
 }
 
 #powerTip div.ttdeci
