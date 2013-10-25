@@ -14,8 +14,6 @@
 #include <functional>
 #include <typeinfo>
 
-#include <adobe/move.hpp>
-
 /**************************************************************************************************/
 
 namespace adobe {
@@ -107,7 +105,7 @@ struct assign
     typedef void result_type;
 
     template <typename T> // T models Regular
-    void operator()(T x, T& r) { r = adobe::move(x); }
+    void operator()(T x, T& r) { r = std::move(x); }
 };
 
 /**************************************************************************************************/

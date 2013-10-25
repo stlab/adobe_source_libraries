@@ -18,7 +18,7 @@ build-project forest_smoke ;
 build-project md5 ;
 # build-project move ;
 # build-project poly ;
-# build-project property_model_eval ; # program options library can't be built
+build-project property_model_eval ;
 build-project reduction ;
 # build-project serialization ;
 build-project sha ;
