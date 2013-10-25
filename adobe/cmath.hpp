@@ -37,7 +37,7 @@ back to include math.h. This also needs to add any other C99 math.h extensions.
 #define ADOBE_HAS_CPP_CMATH 
 
 #elif __GNUC__ == 4 
-#if (__GNUC_MINOR__ < 9) || (!(defined(_GLIBCXX_USE_C99_MATH_TR1)))
+#if (__GNUC_MINOR__ < 6) || (!(defined(_GLIBCXX_USE_C99_MATH_TR1)))
 // at least Ubuntu 9.x, gcc 4.4.1, still falls into this case
 /*
     The currently supported version of GNUC has C99 extensions in math.h. But no TR1 extensions.
@@ -46,7 +46,7 @@ back to include math.h. This also needs to add any other C99 math.h extensions.
 #include <cmath>
 #else 
 #include <tr1/cmath>
-s
+
 #define ADOBE_HAS_C99_STD_MATH_H
 #endif
 #endif
