@@ -25,199 +25,6 @@
 
 namespace adobe {
 
-/*!
-\class adobe::sha1_t
-\ingroup secure_algorithm
-
-\brief A bit-oriented implementation of the SHA-1 Secure Hash Algorithm
-*/
-
-/*!
-\class adobe::sha224_t
-\ingroup secure_algorithm
-
-\brief A bit-oriented implementation of the SHA-224 Secure Hash Algorithm
-*/
-
-/*!
-\class adobe::sha256_t
-\ingroup secure_algorithm
-
-\brief A bit-oriented implementation of the SHA-256 Secure Hash Algorithm
-*/
-
-/*!
-\class adobe::sha384_t
-\ingroup secure_algorithm
-
-\brief A bit-oriented implementation of the SHA-384 Secure Hash Algorithm
-*/
-
-/*!
-\class adobe::sha512_t
-\ingroup secure_algorithm
-
-\brief A bit-oriented implementation of the SHA-512 Secure Hash Algorithm
-*/
-
-/*!
-\typedef adobe::sha1_t::digest_type
-
-A <code>boost::array<boost::uint32_t, 5></code> for the 160-bit digest
-*/
-
-/*!
-\fn adobe::sha1_t::digest_type adobe::sha1_t::digest(I first, I last)
-
-\pre
-    <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
-
-\param first    first iterator over the range to hash
-\param last     last iterator over the range to hash
-
-\return The SHA-1 digest of the message
-*/
-
-/*!
-\fn adobe::sha1_t::digest_type adobe::sha1_t::digest(I first, boost::uint64_t num_bits)
-
-\pre
-    <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
-
-\param first    first iterator over the range to hash
-\param num_bits number of bits to hash
-
-\return The SHA-1 digest of the message
-*/
-
-/*!
-\typedef adobe::sha224_t::digest_type
-
-A <code>boost::array<boost::uint32_t, 7></code> for the 224-bit digest
-*/
-
-/*!
-\fn adobe::sha224_t::digest_type adobe::sha224_t::digest(I first, I last)
-
-\pre
-    <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
-
-\param first    first iterator over the range to hash
-\param last     last iterator over the range to hash
-
-\return The SHA-224 digest of the message
-*/
-
-/*!
-\fn adobe::sha224_t::digest_type adobe::sha224_t::digest(I first, boost::uint64_t num_bits)
-
-\pre
-    <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
-
-\param first    first iterator over the range to hash
-\param num_bits number of bits to hash
-
-\return The SHA-224 digest of the message
-*/
-
-/*!
-\typedef adobe::sha256_t::digest_type
-
-A <code>boost::array<boost::uint32_t, 8></code> for the 256-bit digest
-*/
-
-/*!
-\fn adobe::sha256_t::digest_type adobe::sha256_t::digest(I first, I last)
-
-\pre
-    <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
-
-\param first    first iterator over the range to hash
-\param last     last iterator over the range to hash
-
-\return The SHA-256 digest of the message
-*/
-
-/*!
-\fn adobe::sha256_t::digest_type adobe::sha256_t::digest(I first, boost::uint64_t num_bits)
-
-\pre
-    <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
-
-\param first    first iterator over the range to hash
-\param num_bits number of bits to hash
-
-\return The SHA-256 digest of the message
-*/
-
-/*!
-\typedef adobe::sha384_t::digest_type
-
-A <code>boost::array<boost::uint64_t, 6></code> for the 384-bit digest
-*/
-
-/*!
-\fn adobe::sha384_t::digest_type adobe::sha384_t::digest(I first, I last)
-
-\pre
-    <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
-
-\param first    first iterator over the range to hash
-\param last     last iterator over the range to hash
-
-\return The SHA-384 digest of the message
-
-\note While the SHA standard specifies the ability to process messages of 2^128 in length, currently this SHA-384 implementation only handles messages up to 2^64 in length.
-*/
-
-/*!
-\fn adobe::sha384_t::digest_type adobe::sha384_t::digest(I first, boost::uint64_t num_bits)
-
-\pre
-    <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
-
-\param first    first iterator over the range to hash
-\param num_bits number of bits to hash
-
-\return The SHA-384 digest of the message
-
-\note While the SHA standard specifies the ability to process messages of 2^128 in length, currently this SHA-384 implementation only handles messages up to 2^64 in length.
-*/
-
-/*!
-\typedef adobe::sha512_t::digest_type
-
-A <code>boost::array<boost::uint64_t, 8></code> for the 512-bit digest
-*/
-
-/*!
-\fn adobe::sha512_t::digest_type adobe::sha512_t::digest(I first, I last)
-
-\pre
-    <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
-
-\param first    first iterator over the range to hash
-\param last     last iterator over the range to hash
-
-\return The SHA-512 digest of the message
-
-\note While the SHA standard specifies the ability to process messages of 2^128 in length, currently this SHA-512 implementation only handles messages up to 2^64 in length.
-*/
-
-/*!
-\fn adobe::sha512_t::digest_type adobe::sha512_t::digest(I first, boost::uint64_t num_bits)
-
-\pre
-    <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
-
-\param first    first iterator over the range to hash
-\param num_bits number of bits to hash
-
-\return The SHA-512 digest of the message
-
-\note While the SHA standard specifies the ability to process messages of 2^128 in length, currently this SHA-512 implementation only handles messages up to 2^64 in length.
-*/
-
 /*************************************************************************************************/
 
 namespace implementation {
@@ -886,7 +693,20 @@ struct sha384_traits_t
 } // namespace implementation
 
 /*************************************************************************************************/
+/**
+    Generic engine implementation for SHA-*.
 
+    Given the similarity of behavior between the SHA-* class of algorithms,
+    the core functionality has been encapsulated in this class.
+
+    Users of the class can either call one of the one-shot sha::digest
+    routines or instantiate the class and call sha::update repeatedly,
+    then retrieve the digest with sha::finalize.
+
+    \todo adobe::implementation::long_distance is currently `O(N)`, and
+          should be specialized when possible to `O(1)` when given a
+          random access iterator.
+*/
 template <class Traits>
 class sha
 {
@@ -895,13 +715,36 @@ public:
     typedef Traits traits_type;
 #endif
 
+    /**
+    A statically-sized, contiguous array for the resulting SHA-* digest.
+    
+    \note the size of this digest will change depending on the SHA
+          routine in use.
+    */
     typedef typename traits_type::digest_type digest_type;
 
+    /**
+        Sets the state of the digest machine to its default.
+    */
     sha()
     {
         traits_type().reset_digest(process_m);
     }
 
+    /**
+    This routine can be called successively to digest a data over one or more
+    steps.
+
+    \pre
+        <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
+
+    \param first first iterator over the range to digest
+    \param last  last iterator over the range to digest
+
+    \note While the SHA standard specifies the ability to process messages up to
+          2^128 bits, this routine is limited to 2^64 bits. A workaround to the
+          limitation is to call this routine multiple times.
+    */
     template <typename I>
     inline void update(I first, I last)
     {
@@ -910,17 +753,45 @@ public:
         update(first, implementation::long_distance(first, last) * ibits_k);
     }
 
+    /**
+    This routine can be called successively to digest a data over one or more
+    steps.
+
+    \pre
+        <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
+
+    \param first first iterator over the range to digest
+    \param num_bits number of bits to digest
+
+    \note While the SHA standard specifies the ability to process messages up to
+          2^128 bits, this routine is limited to 2^64 bits. A workaround to the
+          limitation is to call this routine multiple times.
+    */
     template <typename I>
     inline void update(I first, boost::uint64_t num_bits)
     {
         implementation::block_and_digest<traits_type>(process_m, first, num_bits);
     }
 
+    /**
+    \return The SHA-* digest of the message
+    */
     inline digest_type finalize() const
     {
         return traits_type::finalize(process_m);
     }
 
+    /**
+    \pre
+        <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
+
+    \param first first iterator over the range to digest
+    \param last  last iterator over the range to digest
+
+    \note While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to 2^64 bits.
+
+    \return The SHA-* digest of the message
+    */
     template <typename I>
     static inline digest_type digest(I first, I last)
     {
@@ -929,6 +800,17 @@ public:
         return digest(first, implementation::long_distance(first, last) * ibits_k);
     }
 
+    /**
+    \pre
+        <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
+
+    \param first    first iterator over the range to digest
+    \param num_bits number of bits to digest
+
+    \note While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to 2^64 bits.
+
+    \return The SHA-* digest of the message
+    */
     template <typename I>
     static inline digest_type digest(I first, boost::uint64_t num_bits)
     {
@@ -939,17 +821,53 @@ public:
         return instance.finalize();
     }
 
+#ifndef ADOBE_NO_DOCUMENTATION
 private:
     typename traits_type::process_type process_m;
+#endif
 };
 
 /*************************************************************************************************/
 
+/*!
+\ingroup secure_algorithm
+
+\brief A bit-oriented implementation of the SHA-1 Secure Hash Algorithm
+*/
+
 typedef sha<implementation::sha1_traits_t>   sha1_t;
+
+/*!
+\ingroup secure_algorithm
+
+\brief A bit-oriented implementation of the SHA-224 Secure Hash Algorithm
+*/
+
 typedef sha<implementation::sha224_traits_t> sha224_t;
+
+/*!
+\ingroup secure_algorithm
+
+\brief A bit-oriented implementation of the SHA-256 Secure Hash Algorithm
+*/
+
 typedef sha<implementation::sha256_traits_t> sha256_t;
-typedef sha<implementation::sha512_traits_t> sha512_t;
+
+/*!
+\ingroup secure_algorithm
+
+\brief A bit-oriented implementation of the SHA-384 Secure Hash Algorithm
+*/
+
 typedef sha<implementation::sha384_traits_t> sha384_t;
+
+/*!
+\ingroup secure_algorithm
+
+\brief A bit-oriented implementation of the SHA-512 Secure Hash Algorithm
+*/
+
+typedef sha<implementation::sha512_traits_t> sha512_t;
 
 /*************************************************************************************************/
 
