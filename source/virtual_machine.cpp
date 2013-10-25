@@ -10,6 +10,7 @@
 
 #include <cmath>
 #include <map>
+#include <mutex>
 #include <numeric>
 #include <typeinfo>
 #include <vector>
