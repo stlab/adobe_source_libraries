@@ -1,10 +1,10 @@
 # Establish common build settings across all .../adobe/test projects 
 # above and beyond those established for all .../adobe projects 
 
-project 
+project
     : requirements
-        <library>/adobe//asl
-        <library>/boost/test//boost_unit_test_framework 
+      <source>/adobe//asl
+      <source>/boost/test//boost_unit_test_framework
     ;
 
 build-project unit_tests ;

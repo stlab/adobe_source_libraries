@@ -1,5 +1,5 @@
 # Jamfile for building the xml_parser smoke test app
 
-project adobe/xml_parser ;
+project ;
 
 run main.cpp ;
