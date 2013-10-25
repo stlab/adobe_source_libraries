@@ -59,15 +59,10 @@ asl_requirements =
     <include>$(boost-path)
     <include>.
 
-    # Library dependencies
-    <library>/boost/filesystem
-    <library>/boost/system
-
     # Linker specializations
     <link>static,<threading>multi:<define>BOOST_THREAD_USE_LIB
 
     # Threading specializations
-    <threading>multi:<library>/boost/thread//boost_thread
     <threading>single:<define>BOOST_DISABLE_THREADS
 
     # Clang toolset specializations
@@ -133,6 +128,9 @@ project
 lib asl
     : #sources
         [ glob source/*.cpp ]
+        /boost/filesystem
+        /boost/system
+        /boost/thread//boost_thread
     : #requirements
     : #defaults
     : #usage requirements
@@ -147,7 +145,7 @@ explicit asl ;
 
 # Build and run the tests
 
-use-project /adobe : .  ;
+use-project /adobe : . ;
 
 build-project test ;
 
