@@ -123,33 +123,14 @@ project
         $(TOP)/../built_artifacts
     ;
 
-# Build ASL dependencies as a library
-#
-# asl_deps is a set of globbed files from third-party locations (currently
-# just Boost). I would have used the <library> bjam feature to auto-link in
-# the Boost libraries like filesystem and system however I do not know of
-# a way to pass in the flags we specify here to those dependencies - indeed
-# it would seem the <library> feature is a link-time feature anyhow, so
-# e.g., compiler flags would never pass from ASL to Boost. The problem with
-# that is Boost is not being compiled with clang's c++11 flags by default,
-# resulting in binary incompatibilities between Boost's library object files
-# and ASLs. This is the only workaround I can currently think of.
-#
-lib asl_deps
-    : #sources
-        [ glob ../boost_libraries/libs/filesystem/src/*.cpp ]
-        [ glob ../boost_libraries/libs/system/src/*.cpp ]
-    : #requirements
-        $(asl_requirements)
-    : #defaults
-    : #usage requirements
-    ;
-
 # Build ASL as a library
 
 lib asl
     : #sources
         [ glob source/*.cpp ]
+        /boost/filesystem
+        /boost/system
+        /boost/thread//boost_thread
     : #requirements
     : #defaults
     : #usage requirements
@@ -161,8 +142,6 @@ lib asl
 # dependency of another project.
 
 explicit asl ;
-
-explicit asl_deps ;
 
 # Build and run the tests
 
