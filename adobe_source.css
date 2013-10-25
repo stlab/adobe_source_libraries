@@ -1,6 +1,20 @@
+html
+{
+    width: 900px;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    margin-left: auto;
+    margin-right: auto;
+    background: lightgray;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding:0;
+}
+
 body,table,div,p,dl
 {
-    font:400 14px/22px 'Noto Sans',sans-serif;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: medium;
 }
 
 tt, code, kbd, samp
@@ -11,13 +25,23 @@ tt, code, kbd, samp
 
 h1.groupheader
 {
-    font-size:150%;
+    font-size:large;
+}
+
+.tabs, .tabs2, .tabs3
+{
+    font-family: 'Noto Sans', sans-serif;
+    font-size: small;
+}
+
+.tablist li {
+    line-height: 2em;
 }
 
 .title
 {
-    font:400 14px/28px 'Noto Sans',sans-serif;
-    font-size:150%;
+    font-family: 'Noto Sans', sans-serif;
+    font-size:large;
     font-weight:700;
     margin:10px 2px;
 }
@@ -281,8 +305,8 @@ div.groupText
 
 body
 {
-    background-color:#FFF;
-    color:#000;
+    background:white;
+    color:black;
     margin:0;
 }
 
@@ -564,46 +588,12 @@ table.memberdecls
 
 .memproto,dl.reflist dt
 {
-    -moz-border-radius-topleft:4px;
-    -moz-border-radius-topright:4px;
-    -moz-box-shadow:rgba(0,0,0,0.15) 5px 5px 5px;
-    -webkit-border-top-left-radius:4px;
-    -webkit-border-top-right-radius:4px;
-    -webkit-box-shadow:5px 5px 5px rgba(0,0,0,0.15);
-    background-color:#E2E8F2;
-    background-image:url(nav_f.png);
-    background-repeat:repeat-x;
-    border-left:1px solid #A8B8D9;
-    border-right:1px solid #A8B8D9;
-    border-top:1px solid #A8B8D9;
-    border-top-left-radius:4px;
-    border-top-right-radius:4px;
-    box-shadow:5px 5px 5px rgba(0,0,0,0.15);
-    color:#253555;
-    font-weight:700;
-    padding:6px 0;
-    text-shadow:0 1px 1px rgba(255,255,255,0.9);
+    background-image:none;
 }
 
 .memdoc,dl.reflist dd
 {
-    -moz-border-radius-bottomleft:4px;
-    -moz-border-radius-bottomright:4px;
-    -moz-box-shadow:rgba(0,0,0,0.15) 5px 5px 5px;
-    -webkit-border-bottom-left-radius:4px;
-    -webkit-border-bottom-right-radius:4px;
-    -webkit-box-shadow:5px 5px 5px rgba(0,0,0,0.15);
-    background-color:#FFF;
-    background-image:url(nav_g.png);
-    background-repeat:repeat-x;
-    border-bottom:1px solid #A8B8D9;
-    border-bottom-left-radius:4px;
-    border-bottom-right-radius:4px;
-    border-left:1px solid #A8B8D9;
-    border-right:1px solid #A8B8D9;
-    border-top-width:0;
-    box-shadow:5px 5px 5px rgba(0,0,0,0.15);
-    padding:6px 10px 2px;
+    background-image:none;
 }
 
 dl.reflist dt
@@ -907,9 +897,9 @@ table.fieldtable
     background-repeat:repeat-x;
     border:solid 1px #C2CDE4;
     color:#8AA0CC;
-    font-size:11px;
-    height:30px;
-    line-height:30px;
+    font-size:small;
+    height:2em;
+    line-height:2em;
     margin:0;
     overflow:hidden;
     padding:0;
@@ -931,8 +921,7 @@ table.fieldtable
 {
     color:#283A5D;
     display:block;
-    font-family:'Lucida Grande',Geneva,Helvetica,Arial,sans-serif;
-    height:32px;
+    font-family:'Noto Sans', sans-serif;
     outline:none;
     text-decoration:none;
     text-shadow:0 1px 1px rgba(255,255,255,0.9);
@@ -1072,7 +1061,8 @@ dl.section dd
 {
     border-collapse:separate;
     text-align:center;
-    vertical-align:center;
+    margin-top:auto;
+    margin-bottom:auto;
 }
 
 #projectlogo img
@@ -1082,21 +1072,25 @@ dl.section dd
 
 #projectname
 {
-    font:300% Tahoma, Arial,sans-serif;
+    font:'Noto Sans', sans-serif;
+    font-size: xx-large;
+    font-weight: bold;
     margin:0;
     padding:2px 0;
 }
 
 #projectbrief
 {
-    font:120% Tahoma, Arial,sans-serif;
+    font:'Noto Sans', sans-serif;
+    font-size: x-large;
     margin:0;
     padding:0;
 }
 
 #projectnumber
 {
-    font:50% Tahoma, Arial,sans-serif;
+    font:'Noto Sans', sans-serif;
+    font-size: medium;
     margin:0;
     padding:0;
 }
