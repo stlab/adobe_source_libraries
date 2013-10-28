@@ -18,7 +18,7 @@ build-project forest_smoke ;
 build-project md5 ;
 # build-project move ;
 # build-project poly ;
-build-project property_model_eval ;
+alias property_model_eval_test : property_model_eval : <toolset>clang,<variant>release:<optimization>off ;
 build-project reduction ;
 # build-project serialization ;
 build-project sha ;
