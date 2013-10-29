@@ -110,11 +110,26 @@ asl_requirements =
     <toolset>msvc-9.0:<cxxflags>"/W3 /WX /Zc:wchar_t /Zc:forScope"
     ;
 
+# Set up c++11 support as a feature so it will propagate into the
+# boost dependencies
+
+feature.feature cpp11 :
+    on :
+    composite optional propagated
+    ;
+
+feature.compose <cpp11>on :
+        <cxxflags>"-stdlib=libc++ -std=c++11"
+        <define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
+        <linkflags>"-lc++"
+    ;
+
 # Set up ASL as a Boost project
 
 project
     : requirements
         $(asl_requirements)
+        <cpp11>on
     : default-build
         <link>static
         <threading>multi
