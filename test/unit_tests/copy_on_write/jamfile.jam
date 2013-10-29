@@ -1,1 +1,3 @@
+project ;
+
 run cow_test.cpp ;

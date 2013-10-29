@@ -11,7 +11,6 @@
 
 #include <adobe/config.hpp>
 
-
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
@@ -21,7 +20,6 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/has_nothrow_constructor.hpp>
 
-#include <adobe/move.hpp>
 #include <adobe/implementation/swap.hpp>
 #include <adobe/typeinfo.hpp>
 
@@ -286,7 +284,7 @@ struct poly_base {
         if (a.type_info() == b.type_info()) { a.exchange(b); return; }
 
         // x->tmp
-        poly_base tmp(adobe::move(x));
+        poly_base tmp(std::move(x));
         a.~interface_type();
 
         // y->x
@@ -417,7 +415,7 @@ T must be a regular type modeling the concept represented by F
     poly(poly&& x) : F(std::move(x)) {}
     poly(const poly&) = default;
 
-    poly& operator=(poly x) { static_cast<F&>(*this) = adobe::move(static_cast<F&>(x)); return *this; }
+    poly& operator=(poly x) { static_cast<F&>(*this) = std::move(static_cast<F&>(x)); return *this; }
 
     poly() : F() {}
 };

@@ -37,9 +37,8 @@ struct toroid_node_t
     toroid_header_t*    column_m;   // header at head of this column
     toroid_header_t*    row_m;      // header at head of this row
     char                color_m;
-#ifndef NDEBUG
+
     bool                covered_m;  // debugging; is this node covered
-#endif
 };
 
 /****************************************************************************************************/
@@ -111,9 +110,7 @@ public:
         header_m.right_m = &(col_header_set_m.front());
         header_m.left_m = &(col_header_set_m.back());
         header_m.color_m = 0;
-#ifndef NDEBUG
         header_m.covered_m = false;
-#endif
     }
 
     void set(std::size_t row, std::size_t col, char color = 0)
@@ -153,9 +150,9 @@ public:
 
         node.color_m = color; // we set the color even if this is a primary node;
                               // in such case it is a user error and will be ignored.
-#ifndef NDEBUG
+
         node.covered_m = false;
-#endif
+
         //++(row_h.size_m); // not used
         ++(col_h.size_m);
     }
@@ -216,31 +213,25 @@ public:
 
                 --(column_of(j)->size_m);
 
-#ifndef NDEBUG
                 j->covered_m = true;
-#endif
             }
         }
 
-#ifndef NDEBUG
         c->covered_m = true;
-#endif
     }
 
     void uncover_column(toroid_header_t* c)
     {
         assert (finalized_m);
 
-#ifndef NDEBUG
         c->covered_m = false;
-#endif
+
         for (toroid_node_t* i(up_of(c)); i != c; i = up_of(i))
         {
             for (toroid_node_t* j(left_of(i)); j != i; j = left_of(j))
             {
-#ifndef NDEBUG
                 j->covered_m = false;
-#endif
+
                 ++(column_of(j)->size_m);
 
                 down_of(j)->up_m = j;
@@ -269,9 +260,8 @@ public:
                     up_of(nn)->down_m = down_of(nn);
                     down_of(nn)->up_m = up_of(nn);
                     column_of(nn)->size_m--;
-#ifndef NDEBUG
+
                     nn->covered_m = true;
-#endif
                 }
             }
             else if (rr != p)
@@ -299,9 +289,8 @@ public:
                     up_of(nn)->down_m = nn;
                     down_of(nn)->up_m = nn;
                     column_of(nn)->size_m++;
-#ifndef NDEBUG
+
                     nn->covered_m = false;
-#endif
                 }
             }
         }

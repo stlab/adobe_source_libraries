@@ -1,7 +1,6 @@
 import testing ;
 
-project adobe/zuidgen
-	;
+project ;
 
 run main.cpp 
     : #args

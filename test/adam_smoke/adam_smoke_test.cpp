@@ -83,7 +83,7 @@ adobe::dictionary_t read_dictionary(const bfs::path& filepath)
 
 void read_sheet(const bfs::path& filepath, adobe::sheet_t& sheet)
 {
-    std::ifstream  input_file(filepath.native().c_str());
+    std::ifstream input_file(filepath.native().c_str());
 
     if (!input_file.is_open())
     {
@@ -136,9 +136,8 @@ bool compare_arrays(const adobe::array_t& a, const adobe::array_t& b)
 bool test_sheet(const bfs::path& root)
 {
     bool                	success(true);
-    std::string         	triple_name(root.leaf().string());
-    bfs::path           	sheet_path(root.branch_path() / (triple_name + ".adm"));
-    bfs::path           	input_path(root.branch_path() / (triple_name + ".admi"));
+    bfs::path           	sheet_path(root);
+    bfs::path           	input_path(root.string() + "i");
     adobe::sheet_t      	sheet;
     adobe::dictionary_t 	input;
     adobe::dictionary_t 	contributing;
@@ -166,7 +165,7 @@ bool test_sheet(const bfs::path& root)
         adobe::name_t   		cell(first->first);
         adobe::any_regular_t  	value(first->second);
 
-        std::cout << "Setting Cell '" << cell.c_str() << "' to " << adobe::begin_asl_cel << value << adobe::end_asl_cel;
+        std::cout << "Setting Cell '" << cell.c_str() << "' to " << adobe::begin_asl_cel << value << adobe::end_asl_cel << '\n';
 
         sheet.set(cell, value);
     }
