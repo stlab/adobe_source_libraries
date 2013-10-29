@@ -18,7 +18,6 @@
 #include <boost/operators.hpp>
 
 #include <adobe/empty.hpp>
-#include <adobe/move.hpp>
 
 #include <adobe/implementation/swap.hpp>
 

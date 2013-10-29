@@ -21,7 +21,6 @@
 #include <adobe/conversion.hpp>
 #include <adobe/functional.hpp>
 #include <adobe/memory_fwd.hpp>
-#include <adobe/move.hpp>
 
 /*************************************************************************************************/
 
@@ -672,7 +671,7 @@ template <typename I, // I models InputIterator
 F uninitialized_move(I f, I l, F r)
 {
     while (f != l) {
-        adobe::construct(&*r, adobe::move(*f));
+        adobe::construct(&*r, std::move(*f));
         ++f; ++r;
     }
     return r;
