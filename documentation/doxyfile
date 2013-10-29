@@ -1150,7 +1150,7 @@ HTML_FOOTER            = ./documentation/doxygen_support_files/footer.dox
 # obsolete.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_STYLESHEET        = ./documentation/doxygen_support_files/adobe_source.css
+HTML_STYLESHEET        = 
 
 # The HTML_EXTRA_STYLESHEET tag can be used to specify an additional user-
 # defined cascading style sheet that is included after the standard style sheets
@@ -1161,7 +1161,7 @@ HTML_STYLESHEET        = ./documentation/doxygen_support_files/adobe_source.css
 # see the documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_STYLESHEET  = 
+HTML_EXTRA_STYLESHEET  = ./documentation/doxygen_support_files/adobe_source.css
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
 # other source files which should be copied to the HTML output directory. Note

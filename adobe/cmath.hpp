@@ -46,7 +46,7 @@ back to include math.h. This also needs to add any other C99 math.h extensions.
 #include <cmath>
 #else 
 #include <tr1/cmath>
-s
+
 #define ADOBE_HAS_C99_STD_MATH_H
 #endif
 #endif
