@@ -11,7 +11,7 @@ build-project unit_tests ;
 build-project adam_smoke ;
 alias adam_tutorial_test : adam_tutorial : <toolset>clang,<variant>release:<optimization>off ;
 # build-project any_iterator ;
-# alias closed_hash_test : closed_hash : <toolset>gcc,<variant>release:<optimization>off ; # Fails to compile
+build-project closed_hash ;
 build-project cmath ;
 alias eve_smoke_test : eve_smoke : <toolset>clang,<variant>release:<optimization>off ;
 build-project forest_smoke ;

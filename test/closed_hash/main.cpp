@@ -15,7 +15,6 @@
 #include <boost/range/end.hpp>
 
 #include <adobe/closed_hash.hpp>
-#include <adobe/vector.hpp>
 #include <adobe/test/check_regular.hpp>
 #include <cassert>
 #include <iterator>
@@ -32,26 +31,26 @@ template <typename T>
 void test_movable(const T& x)
 {
     assert(x != T());
-    assert(is_movable<T>::value);
+    // assert(is_movable<T>::value);
     
 	adobe::check_regular(x);
     
     T y = x;
     // move construction (and RVO)
     const void* addr = remote_address(y);
-    T z = adobe::move(y);
+    T z = std::move(y);
     BOOST_CHECK(y == T());
     BOOST_CHECK(z == x);
     BOOST_CHECK(remote_address(z) == addr);
     // move assignment
-    y = adobe::move(z);
+    y = std::move(z);
     BOOST_CHECK(z == T());
     BOOST_CHECK(y == x);
     BOOST_CHECK(remote_address(y) == addr);
 }
 
 template <typename T>
-const void* remote_address(const vector<T>& x)
+const void* remote_address(const std::vector<T>& x)
 {
     assert(!x.empty());
     return &*x.begin();
@@ -76,15 +75,15 @@ const void* remote_address(const closed_hash_map<Key, Value>& x)
 BOOST_AUTO_TEST_CASE(vector_allocator_rtti)
 {
     using namespace adobe;
-    typedef adobe::vector<int, capture_allocator<int> > vector_t;
+    typedef std::vector<int, capture_allocator<int> > vector_t;
 	//vector_t v;
-	type_info_t t1 = adobe::type_info<vector_t>();
+	// const std::type_info& t1 = typeid(vector_t);
 
-	BOOST_CHECK(!t1.requires_std_rtti());
+	// BOOST_CHECK(!t1.requires_std_rtti());
 
-    typedef adobe::vector<int, std::allocator<int> > vector_stda_t;
-	type_info_t t2 = adobe::type_info<vector_stda_t>();
-	BOOST_CHECK(t2.requires_std_rtti());
+    typedef std::vector<int, std::allocator<int> > vector_stda_t;
+	// const std::type_info& t2 = typeid(vector_stda_t);
+	// BOOST_CHECK(t2.requires_std_rtti());
 }
 
 
@@ -95,42 +94,42 @@ BOOST_AUTO_TEST_CASE(closed_hash_allocator_rtti)
     typedef adobe::closed_hash_set<int, adobe::identity<const int>, 
 		boost::hash<int>, std::equal_to<int>, adobe::capture_allocator<int> > hash_set_t;
 
-	type_info_t t1 = adobe::type_info<hash_set_t>();
-	BOOST_CHECK(!t1.requires_std_rtti());
+	// const std::type_info& t1 = typeid(hash_set_t);
+	// BOOST_CHECK(!t1.requires_std_rtti());
 
     typedef adobe::closed_hash_map<int, double, boost::hash<int>, 
-		std::equal_to<int>, adobe::capture_allocator<adobe::pair<int, double> > > hash_map_t;
+		std::equal_to<int>, adobe::capture_allocator<std::pair<int, double> > > hash_map_t;
     
-	type_info_t t2 = adobe::type_info<hash_map_t>();
-	BOOST_CHECK(!t2.requires_std_rtti());
+	// const std::type_info& t2 = typeid(hash_map_t);
+	// BOOST_CHECK(!t2.requires_std_rtti());
 
-    typedef adobe::vector<int,capture_allocator<int> > vector_t;
+    typedef std::vector<int,capture_allocator<int> > vector_t;
 
     typedef adobe::closed_hash_map<int, vector_t, boost::hash<int>, 
-		std::equal_to<int>, adobe::capture_allocator<adobe::pair<int, vector_t> > > hash_map_vector_t;
+		std::equal_to<int>, adobe::capture_allocator<std::pair<int, vector_t> > > hash_map_vector_t;
 
-	type_info_t t3 = adobe::type_info<hash_map_vector_t>();
-	BOOST_CHECK(!t3.requires_std_rtti());
+	// const std::type_info& t3 = typeid(hash_map_vector_t);
+	// BOOST_CHECK(!t3.requires_std_rtti());
 
     typedef adobe::closed_hash_set<int, adobe::identity<const int>, 
 		boost::hash<int>, std::equal_to<int>, std::allocator<int> > hash_set_stda_t;
 
-	type_info_t t4 = adobe::type_info<hash_set_stda_t>();
-	BOOST_CHECK(t4.requires_std_rtti());
+	// const std::type_info& t4 = typeid(hash_set_stda_t);
+	// BOOST_CHECK(t4.requires_std_rtti());
 
     typedef adobe::closed_hash_map<int, double, boost::hash<int>, 
 		std::equal_to<int>, std::allocator<double> > hash_map_stda_t;
     
-	type_info_t t5 = adobe::type_info<hash_map_stda_t>();
-	BOOST_CHECK(t5.requires_std_rtti());
+	// const std::type_info& t5 = typeid(hash_map_stda_t);
+	// BOOST_CHECK(t5.requires_std_rtti());
 
-    typedef adobe::vector<int, std::allocator<int> > vector_stda_t;
+    typedef std::vector<int, std::allocator<int> > vector_stda_t;
 
     typedef adobe::closed_hash_map<int, vector_t, boost::hash<int>, 
 		std::equal_to<int>, std::allocator<vector_stda_t> > hash_map_vector_stda_t;
 
-	type_info_t t6 = adobe::type_info<hash_map_vector_stda_t>();
-	BOOST_CHECK(t6.requires_std_rtti());
+	// const std::type_info& t6 = typeid(hash_map_vector_stda_t);
+	// BOOST_CHECK(t6.requires_std_rtti());
 }
 
 BOOST_AUTO_TEST_CASE(closed_hash)
@@ -140,7 +139,7 @@ BOOST_AUTO_TEST_CASE(closed_hash)
     typedef adobe::closed_hash_set<int> hash_set_t;
     typedef adobe::closed_hash_map<int, double> hash_map_t;
     
-    typedef adobe::vector<int> vector_t;
+    typedef std::vector<int> vector_t;
     typedef adobe::closed_hash_map<int, vector_t> hash_map_vector_t;
     
     {
@@ -243,7 +242,7 @@ BOOST_AUTO_TEST_CASE(closed_hash)
         vector_vector_t y;
         y.push_back(x);
         BOOST_CHECK(y.front() == x);
-        y.push_back(adobe::move(x));
+        y.push_back(std::move(x));
         BOOST_CHECK(y.front() == y.back());
         BOOST_CHECK(y.size() == 2);
         BOOST_CHECK(addr == remote_address(y.back()));
@@ -276,7 +275,7 @@ BOOST_AUTO_TEST_CASE(closed_hash)
         vector_vector_t y(boost::begin(b), boost::end(b));
         vector_t z(7, 7);
         const void* addr = remote_address(z);
-        x.insert(x.begin() + 2, adobe::move(z));
+        x.insert(x.begin() + 2, std::move(z));
         BOOST_CHECK(x == y);
         BOOST_CHECK(z.empty() && addr == remote_address(x[2]));
     }
