@@ -21,6 +21,8 @@
 #include <adobe/algorithm/find.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 
+#include <mutex>
+
 
 /*************************************************************************************************/
 
