@@ -18,13 +18,10 @@
 #include <boost/function.hpp>
 #include <boost/operators.hpp>
 
+#include <adobe/any_regular.hpp>
 #include <adobe/array_fwd.hpp>
 #include <adobe/name_fwd.hpp>
 #include <adobe/dictionary_fwd.hpp>
-
-#include <adobe/move.hpp>
-
-#include <adobe/any_regular.hpp>
 
 /*************************************************************************************************/
 
