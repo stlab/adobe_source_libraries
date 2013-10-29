@@ -14,9 +14,13 @@
             "path": "../test"
         },
         {
+            "name" : "documentation",
+            "path": "../documentation"
+        },
+        {
             "name" : "top",
             "path": "../",
-            "folder_exclude_patterns": [ "source", "adobe", "test" ]
+            "folder_exclude_patterns": [ "source", "adobe", "test", "documentation" ]
         }
     ],
     "settings":

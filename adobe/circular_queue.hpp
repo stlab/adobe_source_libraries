@@ -15,7 +15,6 @@
 
 #include <adobe/algorithm/equal.hpp>
 #include <adobe/iterator.hpp>
-#include <adobe/move.hpp>
 
 #include <boost/operators.hpp>
 

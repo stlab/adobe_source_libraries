@@ -38,8 +38,8 @@ int main()
     test[static_name_t("empty")] = any_regular_t(empty_t());
     test[static_name_t("integer")] = any_regular_t(42);
     test[static_name_t("name")] = any_regular_t(static_name_t("test_name"));
-    test[static_name_t("string_safe")] = any_regular_t(string_t("Hello, world!"));
-    test[static_name_t("string_unsafe")] = any_regular_t(string_t("\" ' \n"));
+    test[static_name_t("string_safe")] = any_regular_t(std::string("Hello, world!"));
+    test[static_name_t("string_unsafe")] = any_regular_t(std::string("\" ' \n"));
     test[static_name_t("unknown")] = any_regular_t(unknown_type_t());
 
     std::cout << "======== ASL CEL (Safe) ========"<< std::endl << std::endl;

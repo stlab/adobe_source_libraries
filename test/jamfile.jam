@@ -1,32 +1,28 @@
 # Establish common build settings across all .../adobe/test projects 
 # above and beyond those established for all .../adobe projects 
 
-project 
-    : requirements 
-        <library>/adobe//asl
-        <library>/boost/test//boost_unit_test_framework 
+project
+    : requirements
+      <source>/adobe//asl
+      <source>/boost/test//boost_unit_test_framework
     ;
 
-# build-project unit_tests ;
-# build-project adam_smoke ; # Segfault on Mac
-alias adam_tutorial_test : adam_tutorial : <toolset>clang,<variant>release:<optimization>off ;
+build-project unit_tests ;
+build-project adam_smoke ;
+build-project adam_tutorial ;
 # build-project any_iterator ;
-# alias closed_hash_test : closed_hash : <toolset>gcc,<variant>release:<optimization>off ; # Fails to compile
+build-project closed_hash ;
 build-project cmath ;
-alias eve_smoke_test : eve_smoke : <toolset>clang,<variant>release:<optimization>off ;
+build-project eve_smoke ;
 build-project forest_smoke ;
+build-project n_queens ;
 build-project md5 ;
-# build-project move ;
 # build-project poly ;
-# build-project property_model_eval ; # program options library can't be built
+build-project property_model_eval ;
 build-project reduction ;
-# build-project serialization ;
+build-project serialization ;
 build-project sha ;
 build-project stable_partition_selection ;
-# build-project string_test ;
-# build-project typeinfo ;
 build-project unicode ;
-# build-project vector ;
 build-project xml_parser ;
 build-project zuidgen ;
-

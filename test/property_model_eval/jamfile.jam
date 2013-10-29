@@ -4,7 +4,7 @@ SOURCES = pmeval.cpp
           adam_test_parser.cpp
           queryable_sheet.cpp
           iomanip_flat.cpp
-          /boost/program_options//boost_program_options
+          [ glob $(TOP)/../boost_libraries/libs/program_options/src/*.cpp ]
          ;
 
 

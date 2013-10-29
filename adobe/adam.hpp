@@ -32,7 +32,6 @@
 #include <adobe/array.hpp>
 #include <adobe/dictionary_fwd.hpp>
 #include <adobe/istream.hpp>
-#include <adobe/move.hpp>
 #include <adobe/name_fwd.hpp>
 #include <adobe/virtual_machine.hpp>
 

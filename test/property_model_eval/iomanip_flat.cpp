@@ -50,7 +50,6 @@ void flat_format::stack_event(stream_type& os, bool is_push)
     const format_element_t& top(stack_top());
     name_t                  self(top.tag());
     name_t                  parent(stack_depth() >= 2 ? stack_n(1).tag() : name_t());
-    name_t                  grandparent(stack_depth() >= 3 ? stack_n(2).tag() : name_t());
 
     if (self == atom_name_g)
     {
@@ -97,7 +96,6 @@ void flat_format::stack_event(stream_type& os, bool is_push)
 void flat_format::handle_atom(stream_type& os, bool is_push)
 {
     const format_element_t& top(stack_top());
-    name_t                  self(top.tag());
     name_t                  parent(stack_depth() >= 2 ? stack_n(1).tag() : name_t());
     name_t                  grandparent(stack_depth() >= 3 ? stack_n(2).tag() : name_t());
     const any_regular_t&    value(top.value());
@@ -126,23 +124,23 @@ void flat_format::handle_atom(stream_type& os, bool is_push)
             os << ' ' ;
         }
 
-        if (value.type_info() == adobe::type_info<string_t>())
+        if (value.type_info() == typeid(std::string))
         {
-            bool escape(needs_entity_escape(value.cast<adobe::string_t>()));
+            bool escape(needs_entity_escape(value.cast<std::string>()));
 
             if (escape_m && escape)
                 os << "xml_unescape(";
 
             os << '\"'
                << (escape_m && escape ?
-                   entity_escape(value.cast<string_t>()) :
-                   value.cast<string_t>())
+                   entity_escape(value.cast<std::string>()) :
+                   value.cast<std::string>())
                << '\"';
 
             if (escape_m && escape)
                 os << ")";
         }
-        else if (value.type_info() == adobe::type_info<name_t>())
+        else if (value.type_info() == typeid(name_t))
         {
             if (!named_argument)
                 os << '@';
@@ -152,11 +150,11 @@ void flat_format::handle_atom(stream_type& os, bool is_push)
             if (outputting_bag && named_argument)
                 os << ": ";
         }
-        else if (value.type_info() == adobe::type_info<bool>())
+        else if (value.type_info() == typeid(bool))
         {
             os << (value.cast<bool>() ? "true" : "false");
         }
-        else if (value.type_info() == adobe::type_info<double>())
+        else if (value.type_info() == typeid(double))
         {
             double         dbl_val(value.cast<double>());
             boost::int64_t int_val(static_cast<boost::int64_t>(dbl_val));
@@ -178,15 +176,15 @@ void flat_format::handle_atom(stream_type& os, bool is_push)
                 os << dbl_val;
             }
         }
-        else if (value.type_info() == adobe::type_info<empty_t>())
+        else if (value.type_info() == typeid(empty_t))
         {
             os << value.cast<empty_t>();
         }
-        else if (value.type_info() == adobe::type_info<dictionary_t>())
+        else if (value.type_info() == typeid(dictionary_t))
         {
             os << value.cast<dictionary_t>();
         }
-        else if (value.type_info() == adobe::type_info<array_t>())
+        else if (value.type_info() == typeid(array_t))
         {
             os << value.cast<array_t>();
         }
