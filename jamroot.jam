@@ -91,7 +91,7 @@ asl_requirements =
     <toolset>gcc:<cxxflags>"-std=c++11"
 
     # GCC debug specializations
-    <toolset>gcc,<variant>debug:<cxxflags>"-Werror -Wall -Wno-trigraphs -Wreturn-type -Wnon-virtual-dtor -Woverloaded-virtual -Wformat -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-parameter -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Wno-parentheses -Wno-unused-local-typedefs"
+    <toolset>gcc,<variant>debug:<cxxflags>"-Werror -Wall -Wno-trigraphs -Wreturn-type -Wnon-virtual-dtor -Woverloaded-virtual -Wformat -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-parameter -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Wno-parentheses -Wno-unused-local-typedefs -Wno-overloaded-virtual -Wno-unused-function"
 
     # GCC 4.4 specializations
     <toolset>gcc-4.4.0:<cxxflags>"-std=c++0x -fno-strict-aliasing"
