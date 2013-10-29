@@ -16,7 +16,6 @@ build-project cmath ;
 alias eve_smoke_test : eve_smoke : <toolset>clang,<variant>release:<optimization>off ;
 build-project forest_smoke ;
 build-project md5 ;
-# build-project move ;
 # build-project poly ;
 alias property_model_eval_test : property_model_eval : <toolset>clang,<variant>release:<optimization>off ;
 build-project reduction ;

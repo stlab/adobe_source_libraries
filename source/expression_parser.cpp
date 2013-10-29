@@ -27,7 +27,6 @@ with regards to state.
 #include <adobe/name.hpp>
 #include <adobe/any_regular.hpp>
 #include <adobe/dictionary.hpp>
-#include <adobe/move.hpp>
 #include <adobe/string.hpp>
 
 #include <adobe/implementation/expression_parser.hpp>

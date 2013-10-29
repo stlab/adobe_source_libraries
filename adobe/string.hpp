@@ -28,7 +28,6 @@
 #include <boost/utility.hpp>
 
 #include <adobe/cstring.hpp>
-#include <adobe/move.hpp>
 
 #include <adobe/string/to_string.hpp>
 
