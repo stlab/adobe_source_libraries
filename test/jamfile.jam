@@ -15,6 +15,7 @@ build-project closed_hash ;
 build-project cmath ;
 build-project eve_smoke ;
 build-project forest_smoke ;
+build-project n_queens ;
 build-project md5 ;
 # build-project poly ;
 build-project property_model_eval ;
