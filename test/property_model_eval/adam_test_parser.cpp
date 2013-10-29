@@ -26,8 +26,7 @@
 
 namespace { void init_keyword_table(); }
 
-ADOBE_ONCE_DECLARATION(adobe_adam_test_parser)
-ADOBE_ONCE_DEFINITION(adobe_adam_test_parser, init_keyword_table)
+std::once_flag adobe_adam_test_parser;
 
 /*************************************************************************************************/
 
@@ -76,7 +75,7 @@ void init_keyword_table()
 
 void once_instance()
 {
-    ADOBE_ONCE_INSTANCE(adobe_adam_test_parser);
+    std::call_once(adobe_adam_test_parser, init_keyword_table);
 }
 
 /*************************************************************************************************/
@@ -160,7 +159,7 @@ bool adam_test_parser::is_sheet()
 bool adam_test_parser::is_interaction_list()
 {
 // REVISIT (mmarcus) : fix up grammar here
-    adobe::string_t comment;
+    std::string comment;
     bool result(true);
     while(result)
     {

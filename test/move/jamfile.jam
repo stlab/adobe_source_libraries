@@ -1,7 +1,0 @@
-import testing ;
-
-project adobe/move ;
-
-run main.cpp ;
-
-

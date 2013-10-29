@@ -21,7 +21,6 @@
 
 #include <adobe/copy_on_write.hpp>
 #include <adobe/memory.hpp>
-#include <adobe/string.hpp>
 
 namespace {
 
@@ -127,11 +126,11 @@ R make_value(const T& x)
 { return R(x); }
 
 template <>
-adobe::string_t make_value(const long& x)
+std::string make_value(const long& x)
 {
     std::stringstream s;
     s << x;
-    return adobe::string_t(s.str());
+    return std::string(s.str());
 }
 
 template <typename CowType>
@@ -150,9 +149,7 @@ void test_copy_on_write()
         noisy_check_allocation();
         noisy_check_deallocation();
 
-        std::cout << "Testing ";
-        serialize(adobe::type_info<CowType>(), std::ostream_iterator<char>(std::cout));
-        std::cout << "..." << std::endl;
+        std::cout << "Testing " << typeid(CowType).name() << "...\n";
     }
 
     // Test default constructor
@@ -359,29 +356,24 @@ void test_copy_on_write()
 }
 } // namespace
 
-ADOBE_NAME_TYPE_1("noisy_allocator", noisy_allocator<T0>)
-
 BOOST_AUTO_TEST_CASE(CowType_allocator_rtti)
 {
     using namespace adobe;
 
     {
     typedef copy_on_write<int> cow_t;
-    type_info_t t = adobe::type_info<cow_t>();
 
-    serialize(t, std::ostream_iterator<char>(std::cout));
-    std::cout << std::endl;
+    std::cout << typeid(cow_t).name() << '\n';
 
-    BOOST_CHECK(!t.requires_std_rtti());
+    // BOOST_CHECK(!t.requires_std_rtti());
     }
+
     {
     typedef copy_on_write<int, std::allocator<int> > cow_t;
-    type_info_t t = adobe::type_info<cow_t>();
 
-    serialize(t, std::ostream_iterator<char>(std::cout));
-    std::cout << std::endl;
+    std::cout << typeid(cow_t).name() << '\n';
 
-    BOOST_CHECK(t.requires_std_rtti());
+    // BOOST_CHECK(t.requires_std_rtti());
     }
 }
 
@@ -397,11 +389,11 @@ BOOST_AUTO_TEST_CASE(copy_on_write)
     test_copy_on_write<adobe::copy_on_write<int, noisy_allocator<int> > >();
 
     // test movable type with capture_allocator
-    test_copy_on_write<adobe::copy_on_write<adobe::string_t> >();
+    test_copy_on_write<adobe::copy_on_write<std::string> >();
 
     // test movable type with std::allocator
-    test_copy_on_write<adobe::copy_on_write<adobe::string_t, std::allocator<adobe::string_t> > >();
+    test_copy_on_write<adobe::copy_on_write<std::string, std::allocator<std::string> > >();
 
     // test movable type with noisy_allocator
-    test_copy_on_write<adobe::copy_on_write<adobe::string_t, noisy_allocator<adobe::string_t> > >();
+    test_copy_on_write<adobe::copy_on_write<std::string, noisy_allocator<std::string> > >();
 }

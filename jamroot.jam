@@ -41,6 +41,20 @@ else
 
 use-project /boost : $(boost-path)  ;
 
+# Set up c++11 support as a feature so it will propagate into the
+# boost dependencies
+
+feature.feature cpp11 :
+    on :
+    composite optional propagated
+    ;
+
+feature.compose <cpp11>on :
+        <cxxflags>"-stdlib=libc++ -std=c++11"
+        <define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
+        <linkflags>"-lc++"
+    ;
+
 #
 # The overarching set of requirements and settings to build ASL with the
 # platform/compiler of your choosing.
@@ -51,7 +65,6 @@ asl_requirements =
 
     # Definitions
     <define>BOOST_ALL_NO_LIB
-    <define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
     <define>ADOBE_SERIALIZATION
     <define>ADOBE_STD_SERIALIZATION
 
@@ -59,21 +72,14 @@ asl_requirements =
     <include>$(boost-path)
     <include>.
 
-    # Library dependencies
-    <library>/boost/filesystem
-    <library>/boost/system
-
     # Linker specializations
     <link>static,<threading>multi:<define>BOOST_THREAD_USE_LIB
 
     # Threading specializations
-    <threading>multi:<library>/boost/thread//boost_thread
     <threading>single:<define>BOOST_DISABLE_THREADS
 
     # Clang toolset specializations
-    <toolset>clang:<cxxflags>"-stdlib=libc++ -std=c++11"
-    <toolset>clang:<define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
-    <toolset>clang:<linkflags>"-lc++"
+    <toolset>clang:<cpp11>on
     <toolset>clang:<runtime-link>shared
 
     # Darwin (Mac OS X gcc) toolset specializations
@@ -130,6 +136,9 @@ project
 lib asl
     : #sources
         [ glob source/*.cpp ]
+        /boost/filesystem
+        /boost/system
+        /boost/thread//boost_thread
     : #requirements
     : #defaults
     : #usage requirements
@@ -144,7 +153,7 @@ explicit asl ;
 
 # Build and run the tests
 
-use-project /adobe : .  ;
+use-project /adobe : . ;
 
 build-project test ;
 
