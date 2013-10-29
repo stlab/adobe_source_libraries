@@ -203,6 +203,38 @@ void asl_cel_format::handle_atom(stream_type& os, bool is_push)
 
 /*************************************************************************************************/
 
+std::ostream& begin_asl_cel(std::ostream& os)
+{
+    replace_pword<format_base, asl_cel_format>(os, format_base_idx(), true);
+
+    return os << begin_format;
+}
+
+/*************************************************************************************************/
+
+std::ostream& end_asl_cel(std::ostream& os)
+{
+    return os << end_format;
+}
+
+/*************************************************************************************************/
+
+std::ostream& begin_asl_cel_unsafe(std::ostream& os)
+{
+    replace_pword<format_base, asl_cel_format>(os, format_base_idx(), false);
+
+    return os << begin_format;
+}
+
+/*************************************************************************************************/
+
+std::ostream& end_asl_cel_unsafe(std::ostream& os)
+{
+    return os << end_format;
+}
+
+/*************************************************************************************************/
+
 } // namespace adobe
 
 /*************************************************************************************************/

@@ -56,7 +56,7 @@ private:
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-inline std::ostream& begin_flat(std::ostream& os)
+static std::ostream& begin_flat(std::ostream& os)
 {
     replace_pword<format_base, flat_format>(os, format_base_idx(), true);
     return os << begin_format;
@@ -65,13 +65,13 @@ inline std::ostream& begin_flat(std::ostream& os)
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-inline std::ostream& end_flat(std::ostream& os)
+static std::ostream& end_flat(std::ostream& os)
 { return os << end_format; }
 
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-inline std::ostream& begin_flat_unsafe(std::ostream& os)
+static std::ostream& begin_flat_unsafe(std::ostream& os)
 {
     replace_pword<format_base, flat_format>(os, format_base_idx(), false);
     return os << begin_format;
@@ -80,7 +80,7 @@ inline std::ostream& begin_flat_unsafe(std::ostream& os)
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-inline std::ostream& end_flat_unsafe(std::ostream& os)
+static std::ostream& end_flat_unsafe(std::ostream& os)
 { return os << end_format; }
 
 /*************************************************************************************************/

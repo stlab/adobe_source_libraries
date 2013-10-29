@@ -41,6 +41,20 @@ else
 
 use-project /boost : $(boost-path)  ;
 
+# Set up c++11 support as a feature so it will propagate into the
+# boost dependencies
+
+feature.feature cpp11 :
+    on :
+    composite optional propagated
+    ;
+
+feature.compose <cpp11>on :
+        <cxxflags>"-stdlib=libc++ -std=c++11"
+        <define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
+        <linkflags>"-lc++"
+    ;
+
 #
 # The overarching set of requirements and settings to build ASL with the
 # platform/compiler of your choosing.
@@ -51,7 +65,6 @@ asl_requirements =
 
     # Definitions
     <define>BOOST_ALL_NO_LIB
-    <define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
     <define>ADOBE_SERIALIZATION
     <define>ADOBE_STD_SERIALIZATION
 
@@ -66,9 +79,7 @@ asl_requirements =
     <threading>single:<define>BOOST_DISABLE_THREADS
 
     # Clang toolset specializations
-    <toolset>clang:<cxxflags>"-stdlib=libc++ -std=c++11"
-    <toolset>clang:<define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
-    <toolset>clang:<linkflags>"-lc++"
+    <toolset>clang:<cpp11>on
     <toolset>clang:<runtime-link>shared
 
     # Darwin (Mac OS X gcc) toolset specializations
@@ -107,26 +118,11 @@ asl_requirements =
     <toolset>msvc-9.0:<cxxflags>"/W3 /WX /Zc:wchar_t /Zc:forScope"
     ;
 
-# Set up c++11 support as a feature so it will propagate into the
-# boost dependencies
-
-feature.feature cpp11 :
-    on :
-    composite optional propagated
-    ;
-
-feature.compose <cpp11>on :
-        <cxxflags>"-stdlib=libc++ -std=c++11"
-        <define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
-        <linkflags>"-lc++"
-    ;
-
 # Set up ASL as a Boost project
 
 project
     : requirements
         $(asl_requirements)
-        <cpp11>on
     : default-build
         <link>static
         <threading>multi
