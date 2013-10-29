@@ -37,7 +37,6 @@
 #include <adobe/functional.hpp>
 #include <adobe/iterator/set_next.hpp>
 #include <adobe/memory.hpp>
-#include <adobe/move.hpp>
 #include <adobe/utility.hpp>
 
 #include <adobe/implementation/swap.hpp>

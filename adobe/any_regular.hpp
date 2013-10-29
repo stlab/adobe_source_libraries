@@ -32,7 +32,6 @@
 #include <adobe/cstdint.hpp>
 #include <adobe/empty.hpp>
 #include <adobe/memory.hpp>
-#include <adobe/move.hpp>
 #include <adobe/regular_concept.hpp>
 #include <adobe/typeinfo.hpp>
 
