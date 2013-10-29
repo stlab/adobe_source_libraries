@@ -9,15 +9,15 @@ project
 
 build-project unit_tests ;
 build-project adam_smoke ;
-alias adam_tutorial_test : adam_tutorial : <toolset>clang,<variant>release:<optimization>off ;
+build-project adam_tutorial ;
 # build-project any_iterator ;
 build-project closed_hash ;
 build-project cmath ;
-alias eve_smoke_test : eve_smoke : <toolset>clang,<variant>release:<optimization>off ;
+build-project eve_smoke ;
 build-project forest_smoke ;
 build-project md5 ;
 # build-project poly ;
-alias property_model_eval_test : property_model_eval : <toolset>clang,<variant>release:<optimization>off ;
+build-project property_model_eval ;
 build-project reduction ;
 build-project serialization ;
 build-project sha ;
