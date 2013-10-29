@@ -19,7 +19,7 @@ build-project md5 ;
 # build-project poly ;
 alias property_model_eval_test : property_model_eval : <toolset>clang,<variant>release:<optimization>off ;
 build-project reduction ;
-# build-project serialization ;
+build-project serialization ;
 build-project sha ;
 build-project stable_partition_selection ;
 build-project unicode ;
