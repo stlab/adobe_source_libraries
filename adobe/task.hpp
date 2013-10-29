@@ -11,13 +11,22 @@
 
 /**************************************************************************************************/
 
+#include <type_traits>
+#include <utility>
+
+#if defined (_MSC_VER)
+
+#include <ppltasks.h>
+
+#else
+
 #include <functional>
 #include <future>
 #include <list>
 #include <memory>
 #include <mutex>
-#include <type_traits>
-#include <utility>
+
+#endif
 
 /**************************************************************************************************/
 
@@ -30,9 +39,9 @@ cancellation_token_source <http://msdn.microsoft.com/en-us/library/hh749985.aspx
 cancellation_token <http://msdn.microsoft.com/en-us/library/hh749975.aspx>
 cancellation_token_registration <http://msdn.microsoft.com/en-us/library/hh750057.aspx>
 task_canceled <http://msdn.microsoft.com/en-us/library/hh750110.aspx>
-is_task_cancelation_requested <http://msdn.microsoft.com/en-us/library/hh750070.aspx>
+is_task_cancellation_requested <http://msdn.microsoft.com/en-us/library/hh750070.aspx>
 cancel_current_task <http://msdn.microsoft.com/en-us/library/hh749945.aspx>
-run_with_cancelation_token <http://msdn.microsoft.com/en-us/library/hh749944.aspx>
+run_with_cancellation_token <http://msdn.microsoft.com/en-us/library/hh749944.aspx>
 
 For detailed documentation on using this library see:
 <http://msdn.microsoft.com/en-us/library/dd984117.aspx>
@@ -49,35 +58,17 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-template <typename T>
-class optional {
-  public:
-    optional() : initialized_(false) { }
-    
-    optional& operator=(T&& x) {
-        if (initialized_) get() = std::forward<T>(x);
-        else new(&storage_) T(std::forward<T>(x));
-        initialized_ = true;
-        return *this;
-    }
-    
-    T& get() {
-        assert(initialized_ && "getting unset optional.");
-        return *static_cast<T *>(static_cast<void *>(storage_));
-    }
-    
-    explicit operator bool() const { return initialized_; }
-    
-    ~optional() { if (initialized_) get().~T(); }
+#if defined (_MSC_VER)
 
-  private:
-    optional(const optional&);
-    optional operator=(const optional&);
-    
-    typename std::aligned_storage<sizeof(T), std::alignment_of<T>::value>::type storage_;
+using concurrency::cancellation_token_source;
+using concurrency::cancellation_token;
+using concurrency::cancellation_token_registration;
+using concurrency::task_canceled;
+using concurrency::is_task_cancellation_requested;
+using concurrency::cancel_current_task;
+using concurrency::run_with_cancellation_token;
 
-    bool initialized_;
-};
+#else
 
 /**************************************************************************************************/
 
@@ -205,10 +196,37 @@ namespace details {
 
 struct cancellation_scope;
 
+/*
+	REVISIT (sparent) : The thread local implementation should be the default implementation.
+	The pthread implementation is for current Mac/iOS platforms. Look at what it would take
+	to use boost instead of posix for OS X.
+
+*/
+
+#if defined(_MSC_VER) && (1800 <= _MSC_VER)
+
+template <typename T = void> // placeholder to allow header only library
+cancellation_scope*& get_cancellation_scope_() {
+	__declspec(thread) static cancellation_scope* result = nullptr;
+	return result;
+}
+
+
+inline cancellation_scope* get_cancellation_scope() {
+	return get_cancellation_scope_();
+}
+
+
+inline void set_cancellation_scope(cancellation_scope* scope) {
+	get_cancellation_scope_() = scope;
+}
+
+#else
+
 template <typename T> // placeholder to allow header only library
 pthread_key_t get_cancellation_key() {
     static pthread_key_t cancellation_key = 0; // aggregate initialized
-    static int r = pthread_key_create(&cancellation_key, 0); // execute once
+    int r = pthread_key_create(&cancellation_key, 0); // execute once
     (void)r; // avoid unused arg warning from above
     return cancellation_key;
 }
@@ -221,6 +239,8 @@ inline cancellation_scope* get_cancellation_scope() {
 inline void set_cancellation_scope(cancellation_scope* scope) {
     pthread_setspecific(get_cancellation_key<void>(), scope);
 }
+
+#endif
 
 struct cancellation_scope {
     cancellation_scope(cancellation_token token) : token_(std::move(token)) {
@@ -267,7 +287,7 @@ class task_canceled : public std::exception {
   public:
     task_canceled() noexcept { }
     task_canceled(const char* message) : what_(message) { }
-    const char* what() const noexcept { return what_.empty() ? "task_canceled" : what_.c_str(); }
+	const char* what() const noexcept{ return what_.empty() ? "task_canceled" : what_.c_str(); }
   private:
     std::string what_;
 };
@@ -296,6 +316,50 @@ inline void run_with_cancellation_token(const F& f, cancellation_token token) {
 
 /**************************************************************************************************/
 
+#endif
+
+/**************************************************************************************************/
+
+namespace details {
+
+	/*
+		REVISIT (sparent) : Simple optional - could use Boost but don't want to add the depenency.
+	*/
+
+template <typename T>
+class optional {
+public:
+	optional() : initialized_(false) { }
+
+	optional& operator=(T&& x) {
+		if (initialized_) get() = std::forward<T>(x);
+		else new(&storage_) T(std::forward<T>(x));
+		initialized_ = true;
+		return *this;
+	}
+
+	T& get() {
+		assert(initialized_ && "getting unset optional.");
+		return *static_cast<T *>(static_cast<void *>(&storage_));
+	}
+
+	explicit operator bool() const { return initialized_; }
+
+	~optional() { if (initialized_) get().~T(); }
+
+private:
+	optional(const optional&);
+	optional operator=(const optional&);
+
+	typename std::aligned_storage<sizeof(T), std::alignment_of<T>::value>::type storage_;
+
+	bool initialized_;
+};
+
+} // namespace details
+
+/**************************************************************************************************/
+
 /*!
 
     A function object that will execute f with the given cancellation_token in a
@@ -310,12 +374,11 @@ class cancelable_function<F, R (Arg...)> {
   public:
     typedef R result_type;
   
-  
     cancelable_function(F f, cancellation_token token) :
             function_(std::move(f)), token_(std::move(token)) { }
     
     R operator()(Arg&& ...arg) const {
-        optional<R> r;
+        details::optional<R> r;
         
         run_with_cancellation_token([&]{
             r = function_(std::forward<Arg>(arg)...);
@@ -334,7 +397,6 @@ template <typename F, typename ...Arg>
 class cancelable_function<F, void (Arg...)> {
   public:
     typedef void result_type;
-  
   
     cancelable_function(F f, cancellation_token token) :
             function_(std::move(f)), token_(std::move(token)) { }
