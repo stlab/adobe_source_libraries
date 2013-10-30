@@ -1,3 +1,7 @@
 import testing ;
 
-run main.cpp ;
+run main.cpp
+    : #args
+    : #files
+    english.txt
+    ;
