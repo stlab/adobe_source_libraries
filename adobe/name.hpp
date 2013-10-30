@@ -15,6 +15,7 @@
 
 #include <adobe/conversion.hpp>
 #include <adobe/cstring.hpp>
+#include <adobe/fnv.hpp>
 
 /*************************************************************************************************/
 
@@ -51,8 +52,9 @@ inline bool operator == (const name_t& x, const name_t& y)
         The test case for equal strings is "optimized" because names are stored in hash tables and
         will often match on a find because the compiler will pool string constants.
     */
-    if (x.c_str() == y.c_str()) return true;
-    return adobe::strcmp(x.c_str(), y.c_str()) == 0;
+
+    return x.c_str() == y.c_str() ||
+           adobe::strcmp(x.c_str(), y.c_str()) == 0;
 }
 
 /*************************************************************************************************/
@@ -61,7 +63,7 @@ inline const char* name_t::c_str() const
 {
     return name_m;
 }
-    
+
 /*************************************************************************************************/
 
 class static_name_t : public name_t
@@ -77,20 +79,6 @@ struct aggregate_name_t
     operator name_t() const { return name_t(name_m, name_t::dont_copy_t()); }
 };
 
-/*
-    NOTE (sparent) : This is to allow for boost::hash<> to work with name_t. boost::hash<> relies
-    on argument dependent lookup.
-*/
-
-inline std::size_t hash_value(name_t name)
-{
-    std::size_t seed = 0; 
-    for (const char* first = name.c_str(); *first; ++first) {
-        seed = 5 * seed + *first;
-    }
-    return seed;
-}
-    
 //!@}
 
 /*************************************************************************************************/
@@ -105,6 +93,37 @@ template <> struct promote<aggregate_name_t> { typedef name_t type; };
 /*************************************************************************************************/
 
 } // namespace adobe
+
+/*************************************************************************************************/
+
+namespace std {
+
+/*************************************************************************************************/
+/**
+    Template specialization for std::hash<adobe::name_t>. This way std::hash
+    will either use this specialization or fail to compile, instead of
+    giving you a maybe-silent-fail-maybe-not result based on argument
+    dependent lookup.
+*/
+template<>
+struct hash<adobe::name_t>
+{
+public:
+    std::size_t operator()(adobe::name_t const& name) const 
+    {
+        const char* first(name.c_str());
+        const char* last(first);
+
+        while (*last)
+            ++last;
+
+        return adobe::fnv1a<sizeof(std::size_t) * 8>(first, last);
+     }
+};
+
+/*************************************************************************************************/
+
+} // namespace std
 
 /*************************************************************************************************/
 
