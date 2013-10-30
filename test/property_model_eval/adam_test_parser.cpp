@@ -11,6 +11,8 @@
 #include "adam_test_parser.hpp"
 #include "adam_test_parser_impl.hpp"
 
+#include <mutex>
+
 #include <boost/array.hpp>
 
 #include <adobe/adam_evaluate.hpp>
@@ -20,8 +22,6 @@
 #include <adobe/implementation/token.hpp>
 #include <adobe/algorithm/find.hpp>
 #include <boost/fusion/iterator/deref.hpp>
-
-#include <mutex>
 
 
 /*************************************************************************************************/
