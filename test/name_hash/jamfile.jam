@@ -1,0 +1,3 @@
+import testing ;
+
+run main.cpp ;
