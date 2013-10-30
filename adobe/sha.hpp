@@ -17,6 +17,8 @@
 #include <boost/cstdint.hpp>
 #include <boost/static_assert.hpp>
 
+#include <adobe/algorithm/copy.hpp>
+
 #include <stdexcept>
 #include <limits>
 #include <cstring>
