@@ -38,14 +38,26 @@ std::size_t hash_value(adobe::name_t name)
 
 /****************************************************************************************************/
 
-std::size_t fnv1a(adobe::name_t name)
+std::size_t fnv1a64(adobe::name_t name)
 {
     static_assert(sizeof(std::size_t) == 8, "std::size_t size mismatch.");
 
-    std::size_t result(14695981039346656037ULL);
+    std::uint64_t result(0xcbf29ce484222325ULL);
 
     for (const char* first(name.c_str()); *first; ++first)
-        result = (result xor static_cast<std::size_t>(*first)) * 1099511628211ULL;
+        result = (result xor static_cast<std::size_t>(*first)) * 0x100000001b3ULL;
+
+    return result;
+}
+
+/****************************************************************************************************/
+
+std::size_t fnv1a32(adobe::name_t name)
+{
+    std::uint32_t result(0x811C9DC5UL);
+
+    for (const char* first(name.c_str()); *first; ++first)
+        result = (result xor static_cast<std::uint32_t>(*first)) * 0x1000193UL;
 
     return result;
 }
@@ -195,7 +207,10 @@ void hash_test_corpus(const std::vector<adobe::name_t>& corpus,
                       const char*                       corpus_name)
 {
     hash_test_specific(corpus, corpus_name, &hash_value, "hash_value");
-    hash_test_specific(corpus, corpus_name, &fnv1a, "fnv1a");
+
+    hash_test_specific(corpus, corpus_name, &fnv1a64, "fnv1a64");
+
+    hash_test_specific(corpus, corpus_name, &fnv1a32, "fnv1a32");
 }
 
 /****************************************************************************************************/
