@@ -145,14 +145,6 @@ lib asl
         $(asl_requirements)
     ;
 
-lib asl_dev
-    : #sources
-    : #requirements
-    : #defaults
-    : #usage requirements
-        $(asl_requirements)
-    ;
-
 # Explicit requires 'bjam asl' from the command line in order to build ASL
 # by itself. Otherwise it won't get built, or will get built only as a
 # dependency of another project.
