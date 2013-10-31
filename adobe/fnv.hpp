@@ -47,7 +47,12 @@
     as published.
     </blockquote>
 
-    Currently only the 32- and 64-bit versions of the algorithm are available.
+    All versions of the algorithm are available (32, 64, 128, 256, 512, and 1024)
+    however only the 32- and 64-bit versions have no external dependencies.
+    Beyond 64-bits the implementations leverage the Boost multiprecision
+    library. If you would prefer to remove the dependency (and implicitly limit
+    yourself to the 32- and 64-bit algorithms), define the
+    `ADOBE_FNV_NO_BIGINTS` macro.
 */
 /*************************************************************************************************/
 
