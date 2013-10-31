@@ -19,6 +19,8 @@
 
 /*************************************************************************************************/
 /**
+    \defgroup fnv FNV Hashing Algorithm
+
     Implementation of the FNV (Fowler Noll Vo) class of hash algorithms. From
     the homepage (http://www.isthe.com/chongo/tech/comp/fnv/):
 
@@ -53,6 +55,23 @@
     library. If you would prefer to remove the dependency (and implicitly limit
     yourself to the 32- and 64-bit algorithms), define the
     `ADOBE_FNV_NO_BIGINTS` macro.
+
+    You can also specify a result of any bitsize between 1 and 1024 (or 1 to 64
+    with `ADOBE_FNV_NO_BIGINTS` defined), and the algorithm will produce a
+    truncated result. When computing a hash that is a bitsize other than those
+    explicitly defined, the recommendation from the above website is to use
+    `xor_fold`:
+
+    `((value >> (sizeof(T) * 8 - Bits)) ^ value) & ((1 << Bits) - 1)`
+
+    However, `xor_fold` is not really necessary given the excellent distribution 
+    of the algorithm class, and a straightforward mask will result in bits that
+    are as well distributed as result from `xor_fold`. So we mask.
+
+    \warning
+    This algorithm class is not (nor was ever intended to be) cryptographically
+    secure. Do not use this algorithm where secure algorithms (e.g., \ref sha)
+    are required.
 */
 /*************************************************************************************************/
 
@@ -64,16 +83,35 @@ namespace detail {
 
 /*************************************************************************************************/
 
-template <std::size_t BitCount>
-struct fnv_traits
+constexpr std::size_t rollup(std::size_t n)
+{
+    return n == 0    ? 0 :
+           n <= 32   ? 32 :
+           n <= 64   ? 64 :
+           n <= 128  ? 128 :
+           n <= 256  ? 256 :
+           n <= 512  ? 512 :
+           n <= 1024 ? 1024 :
+           0;
+}
+
+/*************************************************************************************************/
+
+template <std::size_t Bits>
+struct fnv_base_traits
 { };
 
 /*************************************************************************************************/
 
 template <>
-struct fnv_traits<32>
+struct fnv_base_traits<32>
 {
     typedef std::uint32_t value_type;
+
+    static constexpr std::size_t size()
+    {
+        return 32;
+    }
 
     static constexpr value_type offset_basis()
     {
@@ -89,9 +127,14 @@ struct fnv_traits<32>
 /*************************************************************************************************/
 
 template <>
-struct fnv_traits<64>
+struct fnv_base_traits<64>
 {
     typedef std::uint64_t value_type;
+
+    static constexpr std::size_t size()
+    {
+        return 64;
+    }
 
     static constexpr value_type offset_basis()
     {
@@ -111,9 +154,14 @@ using namespace boost::multiprecision::literals;
 /*************************************************************************************************/
 
 template <>
-struct fnv_traits<128>
+struct fnv_base_traits<128>
 {
     typedef boost::multiprecision::uint128_t value_type;
+
+    static constexpr std::size_t size()
+    {
+        return 128;
+    }
 
     static constexpr value_type offset_basis()
     {
@@ -129,9 +177,14 @@ struct fnv_traits<128>
 /*************************************************************************************************/
 
 template <>
-struct fnv_traits<256>
+struct fnv_base_traits<256>
 {
     typedef boost::multiprecision::uint256_t value_type;
+
+    static constexpr std::size_t size()
+    {
+        return 256;
+    }
 
     static constexpr value_type offset_basis()
     {
@@ -147,9 +200,14 @@ struct fnv_traits<256>
 /*************************************************************************************************/
 
 template <>
-struct fnv_traits<512>
+struct fnv_base_traits<512>
 {
     typedef boost::multiprecision::uint512_t value_type;
+
+    static constexpr std::size_t size()
+    {
+        return 512;
+    }
 
     static constexpr value_type offset_basis()
     {
@@ -165,9 +223,14 @@ struct fnv_traits<512>
 /*************************************************************************************************/
 
 template <>
-struct fnv_traits<1024>
+struct fnv_base_traits<1024>
 {
     typedef boost::multiprecision::uint1024_t value_type;
+
+    static constexpr std::size_t size()
+    {
+        return 1024;
+    }
 
     static constexpr value_type offset_basis()
     {
@@ -182,45 +245,86 @@ struct fnv_traits<1024>
 #endif
 /*************************************************************************************************/
 
+template <std::size_t FromBits, std::size_t ToBits>
+struct bitmask
+{
+    template <typename T>
+    inline static T mask(T value)
+    {
+        return value & ((1 << ToBits) - 1);
+    }
+};
+
+template <std::size_t SameBits>
+struct bitmask<SameBits, SameBits>
+{
+    template <typename T>
+    inline static T mask(T value)
+    {
+        return value;
+    }
+};
+
+/*************************************************************************************************/
+
 } // namespace detail
 
 /*************************************************************************************************/
 /**
-    Integral type used to return the result of a call to adobe::fnv1a. The size
-    of the type depends on the version of fnv called.
+    \ingroup fnv
+
+    Traits class used by adobe::fnv1a.
+    
+    \note
+    In the case the implementation is not defined for the bit size passed, this will bump to the
+    next highest implementation and mask the automatically. For example, fnv1a<56> will roll up
+    to use fnv_traits<64> and mask the result back down to 56 bits before returning it.
 */
-template <std::size_t BitCount>
-using fnvtype = typename detail::fnv_traits<BitCount>::value_type;
+template <std::size_t Bits>
+using fnv_traits = typename detail::fnv_base_traits<detail::rollup(Bits)>;
+
+/**
+    \ingroup fnv
+
+    Integral type used to return the result of a call to adobe::fnv1a.
+    
+    The size of the type depends on the version of fnv called.
+*/
+template <std::size_t Bits>
+using fnvtype = typename fnv_traits<Bits>::value_type;
 
 /*************************************************************************************************/
 /**
+    \ingroup fnv
+
     Performs the FNV-1a hash over the specified range.
 */
-template <std::size_t BitCount, typename Iterator>
-fnvtype<BitCount> fnv1a(Iterator first, Iterator last)
+template <std::size_t Bits, typename Iterator>
+fnvtype<Bits> fnv1a(Iterator first, Iterator last)
 {
     static_assert(sizeof (typename std::iterator_traits<Iterator>::value_type) == 1,
                   "Iterator value_type must be 1 byte.");
 
-    typedef fnvtype<BitCount> result_type;
+    typedef fnvtype<Bits> result_type;
 
-    result_type result(detail::fnv_traits<BitCount>::offset_basis());
+    result_type result(fnv_traits<Bits>::offset_basis());
 
     while (first != last)
-        result = (result xor static_cast<result_type>(*first++)) *
-                     detail::fnv_traits<BitCount>::prime();
+        result = (result xor static_cast<result_type>(*first++)) * fnv_traits<Bits>::prime();
 
-    return result;
+    return detail::bitmask<fnv_traits<Bits>::size(), Bits>::template mask(result);
 }
 
 /*************************************************************************************************/
 /**
+    \ingroup fnv
+
     Performs the FNV-1a hash over the specified container.
 */
-template <std::size_t BitCount, typename Container>
-inline fnvtype<BitCount> fnv1a(Container c)
+template <std::size_t Bits, typename Container>
+inline fnvtype<Bits> fnv1a(Container c)
 {
-    return fnv1a<BitCount>(begin(c), end(c));
+    return fnv1a<Bits>(begin(c), end(c));
 }
 
 /*************************************************************************************************/
