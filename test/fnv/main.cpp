@@ -17,8 +17,8 @@ typedef std::vector<std::uint8_t> data_t;
 
 /******************************************************************************/
 
-template <std::size_t BitCount>
-void fnvtest(const data_t& data, adobe::fnvtype<BitCount> expected)
+template <std::size_t BitCount, typename Container>
+void fnvtest(const Container& data, adobe::fnvtype<BitCount> expected)
 {
     adobe::fnvtype<BitCount> result(adobe::fnv1a<BitCount>(data));
 
@@ -51,7 +51,7 @@ int main()
 try
 {
     {
-        data_t data{ 'H', 'e', 'l', 'l', 'o', ',', ' ', 'w', 'o', 'r', 'l', 'd', '!' };
+        std::string data("Hello, world!");
 
         fnvtest<32>(data, 0xed90f094);
         fnvtest<64>(data, 0x38d1334144987bf4);
@@ -77,13 +77,30 @@ try
 
     // Known FNV1a<32> collision.
     {
-        data_t             costarring{ 'c', 'o', 's', 't', 'a', 'r', 'r', 'i', 'n', 'g' };
-        data_t             liquid{ 'l', 'i', 'q', 'u', 'i', 'd' };
+        std::string        costarring("costarring");
+        std::string        liquid("liquid");
         adobe::fnvtype<32> hash(0x5e4daa9d);
 
         fnvtest<32>(costarring, hash);
         fnvtest<32>(liquid, hash);
     }
+
+#ifndef ADOBE_FNV_NO_BIGINTS
+    {
+        std::string lorem_ipsum("Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.");
+
+        std::cout << "Multiprecision support tests:\n"
+                  << "  data: '" << lorem_ipsum << "'\n"
+                  << std::hex
+                  << "    32: " << adobe::fnv1a<32>(lorem_ipsum)   << '\n'
+                  << "    64: " << adobe::fnv1a<64>(lorem_ipsum)   << '\n'
+                  << "   128: " << adobe::fnv1a<128>(lorem_ipsum)  << '\n'
+                  << "   256: " << adobe::fnv1a<256>(lorem_ipsum)  << '\n'
+                  << "   512: " << adobe::fnv1a<512>(lorem_ipsum)  << '\n'
+                  << "  1024: " << adobe::fnv1a<1024>(lorem_ipsum) << '\n'
+                  << std::dec;
+    }
+#endif
 
     std::cout << "All tests passed.\n";
 
