@@ -1102,49 +1102,49 @@ dl.section
 dl.note
 {
     border-left:4px solid #CCCC00;
-    margin-left:-7px;
+    margin-left:0px;
     padding-left:3px;
 }
 
 dl.warning,dl.attention
 {
     border-left:4px solid red;
-    margin-left:-7px;
+    margin-left:0px;
     padding-left:3px;
 }
 
 dl.pre,dl.post,dl.invariant
 {
     border-left:4px solid #006600;
-    margin-left:-7px;
+    margin-left:0px;
     padding-left:3px;
 }
 
 dl.deprecated
 {
     border-left:4px solid #505050;
-    margin-left:-7px;
+    margin-left:0px;
     padding-left:3px;
 }
 
 dl.todo
 {
     border-left:4px solid #00AAAA;
-    margin-left:-7px;
+    margin-left:0px;
     padding-left:3px;
 }
 
 dl.test
 {
     border-left:4px solid #3030E0;
-    margin-left:-7px;
+    margin-left:0px;
     padding-left:3px;
 }
 
 dl.bug
 {
     border-left:4px solid #C08050;
-    margin-left:-7px;
+    margin-left:0px;
     padding-left:3px;
 }
 
