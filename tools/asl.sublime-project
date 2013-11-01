@@ -2,19 +2,15 @@
     "folders":
     [
         {
-            "name" : "headers",
             "path": "../adobe"
         },
         {
-            "name" : "sources",
             "path": "../source"
         },
         {
-            "name" : "tests",
             "path": "../test"
         },
         {
-            "name" : "documentation",
             "path": "../documentation"
         },
         {
