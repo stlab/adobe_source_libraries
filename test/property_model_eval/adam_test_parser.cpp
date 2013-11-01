@@ -46,13 +46,13 @@ typedef boost::array<adobe::name_t, 7> keyword_table_t;
 */
 
 keyword_table_t*           keyword_table_g;
-adobe::aggregate_name_t    update_k       = { "update" };
-adobe::aggregate_name_t    reinitialize_k = { "reinitialize" };
-adobe::aggregate_name_t    dump_k         = { "dump" };
-adobe::aggregate_name_t    check_k        = { "check" };
-adobe::aggregate_name_t    print_k        = { "print" };
-adobe::aggregate_name_t    assert_k       = { "assert" };
-adobe::aggregate_name_t    contributing_k = { "contributing" };
+adobe::static_name_t    update_k       = { "update" };
+adobe::static_name_t    reinitialize_k = { "reinitialize" };
+adobe::static_name_t    dump_k         = { "dump" };
+adobe::static_name_t    check_k        = { "check" };
+adobe::static_name_t    print_k        = { "print" };
+adobe::static_name_t    assert_k       = { "assert" };
+adobe::static_name_t    contributing_k = { "contributing" };
 
 
 /*************************************************************************************************/

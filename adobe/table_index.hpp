@@ -529,7 +529,7 @@ Swaps the contents of two table_indexes.
 
 
 template <  typename T,                     // models Regular
-            typename H = boost::hash<T>,    // models UnaryFunction key_type -> size_t
+            typename H = std::hash<T>,      // models UnaryFunction key_type -> size_t
             typename C = std::equal_to<T>,  // models EqualityComparison(key_type, key_type)
             typename P = identity<T> >      // models UnaryFunction T -> key_type
 class hash_index
