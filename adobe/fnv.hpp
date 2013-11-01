@@ -217,7 +217,7 @@ struct bitmask
     template <typename T>
     inline static T mask(T value)
     {
-        return value & ((1 << ToBits) - 1);
+        return value & ((T(1) << ToBits) - 1);
     }
 };
 
