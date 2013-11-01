@@ -40,26 +40,14 @@ std::size_t hash_value(adobe::name_t name)
 
 std::size_t fnv1a64(adobe::name_t name)
 {
-    static_assert(sizeof(std::size_t) == 8, "std::size_t size mismatch.");
-
-    std::uint64_t result(0xcbf29ce484222325ULL);
-
-    for (const char* first(name.c_str()); *first; ++first)
-        result = (result xor static_cast<std::size_t>(*first)) * 0x100000001b3ULL;
-
-    return result;
+    return adobe::fnv1a<64>(name.c_str(), adobe::logical_not());
 }
 
 /****************************************************************************************************/
 
 std::size_t fnv1a32(adobe::name_t name)
 {
-    std::uint32_t result(0x811C9DC5UL);
-
-    for (const char* first(name.c_str()); *first; ++first)
-        result = (result xor static_cast<std::uint32_t>(*first)) * 0x1000193UL;
-
-    return result;
+    return adobe::fnv1a<32>(name.c_str(), adobe::logical_not());
 }
 
 /****************************************************************************************************/
@@ -256,3 +244,5 @@ catch (...)
 
     return 1;
 }
+
+/****************************************************************************************************/

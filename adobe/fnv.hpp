@@ -17,6 +17,8 @@
 #include <boost/multiprecision/cpp_int.hpp>
 #endif
 
+#include <adobe/functional/operator.hpp>
+
 /*************************************************************************************************/
 /**
     \defgroup fnv FNV Hashing Algorithm
@@ -109,19 +111,13 @@ struct fnv_base_traits<32>
     typedef std::uint32_t value_type;
 
     static constexpr std::size_t size()
-    {
-        return 32;
-    }
+    { return 32; }
 
     static constexpr value_type offset_basis()
-    {
-        return 0x811c9dc5;
-    }
+    { return 0x811c9dc5; }
 
     static constexpr value_type prime()
-    {
-        return 0x1000193;
-    }
+    { return 0x1000193; }
 };
 
 /*************************************************************************************************/
@@ -132,19 +128,13 @@ struct fnv_base_traits<64>
     typedef std::uint64_t value_type;
 
     static constexpr std::size_t size()
-    {
-        return 64;
-    }
+    { return 64; }
 
     static constexpr value_type offset_basis()
-    {
-        return 0xcbf29ce484222325;
-    }
+    { return 0xcbf29ce484222325; }
 
     static constexpr value_type prime()
-    {
-        return 0x100000001b3;
-    }
+    { return 0x100000001b3; }
 };
 
 /*************************************************************************************************/
@@ -159,19 +149,13 @@ struct fnv_base_traits<128>
     typedef boost::multiprecision::uint128_t value_type;
 
     static constexpr std::size_t size()
-    {
-        return 128;
-    }
+    { return 128; }
 
     static constexpr value_type offset_basis()
-    {
-        return 0x6C62272E07BB014262B821756295C58D_cppui128;
-    }
+    { return 0x6C62272E07BB014262B821756295C58D_cppui128; }
 
     static constexpr value_type prime()
-    {
-        return 0x1000000000000000000013B_cppui128;
-    }
+    { return 0x1000000000000000000013B_cppui128; }
 };
 
 /*************************************************************************************************/
@@ -182,19 +166,13 @@ struct fnv_base_traits<256>
     typedef boost::multiprecision::uint256_t value_type;
 
     static constexpr std::size_t size()
-    {
-        return 256;
-    }
+    { return 256; }
 
     static constexpr value_type offset_basis()
-    {
-        return 0xDD268DBCAAC550362D98C384C4E576CCC8B1536847B6BBB31023B4C8CAEE0535_cppui256;
-    }
+    { return 0xDD268DBCAAC550362D98C384C4E576CCC8B1536847B6BBB31023B4C8CAEE0535_cppui256; }
 
     static constexpr value_type prime()
-    {
-        return 0x1000000000000000000000000000000000000000163_cppui256;
-    }
+    { return 0x1000000000000000000000000000000000000000163_cppui256; }
 };
 
 /*************************************************************************************************/
@@ -205,19 +183,13 @@ struct fnv_base_traits<512>
     typedef boost::multiprecision::uint512_t value_type;
 
     static constexpr std::size_t size()
-    {
-        return 512;
-    }
+    { return 512; }
 
     static constexpr value_type offset_basis()
-    {
-        return 0xB86DB0B1171F4416DCA1E50F309990ACAC87D059C90000000000000000000D21E948F68A34C192F62EA79BC942DBE7CE182036415F56E34BAC982AAC4AFE9FD9_cppui512;
-    }
+    { return 0xB86DB0B1171F4416DCA1E50F309990ACAC87D059C90000000000000000000D21E948F68A34C192F62EA79BC942DBE7CE182036415F56E34BAC982AAC4AFE9FD9_cppui512; }
 
     static constexpr value_type prime()
-    {
-        return 0x100000000000000000000000000000000000000000000000000000000000000000000000000000000000157_cppui512;
-    }
+    { return 0x100000000000000000000000000000000000000000000000000000000000000000000000000000000000157_cppui512; }
 };
 
 /*************************************************************************************************/
@@ -228,19 +200,13 @@ struct fnv_base_traits<1024>
     typedef boost::multiprecision::uint1024_t value_type;
 
     static constexpr std::size_t size()
-    {
-        return 1024;
-    }
+    { return 1024; }
 
     static constexpr value_type offset_basis()
-    {
-        return 0x5F7A76758ECC4D32E56D5A591028B74B29FC4223FDADA16C3BF34EDA3674DA9A21D9000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004C6D7EB6E73802734510A555F256CC005AE556BDE8CC9C6A93B21AFF4B16C71EE90B3_cppui1024;
-    }
+    { return 0x5F7A76758ECC4D32E56D5A591028B74B29FC4223FDADA16C3BF34EDA3674DA9A21D9000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004C6D7EB6E73802734510A555F256CC005AE556BDE8CC9C6A93B21AFF4B16C71EE90B3_cppui1024; }
 
     static constexpr value_type prime()
-    {
-        return 0x10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018D_cppui1024;
-    }
+    { return 0x10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018D_cppui1024; }
 };
 #endif
 /*************************************************************************************************/
@@ -297,10 +263,11 @@ using fnvtype = typename fnv_traits<Bits>::value_type;
 /**
     \ingroup fnv
 
-    Performs the FNV-1a hash over the specified range.
+    Performs the FNV-1a hash over the advancing iterator until the (sentinel)
+    predicate returns true.
 */
-template <std::size_t Bits, typename Iterator>
-fnvtype<Bits> fnv1a(Iterator first, Iterator last)
+template <std::size_t Bits, typename Iterator, typename Predicate>
+fnvtype<Bits> fnv1a(Iterator first, Predicate p)
 {
     static_assert(sizeof (typename std::iterator_traits<Iterator>::value_type) == 1,
                   "Iterator value_type must be 1 byte.");
@@ -309,10 +276,24 @@ fnvtype<Bits> fnv1a(Iterator first, Iterator last)
 
     result_type result(fnv_traits<Bits>::offset_basis());
 
-    while (first != last)
+    while (!p(*first))
         result = (result xor static_cast<result_type>(*first++)) * fnv_traits<Bits>::prime();
 
     return detail::bitmask<fnv_traits<Bits>::size(), Bits>::template mask(result);
+}
+
+/*************************************************************************************************/
+/**
+    \ingroup fnv
+
+    Performs the FNV-1a hash over the specified range.
+*/
+template <std::size_t Bits, typename Iterator>
+inline fnvtype<Bits> fnv1a(Iterator first, Iterator last)
+{
+    typedef typename std::iterator_traits<Iterator>::value_type value_type;
+
+    return fnv1a<Bits>(first, [=](const value_type& n){ return &n == &(*last); });
 }
 
 /*************************************************************************************************/

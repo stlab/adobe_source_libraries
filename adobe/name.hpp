@@ -109,16 +109,10 @@ template<>
 struct hash<adobe::name_t>
 {
 public:
-    std::size_t operator()(adobe::name_t const& name) const 
+    inline std::size_t operator()(adobe::name_t const& name) const 
     {
-        const char* first(name.c_str());
-        const char* last(first);
-
-        while (*last)
-            ++last;
-
-        return adobe::fnv1a<sizeof(std::size_t) * 8>(first, last);
-     }
+        return adobe::fnv1a<sizeof(std::size_t) * 8>(name.c_str(), adobe::logical_not());
+    }
 };
 
 /*************************************************************************************************/
