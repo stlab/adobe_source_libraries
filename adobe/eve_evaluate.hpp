@@ -14,7 +14,7 @@
 #include <boost/function.hpp>
 
 #include <adobe/dictionary_fwd.hpp>
-#include <adobe/name_fwd.hpp>
+#include <adobe/name.hpp>
 
 #include <adobe/adam.hpp>
 #include <adobe/eve_parser.hpp>

@@ -276,7 +276,7 @@ typedef std::pair<name_t, any_regular_t> stream_lex_token_t;
 
 /*************************************************************************************************/
 
-extern aggregate_name_t eof_k; // EOF token name
+extern static_name_t eof_k; // EOF token name
 
 /*************************************************************************************************/
 

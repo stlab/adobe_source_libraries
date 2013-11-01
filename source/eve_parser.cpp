@@ -33,16 +33,16 @@ using namespace adobe;
 
 /*************************************************************************************************/
 
-aggregate_name_t     constant_k  = { "constant" };
-aggregate_name_t     interface_k = { "interface" };
-aggregate_name_t     layout_k    = { "layout" };
-aggregate_name_t     logic_k     = { "logic" };
-aggregate_name_t     relate_k    = { "relate" };
-aggregate_name_t     unlink_k    = { "unlink" };
-aggregate_name_t     view_k      = { "view" };
-aggregate_name_t     when_k      = { "when" };
+static_name_t     constant_k  = "constant"_name;
+static_name_t     interface_k = "interface"_name;
+static_name_t     layout_k    = "layout"_name;
+static_name_t     logic_k     = "logic"_name;
+static_name_t     relate_k    = "relate"_name;
+static_name_t     unlink_k    = "unlink"_name;
+static_name_t     view_k      = "view"_name;
+static_name_t     when_k      = "when"_name;
 
-aggregate_name_t keyword_table[] = {
+static_name_t keyword_table[] = {
     constant_k,
     interface_k,
     layout_k,
@@ -123,21 +123,22 @@ private:
     typedef bool (eve_parser::*set_decl_t)(const string& detailed);
     bool is_set_decl(name_t, set_decl_t);
 
-    eve_callback_suite_t     assembler_m;
+    eve_callback_suite_t assembler_m;
 };
 
 /*************************************************************************************************/
     
 void eve_parser::parse(const position_t& position)
 {
-    if (!is_layout_specifier(position)) throw_exception("layout specifier required");
+    if (!is_layout_specifier(position))
+        throw_exception("layout specifier required");
 }
 
 /*************************************************************************************************/
 
 bool eve_parser::is_layout_specifier(const position_t& position)
 {
-/* REVISIT (sparent) : Top level block is ignored. */
+    /* REVISIT (sparent) : Top level block is ignored. */
     
     using namespace adobe;
     
@@ -147,6 +148,7 @@ bool eve_parser::is_layout_specifier(const position_t& position)
     
     require_token(identifier_k);
     require_token(open_brace_k);
+
     while (is_qualified_cell_decl()) { };
     
     if (assembler_m.finalize_sheet_proc_m) assembler_m.finalize_sheet_proc_m();
@@ -162,15 +164,17 @@ bool eve_parser::is_layout_specifier(const position_t& position)
 
 bool eve_parser::is_qualified_cell_decl()
 {
-    if (is_interface_set_decl() || is_constant_set_decl() || is_logic_set_decl()) return true;
-    return false;
+    return is_interface_set_decl() ||
+           is_constant_set_decl() ||
+           is_logic_set_decl();
 }
     
 /*************************************************************************************************/
 	
 bool eve_parser::is_set_decl(name_t token, set_decl_t set_decl)
 {
-	if (!is_keyword(token)) return false;
+	if (!is_keyword(token))
+        return false;
 	
 	require_token(colon_k);
 	

@@ -39,19 +39,19 @@ using namespace adobe;
 
 /*************************************************************************************************/
 
-aggregate_name_t    constant_k   = { "constant" };
-aggregate_name_t    external_k   = { "external" };
-aggregate_name_t    input_k      = { "input" };
-aggregate_name_t    interface_k  = { "interface" };
-aggregate_name_t    invariant_k  = { "invariant" };
-aggregate_name_t    logic_k      = { "logic" };
-aggregate_name_t    output_k     = { "output" };
-aggregate_name_t    relate_k     = { "relate" };
-aggregate_name_t    sheet_k      = { "sheet" };
-aggregate_name_t    unlink_k     = { "unlink" };
-aggregate_name_t    when_k       = { "when" };
+static_name_t    constant_k  = "constant"_name;
+static_name_t    external_k  = "external"_name;
+static_name_t    input_k     = "input"_name;
+static_name_t    interface_k = "interface"_name;
+static_name_t    invariant_k = "invariant"_name;
+static_name_t    logic_k     = "logic"_name;
+static_name_t    output_k    = "output"_name;
+static_name_t    relate_k    = "relate"_name;
+static_name_t    sheet_k     = "sheet"_name;
+static_name_t    unlink_k    = "unlink"_name;
+static_name_t    when_k      = "when"_name;
 
-aggregate_name_t keyword_table[] = {
+static_name_t keyword_table[] = {
     constant_k,
     external_k,
     input_k,
