@@ -92,12 +92,12 @@ BOOST_AUTO_TEST_CASE(closed_hash_allocator_rtti)
     using namespace adobe;
 
     typedef adobe::closed_hash_set<int, adobe::identity<const int>, 
-		boost::hash<int>, std::equal_to<int>, adobe::capture_allocator<int> > hash_set_t;
+		std::hash<int>, std::equal_to<int>, adobe::capture_allocator<int> > hash_set_t;
 
 	// const std::type_info& t1 = typeid(hash_set_t);
 	// BOOST_CHECK(!t1.requires_std_rtti());
 
-    typedef adobe::closed_hash_map<int, double, boost::hash<int>, 
+    typedef adobe::closed_hash_map<int, double, std::hash<int>, 
 		std::equal_to<int>, adobe::capture_allocator<std::pair<int, double> > > hash_map_t;
     
 	// const std::type_info& t2 = typeid(hash_map_t);
@@ -105,19 +105,19 @@ BOOST_AUTO_TEST_CASE(closed_hash_allocator_rtti)
 
     typedef std::vector<int,capture_allocator<int> > vector_t;
 
-    typedef adobe::closed_hash_map<int, vector_t, boost::hash<int>, 
+    typedef adobe::closed_hash_map<int, vector_t, std::hash<int>, 
 		std::equal_to<int>, adobe::capture_allocator<std::pair<int, vector_t> > > hash_map_vector_t;
 
 	// const std::type_info& t3 = typeid(hash_map_vector_t);
 	// BOOST_CHECK(!t3.requires_std_rtti());
 
     typedef adobe::closed_hash_set<int, adobe::identity<const int>, 
-		boost::hash<int>, std::equal_to<int>, std::allocator<int> > hash_set_stda_t;
+		std::hash<int>, std::equal_to<int>, std::allocator<int> > hash_set_stda_t;
 
 	// const std::type_info& t4 = typeid(hash_set_stda_t);
 	// BOOST_CHECK(t4.requires_std_rtti());
 
-    typedef adobe::closed_hash_map<int, double, boost::hash<int>, 
+    typedef adobe::closed_hash_map<int, double, std::hash<int>, 
 		std::equal_to<int>, std::allocator<double> > hash_map_stda_t;
     
 	// const std::type_info& t5 = typeid(hash_map_stda_t);
@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE(closed_hash_allocator_rtti)
 
     typedef std::vector<int, std::allocator<int> > vector_stda_t;
 
-    typedef adobe::closed_hash_map<int, vector_t, boost::hash<int>, 
+    typedef adobe::closed_hash_map<int, vector_t, std::hash<int>, 
 		std::equal_to<int>, std::allocator<vector_stda_t> > hash_map_vector_stda_t;
 
 	// const std::type_info& t6 = typeid(hash_map_vector_stda_t);

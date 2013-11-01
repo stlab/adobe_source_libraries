@@ -196,7 +196,6 @@
     <ClInclude Include="..\adobe\mismatch.hpp" />
     <ClInclude Include="..\adobe\move.hpp" />
     <ClInclude Include="..\adobe\name.hpp" />
-    <ClInclude Include="..\adobe\name_fwd.hpp" />
     <ClInclude Include="..\adobe\numeric.hpp" />
     <ClInclude Include="..\adobe\once.hpp" />
     <ClInclude Include="..\adobe\algorithm\other_of.hpp" />

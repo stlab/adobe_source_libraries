@@ -135,6 +135,8 @@ bool compare_arrays(const adobe::array_t& a, const adobe::array_t& b)
 
 bool test_sheet(const bfs::path& root)
 {
+    using namespace adobe::literals;
+
     bool                	success(true);
     bfs::path           	sheet_path(root);
     bfs::path           	input_path(root.string() + "i");
@@ -153,10 +155,10 @@ bool test_sheet(const bfs::path& root)
     input = read_dictionary(input_path);
 
     // get contributing cells array
-    contributing = get_value(input, adobe::static_name_t("contributing")).cast<adobe::dictionary_t>();
+    contributing = get_value(input, "contributing"_name).cast<adobe::dictionary_t>();
 
     // get expected value array
-    input_value = get_value(input, adobe::static_name_t("value"));
+    input_value = get_value(input, "value"_name);
 
     sheet.update();
 
