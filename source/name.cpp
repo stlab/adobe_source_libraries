@@ -14,30 +14,17 @@
 #include <unordered_map>
 #include <mutex>
 
+// asl
+#include <adobe/implementation/string_pool.hpp>
+
 /****************************************************************************************************/
 
 namespace {
 
 /****************************************************************************************************/
 
-typedef std::unordered_map<std::size_t, const char*> map_t;
-typedef std::lock_guard<std::mutex>                  lock_t;
-
-map_t& map()
-{
-    static map_t value_s;
-
-    return value_s;
-}
-
-std::mutex& map_mutex()
-{
-    static std::mutex value_s;
-
-    return value_s;
-}
-
 constexpr const char* empty_string_s = "";
+constexpr std::size_t empty_hash_s = adobe::detail::name_hash("");
 
 /****************************************************************************************************/
 
@@ -73,7 +60,7 @@ name_t::operator bool() const
 const char* name_t::map_string(const char* str)
 {
     if (!str || !*str)
-        str = empty_string_s;
+        return map_string(empty_string_s, empty_hash_s);
 
     // Once fnv1a is in master we can make the hash faster
     // with a call to the sentinel variant.
@@ -86,39 +73,34 @@ const char* name_t::map_string(const char* str)
 
 const char* name_t::map_string(const char* str, std::size_t hash)
 {
-    lock_t lock(map_mutex());
+    typedef std::unordered_map<std::size_t, const char*> map_t;
+    typedef std::lock_guard<std::mutex>                  lock_t;
 
-    return map().emplace(hash, str).first->second;
+    static std::mutex sync_s;
+
+    lock_t lock(sync_s);
+
+    static adobe::unique_string_pool_t pool_s;
+    static map_t                       map_s;
+    map_t::const_iterator              found(map_s.find(hash));
+
+    return found == map_s.end() ?
+               map_s.emplace(hash, pool_s.add(str)).first->second :
+               found->second;
 }
 
 /****************************************************************************************************/
 
 std::ostream& operator<<(std::ostream& s, const static_name_t& name)
 {
-    return s
-#if ADOBE_NAME_DEBUG
-         << "[ '"
-#endif
-         << name.string_m
-#if ADOBE_NAME_DEBUG
-         << "', 0x" << std::hex << name.hash_m << std::dec << " ]"
-#endif
-        ;
+    return s << name.string_m ;
 }
 
 /****************************************************************************************************/
 
 std::ostream& operator<<(std::ostream& s, const name_t& name)
 {
-    return s
-#if ADOBE_NAME_DEBUG
-         << "[ '"
-#endif
-         << name.ptr_m
-#if ADOBE_NAME_DEBUG
-         << "', 0x" << std::hex << static_cast<const void*>(name.ptr_m) << std::dec << " ]"
-#endif
-        ;
+    return s << name.ptr_m;
 }
 
 /****************************************************************************************************/
