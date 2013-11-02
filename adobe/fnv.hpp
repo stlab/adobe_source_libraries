@@ -265,6 +265,9 @@ using fnvtype = typename fnv_traits<Bits>::value_type;
 
     Performs the FNV-1a hash over the advancing iterator until the (sentinel)
     predicate returns true.
+
+    \todo Refactor this variant with the Iterator/Iterator one so there is one
+    implementation of the algorithm in this header.
 */
 template <std::size_t Bits, typename Iterator, typename Predicate>
 fnvtype<Bits> fnv1a(Iterator first, Predicate p)
@@ -287,13 +290,24 @@ fnvtype<Bits> fnv1a(Iterator first, Predicate p)
     \ingroup fnv
 
     Performs the FNV-1a hash over the specified range.
+
+    \todo Refactor this variant with the Iterator/Predicate one so there is one
+    implementation of the algorithm in this header.
 */
 template <std::size_t Bits, typename Iterator>
 inline fnvtype<Bits> fnv1a(Iterator first, Iterator last)
 {
-    typedef typename std::iterator_traits<Iterator>::value_type value_type;
+    static_assert(sizeof (typename std::iterator_traits<Iterator>::value_type) == 1,
+                  "Iterator value_type must be 1 byte.");
 
-    return fnv1a<Bits>(first, [=](const value_type& n){ return &n == &(*last); });
+    typedef fnvtype<Bits> result_type;
+
+    result_type result(fnv_traits<Bits>::offset_basis());
+
+    while (first != last)
+        result = (result xor static_cast<result_type>(*first++)) * fnv_traits<Bits>::prime();
+
+    return detail::bitmask<fnv_traits<Bits>::size(), Bits>::template mask(result);
 }
 
 /*************************************************************************************************/
