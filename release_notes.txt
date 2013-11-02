@@ -555,7 +555,7 @@ RELEASE NOTES
         library for efficient operation even when chained.
         - Bug fix for any_regular_t. x.assign(u); where x and u are any_regular_t no longer results
         in an any_regular_t inside an any_regular_t - it just does a simple assignment.
-        - Killed const_once_name_t (use aggregate_name_t instead).
+        - Killed const_once_name_t (use static_name_t instead).
         - Fixed a bug with the parser/virtual_machine with mismatched types in an any_regular_t that
         caused a failure on Win64.
 
@@ -597,9 +597,9 @@ RELEASE NOTES
             -- vector library: A high performance vector container which is movable and a move sink.
             -- string library: Added a string_t and string16_t which sit on the vector
             implementation and are movable objects.
-            -- name library: added an aggregate_name_t which replaces const_once_name_t (which is
-            now deprecated and will be removed in 1.0.29). To construct an aggregate_name_t simply
-            write "aggregate_name_t key_width = { "key_width" };" There is no need for once
+            -- name library: added an static_name_t which replaces const_once_name_t (which is
+            now deprecated and will be removed in 1.0.29). To construct an static_name_t simply
+            write "static_name_t key_width = { "key_width" };" There is no need for once
             initialization (nor is it possible). Note that the c_str() for names are no longer
             guaranteed to be unique.
             -- array_t and dictionary_t are now typedefs for a vector<any_regular_t> and

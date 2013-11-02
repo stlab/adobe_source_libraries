@@ -181,7 +181,6 @@
 		9A4B66B0176D47970053A5B7 /* memory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = memory.hpp; path = ../adobe/memory.hpp; sourceTree = "<group>"; };
 		9A4B66B1176D47970053A5B7 /* mismatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mismatch.hpp; path = ../adobe/mismatch.hpp; sourceTree = "<group>"; };
 		9A4B66B2176D47970053A5B7 /* move.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = move.hpp; path = ../adobe/move.hpp; sourceTree = "<group>"; };
-		9A4B66B3176D47970053A5B7 /* name_fwd.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = name_fwd.hpp; path = ../adobe/name_fwd.hpp; sourceTree = "<group>"; };
 		9A4B66B4176D47970053A5B7 /* name.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = name.hpp; path = ../adobe/name.hpp; sourceTree = "<group>"; };
 		9A4B66B5176D47970053A5B7 /* numeric.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = numeric.hpp; path = ../adobe/numeric.hpp; sourceTree = "<group>"; };
 		9A4B66B6176D47970053A5B7 /* once.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = once.hpp; path = ../adobe/once.hpp; sourceTree = "<group>"; };
@@ -577,7 +576,6 @@
 				9A4B66B0176D47970053A5B7 /* memory.hpp */,
 				9A4B66B1176D47970053A5B7 /* mismatch.hpp */,
 				9A4B66B2176D47970053A5B7 /* move.hpp */,
-				9A4B66B3176D47970053A5B7 /* name_fwd.hpp */,
 				9A4B66B4176D47970053A5B7 /* name.hpp */,
 				9A4B66B5176D47970053A5B7 /* numeric.hpp */,
 				9A4B66B6176D47970053A5B7 /* once.hpp */,

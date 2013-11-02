@@ -1,0 +1,9 @@
+import testing ;
+
+project
+    : requirements
+        <include>.
+        <variant>debug:<define>ADOBE_NAME_DEBUG=1
+    ;
+
+run main.cpp ;

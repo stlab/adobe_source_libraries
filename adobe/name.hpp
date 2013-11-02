@@ -1,5 +1,5 @@
 /*
-    Copyright 2005-2007 Adobe Systems Incorporated
+    Copyright 2005-2013 Adobe Systems Incorporated
     Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
     or a copy at http://stlab.adobe.com/licenses.html)
 */
@@ -9,105 +9,225 @@
 #ifndef ADOBE_NAME_HPP
 #define ADOBE_NAME_HPP
 
-#include <adobe/config.hpp>
+/****************************************************************************************************/
 
-#include <adobe/name_fwd.hpp>
+// stdc++
+#include <functional>
+#include <iosfwd>
 
+// boost
+#include <boost/operators.hpp>
+#include <boost/type_traits/is_pod.hpp>
+
+// asl
 #include <adobe/conversion.hpp>
-#include <adobe/cstring.hpp>
 
-/*************************************************************************************************/
+/****************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/****************************************************************************************************/
 
-namespace version_1 {
+namespace detail {
 
-/*! \addtogroup abi_string
-@{
-*/
+/****************************************************************************************************/
 
-/*************************************************************************************************/
-
-#if !defined(ADOBE_NO_DOCUMENTATION)
-
-inline name_t::operator bool() const { return *name_m != 0; }
-
-inline bool name_t::operator!() const { return !(*name_m); }
-
-#endif
-
-/*************************************************************************************************/
-
-inline bool operator<(const name_t& x, const name_t& y)
+constexpr std::size_t name_hash(const char* str,
+                                std::size_t len,
+                                std::size_t n,
+                                std::size_t state)
 {
-    return adobe::strcmp(x.c_str(), y.c_str()) < 0;
+    static_assert(sizeof(std::size_t) == 8, "std::size_t size mismatch.");
+
+    return n+1 < len ?
+               name_hash(str,
+                         len,
+                         n+1,
+                         (state xor static_cast<std::size_t>(str[n])) * 0x100000001b3ULL) :
+               state;
 }
 
-inline bool operator == (const name_t& x, const name_t& y)
+constexpr std::size_t name_hash(const char* str, std::size_t len)
 {
-    /*
-        The test case for equal strings is "optimized" because names are stored in hash tables and
-        will often match on a find because the compiler will pool string constants.
+    static_assert(sizeof(std::size_t) == 8, "std::size_t size mismatch.");
+
+    return name_hash(str, len, 0, 0xcbf29ce484222325ULL);
+}
+
+template <std::size_t N>
+constexpr std::size_t name_hash(const char (&str)[N])
+{
+    static_assert(sizeof(std::size_t) == 8, "std::size_t size mismatch.");
+
+    return name_hash(str, N);
+}
+
+/****************************************************************************************************/
+
+} // namespace detail
+
+/****************************************************************************************************/
+
+struct static_name_t;
+
+/****************************************************************************************************/
+
+namespace literals {
+
+/****************************************************************************************************/
+
+inline constexpr static_name_t operator"" _name (const char* str, std::size_t n);
+
+/****************************************************************************************************/
+
+} // namespace literals
+
+/****************************************************************************************************/
+
+using namespace literals;
+
+/****************************************************************************************************/
+
+struct static_name_t
+{
+    explicit operator bool() const;
+
+    friend bool operator==(const static_name_t& x, const static_name_t& y)
+    { return x.hash_m == y.hash_m; }
+
+    friend bool operator!=(const static_name_t& x, const static_name_t& y)
+    { return !(x == y); }
+
+    friend bool operator<(const static_name_t& x, const static_name_t& y);
+
+private:
+    static_name_t() = delete;
+
+    constexpr static_name_t(const char* str, std::size_t hash) :
+        string_m(str),
+        hash_m(hash)
+    { }
+
+    friend struct name_t;
+
+    friend constexpr static_name_t literals::operator"" _name (const char* str, std::size_t n);
+
+    friend std::ostream& operator<<(std::ostream& s, const static_name_t& name);
+
+    const char* string_m;
+
+    std::size_t hash_m;
+};
+
+/****************************************************************************************************/
+
+namespace literals {
+
+/****************************************************************************************************/
+
+inline constexpr static_name_t operator"" _name (const char* str, std::size_t n)
+{
+    return static_name_t{str, detail::name_hash(str, n+1)};
+}
+
+/****************************************************************************************************/
+
+} // namespace literals
+
+/****************************************************************************************************/
+
+struct name_t : boost::totally_ordered<name_t, name_t>
+{
+    explicit name_t(const char* s = "") :
+        ptr_m(map_string(s))
+    { }
+
+    /*implicit*/ name_t(const static_name_t& aggregate) :
+        ptr_m(map_string(aggregate.string_m, aggregate.hash_m))
+    { }
+
+    friend std::ostream& operator<<(std::ostream& s, const name_t& name);
+
+    explicit operator bool() const;
+
+    friend bool operator==(const name_t& x, const name_t& y)
+    { return x.ptr_m == y.ptr_m; }
+
+    friend bool operator<(const name_t& x, const name_t& y)
+    { return std::strcmp(x.ptr_m, y.ptr_m) < 0; }
+
+    const char* c_str() const
+    { return ptr_m; }
+
+    /**
+    for use with sorting, e.g.:
+
+        std::sort(begin(c), end(c), adobe::name_t::fast_sort);
+    
+    The implicit sort (operator<) is lexicographical ("slow"), whereas fast
+    sort leverages the runtime hash of the name_t to speed things up. The sort
+    order is *not* guaranteed between processes or DLLs, nor is it guaranteed to
+    be lexicographical.
+
+    It is only guaranteed to be stable for the lifetime of the process.
     */
-    if (x.c_str() == y.c_str()) return true;
-    return adobe::strcmp(x.c_str(), y.c_str()) == 0;
-}
+    static inline bool fast_sort(const name_t& x, const name_t& y)
+    { return hash(x) < hash(y); }
 
-/*************************************************************************************************/
+private:
+    friend std::hash<name_t>;
 
-inline const char* name_t::c_str() const
-{
-    return name_m;
-}
-    
-/*************************************************************************************************/
+    static inline std::size_t hash(const name_t& x)
+    { return reinterpret_cast<std::size_t>(x.ptr_m); }
 
-class static_name_t : public name_t
-{
- public:
-    explicit static_name_t (const char* string_name = "") :
-        name_t(string_name, dont_copy_t()) { }
+    static const char* map_string(const char* str);
+    static const char* map_string(const char* str, std::size_t hash);
+
+    const char* ptr_m;
 };
 
-struct aggregate_name_t
-{
-    const char* const name_m;
-    operator name_t() const { return name_t(name_m, name_t::dont_copy_t()); }
-};
-
-/*
-    NOTE (sparent) : This is to allow for boost::hash<> to work with name_t. boost::hash<> relies
-    on argument dependent lookup.
-*/
-
-inline std::size_t hash_value(name_t name)
-{
-    std::size_t seed = 0; 
-    for (const char* first = name.c_str(); *first; ++first) {
-        seed = 5 * seed + *first;
-    }
-    return seed;
-}
-    
-//!@}
-
-/*************************************************************************************************/
-
-} // namespace version_1
-    
-/*************************************************************************************************/
+/****************************************************************************************************/
 
 template <> struct promote<static_name_t> { typedef name_t type; };
-template <> struct promote<aggregate_name_t> { typedef name_t type; };
-    
-/*************************************************************************************************/
+
+/****************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/****************************************************************************************************/
+
+namespace std {
+
+/****************************************************************************************************/
+
+template<>
+struct hash<adobe::name_t>
+{
+public:
+    inline std::size_t operator()(adobe::name_t const& name) const 
+    {
+        return adobe::name_t::hash(name);
+    }
+};
+
+/****************************************************************************************************/
+
+} // namespace std
+
+/****************************************************************************************************/
+
+namespace boost {
+
+/****************************************************************************************************/
+
+template <> struct is_pod<adobe::name_t> : boost::mpl::true_ { };
+
+/****************************************************************************************************/
+
+} // namespace boost
+
+/****************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/****************************************************************************************************/

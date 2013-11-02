@@ -81,11 +81,14 @@ void testParse( boost::filesystem::path& fileName )
     // Call the Eve parser.
     //
 
-    adobe::sheet_t        layout_sheet;
+    adobe::sheet_t layout_sheet;
    
-    adobe::parse(stream, adobe::line_position_t(fileName.native().c_str()),
-        adobe::eve_callback_suite_t::position_t(), adobe::bind_layout(boost::bind(&assemble, _2, _3),
-        layout_sheet, layout_sheet.machine_m));
+    adobe::parse(stream,
+                 adobe::line_position_t(fileName.native().c_str()),
+                 adobe::eve_callback_suite_t::position_t(),
+                 adobe::bind_layout(boost::bind(&assemble, _2, _3),
+                 layout_sheet,
+                 layout_sheet.machine_m));
 }
 
 /*************************************************************************************************/

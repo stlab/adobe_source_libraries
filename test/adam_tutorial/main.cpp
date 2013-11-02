@@ -148,20 +148,22 @@ private:
 
 adobe::name_t cell_type_to_name(adobe::adam_callback_suite_t::cell_type_t type)
 {
+    using namespace adobe::literals;
+
     switch (type)
     {
         case adobe::adam_callback_suite_t::input_k:     
-            return adobe::static_name_t("input");       break;
+            return "input"_name;       break;
         case adobe::adam_callback_suite_t::output_k:    
-            return adobe::static_name_t("output");      break;
+            return "output"_name;      break;
         case adobe::adam_callback_suite_t::constant_k:  
-            return adobe::static_name_t("constant");    break;
+            return "constant"_name;    break;
         case adobe::adam_callback_suite_t::logic_k:     
-            return adobe::static_name_t("logic");       break;
+            return "logic"_name;       break;
         case adobe::adam_callback_suite_t::invariant_k: 
-            return adobe::static_name_t("invariant");   break;
+            return "invariant"_name;   break;
         default: 
-            return adobe::static_name_t("unknown"); break;
+            return "unknown"_name; break;
     }
 }
 
@@ -173,11 +175,13 @@ void sheet_tracker::add_cell_trap(  adobe::adam_callback_suite_t::add_cell_proc_
                                     const adobe::line_position_t&                   position,
                                     const adobe::array_t&                           expr_or_init)
 {
+    using namespace adobe::literals;
+
     original(type, cell_name, position, expr_or_init, std::string(), std::string());
 
     std::cout << "A \'" << cell_name.c_str() << "\' (" << cell_type_to_name(type) << ")" << std::endl;
 
-    if (cell_type_to_name(type) == adobe::static_name_t("output"))
+    if (cell_type_to_name(type) == "output"_name)
         cell_set_m[cell_name] = adobe::any_regular_t();
 }
 

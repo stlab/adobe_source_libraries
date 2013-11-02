@@ -43,15 +43,15 @@ static_table is intended to encapsulate the code used to initialize, sort, and p
 
     static table_t some_table_s =
     {{
-        table_t::entry_type(adobe::static_name_t("foo"),    &do_foo),
-        table_t::entry_type(adobe::static_name_t("bar"),    &do_bar),
-        table_t::entry_type(adobe::static_name_t("baz"),    &do_baz),
-        table_t::entry_type(adobe::static_name_t("snafu"),  &do_snafu)
+        table_t::entry_type("foo"_name,   &do_foo),
+        table_t::entry_type("bar"_name,   &do_bar),
+        table_t::entry_type("baz"_name,   &do_baz),
+        table_t::entry_type("snafu"_name, &do_snafu)
     }};
 
     some_table_s.sort();
 
-    some_table_s(adobe::static_name_t("baz"))(42); // calls do_baz
+    some_table_s("baz"_name)(42); // calls do_baz
 \endcode
 */
 
