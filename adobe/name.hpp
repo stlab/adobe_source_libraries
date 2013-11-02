@@ -61,7 +61,7 @@ constexpr std::size_t name_hash(const char (&str)[N])
 {
     static_assert(sizeof(std::size_t) == 8, "std::size_t size mismatch.");
 
-    return name_hash(str, N);
+    return name_hash(str, N-1);
 }
 
 /****************************************************************************************************/
@@ -129,7 +129,7 @@ namespace literals {
 
 inline constexpr static_name_t operator"" _name (const char* str, std::size_t n)
 {
-    return static_name_t{str, detail::name_hash(str, n+1)};
+    return static_name_t{str, detail::name_hash(str, n)};
 }
 
 /****************************************************************************************************/
