@@ -11,15 +11,57 @@
 #include <algorithm>
 #include <vector>
 
-#include "name.hpp"
+// AAAAAAAHHHHHHH!!!!
+#define private public
+
+#include <adobe/name.hpp>
+
+/****************************************************************************************************/
+
+namespace {
+
+/****************************************************************************************************/
+
+std::ostream& dump(std::ostream& s, const adobe::static_name_t& name)
+{
+    return s << "[ '"
+             << name.string_m
+             << "', 0x" << std::hex << name.hash_m << std::dec << " ]";
+}
+
+/****************************************************************************************************/
+
+std::ostream& dump(std::ostream& s, const adobe::name_t& name)
+{
+    return s << "[ '"
+             << name.c_str()
+             << "', 0x" << std::hex << std::hash<adobe::name_t>()(name) << std::dec << " ]";
+}
 
 /****************************************************************************************************/
 
 template <typename T>
 void type_and_value(const char* name, const T& value)
 {
-    std::cout << name << " (" << typeid(value).name() << "): " << value << '\n';
+    std::cout << name << " (" << typeid(value).name() << "): ";
+
+    dump(std::cout, value);
+
+    std::cout << '\n';
 }
+
+inline std::ostream& operator"" _dump (const char* str, std::size_t n)
+{
+    return std::cout << "dump: {\n"
+                     << "   str: " << str << '\n'
+                     << "     n: " << n << '\n'
+                     << "  hash: 0x" << std::hex << adobe::detail::name_hash(str, n) << std::dec << '\n'
+                     << "};\n";
+}
+
+/****************************************************************************************************/
+
+} // namespace
 
 /****************************************************************************************************/
 
@@ -28,17 +70,17 @@ try
 {
     using namespace adobe::literals;
 
-#if ADOBE_NAME_DEBUG
-    std::cout << "Built with ADOBE_NAME_DEBUG=1\n";
-    std::cout << '\n';
-#endif
-
     constexpr std::size_t myhash = adobe::detail::name_hash("Hello, world!");
 
     std::cout << "hash: 0x" << std::hex << myhash << std::dec << "\n";
 
-    std::cout << "\"Hello, world!\"_name should hash to 0x38d1334144987bf4:\n";
-    std::cout << "Hello, world!"_name << "\n";
+    std::cout << "\"Hello, world!\"_name should hash to 0xdd7b24779de0921d:\n";
+
+    dump(std::cout, "Hello, world!"_name);
+
+    std::cout << '\n';
+
+    "Hello, world!"_dump;
 
     adobe::static_name_t hello_world("Hello, world!"_name);
     adobe::static_name_t foo("Red Sox"_name);
@@ -90,25 +132,41 @@ try
 
     std::cout << "Before slow sort:\n";
     for (auto& entry : name_set)
-        std::cout << "  " << entry << '\n';
+    {
+        std::cout << "  ";
+        dump(std::cout, entry);
+        std::cout << '\n';
+    }
 
     std::sort(begin(name_set), end(name_set));
 
     std::cout << "After slow sort:\n";
     for (auto& entry : name_set)
-        std::cout << "  " << entry << '\n';
+    {
+        std::cout << "  ";
+        dump(std::cout, entry);
+        std::cout << '\n';
+    }
 
     std::random_shuffle(begin(name_set), end(name_set));
 
     std::cout << "Before fast sort:\n";
     for (auto& entry : name_set)
-        std::cout << "  " << entry << '\n';
+    {
+        std::cout << "  ";
+        dump(std::cout, entry);
+        std::cout << '\n';
+    }
 
     std::sort(begin(name_set), end(name_set), adobe::name_t::fast_sort);
 
     std::cout << "After fast sort:\n";
     for (auto& entry : name_set)
-        std::cout << "  " << entry << '\n';
+    {
+        std::cout << "  ";
+        dump(std::cout, entry);
+        std::cout << '\n';
+    }
 
     return 0;
 }

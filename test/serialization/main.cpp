@@ -26,21 +26,21 @@ int main()
     using namespace adobe;
 
     dictionary_t             test;
-    dictionary_t::value_type one_dict_value(static_name_t("favorite_number"), any_regular_t(42));
+    dictionary_t::value_type one_dict_value("favorite_number"_name, any_regular_t(42));
 
-    test[static_name_t("array_empty")] = any_regular_t(array_t());
-    test[static_name_t("array_one")] = any_regular_t(array_t(1, any_regular_t(42)));
-    test[static_name_t("array_many")] = any_regular_t(array_t(3, any_regular_t(42)));
-    test[static_name_t("bool")] = any_regular_t(true);
-    test[static_name_t("dictionary_empty")] = any_regular_t(dictionary_t());
-    test[static_name_t("dictionary_one")] = any_regular_t(dictionary_t(&one_dict_value, boost::next(&one_dict_value)));
-    test[static_name_t("double")] = any_regular_t(3.14159265);
-    test[static_name_t("empty")] = any_regular_t(empty_t());
-    test[static_name_t("integer")] = any_regular_t(42);
-    test[static_name_t("name")] = any_regular_t(static_name_t("test_name"));
-    test[static_name_t("string_safe")] = any_regular_t(std::string("Hello, world!"));
-    test[static_name_t("string_unsafe")] = any_regular_t(std::string("\" ' \n"));
-    test[static_name_t("unknown")] = any_regular_t(unknown_type_t());
+    test["array_empty"_name] = any_regular_t(array_t());
+    test["array_one"_name] = any_regular_t(array_t(1, any_regular_t(42)));
+    test["array_many"_name] = any_regular_t(array_t(3, any_regular_t(42)));
+    test["bool"_name] = any_regular_t(true);
+    test["dictionary_empty"_name] = any_regular_t(dictionary_t());
+    test["dictionary_one"_name] = any_regular_t(dictionary_t(&one_dict_value, boost::next(&one_dict_value)));
+    test["double"_name] = any_regular_t(3.14159265);
+    test["empty"_name] = any_regular_t(empty_t());
+    test["integer"_name] = any_regular_t(42);
+    test["name"_name] = any_regular_t("test_name"_name);
+    test["string_safe"_name] = any_regular_t(std::string("Hello, world!"));
+    test["string_unsafe"_name] = any_regular_t(std::string("\" ' \n"));
+    test["unknown"_name] = any_regular_t(unknown_type_t());
 
     std::cout << "======== ASL CEL (Safe) ========"<< std::endl << std::endl;
     std::cout << begin_asl_cel << test << end_asl_cel << std::endl << std::endl;
