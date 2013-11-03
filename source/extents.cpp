@@ -37,12 +37,12 @@ std::ostream& operator << (std::ostream& s, const adobe::extents_t& x)
     s << adobe::begin_bag("[0]");
 
         s << adobe::begin_sequence;
-            s   << adobe::format(adobe::static_name_t("vertical"));
+            s   << adobe::format("vertical"_name);
             s   << adobe::format(x.slice_m[adobe::extents_slices_t::vertical]);
         s << adobe::end_sequence;
 
         s << adobe::begin_sequence;
-            s   << adobe::format(adobe::static_name_t("horizontal"));
+            s   << adobe::format("horizontal"_name);
             s   << adobe::format(x.slice_m[adobe::extents_slices_t::horizontal]);
         s << adobe::end_sequence;
 
@@ -74,32 +74,32 @@ std::ostream& operator << (std::ostream& s, const adobe::extents_t::slice_t& x)
 
     s   << adobe::begin_bag("[0]")
             << adobe::begin_sequence
-                << adobe::format(adobe::static_name_t("length"))
+                << adobe::format("length"_name)
                 << adobe::format(x.length_m)
             << adobe::end_sequence
             << adobe::begin_sequence
-                << adobe::format(adobe::static_name_t("outset"))
+                << adobe::format("outset"_name)
                 << adobe::begin_sequence
                     << adobe::format(x.outset_m.first)
                     << adobe::format(x.outset_m.second)
                 << adobe::end_sequence
             << adobe::end_sequence
             << adobe::begin_sequence
-                << adobe::format(adobe::static_name_t("frame"))
+                << adobe::format("frame"_name)
                 << adobe::begin_sequence
                     << adobe::format(x.frame_m.first)
                     << adobe::format(x.frame_m.second)
                 << adobe::end_sequence
             << adobe::end_sequence
             << adobe::begin_sequence
-                << adobe::format(adobe::static_name_t("inset"))
+                << adobe::format("inset"_name)
                 << adobe::begin_sequence
                     << adobe::format(x.inset_m.first)
                     << adobe::format(x.inset_m.second)
                 << adobe::end_sequence
             << adobe::end_sequence
             << adobe::begin_sequence
-                << adobe::format(adobe::static_name_t("poi_set"))
+                << adobe::format("poi_set"_name)
                 << adobe::begin_sequence;
                     for (; first != last; ++first)
                         s << adobe::format(*first);

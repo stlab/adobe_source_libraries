@@ -1,0 +1,3 @@
+project adobe/fnv ;
+
+run main.cpp ;

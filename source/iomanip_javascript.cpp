@@ -26,8 +26,27 @@ namespace adobe {
 
 /*************************************************************************************************/
 
+constexpr static_name_t javascript_name_k = "javascript"_name;
+
+/*************************************************************************************************/
+
+std::ostream& begin_javascript(std::ostream& os)
+{
+    replace_pword<format_base, javascript_format>(os, format_base_idx());
+    return os << begin_format;
+}
+
+/*************************************************************************************************/
+
+std::ostream& end_javascript(std::ostream& os)
+{
+    return os << end_format;
+}
+
+/*************************************************************************************************/
+
 void javascript_format::begin_format(stream_type& os)
-{ push_stack(os, format_element_t(name_t("javascript"))); }
+{ push_stack(os, format_element_t(javascript_name_k)); }
 
 /*************************************************************************************************/
 
@@ -58,7 +77,7 @@ void javascript_format::stack_event(stream_type& os, bool is_push)
     }
     else if (is_push)
     {
-        if (self == static_name_t("javascript"))
+        if (self == javascript_name_k)
         { }
         else if (self == bag_name_g)
         {
@@ -73,7 +92,7 @@ void javascript_format::stack_event(stream_type& os, bool is_push)
     }
     else
     {
-        if (self == static_name_t("javascript"))
+        if (self == javascript_name_k)
         { }
         else if (self == bag_name_g)
         {

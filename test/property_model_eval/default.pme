@@ -3,6 +3,7 @@ sheet distance_calculator
 {
 input:
     unit        : 1;
+
 interface:
     distance    : 15 * unit;
     rate        : 3 * unit;
@@ -19,6 +20,7 @@ logic:
 /* testing comment */
 
 print(distance_calculator, "first dump");
+
 dump(distance_calculator);
 
 reinitialize (distance_calculator, {});
@@ -42,9 +44,9 @@ dump(distance_calculator);
 /* testing comment */
 
 check (distance_calculator, {
-	rate: 6,
-	distance: 60,
-	time: 10
+    rate: 6,
+    distance: 60,
+    time: 10
 });
 
 /* testing contributing */

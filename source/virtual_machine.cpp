@@ -86,11 +86,13 @@ namespace {
 
 /*************************************************************************************************/
 
+using namespace adobe::literals;
+
 typedef void (adobe::virtual_machine_t::implementation_t::* operator_t)();
 typedef boost::function<adobe::any_regular_t (const adobe::array_t&)>         array_function_t;
 typedef boost::function<adobe::any_regular_t (const adobe::dictionary_t&)>    dictionary_function_t;
 
-typedef vector<adobe::any_regular_t>                    stack_type; // REVISIT (sparent) : GCC 3.1 the symbol stack_t conflicts with a symbol in signal.h
+typedef vector<adobe::any_regular_t> stack_type; // REVISIT (sparent) : GCC 3.1 the symbol stack_t conflicts with a symbol in signal.h
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 typedef adobe::static_table<adobe::name_t, operator_t, 27>              operator_table_t;
@@ -120,13 +122,13 @@ void get_type_name_init_()
 {
     static type_table_t type_table_s =
     {{
-        type_table_t::entry_type(&typeid(double),               adobe::static_name_t("number")),
-        type_table_t::entry_type(&typeid(bool),                 adobe::static_name_t("boolean")),
-        type_table_t::entry_type(&typeid(adobe::empty_t),       adobe::static_name_t("empty")),
-        type_table_t::entry_type(&typeid(string),               adobe::static_name_t("string")),
-        type_table_t::entry_type(&typeid(adobe::array_t),       adobe::static_name_t("array")),
-        type_table_t::entry_type(&typeid(adobe::dictionary_t),  adobe::static_name_t("dictionary")),
-        type_table_t::entry_type(&typeid(adobe::name_t),        adobe::static_name_t("name"))
+        type_table_t::entry_type(&typeid(double),               "number"_name),
+        type_table_t::entry_type(&typeid(bool),                 "boolean"_name),
+        type_table_t::entry_type(&typeid(adobe::empty_t),       "empty"_name),
+        type_table_t::entry_type(&typeid(string),               "string"_name),
+        type_table_t::entry_type(&typeid(adobe::array_t),       "array"_name),
+        type_table_t::entry_type(&typeid(adobe::dictionary_t),  "dictionary"_name),
+        type_table_t::entry_type(&typeid(adobe::name_t),        "name"_name)
     }};
 
     type_table_s.sort();
@@ -149,7 +151,8 @@ adobe::name_t get_type_name(const adobe::any_regular_t& val)
 
     (*type_table_g)(&val.type_info(), result);
 
-    if (!result) result = adobe::static_name_t("unknown");
+    if (!result)
+        result = "unknown"_name;
 
     return result;
 }
@@ -252,9 +255,9 @@ adobe::any_regular_t scale_function(const adobe::dictionary_t& parameters)
     double  x(0.0);
     double  b(0.0);
 
-    get_value(parameters, adobe::static_name_t("m"), m);
-    get_value(parameters, adobe::static_name_t("x"), x);
-    get_value(parameters, adobe::static_name_t("b"), b);
+    get_value(parameters, "m"_name, m);
+    get_value(parameters, "x"_name, x);
+    get_value(parameters, "b"_name, b);
 
     return adobe::any_regular_t(m * x + b);
 }
@@ -467,18 +470,18 @@ void virtual_machine_init_()
 
     static array_function_table_t array_function_table_s =
     {{
-        array_function_table_t::entry_type(adobe::static_name_t("typeof"),       &typeof_function),
-        array_function_table_t::entry_type(adobe::static_name_t("min"),          &min_function),
-        array_function_table_t::entry_type(adobe::static_name_t("max"),          &max_function),
-        array_function_table_t::entry_type(adobe::static_name_t("round"),        &round_function),
-        array_function_table_t::entry_type(adobe::static_name_t("localize"),     &localize_function),
-        array_function_table_t::entry_type(adobe::static_name_t("xml_escape"),   &xml_escape_function),
-        array_function_table_t::entry_type(adobe::static_name_t("xml_unescape"), &xml_unescape_function)
+        array_function_table_t::entry_type("typeof"_name,       &typeof_function),
+        array_function_table_t::entry_type("min"_name,          &min_function),
+        array_function_table_t::entry_type("max"_name,          &max_function),
+        array_function_table_t::entry_type("round"_name,        &round_function),
+        array_function_table_t::entry_type("localize"_name,     &localize_function),
+        array_function_table_t::entry_type("xml_escape"_name,   &xml_escape_function),
+        array_function_table_t::entry_type("xml_unescape"_name, &xml_unescape_function)
     }};
 
     static dictionary_function_table_t dictionary_function_table_s =
     {{
-        dictionary_function_table_t::entry_type(adobe::static_name_t("scale"),  &scale_function)
+        dictionary_function_table_t::entry_type("scale"_name,  &scale_function)
     }};
 
     operator_table_s.sort();

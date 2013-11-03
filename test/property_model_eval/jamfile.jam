@@ -7,19 +7,16 @@ SOURCES = pmeval.cpp
           [ glob $(TOP)/../boost_libraries/libs/program_options/src/*.cpp ]
          ;
 
-
 #build the executable
- exe pmeval :  
-            $(SOURCES)
-            ;
+exe pmeval :  
+           $(SOURCES)
+           ;
 
- import os ;
+import os ;
 
- # Construct the destination path location
- OS = [ os.name ] ;
- DEST_PATH = $(TOP)/../built_artifacts/install/$(OS)/ ;
-
-
+# Construct the destination path location
+OS = [ os.name ] ;
+DEST_PATH = $(TOP)/../built_artifacts/install/$(OS)/ ;
 
 install app
     :   pmeval
@@ -38,6 +35,7 @@ install examples
 explicit examples ;
 
 alias install_program : app examples ;
+
 explicit install_program ;
 
 run pmeval #source

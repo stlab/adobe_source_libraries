@@ -1,0 +1,7 @@
+import testing ;
+
+run main.cpp
+    : #args
+    : #files
+    english.txt
+    ;

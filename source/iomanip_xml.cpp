@@ -27,8 +27,29 @@ namespace adobe {
 
 /*************************************************************************************************/
 
+constexpr static_name_t xml_name_k = "xml"_name;
+
+/*************************************************************************************************/
+
+//!\ingroup manipulator
+std::ostream& begin_xml(std::ostream& os)
+{
+    replace_pword<format_base, xml_format>(os, format_base_idx());
+    return os << begin_format;
+}
+
+/*************************************************************************************************/
+
+//!\ingroup manipulator
+std::ostream& end_xml(std::ostream& os)
+{
+    return os << end_format;
+}
+
+/*************************************************************************************************/
+
 void xml_format::begin_format(stream_type& os)
-{ push_stack(os, format_element_t(name_t("xml"))); }
+{ push_stack(os, format_element_t(xml_name_k)); }
 
 /*************************************************************************************************/
 
@@ -55,7 +76,7 @@ void xml_format::stack_event(stream_type& os, bool is_push)
 
     if (is_push)
         {
-        if (self == static_name_t("xml"))
+        if (self == xml_name_k)
             {
             os << indents(depth()) << "<xml>\n";
             }
@@ -79,7 +100,7 @@ void xml_format::stack_event(stream_type& os, bool is_push)
         }
     else
         {
-        if (self == static_name_t("xml"))
+        if (self == xml_name_k)
             {
             os << indents(depth()) << "</xml>";
             }
