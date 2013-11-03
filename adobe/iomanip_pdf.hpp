@@ -50,17 +50,10 @@ private:
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-inline std::ostream& begin_pdf(std::ostream& os)
-{
-    replace_pword<format_base, pdf_format>(os, format_base_idx());
-    return os << begin_format;
-}
-
-/*************************************************************************************************/
+std::ostream& begin_pdf(std::ostream& os);
 
 //!\ingroup manipulator
-inline std::ostream& end_pdf(std::ostream& os)
-{ return os << end_format; }
+std::ostream& end_pdf(std::ostream& os);
 
 /*************************************************************************************************/
 

@@ -30,6 +30,23 @@ constexpr static_name_t pdf_name_k = "pdf"_name;
 
 /*************************************************************************************************/
 
+//!\ingroup manipulator
+std::ostream& begin_pdf(std::ostream& os)
+{
+    replace_pword<format_base, pdf_format>(os, format_base_idx());
+    return os << begin_format;
+}
+
+/*************************************************************************************************/
+
+//!\ingroup manipulator
+std::ostream& end_pdf(std::ostream& os)
+{
+    return os << end_format;
+}
+
+/*************************************************************************************************/
+
 void pdf_format::begin_format(stream_type& os)
 { push_stack(os, format_element_t(pdf_name_k)); }
 
