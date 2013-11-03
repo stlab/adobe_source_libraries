@@ -31,6 +31,23 @@ constexpr static_name_t xml_name_k = "xml"_name;
 
 /*************************************************************************************************/
 
+//!\ingroup manipulator
+std::ostream& begin_xml(std::ostream& os)
+{
+    replace_pword<format_base, xml_format>(os, format_base_idx());
+    return os << begin_format;
+}
+
+/*************************************************************************************************/
+
+//!\ingroup manipulator
+std::ostream& end_xml(std::ostream& os)
+{
+    return os << end_format;
+}
+
+/*************************************************************************************************/
+
 void xml_format::begin_format(stream_type& os)
 { push_stack(os, format_element_t(xml_name_k)); }
 
