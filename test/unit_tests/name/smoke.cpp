@@ -71,7 +71,7 @@ BOOST_AUTO_TEST_CASE(name_smoke)
 
     adobe::static_name_t static_hello_world("Hello, world!"_name);
     adobe::static_name_t static_red_sox("Red Sox"_name);
-    adobe::static_name_t stati_cnull(""_name);
+    adobe::static_name_t static_null(""_name);
 
     adobe::name_t red_sox("Red Sox");
     adobe::name_t cardinals("Cardinals");
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE(name_smoke)
 
     BOOST_CHECK_EQUAL(static_hello_world.hash_m, hello_world_hash);
     BOOST_CHECK_EQUAL(static_red_sox.hash_m,     0x4237cec5ff40a07e);
-    BOOST_CHECK_EQUAL(stati_cnull.hash_m,        0xcbf29ce484222325);
+    BOOST_CHECK_EQUAL(static_null.hash_m,        0xcbf29ce484222325);
 
     BOOST_CHECK_EQUAL(std::hash<adobe::name_t>()(static_red_sox),
                       std::hash<adobe::name_t>()(red_sox));
@@ -97,6 +97,8 @@ BOOST_AUTO_TEST_CASE(name_smoke)
     BOOST_CHECK(static_cast<bool>(static_red_sox));
 
     BOOST_CHECK(static_cast<bool>(red_sox));
+
+    BOOST_CHECK(!static_cast<bool>(static_null));
 
     BOOST_CHECK(!static_cast<bool>(nullname));
 
@@ -118,8 +120,6 @@ BOOST_AUTO_TEST_CASE(name_smoke)
     std::sort(begin(name_set), end(name_set));
 
     BOOST_CHECK(is_sorted(begin(name_set), end(name_set)));
-
-    std::random_shuffle(begin(name_set), end(name_set));
 
     BOOST_CHECK(!is_sorted(begin(name_set), end(name_set), adobe::name_t::fast_sort));
 
