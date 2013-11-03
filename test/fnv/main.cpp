@@ -6,9 +6,16 @@
 
 /******************************************************************************/
 
+// stdc++
 #include <vector>
 #include <iostream>
 
+#define BOOST_TEST_MAIN
+
+// boost
+#include <boost/test/unit_test.hpp>
+
+// asl
 #include <adobe/fnv.hpp>
 
 /******************************************************************************/
@@ -23,6 +30,8 @@ bool print_expected_result(const FNVType& expected, const FNVType& result)
     std::cout << std::hex;
 
     bool match(expected == result);
+
+    BOOST_CHECK_EQUAL(expected, result);
 
     if (match)
         {
@@ -106,14 +115,20 @@ void multiprecision_test(const std::string&          data,
 
 /******************************************************************************/
 
-int main()
-try
+BOOST_AUTO_TEST_CASE(fnv_smoke)
 {
     {
         std::string data("Hello, world!");
 
         fnvtest<32>(data, 0xed90f094);
         fnvtest<64>(data, 0x38d1334144987bf4);
+    }
+
+    {
+        std::string data("Hello, world");
+
+        fnvtest<32>(data, 0x94d8f9bd);
+        fnvtest<64>(data, 0xdd7b24779de0921d);
     }
 
     // Known case where FNV1a<32> hashes to zero and a 64 bit check
@@ -213,22 +228,6 @@ try
                             0x4B09771CE1B9B55BD6BBEE8F1627F263EE4E34EE145945CE4063E90BAF408FF181E577CB8ABBB9D68DB95F00000000000000000000000000000000000000000000000000000000000000000000000005992342635328451A9F29E0998A6B548F75911852E3829CFF1313A138C944EE69819D8FB9EA6033182AD1215DCC8E9A6E_cppui1024);
     }
 #endif
-
-    std::cout << "\nAll tests passed.\n";
-
-    return 0;
-}
-catch (const std::exception& error)
-{
-    std::cout << "Error: " << error.what() << '\n';
-
-    return 1;
-}
-catch (...)
-{
-    std::cout << "Error: unknown\n";
-
-    return 1;
 }
 
 /******************************************************************************/
