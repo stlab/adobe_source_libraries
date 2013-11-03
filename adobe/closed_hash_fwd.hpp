@@ -16,8 +16,6 @@
 #include <functional>
 #include <utility>
 
-#include <boost/functional/hash.hpp>
-
 #include <adobe/functional.hpp>
 #include <adobe/memory_fwd.hpp>
 #include <adobe/utility.hpp>

@@ -14,6 +14,7 @@ build-project adam_tutorial ;
 build-project closed_hash ;
 build-project cmath ;
 build-project eve_smoke ;
+build-project fnv ;
 build-project forest_smoke ;
 build-project n_queens ;
 build-project md5 ;
