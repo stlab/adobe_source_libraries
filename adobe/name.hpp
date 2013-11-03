@@ -41,7 +41,7 @@ constexpr std::size_t name_hash(const char* str,
 {
     static_assert(sizeof(std::size_t) == 8, "std::size_t size mismatch.");
 
-    return n+1 < len ?
+    return n < len ?
                name_hash(str,
                          len,
                          n+1,
