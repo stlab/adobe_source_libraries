@@ -49,6 +49,17 @@ inline std::ostream& operator"" _dump (const char* str, std::size_t n)
                      << "};\n";
 }
 
+template <std::size_t N>
+void dumpy(const char (&str)[N])
+{
+    static_assert(sizeof(std::size_t) == 8, "std::size_t size mismatch.");
+
+    std::cout << &str << '\n'
+              << N << '\n'
+              << std::hex << adobe::detail::name_hash(str, N-1) << std::dec << '\n'
+              ;
+}
+
 /****************************************************************************************************/
 
 } // namespace
@@ -59,7 +70,7 @@ BOOST_AUTO_TEST_CASE(name_smoke)
 {
     using namespace adobe::literals;
 
-    constexpr std::size_t hello_world_hash = 0xdd7b24779de0921d;
+    constexpr std::size_t hello_world_hash = 0x38d1334144987bf4;
     constexpr std::size_t myhash = adobe::detail::name_hash("Hello, world!");
 
     BOOST_CHECK_EQUAL(myhash, hello_world_hash);
@@ -78,7 +89,7 @@ BOOST_AUTO_TEST_CASE(name_smoke)
     adobe::name_t nullname(""_name);
 
     BOOST_CHECK_EQUAL(static_hello_world.hash_m, hello_world_hash);
-    BOOST_CHECK_EQUAL(static_red_sox.hash_m,     0x4237cec5ff40a07e);
+    BOOST_CHECK_EQUAL(static_red_sox.hash_m,     0xc5746070bacfea32);
     BOOST_CHECK_EQUAL(static_null.hash_m,        0xcbf29ce484222325);
 
     BOOST_CHECK_EQUAL(std::hash<adobe::name_t>()(static_red_sox),
@@ -126,6 +137,8 @@ BOOST_AUTO_TEST_CASE(name_smoke)
     std::sort(begin(name_set), end(name_set), adobe::name_t::fast_sort);
 
     BOOST_CHECK(is_sorted(begin(name_set), end(name_set), adobe::name_t::fast_sort));
+
+    dumpy("Hello, world!");
 }
 
 /****************************************************************************************************/
