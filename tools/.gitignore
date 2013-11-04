@@ -1,0 +1,10 @@
+#Files previously obliterated. Added here to prevent reintroduction.
+
+adobe/
+asl_codex.pl
+boost_codex.pl
+intel_tbb_codex.pl
+boost_1_35_0_patches.txt
+post_boost_build.pl
+post_build.pl
+post_intel_tbb_build.pl
