@@ -697,6 +697,10 @@ struct sha384_traits_t
 /*************************************************************************************************/
 /**
     \defgroup sha SHA (Secure Hash Algorithm)
+
+    \todo
+        Add sentinel versions of the SHA algorithms, making long_distance
+        obsolete.
 */
 /**
     \ingroup sha

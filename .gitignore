@@ -1,6 +1,6 @@
 .DS_Store
 build/
 project.xcworkspace/
-tools/asl.sublime-workspace
+*.sublime-workspace
 xcuserdata
 gh-pages/
