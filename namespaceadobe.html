@@ -36,6 +36,7 @@
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="modules.html"><span>Modules</span></a></li>
       <li class="current"><a href="namespaces.html"><span>Namespaces</span></a></li>
       <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
@@ -65,114 +66,48 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
-<tr class="memitem:a46ad5f2dd80cbecbcfaff8ade448c03f"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classadobe_1_1sha.html">sha</a><br class="typebreak"/>
-&lt; implementation::sha1_traits_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceadobe.html#a46ad5f2dd80cbecbcfaff8ade448c03f">sha1_t</a></td></tr>
-<tr class="memdesc:a46ad5f2dd80cbecbcfaff8ade448c03f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A bit-oriented implementation of the SHA-1 Secure Hash Algorithm.  <a href="#a46ad5f2dd80cbecbcfaff8ade448c03f">More...</a><br/></td></tr>
-<tr class="separator:a46ad5f2dd80cbecbcfaff8ade448c03f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa65a828318c60166df0a7e01dd53fd21"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classadobe_1_1sha.html">sha</a><br class="typebreak"/>
-&lt; implementation::sha224_traits_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceadobe.html#aa65a828318c60166df0a7e01dd53fd21">sha224_t</a></td></tr>
-<tr class="memdesc:aa65a828318c60166df0a7e01dd53fd21"><td class="mdescLeft">&#160;</td><td class="mdescRight">A bit-oriented implementation of the SHA-224 Secure Hash Algorithm.  <a href="#aa65a828318c60166df0a7e01dd53fd21">More...</a><br/></td></tr>
-<tr class="separator:aa65a828318c60166df0a7e01dd53fd21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0487d95f2694d108c987d1fe86f5def2"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classadobe_1_1sha.html">sha</a><br class="typebreak"/>
-&lt; implementation::sha256_traits_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceadobe.html#a0487d95f2694d108c987d1fe86f5def2">sha256_t</a></td></tr>
-<tr class="memdesc:a0487d95f2694d108c987d1fe86f5def2"><td class="mdescLeft">&#160;</td><td class="mdescRight">A bit-oriented implementation of the SHA-256 Secure Hash Algorithm.  <a href="#a0487d95f2694d108c987d1fe86f5def2">More...</a><br/></td></tr>
-<tr class="separator:a0487d95f2694d108c987d1fe86f5def2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6190c4a0cd7bb46205e6ac00cea4430a"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classadobe_1_1sha.html">sha</a><br class="typebreak"/>
-&lt; implementation::sha384_traits_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceadobe.html#a6190c4a0cd7bb46205e6ac00cea4430a">sha384_t</a></td></tr>
-<tr class="memdesc:a6190c4a0cd7bb46205e6ac00cea4430a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A bit-oriented implementation of the SHA-384 Secure Hash Algorithm.  <a href="#a6190c4a0cd7bb46205e6ac00cea4430a">More...</a><br/></td></tr>
-<tr class="separator:a6190c4a0cd7bb46205e6ac00cea4430a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27532808a0e6d9fb9a2951da44448c94"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classadobe_1_1sha.html">sha</a><br class="typebreak"/>
-&lt; implementation::sha512_traits_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceadobe.html#a27532808a0e6d9fb9a2951da44448c94">sha512_t</a></td></tr>
-<tr class="memdesc:a27532808a0e6d9fb9a2951da44448c94"><td class="mdescLeft">&#160;</td><td class="mdescRight">A bit-oriented implementation of the SHA-512 Secure Hash Algorithm.  <a href="#a27532808a0e6d9fb9a2951da44448c94">More...</a><br/></td></tr>
-<tr class="separator:a27532808a0e6d9fb9a2951da44448c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9b060a32aadc062ccecd6e2ff50b79ef"><td class="memTemplParams" colspan="2">template&lt;std::size_t Bits&gt; </td></tr>
+<tr class="memitem:ga9b060a32aadc062ccecd6e2ff50b79ef"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__fnv.html#ga9b060a32aadc062ccecd6e2ff50b79ef">fnv_traits</a> = typename detail::fnv_base_traits&lt; detail::rollup(Bits)&gt;</td></tr>
+<tr class="separator:ga9b060a32aadc062ccecd6e2ff50b79ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga52b4e150e50ed0bfb00ac7dd5c56859f"><td class="memTemplParams" colspan="2">template&lt;std::size_t Bits&gt; </td></tr>
+<tr class="memitem:ga52b4e150e50ed0bfb00ac7dd5c56859f"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__fnv.html#ga52b4e150e50ed0bfb00ac7dd5c56859f">fnvtype</a> = typename <a class="el" href="group__fnv.html#ga9b060a32aadc062ccecd6e2ff50b79ef">fnv_traits</a>&lt; Bits &gt;::value_type</td></tr>
+<tr class="separator:ga52b4e150e50ed0bfb00ac7dd5c56859f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga46ad5f2dd80cbecbcfaff8ade448c03f"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classadobe_1_1sha.html">sha</a><br class="typebreak"/>
+&lt; implementation::sha1_traits_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sha.html#ga46ad5f2dd80cbecbcfaff8ade448c03f">sha1_t</a></td></tr>
+<tr class="memdesc:ga46ad5f2dd80cbecbcfaff8ade448c03f"><td class="mdescLeft">&#160;</td><td class="mdescRight">A bit-oriented implementation of the SHA-1 Secure Hash Algorithm.  <a href="group__sha.html#ga46ad5f2dd80cbecbcfaff8ade448c03f">More...</a><br/></td></tr>
+<tr class="separator:ga46ad5f2dd80cbecbcfaff8ade448c03f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaa65a828318c60166df0a7e01dd53fd21"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classadobe_1_1sha.html">sha</a><br class="typebreak"/>
+&lt; implementation::sha224_traits_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sha.html#gaa65a828318c60166df0a7e01dd53fd21">sha224_t</a></td></tr>
+<tr class="memdesc:gaa65a828318c60166df0a7e01dd53fd21"><td class="mdescLeft">&#160;</td><td class="mdescRight">A bit-oriented implementation of the SHA-224 Secure Hash Algorithm.  <a href="group__sha.html#gaa65a828318c60166df0a7e01dd53fd21">More...</a><br/></td></tr>
+<tr class="separator:gaa65a828318c60166df0a7e01dd53fd21"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0487d95f2694d108c987d1fe86f5def2"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classadobe_1_1sha.html">sha</a><br class="typebreak"/>
+&lt; implementation::sha256_traits_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sha.html#ga0487d95f2694d108c987d1fe86f5def2">sha256_t</a></td></tr>
+<tr class="memdesc:ga0487d95f2694d108c987d1fe86f5def2"><td class="mdescLeft">&#160;</td><td class="mdescRight">A bit-oriented implementation of the SHA-256 Secure Hash Algorithm.  <a href="group__sha.html#ga0487d95f2694d108c987d1fe86f5def2">More...</a><br/></td></tr>
+<tr class="separator:ga0487d95f2694d108c987d1fe86f5def2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6190c4a0cd7bb46205e6ac00cea4430a"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classadobe_1_1sha.html">sha</a><br class="typebreak"/>
+&lt; implementation::sha384_traits_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sha.html#ga6190c4a0cd7bb46205e6ac00cea4430a">sha384_t</a></td></tr>
+<tr class="memdesc:ga6190c4a0cd7bb46205e6ac00cea4430a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A bit-oriented implementation of the SHA-384 Secure Hash Algorithm.  <a href="group__sha.html#ga6190c4a0cd7bb46205e6ac00cea4430a">More...</a><br/></td></tr>
+<tr class="separator:ga6190c4a0cd7bb46205e6ac00cea4430a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga27532808a0e6d9fb9a2951da44448c94"><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classadobe_1_1sha.html">sha</a><br class="typebreak"/>
+&lt; implementation::sha512_traits_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sha.html#ga27532808a0e6d9fb9a2951da44448c94">sha512_t</a></td></tr>
+<tr class="memdesc:ga27532808a0e6d9fb9a2951da44448c94"><td class="mdescLeft">&#160;</td><td class="mdescRight">A bit-oriented implementation of the SHA-512 Secure Hash Algorithm.  <a href="group__sha.html#ga27532808a0e6d9fb9a2951da44448c94">More...</a><br/></td></tr>
+<tr class="separator:ga27532808a0e6d9fb9a2951da44448c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ga51cabd7eeb3372ffe0c24e9cc857c020"><td class="memTemplParams" colspan="2">template&lt;std::size_t Bits, typename Iterator , typename Predicate &gt; </td></tr>
+<tr class="memitem:ga51cabd7eeb3372ffe0c24e9cc857c020"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__fnv.html#ga52b4e150e50ed0bfb00ac7dd5c56859f">fnvtype</a>&lt; Bits &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__fnv.html#ga51cabd7eeb3372ffe0c24e9cc857c020">fnv1a</a> (Iterator first, Predicate p)</td></tr>
+<tr class="separator:ga51cabd7eeb3372ffe0c24e9cc857c020"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga96e3f4216b5c0a6c77444c3a60511079"><td class="memTemplParams" colspan="2">template&lt;std::size_t Bits, typename Iterator &gt; </td></tr>
+<tr class="memitem:ga96e3f4216b5c0a6c77444c3a60511079"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__fnv.html#ga52b4e150e50ed0bfb00ac7dd5c56859f">fnvtype</a>&lt; Bits &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__fnv.html#ga96e3f4216b5c0a6c77444c3a60511079">fnv1a</a> (Iterator first, Iterator last)</td></tr>
+<tr class="separator:ga96e3f4216b5c0a6c77444c3a60511079"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab3450ca1c138f8ccf161348bcbf78dba"><td class="memTemplParams" colspan="2">template&lt;std::size_t Bits, typename Container &gt; </td></tr>
+<tr class="memitem:gab3450ca1c138f8ccf161348bcbf78dba"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__fnv.html#ga52b4e150e50ed0bfb00ac7dd5c56859f">fnvtype</a>&lt; Bits &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__fnv.html#gab3450ca1c138f8ccf161348bcbf78dba">fnv1a</a> (Container c)</td></tr>
+<tr class="separator:gab3450ca1c138f8ccf161348bcbf78dba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebab64ed4502641197143b40a714d5e5"><td class="memTemplParams" colspan="2">template&lt;typename T , typename I , typename O &gt; </td></tr>
 <tr class="memitem:aebab64ed4502641197143b40a714d5e5"><td class="memTemplItemLeft" align="right" valign="top">O&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceadobe.html#aebab64ed4502641197143b40a714d5e5">copy_utf</a> (I f, I l, O o)</td></tr>
 <tr class="separator:aebab64ed4502641197143b40a714d5e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<h2 class="groupheader">Typedef Documentation</h2>
-<a class="anchor" id="a46ad5f2dd80cbecbcfaff8ade448c03f"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef <a class="el" href="classadobe_1_1sha.html">sha</a>&lt;implementation::sha1_traits_t&gt; <a class="el" href="namespaceadobe.html#a46ad5f2dd80cbecbcfaff8ade448c03f">sha1_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>A bit-oriented implementation of the SHA-1 Secure Hash Algorithm. </p>
-
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00838">838</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="aa65a828318c60166df0a7e01dd53fd21"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef <a class="el" href="classadobe_1_1sha.html">sha</a>&lt;implementation::sha224_traits_t&gt; <a class="el" href="namespaceadobe.html#aa65a828318c60166df0a7e01dd53fd21">sha224_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>A bit-oriented implementation of the SHA-224 Secure Hash Algorithm. </p>
-
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00846">846</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a0487d95f2694d108c987d1fe86f5def2"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef <a class="el" href="classadobe_1_1sha.html">sha</a>&lt;implementation::sha256_traits_t&gt; <a class="el" href="namespaceadobe.html#a0487d95f2694d108c987d1fe86f5def2">sha256_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>A bit-oriented implementation of the SHA-256 Secure Hash Algorithm. </p>
-
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00854">854</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a6190c4a0cd7bb46205e6ac00cea4430a"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef <a class="el" href="classadobe_1_1sha.html">sha</a>&lt;implementation::sha384_traits_t&gt; <a class="el" href="namespaceadobe.html#a6190c4a0cd7bb46205e6ac00cea4430a">sha384_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>A bit-oriented implementation of the SHA-384 Secure Hash Algorithm. </p>
-
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00862">862</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a27532808a0e6d9fb9a2951da44448c94"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef <a class="el" href="classadobe_1_1sha.html">sha</a>&lt;implementation::sha512_traits_t&gt; <a class="el" href="namespaceadobe.html#a27532808a0e6d9fb9a2951da44448c94">sha512_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>A bit-oriented implementation of the SHA-512 Secure Hash Algorithm. </p>
-
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00870">870</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
-
-</div>
-</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="aebab64ed4502641197143b40a714d5e5"></a>
 <div class="memitem">
