@@ -754,98 +754,98 @@
 <div class="line"><a name="l00695"></a><span class="lineno">  695</span>&#160;} <span class="comment">// namespace implementation</span></div>
 <div class="line"><a name="l00696"></a><span class="lineno">  696</span>&#160;</div>
 <div class="line"><a name="l00697"></a><span class="lineno">  697</span>&#160;<span class="comment">/*************************************************************************************************/</span></div>
-<div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Traits&gt;</div>
-<div class="line"><a name="l00724"></a><span class="lineno"><a class="line" href="classadobe_1_1sha.html">  724</a></span>&#160;<span class="keyword">class </span><a class="code" href="classadobe_1_1sha.html">sha</a></div>
-<div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;{</div>
-<div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;<span class="preprocessor">#if !defined(ADOBE_NO_DOCUMENTATION)</span></div>
-<div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;<span class="preprocessor"></span>    <span class="keyword">typedef</span> Traits traits_type;</div>
-<div class="line"><a name="l00729"></a><span class="lineno">  729</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00730"></a><span class="lineno">  730</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00739"></a><span class="lineno"><a class="line" href="group__sha.html#ga539b588128d690183ff55f1a0d06ff7c">  739</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">typename</span> traits_type::digest_type <a class="code" href="group__sha.html#ga539b588128d690183ff55f1a0d06ff7c">digest_type</a>;</div>
-<div class="line"><a name="l00740"></a><span class="lineno">  740</span>&#160;</div>
-<div class="line"><a name="l00746"></a><span class="lineno"><a class="line" href="group__sha.html#ga359178ec99c22ec34a56ae065457eee4">  746</a></span>&#160;    <a class="code" href="group__sha.html#ga359178ec99c22ec34a56ae065457eee4">sha</a>()</div>
-<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;    {</div>
-<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;        traits_type().reset_digest(process_m);</div>
-<div class="line"><a name="l00749"></a><span class="lineno">  749</span>&#160;    }</div>
-<div class="line"><a name="l00750"></a><span class="lineno">  750</span>&#160;</div>
-<div class="line"><a name="l00767"></a><span class="lineno">  767</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> I&gt;</div>
-<div class="line"><a name="l00768"></a><span class="lineno"><a class="line" href="group__sha.html#ga81fb5f2c69c9146c9f98b04c69398e00">  768</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__sha.html#ga81fb5f2c69c9146c9f98b04c69398e00">update</a>(I first, I last)</div>
-<div class="line"><a name="l00769"></a><span class="lineno">  769</span>&#160;    {</div>
-<div class="line"><a name="l00770"></a><span class="lineno">  770</span>&#160;        <span class="keyword">enum</span> { ibits_k = implementation::bitsizeof&lt;typename std::iterator_traits&lt;I&gt;::value_type&gt;::value };</div>
-<div class="line"><a name="l00771"></a><span class="lineno">  771</span>&#160;</div>
-<div class="line"><a name="l00772"></a><span class="lineno">  772</span>&#160;        update(first, implementation::long_distance(first, last) * ibits_k);</div>
-<div class="line"><a name="l00773"></a><span class="lineno">  773</span>&#160;    }</div>
-<div class="line"><a name="l00774"></a><span class="lineno">  774</span>&#160;</div>
-<div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> I&gt;</div>
-<div class="line"><a name="l00792"></a><span class="lineno"><a class="line" href="group__sha.html#gaff89dc73e2f97c7b3301d2d26a76f756">  792</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__sha.html#gaff89dc73e2f97c7b3301d2d26a76f756">update</a>(I first, boost::uint64_t num_bits)</div>
-<div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;    {</div>
-<div class="line"><a name="l00794"></a><span class="lineno">  794</span>&#160;        implementation::block_and_digest&lt;traits_type&gt;(process_m, first, num_bits);</div>
-<div class="line"><a name="l00795"></a><span class="lineno">  795</span>&#160;    }</div>
-<div class="line"><a name="l00796"></a><span class="lineno">  796</span>&#160;</div>
-<div class="line"><a name="l00802"></a><span class="lineno"><a class="line" href="group__sha.html#ga05359c1cbc1f6cc7e91795f90086d78f">  802</a></span>&#160;    <span class="keyword">inline</span> <a class="code" href="group__sha.html#ga539b588128d690183ff55f1a0d06ff7c">digest_type</a> <a class="code" href="group__sha.html#ga05359c1cbc1f6cc7e91795f90086d78f">finalize</a>()<span class="keyword"> const</span></div>
-<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;<span class="keyword">    </span>{</div>
-<div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160;        <span class="keywordflow">return</span> traits_type::finalize(process_m);</div>
-<div class="line"><a name="l00805"></a><span class="lineno">  805</span>&#160;    }</div>
-<div class="line"><a name="l00806"></a><span class="lineno">  806</span>&#160;</div>
-<div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> I&gt;</div>
-<div class="line"><a name="l00821"></a><span class="lineno"><a class="line" href="group__sha.html#ga6154efaa296777d2cb1fac6334c7d486">  821</a></span>&#160;    <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="group__sha.html#ga539b588128d690183ff55f1a0d06ff7c">digest_type</a> <a class="code" href="group__sha.html#ga6154efaa296777d2cb1fac6334c7d486">digest</a>(I first, I last)</div>
-<div class="line"><a name="l00822"></a><span class="lineno">  822</span>&#160;    {</div>
-<div class="line"><a name="l00823"></a><span class="lineno">  823</span>&#160;        <span class="keyword">enum</span> { ibits_k = implementation::bitsizeof&lt;typename std::iterator_traits&lt;I&gt;::value_type&gt;::value };</div>
-<div class="line"><a name="l00824"></a><span class="lineno">  824</span>&#160;</div>
-<div class="line"><a name="l00825"></a><span class="lineno">  825</span>&#160;        <span class="keywordflow">return</span> digest(first, implementation::long_distance(first, last) * ibits_k);</div>
-<div class="line"><a name="l00826"></a><span class="lineno">  826</span>&#160;    }</div>
-<div class="line"><a name="l00827"></a><span class="lineno">  827</span>&#160;</div>
-<div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> I&gt;</div>
-<div class="line"><a name="l00842"></a><span class="lineno"><a class="line" href="group__sha.html#gacf249dcfb8c97fac6abb5710ee5fa3dd">  842</a></span>&#160;    <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="group__sha.html#ga539b588128d690183ff55f1a0d06ff7c">digest_type</a> <a class="code" href="group__sha.html#gacf249dcfb8c97fac6abb5710ee5fa3dd">digest</a>(I first, boost::uint64_t num_bits)</div>
-<div class="line"><a name="l00843"></a><span class="lineno">  843</span>&#160;    {</div>
-<div class="line"><a name="l00844"></a><span class="lineno">  844</span>&#160;        <a class="code" href="classadobe_1_1sha.html">sha</a> instance;</div>
+<div class="line"><a name="l00721"></a><span class="lineno">  721</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">class</span> Traits&gt;</div>
+<div class="line"><a name="l00722"></a><span class="lineno"><a class="line" href="classadobe_1_1sha.html">  722</a></span>&#160;<span class="keyword">class </span><a class="code" href="classadobe_1_1sha.html">sha</a></div>
+<div class="line"><a name="l00723"></a><span class="lineno">  723</span>&#160;{</div>
+<div class="line"><a name="l00724"></a><span class="lineno">  724</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00725"></a><span class="lineno">  725</span>&#160;<span class="preprocessor">#if !defined(ADOBE_NO_DOCUMENTATION)</span></div>
+<div class="line"><a name="l00726"></a><span class="lineno">  726</span>&#160;<span class="preprocessor"></span>    <span class="keyword">typedef</span> Traits traits_type;</div>
+<div class="line"><a name="l00727"></a><span class="lineno">  727</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00728"></a><span class="lineno">  728</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00737"></a><span class="lineno"><a class="line" href="group__sha.html#ga539b588128d690183ff55f1a0d06ff7c">  737</a></span>&#160;    <span class="keyword">typedef</span> <span class="keyword">typename</span> traits_type::digest_type <a class="code" href="group__sha.html#ga539b588128d690183ff55f1a0d06ff7c">digest_type</a>;</div>
+<div class="line"><a name="l00738"></a><span class="lineno">  738</span>&#160;</div>
+<div class="line"><a name="l00744"></a><span class="lineno"><a class="line" href="group__sha.html#ga359178ec99c22ec34a56ae065457eee4">  744</a></span>&#160;    <a class="code" href="group__sha.html#ga359178ec99c22ec34a56ae065457eee4">sha</a>()</div>
+<div class="line"><a name="l00745"></a><span class="lineno">  745</span>&#160;    {</div>
+<div class="line"><a name="l00746"></a><span class="lineno">  746</span>&#160;        traits_type().reset_digest(process_m);</div>
+<div class="line"><a name="l00747"></a><span class="lineno">  747</span>&#160;    }</div>
+<div class="line"><a name="l00748"></a><span class="lineno">  748</span>&#160;</div>
+<div class="line"><a name="l00765"></a><span class="lineno">  765</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> I&gt;</div>
+<div class="line"><a name="l00766"></a><span class="lineno"><a class="line" href="group__sha.html#ga81fb5f2c69c9146c9f98b04c69398e00">  766</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__sha.html#ga81fb5f2c69c9146c9f98b04c69398e00">update</a>(I first, I last)</div>
+<div class="line"><a name="l00767"></a><span class="lineno">  767</span>&#160;    {</div>
+<div class="line"><a name="l00768"></a><span class="lineno">  768</span>&#160;        <span class="keyword">enum</span> { ibits_k = implementation::bitsizeof&lt;typename std::iterator_traits&lt;I&gt;::value_type&gt;::value };</div>
+<div class="line"><a name="l00769"></a><span class="lineno">  769</span>&#160;</div>
+<div class="line"><a name="l00770"></a><span class="lineno">  770</span>&#160;        update(first, implementation::long_distance(first, last) * ibits_k);</div>
+<div class="line"><a name="l00771"></a><span class="lineno">  771</span>&#160;    }</div>
+<div class="line"><a name="l00772"></a><span class="lineno">  772</span>&#160;</div>
+<div class="line"><a name="l00789"></a><span class="lineno">  789</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> I&gt;</div>
+<div class="line"><a name="l00790"></a><span class="lineno"><a class="line" href="group__sha.html#gaff89dc73e2f97c7b3301d2d26a76f756">  790</a></span>&#160;    <span class="keyword">inline</span> <span class="keywordtype">void</span> <a class="code" href="group__sha.html#gaff89dc73e2f97c7b3301d2d26a76f756">update</a>(I first, boost::uint64_t num_bits)</div>
+<div class="line"><a name="l00791"></a><span class="lineno">  791</span>&#160;    {</div>
+<div class="line"><a name="l00792"></a><span class="lineno">  792</span>&#160;        implementation::block_and_digest&lt;traits_type&gt;(process_m, first, num_bits);</div>
+<div class="line"><a name="l00793"></a><span class="lineno">  793</span>&#160;    }</div>
+<div class="line"><a name="l00794"></a><span class="lineno">  794</span>&#160;</div>
+<div class="line"><a name="l00800"></a><span class="lineno"><a class="line" href="group__sha.html#ga05359c1cbc1f6cc7e91795f90086d78f">  800</a></span>&#160;    <span class="keyword">inline</span> <a class="code" href="group__sha.html#ga539b588128d690183ff55f1a0d06ff7c">digest_type</a> <a class="code" href="group__sha.html#ga05359c1cbc1f6cc7e91795f90086d78f">finalize</a>()<span class="keyword"> const</span></div>
+<div class="line"><a name="l00801"></a><span class="lineno">  801</span>&#160;<span class="keyword">    </span>{</div>
+<div class="line"><a name="l00802"></a><span class="lineno">  802</span>&#160;        <span class="keywordflow">return</span> traits_type::finalize(process_m);</div>
+<div class="line"><a name="l00803"></a><span class="lineno">  803</span>&#160;    }</div>
+<div class="line"><a name="l00804"></a><span class="lineno">  804</span>&#160;</div>
+<div class="line"><a name="l00818"></a><span class="lineno">  818</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> I&gt;</div>
+<div class="line"><a name="l00819"></a><span class="lineno"><a class="line" href="group__sha.html#ga6154efaa296777d2cb1fac6334c7d486">  819</a></span>&#160;    <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="group__sha.html#ga539b588128d690183ff55f1a0d06ff7c">digest_type</a> <a class="code" href="group__sha.html#ga6154efaa296777d2cb1fac6334c7d486">digest</a>(I first, I last)</div>
+<div class="line"><a name="l00820"></a><span class="lineno">  820</span>&#160;    {</div>
+<div class="line"><a name="l00821"></a><span class="lineno">  821</span>&#160;        <span class="keyword">enum</span> { ibits_k = implementation::bitsizeof&lt;typename std::iterator_traits&lt;I&gt;::value_type&gt;::value };</div>
+<div class="line"><a name="l00822"></a><span class="lineno">  822</span>&#160;</div>
+<div class="line"><a name="l00823"></a><span class="lineno">  823</span>&#160;        <span class="keywordflow">return</span> digest(first, implementation::long_distance(first, last) * ibits_k);</div>
+<div class="line"><a name="l00824"></a><span class="lineno">  824</span>&#160;    }</div>
+<div class="line"><a name="l00825"></a><span class="lineno">  825</span>&#160;</div>
+<div class="line"><a name="l00839"></a><span class="lineno">  839</span>&#160;    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> I&gt;</div>
+<div class="line"><a name="l00840"></a><span class="lineno"><a class="line" href="group__sha.html#gacf249dcfb8c97fac6abb5710ee5fa3dd">  840</a></span>&#160;    <span class="keyword">static</span> <span class="keyword">inline</span> <a class="code" href="group__sha.html#ga539b588128d690183ff55f1a0d06ff7c">digest_type</a> <a class="code" href="group__sha.html#gacf249dcfb8c97fac6abb5710ee5fa3dd">digest</a>(I first, boost::uint64_t num_bits)</div>
+<div class="line"><a name="l00841"></a><span class="lineno">  841</span>&#160;    {</div>
+<div class="line"><a name="l00842"></a><span class="lineno">  842</span>&#160;        <a class="code" href="classadobe_1_1sha.html">sha</a> instance;</div>
+<div class="line"><a name="l00843"></a><span class="lineno">  843</span>&#160;</div>
+<div class="line"><a name="l00844"></a><span class="lineno">  844</span>&#160;        instance.<a class="code" href="group__sha.html#ga81fb5f2c69c9146c9f98b04c69398e00">update</a>(first, num_bits);</div>
 <div class="line"><a name="l00845"></a><span class="lineno">  845</span>&#160;</div>
-<div class="line"><a name="l00846"></a><span class="lineno">  846</span>&#160;        instance.<a class="code" href="group__sha.html#ga81fb5f2c69c9146c9f98b04c69398e00">update</a>(first, num_bits);</div>
-<div class="line"><a name="l00847"></a><span class="lineno">  847</span>&#160;</div>
-<div class="line"><a name="l00848"></a><span class="lineno">  848</span>&#160;        <span class="keywordflow">return</span> instance.<a class="code" href="group__sha.html#ga05359c1cbc1f6cc7e91795f90086d78f">finalize</a>();</div>
-<div class="line"><a name="l00849"></a><span class="lineno">  849</span>&#160;    }</div>
-<div class="line"><a name="l00850"></a><span class="lineno">  850</span>&#160;</div>
-<div class="line"><a name="l00851"></a><span class="lineno">  851</span>&#160;<span class="preprocessor">#ifndef ADOBE_NO_DOCUMENTATION</span></div>
-<div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;<span class="preprocessor"></span><span class="keyword">private</span>:</div>
-<div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;    <span class="keyword">typename</span> traits_type::process_type process_m;</div>
-<div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;<span class="preprocessor"></span>};</div>
+<div class="line"><a name="l00846"></a><span class="lineno">  846</span>&#160;        <span class="keywordflow">return</span> instance.<a class="code" href="group__sha.html#ga05359c1cbc1f6cc7e91795f90086d78f">finalize</a>();</div>
+<div class="line"><a name="l00847"></a><span class="lineno">  847</span>&#160;    }</div>
+<div class="line"><a name="l00848"></a><span class="lineno">  848</span>&#160;</div>
+<div class="line"><a name="l00849"></a><span class="lineno">  849</span>&#160;<span class="preprocessor">#ifndef ADOBE_NO_DOCUMENTATION</span></div>
+<div class="line"><a name="l00850"></a><span class="lineno">  850</span>&#160;<span class="preprocessor"></span><span class="keyword">private</span>:</div>
+<div class="line"><a name="l00851"></a><span class="lineno">  851</span>&#160;    <span class="keyword">typename</span> traits_type::process_type process_m;</div>
+<div class="line"><a name="l00852"></a><span class="lineno">  852</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00853"></a><span class="lineno">  853</span>&#160;<span class="preprocessor"></span>};</div>
+<div class="line"><a name="l00854"></a><span class="lineno">  854</span>&#160;</div>
+<div class="line"><a name="l00855"></a><span class="lineno">  855</span>&#160;<span class="comment">/*************************************************************************************************/</span></div>
 <div class="line"><a name="l00856"></a><span class="lineno">  856</span>&#160;</div>
-<div class="line"><a name="l00857"></a><span class="lineno">  857</span>&#160;<span class="comment">/*************************************************************************************************/</span></div>
-<div class="line"><a name="l00858"></a><span class="lineno">  858</span>&#160;</div>
-<div class="line"><a name="l00865"></a><span class="lineno"><a class="line" href="group__sha.html#ga46ad5f2dd80cbecbcfaff8ade448c03f">  865</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="classadobe_1_1sha.html">sha&lt;implementation::sha1_traits_t&gt;</a>   <a class="code" href="group__sha.html#ga46ad5f2dd80cbecbcfaff8ade448c03f">sha1_t</a>;</div>
-<div class="line"><a name="l00866"></a><span class="lineno">  866</span>&#160;</div>
-<div class="line"><a name="l00873"></a><span class="lineno"><a class="line" href="group__sha.html#gaa65a828318c60166df0a7e01dd53fd21">  873</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="classadobe_1_1sha.html">sha&lt;implementation::sha224_traits_t&gt;</a> <a class="code" href="group__sha.html#gaa65a828318c60166df0a7e01dd53fd21">sha224_t</a>;</div>
-<div class="line"><a name="l00874"></a><span class="lineno">  874</span>&#160;</div>
-<div class="line"><a name="l00881"></a><span class="lineno"><a class="line" href="group__sha.html#ga0487d95f2694d108c987d1fe86f5def2">  881</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="classadobe_1_1sha.html">sha&lt;implementation::sha256_traits_t&gt;</a> <a class="code" href="group__sha.html#ga0487d95f2694d108c987d1fe86f5def2">sha256_t</a>;</div>
-<div class="line"><a name="l00882"></a><span class="lineno">  882</span>&#160;</div>
-<div class="line"><a name="l00889"></a><span class="lineno"><a class="line" href="group__sha.html#ga6190c4a0cd7bb46205e6ac00cea4430a">  889</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="classadobe_1_1sha.html">sha&lt;implementation::sha384_traits_t&gt;</a> <a class="code" href="group__sha.html#ga6190c4a0cd7bb46205e6ac00cea4430a">sha384_t</a>;</div>
-<div class="line"><a name="l00890"></a><span class="lineno">  890</span>&#160;</div>
-<div class="line"><a name="l00897"></a><span class="lineno"><a class="line" href="group__sha.html#ga27532808a0e6d9fb9a2951da44448c94">  897</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="classadobe_1_1sha.html">sha&lt;implementation::sha512_traits_t&gt;</a> <a class="code" href="group__sha.html#ga27532808a0e6d9fb9a2951da44448c94">sha512_t</a>;</div>
+<div class="line"><a name="l00863"></a><span class="lineno"><a class="line" href="group__sha.html#ga46ad5f2dd80cbecbcfaff8ade448c03f">  863</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="classadobe_1_1sha.html">sha&lt;implementation::sha1_traits_t&gt;</a>   <a class="code" href="group__sha.html#ga46ad5f2dd80cbecbcfaff8ade448c03f">sha1_t</a>;</div>
+<div class="line"><a name="l00864"></a><span class="lineno">  864</span>&#160;</div>
+<div class="line"><a name="l00871"></a><span class="lineno"><a class="line" href="group__sha.html#gaa65a828318c60166df0a7e01dd53fd21">  871</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="classadobe_1_1sha.html">sha&lt;implementation::sha224_traits_t&gt;</a> <a class="code" href="group__sha.html#gaa65a828318c60166df0a7e01dd53fd21">sha224_t</a>;</div>
+<div class="line"><a name="l00872"></a><span class="lineno">  872</span>&#160;</div>
+<div class="line"><a name="l00879"></a><span class="lineno"><a class="line" href="group__sha.html#ga0487d95f2694d108c987d1fe86f5def2">  879</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="classadobe_1_1sha.html">sha&lt;implementation::sha256_traits_t&gt;</a> <a class="code" href="group__sha.html#ga0487d95f2694d108c987d1fe86f5def2">sha256_t</a>;</div>
+<div class="line"><a name="l00880"></a><span class="lineno">  880</span>&#160;</div>
+<div class="line"><a name="l00887"></a><span class="lineno"><a class="line" href="group__sha.html#ga6190c4a0cd7bb46205e6ac00cea4430a">  887</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="classadobe_1_1sha.html">sha&lt;implementation::sha384_traits_t&gt;</a> <a class="code" href="group__sha.html#ga6190c4a0cd7bb46205e6ac00cea4430a">sha384_t</a>;</div>
+<div class="line"><a name="l00888"></a><span class="lineno">  888</span>&#160;</div>
+<div class="line"><a name="l00895"></a><span class="lineno"><a class="line" href="group__sha.html#ga27532808a0e6d9fb9a2951da44448c94">  895</a></span>&#160;<span class="keyword">typedef</span> <a class="code" href="classadobe_1_1sha.html">sha&lt;implementation::sha512_traits_t&gt;</a> <a class="code" href="group__sha.html#ga27532808a0e6d9fb9a2951da44448c94">sha512_t</a>;</div>
+<div class="line"><a name="l00896"></a><span class="lineno">  896</span>&#160;</div>
+<div class="line"><a name="l00897"></a><span class="lineno">  897</span>&#160;<span class="comment">/*************************************************************************************************/</span></div>
 <div class="line"><a name="l00898"></a><span class="lineno">  898</span>&#160;</div>
-<div class="line"><a name="l00899"></a><span class="lineno">  899</span>&#160;<span class="comment">/*************************************************************************************************/</span></div>
+<div class="line"><a name="l00899"></a><span class="lineno">  899</span>&#160;} <span class="comment">// namespace adobe</span></div>
 <div class="line"><a name="l00900"></a><span class="lineno">  900</span>&#160;</div>
-<div class="line"><a name="l00901"></a><span class="lineno">  901</span>&#160;} <span class="comment">// namespace adobe</span></div>
+<div class="line"><a name="l00901"></a><span class="lineno">  901</span>&#160;<span class="comment">/*************************************************************************************************/</span></div>
 <div class="line"><a name="l00902"></a><span class="lineno">  902</span>&#160;</div>
-<div class="line"><a name="l00903"></a><span class="lineno">  903</span>&#160;<span class="comment">/*************************************************************************************************/</span></div>
-<div class="line"><a name="l00904"></a><span class="lineno">  904</span>&#160;</div>
-<div class="line"><a name="l00905"></a><span class="lineno">  905</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00906"></a><span class="lineno">  906</span>&#160;<span class="preprocessor"></span></div>
-<div class="line"><a name="l00907"></a><span class="lineno">  907</span>&#160;<span class="comment">/*************************************************************************************************/</span></div>
-<div class="ttc" id="group__sha_html_ga6190c4a0cd7bb46205e6ac00cea4430a"><div class="ttname"><a href="group__sha.html#ga6190c4a0cd7bb46205e6ac00cea4430a">adobe::sha384_t</a></div><div class="ttdeci">sha&lt; implementation::sha384_traits_t &gt; sha384_t</div><div class="ttdoc">A bit-oriented implementation of the SHA-384 Secure Hash Algorithm. </div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00889">sha.hpp:889</a></div></div>
-<div class="ttc" id="group__sha_html_gaff89dc73e2f97c7b3301d2d26a76f756"><div class="ttname"><a href="group__sha.html#gaff89dc73e2f97c7b3301d2d26a76f756">adobe::sha::update</a></div><div class="ttdeci">void update(I first, boost::uint64_t num_bits)</div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00792">sha.hpp:792</a></div></div>
-<div class="ttc" id="group__sha_html_ga359178ec99c22ec34a56ae065457eee4"><div class="ttname"><a href="group__sha.html#ga359178ec99c22ec34a56ae065457eee4">adobe::sha::sha</a></div><div class="ttdeci">sha()</div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00746">sha.hpp:746</a></div></div>
-<div class="ttc" id="group__sha_html_gaa65a828318c60166df0a7e01dd53fd21"><div class="ttname"><a href="group__sha.html#gaa65a828318c60166df0a7e01dd53fd21">adobe::sha224_t</a></div><div class="ttdeci">sha&lt; implementation::sha224_traits_t &gt; sha224_t</div><div class="ttdoc">A bit-oriented implementation of the SHA-224 Secure Hash Algorithm. </div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00873">sha.hpp:873</a></div></div>
-<div class="ttc" id="classadobe_1_1sha_html"><div class="ttname"><a href="classadobe_1_1sha.html">adobe::sha</a></div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00724">sha.hpp:724</a></div></div>
-<div class="ttc" id="group__sha_html_ga539b588128d690183ff55f1a0d06ff7c"><div class="ttname"><a href="group__sha.html#ga539b588128d690183ff55f1a0d06ff7c">adobe::sha::digest_type</a></div><div class="ttdeci">traits_type::digest_type digest_type</div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00739">sha.hpp:739</a></div></div>
-<div class="ttc" id="group__sha_html_gacf249dcfb8c97fac6abb5710ee5fa3dd"><div class="ttname"><a href="group__sha.html#gacf249dcfb8c97fac6abb5710ee5fa3dd">adobe::sha::digest</a></div><div class="ttdeci">static digest_type digest(I first, boost::uint64_t num_bits)</div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00842">sha.hpp:842</a></div></div>
-<div class="ttc" id="group__sha_html_ga05359c1cbc1f6cc7e91795f90086d78f"><div class="ttname"><a href="group__sha.html#ga05359c1cbc1f6cc7e91795f90086d78f">adobe::sha::finalize</a></div><div class="ttdeci">digest_type finalize() const </div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00802">sha.hpp:802</a></div></div>
-<div class="ttc" id="group__sha_html_ga46ad5f2dd80cbecbcfaff8ade448c03f"><div class="ttname"><a href="group__sha.html#ga46ad5f2dd80cbecbcfaff8ade448c03f">adobe::sha1_t</a></div><div class="ttdeci">sha&lt; implementation::sha1_traits_t &gt; sha1_t</div><div class="ttdoc">A bit-oriented implementation of the SHA-1 Secure Hash Algorithm. </div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00865">sha.hpp:865</a></div></div>
-<div class="ttc" id="group__sha_html_ga81fb5f2c69c9146c9f98b04c69398e00"><div class="ttname"><a href="group__sha.html#ga81fb5f2c69c9146c9f98b04c69398e00">adobe::sha::update</a></div><div class="ttdeci">void update(I first, I last)</div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00768">sha.hpp:768</a></div></div>
-<div class="ttc" id="group__sha_html_ga27532808a0e6d9fb9a2951da44448c94"><div class="ttname"><a href="group__sha.html#ga27532808a0e6d9fb9a2951da44448c94">adobe::sha512_t</a></div><div class="ttdeci">sha&lt; implementation::sha512_traits_t &gt; sha512_t</div><div class="ttdoc">A bit-oriented implementation of the SHA-512 Secure Hash Algorithm. </div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00897">sha.hpp:897</a></div></div>
-<div class="ttc" id="group__sha_html_ga0487d95f2694d108c987d1fe86f5def2"><div class="ttname"><a href="group__sha.html#ga0487d95f2694d108c987d1fe86f5def2">adobe::sha256_t</a></div><div class="ttdeci">sha&lt; implementation::sha256_traits_t &gt; sha256_t</div><div class="ttdoc">A bit-oriented implementation of the SHA-256 Secure Hash Algorithm. </div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00881">sha.hpp:881</a></div></div>
-<div class="ttc" id="group__sha_html_ga6154efaa296777d2cb1fac6334c7d486"><div class="ttname"><a href="group__sha.html#ga6154efaa296777d2cb1fac6334c7d486">adobe::sha::digest</a></div><div class="ttdeci">static digest_type digest(I first, I last)</div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00821">sha.hpp:821</a></div></div>
+<div class="line"><a name="l00903"></a><span class="lineno">  903</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00904"></a><span class="lineno">  904</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00905"></a><span class="lineno">  905</span>&#160;<span class="comment">/*************************************************************************************************/</span></div>
+<div class="ttc" id="group__sha_html_ga6190c4a0cd7bb46205e6ac00cea4430a"><div class="ttname"><a href="group__sha.html#ga6190c4a0cd7bb46205e6ac00cea4430a">adobe::sha384_t</a></div><div class="ttdeci">sha&lt; implementation::sha384_traits_t &gt; sha384_t</div><div class="ttdoc">A bit-oriented implementation of the SHA-384 Secure Hash Algorithm. </div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00887">sha.hpp:887</a></div></div>
+<div class="ttc" id="group__sha_html_gaff89dc73e2f97c7b3301d2d26a76f756"><div class="ttname"><a href="group__sha.html#gaff89dc73e2f97c7b3301d2d26a76f756">adobe::sha::update</a></div><div class="ttdeci">void update(I first, boost::uint64_t num_bits)</div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00790">sha.hpp:790</a></div></div>
+<div class="ttc" id="group__sha_html_ga359178ec99c22ec34a56ae065457eee4"><div class="ttname"><a href="group__sha.html#ga359178ec99c22ec34a56ae065457eee4">adobe::sha::sha</a></div><div class="ttdeci">sha()</div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00744">sha.hpp:744</a></div></div>
+<div class="ttc" id="group__sha_html_gaa65a828318c60166df0a7e01dd53fd21"><div class="ttname"><a href="group__sha.html#gaa65a828318c60166df0a7e01dd53fd21">adobe::sha224_t</a></div><div class="ttdeci">sha&lt; implementation::sha224_traits_t &gt; sha224_t</div><div class="ttdoc">A bit-oriented implementation of the SHA-224 Secure Hash Algorithm. </div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00871">sha.hpp:871</a></div></div>
+<div class="ttc" id="classadobe_1_1sha_html"><div class="ttname"><a href="classadobe_1_1sha.html">adobe::sha</a></div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00722">sha.hpp:722</a></div></div>
+<div class="ttc" id="group__sha_html_ga539b588128d690183ff55f1a0d06ff7c"><div class="ttname"><a href="group__sha.html#ga539b588128d690183ff55f1a0d06ff7c">adobe::sha::digest_type</a></div><div class="ttdeci">traits_type::digest_type digest_type</div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00737">sha.hpp:737</a></div></div>
+<div class="ttc" id="group__sha_html_gacf249dcfb8c97fac6abb5710ee5fa3dd"><div class="ttname"><a href="group__sha.html#gacf249dcfb8c97fac6abb5710ee5fa3dd">adobe::sha::digest</a></div><div class="ttdeci">static digest_type digest(I first, boost::uint64_t num_bits)</div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00840">sha.hpp:840</a></div></div>
+<div class="ttc" id="group__sha_html_ga05359c1cbc1f6cc7e91795f90086d78f"><div class="ttname"><a href="group__sha.html#ga05359c1cbc1f6cc7e91795f90086d78f">adobe::sha::finalize</a></div><div class="ttdeci">digest_type finalize() const </div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00800">sha.hpp:800</a></div></div>
+<div class="ttc" id="group__sha_html_ga46ad5f2dd80cbecbcfaff8ade448c03f"><div class="ttname"><a href="group__sha.html#ga46ad5f2dd80cbecbcfaff8ade448c03f">adobe::sha1_t</a></div><div class="ttdeci">sha&lt; implementation::sha1_traits_t &gt; sha1_t</div><div class="ttdoc">A bit-oriented implementation of the SHA-1 Secure Hash Algorithm. </div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00863">sha.hpp:863</a></div></div>
+<div class="ttc" id="group__sha_html_ga81fb5f2c69c9146c9f98b04c69398e00"><div class="ttname"><a href="group__sha.html#ga81fb5f2c69c9146c9f98b04c69398e00">adobe::sha::update</a></div><div class="ttdeci">void update(I first, I last)</div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00766">sha.hpp:766</a></div></div>
+<div class="ttc" id="group__sha_html_ga27532808a0e6d9fb9a2951da44448c94"><div class="ttname"><a href="group__sha.html#ga27532808a0e6d9fb9a2951da44448c94">adobe::sha512_t</a></div><div class="ttdeci">sha&lt; implementation::sha512_traits_t &gt; sha512_t</div><div class="ttdoc">A bit-oriented implementation of the SHA-512 Secure Hash Algorithm. </div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00895">sha.hpp:895</a></div></div>
+<div class="ttc" id="group__sha_html_ga0487d95f2694d108c987d1fe86f5def2"><div class="ttname"><a href="group__sha.html#ga0487d95f2694d108c987d1fe86f5def2">adobe::sha256_t</a></div><div class="ttdeci">sha&lt; implementation::sha256_traits_t &gt; sha256_t</div><div class="ttdoc">A bit-oriented implementation of the SHA-256 Secure Hash Algorithm. </div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00879">sha.hpp:879</a></div></div>
+<div class="ttc" id="group__sha_html_ga6154efaa296777d2cb1fac6334c7d486"><div class="ttname"><a href="group__sha.html#ga6154efaa296777d2cb1fac6334c7d486">adobe::sha::digest</a></div><div class="ttdeci">static digest_type digest(I first, I last)</div><div class="ttdef"><b>Definition:</b> <a href="sha_8hpp_source.html#l00819">sha.hpp:819</a></div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <script type="text/javascript">

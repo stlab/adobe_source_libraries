@@ -54,10 +54,8 @@
 <dt><a class="anchor" id="_todo000002"></a>Member <a class="el" href="group__fnv.html#ga96e3f4216b5c0a6c77444c3a60511079">adobe::fnv1a</a>  (Iterator first, Iterator last)</dt>
 <dd>Refactor this variant with the Iterator/Predicate one so there is one implementation of the algorithm in this header.  </dd>
 <dt><a class="anchor" id="_todo000003"></a>Group <a class="el" href="group__sha.html">sha</a>  </dt>
-<dd><p class="startdd">Need to implement sentinel variants of the SHA routines to eliminate long_distance altogether.</p>
-<p class="enddd">Need a smoke test of known-good SHA results and set that up as part of the bjam unit tests.  </p>
-</dd>
-<dt><a class="anchor" id="_todo000005"></a>Class <a class="el" href="classadobe_1_1sha.html">sha&lt; Traits &gt;</a>  </dt>
+<dd>Add sentinel versions of the SHA algorithms, making long_distance obsolete.  </dd>
+<dt><a class="anchor" id="_todo000004"></a>Class <a class="el" href="classadobe_1_1sha.html">sha&lt; Traits &gt;</a>  </dt>
 <dd>adobe::implementation::long_distance is currently <code>O(N)</code>, and should be specialized when possible to <code>O(1)</code> when given a random access iterator. </dd>
 </dl>
 </div></div><!-- contents -->

@@ -11,7 +11,6 @@ html
 
 body,table,div,p,dl
 {
-    line-height: 1em;
     font-family: 'Noto Sans', sans-serif;
     font-size: medium;
 }
@@ -1099,53 +1098,59 @@ dl.section
     padding-left:0;
 }
 
+dl.section dt
+{
+    font-style:italic;
+    margin-bottom:6px;
+}
+
 dl.note
 {
-    border-left:4px solid #CCCC00;
+    border-left:none;
     margin-left:0px;
-    padding-left:3px;
+    padding-left:0px;
 }
 
-dl.warning,dl.attention
+dl.user
 {
-    border-left:4px solid red;
+    border-left:none;
     margin-left:0px;
-    padding-left:3px;
+    padding-left:0px;
 }
 
-dl.pre,dl.post,dl.invariant
+dl.warning, dl.attention, dl.bug
 {
-    border-left:4px solid #006600;
+    border-left:none;
     margin-left:0px;
-    padding-left:3px;
+    padding-left:0px;
+}
+
+dl.pre, dl.post, dl.invariant
+{
+    border-left:none;
+    margin-left:0px;
+    padding-left:0px;
 }
 
 dl.deprecated
 {
-    border-left:4px solid #505050;
+    border-left:none;
     margin-left:0px;
-    padding-left:3px;
+    padding-left:0px;
 }
 
 dl.todo
 {
-    border-left:4px solid #00AAAA;
+    border-left:none;
     margin-left:0px;
-    padding-left:3px;
+    padding-left:0px;
 }
 
 dl.test
 {
-    border-left:4px solid #3030E0;
+    border-left:none;
     margin-left:0px;
-    padding-left:3px;
-}
-
-dl.bug
-{
-    border-left:4px solid #C08050;
-    margin-left:0px;
-    padding-left:3px;
+    padding-left:0px;
 }
 
 dl.section dd

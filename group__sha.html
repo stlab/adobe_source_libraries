@@ -103,8 +103,7 @@ Functions</h2></td></tr>
 <tr class="separator:gacf249dcfb8c97fac6abb5710ee5fa3dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>Need to implement sentinel variants of the SHA routines to eliminate long_distance altogether.</dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>Need a smoke test of known-good SHA results and set that up as part of the bjam unit tests. </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>Add sentinel versions of the SHA algorithms, making long_distance obsolete. </dd></dl>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="ga539b588128d690183ff55f1a0d06ff7c"></a>
 <div class="memitem">
@@ -118,7 +117,7 @@ Functions</h2></td></tr>
 <p>A statically-sized, contiguous array for the resulting SHA-* digest.</p>
 <dl class="section note"><dt>Note</dt><dd>the size of this digest will change depending on the SHA routine in use. </dd></dl>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00739">739</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00737">737</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -134,7 +133,7 @@ Functions</h2></td></tr>
 
 <p>A bit-oriented implementation of the SHA-1 Secure Hash Algorithm. </p>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00865">865</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00863">863</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -150,7 +149,7 @@ Functions</h2></td></tr>
 
 <p>A bit-oriented implementation of the SHA-224 Secure Hash Algorithm. </p>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00873">873</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00871">871</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -166,7 +165,7 @@ Functions</h2></td></tr>
 
 <p>A bit-oriented implementation of the SHA-256 Secure Hash Algorithm. </p>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00881">881</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00879">879</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -182,7 +181,7 @@ Functions</h2></td></tr>
 
 <p>A bit-oriented implementation of the SHA-384 Secure Hash Algorithm. </p>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00889">889</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00887">887</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -198,7 +197,7 @@ Functions</h2></td></tr>
 
 <p>A bit-oriented implementation of the SHA-512 Secure Hash Algorithm. </p>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00897">897</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00895">895</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -217,7 +216,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Sets the state of the digest machine to its default. </p>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00746">746</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00744">744</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -255,7 +254,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to 2^64 bits. A workaround to the limitation is to call this routine multiple times. </dd></dl>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00768">768</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00766">766</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -293,7 +292,7 @@ Functions</h2></td></tr>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to 2^64 bits. A workaround to the limitation is to call this routine multiple times. </dd></dl>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00792">792</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00790">790</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -311,7 +310,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>The SHA-* digest of the message </dd></dl>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00802">802</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00800">800</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -357,7 +356,7 @@ Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to 2^64 bits.</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>The SHA-* digest of the message </dd></dl>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00821">821</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00819">819</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -403,7 +402,7 @@ Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to 2^64 bits.</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>The SHA-* digest of the message </dd></dl>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00842">842</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00840">840</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
