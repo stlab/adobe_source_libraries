@@ -11,8 +11,6 @@
 #include "adam_test_parser.hpp"
 #include "adam_test_parser_impl.hpp"
 
-#include <mutex>
-
 #include <boost/array.hpp>
 
 #include <adobe/adam_evaluate.hpp>
