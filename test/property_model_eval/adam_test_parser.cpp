@@ -45,15 +45,17 @@ typedef boost::array<adobe::name_t, 7> keyword_table_t;
     adam_test_parser::adam_test_parser().
 */
 
-keyword_table_t*           keyword_table_g;
-adobe::aggregate_name_t    update_k       = { "update" };
-adobe::aggregate_name_t    reinitialize_k = { "reinitialize" };
-adobe::aggregate_name_t    dump_k         = { "dump" };
-adobe::aggregate_name_t    check_k        = { "check" };
-adobe::aggregate_name_t    print_k        = { "print" };
-adobe::aggregate_name_t    assert_k       = { "assert" };
-adobe::aggregate_name_t    contributing_k = { "contributing" };
+using namespace adobe::literals;
 
+keyword_table_t* keyword_table_g;
+
+adobe::static_name_t update_k       = "update"_name;
+adobe::static_name_t reinitialize_k = "reinitialize"_name;
+adobe::static_name_t dump_k         = "dump"_name;
+adobe::static_name_t check_k        = "check"_name;
+adobe::static_name_t print_k        = "print"_name;
+adobe::static_name_t assert_k       = "assert"_name;
+adobe::static_name_t contributing_k = "contributing"_name;
 
 /*************************************************************************************************/
 

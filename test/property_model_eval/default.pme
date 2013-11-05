@@ -44,9 +44,9 @@ dump(distance_calculator);
 /* testing comment */
 
 check (distance_calculator, {
-	rate: 3,
-	distance: 30,
-	time: 10
+    rate: 6,
+    distance: 60,
+    time: 10
 });
 
 /* testing contributing */

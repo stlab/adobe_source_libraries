@@ -29,43 +29,44 @@ namespace {
 
 /**************************************************************************************************/
 
-typedef std::pair<adobe::name_t*, adobe::name_t*>                                       reflected_table_range_t;
-typedef adobe::static_table<adobe::name_t, adobe::layout_attributes_t::alignment_t, 7>  alignment_table_t;
-typedef adobe::static_table<adobe::name_t, adobe::layout_attributes_placement_t::placement_t, 3>    placement_table_t;
+typedef std::pair<adobe::name_t*, adobe::name_t*>                                                reflected_table_range_t;
+typedef adobe::static_table<adobe::name_t, adobe::layout_attributes_t::alignment_t, 7>           alignment_table_t;
+typedef adobe::static_table<adobe::name_t, adobe::layout_attributes_placement_t::placement_t, 3> placement_table_t;
 
 /**************************************************************************************************/
 
+using namespace adobe::literals;
 
-adobe::aggregate_name_t key_spacing             = { "spacing" };
-adobe::aggregate_name_t key_indent              = { "indent" };
-adobe::aggregate_name_t key_margin              = { "margin" };
+adobe::static_name_t key_spacing             = "spacing"_name;
+adobe::static_name_t key_indent              = "indent"_name;
+adobe::static_name_t key_margin              = "margin"_name;
 
-adobe::aggregate_name_t key_placement           = { "placement" };
+adobe::static_name_t key_placement           = "placement"_name;
 
-adobe::aggregate_name_t key_horizontal          = { "horizontal" };
-adobe::aggregate_name_t key_vertical            = { "vertical" };
+adobe::static_name_t key_horizontal          = "horizontal"_name;
+adobe::static_name_t key_vertical            = "vertical"_name;
 
-adobe::aggregate_name_t key_child_horizontal    = { "child_horizontal" };
-adobe::aggregate_name_t key_child_vertical      = { "child_vertical" };
+adobe::static_name_t key_child_horizontal    = "child_horizontal"_name;
+adobe::static_name_t key_child_vertical      = "child_vertical"_name;
 
-adobe::aggregate_name_t key_align_left          = { "align_left" };
-adobe::aggregate_name_t key_align_right         = { "align_right" };
-adobe::aggregate_name_t key_align_top           = { "align_top" };
-adobe::aggregate_name_t key_align_bottom        = { "align_bottom" };
-adobe::aggregate_name_t key_align_center        = { "align_center" };
-adobe::aggregate_name_t key_align_proportional  = { "align_proportional" };
-adobe::aggregate_name_t key_align_fill          = { "align_fill" };
+adobe::static_name_t key_align_left          = "align_left"_name;
+adobe::static_name_t key_align_right         = "align_right"_name;
+adobe::static_name_t key_align_top           = "align_top"_name;
+adobe::static_name_t key_align_bottom        = "align_bottom"_name;
+adobe::static_name_t key_align_center        = "align_center"_name;
+adobe::static_name_t key_align_proportional  = "align_proportional"_name;
+adobe::static_name_t key_align_fill          = "align_fill"_name;
 
-adobe::aggregate_name_t key_place_row           = { "place_row" };
-adobe::aggregate_name_t key_place_column        = { "place_column" };
-adobe::aggregate_name_t key_place_overlay       = { "place_overlay" };
+adobe::static_name_t key_place_row           = "place_row"_name;
+adobe::static_name_t key_place_column        = "place_column"_name;
+adobe::static_name_t key_place_overlay       = "place_overlay"_name;
 
 
-adobe::aggregate_name_t key_guide_mask          = { "guide_mask" };
-adobe::aggregate_name_t key_guide_balance       = { "guide_balance" };
+adobe::static_name_t key_guide_mask          = "guide_mask"_name;
+adobe::static_name_t key_guide_balance       = "guide_balance"_name;
     
-adobe::aggregate_name_t key_guide_baseline      = { "guide_baseline" };
-adobe::aggregate_name_t key_guide_label         = { "guide_label" };
+adobe::static_name_t key_guide_baseline      = "guide_baseline"_name;
+adobe::static_name_t key_guide_label         = "guide_label"_name;
 
 // blank(guide_attach: {left: @guide_baseline});
 

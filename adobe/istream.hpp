@@ -16,7 +16,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include <adobe/name_fwd.hpp>
+#include <adobe/name.hpp>
 #include <adobe/istream_fwd.hpp>
 
 #include <boost/any.hpp>

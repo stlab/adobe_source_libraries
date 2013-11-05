@@ -20,7 +20,7 @@
 #include <adobe/array.hpp>
 #include <adobe/string.hpp>
 #include <adobe/istream.hpp>
-#include <adobe/name_fwd.hpp>
+#include <adobe/name.hpp>
 
 /*************************************************************************************************/
 

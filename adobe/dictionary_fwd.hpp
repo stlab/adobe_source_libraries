@@ -15,7 +15,7 @@
 
 #include <adobe/any_regular_fwd.hpp>
 #include <adobe/closed_hash_fwd.hpp>
-#include <adobe/name_fwd.hpp>
+#include <adobe/name.hpp>
 
 /*************************************************************************************************/
 
