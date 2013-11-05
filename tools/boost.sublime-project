@@ -1,0 +1,26 @@
+{
+    "folders":
+    [
+        {
+            "path": "../../boost_libraries/boost"
+        },
+        {
+            "path": "../../boost_libraries/libs"
+        },
+        {
+            "path": "../../boost_libraries/doc"
+        },
+        {
+            "path": "../../boost_libraries/tools"
+        },
+        {
+            "name" : "top",
+            "path": "../../boost_libraries/",
+            "folder_exclude_patterns": [ "boost", "libs", "doc", "tools" ]
+        }
+    ],
+    "settings":
+    {
+        "tab_size": 4
+    }
+}
