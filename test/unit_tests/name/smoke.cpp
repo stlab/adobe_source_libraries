@@ -52,8 +52,6 @@ inline std::ostream& operator"" _dump (const char* str, std::size_t n)
 template <std::size_t N>
 void dumpy(const char (&str)[N])
 {
-    static_assert(sizeof(std::size_t) == 8, "std::size_t size mismatch.");
-
     std::cout << &str << '\n'
               << N << '\n'
               << std::hex << adobe::detail::name_hash(str, N-1) << std::dec << '\n'

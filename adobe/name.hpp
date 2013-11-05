@@ -34,32 +34,45 @@ namespace detail {
 
 /****************************************************************************************************/
 
+constexpr std::size_t sizesz_k = sizeof(std::size_t);
+
+constexpr bool        sizeok_k = sizesz_k == 8 || sizesz_k == 4;
+
+constexpr std::size_t name_fnv_prime_k = sizesz_k == 8 ?
+                                             static_cast<std::size_t>(0x100000001b3) :
+                                             static_cast<std::size_t>(0x1000193);
+
+constexpr std::size_t name_fnv_basis_k = sizesz_k == 8 ?
+                                             static_cast<std::size_t>(0xcbf29ce484222325ULL) :
+                                             static_cast<std::size_t>(0x811c9dc5);
+
 constexpr std::size_t name_hash(const char* str,
                                 std::size_t len,
                                 std::size_t n,
                                 std::size_t state)
 {
-    static_assert(sizeof(std::size_t) == 8, "std::size_t size mismatch.");
+    static_assert(sizeok_k, "Unknown sizeof std::size_t (must be 4 or 8).");
 
     return n < len ?
                name_hash(str,
                          len,
                          n+1,
-                         (state xor static_cast<std::size_t>(str[n])) * 0x100000001b3ULL) :
+                         (state xor static_cast<std::size_t>(str[n])) *
+                             name_fnv_prime_k) :
                state;
 }
 
 constexpr std::size_t name_hash(const char* str, std::size_t len)
 {
-    static_assert(sizeof(std::size_t) == 8, "std::size_t size mismatch.");
+    static_assert(sizeok_k, "Unknown sizeof std::size_t (must be 4 or 8).");
 
-    return name_hash(str, len, 0, 0xcbf29ce484222325ULL);
+    return name_hash(str, len, 0, name_fnv_basis_k);
 }
 
 template <std::size_t N>
 constexpr std::size_t name_hash(const char (&str)[N])
 {
-    static_assert(sizeof(std::size_t) == 8, "std::size_t size mismatch.");
+    static_assert(sizeok_k, "Unknown sizeof std::size_t (must be 4 or 8).");
 
     return name_hash(str, N-1);
 }
