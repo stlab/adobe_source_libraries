@@ -377,7 +377,7 @@ private:
     typedef std::vector<cell_t*>                index_vector_t;
     
     typedef hash_index<  cell_t,
-                                boost::hash<name_t>,
+                                std::hash<name_t>,
                                 equal_to,
                                 mem_data_t<cell_t, const name_t> >  index_t;
     
@@ -659,9 +659,9 @@ dictionary_t sheet_t::contributing_to_cell(name_t x) const
 /**************************************************************************************************/
 
 sheet_t::implementation_t::implementation_t(virtual_machine_t& machine) :
-    name_index_m(boost::hash<name_t>(), equal_to(), &cell_t::name_m),
-    input_index_m(boost::hash<name_t>(), equal_to(), &cell_t::name_m),
-    output_index_m(boost::hash<name_t>(), equal_to(), &cell_t::name_m),
+    name_index_m(std::hash<name_t>(), equal_to(), &cell_t::name_m),
+    input_index_m(std::hash<name_t>(), equal_to(), &cell_t::name_m),
+    output_index_m(std::hash<name_t>(), equal_to(), &cell_t::name_m),
     priority_high_m(0),
     priority_low_m(0),
     machine_m(machine),

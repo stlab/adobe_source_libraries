@@ -17,6 +17,8 @@
 #include <boost/cstdint.hpp>
 #include <boost/static_assert.hpp>
 
+#include <adobe/algorithm/copy.hpp>
+
 #include <stdexcept>
 #include <limits>
 #include <cstring>
@@ -694,6 +696,11 @@ struct sha384_traits_t
 
 /*************************************************************************************************/
 /**
+    \defgroup sha SHA (Secure Hash Algorithm)
+*/
+/**
+    \ingroup sha
+
     Generic engine implementation for SHA-*.
 
     Given the similarity of behavior between the SHA-* class of algorithms,
@@ -716,6 +723,8 @@ public:
 #endif
 
     /**
+    \ingroup sha
+
     A statically-sized, contiguous array for the resulting SHA-* digest.
     
     \note the size of this digest will change depending on the SHA
@@ -724,7 +733,9 @@ public:
     typedef typename traits_type::digest_type digest_type;
 
     /**
-        Sets the state of the digest machine to its default.
+    \ingroup sha
+
+    Sets the state of the digest machine to its default.
     */
     sha()
     {
@@ -732,6 +743,8 @@ public:
     }
 
     /**
+    \ingroup sha
+
     This routine can be called successively to digest a data over one or more
     steps.
 
@@ -754,6 +767,8 @@ public:
     }
 
     /**
+    \ingroup sha
+
     This routine can be called successively to digest a data over one or more
     steps.
 
@@ -774,6 +789,8 @@ public:
     }
 
     /**
+    \ingroup sha
+
     \return The SHA-* digest of the message
     */
     inline digest_type finalize() const
@@ -782,6 +799,8 @@ public:
     }
 
     /**
+    \ingroup sha
+
     \pre
         <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
 
@@ -801,6 +820,8 @@ public:
     }
 
     /**
+    \ingroup sha
+
     \pre
         <code>sizeof(std::iterator_traits<I>::value_type)</code> must be 1
 
@@ -830,7 +851,7 @@ private:
 /*************************************************************************************************/
 
 /*!
-\ingroup secure_algorithm
+\ingroup sha
 
 \brief A bit-oriented implementation of the SHA-1 Secure Hash Algorithm
 */
@@ -838,7 +859,7 @@ private:
 typedef sha<implementation::sha1_traits_t>   sha1_t;
 
 /*!
-\ingroup secure_algorithm
+\ingroup sha
 
 \brief A bit-oriented implementation of the SHA-224 Secure Hash Algorithm
 */
@@ -846,7 +867,7 @@ typedef sha<implementation::sha1_traits_t>   sha1_t;
 typedef sha<implementation::sha224_traits_t> sha224_t;
 
 /*!
-\ingroup secure_algorithm
+\ingroup sha
 
 \brief A bit-oriented implementation of the SHA-256 Secure Hash Algorithm
 */
@@ -854,7 +875,7 @@ typedef sha<implementation::sha224_traits_t> sha224_t;
 typedef sha<implementation::sha256_traits_t> sha256_t;
 
 /*!
-\ingroup secure_algorithm
+\ingroup sha
 
 \brief A bit-oriented implementation of the SHA-384 Secure Hash Algorithm
 */
@@ -862,7 +883,7 @@ typedef sha<implementation::sha256_traits_t> sha256_t;
 typedef sha<implementation::sha384_traits_t> sha384_t;
 
 /*!
-\ingroup secure_algorithm
+\ingroup sha
 
 \brief A bit-oriented implementation of the SHA-512 Secure Hash Algorithm
 */

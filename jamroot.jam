@@ -50,7 +50,7 @@ feature.feature cpp11 :
     ;
 
 feature.compose <cpp11>on :
-        <cxxflags>"-stdlib=libc++ -std=c++11"
+        <cxxflags>"-stdlib=libc++ -std=c++11 -fconstexpr-depth=1024 -ftemplate-depth=1024"
         <define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
         <linkflags>"-lc++"
     ;
