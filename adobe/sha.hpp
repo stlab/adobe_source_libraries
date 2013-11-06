@@ -697,6 +697,12 @@ struct sha384_traits_t
 /*************************************************************************************************/
 /**
     \defgroup sha SHA (Secure Hash Algorithm)
+
+    \todo Need to implement sentinel variants of the SHA routines to
+          eliminate long_distance altogether.
+
+    \todo Need a smoke test of known-good SHA results and set that up as part
+          of the bjam unit tests.
 */
 /**
     \ingroup sha
