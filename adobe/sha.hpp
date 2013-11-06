@@ -31,7 +31,20 @@ namespace implementation {
 #if !defined(ADOBE_NO_DOCUMENTATION)
 
 /*************************************************************************************************/
+/*
+    bit_packer converts the value_type of I (which are currently asserted to be
+    1 byte in size) and stuffs them into another type, T, which is likely to be
+    larger than the value_type. So e.g., if T is a uint32_t, the bit packer
+    would stuff:
 
+        uint32_t:     |-------|-------|-------|-------|
+        value_type:   |--v[0]-|--v[1]-|--v[2]-|--v[3]-|
+
+    In the event the iterators run dry and there is nothing more to pack,
+    the bit_packer returns the remaining number of bits that were not
+    stuffed. (This implies that it will return 0 when a complete stuffing
+    takes place.)
+*/
 template <typename I> // I models InputIterator
 struct bit_packer
 {
@@ -86,7 +99,7 @@ private:
         return to_pack * 8;
     }
 
-    I               first_m;
+    I             first_m;
     std::uint64_t bitsize_m;
 };
 
