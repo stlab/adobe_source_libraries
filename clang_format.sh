@@ -6,6 +6,6 @@
 
 cd `dirname $0`
 
-find . -name *.cpp -print
+find . -name *.cpp -print | xargs clang-format -i -style=file
 
-clang-format -style=file "$@"
+find . -name *.hpp -print | xargs clang-format -i -style=file
