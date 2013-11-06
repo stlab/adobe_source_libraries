@@ -13,15 +13,10 @@
 
 #include <adobe/config.hpp>
 
-#include <boost/array.hpp>
-#include <boost/cstdint.hpp>
-#include <boost/static_assert.hpp>
+#include <array>
+#include <limits>
 
 #include <adobe/algorithm/copy.hpp>
-
-#include <stdexcept>
-#include <limits>
-#include <cstring>
 
 /*************************************************************************************************/
 
@@ -38,34 +33,17 @@ namespace implementation {
 /*************************************************************************************************/
 
 template <typename I> // I models InputIterator
-inline boost::uint64_t long_distance(I first, I last)
-{
-    boost::uint64_t result(0);
-
-    while (first != last)
-    {
-        ++result;
-
-        ++first;
-    }
-
-    return result;
-}
-
-/*************************************************************************************************/
-
-template <typename I> // I models InputIterator
 struct bit_packer
 {
     typedef typename std::iterator_traits<I>::value_type value_type;
 
-    BOOST_STATIC_ASSERT((sizeof(value_type) == 1));
+    static_assert(sizeof(value_type) == 1, "value_type size mismatch.");
 
     bit_packer(I first, I last) :
-        first_m(first), bitsize_m(long_distance(first, last))
+        first_m(first), bitsize_m(std::distance(first, last))
     { }
 
-    bit_packer(I first, boost::uint64_t bitsize) :
+    bit_packer(I first, std::uint64_t bitsize) :
         first_m(first), bitsize_m(bitsize)
     { }
 
@@ -109,21 +87,21 @@ private:
     }
 
     I               first_m;
-    boost::uint64_t bitsize_m;
+    std::uint64_t bitsize_m;
 };
 
 /*************************************************************************************************/
 
 template <typename T>
-struct bitsizeof
-{ enum { value = sizeof(T) * 8 }; };
+constexpr std::size_t bitsizeof()
+{ return sizeof(T) * 8; }
 
 /*************************************************************************************************/
 
 template <std::size_t N, typename T>
 inline T shr(const T& x)
 {
-    BOOST_STATIC_ASSERT((N < bitsizeof<T>::value));
+    static_assert(N < bitsizeof<T>(), "shr size mismatch.");
 
     return x >> N;
 }
@@ -131,9 +109,9 @@ inline T shr(const T& x)
 template <std::size_t N, typename T>
 inline T rotr(const T& x)
 {
-    BOOST_STATIC_ASSERT((N < bitsizeof<T>::value));
+    static_assert(N < bitsizeof<T>(), "rotr size mismatch.");
 
-    enum { l_shift = bitsizeof<T>::value - N };
+    constexpr std::size_t l_shift = bitsizeof<T>() - N;
 
     return (x >> N) | (x << l_shift);
 }
@@ -141,9 +119,9 @@ inline T rotr(const T& x)
 template <std::size_t N, typename T>
 inline T rotl(const T& x)
 {
-    BOOST_STATIC_ASSERT((N < bitsizeof<T>::value));
+    static_assert(N < bitsizeof<T>(), "rotl size mismatch.");
 
-    enum { r_shift = bitsizeof<T>::value - N };
+    constexpr std::size_t r_shift = bitsizeof<T>() - N;
 
     return (x << N) | (x >> r_shift);
 }
@@ -171,9 +149,9 @@ struct message_block_part_14_set_t
     typedef typename traits_type::message_block_type message_block_type;
     typedef typename message_block_type::value_type  message_block_value_type;
 
-    enum { half_max_message_bitsize_k = traits_type::max_message_bitsize_k / 2 };
+    static constexpr std::size_t half_max_message_bitsize_k = traits_type::max_message_bitsize_k / 2;
 
-    void operator () (message_block_value_type& mbp14, boost::uint64_t num_bits)
+    void operator () (message_block_value_type& mbp14, std::uint64_t num_bits)
     {
         message_block_value_type message_block_value_type_max(std::numeric_limits<message_block_value_type>::max());
 
@@ -190,33 +168,30 @@ struct message_block_part_14_set_t<false, HashTraits>
     typedef typename traits_type::message_block_type    message_block_type;
     typedef typename message_block_type::value_type     message_block_value_type;
 
-    void operator () (message_block_value_type& mbp14, boost::uint64_t)
+    void operator () (message_block_value_type& mbp14, std::uint64_t)
     { mbp14 = 0; }
 };
 
 /*************************************************************************************************/
 
 template <typename HashTraits, typename I>
-void block_and_digest(typename HashTraits::process_type& digest, I first, boost::uint64_t num_bits)
+void block_and_digest(typename HashTraits::process_type& digest, I first, std::uint64_t num_bits)
 {
     typedef HashTraits                               traits_type;
     typedef typename traits_type::message_block_type message_block_type;
     typedef typename message_block_type::value_type  message_block_value_type;
 
-    enum
-    {
-        max_message_bitsize_k = traits_type::max_message_bitsize_k,
-        half_max_message_bitsize_k = max_message_bitsize_k / 2,
-        message_blocksize_k = traits_type::message_blocksize_k,
-        use_mb_14 = half_max_message_bitsize_k < bitsizeof<boost::uint64_t>::value
-    };
+    static constexpr std::size_t max_message_bitsize_k = traits_type::max_message_bitsize_k;
+    static constexpr std::size_t half_max_message_bitsize_k = max_message_bitsize_k / 2;
+    static constexpr std::size_t message_blocksize_k = traits_type::message_blocksize_k;
+    static constexpr std::size_t use_mb_14 = half_max_message_bitsize_k < bitsizeof<std::uint64_t>();
 
-    message_block_value_type    message_block_value_type_max(std::numeric_limits<message_block_value_type>::max());
-    message_block_type          message_block;
-    boost::uint64_t             message_size(num_bits + max_message_bitsize_k);
-    boost::uint64_t             num_blocks(message_size / message_blocksize_k + 1);
-    bool                        in_padding(false);
-    bit_packer<I>               bits(first, num_bits);
+    message_block_value_type message_block_value_type_max(std::numeric_limits<message_block_value_type>::max());
+    message_block_type       message_block;
+    std::uint64_t            message_size(num_bits + max_message_bitsize_k);
+    std::uint64_t            num_blocks(message_size / message_blocksize_k + 1);
+    bool                     in_padding(false);
+    bit_packer<I>            bits(first, num_bits);
 
     while (num_blocks != 0)
     {
@@ -295,9 +270,9 @@ void sha_2_digest_message_block(typename HashTraits::process_type&              
 
     adobe::copy(message_block, &schedule[0]);
 
-    for (std::size_t t(message_block_type::static_size); t < schedule_type::static_size; ++t)
-        schedule[t] =   traits_type::small_sigma_1(schedule[t - 2]) + schedule[t - 7] +
-                        traits_type::small_sigma_0(schedule[t - 15]) + schedule[t - 16];
+    for (std::size_t t(message_block.size()); t < schedule.size(); ++t)
+        schedule[t] = traits_type::small_sigma_1(schedule[t - 2]) + schedule[t - 7] +
+                      traits_type::small_sigma_0(schedule[t - 15]) + schedule[t - 16];
 
     digest_value_type a(digest[0]);
     digest_value_type b(digest[1]);
@@ -310,13 +285,13 @@ void sha_2_digest_message_block(typename HashTraits::process_type&              
 
     for (std::size_t t(0); t < schedule.size(); ++t)
     {
-        digest_value_type T1 =  h                           +
-                                traits_type::big_sigma_1(e) +
-                                implementation::ch(e, f, g) +
-                                traits_type::k(t)           +
-                                schedule[t];
-        digest_value_type T2 =  traits_type::big_sigma_0(a) +
-                                implementation::maj(a, b, c);
+        digest_value_type T1 = h                           +
+                               traits_type::big_sigma_1(e) +
+                               implementation::ch(e, f, g) +
+                               traits_type::k(t)           +
+                               schedule[t];
+        digest_value_type T2 = traits_type::big_sigma_0(a) +
+                               implementation::maj(a, b, c);
         h = g;
         g = f;
         f = e;
@@ -344,16 +319,13 @@ void sha_2_digest_message_block(typename HashTraits::process_type&              
 
 struct sha1_traits_t
 {
-    typedef boost::array<boost::uint32_t, 5>  process_type;
-    typedef boost::array<boost::uint32_t, 16> message_block_type;
-    typedef boost::array<boost::uint32_t, 80> schedule_type;
-    typedef process_type                      digest_type;
+    typedef std::array<std::uint32_t, 5>  process_type;
+    typedef std::array<std::uint32_t, 16> message_block_type;
+    typedef std::array<std::uint32_t, 80> schedule_type;
+    typedef process_type                  digest_type;
 
-    enum
-    {
-        max_message_bitsize_k = 64,
-        message_blocksize_k = 512
-    };
+    static constexpr std::size_t max_message_bitsize_k = 64;
+    static constexpr std::size_t message_blocksize_k = 512;
 
     static inline void reset_digest(process_type& digest)
     {
@@ -370,23 +342,24 @@ struct sha1_traits_t
 
         adobe::copy(message_block, &schedule[0]);
 
-        for (std::size_t t(message_block_type::static_size); t < schedule_type::static_size; ++t)
-            schedule[t] = implementation::rotl<1>(  schedule[t - 3] ^ schedule[t - 8] ^
-                                                    schedule[t - 14] ^ schedule[t - 16]);
+        for (std::size_t t(message_block.size()); t < schedule.size(); ++t)
+            schedule[t] = implementation::rotl<1>(schedule[t - 3] ^ schedule[t - 8] ^
+                                                  schedule[t - 14] ^ schedule[t - 16]);
 
-        boost::uint32_t a(digest[0]);
-        boost::uint32_t b(digest[1]);
-        boost::uint32_t c(digest[2]);
-        boost::uint32_t d(digest[3]);
-        boost::uint32_t e(digest[4]);
+        std::uint32_t a(digest[0]);
+        std::uint32_t b(digest[1]);
+        std::uint32_t c(digest[2]);
+        std::uint32_t d(digest[3]);
+        std::uint32_t e(digest[4]);
 
         for (std::size_t t(0); t < schedule.size(); ++t)
         {
-            boost::uint32_t T = implementation::rotl<5>(a)  +
-                                f(t, b, c, d)               +
-                                e                           +
-                                k(t)                        +
-                                schedule[t];
+            std::uint32_t T = implementation::rotl<5>(a) +
+                              f(t, b, c, d)              +
+                              e                          +
+                              k(t)                       +
+                              schedule[t];
+
             e = d;
             d = c;
             c = implementation::rotl<30>(b);
@@ -408,10 +381,10 @@ struct sha1_traits_t
         { return process; }
 
 private:
-    static inline boost::uint32_t f(std::size_t     t,
-                                    boost::uint32_t x,
-                                    boost::uint32_t y,
-                                    boost::uint32_t z)
+    static inline std::uint32_t f(std::size_t   t,
+                                  std::uint32_t x,
+                                  std::uint32_t y,
+                                  std::uint32_t z)
     {
         assert (t < 80);
     
@@ -422,7 +395,7 @@ private:
         return implementation::parity(x, y, z);
     }
 
-    static inline boost::uint32_t k(std::size_t t)
+    static inline std::uint32_t k(std::size_t t)
     {
         assert(t < 80);
     
@@ -438,16 +411,13 @@ private:
 
 struct sha256_traits_t
 {
-    typedef boost::array<boost::uint32_t, 8>  process_type;
-    typedef boost::array<boost::uint32_t, 16> message_block_type;
-    typedef boost::array<boost::uint32_t, 64> schedule_type;
-    typedef process_type                       digest_type;
+    typedef std::array<std::uint32_t, 8>  process_type;
+    typedef std::array<std::uint32_t, 16> message_block_type;
+    typedef std::array<std::uint32_t, 64> schedule_type;
+    typedef process_type                  digest_type;
 
-    enum
-    {
-        max_message_bitsize_k = 64,
-        message_blocksize_k = 512
-    };
+    static constexpr std::size_t max_message_bitsize_k = 64;
+    static constexpr std::size_t message_blocksize_k = 512;
 
     static inline void reset_digest(process_type& digest)
     {
@@ -464,21 +434,21 @@ struct sha256_traits_t
     static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
         { sha_2_digest_message_block<sha256_traits_t>(digest, message_block); }
 
-    static inline boost::uint32_t big_sigma_0(boost::uint32_t x)
+    static inline std::uint32_t big_sigma_0(std::uint32_t x)
         { return implementation::rotr<2>(x) ^ implementation::rotr<13>(x) ^ implementation::rotr<22>(x); }
 
-    static inline boost::uint32_t big_sigma_1(boost::uint32_t x)
+    static inline std::uint32_t big_sigma_1(std::uint32_t x)
         { return implementation::rotr<6>(x) ^ implementation::rotr<11>(x) ^ implementation::rotr<25>(x); }
 
-    static inline boost::uint32_t small_sigma_0(boost::uint32_t x)
+    static inline std::uint32_t small_sigma_0(std::uint32_t x)
         { return implementation::rotr<7>(x) ^ implementation::rotr<18>(x) ^ implementation::shr<3>(x); }
 
-    static inline boost::uint32_t small_sigma_1(boost::uint32_t x)
+    static inline std::uint32_t small_sigma_1(std::uint32_t x)
         { return implementation::rotr<17>(x) ^ implementation::rotr<19>(x) ^ implementation::shr<10>(x); }
 
-    static inline boost::uint32_t k(std::size_t t)
+    static inline std::uint32_t k(std::size_t t)
     {
-        static const boost::uint32_t k_set[] =
+        static const std::uint32_t k_set[] =
         {
             0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
             0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
@@ -501,18 +471,9 @@ struct sha256_traits_t
 
 /*************************************************************************************************/
 
-struct sha224_traits_t
+struct sha224_traits_t : public sha256_traits_t
 {
-    typedef sha256_traits_t::process_type        process_type;
-    typedef sha256_traits_t::message_block_type message_block_type;
-    typedef sha256_traits_t::schedule_type      schedule_type;
-    typedef boost::array<boost::uint32_t, 7>    digest_type;
-
-    enum
-    {
-        max_message_bitsize_k = sha256_traits_t::max_message_bitsize_k,
-        message_blocksize_k = sha256_traits_t::message_blocksize_k
-    };
+    typedef std::array<std::uint32_t, 7> digest_type;
 
     static inline void reset_digest(process_type& digest)
     {
@@ -526,29 +487,11 @@ struct sha224_traits_t
         digest[7] = 0xbefa4fa4;
     }
 
-    static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
-        { sha_2_digest_message_block<sha224_traits_t>(digest, message_block); }
-
-    static inline boost::uint32_t big_sigma_0(boost::uint32_t x)
-        { return sha256_traits_t::big_sigma_0(x); }
-
-    static inline boost::uint32_t big_sigma_1(boost::uint32_t x)
-        { return sha256_traits_t::big_sigma_1(x); }
-
-    static inline boost::uint32_t small_sigma_0(boost::uint32_t x)
-        { return sha256_traits_t::small_sigma_0(x); }
-
-    static inline boost::uint32_t small_sigma_1(boost::uint32_t x)
-        { return sha256_traits_t::small_sigma_1(x); }
-
-    static inline boost::uint32_t k(std::size_t x)
-        { return sha256_traits_t::k(x); }
-
     static inline digest_type finalize(const process_type& process)
     {
         digest_type result = {{0}};
 
-        std::copy(process.begin(), process.begin() + digest_type::static_size, &result[0]);
+        std::copy(process.begin(), process.begin() + result.size(), &result[0]);
 
         return result;
     }
@@ -558,16 +501,13 @@ struct sha224_traits_t
 
 struct sha512_traits_t
 {
-    typedef boost::array<boost::uint64_t, 8>  process_type;
-    typedef boost::array<boost::uint64_t, 16> message_block_type;
-    typedef boost::array<boost::uint64_t, 80> schedule_type;
-    typedef process_type                      digest_type;
+    typedef std::array<std::uint64_t, 8>  process_type;
+    typedef std::array<std::uint64_t, 16> message_block_type;
+    typedef std::array<std::uint64_t, 80> schedule_type;
+    typedef process_type                  digest_type;
 
-    enum
-    {
-        max_message_bitsize_k = 128,
-        message_blocksize_k = 1024
-    };
+    static constexpr std::size_t max_message_bitsize_k = 128;
+    static constexpr std::size_t message_blocksize_k = 1024;
 
     static inline void reset_digest(process_type& digest)
     {
@@ -584,21 +524,21 @@ struct sha512_traits_t
     static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
         { sha_2_digest_message_block<sha512_traits_t>(digest, message_block); }
 
-    static inline boost::uint64_t big_sigma_0(boost::uint64_t x)
+    static inline std::uint64_t big_sigma_0(std::uint64_t x)
         { return implementation::rotr<28>(x) ^ implementation::rotr<34>(x) ^ implementation::rotr<39>(x); }
 
-    static inline boost::uint64_t big_sigma_1(boost::uint64_t x)
+    static inline std::uint64_t big_sigma_1(std::uint64_t x)
         { return implementation::rotr<14>(x) ^ implementation::rotr<18>(x) ^ implementation::rotr<41>(x); }
 
-    static inline boost::uint64_t small_sigma_0(boost::uint64_t x)
+    static inline std::uint64_t small_sigma_0(std::uint64_t x)
         { return implementation::rotr<1>(x) ^ implementation::rotr<8>(x) ^ implementation::shr<7>(x); }
 
-    static inline boost::uint64_t small_sigma_1(boost::uint64_t x)
+    static inline std::uint64_t small_sigma_1(std::uint64_t x)
         { return implementation::rotr<19>(x) ^ implementation::rotr<61>(x) ^ implementation::shr<6>(x); }
 
-    static inline boost::uint64_t k(std::size_t t)
+    static inline std::uint64_t k(std::size_t t)
     {
-        static const boost::uint64_t k_set[] =
+        static const std::uint64_t k_set[] =
         {
             0x428a2f98d728ae22ULL, 0x7137449123ef65cdULL, 0xb5c0fbcfec4d3b2fULL, 0xe9b5dba58189dbbcULL,
             0x3956c25bf348b538ULL, 0x59f111f1b605d019ULL, 0x923f82a4af194f9bULL, 0xab1c5ed5da6d8118ULL,
@@ -633,18 +573,9 @@ struct sha512_traits_t
 
 /*************************************************************************************************/
 
-struct sha384_traits_t
+struct sha384_traits_t : public sha512_traits_t
 {
-    typedef sha512_traits_t::process_type       process_type;
-    typedef sha512_traits_t::message_block_type message_block_type;
-    typedef sha512_traits_t::schedule_type      schedule_type;
-    typedef boost::array<boost::uint64_t, 6>    digest_type;
-
-    enum
-    {
-        max_message_bitsize_k = sha512_traits_t::max_message_bitsize_k,
-        message_blocksize_k = sha512_traits_t::message_blocksize_k
-    };
+    typedef std::array<std::uint64_t, 6> digest_type;
 
     static inline void reset_digest(process_type& digest)
     {
@@ -658,29 +589,11 @@ struct sha384_traits_t
         digest[7] = 0x47b5481dbefa4fa4ULL;
     }
 
-    static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
-        { sha_2_digest_message_block<sha384_traits_t>(digest, message_block); }
-
-    static inline boost::uint64_t big_sigma_0(boost::uint64_t x)
-        { return sha512_traits_t::big_sigma_0(x); }
-
-    static inline boost::uint64_t big_sigma_1(boost::uint64_t x)
-        { return sha512_traits_t::big_sigma_1(x); }
-
-    static inline boost::uint64_t small_sigma_0(boost::uint64_t x)
-        { return sha512_traits_t::small_sigma_0(x); }
-
-    static inline boost::uint64_t small_sigma_1(boost::uint64_t x)
-        { return sha512_traits_t::small_sigma_1(x); }
-
-    static inline boost::uint64_t k(std::size_t x)
-        { return sha512_traits_t::k(x); }
-
     static inline digest_type finalize(const process_type& process)
     {
         digest_type result = {{0}};
 
-        std::copy(process.begin(), process.begin() + digest_type::static_size, &result[0]);
+        std::copy(process.begin(), process.begin() + result.size(), &result[0]);
 
         return result;
     }
@@ -699,10 +612,7 @@ struct sha384_traits_t
     \defgroup sha SHA (Secure Hash Algorithm)
 
     \todo Need to implement sentinel variants of the SHA routines to
-          eliminate long_distance altogether.
-
-    \todo Need a smoke test of known-good SHA results and set that up as part
-          of the bjam unit tests.
+          eliminate std::distance altogether.
 */
 /**
     \ingroup sha
@@ -715,10 +625,6 @@ struct sha384_traits_t
     Users of the class can either call one of the one-shot sha::digest
     routines or instantiate the class and call sha::update repeatedly,
     then retrieve the digest with sha::finalize.
-
-    \todo adobe::implementation::long_distance is currently `O(N)`, and
-          should be specialized when possible to `O(1)` when given a
-          random access iterator.
 */
 template <class Traits>
 class sha
@@ -761,15 +667,18 @@ public:
     \param last  last iterator over the range to digest
 
     \note While the SHA standard specifies the ability to process messages up to
-          2^128 bits, this routine is limited to 2^64 bits. A workaround to the
-          limitation is to call this routine multiple times.
+          2^128 bits, this routine is limited to
+          `sizeof(std::iterator_traits<I>::difference_type) * 8` bits. A
+          workaround to the limitation is to call this routine multiple times.
     */
     template <typename I>
     inline void update(I first, I last)
     {
-        enum { ibits_k = implementation::bitsizeof<typename std::iterator_traits<I>::value_type>::value };
+        typedef typename std::iterator_traits<I>::value_type value_type;
 
-        update(first, implementation::long_distance(first, last) * ibits_k);
+        constexpr std::size_t ibits_k = implementation::bitsizeof<value_type>();
+
+        update(first, std::distance(first, last) * ibits_k);
     }
 
     /**
@@ -789,7 +698,7 @@ public:
           limitation is to call this routine multiple times.
     */
     template <typename I>
-    inline void update(I first, boost::uint64_t num_bits)
+    inline void update(I first, std::uint64_t num_bits)
     {
         implementation::block_and_digest<traits_type>(process_m, first, num_bits);
     }
@@ -813,16 +722,20 @@ public:
     \param first first iterator over the range to digest
     \param last  last iterator over the range to digest
 
-    \note While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to 2^64 bits.
+    \note While the SHA standard specifies the ability to process messages up to
+          2^128 bits, this routine is limited to
+          `sizeof(std::iterator_traits<I>::difference_type) * 8` bits.
 
     \return The SHA-* digest of the message
     */
     template <typename I>
     static inline digest_type digest(I first, I last)
     {
-        enum { ibits_k = implementation::bitsizeof<typename std::iterator_traits<I>::value_type>::value };
+        typedef typename std::iterator_traits<I>::value_type value_type;
 
-        return digest(first, implementation::long_distance(first, last) * ibits_k);
+        constexpr std::size_t ibits_k = implementation::bitsizeof<value_type>();
+
+        return digest(first, std::distance(first, last) * ibits_k);
     }
 
     /**
@@ -834,12 +747,13 @@ public:
     \param first    first iterator over the range to digest
     \param num_bits number of bits to digest
 
-    \note While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to 2^64 bits.
+    \note While the SHA standard specifies the ability to process messages up to
+          2^128 bits, this routine is limited to 2^64 bits.
 
     \return The SHA-* digest of the message
     */
     template <typename I>
-    static inline digest_type digest(I first, boost::uint64_t num_bits)
+    static inline digest_type digest(I first, std::uint64_t num_bits)
     {
         sha instance;
 

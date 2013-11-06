@@ -3,8 +3,5 @@ import testing ;
 project adobe/sha
     ;
 
-run main.cpp
-    : # args
-    : #files
-    : <toolset>darwin:<linkflags>"-framework Carbon"
-    ;
+unit-test sha_test
+    : main.cpp ;
