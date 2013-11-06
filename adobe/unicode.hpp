@@ -477,19 +477,17 @@ O to_utf_(I f, I l, O o, unicode_size_type_<4>)
 \c copy_utf32 copies the text from the range <code>[f, l)</code> from UTF-8, 16, or 32 to UTF-8, 16
 or 32 and assigns the result to \c *o.
 
-\pre <code>[f, l)</code> is a valid range of UTF-8, 16, or 32 encode text.
-\pre \c o is not an iterator within the range <code>[f, l)</code>. 
-\pre \c There is enough space to hold the text being copied. The maximum requirement on the output
-is that <code>[o, o + m(l - f))</code> is a valid range where m is determined by the following
-table:
-
-<table>
-    <tr><th></th><th colspan="3">result</th></tr>
-    <tr><th>source</th><th>UTF-8</th><th>UTF-16</th><th>UTF-32</th></tr>
-    <tr><th>UTF-8</th><td>1</td><td>1</td><td>1</td></tr>
-    <tr><th>UTF-16</th><td>3</td><td>1</td><td>1</td></tr>
-    <tr><th>UTF-32</th><td>4</td><td>2</td><td>1</td></tr>
-</table>
+\pre
+    - `[f, l)` is a valid range of UTF-8, 16, or 32 encode text.
+    - `o` is not an iterator within the range `[f, l)`. 
+    - There is enough space to hold the text being copied. The maximum
+      requirement on the output is that `[o, o + m(l - f))` is a valid range
+      where `m` is determined by the following table:
+        |source/result|UTF-8|UTF-16|UTF-32|
+        |------------:|:---:|:----:|:----:|
+        |UTF-8        |  1  |   1  |   1  |
+        |UTF-16       |  3  |   1  |   1  |
+        |UTF-32       |  4  |   2  |   1  |
 
 \note If the source contains an invalid or partial encoding then the output is undefined (debug
 builds may assert). However, the code will not read beyond the specified source range or output
