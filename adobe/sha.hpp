@@ -33,45 +33,36 @@ namespace implementation {
 /*************************************************************************************************/
 
 template <typename I> // I models InputIterator
-struct bit_packer
-{
+struct bit_packer {
     typedef typename std::iterator_traits<I>::value_type value_type;
 
     static_assert(sizeof(value_type) == 1, "value_type size mismatch.");
 
-    bit_packer(I first, I last) :
-        first_m(first), bitsize_m(std::distance(first, last))
-    { }
+    bit_packer(I first, I last) : first_m(first), bitsize_m(std::distance(first, last)) {}
 
-    bit_packer(I first, std::uint64_t bitsize) :
-        first_m(first), bitsize_m(bitsize)
-    { }
+    bit_packer(I first, std::uint64_t bitsize) : first_m(first), bitsize_m(bitsize) {}
 
     template <typename T>
-    inline std::size_t operator () (T& result)
-    { return byte_pack(result); }
+    inline std::size_t operator()(T &result) {
+        return byte_pack(result);
+    }
 
 private:
     template <typename T>
-    std::size_t byte_pack(T& result)
-    {
+    std::size_t byte_pack(T &result) {
         std::size_t to_pack(sizeof(T));
 
         result = 0;
 
-        while (to_pack != 0 && bitsize_m != 0)
-        {
+        while (to_pack != 0 && bitsize_m != 0) {
             std::size_t shift_count(8 * (to_pack - 1));
-            T           mask(T(255) << shift_count);
+            T mask(T(255) << shift_count);
 
             result |= (T(*first_m) << shift_count) & mask;
 
-            if (bitsize_m >= 8)
-            {
+            if (bitsize_m >= 8) {
                 bitsize_m -= 8;
-            }
-            else
-            {
+            } else {
                 std::size_t remaining(static_cast<std::size_t>(to_pack * 8 - bitsize_m));
 
                 bitsize_m = 0;
@@ -86,29 +77,28 @@ private:
         return to_pack * 8;
     }
 
-    I               first_m;
+    I first_m;
     std::uint64_t bitsize_m;
 };
 
 /*************************************************************************************************/
 
 template <typename T>
-constexpr std::size_t bitsizeof()
-{ return sizeof(T) * 8; }
+constexpr std::size_t bitsizeof() {
+    return sizeof(T) * 8;
+}
 
 /*************************************************************************************************/
 
 template <std::size_t N, typename T>
-inline T shr(const T& x)
-{
+inline T shr(const T &x) {
     static_assert(N < bitsizeof<T>(), "shr size mismatch.");
 
     return x >> N;
 }
 
 template <std::size_t N, typename T>
-inline T rotr(const T& x)
-{
+inline T rotr(const T &x) {
     static_assert(N < bitsizeof<T>(), "rotr size mismatch.");
 
     constexpr std::size_t l_shift = bitsizeof<T>() - N;
@@ -117,8 +107,7 @@ inline T rotr(const T& x)
 }
 
 template <std::size_t N, typename T>
-inline T rotl(const T& x)
-{
+inline T rotl(const T &x) {
     static_assert(N < bitsizeof<T>(), "rotl size mismatch.");
 
     constexpr std::size_t r_shift = bitsizeof<T>() - N;
@@ -129,89 +118,85 @@ inline T rotl(const T& x)
 /*************************************************************************************************/
 
 template <typename T>
-inline T ch(T x, T y, T z)
-    { return (x & y) ^ (~x & z); }
+inline T ch(T x, T y, T z) {
+    return (x & y) ^ (~x & z);
+}
 
 template <typename T>
-inline T parity(T x, T y, T z)
-    { return x ^ y ^ z; }
+inline T parity(T x, T y, T z) {
+    return x ^ y ^ z;
+}
 
 template <typename T>
-inline T maj(T x, T y, T z)
-    { return (x & y) ^ (x & z) ^ (y & z); }
+inline T maj(T x, T y, T z) {
+    return (x & y) ^ (x & z) ^ (y & z);
+}
 
 /*************************************************************************************************/
 
 template <bool UseMB14, typename HashTraits>
-struct message_block_part_14_set_t
-{
-    typedef HashTraits                               traits_type;
+struct message_block_part_14_set_t {
+    typedef HashTraits traits_type;
     typedef typename traits_type::message_block_type message_block_type;
-    typedef typename message_block_type::value_type  message_block_value_type;
+    typedef typename message_block_type::value_type message_block_value_type;
 
-    static constexpr std::size_t half_max_message_bitsize_k = traits_type::max_message_bitsize_k / 2;
+    static constexpr std::size_t half_max_message_bitsize_k =
+        traits_type::max_message_bitsize_k / 2;
 
-    void operator () (message_block_value_type& mbp14, std::uint64_t num_bits)
-    {
-        message_block_value_type message_block_value_type_max(std::numeric_limits<message_block_value_type>::max());
+    void operator()(message_block_value_type &mbp14, std::uint64_t num_bits) {
+        message_block_value_type message_block_value_type_max(
+            std::numeric_limits<message_block_value_type>::max());
 
-        mbp14 = static_cast<message_block_value_type>((num_bits >> (half_max_message_bitsize_k)) & message_block_value_type_max);
+        mbp14 = static_cast<message_block_value_type>((num_bits >> (half_max_message_bitsize_k)) &
+                                                      message_block_value_type_max);
     }
 };
 
 /*************************************************************************************************/
 
 template <typename HashTraits>
-struct message_block_part_14_set_t<false, HashTraits>
-{
-    typedef HashTraits                                  traits_type;
-    typedef typename traits_type::message_block_type    message_block_type;
-    typedef typename message_block_type::value_type     message_block_value_type;
+struct message_block_part_14_set_t<false, HashTraits> {
+    typedef HashTraits traits_type;
+    typedef typename traits_type::message_block_type message_block_type;
+    typedef typename message_block_type::value_type message_block_value_type;
 
-    void operator () (message_block_value_type& mbp14, std::uint64_t)
-    { mbp14 = 0; }
+    void operator()(message_block_value_type &mbp14, std::uint64_t) { mbp14 = 0; }
 };
 
 /*************************************************************************************************/
 
 template <typename HashTraits, typename I>
-void block_and_digest(typename HashTraits::process_type& digest, I first, std::uint64_t num_bits)
-{
-    typedef HashTraits                               traits_type;
+void block_and_digest(typename HashTraits::process_type &digest, I first, std::uint64_t num_bits) {
+    typedef HashTraits traits_type;
     typedef typename traits_type::message_block_type message_block_type;
-    typedef typename message_block_type::value_type  message_block_value_type;
+    typedef typename message_block_type::value_type message_block_value_type;
 
     static constexpr std::size_t max_message_bitsize_k = traits_type::max_message_bitsize_k;
     static constexpr std::size_t half_max_message_bitsize_k = max_message_bitsize_k / 2;
     static constexpr std::size_t message_blocksize_k = traits_type::message_blocksize_k;
-    static constexpr std::size_t use_mb_14 = half_max_message_bitsize_k < bitsizeof<std::uint64_t>();
+    static constexpr std::size_t use_mb_14 =
+        half_max_message_bitsize_k < bitsizeof<std::uint64_t>();
 
-    message_block_value_type message_block_value_type_max(std::numeric_limits<message_block_value_type>::max());
-    message_block_type       message_block;
-    std::uint64_t            message_size(num_bits + max_message_bitsize_k);
-    std::uint64_t            num_blocks(message_size / message_blocksize_k + 1);
-    bool                     in_padding(false);
-    bit_packer<I>            bits(first, num_bits);
+    message_block_value_type message_block_value_type_max(
+        std::numeric_limits<message_block_value_type>::max());
+    message_block_type message_block;
+    std::uint64_t message_size(num_bits + max_message_bitsize_k);
+    std::uint64_t num_blocks(message_size / message_blocksize_k + 1);
+    bool in_padding(false);
+    bit_packer<I> bits(first, num_bits);
 
-    while (num_blocks != 0)
-    {
-        for (std::size_t i(0); i < 16; ++i)
-        {
-            if (!in_padding)
-            {
+    while (num_blocks != 0) {
+        for (std::size_t i(0); i < 16; ++i) {
+            if (!in_padding) {
                 std::size_t unset_bits(bits(message_block[i]));
 
-                if (unset_bits != 0)
-                {
+                if (unset_bits != 0) {
                     message_block[i] |= message_block_value_type(1) << (unset_bits - 1);
 
                     in_padding = true;
                 }
-            }
-            else
-            {
-                if (num_blocks == 1)
-                {
+            } else {
+                if (num_blocks == 1) {
                     // REVISIT (fbrereto) : According to the SHA standard the message length in the
                     //                      1024-block-size case can be up to 2^128 bits long,
                     //                      but we only support messages up to 2^64 in length. In
@@ -230,13 +215,14 @@ void block_and_digest(typename HashTraits::process_type& digest, I first, std::u
                     //                      1024-block-size case, thus sliencing the compiler.
 
                     if (i == 14)
-                        message_block_part_14_set_t<use_mb_14, traits_type>()(message_block[i], num_bits);
+                        message_block_part_14_set_t<use_mb_14, traits_type>()(message_block[i],
+                                                                              num_bits);
                     else if (i == 15)
-                        message_block[i] = static_cast<message_block_value_type>(num_bits & message_block_value_type_max);
+                        message_block[i] = static_cast<message_block_value_type>(
+                            num_bits & message_block_value_type_max);
                     else
                         message_block[i] = 0;
-                }
-                else
+                } else
                     message_block[i] = 0;
             }
         }
@@ -253,17 +239,16 @@ void block_and_digest(typename HashTraits::process_type& digest, I first, std::u
 /*************************************************************************************************/
 
 template <typename HashTraits>
-void sha_2_digest_message_block(typename HashTraits::process_type&              digest,
-                                const typename HashTraits::message_block_type&  message_block)
-{
+void sha_2_digest_message_block(typename HashTraits::process_type &digest,
+                                const typename HashTraits::message_block_type &message_block) {
     //  The "sha_2" in the name of this function is in
     //  reference to the second generation of SHA algorithms
     //  (224, 256, 384, and 512), all of which have the same
     //  message block process implementation.
 
-    typedef HashTraits                                     traits_type;
-    typedef typename traits_type::message_block_type       message_block_type;
-    typedef typename traits_type::schedule_type            schedule_type;
+    typedef HashTraits traits_type;
+    typedef typename traits_type::message_block_type message_block_type;
+    typedef typename traits_type::schedule_type schedule_type;
     typedef typename traits_type::process_type::value_type digest_value_type;
 
     schedule_type schedule;
@@ -283,15 +268,10 @@ void sha_2_digest_message_block(typename HashTraits::process_type&              
     digest_value_type g(digest[6]);
     digest_value_type h(digest[7]);
 
-    for (std::size_t t(0); t < schedule.size(); ++t)
-    {
-        digest_value_type T1 = h                           +
-                               traits_type::big_sigma_1(e) +
-                               implementation::ch(e, f, g) +
-                               traits_type::k(t)           +
-                               schedule[t];
-        digest_value_type T2 = traits_type::big_sigma_0(a) +
-                               implementation::maj(a, b, c);
+    for (std::size_t t(0); t < schedule.size(); ++t) {
+        digest_value_type T1 = h + traits_type::big_sigma_1(e) + implementation::ch(e, f, g) +
+                               traits_type::k(t) + schedule[t];
+        digest_value_type T2 = traits_type::big_sigma_0(a) + implementation::maj(a, b, c);
         h = g;
         g = f;
         f = e;
@@ -317,18 +297,16 @@ void sha_2_digest_message_block(typename HashTraits::process_type&              
 
 /*************************************************************************************************/
 
-struct sha1_traits_t
-{
-    typedef std::array<std::uint32_t, 5>  process_type;
+struct sha1_traits_t {
+    typedef std::array<std::uint32_t, 5> process_type;
     typedef std::array<std::uint32_t, 16> message_block_type;
     typedef std::array<std::uint32_t, 80> schedule_type;
-    typedef process_type                  digest_type;
+    typedef process_type digest_type;
 
     static constexpr std::size_t max_message_bitsize_k = 64;
     static constexpr std::size_t message_blocksize_k = 512;
 
-    static inline void reset_digest(process_type& digest)
-    {
+    static inline void reset_digest(process_type &digest) {
         digest[0] = 0x67452301;
         digest[1] = 0xefcdab89;
         digest[2] = 0x98badcfe;
@@ -336,8 +314,8 @@ struct sha1_traits_t
         digest[4] = 0xc3d2e1f0;
     }
 
-    static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
-    {   
+    static inline void digest_message_block(process_type &digest,
+                                            const message_block_type &message_block) {
         schedule_type schedule;
 
         adobe::copy(message_block, &schedule[0]);
@@ -352,13 +330,8 @@ struct sha1_traits_t
         std::uint32_t d(digest[3]);
         std::uint32_t e(digest[4]);
 
-        for (std::size_t t(0); t < schedule.size(); ++t)
-        {
-            std::uint32_t T = implementation::rotl<5>(a) +
-                              f(t, b, c, d)              +
-                              e                          +
-                              k(t)                       +
-                              schedule[t];
+        for (std::size_t t(0); t < schedule.size(); ++t) {
+            std::uint32_t T = implementation::rotl<5>(a) + f(t, b, c, d) + e + k(t) + schedule[t];
 
             e = d;
             d = c;
@@ -377,50 +350,49 @@ struct sha1_traits_t
         std::memset(&schedule, 0, sizeof(schedule));
     }
 
-    static inline digest_type finalize(const process_type& process)
-        { return process; }
+    static inline digest_type finalize(const process_type &process) { return process; }
 
 private:
-    static inline std::uint32_t f(std::size_t   t,
-                                  std::uint32_t x,
-                                  std::uint32_t y,
-                                  std::uint32_t z)
-    {
-        assert (t < 80);
-    
-        if (t <= 19)      return implementation::ch(x, y, z);
-        else if (t <= 39) return implementation::parity(x, y, z);
-        else if (t <= 59) return implementation::maj(x, y, z);
-    
+    static inline std::uint32_t f(std::size_t t, std::uint32_t x, std::uint32_t y,
+                                  std::uint32_t z) {
+        assert(t < 80);
+
+        if (t <= 19)
+            return implementation::ch(x, y, z);
+        else if (t <= 39)
+            return implementation::parity(x, y, z);
+        else if (t <= 59)
+            return implementation::maj(x, y, z);
+
         return implementation::parity(x, y, z);
     }
 
-    static inline std::uint32_t k(std::size_t t)
-    {
+    static inline std::uint32_t k(std::size_t t) {
         assert(t < 80);
-    
-        if (t <= 19)      return 0x5a827999;
-        else if (t <= 39) return 0x6ed9eba1;
-        else if (t <= 59) return 0x8f1bbcdc;
-    
+
+        if (t <= 19)
+            return 0x5a827999;
+        else if (t <= 39)
+            return 0x6ed9eba1;
+        else if (t <= 59)
+            return 0x8f1bbcdc;
+
         return 0xca62c1d6;
     }
 };
 
 /*************************************************************************************************/
 
-struct sha256_traits_t
-{
-    typedef std::array<std::uint32_t, 8>  process_type;
+struct sha256_traits_t {
+    typedef std::array<std::uint32_t, 8> process_type;
     typedef std::array<std::uint32_t, 16> message_block_type;
     typedef std::array<std::uint32_t, 64> schedule_type;
-    typedef process_type                  digest_type;
+    typedef process_type digest_type;
 
     static constexpr std::size_t max_message_bitsize_k = 64;
     static constexpr std::size_t message_blocksize_k = 512;
 
-    static inline void reset_digest(process_type& digest)
-    {
+    static inline void reset_digest(process_type &digest) {
         digest[0] = 0x6a09e667;
         digest[1] = 0xbb67ae85;
         digest[2] = 0x3c6ef372;
@@ -431,52 +403,57 @@ struct sha256_traits_t
         digest[7] = 0x5be0cd19;
     }
 
-    static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
-        { sha_2_digest_message_block<sha256_traits_t>(digest, message_block); }
+    static inline void digest_message_block(process_type &digest,
+                                            const message_block_type &message_block) {
+        sha_2_digest_message_block<sha256_traits_t>(digest, message_block);
+    }
 
-    static inline std::uint32_t big_sigma_0(std::uint32_t x)
-        { return implementation::rotr<2>(x) ^ implementation::rotr<13>(x) ^ implementation::rotr<22>(x); }
+    static inline std::uint32_t big_sigma_0(std::uint32_t x) {
+        return implementation::rotr<2>(x) ^ implementation::rotr<13>(x) ^
+               implementation::rotr<22>(x);
+    }
 
-    static inline std::uint32_t big_sigma_1(std::uint32_t x)
-        { return implementation::rotr<6>(x) ^ implementation::rotr<11>(x) ^ implementation::rotr<25>(x); }
+    static inline std::uint32_t big_sigma_1(std::uint32_t x) {
+        return implementation::rotr<6>(x) ^ implementation::rotr<11>(x) ^
+               implementation::rotr<25>(x);
+    }
 
-    static inline std::uint32_t small_sigma_0(std::uint32_t x)
-        { return implementation::rotr<7>(x) ^ implementation::rotr<18>(x) ^ implementation::shr<3>(x); }
+    static inline std::uint32_t small_sigma_0(std::uint32_t x) {
+        return implementation::rotr<7>(x) ^ implementation::rotr<18>(x) ^ implementation::shr<3>(x);
+    }
 
-    static inline std::uint32_t small_sigma_1(std::uint32_t x)
-        { return implementation::rotr<17>(x) ^ implementation::rotr<19>(x) ^ implementation::shr<10>(x); }
+    static inline std::uint32_t small_sigma_1(std::uint32_t x) {
+        return implementation::rotr<17>(x) ^ implementation::rotr<19>(x) ^
+               implementation::shr<10>(x);
+    }
 
-    static inline std::uint32_t k(std::size_t t)
-    {
-        static const std::uint32_t k_set[] =
-        {
-            0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
-            0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
-            0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
-            0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
-            0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
-            0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
-            0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-            0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
-        };
+    static inline std::uint32_t k(std::size_t t) {
+        static const std::uint32_t k_set[] = {
+            0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4,
+            0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe,
+            0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f,
+            0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,
+            0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc,
+            0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b,
+            0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070, 0x19a4c116,
+            0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+            0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7,
+            0xc67178f2};
 
-        assert (t < 64);
+        assert(t < 64);
 
         return k_set[t];
     }
 
-    static inline digest_type finalize(const process_type& process)
-        { return process; }
+    static inline digest_type finalize(const process_type &process) { return process; }
 };
 
 /*************************************************************************************************/
 
-struct sha224_traits_t : public sha256_traits_t
-{
+struct sha224_traits_t : public sha256_traits_t {
     typedef std::array<std::uint32_t, 7> digest_type;
 
-    static inline void reset_digest(process_type& digest)
-    {
+    static inline void reset_digest(process_type &digest) {
         digest[0] = 0xc1059ed8;
         digest[1] = 0x367cd507;
         digest[2] = 0x3070dd17;
@@ -487,8 +464,7 @@ struct sha224_traits_t : public sha256_traits_t
         digest[7] = 0xbefa4fa4;
     }
 
-    static inline digest_type finalize(const process_type& process)
-    {
+    static inline digest_type finalize(const process_type &process) {
         digest_type result = {{0}};
 
         std::copy(process.begin(), process.begin() + result.size(), &result[0]);
@@ -499,18 +475,16 @@ struct sha224_traits_t : public sha256_traits_t
 
 /*************************************************************************************************/
 
-struct sha512_traits_t
-{
-    typedef std::array<std::uint64_t, 8>  process_type;
+struct sha512_traits_t {
+    typedef std::array<std::uint64_t, 8> process_type;
     typedef std::array<std::uint64_t, 16> message_block_type;
     typedef std::array<std::uint64_t, 80> schedule_type;
-    typedef process_type                  digest_type;
+    typedef process_type digest_type;
 
     static constexpr std::size_t max_message_bitsize_k = 128;
     static constexpr std::size_t message_blocksize_k = 1024;
 
-    static inline void reset_digest(process_type& digest)
-    {
+    static inline void reset_digest(process_type &digest) {
         digest[0] = 0x6a09e667f3bcc908ULL;
         digest[1] = 0xbb67ae8584caa73bULL;
         digest[2] = 0x3c6ef372fe94f82bULL;
@@ -521,64 +495,74 @@ struct sha512_traits_t
         digest[7] = 0x5be0cd19137e2179ULL;
     }
 
-    static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
-        { sha_2_digest_message_block<sha512_traits_t>(digest, message_block); }
+    static inline void digest_message_block(process_type &digest,
+                                            const message_block_type &message_block) {
+        sha_2_digest_message_block<sha512_traits_t>(digest, message_block);
+    }
 
-    static inline std::uint64_t big_sigma_0(std::uint64_t x)
-        { return implementation::rotr<28>(x) ^ implementation::rotr<34>(x) ^ implementation::rotr<39>(x); }
+    static inline std::uint64_t big_sigma_0(std::uint64_t x) {
+        return implementation::rotr<28>(x) ^ implementation::rotr<34>(x) ^
+               implementation::rotr<39>(x);
+    }
 
-    static inline std::uint64_t big_sigma_1(std::uint64_t x)
-        { return implementation::rotr<14>(x) ^ implementation::rotr<18>(x) ^ implementation::rotr<41>(x); }
+    static inline std::uint64_t big_sigma_1(std::uint64_t x) {
+        return implementation::rotr<14>(x) ^ implementation::rotr<18>(x) ^
+               implementation::rotr<41>(x);
+    }
 
-    static inline std::uint64_t small_sigma_0(std::uint64_t x)
-        { return implementation::rotr<1>(x) ^ implementation::rotr<8>(x) ^ implementation::shr<7>(x); }
+    static inline std::uint64_t small_sigma_0(std::uint64_t x) {
+        return implementation::rotr<1>(x) ^ implementation::rotr<8>(x) ^ implementation::shr<7>(x);
+    }
 
-    static inline std::uint64_t small_sigma_1(std::uint64_t x)
-        { return implementation::rotr<19>(x) ^ implementation::rotr<61>(x) ^ implementation::shr<6>(x); }
+    static inline std::uint64_t small_sigma_1(std::uint64_t x) {
+        return implementation::rotr<19>(x) ^ implementation::rotr<61>(x) ^
+               implementation::shr<6>(x);
+    }
 
-    static inline std::uint64_t k(std::size_t t)
-    {
-        static const std::uint64_t k_set[] =
-        {
-            0x428a2f98d728ae22ULL, 0x7137449123ef65cdULL, 0xb5c0fbcfec4d3b2fULL, 0xe9b5dba58189dbbcULL,
-            0x3956c25bf348b538ULL, 0x59f111f1b605d019ULL, 0x923f82a4af194f9bULL, 0xab1c5ed5da6d8118ULL,
-            0xd807aa98a3030242ULL, 0x12835b0145706fbeULL, 0x243185be4ee4b28cULL, 0x550c7dc3d5ffb4e2ULL,
-            0x72be5d74f27b896fULL, 0x80deb1fe3b1696b1ULL, 0x9bdc06a725c71235ULL, 0xc19bf174cf692694ULL,
-            0xe49b69c19ef14ad2ULL, 0xefbe4786384f25e3ULL, 0x0fc19dc68b8cd5b5ULL, 0x240ca1cc77ac9c65ULL,
-            0x2de92c6f592b0275ULL, 0x4a7484aa6ea6e483ULL, 0x5cb0a9dcbd41fbd4ULL, 0x76f988da831153b5ULL,
-            0x983e5152ee66dfabULL, 0xa831c66d2db43210ULL, 0xb00327c898fb213fULL, 0xbf597fc7beef0ee4ULL,
-            0xc6e00bf33da88fc2ULL, 0xd5a79147930aa725ULL, 0x06ca6351e003826fULL, 0x142929670a0e6e70ULL,
-            0x27b70a8546d22ffcULL, 0x2e1b21385c26c926ULL, 0x4d2c6dfc5ac42aedULL, 0x53380d139d95b3dfULL,
-            0x650a73548baf63deULL, 0x766a0abb3c77b2a8ULL, 0x81c2c92e47edaee6ULL, 0x92722c851482353bULL,
-            0xa2bfe8a14cf10364ULL, 0xa81a664bbc423001ULL, 0xc24b8b70d0f89791ULL, 0xc76c51a30654be30ULL,
-            0xd192e819d6ef5218ULL, 0xd69906245565a910ULL, 0xf40e35855771202aULL, 0x106aa07032bbd1b8ULL,
-            0x19a4c116b8d2d0c8ULL, 0x1e376c085141ab53ULL, 0x2748774cdf8eeb99ULL, 0x34b0bcb5e19b48a8ULL,
-            0x391c0cb3c5c95a63ULL, 0x4ed8aa4ae3418acbULL, 0x5b9cca4f7763e373ULL, 0x682e6ff3d6b2b8a3ULL,
-            0x748f82ee5defb2fcULL, 0x78a5636f43172f60ULL, 0x84c87814a1f0ab72ULL, 0x8cc702081a6439ecULL,
-            0x90befffa23631e28ULL, 0xa4506cebde82bde9ULL, 0xbef9a3f7b2c67915ULL, 0xc67178f2e372532bULL,
-            0xca273eceea26619cULL, 0xd186b8c721c0c207ULL, 0xeada7dd6cde0eb1eULL, 0xf57d4f7fee6ed178ULL,
-            0x06f067aa72176fbaULL, 0x0a637dc5a2c898a6ULL, 0x113f9804bef90daeULL, 0x1b710b35131c471bULL,
-            0x28db77f523047d84ULL, 0x32caab7b40c72493ULL, 0x3c9ebe0a15c9bebcULL, 0x431d67c49c100d4cULL,
-            0x4cc5d4becb3e42b6ULL, 0x597f299cfc657e2aULL, 0x5fcb6fab3ad6faecULL, 0x6c44198c4a475817ULL
-        };
+    static inline std::uint64_t k(std::size_t t) {
+        static const std::uint64_t k_set[] = {
+            0x428a2f98d728ae22ULL, 0x7137449123ef65cdULL, 0xb5c0fbcfec4d3b2fULL,
+            0xe9b5dba58189dbbcULL, 0x3956c25bf348b538ULL, 0x59f111f1b605d019ULL,
+            0x923f82a4af194f9bULL, 0xab1c5ed5da6d8118ULL, 0xd807aa98a3030242ULL,
+            0x12835b0145706fbeULL, 0x243185be4ee4b28cULL, 0x550c7dc3d5ffb4e2ULL,
+            0x72be5d74f27b896fULL, 0x80deb1fe3b1696b1ULL, 0x9bdc06a725c71235ULL,
+            0xc19bf174cf692694ULL, 0xe49b69c19ef14ad2ULL, 0xefbe4786384f25e3ULL,
+            0x0fc19dc68b8cd5b5ULL, 0x240ca1cc77ac9c65ULL, 0x2de92c6f592b0275ULL,
+            0x4a7484aa6ea6e483ULL, 0x5cb0a9dcbd41fbd4ULL, 0x76f988da831153b5ULL,
+            0x983e5152ee66dfabULL, 0xa831c66d2db43210ULL, 0xb00327c898fb213fULL,
+            0xbf597fc7beef0ee4ULL, 0xc6e00bf33da88fc2ULL, 0xd5a79147930aa725ULL,
+            0x06ca6351e003826fULL, 0x142929670a0e6e70ULL, 0x27b70a8546d22ffcULL,
+            0x2e1b21385c26c926ULL, 0x4d2c6dfc5ac42aedULL, 0x53380d139d95b3dfULL,
+            0x650a73548baf63deULL, 0x766a0abb3c77b2a8ULL, 0x81c2c92e47edaee6ULL,
+            0x92722c851482353bULL, 0xa2bfe8a14cf10364ULL, 0xa81a664bbc423001ULL,
+            0xc24b8b70d0f89791ULL, 0xc76c51a30654be30ULL, 0xd192e819d6ef5218ULL,
+            0xd69906245565a910ULL, 0xf40e35855771202aULL, 0x106aa07032bbd1b8ULL,
+            0x19a4c116b8d2d0c8ULL, 0x1e376c085141ab53ULL, 0x2748774cdf8eeb99ULL,
+            0x34b0bcb5e19b48a8ULL, 0x391c0cb3c5c95a63ULL, 0x4ed8aa4ae3418acbULL,
+            0x5b9cca4f7763e373ULL, 0x682e6ff3d6b2b8a3ULL, 0x748f82ee5defb2fcULL,
+            0x78a5636f43172f60ULL, 0x84c87814a1f0ab72ULL, 0x8cc702081a6439ecULL,
+            0x90befffa23631e28ULL, 0xa4506cebde82bde9ULL, 0xbef9a3f7b2c67915ULL,
+            0xc67178f2e372532bULL, 0xca273eceea26619cULL, 0xd186b8c721c0c207ULL,
+            0xeada7dd6cde0eb1eULL, 0xf57d4f7fee6ed178ULL, 0x06f067aa72176fbaULL,
+            0x0a637dc5a2c898a6ULL, 0x113f9804bef90daeULL, 0x1b710b35131c471bULL,
+            0x28db77f523047d84ULL, 0x32caab7b40c72493ULL, 0x3c9ebe0a15c9bebcULL,
+            0x431d67c49c100d4cULL, 0x4cc5d4becb3e42b6ULL, 0x597f299cfc657e2aULL,
+            0x5fcb6fab3ad6faecULL, 0x6c44198c4a475817ULL};
 
-        assert (t < 80);
+        assert(t < 80);
 
         return k_set[t];
     }
 
-    static inline digest_type finalize(const process_type& process)
-        { return process; }
+    static inline digest_type finalize(const process_type &process) { return process; }
 };
 
 /*************************************************************************************************/
 
-struct sha384_traits_t : public sha512_traits_t
-{
+struct sha384_traits_t : public sha512_traits_t {
     typedef std::array<std::uint64_t, 6> digest_type;
 
-    static inline void reset_digest(process_type& digest)
-    {
+    static inline void reset_digest(process_type &digest) {
         digest[0] = 0xcbbb9d5dc1059ed8ULL;
         digest[1] = 0x629a292a367cd507ULL;
         digest[2] = 0x9159015a3070dd17ULL;
@@ -589,8 +573,7 @@ struct sha384_traits_t : public sha512_traits_t
         digest[7] = 0x47b5481dbefa4fa4ULL;
     }
 
-    static inline digest_type finalize(const process_type& process)
-    {
+    static inline digest_type finalize(const process_type &process) {
         digest_type result = {{0}};
 
         std::copy(process.begin(), process.begin() + result.size(), &result[0]);
@@ -627,8 +610,7 @@ struct sha384_traits_t : public sha512_traits_t
     then retrieve the digest with sha::finalize.
 */
 template <class Traits>
-class sha
-{
+class sha {
 public:
 #if !defined(ADOBE_NO_DOCUMENTATION)
     typedef Traits traits_type;
@@ -638,7 +620,7 @@ public:
     \ingroup sha
 
     A statically-sized, contiguous array for the resulting SHA-* digest.
-    
+
     \note the size of this digest will change depending on the SHA
           routine in use.
     */
@@ -649,10 +631,7 @@ public:
 
     Sets the state of the digest machine to its default.
     */
-    sha()
-    {
-        traits_type().reset_digest(process_m);
-    }
+    sha() { traits_type().reset_digest(process_m); }
 
     /**
     \ingroup sha
@@ -672,8 +651,7 @@ public:
           workaround to the limitation is to call this routine multiple times.
     */
     template <typename I>
-    inline void update(I first, I last)
-    {
+    inline void update(I first, I last) {
         typedef typename std::iterator_traits<I>::value_type value_type;
 
         constexpr std::size_t ibits_k = implementation::bitsizeof<value_type>();
@@ -698,8 +676,7 @@ public:
           limitation is to call this routine multiple times.
     */
     template <typename I>
-    inline void update(I first, std::uint64_t num_bits)
-    {
+    inline void update(I first, std::uint64_t num_bits) {
         implementation::block_and_digest<traits_type>(process_m, first, num_bits);
     }
 
@@ -708,10 +685,7 @@ public:
 
     \return The SHA-* digest of the message
     */
-    inline digest_type finalize() const
-    {
-        return traits_type::finalize(process_m);
-    }
+    inline digest_type finalize() const { return traits_type::finalize(process_m); }
 
     /**
     \ingroup sha
@@ -729,8 +703,7 @@ public:
     \return The SHA-* digest of the message
     */
     template <typename I>
-    static inline digest_type digest(I first, I last)
-    {
+    static inline digest_type digest(I first, I last) {
         typedef typename std::iterator_traits<I>::value_type value_type;
 
         constexpr std::size_t ibits_k = implementation::bitsizeof<value_type>();
@@ -753,8 +726,7 @@ public:
     \return The SHA-* digest of the message
     */
     template <typename I>
-    static inline digest_type digest(I first, std::uint64_t num_bits)
-    {
+    static inline digest_type digest(I first, std::uint64_t num_bits) {
         sha instance;
 
         instance.update(first, num_bits);
@@ -776,7 +748,7 @@ private:
 \brief A bit-oriented implementation of the SHA-1 Secure Hash Algorithm
 */
 
-typedef sha<implementation::sha1_traits_t>   sha1_t;
+typedef sha<implementation::sha1_traits_t> sha1_t;
 
 /*!
 \ingroup sha

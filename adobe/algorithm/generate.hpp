@@ -35,8 +35,7 @@ namespace adobe {
     \brief generate implementation
 */
 template <class ForwardRange, class Generator>
-inline void generate(ForwardRange& range, Generator gen)
-{
+inline void generate(ForwardRange &range, Generator gen) {
     std::generate(boost::begin(range), boost::end(range), gen);
 }
 

@@ -27,11 +27,11 @@ namespace version_1 {
 /**************************************************************************************************/
 
 template <typename T> // T models Regular
-inline void push_back(array_t& v, T x)
-{ v.push_back(any_regular_t(std::move(x))); }
+inline void push_back(array_t &v, T x) {
+    v.push_back(any_regular_t(std::move(x)));
+}
 
-inline void push_back(array_t& v, any_regular_t x)
-{ v.push_back(std::move(x)); }
+inline void push_back(array_t &v, any_regular_t x) { v.push_back(std::move(x)); }
 
 /**************************************************************************************************/
 
@@ -43,14 +43,14 @@ using version_1::push_back;
 
 #ifdef ADOBE_STD_SERIALIZATION
 
-inline std::ostream& operator<<(std::ostream& out, const array_t& x)
-{
+inline std::ostream &operator<<(std::ostream &out, const array_t &x) {
     out << begin_sequence;
-    
-    for (const auto& e : x) out << format(e);
-    
+
+    for (const auto &e : x)
+        out << format(e);
+
     out << end_sequence;
-    
+
     return out;
 }
 

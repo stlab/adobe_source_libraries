@@ -40,10 +40,8 @@ namespace implementation {
 /*************************************************************************************************/
 
 template <class InputIterator, class UnaryFunction>
-void for_each_position(InputIterator first, InputIterator last, UnaryFunction f)
-{
-    while (first != last)
-    {
+void for_each_position(InputIterator first, InputIterator last, UnaryFunction f) {
+    while (first != last) {
         f(first);
         ++first;
     }
@@ -60,8 +58,7 @@ void for_each_position(InputIterator first, InputIterator last, UnaryFunction f)
     \brief for_each_position implementation
 */
 template <class InputIterator, class UnaryFunction>
-inline void for_each_position(InputIterator first, InputIterator last, UnaryFunction f)
-{
+inline void for_each_position(InputIterator first, InputIterator last, UnaryFunction f) {
     adobe::implementation::for_each_position(first, last, boost::bind(f, _1));
 }
 
@@ -71,8 +68,7 @@ inline void for_each_position(InputIterator first, InputIterator last, UnaryFunc
     \brief for_each_position implementation
 */
 template <class InputRange, class UnaryFunction>
-inline void for_each_position(InputRange& range, UnaryFunction f)
-{
+inline void for_each_position(InputRange &range, UnaryFunction f) {
     adobe::for_each_position(boost::begin(range), boost::end(range), f);
 }
 
@@ -82,8 +78,7 @@ inline void for_each_position(InputRange& range, UnaryFunction f)
     \brief for_each_position implementation
 */
 template <class InputRange, class UnaryFunction>
-inline void for_each_position(const InputRange& range, UnaryFunction f)
-{
+inline void for_each_position(const InputRange &range, UnaryFunction f) {
     adobe::for_each_position(boost::begin(range), boost::end(range), f);
 }
 

@@ -55,11 +55,10 @@ namespace implementation {
 
 template <typename I, // I models InputIterator
           typename O, // O models OutputIterator
-          typename F> // F is a function type of the form O F()(value_type(I), O)
-O filter(I first, I last, O result, F op)
-{
-    while (first != last)
-    {
+          typename F>
+// F is a function type of the form O F()(value_type(I), O)
+O filter(I first, I last, O result, F op) {
+    while (first != last) {
         result = op(*first, result);
         ++first;
     }
@@ -78,9 +77,9 @@ O filter(I first, I last, O result, F op)
 */
 template <typename I, // I models InputIterator
           typename O, // O models OutputIterator
-          typename F> // F is a function type of the form O F()(value_type(I), O)
-inline O filter(I first, I last, O result, F op)
-{
+          typename F>
+// F is a function type of the form O F()(value_type(I), O)
+inline O filter(I first, I last, O result, F op) {
     return implementation::filter(first, last, result, boost::bind<O>(op, _1, _2));
 }
 
@@ -91,9 +90,9 @@ inline O filter(I first, I last, O result, F op)
 */
 template <typename I, // I models InputRange
           typename O, // O models OutputIterator
-          typename F> // F is a function type of the form O F()(value_type(I), O)
-O filter(I& source, O result, F op)
-{
+          typename F>
+// F is a function type of the form O F()(value_type(I), O)
+O filter(I &source, O result, F op) {
     return adobe::filter(boost::begin(source), boost::end(source), result, op);
 }
 
@@ -104,9 +103,9 @@ O filter(I& source, O result, F op)
 */
 template <typename I, // I models InputRange
           typename O, // O models OutputIterator
-          typename F> // F is a function type of the form O F()(value_type(I), O)
-O filter(const I& source, O result, F op)
-{
+          typename F>
+// F is a function type of the form O F()(value_type(I), O)
+O filter(const I &source, O result, F op) {
     return adobe::filter(boost::begin(source), boost::end(source), result, op);
 }
 

@@ -12,17 +12,26 @@
 #include <adobe/config.hpp>
 
 // define default implementation of size operation to call member function size
-template <typename T> double height(const T& t) { return t.height(); }
+template <typename T>
+double height(const T &t) {
+    return t.height();
+}
 
 #ifndef ADOBE_HAS_CPLUS0X_CONCEPTS
 
 template <class T>
-struct Measurable_2DConcept : MeasurableConcept<T>{
-// operations
-    static double height(const T& t) { using ::height; return height(t); }
-    
-// constraints
-    void constraints() { d = height(t); d = size(t); }
+struct Measurable_2DConcept : MeasurableConcept<T> {
+    // operations
+    static double height(const T &t) {
+        using ::height;
+        return height(t);
+    }
+
+    // constraints
+    void constraints() {
+        d = height(t);
+        d = size(t);
+    }
 
     const T t;
     double d;
@@ -32,11 +41,10 @@ struct Measurable_2DConcept : MeasurableConcept<T>{
 
 #include <concepts>
 
-auto concept Measurable_2DConcept<typename T> 
-    : std::CopyConstructible<T>, std::EqualityComparable<T> 
-{
+auto concept Measurable_2DConcept<typename T> : std::CopyConstructible<T>,
+                                                std::EqualityComparable<T> {
 
-// operations
+    // operations
     double height(T t);
 };
 

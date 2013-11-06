@@ -1,7 +1,7 @@
 /*
-	Copyright 2005-2007 Adobe Systems Incorporated
-	Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
-	or a copy at http://stlab.adobe.com/licenses.html)
+    Copyright 2005-2007 Adobe Systems Incorporated
+    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
+    or a copy at http://stlab.adobe.com/licenses.html)
 */
 
 /*************************************************************************************************/
@@ -21,8 +21,7 @@ T arbitrary_regular_value();
 
 
 template <typename T>
-void check_regular(const T& x)
-{
+void check_regular(const T &x) {
     using std::swap;
 
     BOOST_CHECK(x != T());
@@ -38,11 +37,9 @@ void check_regular(const T& x)
 }
 
 
-BOOST_TEST_CASE_TEMPLATE_FUNCTION(check_regulars, T)
-{
+BOOST_TEST_CASE_TEMPLATE_FUNCTION(check_regulars, T) {
     check_regular(arbitrary_regular_value<T>());
 }
-
 }
 
 //! @}

@@ -67,8 +67,7 @@ assert(a == 10);
 */
 
 template <class T, class R>
-inline const T& (min)(const T& a, const T& b, R r)
-{
+inline const T &(min)(const T &a, const T &b, R r) {
     return select_0_2(a, b, boost::bind(r, _1, _2));
 }
 
@@ -79,8 +78,7 @@ inline const T& (min)(const T& a, const T& b, R r)
 */
 
 template <class T, class R>
-inline T& (min)(T& a, T& b, R r)
-{
+inline T &(min)(T &a, T &b, R r) {
     return select_0_2(a, b, boost::bind(r, _1, _2));
 }
 
@@ -91,8 +89,9 @@ inline T& (min)(T& a, T& b, R r)
 */
 
 template <class T>
-inline const T& (min)(const T& a, const T& b)
-{ return select_0_2(a, b, less()); }
+inline const T &(min)(const T &a, const T &b) {
+    return select_0_2(a, b, less());
+}
 
 /*!
     \ingroup minmax
@@ -101,8 +100,9 @@ inline const T& (min)(const T& a, const T& b)
 */
 
 template <class T>
-inline T& (min)(T& a, T& b)
-{ return select_0_2(a, b, less()); }
+inline T &(min)(T &a, T &b) {
+    return select_0_2(a, b, less());
+}
 
 /*!
     \ingroup minmax
@@ -111,8 +111,7 @@ inline T& (min)(T& a, T& b)
 */
 
 template <class T, class R>
-inline const T& (max)(const T& a, const T& b, R r)
-{
+inline const T &(max)(const T &a, const T &b, R r) {
     return select_1_2(a, b, boost::bind(r, _1, _2));
 }
 
@@ -123,8 +122,7 @@ inline const T& (max)(const T& a, const T& b, R r)
 */
 
 template <class T, class R>
-inline T& (max)(T& a, T& b, R r)
-{
+inline T &(max)(T &a, T &b, R r) {
     return select_1_2(a, b, boost::bind(r, _1, _2));
 }
 
@@ -136,8 +134,9 @@ inline T& (max)(T& a, T& b, R r)
 
 
 template <class T>
-inline const T& (max)(const T& a, const T& b)
-{ return select_1_2(a, b, less()); }
+inline const T &(max)(const T &a, const T &b) {
+    return select_1_2(a, b, less());
+}
 
 /*!
     \ingroup minmax
@@ -146,8 +145,9 @@ inline const T& (max)(const T& a, const T& b)
 */
 
 template <class T>
-inline T& (max)(T& a, T& b)
-{ return select_1_2(a, b, less()); }
+inline T &(max)(T &a, T &b) {
+    return select_1_2(a, b, less());
+}
 
 /*!
     \ingroup minmax
@@ -155,8 +155,7 @@ inline T& (max)(T& a, T& b)
     \brief minmax implementation
 */
 template <class ForwardRange>
-inline typename boost::range_iterator<ForwardRange>::type min_element(ForwardRange& range)
-{
+inline typename boost::range_iterator<ForwardRange>::type min_element(ForwardRange &range) {
     return std::min_element(boost::begin(range), boost::end(range));
 }
 
@@ -167,8 +166,7 @@ inline typename boost::range_iterator<ForwardRange>::type min_element(ForwardRan
 */
 template <class ForwardRange>
 inline typename boost::range_const_iterator<ForwardRange>::type
-min_element(const ForwardRange& range)
-{
+min_element(const ForwardRange &range) {
     return std::min_element(boost::begin(range), boost::end(range));
 }
 
@@ -178,8 +176,7 @@ min_element(const ForwardRange& range)
     \brief minmax implementation
 */
 template <class ForwardIterator, class R>
-inline ForwardIterator min_element(ForwardIterator first, ForwardIterator last, R r)
-{
+inline ForwardIterator min_element(ForwardIterator first, ForwardIterator last, R r) {
     return std::min_element(first, last, boost::bind(r, _1, _2));
 }
 
@@ -189,9 +186,7 @@ inline ForwardIterator min_element(ForwardIterator first, ForwardIterator last, 
     \brief minmax implementation
 */
 template <class ForwardRange, class R>
-inline typename boost::range_iterator<ForwardRange>::type
-min_element(ForwardRange& range, R r)
-{
+inline typename boost::range_iterator<ForwardRange>::type min_element(ForwardRange &range, R r) {
     return adobe::min_element(boost::begin(range), boost::end(range), r);
 }
 
@@ -202,8 +197,7 @@ min_element(ForwardRange& range, R r)
 */
 template <class ForwardRange, class R>
 inline typename boost::range_const_iterator<ForwardRange>::type
-min_element(const ForwardRange& range, R r)
-{
+min_element(const ForwardRange &range, R r) {
     return adobe::min_element(boost::begin(range), boost::end(range), r);
 }
 
@@ -213,8 +207,7 @@ min_element(const ForwardRange& range, R r)
     \brief minmax implementation
 */
 template <class ForwardRange>
-inline typename boost::range_iterator<ForwardRange>::type max_element(ForwardRange& range)
-{
+inline typename boost::range_iterator<ForwardRange>::type max_element(ForwardRange &range) {
     return std::max_element(boost::begin(range), boost::end(range));
 }
 
@@ -225,8 +218,7 @@ inline typename boost::range_iterator<ForwardRange>::type max_element(ForwardRan
 */
 template <class ForwardRange>
 inline typename boost::range_const_iterator<ForwardRange>::type
-max_element(const ForwardRange& range)
-{
+max_element(const ForwardRange &range) {
     return std::max_element(boost::begin(range), boost::end(range));
 }
 
@@ -236,8 +228,7 @@ max_element(const ForwardRange& range)
     \brief minmax implementation
 */
 template <class ForwardIterator, class R>
-inline ForwardIterator max_element(ForwardIterator first, ForwardIterator last, R r)
-{
+inline ForwardIterator max_element(ForwardIterator first, ForwardIterator last, R r) {
     return std::max_element(first, last, boost::bind(r, _1, _2));
 }
 
@@ -247,9 +238,7 @@ inline ForwardIterator max_element(ForwardIterator first, ForwardIterator last, 
     \brief minmax implementation
 */
 template <class ForwardRange, class R>
-inline typename boost::range_iterator<ForwardRange>::type
-max_element(ForwardRange& range, R r)
-{
+inline typename boost::range_iterator<ForwardRange>::type max_element(ForwardRange &range, R r) {
     return adobe::max_element(boost::begin(range), boost::end(range), r);
 }
 
@@ -260,8 +249,7 @@ max_element(ForwardRange& range, R r)
 */
 template <class ForwardRange, class R>
 inline typename boost::range_const_iterator<ForwardRange>::type
-max_element(const ForwardRange& range, R r)
-{
+max_element(const ForwardRange &range, R r) {
     return adobe::max_element(boost::begin(range), boost::end(range), r);
 }
 

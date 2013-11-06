@@ -34,12 +34,11 @@ namespace adobe {
 /*!
 \ingroup placeable_concept
  */
-auto concept PlaceableConcept <typename T> 
-// not yet : RegularConcept<T> 
-: std::CopyConstructible<T>
-{
-    void measure(T& t, extents_t& result);
-    void place(T& t, const place_data_t& place_data);
+auto concept PlaceableConcept<typename T>
+    // not yet : RegularConcept<T>
+    : std::CopyConstructible<T> {
+    void measure(T & t, extents_t & result);
+    void place(T & t, const place_data_t & place_data);
 };
 
 /*************************************************************************************************/
@@ -47,12 +46,11 @@ auto concept PlaceableConcept <typename T>
 /*!
 \ingroup placeable_concept
  */
-auto concept PlaceableMFConcept <typename Placeable> 
-// not yet : RegularConcept<Placeable>
-: std::CopyConstructible<Placeable>
-{
-    void Placeable::measure(extents_t& result); 
-    void Placeable::place(const place_data_t& place_data);
+auto concept PlaceableMFConcept<typename Placeable>
+    // not yet : RegularConcept<Placeable>
+    : std::CopyConstructible<Placeable> {
+    void Placeable::measure(extents_t & result);
+    void Placeable::place(const place_data_t & place_data);
 };
 
 /*************************************************************************************************/
@@ -61,12 +59,11 @@ auto concept PlaceableMFConcept <typename Placeable>
 \ingroup placeable_concept
  */
 template <PlaceableMFConcept T>
-concept_map PlaceableConcept<T> {
-    void measure(T& t, extents_t& result)
-        { t.measure(result); }
-    void place(T& t, const place_data_t& place_data)
-        { t.place(place_data); }
-};
+concept_map PlaceableConcept<T>{void measure(T &t, extents_t &result) {t.measure(result);
+}
+void place(T &t, const place_data_t &place_data) { t.place(place_data); }
+}
+;
 
 /*************************************************************************************************/
 
@@ -74,9 +71,21 @@ concept_map PlaceableConcept<T> {
 \ingroup placeable_concept
  */
 template <PlaceableConcept T>
-concept_map PlaceableConcept<boost::reference_wrapper<T> > {
-    void measure(boost::reference_wrapper<T>& r, extents_t& result)
-        { PlaceableConcept<T>::measure(static_cast<T&>(r), result); }
+concept_map PlaceableConcept<boost::reference_wrapper<T>>{
+    void measure(boost::reference_wrapper<T> &r,
+                 extents_t &result) {PlaceableConcept<T>::measure(static_cast<T &>(r), result);
+}
+}
+;
+
+/*************************************************************************************************/
+
+/*!
+\ingroup placeable_concept
+ */
+auto concept PlaceableTwoPassConcept<typename Placeable> : PlaceableConcept<Placeable> {
+    void measure_vertical(Placeable & p, extents_t & calculated_horizontal,
+                          const place_data_t & placed_horizontal);
 };
 
 /*************************************************************************************************/
@@ -84,40 +93,9 @@ concept_map PlaceableConcept<boost::reference_wrapper<T> > {
 /*!
 \ingroup placeable_concept
  */
-auto concept PlaceableTwoPassConcept<typename Placeable> : PlaceableConcept<Placeable> 
-{
-    void measure_vertical(Placeable& p, extents_t& calculated_horizontal,
-                                 const place_data_t& placed_horizontal);
-};
-
-/*************************************************************************************************/
-
-/*!
-\ingroup placeable_concept
- */
-auto concept PlaceableTwoPassMFConcept<typename Placeable> : PlaceableMFConcept<Placeable>
-{
-    void Placeable::measure_vertical(extents_t& calculated_horizontal,
-                                 const place_data_t& placed_horizontal); 
-};
-
-/*************************************************************************************************/
-
-/*!
-\ingroup placeable_concept
- */
-template <typename T>
-concept_map PlaceableTwoPassConcept<PlaceableTwoPassMFConcept<T> > {
-    
-    void measure(PlaceableTwoPassMFConcept<T>& t, extents_t& result)
-    { t.measure(result); }
-
-    void place(PlaceableTwoPassMFConcept<T>& t, const place_data_t& place_data)
-    { t.place(place_data); }
-
-    void measure_vertical(PlaceableTwoPassMFConcept<T>& t, extents_t& calculated_horizontal,
-                                 const place_data_t& placed_horizontal)
-    { t.measure_vertical(calculated_horizontal, placed_horizontal); }
+auto concept PlaceableTwoPassMFConcept<typename Placeable> : PlaceableMFConcept<Placeable> {
+    void Placeable::measure_vertical(extents_t & calculated_horizontal,
+                                     const place_data_t & placed_horizontal);
 };
 
 /*************************************************************************************************/
@@ -126,27 +104,40 @@ concept_map PlaceableTwoPassConcept<PlaceableTwoPassMFConcept<T> > {
 \ingroup placeable_concept
  */
 template <typename T>
-concept_map PlaceableTwoPassConcept<boost::reference_wrapper<PlaceableTwoPassConcept<T> > > {
-    void measure(boost::reference_wrapper<PlaceableTwoPassConcept<T> >& r, 
-                          extents_t& extents)
-    { 
-        PlaceableTwoPassConcept<PlaceableTwoPassConcept<T> >::measure(
-            *r.get_pointer(), extents); 
-    }
-    void place(boost::reference_wrapper<PlaceableTwoPassConcept<T> >& r, 
-               const place_data_t& place_data)
-    { 
-        PlaceableTwoPassConcept<PlaceableTwoPassConcept<T> >::place(
-            *r.get_pointer(), place_data); 
-    }
-    void measure_vertical(boost::reference_wrapper<PlaceableTwoPassConcept<T> >& r, 
-                          extents_t& calculated_horizontal,
-                          const place_data_t& placed_horizontal)
-    { 
-        PlaceableTwoPassConcept<PlaceableTwoPassConcept<T> >::measure_vertical(
-            *r.get_pointer(), calculated_horizontal, placed_horizontal); 
-    }
-};
+concept_map PlaceableTwoPassConcept<PlaceableTwoPassMFConcept<T>>{
+    void measure(PlaceableTwoPassMFConcept<T> &t, extents_t &result) {t.measure(result);
+}
+
+void place(PlaceableTwoPassMFConcept<T> &t, const place_data_t &place_data) { t.place(place_data); }
+
+void measure_vertical(PlaceableTwoPassMFConcept<T> &t, extents_t &calculated_horizontal,
+                      const place_data_t &placed_horizontal) {
+    t.measure_vertical(calculated_horizontal, placed_horizontal);
+}
+}
+;
+
+/*************************************************************************************************/
+
+/*!
+\ingroup placeable_concept
+ */
+template <typename T>
+concept_map PlaceableTwoPassConcept<boost::reference_wrapper<PlaceableTwoPassConcept<T>>>{
+    void measure(boost::reference_wrapper<PlaceableTwoPassConcept<T>> &r, extents_t &extents) {
+        PlaceableTwoPassConcept<PlaceableTwoPassConcept<T>>::measure(*r.get_pointer(), extents);
+}
+void place(boost::reference_wrapper<PlaceableTwoPassConcept<T>> &r,
+           const place_data_t &place_data) {
+    PlaceableTwoPassConcept<PlaceableTwoPassConcept<T>>::place(*r.get_pointer(), place_data);
+}
+void measure_vertical(boost::reference_wrapper<PlaceableTwoPassConcept<T>> &r,
+                      extents_t &calculated_horizontal, const place_data_t &placed_horizontal) {
+    PlaceableTwoPassConcept<PlaceableTwoPassConcept<T>>::measure_vertical(
+        *r.get_pointer(), calculated_horizontal, placed_horizontal);
+}
+}
+;
 
 /*************************************************************************************************/
 
@@ -172,8 +163,9 @@ name. Can be specialized or overloaded for user types.
 */
 
 template <class T>
-inline void measure(T& t, extents_t& result)
-{ t.measure(result); }
+inline void measure(T &t, extents_t &result) {
+    t.measure(result);
+}
 
 /*************************************************************************************************/
 
@@ -182,10 +174,10 @@ inline void measure(T& t, extents_t& result)
 
 \ingroup placeable_concept
 
-Place is the final function signaled from the Eve engine to a placeable object. When this function 
+Place is the final function signaled from the Eve engine to a placeable object. When this function
 is made there are several guarantees for the client:
     - All parent views for this placeable object have already had their place function invoked
-    - All data provided in the place_data_t is the final geometric information for the placeable 
+    - All data provided in the place_data_t is the final geometric information for the placeable
     object.
 
 \par
@@ -203,8 +195,9 @@ name. Can be specialized or overloaded for user types.
 */
 
 template <class T>
-inline void place(T& t, const place_data_t& place_data)
-{ t.place(place_data); }
+inline void place(T &t, const place_data_t &place_data) {
+    t.place(place_data);
+}
 
 /*************************************************************************************************/
 
@@ -217,39 +210,36 @@ inline void place(T& t, const place_data_t& place_data)
 */
 
 template <class T>
-struct PlaceableConcept
-{
+struct PlaceableConcept {
 #if !defined(ADOBE_NO_DOCUMENTATION)
 
-    static void measure(T& t, extents_t& result)
-    {   
+    static void measure(T &t, extents_t &result) {
         using adobe::measure; // pick up default version which looks for member functions
-        measure(t, result); // unqualified to allow user versions
+        measure(t, result);   // unqualified to allow user versions
     }
 
-    static void place(T& t, const place_data_t& place_data)
-    { 
-        using adobe::place; // pick up default version which looks for member functions
+    static void place(T &t, const place_data_t &place_data) {
+        using adobe::place;   // pick up default version which looks for member functions
         place(t, place_data); // unqualified to allow user versions
     }
 
-// Concept checking:
-    
+    // Concept checking:
+
     void constraints() {
         // not yet: boost::function_requires<RegularConcept<Placeable> >();
         // boost::function_requires<boost::CopyConstructibleConcept<Placeable> >();
 
-        using adobe::measure; 
+        using adobe::measure;
         measure(*placeable, extents);
 
         using adobe::place;
         place(*placeable, place_data);
     }
 
-//use pointers since not required to be default constructible
-    T*                  placeable;
-    const place_data_t  place_data;
-    extents_t           extents;    
+    // use pointers since not required to be default constructible
+    T *placeable;
+    const place_data_t place_data;
+    extents_t extents;
 #endif
 };
 
@@ -262,17 +252,16 @@ boost::reference_wrapper<T> to model this concept when T does.
 */
 
 template <class T>
-struct PlaceableConcept<T*> : public PlaceableConcept<T>
-{
-    static void measure(T* r, extents_t& result) 
-    { PlaceableConcept<T>::measure(*r, result); }
+struct PlaceableConcept<T *> : public PlaceableConcept<T> {
+    static void measure(T *r, extents_t &result) { PlaceableConcept<T>::measure(*r, result); }
 
-    static void place(T* r, const place_data_t& place_data) 
-    { PlaceableConcept<T>::place(*r, place_data); }
+    static void place(T *r, const place_data_t &place_data) {
+        PlaceableConcept<T>::place(*r, place_data);
+    }
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
     void constraints() {
-        //boost concept check lib gets confused on VC8 without this
+        // boost concept check lib gets confused on VC8 without this
         PlaceableConcept<T>::constraints();
     }
 #endif
@@ -301,10 +290,10 @@ name. Can be specialized or overloaded for user types.
 */
 
 template <class T>
-inline void measure_vertical(T& t,
-                             extents_t& calculated_horizontal,
-                             const place_data_t& placed_horizontal)
-{ t.measure_vertical(calculated_horizontal, placed_horizontal); }
+inline void measure_vertical(T &t, extents_t &calculated_horizontal,
+                             const place_data_t &placed_horizontal) {
+    t.measure_vertical(calculated_horizontal, placed_horizontal);
+}
 
 /*************************************************************************************************/
 
@@ -317,25 +306,22 @@ inline void measure_vertical(T& t,
 */
 
 template <class T>
-struct PlaceableTwoPassConcept : PlaceableConcept<T>
-{
-#if ! defined(ADOBE_NO_DOCUMENTATION)    
+struct PlaceableTwoPassConcept : PlaceableConcept<T> {
+#if !defined(ADOBE_NO_DOCUMENTATION)
 
-    static void measure_vertical(T& t,
-                                 extents_t& calculated_horizontal,
-                                 const place_data_t& placed_horizontal)
-    {
+    static void measure_vertical(T &t, extents_t &calculated_horizontal,
+                                 const place_data_t &placed_horizontal) {
         using adobe::measure_vertical;
         measure_vertical(t, calculated_horizontal, placed_horizontal);
     }
 
     void constraints() {
         // not yet: boost::function_requires<RegularConcept<T> >();
-        //boost::function_requires<boost::CopyConstructibleConcept<T> >();  
+        // boost::function_requires<boost::CopyConstructibleConcept<T> >();
 
         using adobe::place;
-        place(*t2, this->place_data); 
-        
+        place(*t2, this->place_data);
+
         using adobe::measure;
         measure(*t2, this->extents);
 
@@ -343,11 +329,10 @@ struct PlaceableTwoPassConcept : PlaceableConcept<T>
         measure_vertical(*t2, this->extents, this->place_data);
     }
 
-     // Concept checking:
-    //use pointers since not required to be default constructible
+    // Concept checking:
+    // use pointers since not required to be default constructible
     T *t2;
 #endif
-
 };
 
 /*!
@@ -359,29 +344,21 @@ boost::reference_wrapper<T> to model this concept when T does.
 */
 
 template <class T>
-struct PlaceableTwoPassConcept<T*> : 
-    PlaceableTwoPassConcept<T> 
-{
-    static void measure(T* r, extents_t& extents)
-    { 
-        PlaceableTwoPassConcept<T>::measure(
-            *r, extents); 
+struct PlaceableTwoPassConcept<T *> : PlaceableTwoPassConcept<T> {
+    static void measure(T *r, extents_t &extents) {
+        PlaceableTwoPassConcept<T>::measure(*r, extents);
     }
-    static void place(T* r, const place_data_t& place_data)
-    { 
-        PlaceableTwoPassConcept<T>::place(
-            *r, place_data); 
+    static void place(T *r, const place_data_t &place_data) {
+        PlaceableTwoPassConcept<T>::place(*r, place_data);
     }
-    static void measure_vertical(T* r, extents_t& calculated_horizontal,
-                          const place_data_t& placed_horizontal)
-    { 
-        PlaceableTwoPassConcept<T>::measure_vertical(
-            *r, calculated_horizontal, placed_horizontal); 
+    static void measure_vertical(T *r, extents_t &calculated_horizontal,
+                                 const place_data_t &placed_horizontal) {
+        PlaceableTwoPassConcept<T>::measure_vertical(*r, calculated_horizontal, placed_horizontal);
     }
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
     void constraints() {
-        //boost concept check lib gets confused on VC8 without this
+        // boost concept check lib gets confused on VC8 without this
         PlaceableTwoPassConcept<T>::constraints();
     }
 #endif

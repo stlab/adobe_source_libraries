@@ -32,13 +32,14 @@ namespace adobe {
 /*!
 \ingroup sorted
 */
-template <  typename I, // I models InputIterator
-            typename O> // O models StrictWeakOrdering on value_type(I)
-I sorted(I f, I l, O o)
-{
+template <typename I, // I models InputIterator
+          typename O>
+// O models StrictWeakOrdering on value_type(I)
+I sorted(I f, I l, O o) {
 
     f = std::adjacent_find(f, l, !boost::bind(o, _1, _2));
-    if (f != l) ++f;
+    if (f != l)
+        ++f;
 }
 
 /*************************************************************************************************/
@@ -47,8 +48,7 @@ I sorted(I f, I l, O o)
 \ingroup sorted
 */
 template <typename I> // I models InputIterator, value_type(I) models LessThanComparable
-I sorted(I f, I l)
-{
+I sorted(I f, I l) {
     return sorted(f, l, less());
 }
 
@@ -57,10 +57,10 @@ I sorted(I f, I l)
 /*!
 \ingroup sorted
 */
-template <  typename I, // I models InputIterator
-            typename O> // O models StrictWeakOrdering on value_type(I)
-inline bool is_sorted(I f, I l, O o)
-{
+template <typename I, // I models InputIterator
+          typename O>
+// O models StrictWeakOrdering on value_type(I)
+inline bool is_sorted(I f, I l, O o) {
     return std::adjacent_find(f, l, !boost::bind(o, _1, _2)) == l;
 }
 
@@ -70,21 +70,8 @@ inline bool is_sorted(I f, I l, O o)
 \ingroup sorted
 */
 template <typename I> // I models InputIterator, value_type(I) models LessThanComparable
-inline bool is_sorted(I f, I l)
-{ return is_sorted(f, l, less()); }
-
-/*************************************************************************************************/
-
-/*!
-\ingroup sorted
-*/
-template <  typename I, // I models ForwardIterator
-            typename C, // C models StrictWeakOrdering(T, T)
-            typename P> // P models UnaryFunction(value_type(I)) -> T
-inline bool is_sorted(I f, I l, C c, P p)
-{
-    return std::adjacent_find(f, l,
-        !boost::bind(c, boost::bind(p, _1), boost::bind(p, _2))) == l;
+inline bool is_sorted(I f, I l) {
+    return is_sorted(f, l, less());
 }
 
 /*************************************************************************************************/
@@ -92,30 +79,49 @@ inline bool is_sorted(I f, I l, C c, P p)
 /*!
 \ingroup sorted
 */
-template <  typename I, // I models ForwardRange
-            typename C, // C models StrictWeakOrdering(T, T)
-            typename P> // P models UnaryFunction(value_type(I)) -> T
-inline bool is_sorted(const I& r, C c, P p)
-{ return is_sorted(boost::begin(r), boost::end(r), c, p); }
+template <typename I, // I models ForwardIterator
+          typename C, // C models StrictWeakOrdering(T, T)
+          typename P>
+// P models UnaryFunction(value_type(I)) -> T
+inline bool is_sorted(I f, I l, C c, P p) {
+    return std::adjacent_find(f, l, !boost::bind(c, boost::bind(p, _1), boost::bind(p, _2))) == l;
+}
 
 /*************************************************************************************************/
 
 /*!
 \ingroup sorted
 */
-template <  typename I, // I models ForwardRange
-            typename C> // C models StrictWeakOrdering(T, T)
-inline bool is_sorted(const I& r, C c)
-{ return is_sorted(boost::begin(r), boost::end(r), c, identity<typename std::iterator_traits<I>::value_type>()); }
+template <typename I, // I models ForwardRange
+          typename C, // C models StrictWeakOrdering(T, T)
+          typename P>
+// P models UnaryFunction(value_type(I)) -> T
+inline bool is_sorted(const I &r, C c, P p) {
+    return is_sorted(boost::begin(r), boost::end(r), c, p);
+}
 
 /*************************************************************************************************/
 
 /*!
 \ingroup sorted
 */
-template <  typename I> // I models ForwardRange
-inline bool is_sorted(const I& r)
-{ return is_sorted(boost::begin(r), boost::end(r), less()); }
+template <typename I, // I models ForwardRange
+          typename C>
+// C models StrictWeakOrdering(T, T)
+inline bool is_sorted(const I &r, C c) {
+    return is_sorted(boost::begin(r), boost::end(r), c,
+                     identity<typename std::iterator_traits<I>::value_type>());
+}
+
+/*************************************************************************************************/
+
+/*!
+\ingroup sorted
+*/
+template <typename I> // I models ForwardRange
+inline bool is_sorted(const I &r) {
+    return is_sorted(boost::begin(r), boost::end(r), less());
+}
 
 /*************************************************************************************************/
 

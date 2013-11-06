@@ -42,10 +42,8 @@ namespace unsafe {
 \ingroup node_algorithm
 */
 template <typename I> // I models NodeIterator
-I reverse_append(I first, I last, I result)
-{
-    while (first != last)
-    {
+I reverse_append(I first, I last, I result) {
+    while (first != last) {
         I prior(first);
         ++first;
         adobe::unsafe::set_next(prior, result);
@@ -58,9 +56,9 @@ I reverse_append(I first, I last, I result)
 \ingroup node_algorithm
 */
 template <typename R, // R models NodeRange
-          typename I> // I models NodeIterator
-inline I reverse_append(R& range, I result)
-{
+          typename I>
+// I models NodeIterator
+inline I reverse_append(R &range, I result) {
     return adobe::unsafe::reverse_append(boost::begin(range), boost::end(range), result);
 }
 
@@ -68,8 +66,7 @@ inline I reverse_append(R& range, I result)
 \ingroup node_algorithm
 */
 template <typename I> // I models NodeIterator
-inline I reverse_nodes(I first, I last)
-{
+inline I reverse_nodes(I first, I last) {
     return adobe::unsafe::reverse_append(first, last, last);
 }
 
@@ -77,8 +74,7 @@ inline I reverse_nodes(I first, I last)
 \ingroup node_algorithm
 */
 template <typename R> // R models NodeRange
-inline typename boost::range_iterator<R>::type reverse_nodes(R& range)
-{
+inline typename boost::range_iterator<R>::type reverse_nodes(R &range) {
     return adobe::unsafe::reverse_nodes(boost::begin(range), boost::end(range));
 }
 
@@ -93,8 +89,7 @@ inline typename boost::range_iterator<R>::type reverse_nodes(R& range)
     \brief reverse implementation
 */
 template <class BidirectionalRange>
-inline void reverse(BidirectionalRange& range)
-{
+inline void reverse(BidirectionalRange &range) {
     std::reverse(boost::begin(range), boost::end(range));
 }
 
@@ -104,8 +99,7 @@ inline void reverse(BidirectionalRange& range)
     \brief reverse implementation
 */
 template <class BidirectionalRange, class OutputIterator>
-inline void reverse_copy(BidirectionalRange& range, OutputIterator result)
-{
+inline void reverse_copy(BidirectionalRange &range, OutputIterator result) {
     std::reverse_copy(boost::begin(range), boost::end(range), result);
 }
 
@@ -115,8 +109,7 @@ inline void reverse_copy(BidirectionalRange& range, OutputIterator result)
     \brief reverse implementation
 */
 template <class BidirectionalRange, class OutputIterator>
-inline void reverse_copy(const BidirectionalRange& range, OutputIterator result)
-{
+inline void reverse_copy(const BidirectionalRange &range, OutputIterator result) {
     std::reverse_copy(boost::begin(range), boost::end(range), result);
 }
 
@@ -127,10 +120,8 @@ inline void reverse_copy(const BidirectionalRange& range, OutputIterator result)
     \brief reverse implementation
 */
 template <typename I> // I models Bidirectional Iterator
-std::pair<I, I> reverse_until(I f, I m, I l)
-{
-    while (f != m && m != l)
-    {
+std::pair<I, I> reverse_until(I f, I m, I l) {
+    while (f != m && m != l) {
         --l;
 
         std::iter_swap(f, l);
@@ -139,8 +130,8 @@ std::pair<I, I> reverse_until(I f, I m, I l)
     }
 
     return std::pair<I, I>(f, l);
-} 
- 
+}
+
 /*************************************************************************************************/
 
 } // namespace adobe

@@ -19,7 +19,7 @@
 
 /*************************************************************************************************/
 
-namespace adobe {  
+namespace adobe {
 
 /*!
   \ingroup poly_related
@@ -33,10 +33,9 @@ namespace adobe {
   Used in poly<copyable> implementation.
   \sa copyable, poly_copyable_interface, optimized_storage_type
 */
-    
+
 template <typename T>
-struct poly_copyable_instance : optimized_storage_type<T, poly_copyable_interface>::type
-{
+struct poly_copyable_instance : optimized_storage_type<T, poly_copyable_interface>::type {
     typedef typename optimized_storage_type<T, poly_copyable_interface>::type base_t;
 
     /*!
@@ -47,15 +46,14 @@ struct poly_copyable_instance : optimized_storage_type<T, poly_copyable_interfac
     /*!
         Construct from concrete copyable
     */
-    poly_copyable_instance(const T& x) : base_t(x) {}
+    poly_copyable_instance(const T &x) : base_t(x) {}
 
     /*!
         Move constructor
     */
-    poly_copyable_instance(move_from<poly_copyable_instance> x) 
+    poly_copyable_instance(move_from<poly_copyable_instance> x)
         : base_t(move_from<base_t>(x.source)) {}
-
-}; 
+};
 
 /*************************************************************************************************/
 
@@ -65,22 +63,20 @@ struct poly_copyable_instance : optimized_storage_type<T, poly_copyable_interfac
   \sa poly_copyable_instance, poly_copyable_interface, poly_copyable_interface, poly_base
 */
 
-struct copyable : poly_base<poly_copyable_interface, poly_copyable_instance>
-{
+struct copyable : poly_base<poly_copyable_interface, poly_copyable_instance> {
     typedef poly_base<poly_copyable_interface, poly_copyable_instance> base_t;
 
     /*!
         Construct from concrete copyable
     */
     template <typename T>
-    explicit copyable(const T& s)
-      : base_t(s)  { }
+    explicit copyable(const T &s)
+        : base_t(s) {}
 
     /*!
         Move constructor
     */
-    copyable(move_from<copyable> x)
-        : base_t(move_from<base_t>(x.source)) {}
+    copyable(move_from<copyable> x) : base_t(move_from<base_t>(x.source)) {}
 };
 
 

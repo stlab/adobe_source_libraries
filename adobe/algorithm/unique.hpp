@@ -37,8 +37,7 @@ namespace adobe {
     \brief unique implementation
 */
 template <class ForwardRange>
-inline typename boost::range_iterator<ForwardRange>::type unique(ForwardRange& range)
-{
+inline typename boost::range_iterator<ForwardRange>::type unique(ForwardRange &range) {
     return std::unique(boost::begin(range), boost::end(range));
 }
 
@@ -48,8 +47,7 @@ inline typename boost::range_iterator<ForwardRange>::type unique(ForwardRange& r
     \brief unique implementation
 */
 template <class ForwardIterator, class BinaryPredicate>
-inline ForwardIterator unique(ForwardIterator first, ForwardIterator last, BinaryPredicate pred)
-{
+inline ForwardIterator unique(ForwardIterator first, ForwardIterator last, BinaryPredicate pred) {
     return std::unique(first, last, boost::bind(pred, _1, _2));
 }
 
@@ -59,8 +57,8 @@ inline ForwardIterator unique(ForwardIterator first, ForwardIterator last, Binar
     \brief unique implementation
 */
 template <class ForwardRange, class BinaryPredicate>
-inline typename boost::range_iterator<ForwardRange>::type unique(ForwardRange& range, BinaryPredicate pred)
-{
+inline typename boost::range_iterator<ForwardRange>::type unique(ForwardRange &range,
+                                                                 BinaryPredicate pred) {
     return adobe::unique(boost::begin(range), boost::end(range), pred);
 }
 
@@ -70,8 +68,7 @@ inline typename boost::range_iterator<ForwardRange>::type unique(ForwardRange& r
     \brief unique implementation
 */
 template <class InputRange, class OutputIterator>
-inline OutputIterator unique_copy(InputRange& range, OutputIterator result)
-{
+inline OutputIterator unique_copy(InputRange &range, OutputIterator result) {
     return std::unique_copy(boost::begin(range), boost::end(range), result);
 }
 
@@ -81,8 +78,7 @@ inline OutputIterator unique_copy(InputRange& range, OutputIterator result)
     \brief unique implementation
 */
 template <class InputRange, class OutputIterator>
-inline OutputIterator unique_copy(const InputRange& range, OutputIterator result)
-{
+inline OutputIterator unique_copy(const InputRange &range, OutputIterator result) {
     return std::unique_copy(boost::begin(range), boost::end(range), result);
 }
 
@@ -92,8 +88,8 @@ inline OutputIterator unique_copy(const InputRange& range, OutputIterator result
     \brief unique implementation
 */
 template <class InputIterator, class OutputIterator, class BinaryPredicate>
-inline OutputIterator unique_copy(InputIterator first, InputIterator last, OutputIterator result, BinaryPredicate pred)
-{
+inline OutputIterator unique_copy(InputIterator first, InputIterator last, OutputIterator result,
+                                  BinaryPredicate pred) {
     return std::unique_copy(first, last, result, boost::bind(pred, _1, _2));
 }
 
@@ -103,8 +99,7 @@ inline OutputIterator unique_copy(InputIterator first, InputIterator last, Outpu
     \brief unique implementation
 */
 template <class InputRange, class OutputIterator, class BinaryPredicate>
-inline OutputIterator unique_copy(InputRange& range, OutputIterator result, BinaryPredicate pred)
-{
+inline OutputIterator unique_copy(InputRange &range, OutputIterator result, BinaryPredicate pred) {
     return adobe::unique_copy(boost::begin(range), boost::end(range), result, pred);
 }
 
@@ -114,8 +109,8 @@ inline OutputIterator unique_copy(InputRange& range, OutputIterator result, Bina
     \brief unique implementation
 */
 template <class InputRange, class OutputIterator, class BinaryPredicate>
-inline OutputIterator unique_copy(const InputRange& range, OutputIterator result, BinaryPredicate pred)
-{
+inline OutputIterator unique_copy(const InputRange &range, OutputIterator result,
+                                  BinaryPredicate pred) {
     return adobe::unique_copy(boost::begin(range), boost::end(range), result, pred);
 }
 

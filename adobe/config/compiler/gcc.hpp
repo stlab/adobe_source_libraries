@@ -12,13 +12,14 @@
 /*************************************************************************************************/
 
 #ifndef ADOBE_CONFIG_HPP
-    #error "This file is intended to be included by <adobe/config.hpp> -- please use that file directly."
+#error                                                                                             \
+    "This file is intended to be included by <adobe/config.hpp> -- please use that file directly."
 #endif
 
 /*************************************************************************************************/
 
 #ifndef ADOBE_COMPILER_GCC
-    #define ADOBE_COMPILER_GCC 1
+#define ADOBE_COMPILER_GCC 1
 #endif
 
 /*************************************************************************************************/

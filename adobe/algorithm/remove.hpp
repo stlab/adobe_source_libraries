@@ -39,8 +39,7 @@ namespace adobe {
     \brief remove implementation
 */
 template <class InputRange, class T>
-inline typename boost::range_iterator<InputRange>::type remove(InputRange& range, const T& value)
-{
+inline typename boost::range_iterator<InputRange>::type remove(InputRange &range, const T &value) {
     return std::remove(boost::begin(range), boost::end(range), value);
 }
 
@@ -50,8 +49,7 @@ inline typename boost::range_iterator<InputRange>::type remove(InputRange& range
     \brief remove implementation
 */
 template <class InputIterator, class Predicate>
-inline InputIterator remove_if(InputIterator first, InputIterator last, Predicate pred)
-{
+inline InputIterator remove_if(InputIterator first, InputIterator last, Predicate pred) {
     return std::remove_if(first, last, boost::bind(pred, _1));
 }
 
@@ -61,9 +59,8 @@ inline InputIterator remove_if(InputIterator first, InputIterator last, Predicat
     \brief remove implementation
 */
 template <class InputRange, class Predicate>
-inline typename boost::range_iterator<InputRange>::type
-remove_if(InputRange& range, Predicate pred)
-{
+inline typename boost::range_iterator<InputRange>::type remove_if(InputRange &range,
+                                                                  Predicate pred) {
     return adobe::remove_if(boost::begin(range), boost::end(range), pred);
 }
 
@@ -74,8 +71,7 @@ remove_if(InputRange& range, Predicate pred)
 */
 template <class InputRange, class OutputIterator, class T>
 inline typename boost::range_iterator<InputRange>::type
-remove_copy(InputRange& range, OutputIterator result, const T& value)
-{
+remove_copy(InputRange &range, OutputIterator result, const T &value) {
     return std::remove_copy(boost::begin(range), boost::end(range), result, value);
 }
 
@@ -86,8 +82,7 @@ remove_copy(InputRange& range, OutputIterator result, const T& value)
 */
 template <class InputRange, class OutputIterator, class T>
 inline typename boost::range_const_iterator<InputRange>::type
-remove_copy(const InputRange& range, OutputIterator result, const T& value)
-{
+remove_copy(const InputRange &range, OutputIterator result, const T &value) {
     return std::remove_copy(boost::begin(range), boost::end(range), result, value);
 }
 
@@ -97,9 +92,8 @@ remove_copy(const InputRange& range, OutputIterator result, const T& value)
     \brief remove implementation
 */
 template <class InputIterator, class OutputIterator, class Predicate>
-inline InputIterator
-remove_copy_if(InputIterator first, InputIterator last, OutputIterator result, Predicate pred)
-{
+inline InputIterator remove_copy_if(InputIterator first, InputIterator last, OutputIterator result,
+                                    Predicate pred) {
     return std::remove_copy_if(first, last, result, boost::bind(pred, _1));
 }
 
@@ -110,8 +104,7 @@ remove_copy_if(InputIterator first, InputIterator last, OutputIterator result, P
 */
 template <class InputRange, class OutputIterator, class Predicate>
 inline typename boost::range_iterator<InputRange>::type
-remove_copy_if(InputRange& range, OutputIterator result, Predicate pred)
-{
+remove_copy_if(InputRange &range, OutputIterator result, Predicate pred) {
     return adobe::remove_copy_if(boost::begin(range), boost::end(range), result, pred);
 }
 
@@ -122,8 +115,7 @@ remove_copy_if(InputRange& range, OutputIterator result, Predicate pred)
 */
 template <class InputRange, class OutputIterator, class Predicate>
 inline typename boost::range_const_iterator<InputRange>::type
-remove_copy_if(const InputRange& range, OutputIterator result, Predicate pred)
-{
+remove_copy_if(const InputRange &range, OutputIterator result, Predicate pred) {
     return adobe::remove_copy_if(boost::begin(range), boost::end(range), result, pred);
 }
 

@@ -45,29 +45,28 @@ namespace adobe {
     Selections can also be used in place of a predicate for some algorithms. There are a series of
     algorithms associated with the selection container; Please see \ref selection_algorithms.
 */
-class selection_t : boost::equality_comparable<selection_t>
-{
+class selection_t : boost::equality_comparable<selection_t> {
 public:
     /// value_type for selection_t
-    typedef std::size_t                   value_type;
+    typedef std::size_t value_type;
     /// store_type for selection_t
-    typedef std::vector<value_type>       store_type;
+    typedef std::vector<value_type> store_type;
     /// iterator for selection_t
-    typedef store_type::iterator          iterator;
+    typedef store_type::iterator iterator;
     /// const_iterator for selection_t
-    typedef store_type::const_iterator    const_iterator;
+    typedef store_type::const_iterator const_iterator;
     /// size_type for selection_t
-    typedef store_type::size_type         size_type;
+    typedef store_type::size_type size_type;
     /// difference_type for selection_t
-    typedef store_type::difference_type   difference_type;
+    typedef store_type::difference_type difference_type;
     /// reference for selection_t
-    typedef value_type&                   reference;
+    typedef value_type &reference;
     /// const_reference for selection_t
-    typedef const value_type&             const_reference;
+    typedef const value_type &const_reference;
     /// pointer for selection_t
-    typedef value_type*                   pointer;
+    typedef value_type *pointer;
     /// const_pointer for selection_t
-    typedef const value_type*             const_pointer;
+    typedef const value_type *const_pointer;
 
     /*!
         Default constructor.
@@ -76,9 +75,7 @@ public:
                               a selection has everything selected when it is first constructed
                               (as it has no other toggle points).
     */
-    explicit selection_t(bool start_selected = false) :
-        start_selected_m(start_selected)
-    { }
+    explicit selection_t(bool start_selected = false) : start_selected_m(start_selected) {}
 
     /*!
         Constructor with the ability to initialize the selection with toggle points from the get-go.
@@ -91,27 +88,23 @@ public:
         \param start_selected Specifies whether or not this selection begins "on" or not.
     */
     template <typename I> // value_type(I) == value_type
-    selection_t(I first, I last, bool start_selected = false) :
-        start_selected_m(start_selected),
-        store_m(first, last)
-    { }
+    selection_t(I first, I last, bool start_selected = false)
+        : start_selected_m(start_selected), store_m(first, last) {}
 
     /*!
         \return the number of boundaries in the selection; to get the number of elements contained
                 within a selection, a container must also be supplied, as such:
-                <code>selection_t::size_type selected_element_size(adobe::size(selection, container))</code>
+                <code>selection_t::size_type selected_element_size(adobe::size(selection,
+       container))</code>
     */
-    size_type size() const
-    { return store_m.size(); }
+    size_type size() const { return store_m.size(); }
 
     /// \return \c true if there is at least one toggle point, or the selection starts selected.
-    bool empty() const
-    { return store_m.empty() && start_selected_m == false; }
+    bool empty() const { return store_m.empty() && start_selected_m == false; }
 
     /// pushes a toggle point onto the back of the selection.
     /// The index must be greater than the previous toggle point.
-    void push_back(const value_type& x)
-    {
+    void push_back(const value_type &x) {
         assert(empty() || store_m.back() < x);
 
         store_m.push_back(x);
@@ -124,25 +117,20 @@ public:
     const_iterator end() const { return store_m.end(); }
 
     /// fetches a toggle point at index i of the toggle point sequence
-    const value_type& operator[](const size_type& i) const
-    { return store_m[i]; }
+    const value_type &operator[](const size_type &i) const { return store_m[i]; }
 
     /*!
         inverts the selection.
     */
-    void invert()
-    { start_selected_m = !start_selected_m; }
+    void invert() { start_selected_m = !start_selected_m; }
 
     /*!
         \return Whether or not the selection begins toggled "on"
     */
-    bool start_selected() const
-    { return start_selected_m; }
+    bool start_selected() const { return start_selected_m; }
 
-    friend inline bool operator==(const selection_t& x, const selection_t& y)
-    {
-        return x.size() == y.size() &&
-               std::equal(x.begin(), x.end(), y.begin());
+    friend inline bool operator==(const selection_t &x, const selection_t &y) {
+        return x.size() == y.size() && std::equal(x.begin(), x.end(), y.begin());
     }
 
 private:

@@ -21,19 +21,18 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-class unique_string_pool_t : boost::noncopyable
-{
+class unique_string_pool_t : boost::noncopyable {
 public:
     unique_string_pool_t();
 
     ~unique_string_pool_t();
 
-    const char* add(const char* str);
+    const char *add(const char *str);
 
 private:
     struct implementation_t;
 
-    implementation_t* object_m;
+    implementation_t *object_m;
 };
 
 

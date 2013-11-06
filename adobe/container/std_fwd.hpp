@@ -27,15 +27,24 @@
 #else
 
 namespace std {
-template <typename, typename> class pair;
-template <typename> class allocator;
-template <typename T, typename = std::allocator<T> > class vector;
-template <typename T, typename = std::allocator<T> > class deque;
-template <typename T, typename = std::allocator<T> > class list;
-template <typename T, typename, typename = std::allocator<T> > class set;
-template <typename T, typename, typename = std::allocator<T> > class multiset;
-template <typename K, typename T, typename, typename = std::allocator<std::pair<const K, T> > > class map;
-template <typename K, typename T, typename, typename = std::allocator<std::pair<const K, T> > > class multimap;
+template <typename, typename>
+class pair;
+template <typename>
+class allocator;
+template <typename T, typename = std::allocator<T>>
+class vector;
+template <typename T, typename = std::allocator<T>>
+class deque;
+template <typename T, typename = std::allocator<T>>
+class list;
+template <typename T, typename, typename = std::allocator<T>>
+class set;
+template <typename T, typename, typename = std::allocator<T>>
+class multiset;
+template <typename K, typename T, typename, typename = std::allocator<std::pair<const K, T>>>
+class map;
+template <typename K, typename T, typename, typename = std::allocator<std::pair<const K, T>>>
+class multimap;
 
 } // namespace std
 

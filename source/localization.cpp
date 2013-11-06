@@ -16,8 +16,7 @@ namespace {
 
 /*************************************************************************************************/
 
-adobe::localization_lookup_proc_t& localization_proc()
-{
+adobe::localization_lookup_proc_t &localization_proc() {
     static adobe::localization_lookup_proc_t localization_lookup_proc_s;
 
     return localization_lookup_proc_s;
@@ -33,23 +32,16 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-void localization_register(const localization_lookup_proc_t& proc)
-{
-    localization_proc() = proc;
-}
+void localization_register(const localization_lookup_proc_t &proc) { localization_proc() = proc; }
 
-std::string localization_invoke(const std::string& source)
-{
+std::string localization_invoke(const std::string &source) {
     if (!localization_proc())
         throw std::runtime_error("Attempting to call an unregistered localization routine.");
 
     return localization_proc()(source);
 }
 
-bool localization_ready()
-{
-    return localization_proc();
-}
+bool localization_ready() { return localization_proc(); }
 
 /*************************************************************************************************/
 

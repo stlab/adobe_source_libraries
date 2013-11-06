@@ -41,19 +41,19 @@ namespace version_1 {
 \brief An empty regular- and less-than-comparable- type.
 
 \rationale
-    empty_t is useful for default values. For example, value_t() will construct a value_t containing an empty_t by default.
+    empty_t is useful for default values. For example, value_t() will construct a value_t containing
+an empty_t by default.
 */
 
-struct empty_t : private boost::totally_ordered<empty_t>
-{
-    friend inline bool operator == (const empty_t&, const empty_t&) { return true; }
-    friend inline bool operator < (const empty_t&, const empty_t&) { return false; }
-    friend inline void swap(empty_t&, empty_t&) { }
+struct empty_t : private boost::totally_ordered<empty_t> {
+    friend inline bool operator==(const empty_t &, const empty_t &) { return true; }
+    friend inline bool operator<(const empty_t &, const empty_t &) { return false; }
+    friend inline void swap(empty_t &, empty_t &) {}
 };
 
 #if defined(ADOBE_STD_SERIALIZATION)
 //!\ingroup abi_misc
-std::ostream& operator << (std::ostream& stream, const empty_t&);
+std::ostream &operator<<(std::ostream &stream, const empty_t &);
 #endif
 
 /*************************************************************************************************/
@@ -71,7 +71,7 @@ using version_1::empty_t;
 
 //!\ingroup util_misc
 template <typename Derived>
-struct empty_base { };
+struct empty_base {};
 
 /*************************************************************************************************/
 
@@ -81,11 +81,14 @@ struct empty_base { };
 
 namespace boost {
 
-template <> struct is_pod<adobe::version_1::empty_t> : boost::mpl::true_ { };
-template <> struct is_empty<adobe::version_1::empty_t> : boost::mpl::true_ { };
-template <> struct has_trivial_constructor<adobe::version_1::empty_t> : boost::mpl::true_ { };
-template <> struct has_trivial_destructor<adobe::version_1::empty_t> : boost::mpl::true_ { };
-
+template <>
+struct is_pod<adobe::version_1::empty_t> : boost::mpl::true_ {};
+template <>
+struct is_empty<adobe::version_1::empty_t> : boost::mpl::true_ {};
+template <>
+struct has_trivial_constructor<adobe::version_1::empty_t> : boost::mpl::true_ {};
+template <>
+struct has_trivial_destructor<adobe::version_1::empty_t> : boost::mpl::true_ {};
 }
 
 /*************************************************************************************************/

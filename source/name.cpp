@@ -23,7 +23,7 @@ namespace {
 
 /****************************************************************************************************/
 
-constexpr const char* empty_string_s = "";
+constexpr const char *empty_string_s = "";
 constexpr std::size_t empty_hash_s = adobe::detail::name_hash("");
 
 /****************************************************************************************************/
@@ -36,29 +36,19 @@ namespace adobe {
 
 /****************************************************************************************************/
 
-static_name_t::operator bool() const
-{
-    return static_cast<bool>(static_cast<name_t>(*this));
-}
+static_name_t::operator bool() const { return static_cast<bool>(static_cast<name_t>(*this)); }
 
 /****************************************************************************************************/
 
-bool operator<(const static_name_t& x, const static_name_t& y)
-{
-    return name_t(x) < name_t(y);
-}
+bool operator<(const static_name_t &x, const static_name_t &y) { return name_t(x) < name_t(y); }
 
 /****************************************************************************************************/
 
-name_t::operator bool() const
-{
-    return ptr_m != empty_string_s;
-}
+name_t::operator bool() const { return ptr_m != empty_string_s; }
 
 /****************************************************************************************************/
 
-const char* name_t::map_string(const char* str)
-{
+const char *name_t::map_string(const char *str) {
     if (!str || !*str)
         return map_string(empty_string_s, empty_hash_s);
 
@@ -71,37 +61,29 @@ const char* name_t::map_string(const char* str)
 
 /****************************************************************************************************/
 
-const char* name_t::map_string(const char* str, std::size_t hash)
-{
-    typedef std::unordered_map<std::size_t, const char*> map_t;
-    typedef std::lock_guard<std::mutex>                  lock_t;
+const char *name_t::map_string(const char *str, std::size_t hash) {
+    typedef std::unordered_map<std::size_t, const char *> map_t;
+    typedef std::lock_guard<std::mutex> lock_t;
 
     static std::mutex sync_s;
 
     lock_t lock(sync_s);
 
     static adobe::unique_string_pool_t pool_s;
-    static map_t                       map_s;
-    map_t::const_iterator              found(map_s.find(hash));
+    static map_t map_s;
+    map_t::const_iterator found(map_s.find(hash));
 
-    return found == map_s.end() ?
-               map_s.emplace(hash, pool_s.add(str)).first->second :
-               found->second;
+    return found == map_s.end() ? map_s.emplace(hash, pool_s.add(str)).first->second
+                                : found->second;
 }
 
 /****************************************************************************************************/
 
-std::ostream& operator<<(std::ostream& s, const static_name_t& name)
-{
-    return s << name.string_m ;
-}
+std::ostream &operator<<(std::ostream &s, const static_name_t &name) { return s << name.string_m; }
 
 /****************************************************************************************************/
 
-std::ostream& operator<<(std::ostream& s, const name_t& name)
-{
-    return s << name.ptr_m;
-}
+std::ostream &operator<<(std::ostream &s, const name_t &name) { return s << name.ptr_m; }
 
 /****************************************************************************************************/
 

@@ -50,8 +50,9 @@ the min and max bounds are placed where they should be when the actual pin is ex
     \brief pin implementation
 */
 template <typename T, typename R>
-inline const T& pin(const T& min, const T& x, const T& max, R r)
-{ return clamp(x, min, max, r); }
+inline const T &pin(const T &min, const T &x, const T &max, R r) {
+    return clamp(x, min, max, r);
+}
 
 /*************************************************************************************************/
 /*!
@@ -60,8 +61,9 @@ inline const T& pin(const T& min, const T& x, const T& max, R r)
     \brief pin implementation
 */
 template <typename T>
-inline const T& pin(const T& min, const T& x, const T& max)
-{ return clamp(x, min, max); }
+inline const T &pin(const T &min, const T &x, const T &max) {
+    return clamp(x, min, max);
+}
 
 
 /****************************************************************************************************/
@@ -71,8 +73,9 @@ inline const T& pin(const T& min, const T& x, const T& max)
     \brief pin_safe implementation
 */
 template <typename T, typename R>
-const T& pin_safe(const T& min, const T& x, const T& max, R r)
-{ return clamp_unordered(x, min, max, r); }
+const T &pin_safe(const T &min, const T &x, const T &max, R r) {
+    return clamp_unordered(x, min, max, r);
+}
 
 /****************************************************************************************************/
 /*!
@@ -81,8 +84,9 @@ const T& pin_safe(const T& min, const T& x, const T& max, R r)
     \brief pin_safe implementation
 */
 template <typename T, typename R>
-const T& pin_safe(const T& min, const T& x, const T& max)
-{ return clamp_unordered(x, min, max); }
+const T &pin_safe(const T &min, const T &x, const T &max) {
+    return clamp_unordered(x, min, max);
+}
 
 /*************************************************************************************************/
 

@@ -35,8 +35,7 @@ namespace adobe {
     \brief swap_ranges implementation
 */
 template <class ForwardRange1, class ForwardIterator2>
-inline ForwardIterator2 swap_ranges(ForwardRange1& range1, ForwardIterator2 first2)
-{
+inline ForwardIterator2 swap_ranges(ForwardRange1 &range1, ForwardIterator2 first2) {
     return std::swap_ranges(boost::begin(range1), boost::end(range1), first2);
 }
 

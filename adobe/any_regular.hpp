@@ -64,20 +64,24 @@ namespace adobe {
 \fn const typename promote<T>::type& adobe::any_regular_t::cast() const
 
 \return
-    A refernce to a promoted type for <code>T</code> containing the <code>any_regular_t</code>'s instance value.
+    A refernce to a promoted type for <code>T</code> containing the <code>any_regular_t</code>'s
+instance value.
 
 \exception
-    adobe::bad_cast Thrown if <code>adobe::promote<T></code> does not match the stored instance type.
+    adobe::bad_cast Thrown if <code>adobe::promote<T></code> does not match the stored instance
+type.
 */
 
 /*!
 \fn typename promote<T>::type& adobe::any_regular_t::cast()
 
 \return
-    A refernce to a promoted type for <code>T</code> containing the <code>any_regular_t</code>'s instance value.
+    A refernce to a promoted type for <code>T</code> containing the <code>any_regular_t</code>'s
+instance value.
 
 \exception
-    adobe::bad_cast Thrown if <code>adobe::promote<T></code> does not match the stored instance type.
+    adobe::bad_cast Thrown if <code>adobe::promote<T></code> does not match the stored instance
+type.
 */
 
 /*!
@@ -119,7 +123,8 @@ namespace adobe {
 /*!
 \typedef adobe::any_regular_t::transform::result_type
 
-The promoted value type from T that will be returned by this function object's <code>operator()</code>s.
+The promoted value type from T that will be returned by this function object's
+<code>operator()</code>s.
 */
 
 /*!
@@ -138,7 +143,8 @@ Parameter type required by this function object's <code>operator()</code>s.
 */
 
 /*!
-\fn const promote<T>::type& adobe::any_regular_t::transform::operator()(const any_regular_t &x) const
+\fn const promote<T>::type& adobe::any_regular_t::transform::operator()(const any_regular_t &x)
+const
 
 \param x The value from which the result is to be obtained.
 
@@ -150,33 +156,33 @@ Parameter type required by this function object's <code>operator()</code>s.
 
 namespace implementation {
 
-enum { vtable_version = 1 };
+enum {
+    vtable_version = 1
+};
 
 struct any_regular_interface_t;
 
-struct vtable_t
-{
+struct vtable_t {
     typedef any_regular_interface_t interface_type;
 
-    adobe::uintptr_t        version;
-    void                    (*destruct)(const interface_type&);
-    const std::type_info&   (*type_info)(const interface_type&);
-    interface_type*         (*clone)(const interface_type&, void*);
-    interface_type*         (*move_clone)(interface_type&, void*);
-    void                    (*assign)(interface_type&, const interface_type&);
-    bool                    (*equals)(const interface_type&, const interface_type&);
-    void                    (*exchange)(interface_type&, interface_type&);
+    adobe::uintptr_t version;
+    void (*destruct)(const interface_type &);
+    const std::type_info &(*type_info)(const interface_type &);
+    interface_type *(*clone)(const interface_type &, void *);
+    interface_type *(*move_clone)(interface_type &, void *);
+    void (*assign)(interface_type &, const interface_type &);
+    bool (*equals)(const interface_type &, const interface_type &);
+    void (*exchange)(interface_type &, interface_type &);
 };
 
 // Ensure that the vtable_t has a fixed layout regardless of alignment or packing.
 
-BOOST_STATIC_ASSERT(sizeof(vtable_t) == 8 * sizeof(void*));
+BOOST_STATIC_ASSERT(sizeof(vtable_t) == 8 * sizeof(void *));
 
 /**************************************************************************************************/
 
-union pad_vtable_t
-{
-    const vtable_t* vtable_m;
+union pad_vtable_t {
+    const vtable_t *vtable_m;
     double pad_m; // unused padding
 };
 
@@ -187,84 +193,80 @@ BOOST_STATIC_ASSERT(sizeof(pad_vtable_t) == sizeof(double));
 struct any_regular_interface_t {
     typedef any_regular_interface_t interface_type;
 
-    any_regular_interface_t(const vtable_t& x) { object_m.vtable_m = &x; }
+    any_regular_interface_t(const vtable_t &x) { object_m.vtable_m = &x; }
 
-    pad_vtable_t    object_m;
+    pad_vtable_t object_m;
 
-    void            destruct() const { return object_m.vtable_m->destruct(*this); }
-    const std::type_info&     type_info() const { return object_m.vtable_m->type_info(*this); }
-    interface_type* clone(void* x) const { return object_m.vtable_m->clone(*this, x); }
-    interface_type* move_clone(void* x) { return object_m.vtable_m->move_clone(*this, x); }
-    void            assign(const interface_type& x) { object_m.vtable_m->assign(*this, x); }
-    bool            equals(const interface_type& x) const { return object_m.vtable_m->equals(*this, x); }
-    void            exchange(interface_type& x) { object_m.vtable_m->exchange(*this, x); }
+    void destruct() const { return object_m.vtable_m->destruct(*this); }
+    const std::type_info &type_info() const { return object_m.vtable_m->type_info(*this); }
+    interface_type *clone(void *x) const { return object_m.vtable_m->clone(*this, x); }
+    interface_type *move_clone(void *x) { return object_m.vtable_m->move_clone(*this, x); }
+    void assign(const interface_type &x) { object_m.vtable_m->assign(*this, x); }
+    bool equals(const interface_type &x) const { return object_m.vtable_m->equals(*this, x); }
+    void exchange(interface_type &x) { object_m.vtable_m->exchange(*this, x); }
 };
 
 /**************************************************************************************************/
 
 template <typename T> // T models Regular
-struct any_regular_model_local : any_regular_interface_t, boost::noncopyable
-{
+struct any_regular_model_local : any_regular_interface_t, boost::noncopyable {
     typedef any_regular_interface_t interface_type;
 
     T object_m;
 
     static const vtable_t vtable_s;
 
-    any_regular_model_local() : interface_type(vtable_s), object_m() { }
+    any_regular_model_local() : interface_type(vtable_s), object_m() {}
 
-    explicit any_regular_model_local(T x)
-        : interface_type(vtable_s), object_m(std::move(x)) { }
+    explicit any_regular_model_local(T x) : interface_type(vtable_s), object_m(std::move(x)) {}
 
-    static const any_regular_model_local& self(const interface_type& x)
-    { return static_cast<const any_regular_model_local&>(x); }
+    static const any_regular_model_local &self(const interface_type &x) {
+        return static_cast<const any_regular_model_local &>(x);
+    }
 
-    static any_regular_model_local& self(interface_type& x)
-    { return static_cast<any_regular_model_local&>(x); }
+    static any_regular_model_local &self(interface_type &x) {
+        return static_cast<any_regular_model_local &>(x);
+    }
 
-    static const std::type_info& type_info(const interface_type&)
-    { return typeid(T); }
+    static const std::type_info &type_info(const interface_type &) { return typeid(T); }
 
-    static void destruct(const interface_type& x)
-    { self(x).~any_regular_model_local(); }
+    static void destruct(const interface_type &x) { self(x).~any_regular_model_local(); }
 
-    static interface_type* clone(const interface_type& x, void* storage)
-    { return ::new(storage) any_regular_model_local(self(x).object_m); }
+    static interface_type *clone(const interface_type &x, void *storage) {
+        return ::new (storage) any_regular_model_local(self(x).object_m);
+    }
 
-    static interface_type* move_clone(interface_type& x, void* storage)
-    { return ::new(storage) any_regular_model_local(std::move(self(x).object_m)); }
+    static interface_type *move_clone(interface_type &x, void *storage) {
+        return ::new (storage) any_regular_model_local(std::move(self(x).object_m));
+    }
 
-    static void assign(interface_type& x, const interface_type& y)
-    { self(x).object_m = self(y).object_m; }
+    static void assign(interface_type &x, const interface_type &y) {
+        self(x).object_m = self(y).object_m;
+    }
 
-    static bool equals(const interface_type& x, const interface_type& y)
-    { return self(x).object_m == self(y).object_m; }
+    static bool equals(const interface_type &x, const interface_type &y) {
+        return self(x).object_m == self(y).object_m;
+    }
 
-    static void exchange(interface_type& x, interface_type& y)
-    { swap(self(x).object_m, self(y).object_m); }
+    static void exchange(interface_type &x, interface_type &y) {
+        swap(self(x).object_m, self(y).object_m);
+    }
 
-    const T& get() const { return object_m; }
-    T& get() { return object_m; }
+    const T &get() const { return object_m; }
+    T &get() { return object_m; }
 };
 
 BOOST_STATIC_ASSERT(sizeof(any_regular_model_local<double>) == 16);
 
 template <typename T>
-const vtable_t any_regular_model_local<T>::vtable_s
-    = {
-        vtable_version,
-        &any_regular_model_local::destruct,
-        &any_regular_model_local::type_info,
-        &any_regular_model_local::clone,
-        &any_regular_model_local::move_clone,
-        &any_regular_model_local::assign,
-        &any_regular_model_local::equals,
-        &any_regular_model_local::exchange,
-    };
+const vtable_t any_regular_model_local<T>::vtable_s = {
+    vtable_version,                       &any_regular_model_local::destruct,
+    &any_regular_model_local::type_info,  &any_regular_model_local::clone,
+    &any_regular_model_local::move_clone, &any_regular_model_local::assign,
+    &any_regular_model_local::equals,     &any_regular_model_local::exchange, };
 
 template <typename T> // T models Regular
-struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable
-{
+struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable {
     BOOST_CLASS_REQUIRE(T, adobe, RegularConcept);
 
     typedef any_regular_interface_t interface_type;
@@ -272,34 +274,31 @@ struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable
     struct object_t;
     typedef capture_allocator<object_t> allocator_type;
 
-    struct object_t : boost::noncopyable
-    {
-        aligned_storage<allocator_type>   alloc_m;
-        T                                 data_m;
+    struct object_t : boost::noncopyable {
+        aligned_storage<allocator_type> alloc_m;
+        T data_m;
     };
 
-    static object_t* new_move(T& x)
-    {
+    static object_t *new_move(T &x) {
         allocator_type a;
-        object_t* result = a.allocate(1);
+        object_t *result = a.allocate(1);
         construct(&result->alloc_m, aligned_storage<allocator_type>(a));
         construct(&result->data_m, std::move(x));
         return result;
     }
 
-    object_t* object_ptr_m;
+    object_t *object_ptr_m;
 
     static const vtable_t vtable_s;
 
-    explicit any_regular_model_remote(T x)
-        : interface_type(vtable_s), object_ptr_m(new_move(x))
-        { }
+    explicit any_regular_model_remote(T x) : interface_type(vtable_s), object_ptr_m(new_move(x)) {}
 
-    any_regular_model_remote(any_regular_model_remote&& x) noexcept
-        : interface_type(vtable_s), object_ptr_m(x.object_ptr_m) { x.object_ptr_m = 0; }
+    any_regular_model_remote(any_regular_model_remote &&x) noexcept : interface_type(vtable_s),
+                                                                      object_ptr_m(x.object_ptr_m) {
+        x.object_ptr_m = 0;
+    }
 
-    ~any_regular_model_remote()
-    {
+    ~any_regular_model_remote() {
         if (object_ptr_m) {
             allocator_type a = object_ptr_m->alloc_m.get();
             destroy(&object_ptr_m->alloc_m);
@@ -308,51 +307,50 @@ struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable
         }
     }
 
-    static const any_regular_model_remote& self(const interface_type& x)
-    { return static_cast<const any_regular_model_remote&>(x); }
+    static const any_regular_model_remote &self(const interface_type &x) {
+        return static_cast<const any_regular_model_remote &>(x);
+    }
 
-    static any_regular_model_remote& self(interface_type& x)
-    { return static_cast<any_regular_model_remote&>(x); }
+    static any_regular_model_remote &self(interface_type &x) {
+        return static_cast<any_regular_model_remote &>(x);
+    }
 
-    static  const std::type_info& type_info(const interface_type&)
-    { return typeid(T); }
+    static const std::type_info &type_info(const interface_type &) { return typeid(T); }
 
-    static void destruct(const interface_type& x)
-    { return self(x).~any_regular_model_remote(); }
+    static void destruct(const interface_type &x) { return self(x).~any_regular_model_remote(); }
 
-    static interface_type* clone(const interface_type& x, void* storage)
-    { return ::new(storage) any_regular_model_remote(self(x).get()); }
+    static interface_type *clone(const interface_type &x, void *storage) {
+        return ::new (storage) any_regular_model_remote(self(x).get());
+    }
 
-    static interface_type* move_clone(interface_type& x, void* storage)
-    { return ::new(storage) any_regular_model_remote(std::move(self(x))); }
+    static interface_type *move_clone(interface_type &x, void *storage) {
+        return ::new (storage) any_regular_model_remote(std::move(self(x)));
+    }
 
-    static void assign(interface_type& x, const interface_type& y)
-    { self(x).get() = self(y).get(); }
+    static void assign(interface_type &x, const interface_type &y) {
+        self(x).get() = self(y).get();
+    }
 
-    static bool equals(const interface_type& x, const interface_type& y)
-    { return self(x).get() == self(y).get(); }
+    static bool equals(const interface_type &x, const interface_type &y) {
+        return self(x).get() == self(y).get();
+    }
 
-    static void exchange(interface_type& x, interface_type& y)
-    { return swap(self(x).object_ptr_m, self(y).object_ptr_m); }
+    static void exchange(interface_type &x, interface_type &y) {
+        return swap(self(x).object_ptr_m, self(y).object_ptr_m);
+    }
 
-    const T& get() const { return object_ptr_m->data_m; }
-    T& get() { return object_ptr_m->data_m; }
+    const T &get() const { return object_ptr_m->data_m; }
+    T &get() { return object_ptr_m->data_m; }
 };
 
 BOOST_STATIC_ASSERT(sizeof(any_regular_model_remote<double>) <= 16);
 
 template <typename T>
-const vtable_t any_regular_model_remote<T>::vtable_s
-    = {
-        vtable_version,
-        &any_regular_model_remote::destruct,
-        &any_regular_model_remote::type_info,
-        &any_regular_model_remote::clone,
-        &any_regular_model_remote::move_clone,
-        &any_regular_model_remote::assign,
-        &any_regular_model_remote::equals,
-        &any_regular_model_remote::exchange,
-    };
+const vtable_t any_regular_model_remote<T>::vtable_s = {
+    vtable_version,                        &any_regular_model_remote::destruct,
+    &any_regular_model_remote::type_info,  &any_regular_model_remote::clone,
+    &any_regular_model_remote::move_clone, &any_regular_model_remote::assign,
+    &any_regular_model_remote::equals,     &any_regular_model_remote::exchange, };
 
 /**************************************************************************************************/
 
@@ -403,7 +401,8 @@ namespace version_1 {
             model \ref concept_movable are stored without a free store allocation.
 
 \note With currently compilers the trait
-<a href="http://www.boost.org/doc/libs/1_35_0/libs/type_traits/doc/html/boost_typetraits/reference/has_nothrow_copy.html">
+<a
+href="http://www.boost.org/doc/libs/1_35_0/libs/type_traits/doc/html/boost_typetraits/reference/has_nothrow_copy.html">
 <code>boost::has_no_throw_copy</code></a> must be manually declared for small types to be stored
 without a free store allocation.
 
@@ -414,49 +413,45 @@ without a free store allocation.
     A tutorial for \ref asl_tutorials_value_t is available.
 */
 
-class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t>
-{
-    typedef implementation::any_regular_interface_t    interface_type;
+class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t> {
+    typedef implementation::any_regular_interface_t interface_type;
     typedef double storage_t[2];
 
-    #ifndef ADOBE_NO_DOCUMENTATION
+#ifndef ADOBE_NO_DOCUMENTATION
 
     template <typename T>
-    struct traits
-    {
-        typedef typename promote<T>::type                               promote_type;
+    struct traits {
+        typedef typename promote<T>::type promote_type;
         BOOST_CLASS_REQUIRE(promote_type, adobe, RegularConcept);
 
-        typedef promote_type&                                           reference_type;
-        typedef const promote_type&                                     const_reference_type;
+        typedef promote_type &reference_type;
+        typedef const promote_type &const_reference_type;
 
-        typedef implementation::any_regular_model_local<promote_type>   regular_model_local_type;
-        typedef implementation::any_regular_model_remote<promote_type>  regular_model_remote_type;
+        typedef implementation::any_regular_model_local<promote_type> regular_model_local_type;
+        typedef implementation::any_regular_model_remote<promote_type> regular_model_remote_type;
 
-        typedef boost::mpl::bool_<(sizeof(regular_model_local_type)
-                <= sizeof(storage_t))
-                && (boost::has_nothrow_copy<promote_type>::value
-                || std::is_nothrow_move_constructible<promote_type>::value)> use_local_type;
+        typedef boost::mpl::bool_ < (sizeof(regular_model_local_type) <= sizeof(storage_t)) &&
+            (boost::has_nothrow_copy<promote_type>::value ||
+             std::is_nothrow_move_constructible<promote_type>::value) > use_local_type;
 
-        typedef typename boost::mpl::if_<use_local_type,
-                regular_model_local_type,
-                regular_model_remote_type>::type                        model_type;
+        typedef typename boost::mpl::if_<use_local_type, regular_model_local_type,
+                                         regular_model_remote_type>::type model_type;
 
-        typedef typename boost::mpl::if_c<
-            boost::is_same<promote_type, T>::value,
-            reference_type, T>::type                                    result_type;
+        typedef typename boost::mpl::if_c<boost::is_same<promote_type, T>::value, reference_type,
+                                          T>::type result_type;
 
-        typedef typename boost::mpl::if_c<
-            boost::is_same<promote_type, T>::value,
-            const_reference_type, T>::type                              const_result_type;
+        typedef typename boost::mpl::if_c<boost::is_same<promote_type, T>::value,
+                                          const_reference_type, T>::type const_result_type;
     };
 
-    template <typename T> struct helper;
-    template <typename T> friend struct helper;
+    template <typename T>
+    struct helper;
+    template <typename T>
+    friend struct helper;
 
-    #endif
+#endif
 
- public:
+public:
     /*!
     \name Movable Functions
     \see_only
@@ -465,12 +460,11 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t>
     /*!@{*/
     any_regular_t() { ::new (storage()) traits<empty_t>::model_type(); }
 
-    any_regular_t(const any_regular_t& x) { x.object().clone(storage()); }
+    any_regular_t(const any_regular_t &x) { x.object().clone(storage()); }
 
-    any_regular_t(any_regular_t&& x) noexcept { x.object().move_clone(storage()); }
+    any_regular_t(any_regular_t &&x) noexcept { x.object().move_clone(storage()); }
 
-    any_regular_t& operator=(any_regular_t x)
-    {
+    any_regular_t &operator=(any_regular_t x) {
         object().destruct();
         x.object().move_clone(storage());
         return *this;
@@ -486,8 +480,9 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t>
     */
 
     template <typename T>
-    any_regular_t(T x)
-    { ::new (storage()) typename traits<T>::model_type(std::move(x)); }
+    any_regular_t(T x) {
+        ::new (storage()) typename traits<T>::model_type(std::move(x));
+    }
 
     /*!@}*/
 
@@ -503,16 +498,17 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t>
     */
 
     template <typename T>
-    bool cast(T& x) const
-    {
-        if (type_info() != typeid(typename promote<T>::type)) return false;
+    bool cast(T &x) const {
+        if (type_info() != typeid(typename promote<T>::type))
+            return false;
         x = cast<T>();
         return true;
     }
 
     template <typename T>
-    typename traits<T>::const_result_type cast() const
-    { return helper<T>::cast(*this); }
+    typename traits<T>::const_result_type cast() const {
+        return helper<T>::cast(*this);
+    }
 
     /*!
     \return
@@ -524,8 +520,9 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t>
     */
 
     template <typename T>
-    typename traits<T>::result_type cast()
-    { return helper<T>::cast(*this); }
+    typename traits<T>::result_type cast() {
+        return helper<T>::cast(*this);
+    }
 
     /*!@}*/
 
@@ -541,15 +538,13 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t>
     */
 
     template <typename T>
-    any_regular_t& assign(T x)
-    {
+    any_regular_t &assign(T x) {
         object().destruct();
         ::new (storage()) typename traits<T>::model_type(std::move(x));
         return *this;
     }
 
-    any_regular_t& assign(any_regular_t x)
-    {
+    any_regular_t &assign(any_regular_t x) {
         object().destruct();
         x.object().move_clone(storage());
         return *this;
@@ -564,7 +559,7 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t>
         The information returned by <code>adobe::type_info<T>()</code> for the stored value.
     */
 
-    const std::type_info& type_info() const { return object().type_info(); }
+    const std::type_info &type_info() const { return object().type_info(); }
 
     /*!
     \brief Function object used in binding for instance value access.
@@ -574,32 +569,31 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t>
 
 
     template <typename T>
-    struct transform
-    {
-        typedef typename traits<T>::promote_type    result_type;
+    struct transform {
+        typedef typename traits<T>::promote_type result_type;
 
-        typename traits<T>::result_type operator () (any_regular_t& x) const
-        { return x.cast<T>(); }
+        typename traits<T>::result_type operator()(any_regular_t &x) const { return x.cast<T>(); }
 
-        typename traits<T>::const_result_type operator () (const any_regular_t& x) const
-        { return x.cast<T>(); }
+        typename traits<T>::const_result_type operator()(const any_regular_t &x) const {
+            return x.cast<T>();
+        }
     };
 
 #if defined(ADOBE_STD_SERIALIZATION)
-    friend std::ostream& operator<<(std::ostream& out, const any_regular_t& value);
+    friend std::ostream &operator<<(std::ostream &out, const any_regular_t &value);
 #endif
 
-    friend bool operator==(const any_regular_t& x, const any_regular_t& y);
-    friend void swap(any_regular_t& x, any_regular_t& y);
+    friend bool operator==(const any_regular_t &x, const any_regular_t &y);
+    friend void swap(any_regular_t &x, any_regular_t &y);
 
- private:
-    any_regular_t(interface_type&& x) noexcept { x.move_clone(storage()); }
+private:
+    any_regular_t(interface_type &&x) noexcept { x.move_clone(storage()); }
 
-    interface_type& object() { return *static_cast<interface_type*>(storage()); }
-    const interface_type& object() const { return *static_cast<const interface_type*>(storage()); }
+    interface_type &object() { return *static_cast<interface_type *>(storage()); }
+    const interface_type &object() const { return *static_cast<const interface_type *>(storage()); }
 
-    void* storage() { return &data_m; }
-    const void* storage() const { return &data_m; }
+    void *storage() { return &data_m; }
+    const void *storage() const { return &data_m; }
 
     storage_t data_m;
 
@@ -608,12 +602,14 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t>
 #ifdef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 public:
 #else
-    template <typename, typename> friend struct adobe::runtime_cast_t;
+    template <typename, typename>
+    friend struct adobe::runtime_cast_t;
 #endif
 
     template <typename T>
-    T* ptr_cast()
-    { return helper<T>::ptr_cast(*this); }
+    T *ptr_cast() {
+        return helper<T>::ptr_cast(*this);
+    }
 
 #endif
 };
@@ -622,15 +618,18 @@ public:
 
 BOOST_STATIC_ASSERT((sizeof(any_regular_t) == 16));
 
-inline bool operator == (const any_regular_t& x, const any_regular_t& y)
-{ return (x.type_info() == y.type_info()) && x.object().equals(y.object()); }
+inline bool operator==(const any_regular_t &x, const any_regular_t &y) {
+    return (x.type_info() == y.type_info()) && x.object().equals(y.object());
+}
 
-inline void swap(any_regular_t& x, any_regular_t& y)
-{
-    any_regular_t::interface_type& a(x.object());
-    any_regular_t::interface_type& b(y.object());
+inline void swap(any_regular_t &x, any_regular_t &y) {
+    any_regular_t::interface_type &a(x.object());
+    any_regular_t::interface_type &b(y.object());
 
-    if (a.type_info() == b.type_info()) { a.exchange(b); return; }
+    if (a.type_info() == b.type_info()) {
+        a.exchange(b);
+        return;
+    }
 
     // x->tmp
     any_regular_t tmp = std::move(a);
@@ -651,43 +650,37 @@ inline void swap(any_regular_t& x, any_regular_t& y)
 #ifndef ADOBE_NO_DOCUMENTATION
 
 template <typename T>
-struct any_regular_t::helper
-{
-    static inline T* ptr_cast(any_regular_t& r)
-    {
+struct any_regular_t::helper {
+    static inline T *ptr_cast(any_regular_t &r) {
         if (r.type_info() != typeid(T))
             return 0;
-        return &reinterpret_cast<typename traits<T>::model_type&>(r.object()).get();
+        return &reinterpret_cast<typename traits<T>::model_type &>(r.object()).get();
     }
 
-    static inline typename traits<T>::const_result_type cast(const any_regular_t& r)
-    {
+    static inline typename traits<T>::const_result_type cast(const any_regular_t &r) {
         typedef typename traits<T>::promote_type promote_type;
 
         if (r.type_info() != typeid(promote_type))
             throw bad_cast(r.type_info(), typeid(promote_type));
         return static_cast<typename traits<T>::const_result_type>(
-                reinterpret_cast<const typename traits<T>::model_type&>(r.object()).get());
+            reinterpret_cast<const typename traits<T>::model_type &>(r.object()).get());
     }
 
-    static inline typename traits<T>::result_type cast(any_regular_t& r)
-    {
+    static inline typename traits<T>::result_type cast(any_regular_t &r) {
         typedef typename traits<T>::promote_type promote_type;
 
         if (r.type_info() != typeid(promote_type))
             throw bad_cast(r.type_info(), typeid(promote_type));
         return static_cast<typename traits<T>::result_type>(
-                reinterpret_cast<typename traits<T>::model_type&>(r.object()).get());
+            reinterpret_cast<typename traits<T>::model_type &>(r.object()).get());
     }
 
-    static inline any_regular_t& assign(any_regular_t& r, const T& x)
-    {
+    static inline any_regular_t &assign(any_regular_t &r, const T &x) {
         typedef typename promote<T>::type promote_type;
 
         if (r.type_info() == typeid(promote_type))
             r.cast<promote_type>() = static_cast<promote_type>(x);
-        else
-        {
+        else {
             any_regular_t result(x);
             swap(r, result);
         }
@@ -698,16 +691,12 @@ struct any_regular_t::helper
 /**************************************************************************************************/
 
 template <>
-struct any_regular_t::helper<any_regular_t>
-{
-    static inline any_regular_t* ptr_cast(any_regular_t& r)
-    { return &r; }
+struct any_regular_t::helper<any_regular_t> {
+    static inline any_regular_t *ptr_cast(any_regular_t &r) { return &r; }
 
-    static inline const any_regular_t& cast(const any_regular_t& r)
-    { return r; }
+    static inline const any_regular_t &cast(const any_regular_t &r) { return r; }
 
-    static inline any_regular_t& cast(any_regular_t& r)
-    { return r; }
+    static inline any_regular_t &cast(any_regular_t &r) { return r; }
 };
 
 #endif
@@ -724,7 +713,7 @@ struct any_regular_t::helper<any_regular_t>
     \related adobe::version_1::any_regular_t
 */
 
-inline bool empty(const any_regular_t& x) { return x.type_info() == typeid(empty_t); }
+inline bool empty(const any_regular_t &x) { return x.type_info() == typeid(empty_t); }
 
 /**************************************************************************************************/
 
@@ -735,17 +724,16 @@ inline bool empty(const any_regular_t& x) { return x.type_info() == typeid(empty
 /**************************************************************************************************/
 
 template <typename R>
-struct runtime_cast_t<R, const any_regular_t>
-{
-    R operator()(const any_regular_t& x) const
-    {
+struct runtime_cast_t<R, const any_regular_t> {
+    R operator()(const any_regular_t &x) const {
         typedef typename boost::remove_const<typename boost::remove_reference<R>::type>::type
-                result_type;
+        result_type;
 
         BOOST_STATIC_ASSERT((boost::is_reference<R>::value));
 
         /* There is no auto-promotion through the new interface. Soon promotion will be disabled. */
-        BOOST_STATIC_ASSERT((boost::is_same<typename promote<result_type>::type, result_type>::value));
+        BOOST_STATIC_ASSERT(
+            (boost::is_same<typename promote<result_type>::type, result_type>::value));
 
         return x.cast<result_type>();
     }
@@ -754,16 +742,15 @@ struct runtime_cast_t<R, const any_regular_t>
 /**************************************************************************************************/
 
 template <typename R>
-struct runtime_cast_t<R, any_regular_t>
-{
-    R operator()(any_regular_t& x) const
-    {
+struct runtime_cast_t<R, any_regular_t> {
+    R operator()(any_regular_t &x) const {
         typedef typename boost::remove_reference<R>::type result_type;
 
         BOOST_STATIC_ASSERT((boost::is_reference<R>::value));
 
         /* There is no auto-promotion through the new interface. Soon promotion will be disabled. */
-        BOOST_STATIC_ASSERT((boost::is_same<typename promote<result_type>::type, result_type>::value));
+        BOOST_STATIC_ASSERT(
+            (boost::is_same<typename promote<result_type>::type, result_type>::value));
 
         return x.cast<result_type>();
     }
@@ -772,16 +759,15 @@ struct runtime_cast_t<R, any_regular_t>
 /**************************************************************************************************/
 
 template <typename R>
-struct runtime_cast_t<R, any_regular_t*>
-{
-    R operator()(any_regular_t* x) const
-    {
+struct runtime_cast_t<R, any_regular_t *> {
+    R operator()(any_regular_t *x) const {
         typedef typename boost::remove_pointer<R>::type result_type;
 
         BOOST_STATIC_ASSERT((boost::is_pointer<R>::value));
 
         /* There is no auto-promotion through the new interface. Soon promotion will be disabled. */
-        BOOST_STATIC_ASSERT((boost::is_same<typename promote<result_type>::type, result_type>::value));
+        BOOST_STATIC_ASSERT(
+            (boost::is_same<typename promote<result_type>::type, result_type>::value));
 
         return x->ptr_cast<result_type>();
     }
@@ -790,19 +776,19 @@ struct runtime_cast_t<R, any_regular_t*>
 /**************************************************************************************************/
 
 template <typename R>
-struct runtime_cast_t<R, const any_regular_t*>
-{
-    R operator()(const any_regular_t* x) const
-    {
+struct runtime_cast_t<R, const any_regular_t *> {
+    R operator()(const any_regular_t *x) const {
         typedef typename boost::remove_const<typename boost::remove_pointer<R>::type>::type
-                result_type;
+        result_type;
 
         BOOST_STATIC_ASSERT((boost::is_pointer<R>::value));
 
         /* There is no auto-promotion through the new interface. Soon promotion will be disabled. */
-        BOOST_STATIC_ASSERT((boost::is_same<typename promote<result_type>::type, result_type>::value));
+        BOOST_STATIC_ASSERT(
+            (boost::is_same<typename promote<result_type>::type, result_type>::value));
 
-        if (x->type_info() != typeid(result_type)) return 0;
+        if (x->type_info() != typeid(result_type))
+            return 0;
         return &x->cast<result_type>();
     }
 };

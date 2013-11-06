@@ -26,29 +26,26 @@ namespace adobe {
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-class asl_cel_format : public format_base
-{
+class asl_cel_format : public format_base {
     typedef format_base inherited_t;
 
 public:
     typedef inherited_t::stream_type stream_type;
 
-    explicit asl_cel_format(bool safe_strings) :
-        escape_m(safe_strings)
-    { }
+    explicit asl_cel_format(bool safe_strings) : escape_m(safe_strings) {}
 
-    virtual void begin_format(stream_type& os);
+    virtual void begin_format(stream_type &os);
 
-    virtual void begin_bag(stream_type& os, const std::string& ident);
+    virtual void begin_bag(stream_type &os, const std::string &ident);
 
-    virtual void begin_sequence(stream_type& os);
+    virtual void begin_sequence(stream_type &os);
 
-    virtual void begin_atom(stream_type& os, const any_regular_t&);
+    virtual void begin_atom(stream_type &os, const any_regular_t &);
 
 private:
-    virtual void stack_event(stream_type& os, bool is_push);
+    virtual void stack_event(stream_type &os, bool is_push);
 
-    void handle_atom(stream_type& os, bool is_push);
+    void handle_atom(stream_type &os, bool is_push);
 
     bool escape_m;
 };
@@ -56,16 +53,16 @@ private:
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-std::ostream& begin_asl_cel(std::ostream& os);
+std::ostream &begin_asl_cel(std::ostream &os);
 
 //!\ingroup manipulator
-std::ostream& end_asl_cel(std::ostream& os);
+std::ostream &end_asl_cel(std::ostream &os);
 
 //!\ingroup manipulator
-std::ostream& begin_asl_cel_unsafe(std::ostream& os);
+std::ostream &begin_asl_cel_unsafe(std::ostream &os);
 
 //!\ingroup manipulator
-std::ostream& end_asl_cel_unsafe(std::ostream& os);
+std::ostream &end_asl_cel_unsafe(std::ostream &os);
 
 /*************************************************************************************************/
 

@@ -16,18 +16,14 @@
 /*************************************************************************************************/
 
 #if defined(BOOST_MSVC) && defined(BOOST_THREAD_USE_LIB)
-extern "C" void tss_cleanup_implemented()
-{ }
+extern "C" void tss_cleanup_implemented() {}
 #endif
 
 /****************************************************************************************************/
 
-int main(int argc, char** argv)
-{
-    if (argc > 1)
-    {
-        if (std::string(argv[1]) == "--test")
-        {
+int main(int argc, char **argv) {
+    if (argc > 1) {
+        if (std::string(argv[1]) == "--test") {
             std::string test_uuid("baadf00d-cafe-1337-d00d-feeddeadbeef");
             std::string test_uuid2("baadf00d-feed-dead-beef-1337cafed00d");
 
@@ -59,8 +55,10 @@ int main(int argc, char** argv)
                       << "          uuid2: " << adobe::zuid_t("bad").c_str() << std::endl
                       << "          uuid3: " << adobe::zuid_t("bad-f00d").c_str() << std::endl
                       << "          uuid4: " << adobe::zuid_t("bad-f00d-badd").c_str() << std::endl
-                      << "          uuid5: " << adobe::zuid_t("bad-f00d-badd-d00d").c_str() << std::endl
-                      << "          uuid6: " << adobe::zuid_t("bad-f00d-badd-d00d-deadbeef").c_str() << std::endl;
+                      << "          uuid5: " << adobe::zuid_t("bad-f00d-badd-d00d").c_str()
+                      << std::endl
+                      << "          uuid6: " << adobe::zuid_t("bad-f00d-badd-d00d-deadbeef").c_str()
+                      << std::endl;
 
             std::cout << "Sort Test:" << std::endl;
 
@@ -80,33 +78,28 @@ int main(int argc, char** argv)
             zuid_set.push_back(adobe::zuid_t(domain, "Circle"));
             zuid_set.push_back(adobe::zuid_t(domain, "K"));
 
-            for (zuid_set_t::iterator first(zuid_set.begin()), last(zuid_set.end()); first != last; ++first)
+            for (zuid_set_t::iterator first(zuid_set.begin()), last(zuid_set.end()); first != last;
+                 ++first)
                 std::cout << ' ' << first->c_str() << std::endl;
 
             adobe::sort(zuid_set);
 
             std::cout << "Sorted:" << std::endl;
 
-            for (zuid_set_t::iterator first(zuid_set.begin()), last(zuid_set.end()); first != last; ++first)
+            for (zuid_set_t::iterator first(zuid_set.begin()), last(zuid_set.end()); first != last;
+                 ++first)
                 std::cout << ' ' << first->c_str() << std::endl;
-        }
-        else
-        {
-            std::cout << "Adobe Source Libraries ZUID generator; version "
-                      << ADOBE_VERSION_MAJOR << '.'
-                      << ADOBE_VERSION_MINOR << '.'
-                      << ADOBE_VERSION_SUBMINOR << std::endl
-                      << "http://stlab.adobe.com"
-                      << std::endl << std::endl;
+        } else {
+            std::cout << "Adobe Source Libraries ZUID generator; version " << ADOBE_VERSION_MAJOR
+                      << '.' << ADOBE_VERSION_MINOR << '.' << ADOBE_VERSION_SUBMINOR << std::endl
+                      << "http://stlab.adobe.com" << std::endl << std::endl;
             std::cout << "Usage:" << std::endl;
             std::cout << "  " << argv[0] << std::endl;
             std::cout << "    > generate a ZUID" << std::endl;
             std::cout << "  " << argv[0] << " --test" << std::endl;
             std::cout << "    > Run extended test over adobe::zuid_t API" << std::endl;
         }
-    }
-    else
-    {
+    } else {
         std::cout << adobe::zuid_t().c_str() << std::endl;
     }
 

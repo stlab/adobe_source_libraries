@@ -36,12 +36,10 @@ namespace adobe {
     \brief merge implementation
 */
 template <class InputRange1, class InputRange2, class OutputIterator>
-inline OutputIterator
-merge(const InputRange1& range1, const InputRange2& range2, OutputIterator result)
-{
-    return std::merge(  boost::begin(range1), boost::end(range1),
-                        boost::begin(range2), boost::end(range2),
-                        result);
+inline OutputIterator merge(const InputRange1 &range1, const InputRange2 &range2,
+                            OutputIterator result) {
+    return std::merge(boost::begin(range1), boost::end(range1), boost::begin(range2),
+                      boost::end(range2), result);
 }
 
 /*!
@@ -50,10 +48,8 @@ merge(const InputRange1& range1, const InputRange2& range2, OutputIterator resul
     \brief merge implementation
 */
 template <class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
-inline OutputIterator merge(InputIterator1 first1, InputIterator1 last1, 
-                            InputIterator2 first2, InputIterator2 last2,
-                            OutputIterator result, Compare comp)
-{
+inline OutputIterator merge(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2,
+                            InputIterator2 last2, OutputIterator result, Compare comp) {
     return std::merge(first1, last1, first2, last2, result, boost::bind(comp, _1, _2));
 }
 
@@ -63,12 +59,10 @@ inline OutputIterator merge(InputIterator1 first1, InputIterator1 last1,
     \brief merge implementation
 */
 template <class InputRange1, class InputRange2, class OutputIterator, class Compare>
-inline OutputIterator
-merge(const InputRange1& range1, const InputRange2& range2, OutputIterator result, Compare comp)
-{
-    return adobe::merge(    boost::begin(range1), boost::end(range1),
-                                boost::begin(range2), boost::end(range2),
-                                result, comp);
+inline OutputIterator merge(const InputRange1 &range1, const InputRange2 &range2,
+                            OutputIterator result, Compare comp) {
+    return adobe::merge(boost::begin(range1), boost::end(range1), boost::begin(range2),
+                        boost::end(range2), result, comp);
 }
 
 /*************************************************************************************************/

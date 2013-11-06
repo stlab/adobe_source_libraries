@@ -43,8 +43,7 @@ equivalent to <code>median(min, x, max)</code>.
 */
 
 template <typename T, typename R>
-inline const T& clamp(const T& x, const T& min, const T& max, R r)
-{
+inline const T &clamp(const T &x, const T &min, const T &max, R r) {
     return select_1_3_ac(min, x, max, boost::bind(r, _1, _2));
 }
 
@@ -55,8 +54,7 @@ inline const T& clamp(const T& x, const T& min, const T& max, R r)
 */
 
 template <typename T, typename R>
-inline T& clamp(T& x, T& min, T& max, R r)
-{
+inline T &clamp(T &x, T &min, T &max, R r) {
     return select_1_3_ac(min, x, max, boost::bind(r, _1, _2));
 }
 
@@ -67,8 +65,7 @@ inline T& clamp(T& x, T& min, T& max, R r)
 */
 
 template <typename T>
-inline const T& clamp(const T& x, const T& min, const T& max)
-{
+inline const T &clamp(const T &x, const T &min, const T &max) {
     return select_1_3_ac(min, x, max, less());
 }
 
@@ -79,8 +76,7 @@ inline const T& clamp(const T& x, const T& min, const T& max)
 */
 
 template <typename T>
-inline T& clamp(T& x, T& min, T& max)
-{
+inline T &clamp(T &x, T &min, T &max) {
     return select_1_3_ac(min, x, max, less());
 }
 
@@ -90,8 +86,9 @@ inline T& clamp(T& x, T& min, T& max)
 */
 
 template <typename T, typename R>
-inline const T& clamp_unordered(const T& x, const T& min, const T& max, R r)
-{ return select_1_3(min, x, max, boost::bind(r, _1, _2)); }
+inline const T &clamp_unordered(const T &x, const T &min, const T &max, R r) {
+    return select_1_3(min, x, max, boost::bind(r, _1, _2));
+}
 
 /*!
     \ingroup clamp
@@ -99,8 +96,9 @@ inline const T& clamp_unordered(const T& x, const T& min, const T& max, R r)
 */
 
 template <typename T, typename R>
-inline T& clamp_unordered(T& x, T& min, T& max, R r)
-{ return select_1_3(min, x, max, boost::bind(r, _1, _2)); }
+inline T &clamp_unordered(T &x, T &min, T &max, R r) {
+    return select_1_3(min, x, max, boost::bind(r, _1, _2));
+}
 
 /*!
     \ingroup clamp
@@ -108,8 +106,9 @@ inline T& clamp_unordered(T& x, T& min, T& max, R r)
 */
 
 template <typename T>
-inline const T& clamp_unordered(const T& x, const T& min, const T& max)
-{ return select_1_3(min, x, max, less()); }
+inline const T &clamp_unordered(const T &x, const T &min, const T &max) {
+    return select_1_3(min, x, max, less());
+}
 
 /*!
     \ingroup clamp
@@ -117,8 +116,9 @@ inline const T& clamp_unordered(const T& x, const T& min, const T& max)
 */
 
 template <typename T>
-inline T& clamp_unordered(T& x, T& min, T& max)
-{ return select_1_3(min, x, max, less()); }
+inline T &clamp_unordered(T &x, T &min, T &max) {
+    return select_1_3(min, x, max, less());
+}
 
 /**************************************************************************************************/
 

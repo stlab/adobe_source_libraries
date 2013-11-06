@@ -25,23 +25,23 @@ namespace {
 /**************************************************************************************************/
 
 template <typename I> // I models ForwardIterator
-struct combine_ranges : std::binary_function<std::pair<I, I>, std::pair<I, I>, std::pair<I, I> >
-{
+struct combine_ranges : std::binary_function<std::pair<I, I>, std::pair<I, I>, std::pair<I, I>> {
     typedef std::pair<I, I> second_argument_type;
     typedef std::pair<I, I> first_argument_type;
     typedef std::pair<I, I> result_type;
 
-    result_type operator()(const first_argument_type& x, const second_argument_type& y) const
-    {
+    result_type operator()(const first_argument_type &x, const second_argument_type &y) const {
         std::cout << "merging ( ";
         std::copy(x.first, x.second, std::ostream_iterator<ADOBE_VALUE_TYPE(I)>(std::cout, " "));
         std::cout << ") and ( ";
         std::copy(y.first, y.second, std::ostream_iterator<ADOBE_VALUE_TYPE(I)>(std::cout, " "));
         std::cout << ") yields ( ";
 
-        result_type result(make_pair(adobe::other_of(adobe::rotate(x.first, x.second, y.first), x.second), y.second));
+        result_type result(make_pair(
+            adobe::other_of(adobe::rotate(x.first, x.second, y.first), x.second), y.second));
 
-        std::copy(result.first, result.second, std::ostream_iterator<ADOBE_VALUE_TYPE(I)>(std::cout, " "));
+        std::copy(result.first, result.second,
+                  std::ostream_iterator<ADOBE_VALUE_TYPE(I)>(std::cout, " "));
         std::cout << ")" << std::endl;
 
         return result;
@@ -51,15 +51,13 @@ struct combine_ranges : std::binary_function<std::pair<I, I>, std::pair<I, I>, s
 /**************************************************************************************************/
 
 template <typename T>
-struct myplus : std::binary_function<T, T, T>
-{
+struct myplus : std::binary_function<T, T, T> {
     typedef T second_argument_type;
     typedef T first_argument_type;
     typedef T result_type;
 
-    result_type operator()(const first_argument_type& x, const second_argument_type& y) const
-    {
-        result_type result(x+y);
+    result_type operator()(const first_argument_type &x, const second_argument_type &y) const {
+        result_type result(x + y);
 
         std::cout << x << " + " << y << " = " << result << std::endl;
 
@@ -78,12 +76,10 @@ namespace adobe {
 /**************************************************************************************************/
 
 template <typename T>
-struct identity_element<myplus<T> >
-{
+struct identity_element<myplus<T>> {
     typedef T result_type;
 
-    result_type operator()() const
-    { return T(0); }
+    result_type operator()() const { return T(0); }
 };
 
 /**************************************************************************************************/
@@ -98,15 +94,12 @@ namespace {
 
 template <typename I, // I models ForwardIterator
           typename P> // P models UnaryPredicate
-struct partition_trivial : std::unary_function<I, std::pair<I, I> >
-{
+struct partition_trivial : std::unary_function<I, std::pair<I, I>> {
     P p;
 
-    partition_trivial(const P & x) : p(x)
-    { }
+    partition_trivial(const P &x) : p(x) {}
 
-    std::pair<I, I> operator()(I i) const
-    {
+    std::pair<I, I> operator()(I i) const {
         if (p(*i))
             return std::make_pair(i, i);
         else
@@ -117,10 +110,10 @@ struct partition_trivial : std::unary_function<I, std::pair<I, I> >
 /**************************************************************************************************/
 
 template <typename I, // I models ForwardIterator
-          typename P> // P models UnaryPredicate
-I stable_partition_inplace_iterative(I f, I l, P p)
-{
-    typedef partition_trivial<I, P>                  fun_t;
+          typename P>
+// P models UnaryPredicate
+I stable_partition_inplace_iterative(I f, I l, P p) {
+    typedef partition_trivial<I, P> fun_t;
     typedef typename adobe::value_iterator<I, fun_t> val_iter;
 
     fun_t fun(p);
@@ -136,23 +129,20 @@ I stable_partition_inplace_iterative(I f, I l, P p)
     std::pair<I, I> result(adobe::reduce_balanced(f1, l1, op, z));
 
     return result.first;
-}  
+}
 
 /**************************************************************************************************/
 
 template <typename T>
-struct is_odd : std::unary_function<T, bool>
-{
+struct is_odd : std::unary_function<T, bool> {
     typedef bool result_type;
 
-    bool operator()(const T& x) const
-    { return x & 1; }
+    bool operator()(const T &x) const { return x & 1; }
 };
 
 /**************************************************************************************************/
 
-void test1()
-{
+void test1() {
     std::vector<int> set(20);
 
     adobe::iota(set.begin(), set.end(), 1);
@@ -169,8 +159,7 @@ void test1()
 
 /**************************************************************************************************/
 
-void test2()
-{
+void test2() {
     std::vector<double> set(20);
 
     adobe::iota(set.begin(), set.end(), 1);
@@ -182,7 +171,8 @@ void test2()
     std::cout << adobe::reduce_balanced(set.begin(), set.end(), std::plus<double>()) << std::endl;
 
     // just to test std::multiplies
-    std::cout << adobe::reduce_balanced(set.begin(), set.end(), std::multiplies<double>()) << std::endl;
+    std::cout << adobe::reduce_balanced(set.begin(), set.end(), std::multiplies<double>())
+              << std::endl;
 
     // now a more verbose version
     std::cout << adobe::reduce_balanced(set.begin(), set.end(), myplus<double>()) << std::endl;
@@ -194,8 +184,7 @@ void test2()
 
 /**************************************************************************************************/
 
-int main()
-{
+int main() {
     test1();
 
     test2();

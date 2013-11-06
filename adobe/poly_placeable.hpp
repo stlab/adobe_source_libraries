@@ -18,11 +18,10 @@
 #include <adobe/layout_attributes.hpp>
 
 
-
 /*************************************************************************************************/
 
 namespace adobe {
-    
+
 /*************************************************************************************************/
 /*!
 \defgroup poly_placeable poly_placeable
@@ -34,11 +33,10 @@ namespace adobe {
 \ref adobe::PlaceableConcept
 \ingroup poly_placeable
 */
-    
-struct poly_placeable_interface : poly_copyable_interface
-{
-    virtual void measure(extents_t& result) = 0;
-    virtual void place(const place_data_t& place_data) = 0;
+
+struct poly_placeable_interface : poly_copyable_interface {
+    virtual void measure(extents_t &result) = 0;
+    virtual void place(const place_data_t &place_data) = 0;
 };
 
 /*************************************************************************************************/
@@ -46,34 +44,27 @@ struct poly_placeable_interface : poly_copyable_interface
 /*!
 
 \brief Implementation of virtual interface for the poly<placeable> modeling
-\ref adobe::PlaceableConcept 
+\ref adobe::PlaceableConcept
 \ingroup poly_placeable
 */
 
 template <typename T>
-struct poly_placeable_instance : optimized_storage_type<T, poly_placeable_interface>::type
-{
+struct poly_placeable_instance : optimized_storage_type<T, poly_placeable_interface>::type {
     typedef typename optimized_storage_type<T, poly_placeable_interface>::type base_t;
 
     BOOST_CLASS_REQUIRE(T, adobe, PlaceableConcept);
 
-    poly_placeable_instance(const T& x) 
-        : base_t(x) {}
-    poly_placeable_instance(poly_placeable_instance&& x)
-        : base_t(std::move(x)) {}
+    poly_placeable_instance(const T &x) : base_t(x) {}
+    poly_placeable_instance(poly_placeable_instance &&x) : base_t(std::move(x)) {}
 
-    void measure(extents_t& result)
-    { 
-        PlaceableConcept<T>::measure(this->get(), result); 
-    }
+    void measure(extents_t &result) { PlaceableConcept<T>::measure(this->get(), result); }
 
-    void place(const place_data_t& place_data)
-    { 
-        PlaceableConcept<T>::place(this->get(), place_data); 
+    void place(const place_data_t &place_data) {
+        PlaceableConcept<T>::place(this->get(), place_data);
     }
 };
 
-    
+
 /*************************************************************************************************/
 
 /*!
@@ -83,20 +74,18 @@ models \ref adobe::PlaceableConcept when T does.
 \ingroup poly_placeable
 */
 
-struct placeable : public poly_base<poly_placeable_interface, poly_placeable_instance>
-{
+struct placeable : public poly_base<poly_placeable_interface, poly_placeable_instance> {
     typedef poly_base<poly_placeable_interface, poly_placeable_instance> base_t;
 
     template <typename T>
-    explicit placeable(const T& x) : base_t(x) {}
-    
-    placeable(placeable&& x) : base_t(std::move(x)) {}
+    explicit placeable(const T &x)
+        : base_t(x) {}
 
-    void measure(extents_t& result)
-    { interface_ref().measure(result); }
+    placeable(placeable &&x) : base_t(std::move(x)) {}
 
-    void place(const place_data_t& place_data)
-    { interface_ref().place(place_data); }
+    void measure(extents_t &result) { interface_ref().measure(result); }
+
+    void place(const place_data_t &place_data) { interface_ref().place(place_data); }
 };
 
 /*************************************************************************************************/
@@ -119,46 +108,38 @@ typedef poly<placeable> poly_placeable_t;
 \ref adobe::PlaceableTwoPassConcept
 \ingroup poly_placeable
 */
-struct poly_placeable_twopass_interface : public poly_placeable_interface
-{
-    virtual void measure_vertical(extents_t& in_out_attrs,
-                                  const place_data_t& placed_horizontal) = 0;
+struct poly_placeable_twopass_interface : public poly_placeable_interface {
+    virtual void measure_vertical(extents_t &in_out_attrs,
+                                  const place_data_t &placed_horizontal) = 0;
 };
 
 /*************************************************************************************************/
 
 /*!
 \brief Implementation of virtual interface for the poly<placeable_twopass> modeling
-\ref adobe::PlaceableTwoPassConcept 
+\ref adobe::PlaceableTwoPassConcept
 \ingroup poly_placeable
 */
 template <typename T>
-struct poly_placeable_twopass_instance : optimized_storage_type<T, poly_placeable_twopass_interface>::type
-{
+struct poly_placeable_twopass_instance
+    : optimized_storage_type<T, poly_placeable_twopass_interface>::type {
     typedef typename optimized_storage_type<T, poly_placeable_twopass_interface>::type base_t;
 
     BOOST_CLASS_REQUIRE(T, adobe, PlaceableTwoPassConcept);
 
-    poly_placeable_twopass_instance(const T& x) 
-        : base_t(x) {}  
-    poly_placeable_twopass_instance(poly_placeable_twopass_instance&& x)
-        : base_t(std::move(x)) {}
+    poly_placeable_twopass_instance(const T &x) : base_t(x) {}
+    poly_placeable_twopass_instance(poly_placeable_twopass_instance &&x) : base_t(std::move(x)) {}
 
-    void measure(extents_t& result)
-    { 
-        PlaceableTwoPassConcept<T>::measure(this->get(), result); 
-    }
-    
-    void measure_vertical(extents_t& calculated_horizontal, const place_data_t& placed_horizontal)
-    { 
-        PlaceableTwoPassConcept<T>::measure_vertical(this->get(), calculated_horizontal, placed_horizontal); 
+    void measure(extents_t &result) { PlaceableTwoPassConcept<T>::measure(this->get(), result); }
+
+    void measure_vertical(extents_t &calculated_horizontal, const place_data_t &placed_horizontal) {
+        PlaceableTwoPassConcept<T>::measure_vertical(this->get(), calculated_horizontal,
+                                                     placed_horizontal);
     }
 
-    void place(const place_data_t& place_data)
-    { 
-        PlaceableTwoPassConcept<T>::place(this->get(), place_data); 
+    void place(const place_data_t &place_data) {
+        PlaceableTwoPassConcept<T>::place(this->get(), place_data);
     }
-    
 };
 
 /*************************************************************************************************/
@@ -166,24 +147,23 @@ struct poly_placeable_twopass_instance : optimized_storage_type<T, poly_placeabl
 /*!
 \ingroup poly_placeable
 */
-struct placeable_twopass 
-    : public poly_base<poly_placeable_twopass_interface, poly_placeable_twopass_instance>
-{
+struct placeable_twopass
+    : public poly_base<poly_placeable_twopass_interface, poly_placeable_twopass_instance> {
     typedef poly_base<poly_placeable_twopass_interface, poly_placeable_twopass_instance> base_t;
 
     template <typename T>
-    explicit placeable_twopass(const T& x) : base_t(x) {}
- 
-    placeable_twopass(placeable_twopass&& x) : base_t(std::move(x)) {}
+    explicit placeable_twopass(const T &x)
+        : base_t(x) {}
 
-    void measure(extents_t& result)
-        { interface_ref().measure(result); }
+    placeable_twopass(placeable_twopass &&x) : base_t(std::move(x)) {}
 
-    void measure_vertical(extents_t& calculated_horizontal, const place_data_t& placed_horizontal)
-        { interface_ref().measure_vertical(calculated_horizontal, placed_horizontal); }
+    void measure(extents_t &result) { interface_ref().measure(result); }
 
-    void place(const place_data_t& place_data)
-        { interface_ref().place(place_data); }
+    void measure_vertical(extents_t &calculated_horizontal, const place_data_t &placed_horizontal) {
+        interface_ref().measure_vertical(calculated_horizontal, placed_horizontal);
+    }
+
+    void place(const place_data_t &place_data) { interface_ref().place(place_data); }
 };
 
 /*************************************************************************************************/

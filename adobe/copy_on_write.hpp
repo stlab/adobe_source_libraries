@@ -66,10 +66,9 @@ copy_on_write<T> x(custom_allocator);
 x.write() = value;
 </pre>
 */
-template <typename T,                                   // T models Regular
-          typename A = adobe::capture_allocator<T> >    // A models Allocator
-class copy_on_write
-{
+template <typename T,                               // T models Regular
+          typename A = adobe::capture_allocator<T>> // A models Allocator
+class copy_on_write {
 public:
     /// \brief The type of value stored.
     typedef T value_type;
@@ -79,7 +78,9 @@ public:
 #if !defined(ADOBE_NO_DOCUMENTATION)
 private:
     struct implementation_t;
-    typedef typename allocator_type::template rebind<implementation_t>::other implementation_allocator_type;
+    typedef typename allocator_type::template rebind<implementation_t>::other
+    implementation_allocator_type;
+
 public:
 #endif
 
@@ -88,9 +89,8 @@ public:
         instance of value_type which will be used for subsequent calls to the
         default constructor. The default instance will be released at exit.
     */
-    copy_on_write()
-    {
-		std::call_once(flag_s, init_default);
+    copy_on_write() {
+        std::call_once(flag_s, init_default);
         object_m = default_s;
         object_m->header_m.get().count_m.increment();
     }
@@ -98,9 +98,7 @@ public:
     /*!
         Initializes the instance with a custom allocator
     */
-    explicit copy_on_write(const allocator_type& a) :
-        object_m(0)
-    {
+    explicit copy_on_write(const allocator_type &a) : object_m(0) {
         implementation_allocator_type other_allocator(a);
 
         object_m = allocate(other_allocator);
@@ -111,43 +109,33 @@ public:
 
     \param x A default value to assign to this object
     */
-    copy_on_write(T x) :
-        object_m(allocate_move(0, std::move(x)))
-    { }
+    copy_on_write(T x) : object_m(allocate_move(0, std::move(x))) {}
 
     /*!
     Copy construction is a non-throwing operation and simply increments the
     reference count on the stored object.
     */
-    copy_on_write(const copy_on_write& x) :
-        object_m(x.object_m)
-    {
+    copy_on_write(const copy_on_write &x) : object_m(x.object_m) {
         if (object_m)
             object_m->header_m.get().count_m.increment();
     }
 
-    copy_on_write(copy_on_write&& x) :
-        object_m(x.object_m)
-    {
-        x.object_m = 0;
-    }
+    copy_on_write(copy_on_write &&x) : object_m(x.object_m) { x.object_m = 0; }
 
-    ~copy_on_write()
-    {
-        release(object_m);
-    }
+    ~copy_on_write() { release(object_m); }
 
     /*!
         As with copy construction, assignment is a non-throwing operation which
         releases the old value and increments the reference count of the item
         being assigned to.
     */
-    copy_on_write& operator=(copy_on_write x)
-    { swap(*this, x); return *this; }
+    copy_on_write &operator=(copy_on_write x) {
+        swap(*this, x);
+        return *this;
+    }
 
 
-    copy_on_write& operator=(T x)
-    {
+    copy_on_write &operator=(T x) {
         if (!object_m)
             object_m = allocate_move(0, std::move(x));
         else if (object_m->header_m.get().count_m.is_one())
@@ -170,8 +158,7 @@ public:
 
     \return A reference to the underlying object
     */
-    value_type& write()
-    {
+    value_type &write() {
         assert(object_m && "FATAL (sparent) : using a moved copy_on_write object");
 
         if (!object_m->header_m.get().count_m.is_one())
@@ -185,8 +172,7 @@ public:
 
     \return A const reference to the underlying object
     */
-    const value_type& read() const
-    {
+    const value_type &read() const {
         assert(object_m && "FATAL (sparent) : using a moved copy_on_write object");
         return object_m->value_m;
     }
@@ -196,8 +182,7 @@ public:
 
     \return A const reference to the underlying object
     */
-    operator const value_type& () const
-    { return read(); }
+    operator const value_type &() const { return read(); }
 
     /*!
     \brief Obtain a const reference to the underlying object.
@@ -209,8 +194,7 @@ public:
 
     \return A const reference to the underlying object
     */
-    const value_type& operator*() const
-    { return read(); }
+    const value_type &operator*() const { return read(); }
 
     /*!
     \brief Obtain a const pointer to the underlying object.
@@ -222,8 +206,7 @@ public:
 
     \return A const pointer to the underlying object
     */
-    const value_type* operator->() const
-    { return &read(); }
+    const value_type *operator->() const { return &read(); }
 
     /*!
     \brief unique_instance returns whether or not the reference count to the
@@ -232,8 +215,7 @@ public:
 
     \return <code>true</code> if the ref count for the instance is one.
     */
-    bool unique_instance() const
-    { return !object_m || object_m->header_m.get().count_m.is_one(); }
+    bool unique_instance() const { return !object_m || object_m->header_m.get().count_m.is_one(); }
 
     /*!
     \brief identity is used to see if two copy_on_write items refer to the same
@@ -242,51 +224,54 @@ public:
     \return Boolean; <code>true</code> if the underlying object instance is
     shared by both objects.
     */
-    bool identity(const copy_on_write& x) const
-    { return object_m == x.object_m; }
+    bool identity(const copy_on_write &x) const { return object_m == x.object_m; }
 
-    friend inline void swap(copy_on_write& x, copy_on_write& y)
-    { std::swap(x.object_m, y.object_m); }
+    friend inline void swap(copy_on_write &x, copy_on_write &y) {
+        std::swap(x.object_m, y.object_m);
+    }
 
-    friend inline bool operator<(const copy_on_write& x, const copy_on_write& y)
-    { return y.object_m && (!x.object_m || (!x.identity(y) && *x < *y)); }
+    friend inline bool operator<(const copy_on_write &x, const copy_on_write &y) {
+        return y.object_m && (!x.object_m || (!x.identity(y) && *x < *y));
+    }
 
-    friend inline bool operator>(const copy_on_write& x, const copy_on_write& y)
-    { return y < x; }
+    friend inline bool operator>(const copy_on_write &x, const copy_on_write &y) { return y < x; }
 
-    friend inline bool operator<=(const copy_on_write& x, const copy_on_write& y)
-    { return !(y < x); }
+    friend inline bool operator<=(const copy_on_write &x, const copy_on_write &y) {
+        return !(y < x);
+    }
 
-    friend inline bool operator>=(const copy_on_write& x, const copy_on_write& y)
-    { return !(x < y); }
+    friend inline bool operator>=(const copy_on_write &x, const copy_on_write &y) {
+        return !(x < y);
+    }
 
-    friend inline bool operator==(const copy_on_write& x, const copy_on_write& y)
-    { return x.identity(y) || (x.object_m && y.object_m && *x == *y); }
+    friend inline bool operator==(const copy_on_write &x, const copy_on_write &y) {
+        return x.identity(y) || (x.object_m && y.object_m && *x == *y);
+    }
 
-    friend inline bool operator!=(const copy_on_write& x, const copy_on_write& y)
-    { return !(x == y); }
+    friend inline bool operator!=(const copy_on_write &x, const copy_on_write &y) {
+        return !(x == y);
+    }
 
-    allocator_type get_allocator() const
-    { return object_m ? allocator_type(object_m->get_allocator()) : allocator_type(); }
+    allocator_type get_allocator() const {
+        return object_m ? allocator_type(object_m->get_allocator()) : allocator_type();
+    }
 
 private:
 #if !defined(ADOBE_NO_DOCUMENTATION)
-    static implementation_t* allocate(const implementation_t* alloc_src, const T& x = T())
-    {
-        implementation_allocator_type allocator(alloc_src ?
-                                                alloc_src->get_allocator() :
-                                                implementation_allocator_type());
+    static implementation_t *allocate(const implementation_t *alloc_src, const T &x = T()) {
+        implementation_allocator_type allocator(alloc_src ? alloc_src->get_allocator()
+                                                          : implementation_allocator_type());
 
         return allocate(allocator, x);
     }
 
-    static implementation_t* allocate(implementation_allocator_type& allocator, const T& x = T())
-    {
-        implementation_t* tmp(allocator.allocate(1));
+    static implementation_t *allocate(implementation_allocator_type &allocator, const T &x = T()) {
+        implementation_t *tmp(allocator.allocate(1));
 
         try {
-            ::new(static_cast<void*>(tmp)) implementation_t(x);
-        } catch (...) {
+            ::new (static_cast<void *>(tmp)) implementation_t(x);
+        }
+        catch (...) {
             tmp->get_allocator().deallocate(tmp, 1);
             throw;
         }
@@ -294,16 +279,15 @@ private:
         return tmp;
     }
 
-    static implementation_t* allocate_move(const implementation_t* alloc_src, T x)
-    {
-        implementation_allocator_type allocator(alloc_src ?
-                                                alloc_src->get_allocator() :
-                                                implementation_allocator_type());
-        implementation_t*             tmp(allocator.allocate(1));
+    static implementation_t *allocate_move(const implementation_t *alloc_src, T x) {
+        implementation_allocator_type allocator(alloc_src ? alloc_src->get_allocator()
+                                                          : implementation_allocator_type());
+        implementation_t *tmp(allocator.allocate(1));
 
         try {
-            ::new(static_cast<void*>(tmp)) implementation_t(std::move(x));
-        } catch (...) {
+            ::new (static_cast<void *>(tmp)) implementation_t(std::move(x));
+        }
+        catch (...) {
             tmp->get_allocator().deallocate(tmp, 1);
             throw;
         }
@@ -311,8 +295,7 @@ private:
         return tmp;
     }
 
-    static void release(implementation_t* x)
-    {
+    static void release(implementation_t *x) {
         /*
             I thought about returning a bool from this routine (denoting whether
             or not a deallocation took place) but decided not to in the end.
@@ -332,16 +315,15 @@ private:
         allocator.deallocate(x, 1);
     }
 
-    void reset(implementation_t* to)
-    {
+    void reset(implementation_t *to) {
         release(object_m);
         object_m = to;
     }
 
-    implementation_t* object_m;
+    implementation_t *object_m;
 
-    static std::once_flag    flag_s;
-    static implementation_t* default_s;
+    static std::once_flag flag_s;
+    static implementation_t *default_s;
 
     static void release_default();
     static void init_default();
@@ -358,36 +340,32 @@ template <typename T, typename A>
 std::once_flag copy_on_write<T, A>::flag_s;
 
 template <typename T, typename A>
-typename copy_on_write<T, A>::implementation_t* copy_on_write<T, A>::default_s;
+typename copy_on_write<T, A>::implementation_t *copy_on_write<T, A>::default_s;
 
 template <typename T, typename A>
-struct copy_on_write<T, A>::implementation_t : private boost::noncopyable
-{
+struct copy_on_write<T, A>::implementation_t : private boost::noncopyable {
     // Assert proper size for counter_t
     BOOST_STATIC_ASSERT((sizeof(counter_t) == sizeof(std::size_t)));
     // Assert proper alignment for counter_t
-    BOOST_STATIC_ASSERT((sizeof(counter_t) == sizeof(void*)));
+    BOOST_STATIC_ASSERT((sizeof(counter_t) == sizeof(void *)));
 
-    struct header_t
-    {
-        counter_t      count_m;
+    struct header_t {
+        counter_t count_m;
         allocator_type allocator_m;
     };
 
-    explicit implementation_t(T x) :
-        value_m(std::move(x))
-    { }
+    explicit implementation_t(T x) : value_m(std::move(x)) {}
 
-    implementation_allocator_type get_allocator() const
-    { return implementation_allocator_type(header_m.get().allocator_m); }
+    implementation_allocator_type get_allocator() const {
+        return implementation_allocator_type(header_m.get().allocator_m);
+    }
 
     aligned_storage<header_t> header_m;
-    value_type                value_m;
+    value_type value_m;
 };
 
 template <typename T, typename A>
-void copy_on_write<T, A>::init_default()
-{
+void copy_on_write<T, A>::init_default() {
     implementation_allocator_type allocator;
 
     default_s = allocate(allocator);
@@ -396,8 +374,7 @@ void copy_on_write<T, A>::init_default()
 }
 
 template <typename T, typename A>
-void copy_on_write<T, A>::release_default()
-{
+void copy_on_write<T, A>::release_default() {
     release(default_s);
 }
 

@@ -51,8 +51,7 @@ iterator \c i in the range <code>[first, last)</code> is assigned
     \brief iota implementation
 */
 template <class ForwardIterator, class T>
-T iota (ForwardIterator first, ForwardIterator last, const T& value)
-{
+T iota(ForwardIterator first, ForwardIterator last, const T &value) {
     T result = value;
     while (first != last) {
         *first = result;
@@ -68,8 +67,7 @@ T iota (ForwardIterator first, ForwardIterator last, const T& value)
     \brief iota implementation
 */
 template <class ForwardRange, class T>
-T iota (ForwardRange& range, const T& value)
-{
+T iota(ForwardRange &range, const T &value) {
     return adobe::iota(boost::begin(range), boost::end(range), value);
 }
 

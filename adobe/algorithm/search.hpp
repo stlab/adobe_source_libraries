@@ -38,10 +38,9 @@ namespace adobe {
 */
 template <class ForwardRange1, class ForwardRange2>
 inline typename boost::range_const_iterator<ForwardRange1>::type
-search(const ForwardRange1& range1, const ForwardRange2& range2)
-{
-    return std::search(boost::begin(range1), boost::end(range1),
-                       boost::begin(range2), boost::end(range2));
+search(const ForwardRange1 &range1, const ForwardRange2 &range2) {
+    return std::search(boost::begin(range1), boost::end(range1), boost::begin(range2),
+                       boost::end(range2));
 }
 
 /*!
@@ -50,11 +49,10 @@ search(const ForwardRange1& range1, const ForwardRange2& range2)
     \brief search implementation
 */
 template <class ForwardRange1, class ForwardRange2>
-inline typename boost::range_iterator<ForwardRange1>::type
-search(ForwardRange1& range1, const ForwardRange2& range2)
-{
-    return std::search(boost::begin(range1), boost::end(range1),
-                       boost::begin(range2), boost::end(range2));
+inline typename boost::range_iterator<ForwardRange1>::type search(ForwardRange1 &range1,
+                                                                  const ForwardRange2 &range2) {
+    return std::search(boost::begin(range1), boost::end(range1), boost::begin(range2),
+                       boost::end(range2));
 }
 
 /*!
@@ -63,10 +61,9 @@ search(ForwardRange1& range1, const ForwardRange2& range2)
     \brief search implementation
 */
 template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
-inline ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1, 
+inline ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1,
                                ForwardIterator2 first2, ForwardIterator2 last2,
-                               BinaryPredicate pred)
-{
+                               BinaryPredicate pred) {
     return std::search(first1, last1, first2, last2, boost::bind(pred, _1, _2));
 }
 
@@ -76,13 +73,10 @@ inline ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1,
     \brief search implementation
 */
 template <class ForwardRange1, class ForwardRange2, class BinaryPredicate>
-inline typename boost::range_iterator<ForwardRange1>::type search(ForwardRange1& range1,
-                                                                  const ForwardRange2& range2,
-                                                                  BinaryPredicate pred)
-{
-    return adobe::search(boost::begin(range1), boost::end(range1),
-                         boost::begin(range2), boost::end(range2),
-                         pred);
+inline typename boost::range_iterator<ForwardRange1>::type
+search(ForwardRange1 &range1, const ForwardRange2 &range2, BinaryPredicate pred) {
+    return adobe::search(boost::begin(range1), boost::end(range1), boost::begin(range2),
+                         boost::end(range2), pred);
 }
 
 /*!
@@ -91,13 +85,10 @@ inline typename boost::range_iterator<ForwardRange1>::type search(ForwardRange1&
     \brief search implementation
 */
 template <class ForwardRange1, class ForwardRange2, class BinaryPredicate>
-inline typename boost::range_const_iterator<ForwardRange1>::type search(const ForwardRange1& range1,
-                                                                        const ForwardRange2& range2,
-                                                                        BinaryPredicate      pred)
-{
-    return adobe::search(boost::begin(range1), boost::end(range1),
-                         boost::begin(range2), boost::end(range2),
-                         pred);
+inline typename boost::range_const_iterator<ForwardRange1>::type
+search(const ForwardRange1 &range1, const ForwardRange2 &range2, BinaryPredicate pred) {
+    return adobe::search(boost::begin(range1), boost::end(range1), boost::begin(range2),
+                         boost::end(range2), pred);
 }
 
 /*!
@@ -106,9 +97,8 @@ inline typename boost::range_const_iterator<ForwardRange1>::type search(const Fo
     \brief search implementation
 */
 template <class ForwardRange, class Size, class T>
-inline typename boost::range_iterator<ForwardRange>::type
-search_n(ForwardRange& range, Size count, const T& value)
-{
+inline typename boost::range_iterator<ForwardRange>::type search_n(ForwardRange &range, Size count,
+                                                                   const T &value) {
     return std::search_n(boost::begin(range), boost::end(range), count, value);
 }
 
@@ -119,8 +109,7 @@ search_n(ForwardRange& range, Size count, const T& value)
 */
 template <class ForwardRange, class Size, class T>
 inline typename boost::range_const_iterator<ForwardRange>::type
-search_n(const ForwardRange& range, Size count, const T& value)
-{
+search_n(const ForwardRange &range, Size count, const T &value) {
     return std::search_n(boost::begin(range), boost::end(range), count, value);
 }
 
@@ -130,9 +119,8 @@ search_n(const ForwardRange& range, Size count, const T& value)
     \brief search implementation
 */
 template <class ForwardIterator, class Size, class T, class BinaryPredicate>
-inline ForwardIterator
-search_n(ForwardIterator first, ForwardIterator last, Size count, const T& value, BinaryPredicate pred)
-{
+inline ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Size count,
+                                const T &value, BinaryPredicate pred) {
     return std::search_n(first, last, count, value, boost::bind(pred, _1, _2));
 }
 
@@ -143,8 +131,7 @@ search_n(ForwardIterator first, ForwardIterator last, Size count, const T& value
 */
 template <class ForwardRange, class Size, class T, class BinaryPredicate>
 inline typename boost::range_iterator<ForwardRange>::type
-search_n(ForwardRange& range, Size count, const T& value, BinaryPredicate pred)
-{
+search_n(ForwardRange &range, Size count, const T &value, BinaryPredicate pred) {
     return adobe::search_n(boost::begin(range), boost::end(range), count, value, pred);
 }
 
@@ -155,8 +142,7 @@ search_n(ForwardRange& range, Size count, const T& value, BinaryPredicate pred)
 */
 template <class ForwardRange, class Size, class T, class BinaryPredicate>
 inline typename boost::range_const_iterator<ForwardRange>::type
-search_n(const ForwardRange& range, Size count, const T& value, BinaryPredicate pred)
-{
+search_n(const ForwardRange &range, Size count, const T &value, BinaryPredicate pred) {
     return adobe::search_n(boost::begin(range), boost::end(range), count, value, pred);
 }
 

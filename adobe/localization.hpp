@@ -31,11 +31,11 @@ namespace adobe {
     The proc used here can expect utf-8 coming in and should output utf-8 encoded text in kind.
 */
 
-typedef boost::function<std::string (const std::string&)> localization_lookup_proc_t;
+typedef boost::function<std::string(const std::string &)> localization_lookup_proc_t;
 
-void localization_register(const localization_lookup_proc_t& proc);
+void localization_register(const localization_lookup_proc_t &proc);
 
-std::string localization_invoke(const std::string& source);
+std::string localization_invoke(const std::string &source);
 
 bool localization_ready();
 

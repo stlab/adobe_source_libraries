@@ -78,8 +78,7 @@ Returns \c last if no such iterator exists.
     \brief find_if_not implementation
 */
 template <class InputIterator, class Predicate>
-inline InputIterator find_if_not(InputIterator first, InputIterator last, Predicate pred)
-{
+inline InputIterator find_if_not(InputIterator first, InputIterator last, Predicate pred) {
     return std::find_if(first, last, !boost::bind(pred, _1));
 }
 
@@ -89,9 +88,8 @@ inline InputIterator find_if_not(InputIterator first, InputIterator last, Predic
     \brief find_if_not implementation
 */
 template <class InputRange, class Predicate>
-inline typename boost::range_iterator<InputRange>::type
-find_if_not(InputRange& range, Predicate pred)
-{
+inline typename boost::range_iterator<InputRange>::type find_if_not(InputRange &range,
+                                                                    Predicate pred) {
     return adobe::find_if_not(boost::begin(range), boost::end(range), pred);
 }
 
@@ -101,9 +99,8 @@ find_if_not(InputRange& range, Predicate pred)
     \brief find_if_not implementation
 */
 template <class InputRange, class Predicate>
-inline typename boost::range_const_iterator<InputRange>::type
-find_if_not(const InputRange& range, Predicate pred)
-{
+inline typename boost::range_const_iterator<InputRange>::type find_if_not(const InputRange &range,
+                                                                          Predicate pred) {
     return adobe::find_if_not(boost::begin(range), boost::end(range), pred);
 }
 
@@ -113,8 +110,7 @@ find_if_not(const InputRange& range, Predicate pred)
     \ingroup find_not
 */
 template <class InputIterator, class T>
-inline InputIterator find_not(InputIterator first, InputIterator last, const T& value)
-{
+inline InputIterator find_not(InputIterator first, InputIterator last, const T &value) {
     return std::find_if(first, last, !boost::bind(std::equal_to<T>(), value, _1));
 }
 
@@ -124,9 +120,8 @@ inline InputIterator find_not(InputIterator first, InputIterator last, const T& 
     \brief find_not implementation
 */
 template <class InputRange, class T>
-inline typename boost::range_iterator<InputRange>::type
-find_not(InputRange& range, const T& value)
-{
+inline typename boost::range_iterator<InputRange>::type find_not(InputRange &range,
+                                                                 const T &value) {
     return adobe::find_not(boost::begin(range), boost::end(range), value);
 }
 
@@ -136,9 +131,8 @@ find_not(InputRange& range, const T& value)
     \brief find_not implementation
 */
 template <class InputRange, class T>
-inline typename boost::range_const_iterator<InputRange>::type
-find_not(const InputRange& range, const T& value)
-{
+inline typename boost::range_const_iterator<InputRange>::type find_not(const InputRange &range,
+                                                                       const T &value) {
     return adobe::find_not(boost::begin(range), boost::end(range), value);
 }
 
@@ -148,9 +142,7 @@ find_not(const InputRange& range, const T& value)
     \brief find implementation
 */
 template <class InputRange, class T>
-inline typename boost::range_iterator<InputRange>::type
-find(InputRange& range, const T& value)
-{
+inline typename boost::range_iterator<InputRange>::type find(InputRange &range, const T &value) {
     return std::find(boost::begin(range), boost::end(range), value);
 }
 
@@ -160,9 +152,8 @@ find(InputRange& range, const T& value)
     \brief find implementation
 */
 template <class InputRange, class T>
-inline typename boost::range_const_iterator<InputRange>::type
-find(const InputRange& range, const T& value)
-{
+inline typename boost::range_const_iterator<InputRange>::type find(const InputRange &range,
+                                                                   const T &value) {
     return std::find(boost::begin(range), boost::end(range), value);
 }
 
@@ -172,8 +163,7 @@ find(const InputRange& range, const T& value)
     \brief find implementation
 */
 template <class InputIterator, class Predicate>
-inline InputIterator find_if(InputIterator first, InputIterator last, Predicate pred)
-{
+inline InputIterator find_if(InputIterator first, InputIterator last, Predicate pred) {
     return std::find_if(first, last, boost::bind(pred, _1));
 }
 
@@ -183,9 +173,7 @@ inline InputIterator find_if(InputIterator first, InputIterator last, Predicate 
     \brief find implementation
 */
 template <class InputRange, class Predicate>
-inline typename boost::range_iterator<InputRange>::type
-find_if(InputRange& range, Predicate pred)
-{
+inline typename boost::range_iterator<InputRange>::type find_if(InputRange &range, Predicate pred) {
     return adobe::find_if(boost::begin(range), boost::end(range), pred);
 }
 
@@ -195,9 +183,8 @@ find_if(InputRange& range, Predicate pred)
     \brief find implementation
 */
 template <class InputRange, class Predicate>
-inline typename boost::range_const_iterator<InputRange>::type
-find_if(const InputRange& range, Predicate pred)
-{
+inline typename boost::range_const_iterator<InputRange>::type find_if(const InputRange &range,
+                                                                      Predicate pred) {
     return adobe::find_if(boost::begin(range), boost::end(range), pred);
 }
 
@@ -205,12 +192,13 @@ find_if(const InputRange& range, Predicate pred)
     \ingroup find
 */
 
-template <  typename I, // I models ForwardIterator
-            typename T> // T is value_type(I)
-std::pair<I, I> find_range(I f, I l, const T& x)
-{
+template <typename I, // I models ForwardIterator
+          typename T>
+// T is value_type(I)
+std::pair<I, I> find_range(I f, I l, const T &x) {
     f = std::find(f, l, x);
-    if (f != l) l = find_not(boost::next(f), l, x);
+    if (f != l)
+        l = find_not(boost::next(f), l, x);
     return std::make_pair(f, l);
 }
 
@@ -218,12 +206,13 @@ std::pair<I, I> find_range(I f, I l, const T& x)
     \ingroup find
 */
 
-template <  typename I, // I models ForwardIterator
-            typename P> // P models UnaryPredicate(value_type(I))
-std::pair<I, I> find_range_if(I f, I l, P p)
-{
+template <typename I, // I models ForwardIterator
+          typename P>
+// P models UnaryPredicate(value_type(I))
+std::pair<I, I> find_range_if(I f, I l, P p) {
     f = adobe::find_if(f, l, p);
-    if (f != l) l = adobe::find_if_not(boost::next(f), l, p);
+    if (f != l)
+        l = adobe::find_if_not(boost::next(f), l, p);
     return std::make_pair(f, l);
 }
 
@@ -233,11 +222,10 @@ std::pair<I, I> find_range_if(I f, I l, P p)
     \brief find implementation
 */
 template <class ForwardRange1, class ForwardRange2>
-inline typename boost::range_iterator<ForwardRange1>::type
-find_end(ForwardRange1& range1, const ForwardRange2& range2)
-{
-    return std::find_end(boost::begin(range1), boost::end(range1),
-                         boost::begin(range2), boost::end(range2));
+inline typename boost::range_iterator<ForwardRange1>::type find_end(ForwardRange1 &range1,
+                                                                    const ForwardRange2 &range2) {
+    return std::find_end(boost::begin(range1), boost::end(range1), boost::begin(range2),
+                         boost::end(range2));
 }
 
 /*!
@@ -247,10 +235,9 @@ find_end(ForwardRange1& range1, const ForwardRange2& range2)
 */
 template <class ForwardRange1, class ForwardRange2>
 inline typename boost::range_const_iterator<ForwardRange1>::type
-find_end(const ForwardRange1& range1, const ForwardRange2& range2)
-{
-    return std::find_end(boost::begin(range1), boost::end(range1),
-                         boost::begin(range2), boost::end(range2));
+find_end(const ForwardRange1 &range1, const ForwardRange2 &range2) {
+    return std::find_end(boost::begin(range1), boost::end(range1), boost::begin(range2),
+                         boost::end(range2));
 }
 
 /*!
@@ -259,10 +246,9 @@ find_end(const ForwardRange1& range1, const ForwardRange2& range2)
     \brief find implementation
 */
 template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
-inline ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1, 
+inline ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1,
                                  ForwardIterator2 first2, ForwardIterator2 last2,
-                                 BinaryPredicate comp)
-{
+                                 BinaryPredicate comp) {
     return std::find_end(first1, last1, first2, last2, boost::bind(comp, _1, _2));
 }
 
@@ -273,11 +259,9 @@ inline ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1
 */
 template <class ForwardRange1, class ForwardRange2, class BinaryPredicate>
 inline typename boost::range_iterator<ForwardRange1>::type
-find_end(ForwardRange1& range1, const ForwardRange2& range2, BinaryPredicate comp)
-{
-    return adobe::find_end(boost::begin(range1), boost::end(range1),
-                           boost::begin(range2), boost::end(range2),
-                           comp);
+find_end(ForwardRange1 &range1, const ForwardRange2 &range2, BinaryPredicate comp) {
+    return adobe::find_end(boost::begin(range1), boost::end(range1), boost::begin(range2),
+                           boost::end(range2), comp);
 }
 
 /*!
@@ -287,11 +271,9 @@ find_end(ForwardRange1& range1, const ForwardRange2& range2, BinaryPredicate com
 */
 template <class ForwardRange1, class ForwardRange2, class BinaryPredicate>
 inline typename boost::range_const_iterator<ForwardRange1>::type
-find_end(const ForwardRange1& range1, const ForwardRange2& range2, BinaryPredicate comp)
-{
-    return adobe::find_end(boost::begin(range1), boost::end(range1),
-                           boost::begin(range2), boost::end(range2),
-                           comp);
+find_end(const ForwardRange1 &range1, const ForwardRange2 &range2, BinaryPredicate comp) {
+    return adobe::find_end(boost::begin(range1), boost::end(range1), boost::begin(range2),
+                           boost::end(range2), comp);
 }
 
 #if 0
@@ -374,8 +356,7 @@ find_first_of(const InputRange& range1, const ForwardRange& range2, BinaryPredic
     \brief find implementation
 */
 template <class ForwardRange>
-inline typename boost::range_iterator<ForwardRange>::type adjacent_find(ForwardRange& range)
-{
+inline typename boost::range_iterator<ForwardRange>::type adjacent_find(ForwardRange &range) {
     return std::adjacent_find(boost::begin(range), boost::end(range));
 }
 
@@ -386,8 +367,7 @@ inline typename boost::range_iterator<ForwardRange>::type adjacent_find(ForwardR
 */
 template <class ForwardRange>
 inline typename boost::range_const_iterator<ForwardRange>::type
-adjacent_find(const ForwardRange& range)
-{
+adjacent_find(const ForwardRange &range) {
     return std::adjacent_find(boost::begin(range), boost::end(range));
 }
 
@@ -397,9 +377,8 @@ adjacent_find(const ForwardRange& range)
     \brief find implementation
 */
 template <class ForwardIterator, class BinaryPredicate>
-inline ForwardIterator
-adjacent_find(ForwardIterator first, ForwardIterator last, BinaryPredicate pred)
-{
+inline ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last,
+                                     BinaryPredicate pred) {
     return std::adjacent_find(first, last, boost::bind(pred, _1, _2));
 }
 
@@ -409,9 +388,8 @@ adjacent_find(ForwardIterator first, ForwardIterator last, BinaryPredicate pred)
     \brief find implementation
 */
 template <class ForwardRange, class BinaryPredicate>
-inline typename boost::range_iterator<ForwardRange>::type
-adjacent_find(ForwardRange& range, BinaryPredicate pred)
-{
+inline typename boost::range_iterator<ForwardRange>::type adjacent_find(ForwardRange &range,
+                                                                        BinaryPredicate pred) {
     return adobe::adjacent_find(boost::begin(range), boost::end(range), pred);
 }
 
@@ -422,8 +400,7 @@ adjacent_find(ForwardRange& range, BinaryPredicate pred)
 */
 template <class ForwardRange, class BinaryPredicate>
 inline typename boost::range_const_iterator<ForwardRange>::type
-adjacent_find(const ForwardRange& range, BinaryPredicate pred)
-{
+adjacent_find(const ForwardRange &range, BinaryPredicate pred) {
     return adobe::adjacent_find(boost::begin(range), boost::end(range), pred);
 }
 

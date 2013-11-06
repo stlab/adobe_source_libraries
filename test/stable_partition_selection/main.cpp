@@ -24,12 +24,9 @@ namespace adobe {
 /****************************************************************************************************/
 
 template <typename ForwardIterator>
-std::pair<ForwardIterator, ForwardIterator> shift_range(ForwardIterator first,
-                                                        ForwardIterator last,
-                                                        ForwardIterator range_first,
-                                                        ForwardIterator range_last,
-                                                        ForwardIterator p)
-{
+std::pair<ForwardIterator, ForwardIterator>
+shift_range(ForwardIterator first, ForwardIterator last, ForwardIterator range_first,
+            ForwardIterator range_last, ForwardIterator p) {
     if (within_range(first, range_first, range_last, p))
         return std::pair<ForwardIterator, ForwardIterator>(range_first, range_last);
     else if (!within_range(first, range_last, last, p))
@@ -48,23 +45,20 @@ namespace {
 
 /****************************************************************************************************/
 
-template <typename ForwardRange>  
-void print_selection(const ForwardRange& range, const adobe::selection_t& selection)
-{
-    typedef typename ForwardRange::const_iterator       set_const_iterator;
+template <typename ForwardRange>
+void print_selection(const ForwardRange &range, const adobe::selection_t &selection) {
+    typedef typename ForwardRange::const_iterator set_const_iterator;
     typedef typename adobe::selection_t::const_iterator selection_const_iterator;
 
-    set_const_iterator       iter(boost::begin(range));
-    set_const_iterator       last(boost::end(range));
+    set_const_iterator iter(boost::begin(range));
+    set_const_iterator last(boost::end(range));
     selection_const_iterator s_iter(boost::begin(selection));
     selection_const_iterator s_last(boost::end(selection));
-    bool                     inside(selection.start_selected());
-    std::stringstream        selection_output;
+    bool inside(selection.start_selected());
+    std::stringstream selection_output;
 
-    while (iter != last)
-    {
-        if (s_iter != s_last && iter == boost::next(boost::begin(range), *s_iter))
-        {
+    while (iter != last) {
+        if (s_iter != s_last && iter == boost::next(boost::begin(range), *s_iter)) {
             inside = !inside;
 
             ++s_iter;
@@ -85,8 +79,8 @@ void print_selection(const ForwardRange& range, const adobe::selection_t& select
 
     std::cout << std::endl << selection_output.str().c_str() << std::endl;
 
-    std::cout << adobe::size(selection) << " boundaries, "
-              << adobe::size(selection, range) << " items: [ ";
+    std::cout << adobe::size(selection) << " boundaries, " << adobe::size(selection, range)
+              << " items: [ ";
 
     selection_copy(selection, range,
                    std::ostream_iterator<typename ForwardRange::value_type>(std::cout, " "));
@@ -96,18 +90,16 @@ void print_selection(const ForwardRange& range, const adobe::selection_t& select
 
 /****************************************************************************************************/
 
-typedef std::vector<int>               set_type;
-typedef set_type::iterator             iterator;
-typedef adobe::selection_t             selection_type;
+typedef std::vector<int> set_type;
+typedef set_type::iterator iterator;
+typedef adobe::selection_t selection_type;
 typedef selection_type::const_iterator selection_iterator;
 
 /****************************************************************************************************/
 
 template <typename IteratorCategory>
-void do_split_selection(const adobe::selection_t& selection,
-                        std::size_t               p,
-                        IteratorCategory          iterator_category)
-{
+void do_split_selection(const adobe::selection_t &selection, std::size_t p,
+                        IteratorCategory iterator_category) {
     std::pair<selection_iterator, adobe::selection_t::difference_type> result =
         adobe::selection_find_boundary(selection, p, iterator_category);
 
@@ -123,8 +115,7 @@ void do_split_selection(const adobe::selection_t& selection,
 
 /****************************************************************************************************/
 
-void test1()
-{
+void test1() {
     set_type set(20);
 
     adobe::iota(set.begin(), set.end(), 0);
@@ -152,8 +143,7 @@ void test1()
 
 /****************************************************************************************************/
 
-void test2()
-{
+void test2() {
     set_type set(20);
 
     adobe::iota(set.begin(), set.end(), 0);
@@ -174,7 +164,8 @@ void test2()
 
     selection_type selection2;
 
-    selection2.push_back(static_cast<selection_type::size_type>(std::distance(set.begin(), middle)));
+    selection2.push_back(
+        static_cast<selection_type::size_type>(std::distance(set.begin(), middle)));
 
     print_selection(set, selection2);
     std::cout << std::endl;
@@ -182,10 +173,8 @@ void test2()
 
 /****************************************************************************************************/
 
-void test3()
-{
-    for (int i(0); i != 21; ++i)
-    {
+void test3() {
+    for (int i(0); i != 21; ++i) {
         set_type set(20);
 
         adobe::iota(set.begin(), set.end(), 0);
@@ -214,8 +203,7 @@ void test3()
 
 /****************************************************************************************************/
 
-void test4()
-{
+void test4() {
     set_type set(20);
 
     adobe::iota(set.begin(), set.end(), 0);
@@ -229,8 +217,7 @@ void test4()
     selection.push_back(14);
     selection.push_back(17);
 
-    adobe::selection_partition_copy(selection, set,
-                                    std::ostream_iterator<int>(std::cout, "b "),
+    adobe::selection_partition_copy(selection, set, std::ostream_iterator<int>(std::cout, "b "),
                                     std::ostream_iterator<int>(std::cout, "g "));
 
     std::cout << std::endl;
@@ -242,8 +229,7 @@ void test4()
 
 /****************************************************************************************************/
 
-int main()
-{
+int main() {
     std::cout << "test1:" << std::endl;
     test1();
 

@@ -33,7 +33,7 @@ namespace adobe {
 */
 
 /*
-    REVISIT (sparent) : Documentation for delete_ptr moved to adobe/functional.hpp because doxygen 
+    REVISIT (sparent) : Documentation for delete_ptr moved to adobe/functional.hpp because doxygen
     1.4.3 cannot handle the template specializations.
 */
 
@@ -45,7 +45,7 @@ namespace adobe {
 */
 
 /*!
-\class adobe::sequence_t 
+\class adobe::sequence_t
 \ingroup misc_functional
 
 \brief A function object for sequence generation within a domain.
@@ -55,7 +55,8 @@ namespace adobe {
 \defgroup compare_members Object Member Comparsion
 \ingroup adobe_functional
 
-The library provides basic function object classes for comparing two member variables between object instances.
+The library provides basic function object classes for comparing two member variables between object
+instances.
 */
 
 /*!
@@ -94,7 +95,8 @@ Used to compare members in two objects of type \c T using a provided comparsion 
 \defgroup mem_data Member Data Accessor
 \ingroup adobe_functional
 
-This library provides access to member data, similar to boost::mem_fn() except it returns a reference (or const reference for a const object) to the data.
+This library provides access to member data, similar to boost::mem_fn() except it returns a
+reference (or const reference for a const object) to the data.
 */
 
 /*!
@@ -103,7 +105,8 @@ This library provides access to member data, similar to boost::mem_fn() except i
 
 \brief Adaptor similar to \c boost::mem_fn() used by \c boost::bind.
 
-Unlike boost::mem_fn() this is of use when you want to use a pointer to a member and have it return a reference.
+Unlike boost::mem_fn() this is of use when you want to use a pointer to a member and have it return
+a reference.
 
 \todo
     (sparent) Propose this addition back to Boost.
@@ -113,7 +116,8 @@ Unlike boost::mem_fn() this is of use when you want to use a pointer to a member
 \fn adobe::mem_data_t<T, R> adobe::mem_data(R T::* member)
 \ingroup mem_data
 
-Returns a function object, which given an object of type \c T, will return the value of the member pointed to by \c member.
+Returns a function object, which given an object of type \c T, will return the value of the member
+pointed to by \c member.
 
 \param member pointer to member data.
 
@@ -132,7 +136,8 @@ Returns a function object, which given an object of type \c T, will return the v
 \defgroup bitwise_operators Bitwise Operations
 \ingroup adobe_functional
 
-The library provides basic function object classes for all of the bitwise logical operators in the language.
+The library provides basic function object classes for all of the bitwise logical operators in the
+language.
 */
 
 /*!
@@ -143,64 +148,72 @@ The library provides basic function object classes for all of the bitwise logica
 */
 
 /*!
-\class adobe::bitwise_and 
+\class adobe::bitwise_and
 \ingroup bitwise_operators
 
 \brief \c operator() returns <code>x & y</code>.
 */
 
 /*!
-\class adobe::bitwise_xor 
+\class adobe::bitwise_xor
 \ingroup bitwise_operators
 
 \brief \c operator() returns <code>x ^ y</code>.
 */
 
 
-
 /*! \addtogroup misc_functional
 @{
 */
 
-template <  typename F, // models UnaryFunction
-            typename G> // models UnaryFunction -> argument_type(F)
-struct unary_compose
-{
+template <typename F, // models UnaryFunction
+          typename G> // models UnaryFunction -> argument_type(F)
+struct unary_compose {
     typedef typename F::result_type result_type;
-    
-    unary_compose() { }
-    unary_compose(F f, G g) : data_m(f, g) { }
+
+    unary_compose() {}
+    unary_compose(F f, G g) : data_m(f, g) {}
 
     template <typename U> // U models Regular
-    result_type operator()(const U& x) const { return data_m.first()(data_m.second()(x)); }
+    result_type operator()(const U &x) const {
+        return data_m.first()(data_m.second()(x));
+    }
 
     template <typename U> // U models Regular
-    result_type operator()(U& x) const { return data_m.first()(data_m.second()(x)); }
+    result_type operator()(U &x) const {
+        return data_m.first()(data_m.second()(x));
+    }
 
- private:
+private:
     boost::compressed_pair<F, G> data_m;
 };
 
 /*************************************************************************************************/
 
-template <  typename F, // models UnaryFunction
-            typename G> // models UnaryFunction -> argument_type(F)
-unary_compose<F, G> compose(F f, G g) { return unary_compose<F, G>(f, g); }
+template <typename F, // models UnaryFunction
+          typename G>
+// models UnaryFunction -> argument_type(F)
+unary_compose<F, G> compose(F f, G g) {
+    return unary_compose<F, G>(f, g);
+}
 
 /*************************************************************************************************/
 
-template <  typename F,     // models BinaryFunction
-            typename G,     // models UnaryFunction -> argument_type(F, 0);
-            typename H = G> // models UnaryFunction -> argument_type(F, 1);
-struct binary_compose
-{
+template <typename F,     // models BinaryFunction
+          typename G,     // models UnaryFunction -> argument_type(F, 0);
+          typename H = G> // models UnaryFunction -> argument_type(F, 1);
+struct binary_compose {
     typedef typename F::result_type result_type;
 
     template <typename T, typename U> // models Regular
-    result_type operator()(const T& x, const U& y) const { return f(g(x), h(y)); }
+    result_type operator()(const T &x, const U &y) const {
+        return f(g(x), h(y));
+    }
 
     template <typename T, typename U> // models Regular
-    result_type operator()(T& x, U& y) const { return f(g(x), h(y)); }
+    result_type operator()(T &x, U &y) const {
+        return f(g(x), h(y));
+    }
 
     F f;
     G g;
@@ -210,20 +223,17 @@ struct binary_compose
 /*************************************************************************************************/
 
 template <int N, typename T> // T is boost::tuple<>
-struct element
-{
+struct element {
     typedef typename boost::tuples::element<N, T>::type type;
 };
 
 template <typename T1, typename T2>
-struct element<0, std::pair<T1, T2> >
-{
+struct element<0, std::pair<T1, T2>> {
     typedef typename std::pair<T1, T2>::first_type type;
 };
 
 template <typename T1, typename T2>
-struct element<1, std::pair<T1, T2> >
-{
+struct element<1, std::pair<T1, T2>> {
     typedef typename std::pair<T1, T2>::second_type type;
 };
 
@@ -244,29 +254,24 @@ struct element<1, pair<T1, T2> >
 /*************************************************************************************************/
 
 template <int N, typename T> // T is pair or tuple
-struct get_element : std::unary_function<T, typename element<N, T>::type>
-{
-    typename element<N, T>::type& operator()(T& x) const
-    { return boost::get<N>(x); }
-    
-    const typename element<N, T>::type& operator()(const T& x) const
-    { return boost::get<N>(x); }
+struct get_element : std::unary_function<T, typename element<N, T>::type> {
+    typename element<N, T>::type &operator()(T &x) const { return boost::get<N>(x); }
+
+    const typename element<N, T>::type &operator()(const T &x) const { return boost::get<N>(x); }
 };
 
 /*************************************************************************************************/
 
 template <typename T1, typename T2> // T is pair or tuple
-struct get_element<0, std::pair<T1, T2> > :
-        std::unary_function<std::pair<T1, T2>, typename std::pair<T1, T2>::first_type>
-{
-    typedef std::pair<T1, T2>                   argument_type;
-    typedef typename argument_type::first_type  result_type;
+struct get_element<0, std::pair<T1, T2>> : std::unary_function<
+                                               std::pair<T1, T2>,
+                                               typename std::pair<T1, T2>::first_type> {
+    typedef std::pair<T1, T2> argument_type;
+    typedef typename argument_type::first_type result_type;
 
-    result_type& operator()(argument_type& x) const
-    { return x.first; }
-    
-    const result_type& operator()(const argument_type& x) const
-    { return x.first; }
+    result_type &operator()(argument_type &x) const { return x.first; }
+
+    const result_type &operator()(const argument_type &x) const { return x.first; }
 };
 
 /*************************************************************************************************/
@@ -290,17 +295,15 @@ struct get_element<0, pair<T1, T2> > :
 /*************************************************************************************************/
 
 template <typename T1, typename T2> // T is pair or tuple
-struct get_element<1, std::pair<T1, T2> > :
-        std::unary_function<std::pair<T1, T2>, typename std::pair<T1, T2>::second_type>
-{
-    typedef std::pair<T1, T2>                   argument_type;
+struct get_element<1, std::pair<T1, T2>> : std::unary_function<
+                                               std::pair<T1, T2>,
+                                               typename std::pair<T1, T2>::second_type> {
+    typedef std::pair<T1, T2> argument_type;
     typedef typename argument_type::second_type result_type;
-    
-    result_type& operator()(argument_type& x) const
-    { return x.second; }
-    
-    const result_type& operator()(const argument_type& x) const
-    { return x.second; }
+
+    result_type &operator()(argument_type &x) const { return x.second; }
+
+    const result_type &operator()(const argument_type &x) const { return x.second; }
 };
 
 /*************************************************************************************************/
@@ -324,16 +327,14 @@ struct get_element<1, pair<T1, T2> > :
 /*************************************************************************************************/
 
 template <typename T>
-struct always_true : std::unary_function<T, bool>
-{
-    bool operator()(const T&) const { return true; }
+struct always_true : std::unary_function<T, bool> {
+    bool operator()(const T &) const { return true; }
 };
 
 /*************************************************************************************************/
 
 template <class Result>
-struct generator_t
-{
+struct generator_t {
     typedef Result result_type;
 };
 
@@ -343,11 +344,12 @@ struct generator_t
 template <typename T>
 struct sequence_t
 #if !defined(ADOBE_NO_DOCUMENTATION)
-: generator_t<T>
+    : generator_t<T>
 #endif
-{
-    explicit sequence_t(const T& x) : data_m(x) { }
-    T operator () () { return data_m++; }
+      {
+    explicit sequence_t(const T &x) : data_m(x) {}
+    T operator()() { return data_m++; }
+
 private:
     T data_m;
 };
@@ -355,82 +357,62 @@ private:
 /*************************************************************************************************/
 
 template <class T, typename R, class Compare>
-struct compare_members_t : std::binary_function<T, T, bool>
-{
-    compare_members_t(R T::* member, Compare compare) :
-        compare_m(compare),
-        member_m(member)
-        { }
+struct compare_members_t : std::binary_function<T, T, bool> {
+    compare_members_t(R T::*member, Compare compare) : compare_m(compare), member_m(member) {}
 
-    bool operator () (const T& x, const T& y) const
-        { return compare_m(x.*member_m, y.*member_m); }
-    
-    bool operator () (const T& x, const R& y) const
-        { return compare_m(x.*member_m, y); }
-    
-    bool operator () (const R& x, const T& y) const
-        { return compare_m(x, y.*member_m); }
+    bool operator()(const T &x, const T &y) const { return compare_m(x.*member_m, y.*member_m); }
 
- private:
- 
-/*
-    REVISIT (sparent) : This could probably use an empty member optimization.
-*/
+    bool operator()(const T &x, const R &y) const { return compare_m(x.*member_m, y); }
+
+    bool operator()(const R &x, const T &y) const { return compare_m(x, y.*member_m); }
+
+private:
+    /*
+        REVISIT (sparent) : This could probably use an empty member optimization.
+    */
 
     Compare compare_m;
-    R T::*  member_m;
+    R T::*member_m;
 };
 
 template <class T, typename R>
-compare_members_t<T, R, std::less<R> > compare_members(R T::* member)
-{
-    return compare_members_t<T, R, std::less<R> >(member, std::less<R>() );
+compare_members_t<T, R, std::less<R>> compare_members(R T::*member) {
+    return compare_members_t<T, R, std::less<R>>(member, std::less<R>());
 }
 
 template <class T, typename R, class Compare>
-compare_members_t<T, R, Compare> compare_members(R T::* member, Compare compare)
-{
+compare_members_t<T, R, Compare> compare_members(R T::*member, Compare compare) {
     return compare_members_t<T, R, Compare>(member, compare);
 }
 
 /*************************************************************************************************/
 
 template <class T, typename R>
-struct mem_data_t : std::unary_function<T, R&>
-{
-    mem_data_t() { }
+struct mem_data_t : std::unary_function<T, R &> {
+    mem_data_t() {}
 
-    explicit mem_data_t(R T::* member) :
-        member_m(member)
-        { }
-    
-    R& operator () (T& x) const
-        { return  x.*member_m; }
-        
-    const R& operator () (const T& x) const
-        { return x.*member_m; }
+    explicit mem_data_t(R T::*member) : member_m(member) {}
 
- private:
-    R T::* member_m;
+    R &operator()(T &x) const { return x.*member_m; }
+
+    const R &operator()(const T &x) const { return x.*member_m; }
+
+private:
+    R T::*member_m;
 };
 
 template <class T, typename R>
-struct mem_data_t<const T, R> : std::unary_function<T, const R&>
-{
-    explicit mem_data_t(R T::* member) :
-        member_m(member)
-        { }
-    
-    const R& operator () (const T& x) const
-        { return x.*member_m; }
+struct mem_data_t<const T, R> : std::unary_function<T, const R &> {
+    explicit mem_data_t(R T::*member) : member_m(member) {}
 
- private:
-    R T::* member_m;
+    const R &operator()(const T &x) const { return x.*member_m; }
+
+private:
+    R T::*member_m;
 };
 
 template <class T, typename R>
-mem_data_t<T, R> mem_data(R T::* member)
-{
+mem_data_t<T, R> mem_data(R T::*member) {
     return mem_data_t<T, R>(member);
 }
 
@@ -438,16 +420,16 @@ mem_data_t<T, R> mem_data(R T::* member)
 
 template <typename O> // O models StrictWeakOrdering
 struct equivalent : std::binary_function<typename O::first_argument_type,
-                                         typename O::second_argument_type,
-                                         bool>
-{
-    public:
-      explicit equivalent(const O& x) : o_m(x) { }
+                                         typename O::second_argument_type, bool> {
+public:
+    explicit equivalent(const O &x) : o_m(x) {}
 
-      bool operator()(  const typename O::first_argument_type& x,
-                        const typename O::second_argument_type& y) const
-      { return !o_m(x, y) && !o_m(y, x); }
- private:
+    bool operator()(const typename O::first_argument_type &x,
+                    const typename O::second_argument_type &y) const {
+        return !o_m(x, y) && !o_m(y, x);
+    }
+
+private:
     O o_m;
 };
 
@@ -455,28 +437,22 @@ struct equivalent : std::binary_function<typename O::first_argument_type,
 
 template <class F> // F models a BinaryFunction
 struct transposer : std::binary_function<typename F::second_argument_type,
-                                         typename F::first_argument_type,
-                                         typename F::result_type>
-{
+                                         typename F::first_argument_type, typename F::result_type> {
     typedef typename F::second_argument_type first_argument_type;
-    typedef typename F::first_argument_type  second_argument_type;
-    typedef typename F::result_type          result_type;
+    typedef typename F::first_argument_type second_argument_type;
+    typedef typename F::result_type result_type;
 
     F fun;
 
-    transposer(const F& f) :
-        fun(f)
-    { }
+    transposer(const F &f) : fun(f) {}
 
-    result_type operator()(const first_argument_type& x, const second_argument_type& y) const
-    {
+    result_type operator()(const first_argument_type &x, const second_argument_type &y) const {
         return fun(y, x);
     }
 };
 
 template <typename F> // F models BinaryFunction
-inline transposer<F> f_transpose(F f)
-{
+inline transposer<F> f_transpose(F f) {
     return transposer<F>(f);
 }
 

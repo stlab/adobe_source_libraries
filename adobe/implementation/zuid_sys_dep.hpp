@@ -12,7 +12,7 @@
 /*************************************************************************************************/
 
 /*
-    Relevant copyright information is provided below and may not be removed from this file. 
+    Relevant copyright information is provided below and may not be removed from this file.
 */
 
 /*************************************************************************************************/
@@ -22,16 +22,16 @@
     Copyright (c) 1989 by Hewlett-Packard Company, Palo Alto, Ca. &
     Digital Equipment Corporation, Maynard, Mass.
     Copyright (c) 1998 Microsoft.
-  
-    To anyone who acknowledges that this file is provided "AS IS" without any 
-    express or implied warranty: permission to use, copy, modify, and 
-    distribute this file for any purpose is hereby granted without fee, 
-    provided that the above copyright notices and this notice appears in all 
-    source code copies, and that none of the names of Open Software Foundation, 
-    Inc., Hewlett-Packard Company, or Digital Equipment Corporation be used in 
-    advertising or publicity pertaining to distribution of the software without 
-    specific, written prior permission. Neither Open Software Foundation, Inc., 
-    Hewlett-Packard Company, Microsoft, nor Digital Equipment Corporation makes 
+
+    To anyone who acknowledges that this file is provided "AS IS" without any
+    express or implied warranty: permission to use, copy, modify, and
+    distribute this file for any purpose is hereby granted without fee,
+    provided that the above copyright notices and this notice appears in all
+    source code copies, and that none of the names of Open Software Foundation,
+    Inc., Hewlett-Packard Company, or Digital Equipment Corporation be used in
+    advertising or publicity pertaining to distribution of the software without
+    specific, written prior permission. Neither Open Software Foundation, Inc.,
+    Hewlett-Packard Company, Microsoft, nor Digital Equipment Corporation makes
     any representations about the suitability of this software for any purpose.
 */
 
@@ -58,7 +58,7 @@
 #define STD_UNLOCK
 
 #ifdef BOOST_NO_INT64_T
-    #error "Your platform has no 64-bit integral type."
+#error "Your platform has no 64-bit integral type."
 #endif
 
 /*************************************************************************************************/
@@ -67,8 +67,8 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-typedef boost::uint64_t         uuid_time_t;
-typedef boost::array<char, 6>   uuid_node_t;
+typedef boost::uint64_t uuid_time_t;
+typedef boost::array<char, 6> uuid_node_t;
 
 /*************************************************************************************************/
 
@@ -87,20 +87,15 @@ template <typename I> // where I models a BinaryInteger
 inline I swab(I x);
 
 template <> // where I models a BinaryInteger
-inline boost::uint32_t swab<boost::uint32_t>(boost::uint32_t x)
-{
-return  (x << 24) |                 // (x & 0x000000FF) << 24
-        ((x & 0x0000FF00) <<  8) |
-        ((x & 0x00FF0000) >>  8) |
-        (x >> 24);                  // (x & 0xFF000000) >> 24
+inline boost::uint32_t swab<boost::uint32_t>(boost::uint32_t x) {
+    return (x << 24) |                                                    // (x & 0x000000FF) << 24
+           ((x & 0x0000FF00) << 8) | ((x & 0x00FF0000) >> 8) | (x >> 24); // (x & 0xFF000000) >> 24
 }
 
 template <> // where I models a BinaryInteger
-inline boost::uint16_t swab<boost::uint16_t>(boost::uint16_t x)
-{
-    return static_cast<boost::uint16_t>(
-            (x << 8) |  // (x & 0x00FF) << 8
-            (x >> 8));  // (x & 0xFF00) >> 8
+inline boost::uint16_t swab<boost::uint16_t>(boost::uint16_t x) {
+    return static_cast<boost::uint16_t>((x << 8) | // (x & 0x00FF) << 8
+                                        (x >> 8)); // (x & 0xFF00) >> 8
 }
 
 /*************************************************************************************************/
@@ -110,29 +105,33 @@ inline boost::uint16_t swab<boost::uint16_t>(boost::uint16_t x)
 // Any other platforms that are Big Endian should use this code as well
 
 template <typename I> // where I models a BinaryInteger
-inline I host_to_net(I host)
-{ return host; }
+inline I host_to_net(I host) {
+    return host;
+}
 
 template <typename I> // where I models a BinaryInteger
-inline I net_to_host(I net)
-{ return net; }
+inline I net_to_host(I net) {
+    return net;
+}
 
 #else
 
 template <typename I> // where I models a BinaryInteger
-inline I host_to_net(I host)
-{ return swab(host); }
+inline I host_to_net(I host) {
+    return swab(host);
+}
 
 template <typename I> // where I models a BinaryInteger
-inline I net_to_host(I net)
-{ return swab(net); }
+inline I net_to_host(I net) {
+    return swab(net);
+}
 
 #endif
 
 /*************************************************************************************************/
 
-boost::int16_t  read_state(boost::uint16_t* clockseq, uuid_time_t* timestamp, uuid_node_t* node);
-void            write_state(boost::uint16_t clockseq, uuid_time_t timestamp, uuid_node_t node);
+boost::int16_t read_state(boost::uint16_t *clockseq, uuid_time_t *timestamp, uuid_node_t *node);
+void write_state(boost::uint16_t clockseq, uuid_time_t timestamp, uuid_node_t node);
 
 /*************************************************************************************************/
 

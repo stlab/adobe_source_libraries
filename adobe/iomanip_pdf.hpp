@@ -26,34 +26,33 @@ namespace adobe {
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-class pdf_format : public format_base
-{
+class pdf_format : public format_base {
     typedef format_base inherited_t;
 
 public:
     typedef inherited_t::stream_type stream_type;
 
-    virtual void begin_format(stream_type& os);
+    virtual void begin_format(stream_type &os);
 
-    virtual void begin_bag(stream_type& os, const std::string& ident);
+    virtual void begin_bag(stream_type &os, const std::string &ident);
 
-    virtual void begin_sequence(stream_type& os);
+    virtual void begin_sequence(stream_type &os);
 
-    virtual void begin_atom(stream_type& os, const any_regular_t&);
+    virtual void begin_atom(stream_type &os, const any_regular_t &);
 
 private:
-    virtual void stack_event(stream_type& os, bool is_push);
+    virtual void stack_event(stream_type &os, bool is_push);
 
-    void handle_atom(stream_type& os, bool is_push);
+    void handle_atom(stream_type &os, bool is_push);
 };
 
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-std::ostream& begin_pdf(std::ostream& os);
+std::ostream &begin_pdf(std::ostream &os);
 
 //!\ingroup manipulator
-std::ostream& end_pdf(std::ostream& os);
+std::ostream &end_pdf(std::ostream &os);
 
 /*************************************************************************************************/
 

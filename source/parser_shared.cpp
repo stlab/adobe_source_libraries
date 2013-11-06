@@ -20,22 +20,18 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-void throw_parser_exception(const char*              error_string,
-                            const line_position_t&   position)
-{
+void throw_parser_exception(const char *error_string, const line_position_t &position) {
     throw stream_error_t(error_string, position);
 }
 
 /*************************************************************************************************/
 
-void throw_parser_exception(const char*                     expected,
-                            const char*                     found,
-                            const adobe::line_position_t&   position)
-{
+void throw_parser_exception(const char *expected, const char *found,
+                            const adobe::line_position_t &position) {
     throw stream_error_t(string() + "Expected \"" + expected + "\", Found \"" + found + "\"",
-            position);
+                         position);
 }
-    
+
 /*************************************************************************************************/
 
 } // namespace adobe

@@ -34,8 +34,7 @@ undefined.
 template <typename T, // T models EqualityComparable
           typename P, // P models pair<T, T>
           typename BinaryPredicate>
-inline const T& other_of(const P& pair, const T& x, BinaryPredicate pred)
-{
+inline const T &other_of(const P &pair, const T &x, BinaryPredicate pred) {
     return pred(pair.first, x) ? pair.second : pair.first;
 }
 
@@ -45,9 +44,9 @@ inline const T& other_of(const P& pair, const T& x, BinaryPredicate pred)
     \brief other_of implementation
 */
 template <typename T, // T models EqualityComparable
-          typename P> // P models pair<T, T>
-inline const T& other_of(const P& pair, const T& x)
-{
+          typename P>
+// P models pair<T, T>
+inline const T &other_of(const P &pair, const T &x) {
     return other_of(pair, x, std::equal_to<T>());
 }
 

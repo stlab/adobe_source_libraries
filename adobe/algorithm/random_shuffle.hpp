@@ -36,8 +36,7 @@ namespace adobe {
     \brief random_shuffle implementation
 */
 template <class RandomAccessRange>
-inline void random_shuffle(RandomAccessRange& range)
-{
+inline void random_shuffle(RandomAccessRange &range) {
     return std::random_shuffle(boost::begin(range), boost::end(range));
 }
 
@@ -47,9 +46,8 @@ inline void random_shuffle(RandomAccessRange& range)
     \brief random_shuffle implementation
 */
 template <class RandomAccessIterator, class RandomNumberGenerator>
-inline void
-random_shuffle(RandomAccessIterator first, RandomAccessIterator last, RandomNumberGenerator& rand)
-{
+inline void random_shuffle(RandomAccessIterator first, RandomAccessIterator last,
+                           RandomNumberGenerator &rand) {
     return std::random_shuffle(first, last, boost::bind(rand, _1));
 }
 
@@ -59,8 +57,7 @@ random_shuffle(RandomAccessIterator first, RandomAccessIterator last, RandomNumb
     \brief random_shuffle implementation
 */
 template <class RandomAccessRange, class RandomNumberGenerator>
-inline void random_shuffle(RandomAccessRange& range, RandomNumberGenerator& rand)
-{
+inline void random_shuffle(RandomAccessRange &range, RandomNumberGenerator &rand) {
     return adobe::random_shuffle(boost::begin(range), boost::end(range), rand);
 }
 

@@ -20,15 +20,13 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-int format_base_idx()
-{
+int format_base_idx() {
     static const int idx(std::ios_base::xalloc());
     return idx;
 }
 
-format_base* get_formatter(std::ostream& os)
-{
-    return static_cast<format_base*>(os.pword(format_base_idx()));
+format_base *get_formatter(std::ostream &os) {
+    return static_cast<format_base *>(os.pword(format_base_idx()));
 }
 
 /*************************************************************************************************/
@@ -39,12 +37,12 @@ format_base* get_formatter(std::ostream& os)
 */
 #define ADOBE_GLUE(x) x
 
-#define ADOBE_FORMAT_MANIP_BOILERPLATE(x) \
-format_base::stream_type& ADOBE_GLUE(x)(format_base::stream_type& os) \
-    { \
-    format_base* format(get_formatter(os)); \
-    if (format) format->ADOBE_GLUE(x)(os); \
-    return os; \
+#define ADOBE_FORMAT_MANIP_BOILERPLATE(x)                                                          \
+    format_base::stream_type &ADOBE_GLUE(x)(format_base::stream_type &os) {                        \
+        format_base *format(get_formatter(os));                                                    \
+        if (format)                                                                                \
+            format->ADOBE_GLUE(x)(os);                                                             \
+        return os;                                                                                 \
     }
 
 /*************************************************************************************************/

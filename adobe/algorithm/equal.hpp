@@ -34,9 +34,8 @@ namespace adobe {
     \ingroup equal
 */
 template <class InputIterator1, class InputIterator2, class BinaryPredicate>
-inline bool
-equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, BinaryPredicate pred)
-{
+inline bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2,
+                  BinaryPredicate pred) {
     return std::equal(first1, last1, first2, boost::bind(pred, _1, _2));
 }
 
@@ -44,8 +43,7 @@ equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, Binary
     \ingroup equal
 */
 template <class InputRange1, class InputIterator2>
-inline bool equal(const InputRange1& range1, InputIterator2 first2)
-{
+inline bool equal(const InputRange1 &range1, InputIterator2 first2) {
     return std::equal(boost::begin(range1), boost::end(range1), first2);
 }
 
@@ -53,8 +51,7 @@ inline bool equal(const InputRange1& range1, InputIterator2 first2)
     \ingroup equal
 */
 template <class InputRange1, class InputIterator2, class BinaryPredicate>
-inline bool equal(const InputRange1& range1, InputIterator2 first2, BinaryPredicate pred)
-{
+inline bool equal(const InputRange1 &range1, InputIterator2 first2, BinaryPredicate pred) {
     return adobe::equal(boost::begin(range1), boost::end(range1), first2, pred);
 }
 

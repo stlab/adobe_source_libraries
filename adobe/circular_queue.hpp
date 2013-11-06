@@ -66,7 +66,7 @@ Equivalent to std::size_t.
 Creates a circular_queue.
 
 \param capacity
-	Capacity for this queue.
+    Capacity for this queue.
 */
 /*!
 \fn adobe::circular_queue::size_type adobe::circular_queue::size() const
@@ -108,14 +108,16 @@ Equivalent to \c capacity(), provided for completeness.
 /*!
 \fn void adobe::circular_queue::clear()
 
-All elements are removed from the queue. Equivalent to <code>while (size()) pop_front();</code> except with constant complexity.
+All elements are removed from the queue. Equivalent to <code>while (size()) pop_front();</code>
+except with constant complexity.
 */
 
 /*!
 \fn adobe::circular_queue::reference adobe::circular_queue::front()
 
 \return
-    A mutable reference to the element at the front of the queue, that is, the element least recently inserted.
+    A mutable reference to the element at the front of the queue, that is, the element least
+recently inserted.
 
 \pre
     \c empty() is \false.
@@ -125,7 +127,8 @@ All elements are removed from the queue. Equivalent to <code>while (size()) pop_
 \fn adobe::circular_queue::const_reference adobe::circular_queue::front() const
 
 \return
-    A const reference to the element at the front of the queue, that is, the element least recently inserted.
+    A const reference to the element at the front of the queue, that is, the element least recently
+inserted.
 
 \pre
     \c empty() is \false.
@@ -138,13 +141,15 @@ All elements are removed from the queue. Equivalent to <code>while (size()) pop_
     Inserts \c x at the back of the queue.
 
 \post
-    If \c full(), the front item of the queue will be lost and the queue will remain full. Otherwise, \c size() will be incremented by \c 1.
+    If \c full(), the front item of the queue will be lost and the queue will remain full.
+Otherwise, \c size() will be incremented by \c 1.
 */
 
 /*!
 \fn void adobe::circular_queue::pop_front()
 
-The element at the front of the queue is removed. The element is not destructed and may be returned with \c putback().
+The element at the front of the queue is removed. The element is not destructed and may be returned
+with \c putback().
 
 \pre
     \c empty() is \false.
@@ -196,7 +201,8 @@ assert(queue.front() == 10);
 \param y second queue to swap
 
 \exception
-    Unknown If the elements are swappable without throwing then the circular_queue will be swappable without throwing. See the requirements for \ref stldoc_Assignable.
+    Unknown If the elements are swappable without throwing then the circular_queue will be swappable
+without throwing. See the requirements for \ref stldoc_Assignable.
 
 \complexity
     Linear. \c size() of larger queue elements are swapped.
@@ -206,27 +212,29 @@ assert(queue.front() == 10);
 /*************************************************************************************************/
 
 #if 1 // REVISIT (fbrereto) : Possible compiler optimization?
-    #define ADOBE_NOTHROW throw()
+#define ADOBE_NOTHROW throw()
 #else
-    #define ADOBE_NOTHROW
+#define ADOBE_NOTHROW
 #endif
 
 /*************************************************************************************************/
 
-template <typename T> class circular_queue;
+template <typename T>
+class circular_queue;
 
 template <typename T>
-bool operator == (const circular_queue<T>& x, const circular_queue<T>& y);
+bool operator==(const circular_queue<T> &x, const circular_queue<T> &y);
 
 template <typename T>
-void swap(circular_queue<T>&, circular_queue<T>&);
+void swap(circular_queue<T> &, circular_queue<T> &);
 
 /*************************************************************************************************/
 
 /*!
 \ingroup other_container
 
-\brief A queue with a fixed capacity which supports putting back elements. Pushing more elements than there is capacity will pop the least recently pushed elements.
+\brief A queue with a fixed capacity which supports putting back elements. Pushing more elements
+than there is capacity will pop the least recently pushed elements.
 
 \template_parameters
     - \c T The queue's value type: the type of object that is stored in the queue.
@@ -240,22 +248,21 @@ void swap(circular_queue<T>&, circular_queue<T>&);
     \c T is a model of \ref stldoc_Assignable.
 */
 template <typename T>
-class circular_queue : boost::equality_comparable<circular_queue<T> >
-{
+class circular_queue : boost::equality_comparable<circular_queue<T>> {
 public:
-    typedef T           value_type;
-    typedef T*          pointer;
-    typedef const T*    const_pointer;
-    typedef T&          reference;
-    typedef const T&    const_reference;
+    typedef T value_type;
+    typedef T *pointer;
+    typedef const T *const_pointer;
+    typedef T &reference;
+    typedef const T &const_reference;
     typedef std::size_t size_type;
 
     circular_queue(std::size_t capacity = 0);
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
-    circular_queue(const circular_queue& rhs);
+    circular_queue(const circular_queue &rhs);
 
-    circular_queue& operator = (circular_queue rhs);
+    circular_queue &operator=(circular_queue rhs);
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 
     size_type size() const ADOBE_NOTHROW;
@@ -265,9 +272,12 @@ public:
     bool empty() const ADOBE_NOTHROW { return is_empty_m; }
     bool full() const ADOBE_NOTHROW { return !is_empty_m && begin_m == end_m; }
 
-    void clear() ADOBE_NOTHROW { begin_m = end_m; is_empty_m = true; }
+    void clear() ADOBE_NOTHROW {
+        begin_m = end_m;
+        is_empty_m = true;
+    }
 
-    reference       front() ADOBE_NOTHROW;
+    reference front() ADOBE_NOTHROW;
     const_reference front() const ADOBE_NOTHROW;
 
     void push_back(T x);
@@ -278,37 +288,39 @@ public:
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 private:
-    friend inline void swap(circular_queue& x, circular_queue& y)
-    {
+    friend inline void swap(circular_queue &x, circular_queue &y) {
         swap(x.container_m, y.container_m);
         std::swap(x.begin_m, y.begin_m);
         std::swap(x.end_m, y.end_m);
         swap(x.is_empty_m, y.is_empty_m);
     }
 
-    friend bool operator == <> (const circular_queue& x,
-                                const circular_queue& y);
+    friend bool operator==<>(const circular_queue &x, const circular_queue &y);
 
-    typedef typename std::vector<value_type>        container_t;
-    typedef typename container_t::iterator          iterator;
-    typedef typename container_t::const_iterator    const_iterator;
+    typedef typename std::vector<value_type> container_t;
+    typedef typename container_t::iterator iterator;
+    typedef typename container_t::const_iterator const_iterator;
 
     /* WARNING (sparent) : Order of members is important to initialization */
     container_t container_m;
-    iterator    begin_m;
-    iterator    end_m;
-    bool        is_empty_m;
+    iterator begin_m;
+    iterator end_m;
+    bool is_empty_m;
     /* WARNING (sparent) : Order of members is important to initialization */
 
     // Note that these ranges assume non-empty.
 
     typedef std::pair<const_iterator, const_iterator> const_range;
 
-    const_range first_range() const
-    { return const_range(begin_m, begin_m < end_m ? const_iterator(end_m) : boost::end(container_m)); }
+    const_range first_range() const {
+        return const_range(begin_m,
+                           begin_m < end_m ? const_iterator(end_m) : boost::end(container_m));
+    }
 
-    const_range second_range() const
-    { return const_range(begin_m < end_m ? const_iterator(end_m) : boost::begin(container_m), end_m); }
+    const_range second_range() const {
+        return const_range(begin_m < end_m ? const_iterator(end_m) : boost::begin(container_m),
+                           end_m);
+    }
 
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 };
@@ -316,25 +328,20 @@ private:
 /*************************************************************************************************/
 
 template <typename T>
-circular_queue<T>::circular_queue(std::size_t capacity) :
-    container_m(capacity),
-    begin_m(boost::begin(container_m)),
-    end_m(boost::begin(container_m)),
-    is_empty_m(true)
-{ }
+circular_queue<T>::circular_queue(std::size_t capacity)
+    : container_m(capacity), begin_m(boost::begin(container_m)), end_m(boost::begin(container_m)),
+      is_empty_m(true) {}
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 
 /*************************************************************************************************/
 
 template <typename T>
-circular_queue<T>::circular_queue(const circular_queue& rhs) :
-    container_m (rhs.capacity()),
-    begin_m     (boost::begin(container_m)),
-    end_m       (boost::begin(container_m)),
-    is_empty_m  (rhs.is_empty_m)
-{
-    if (is_empty_m) return;
+circular_queue<T>::circular_queue(const circular_queue &rhs)
+    : container_m(rhs.capacity()), begin_m(boost::begin(container_m)),
+      end_m(boost::begin(container_m)), is_empty_m(rhs.is_empty_m) {
+    if (is_empty_m)
+        return;
 
     end_m = copy(rhs.first_range(), end_m);
     end_m = copy(rhs.second_range(), end_m);
@@ -343,15 +350,16 @@ circular_queue<T>::circular_queue(const circular_queue& rhs) :
 /*************************************************************************************************/
 
 template <typename T>
-inline circular_queue<T>& circular_queue<T>::operator = (circular_queue rhs)
-{  swap(*this, rhs); return *this; }
+inline circular_queue<T> &circular_queue<T>::operator=(circular_queue rhs) {
+    swap(*this, rhs);
+    return *this;
+}
 
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 /*************************************************************************************************/
 
 template <typename T>
-typename circular_queue<T>::reference circular_queue<T>::front() ADOBE_NOTHROW
-{
+typename circular_queue<T>::reference circular_queue<T>::front() ADOBE_NOTHROW {
     assert(!empty());
     return *begin_m;
 }
@@ -359,9 +367,7 @@ typename circular_queue<T>::reference circular_queue<T>::front() ADOBE_NOTHROW
 /*************************************************************************************************/
 
 template <typename T>
-typename circular_queue<T>::const_reference circular_queue<T>::front() const
-        ADOBE_NOTHROW
-{
+typename circular_queue<T>::const_reference circular_queue<T>::front() const ADOBE_NOTHROW {
     assert(!empty());
     return *begin_m;
 }
@@ -369,14 +375,15 @@ typename circular_queue<T>::const_reference circular_queue<T>::front() const
 /*************************************************************************************************/
 
 template <typename T>
-void circular_queue<T>::push_back(T x)
-{
+void circular_queue<T>::push_back(T x) {
     *end_m = std::move(x);
 
-    bool was_full (full());
+    bool was_full(full());
 
-    if (++end_m == boost::end(container_m)) end_m = boost::begin(container_m);
-    if (was_full) begin_m = end_m;
+    if (++end_m == boost::end(container_m))
+        end_m = boost::begin(container_m);
+    if (was_full)
+        begin_m = end_m;
 
     is_empty_m = false;
 }
@@ -384,8 +391,7 @@ void circular_queue<T>::push_back(T x)
 /*************************************************************************************************/
 
 template <typename T>
-void circular_queue<T>::pop_front() ADOBE_NOTHROW
-{
+void circular_queue<T>::pop_front() ADOBE_NOTHROW {
     assert(!empty());
     if (++begin_m == boost::end(container_m))
         begin_m = boost::begin(container_m);
@@ -395,8 +401,7 @@ void circular_queue<T>::pop_front() ADOBE_NOTHROW
 /*************************************************************************************************/
 
 template <typename T>
-void circular_queue<T>::putback() ADOBE_NOTHROW
-{
+void circular_queue<T>::putback() ADOBE_NOTHROW {
     assert(!full());
     if (begin_m == boost::begin(container_m))
         begin_m = boost::end(container_m);
@@ -407,9 +412,9 @@ void circular_queue<T>::putback() ADOBE_NOTHROW
 /*************************************************************************************************/
 
 template <typename T>
-typename circular_queue<T>::size_type circular_queue<T>::size() const ADOBE_NOTHROW
-{
-    if (begin_m < end_m) return std::distance(begin_m, end_m);
+typename circular_queue<T>::size_type circular_queue<T>::size() const ADOBE_NOTHROW {
+    if (begin_m < end_m)
+        return std::distance(begin_m, end_m);
 
     return is_empty_m ? 0 : capacity() - std::distance(end_m, begin_m);
 }
@@ -417,23 +422,21 @@ typename circular_queue<T>::size_type circular_queue<T>::size() const ADOBE_NOTH
 /*************************************************************************************************/
 
 template <typename T>
-bool operator == (  const circular_queue<T>& x,
-                    const circular_queue<T>& y)
-{
-/*
-    REVISIT (sparent) : I'm trying to move the code towards equality of containers to mean "the
-    size is the same and all the parts are the same." By making the segmented iterators part of
-    a public begin, end interface this would simply be a generic. "equal_containers()" function.
-*/
+bool operator==(const circular_queue<T> &x, const circular_queue<T> &y) {
+    /*
+        REVISIT (sparent) : I'm trying to move the code towards equality of containers to mean "the
+        size is the same and all the parts are the same." By making the segmented iterators part of
+        a public begin, end interface this would simply be a generic. "equal_containers()" function.
+    */
     typedef typename circular_queue<T>::const_range const_range;
 
-    if (x.size() != y.size()) return false;
+    if (x.size() != y.size())
+        return false;
 
-    const_range sequence1[] = { x.first_range(), x.second_range() };
-    const_range sequence2[] = { y.first_range(), y.second_range() };
+    const_range sequence1[] = {x.first_range(), x.second_range()};
+    const_range sequence2[] = {y.first_range(), y.second_range()};
 
-    return equal(make_segmented_range(sequence1),
-                 make_segmented_iterator(sequence2));
+    return equal(make_segmented_range(sequence1), make_segmented_iterator(sequence2));
 }
 
 /*************************************************************************************************/

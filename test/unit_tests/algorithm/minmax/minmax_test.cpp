@@ -1,7 +1,7 @@
 /*
-	Copyright 2005-2007 Adobe Systems Incorporated
-	Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
-	or a copy at http://stlab.adobe.com/licenses.html)
+    Copyright 2005-2007 Adobe Systems Incorporated
+    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
+    or a copy at http://stlab.adobe.com/licenses.html)
 */
 
 /**************************************************************************************************/
@@ -13,7 +13,7 @@
 #include <boost/test/unit_test.hpp>
 
 struct test_t {
-    bool before(const test_t&) const { return false; }
+    bool before(const test_t &) const { return false; }
 };
 
 BOOST_AUTO_TEST_CASE(clamp_test) {
@@ -50,4 +50,3 @@ BOOST_AUTO_TEST_CASE(clamp_test) {
         BOOST_CHECK_EQUAL(b, 3);
     }
 }
-
