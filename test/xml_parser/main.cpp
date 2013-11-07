@@ -33,7 +33,7 @@ struct math_test_t {
 
 /****************************************************************************************************/
 
-const char *const test_document_1 = "<math-test>\n"
+const char* const test_document_1 = "<math-test>\n"
                                     "	<expression>\n"
                                     "		<operand value=\"15\"/>\n"
                                     "		<operand value=\"10\"/>\n"
@@ -42,7 +42,7 @@ const char *const test_document_1 = "<math-test>\n"
                                     "	<result value=\"25\"/>\n"
                                     "</math-test>";
 
-const char *const test_document_2 = "<math-test>/n"
+const char* const test_document_2 = "<math-test>/n"
                                     "	<expression>/n"
                                     "		<operand value=\"3\"/>/n"
                                     "		<operand value=\"5\"/>/n"
@@ -51,7 +51,7 @@ const char *const test_document_2 = "<math-test>/n"
                                     "	<result value=\"15\"/>/n"
                                     "</math-test>/n";
 
-const char *const test_document_3 = "<?xml version=\"1.0\" encoding=\"utf8\" ?>\n"
+const char* const test_document_3 = "<?xml version=\"1.0\" encoding=\"utf8\" ?>\n"
                                     "<math-test>\n"
                                     "	<expression>\n"
                                     "		<operand value=\"2\"/>\n"
@@ -69,27 +69,27 @@ const char *const test_document_3 = "<?xml version=\"1.0\" encoding=\"utf8\" ?>\
 
 /****************************************************************************************************/
 
-long to_long(const adobe::token_range_t &value);
+long to_long(const adobe::token_range_t& value);
 
-long calculate_expression(const adobe::token_range_t &content);
+long calculate_expression(const adobe::token_range_t& content);
 
-adobe::token_range_t document_content(const adobe::token_range_t &entire_element_range,
-                                      const adobe::token_range_t &name,
-                                      const adobe::attribute_set_t &attribute_set,
-                                      const adobe::token_range_t &value, bool &passed);
+adobe::token_range_t document_content(const adobe::token_range_t& entire_element_range,
+                                      const adobe::token_range_t& name,
+                                      const adobe::attribute_set_t& attribute_set,
+                                      const adobe::token_range_t& value, bool& passed);
 
-adobe::token_range_t test_content(const adobe::token_range_t &entire_element_range,
-                                  const adobe::token_range_t &name,
-                                  const adobe::attribute_set_t &attribute_set,
-                                  const adobe::token_range_t &value, math_test_t &test);
+adobe::token_range_t test_content(const adobe::token_range_t& entire_element_range,
+                                  const adobe::token_range_t& name,
+                                  const adobe::attribute_set_t& attribute_set,
+                                  const adobe::token_range_t& value, math_test_t& test);
 
-adobe::token_range_t expression_content(const adobe::token_range_t &entire_element_range,
-                                        const adobe::token_range_t &name,
-                                        const adobe::attribute_set_t &attribute_set,
-                                        const adobe::token_range_t &value,
-                                        std::vector<long> &stack);
+adobe::token_range_t expression_content(const adobe::token_range_t& entire_element_range,
+                                        const adobe::token_range_t& name,
+                                        const adobe::attribute_set_t& attribute_set,
+                                        const adobe::token_range_t& value,
+                                        std::vector<long>& stack);
 
-bool run_test(const adobe::token_range_t &document, const adobe::line_position_t &line_position);
+bool run_test(const adobe::token_range_t& document, const adobe::line_position_t& line_position);
 
 /****************************************************************************************************/
 
@@ -123,7 +123,7 @@ int main() {
         std::cout << "XML Test 3 " << (test_passed ? "passed" : "failed") << std::endl;
         success = success && test_passed;
     }
-    catch (const std::exception &e) {
+    catch (const std::exception& e) {
         std::cout << "Caught exception: '" << e.what() << "'" << std::endl;
         success = false;
     }
@@ -135,13 +135,13 @@ namespace {
 
 /****************************************************************************************************/
 
-long to_long(const adobe::token_range_t &value) {
+long to_long(const adobe::token_range_t& value) {
     const std::string value_string(value.first, value.second);
 
     return boost::lexical_cast<long>(value_string);
 }
 
-long calculate_expression(const adobe::token_range_t &content) {
+long calculate_expression(const adobe::token_range_t& content) {
     std::vector<long> value_stack;
 
     adobe::make_xml_parser(content.first, content.second, adobe::line_position_t("expression"),
@@ -152,10 +152,10 @@ long calculate_expression(const adobe::token_range_t &content) {
     return value_stack.back();
 }
 
-adobe::token_range_t document_content(const adobe::token_range_t & /*entire_element_range*/,
-                                      const adobe::token_range_t &name,
-                                      const adobe::attribute_set_t & /*attribute_set*/,
-                                      const adobe::token_range_t &value, bool &passed) {
+adobe::token_range_t document_content(const adobe::token_range_t& /*entire_element_range*/,
+                                      const adobe::token_range_t& name,
+                                      const adobe::attribute_set_t& /*attribute_set*/,
+                                      const adobe::token_range_t& value, bool& passed) {
     static const adobe::token_range_t math_test_token_k(adobe::static_token_range("math-test"));
 
     passed = false;
@@ -175,10 +175,10 @@ adobe::token_range_t document_content(const adobe::token_range_t & /*entire_elem
     return adobe::token_range_t();
 }
 
-adobe::token_range_t test_content(const adobe::token_range_t & /*entire_element_range*/,
-                                  const adobe::token_range_t &name,
-                                  const adobe::attribute_set_t &attribute_set,
-                                  const adobe::token_range_t &value, math_test_t &test) {
+adobe::token_range_t test_content(const adobe::token_range_t& /*entire_element_range*/,
+                                  const adobe::token_range_t& name,
+                                  const adobe::attribute_set_t& attribute_set,
+                                  const adobe::token_range_t& value, math_test_t& test) {
     static const adobe::token_range_t expression_token_k(adobe::static_token_range("expression"));
     static const adobe::token_range_t result_token_k(adobe::static_token_range("result"));
     static const adobe::token_range_t value_attr_k(adobe::static_token_range("value"));
@@ -199,11 +199,11 @@ adobe::token_range_t test_content(const adobe::token_range_t & /*entire_element_
     return adobe::token_range_t();
 }
 
-adobe::token_range_t expression_content(const adobe::token_range_t & /*entire_element_range*/,
-                                        const adobe::token_range_t &name,
-                                        const adobe::attribute_set_t &attribute_set,
-                                        const adobe::token_range_t &value,
-                                        std::vector<long> &stack) {
+adobe::token_range_t expression_content(const adobe::token_range_t& /*entire_element_range*/,
+                                        const adobe::token_range_t& name,
+                                        const adobe::attribute_set_t& attribute_set,
+                                        const adobe::token_range_t& value,
+                                        std::vector<long>& stack) {
     static const adobe::token_range_t expression_token_k(adobe::static_token_range("expression"));
     static const adobe::token_range_t operand_token_k(adobe::static_token_range("operand"));
     static const adobe::token_range_t add_token_k(adobe::static_token_range("add"));
@@ -242,7 +242,7 @@ adobe::token_range_t expression_content(const adobe::token_range_t & /*entire_el
     return adobe::token_range_t();
 }
 
-bool run_test(const adobe::token_range_t &document, const adobe::line_position_t &line_position) {
+bool run_test(const adobe::token_range_t& document, const adobe::line_position_t& line_position) {
     bool passed = false;
 
     adobe::make_xml_parser(document.first, document.second, line_position,

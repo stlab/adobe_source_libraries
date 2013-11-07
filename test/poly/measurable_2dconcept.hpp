@@ -13,7 +13,7 @@
 
 // define default implementation of size operation to call member function size
 template <typename T>
-double height(const T &t) {
+double height(const T& t) {
     return t.height();
 }
 
@@ -22,7 +22,7 @@ double height(const T &t) {
 template <class T>
 struct Measurable_2DConcept : MeasurableConcept<T> {
     // operations
-    static double height(const T &t) {
+    static double height(const T& t) {
         using ::height;
         return height(t);
     }

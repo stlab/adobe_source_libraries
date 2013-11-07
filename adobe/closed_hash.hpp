@@ -67,7 +67,7 @@ public:
     closed_hash_iterator() : node_m(0) {}
 
     template <typename O>
-    closed_hash_iterator(const closed_hash_iterator<T, O> &x)
+    closed_hash_iterator(const closed_hash_iterator<T, O>& x)
         : node_m(x.node_m) {}
 
 public:
@@ -76,7 +76,7 @@ public:
         "gcc version 4.0.1 (Apple Inc. build 5465)" doesn't like it.
     */
 
-    node_t *node_m;
+    node_t* node_m;
 
 private:
     reference dereference() const { return node_m->value_m; }
@@ -84,14 +84,14 @@ private:
     void decrement() { node_m = node_m->prior(); }
 
     template <typename O>
-    bool equal(const closed_hash_iterator<T, O> &y) const {
+    bool equal(const closed_hash_iterator<T, O>& y) const {
         return node_m == y.node_m;
     }
 
     std::size_t state() const { return node_m->state(); }
     void set_state(std::size_t x) { return node_m->set_state(x); }
 
-    explicit closed_hash_iterator(node_t *node) : node_m(node) {}
+    explicit closed_hash_iterator(node_t* node) : node_m(node) {}
 
     friend class version_1::closed_hash_set<value_type, typename T::key_transform,
                                             typename T::hasher, typename T::key_equal,
@@ -146,7 +146,8 @@ A \c closed_hash_set is a hash based associative container, similar to a hash_se
     - \ref stldoc_UniqueHashedAssociativeContainer
 
 \todo
-    - re-order parameters so key_function is after comparison - to be consistent with lower_bound.
+    - re-order parameters so key_function is after comparison - to be consistent with
+lower_bound.
 
 */
 
@@ -164,10 +165,10 @@ public:
     typedef Hash hasher;
     typedef Pred key_equal;
     typedef A allocator_type;
-    typedef value_type *pointer;
-    typedef const value_type *const_pointer;
-    typedef value_type &reference;
-    typedef const value_type &const_reference;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
     typedef std::size_t size_type;
     typedef std::ptrdiff_t difference_type;
 
@@ -190,22 +191,22 @@ private:
     template <typename U> // U is derived node
     struct list_node_base {
         list_node_base() {
-            next_m = static_cast<U *>(this);
-            prior_m = static_cast<U *>(this);
+            next_m = static_cast<U*>(this);
+            prior_m = static_cast<U*>(this);
         }
 
-        U *address() { return static_cast<U *>(this); }
-        const U *address() const { return static_cast<const U *>(this); }
+        U* address() { return static_cast<U*>(this); }
+        const U* address() const { return static_cast<const U*>(this); }
 
-        operator U &() { return *static_cast<U *>(this); }
-        operator const U &() const { return *static_cast<const U *>(this); }
+        operator U&() { return *static_cast<U*>(this); }
+        operator const U&() const { return *static_cast<const U*>(this); }
 
-        friend inline void set_next(U &x, U &y) {
-            x.next_m = reinterpret_cast<U *>(uintptr_t(&y) | uintptr_t(x.state()));
+        friend inline void set_next(U& x, U& y) {
+            x.next_m = reinterpret_cast<U*>(uintptr_t(&y) | uintptr_t(x.state()));
             y.prior_m = &x;
         }
 
-        friend inline void set_next_raw(U &x, U &y) {
+        friend inline void set_next_raw(U& x, U& y) {
             x.next_m = &y;
             y.prior_m = &x;
         }
@@ -213,17 +214,17 @@ private:
         std::size_t state() const { return std::size_t(uintptr_t(next_m) & uintptr_t(0x03UL)); }
         void set_state(std::size_t x) {
             assert(x < 0x04UL);
-            next_m = reinterpret_cast<U *>(uintptr_t(next()) | uintptr_t(x));
+            next_m = reinterpret_cast<U*>(uintptr_t(next()) | uintptr_t(x));
         }
 
-        U *next() const {
-            return reinterpret_cast<U *>(reinterpret_cast<uintptr_t>(next_m) & ~uintptr_t(0x03UL));
+        U* next() const {
+            return reinterpret_cast<U*>(reinterpret_cast<uintptr_t>(next_m) & ~uintptr_t(0x03UL));
         }
-        U *prior() const { return prior_m; }
+        U* prior() const { return prior_m; }
 
     private:
-        U *next_m;
-        U *prior_m;
+        U* next_m;
+        U* prior_m;
     };
 
     struct node_t : list_node_base<node_t> {
@@ -241,42 +242,43 @@ private:
         };
 
         /*
-        NOTE (sparent) - the assumption is that the initial items are pointers and that size_t is
+        NOTE (sparent) - the assumption is that the initial items are pointers and that size_t
+        is
         either equal to the sizeof a pointer or a lower power of two so this packs tightly.
         */
 
         BOOST_STATIC_ASSERT(
-            !(sizeof(A) == sizeof(void *) || sizeof(A) == 0) ||
+            !(sizeof(A) == sizeof(void*) || sizeof(A) == 0) ||
             (sizeof(compact_header_t) ==
              (sizeof(allocator_type) + 2 * sizeof(node_base_t) + 2 * sizeof(std::size_t))));
 
         aligned_storage<compact_header_t> header_m;
         node_t storage_m[1];
 
-        allocator_type &allocator() { return header_m.get().alloc_free_tail_m.first(); }
-        const allocator_type &allocator() const { return header_m.get().alloc_free_tail_m.first(); }
-        node_base_t &free_tail() { return header_m.get().alloc_free_tail_m.second(); }
-        const node_base_t &free_tail() const { return header_m.get().alloc_free_tail_m.second(); }
-        node_base_t &used_tail() { return header_m.get().used_tail_m; }
-        const node_base_t &used_tail() const { return header_m.get().used_tail_m; }
-        std::size_t &capacity() { return header_m.get().capacity_m; }
-        const std::size_t &capacity() const { return header_m.get().capacity_m; }
-        std::size_t &size() { return header_m.get().size_m; }
-        const std::size_t &size() const { return header_m.get().size_m; }
+        allocator_type& allocator() { return header_m.get().alloc_free_tail_m.first(); }
+        const allocator_type& allocator() const { return header_m.get().alloc_free_tail_m.first(); }
+        node_base_t& free_tail() { return header_m.get().alloc_free_tail_m.second(); }
+        const node_base_t& free_tail() const { return header_m.get().alloc_free_tail_m.second(); }
+        node_base_t& used_tail() { return header_m.get().used_tail_m; }
+        const node_base_t& used_tail() const { return header_m.get().used_tail_m; }
+        std::size_t& capacity() { return header_m.get().capacity_m; }
+        const std::size_t& capacity() const { return header_m.get().capacity_m; }
+        std::size_t& size() { return header_m.get().size_m; }
+        const std::size_t& size() const { return header_m.get().size_m; }
     };
 
-    typedef node_t *node_ptr;
+    typedef node_t* node_ptr;
 
     typedef boost::compressed_pair<
-        hasher, boost::compressed_pair<key_equal,
-                                       boost::compressed_pair<key_transform, header_t *>>> data_t;
+        hasher, boost::compressed_pair<key_equal, boost::compressed_pair<key_transform, header_t*>>>
+    data_t;
 
     data_t data_m;
 
-    typedef header_t *header_pointer;
+    typedef header_t* header_pointer;
 
-    const header_pointer &header() const { return data_m.second().second().second(); }
-    header_pointer &header() { return data_m.second().second().second(); }
+    const header_pointer& header() const { return data_m.second().second().second(); }
+    header_pointer& header() { return data_m.second().second().second(); }
 
 public:
     // construct/destroy/copy
@@ -288,9 +290,9 @@ public:
         allocate(allocator_type(), n);
     }
 
-    closed_hash_set(size_type n, const hasher &hf, const key_equal &eq = key_equal(),
-                    const key_transform &kf = key_transform(),
-                    const allocator_type &a = allocator_type()) {
+    closed_hash_set(size_type n, const hasher& hf, const key_equal& eq = key_equal(),
+                    const key_transform& kf = key_transform(),
+                    const allocator_type& a = allocator_type()) {
         header() = 0;
         data_m.first() = hf;
         data_m.second().first() = eq;
@@ -305,9 +307,9 @@ public:
     }
 
     template <typename I> // I models InputIterator
-    closed_hash_set(I f, I l, size_type n, const hasher &hf = hasher(),
-                    const key_equal &eq = key_equal(), const key_transform &kf = key_transform(),
-                    const allocator_type &a = allocator_type()) {
+    closed_hash_set(I f, I l, size_type n, const hasher& hf = hasher(),
+                    const key_equal& eq = key_equal(), const key_transform& kf = key_transform(),
+                    const allocator_type& a = allocator_type()) {
         header() = 0;
         data_m.first() = hf;
         data_m.second().first() = eq;
@@ -316,12 +318,12 @@ public:
         insert(f, l);
     }
 
-    closed_hash_set(const closed_hash_set &x) : data_m(x.data_m) {
+    closed_hash_set(const closed_hash_set& x) : data_m(x.data_m) {
         header() = 0;
         allocate(x.get_allocator(), x.size());
         insert(x.begin(), x.end());
     }
-    closed_hash_set &operator=(closed_hash_set x) {
+    closed_hash_set& operator=(closed_hash_set x) {
         swap(x, *this);
         return *this;
     }
@@ -330,7 +332,7 @@ public:
         return header() ? header()->allocator() : allocator_type();
     }
 
-    closed_hash_set(closed_hash_set &&x) noexcept : data_m(x.data_m) { x.header() = 0; }
+    closed_hash_set(closed_hash_set&& x) noexcept : data_m(x.data_m) { x.header() = 0; }
 
 #if 0
     template <typename I> // I models ForwardIterator
@@ -366,7 +368,7 @@ public:
 
     const_iterator begin() const { return iterator(header() ? header()->used_tail().next() : 0); }
     const_iterator end() const {
-        return iterator(header() ? const_cast<node_t *>(header()->used_tail().address()) : 0);
+        return iterator(header() ? const_cast<node_t*>(header()->used_tail().address()) : 0);
     }
 
     reverse_iterator rbegin() { return reverse_iterator(end()); }
@@ -394,7 +396,7 @@ public:
         return result;
     }
 
-    std::size_t erase(const key_type &key) {
+    std::size_t erase(const key_type& key) {
         iterator node(find(key));
         if (node == end())
             return 0;
@@ -407,9 +409,9 @@ public:
             ;
     }
 
-    const_iterator find(const key_type &key) const { return adobe::remove_const(*this).find(key); }
+    const_iterator find(const key_type& key) const { return adobe::remove_const(*this).find(key); }
 
-    iterator find(const key_type &key) {
+    iterator find(const key_type& key) {
         if (!header())
             return iterator(0);
 
@@ -422,21 +424,21 @@ public:
         return find(node, last, key);
     }
 
-    std::pair<const_iterator, const_iterator> equal_range(const key_type &key) const {
+    std::pair<const_iterator, const_iterator> equal_range(const key_type& key) const {
         const_iterator result = find(key);
         if (result == end())
             return std::make_pair(result, result);
         return std::make_pair(result, boost::next(result));
     }
 
-    std::pair<iterator, iterator> equal_range(const key_type &key) {
+    std::pair<iterator, iterator> equal_range(const key_type& key) {
         iterator result = find(key);
         if (result == end())
             return std::make_pair(result, result);
         return std::make_pair(result, boost::next(result));
     }
 
-    std::size_t count(const key_type &key) const { return std::size_t(find(key) != end()); }
+    std::size_t count(const key_type& key) const { return std::size_t(find(key) != end()); }
 
     template <typename I> // I models InputIterator
     void insert(I first, I last) {
@@ -506,13 +508,13 @@ public:
             for (iterator first(begin()), last(end()); first != last; ++first)
                 destroy(&*first);
             raw_allocator alloc(get_allocator());
-            alloc.deallocate(reinterpret_cast<char *>(header()), 0);
+            alloc.deallocate(reinterpret_cast<char*>(header()), 0);
         }
     }
 
-    friend void swap(closed_hash_set &x, closed_hash_set &y) { std::swap(x.data_m, y.data_m); }
+    friend void swap(closed_hash_set& x, closed_hash_set& y) { std::swap(x.data_m, y.data_m); }
 
-    friend bool operator==(const closed_hash_set &x, const closed_hash_set &y) {
+    friend bool operator==(const closed_hash_set& x, const closed_hash_set& y) {
         if (x.size() != y.size())
             return false;
         for (const_iterator first(x.begin()), last(x.end()); first != last; ++first) {
@@ -527,7 +529,7 @@ private:
     typedef typename allocator_type::template rebind<char>::other raw_allocator;
 
 
-    void allocate(const allocator_type &a, size_type n) {
+    void allocate(const allocator_type& a, size_type n) {
         // table of primes such that p[n + 1] = next_prime(2 * p[n])
 
         static const std::size_t prime_table[] = {
@@ -547,7 +549,7 @@ private:
 
         raw_allocator alloc(a);
 
-        header() = reinterpret_cast<header_t *>(
+        header() = reinterpret_cast<header_t*>(
             alloc.allocate(sizeof(header_t) - sizeof(node_t) + sizeof(node_t) * n));
         header()->capacity() = n;
         header()->size() = 0;
@@ -555,7 +557,7 @@ private:
         construct(&header()->used_tail());
         construct(&header()->allocator(), a);
 
-        node_t *prior = header()->free_tail().address();
+        node_t* prior = header()->free_tail().address();
         for (node_ptr first(&header()->storage_m[0]), last(&header()->storage_m[0] + n);
              first != last; ++first) {
             set_next_raw(*prior, *first);
@@ -573,12 +575,12 @@ private:
     size_type capacity_() const { return header()->capacity(); }
 
     // precondition: header() != NULL
-    iterator bucket_(const key_type &key) {
+    iterator bucket_(const key_type& key) {
         return iterator(&header()->storage_m[0] + hash_function()(key) % capacity_());
     }
 
     // preconditino: [f, l) is not empty
-    iterator find(iterator f, iterator l, const key_type &key) {
+    iterator find(iterator f, iterator l, const key_type& key) {
         do {
             if (key_eq()(key, key_function()(*f)))
                 return f;
@@ -646,28 +648,29 @@ public:
     closed_hash_map(I f, I l, move_ctor) : set_type(f, l, move_ctor()) { }
 #endif
 
-    closed_hash_map(const closed_hash_map &x) : set_type(x) {}
-    closed_hash_map(closed_hash_map &&x) noexcept : set_type(std::move(x)) {}
-    closed_hash_map &operator=(closed_hash_map x) {
+    closed_hash_map(const closed_hash_map& x) : set_type(x) {}
+    closed_hash_map(closed_hash_map&& x) noexcept : set_type(std::move(x)) {}
+    closed_hash_map& operator=(closed_hash_map x) {
         swap(x, *this);
         return *this;
     }
 
-    friend void swap(closed_hash_map &x, closed_hash_map &y) {
-        swap(static_cast<set_type &>(x), static_cast<set_type &>(y));
+    friend void swap(closed_hash_map& x, closed_hash_map& y) {
+        swap(static_cast<set_type&>(x), static_cast<set_type&>(y));
     }
 
 
-    friend bool operator==(const closed_hash_map &x, const closed_hash_map &y) {
-        return static_cast<const set_type &>(x) == static_cast<const set_type &>(y);
+    friend bool operator==(const closed_hash_map& x, const closed_hash_map& y) {
+        return static_cast<const set_type&>(x) == static_cast<const set_type&>(y);
     }
 
     /*
-        NOTE (sparent) : Can't use boost::equality_comparable without introducing extra base class
+        NOTE (sparent) : Can't use boost::equality_comparable without introducing extra base
+       class
         overhead.
     */
 
-    friend bool operator!=(const closed_hash_map &x, const closed_hash_map &y) { return !(x == y); }
+    friend bool operator!=(const closed_hash_map& x, const closed_hash_map& y) { return !(x == y); }
 
 #ifndef ADOBE_CLOSED_HASH_MAP_INDEX
 #define ADOBE_CLOSED_HASH_MAP_INDEX 1
@@ -675,7 +678,7 @@ public:
 
 #if ADOBE_CLOSED_HASH_MAP_INDEX
 
-    mapped_type &operator[](const Key &x) {
+    mapped_type& operator[](const Key& x) {
         typename set_type::iterator i = this->find(x);
         if (i == this->end()) {
             return this->insert(std::make_pair(x, mapped_type())).first->second;
@@ -688,7 +691,7 @@ public:
 
 /*************************************************************************************************/
 
-BOOST_STATIC_ASSERT(sizeof(closed_hash_set<int>) == sizeof(void *));
+BOOST_STATIC_ASSERT(sizeof(closed_hash_set<int>) == sizeof(void*));
 
 
 #ifndef ADOBE_NO_DOCUMENTATION

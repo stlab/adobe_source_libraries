@@ -48,7 +48,7 @@ namespace {
 
 /* make a UUID from the timestamp, clockseq, and node ID */
 
-void format_uuid_v1(uuid_t *uuid, boost::uint16_t clock_seq, uuid_time_t timestamp,
+void format_uuid_v1(uuid_t* uuid, boost::uint16_t clock_seq, uuid_time_t timestamp,
                     uuid_node_t node) {
     // Construct a version 1 uuid with the information we've gathered plus a few constants.
 
@@ -67,7 +67,7 @@ void format_uuid_v1(uuid_t *uuid, boost::uint16_t clock_seq, uuid_time_t timesta
 
 /* make a UUID from a (pseudo)random 128 bit number */
 
-void format_uuid_v3(uuid_t *uuid, boost::uint8_t hash[16]) {
+void format_uuid_v3(uuid_t* uuid, boost::uint8_t hash[16]) {
     /* Construct a version 3 uuid with the (pseudo-)random number
     * plus a few constants. */
 
@@ -97,7 +97,7 @@ void format_uuid_v3(uuid_t *uuid, boost::uint8_t hash[16]) {
     code will increment first and reset on the clock every UUIDS_PER_TICK.
 */
 
-void get_current_time(uuid_time_t *timestamp) {
+void get_current_time(uuid_time_t* timestamp) {
     static uuid_time_t time_last;
     static boost::uint16_t uuids_this_tick(0);
     static bool inited(false);
@@ -136,7 +136,7 @@ void get_current_time(uuid_time_t *timestamp) {
 /*************************************************************************************************/
 
 /* uuid_create -- generator a UUID */
-boost::int16_t uuid_create(uuid_t *uuid) {
+boost::int16_t uuid_create(uuid_t* uuid) {
     uuid_time_t timestamp;
     uuid_time_t last_time;
     boost::uint16_t clockseq;
@@ -176,7 +176,7 @@ boost::int16_t uuid_create(uuid_t *uuid) {
 
 /* uuid_create_from_name -- create a UUID using a "name" from a "name space" */
 
-void uuid_create_from_name(uuid_t *uuid, uuid_t nsid, boost::uint8_t *name,
+void uuid_create_from_name(uuid_t* uuid, uuid_t nsid, boost::uint8_t* name,
                            boost::uint16_t namelen) {
     uuid_t net_nsid; /* context UUID in network byte order */
 
@@ -201,7 +201,7 @@ void uuid_create_from_name(uuid_t *uuid, uuid_t nsid, boost::uint8_t *name,
 
 /*************************************************************************************************/
 
-boost::int16_t uuid_compare(const uuid_t *u1, const uuid_t *u2) {
+boost::int16_t uuid_compare(const uuid_t* u1, const uuid_t* u2) {
 #define ADOBE_UUID_COMPARE_CHECK(f1, f2)                                                           \
     if (f1 != f2)                                                                                  \
         return (f1 < f2) ? boost::int16_t(-1) : boost::int16_t(1);

@@ -160,7 +160,7 @@ extern "C" void tss_cleanup_implemented() {}
 
 /*************************************************************************************************/
 
-int main(int argc, char *argv[]) try {
+int main(int argc, char* argv[]) try {
     basic_roundtrip_test();
 
     if (argc > 1 && argv[1] == std::string("--full"))
@@ -174,7 +174,7 @@ int main(int argc, char *argv[]) try {
 
     return 0;
 }
-catch (const std::exception &error) {
+catch (const std::exception& error) {
     std::cerr << "Exception: " << error.what() << "\n";
 
     return 1;

@@ -207,17 +207,17 @@ struct static_table_traits {
     typedef ValueType value_type;
     typedef std::pair<key_type, value_type> entry_type;
 
-    result_type operator()(const entry_type &x, const entry_type &y) const {
+    result_type operator()(const entry_type& x, const entry_type& y) const {
         return (*this)(x, y.first);
     }
 
     // revisit: MM. For debugging purposes, VC 8 requires the definition of
     // this (unnecessary overload) in debug versions.
-    result_type operator()(const key_type &x, const entry_type &y) const { return x < y.first; }
+    result_type operator()(const key_type& x, const entry_type& y) const { return x < y.first; }
 
-    result_type operator()(const entry_type &x, const key_type &y) const { return x.first < y; }
+    result_type operator()(const entry_type& x, const key_type& y) const { return x.first < y; }
 
-    result_type equal(const key_type &x, const key_type &y) const { return x == y; }
+    result_type equal(const key_type& x, const key_type& y) const { return x == y; }
 };
 
 /*************************************************************************************************/
@@ -230,8 +230,8 @@ struct static_table {
     typedef typename traits_type::value_type value_type;
     typedef typename traits_type::entry_type entry_type;
 
-    const value_type &operator()(const key_type &key) const {
-        const entry_type *iter(adobe::lower_bound(table_m, key, traits_type()));
+    const value_type& operator()(const key_type& key) const {
+        const entry_type* iter(adobe::lower_bound(table_m, key, traits_type()));
 
         if (iter == boost::end(table_m) || !traits_type().equal(iter->first, key))
             throw std::logic_error("static_table key not found");
@@ -239,8 +239,8 @@ struct static_table {
         return iter->second;
     }
 
-    bool operator()(const key_type &key, value_type &result) const {
-        const entry_type *iter(adobe::lower_bound(table_m, key, traits_type()));
+    bool operator()(const key_type& key, value_type& result) const {
+        const entry_type* iter(adobe::lower_bound(table_m, key, traits_type()));
 
         if (iter == boost::end(table_m) || !traits_type().equal(iter->first, key))
             return false;

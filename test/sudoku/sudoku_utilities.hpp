@@ -51,7 +51,7 @@ enum {
 
 /****************************************************************************************************/
 
-void detailed_status(const sudoku_t &puzzle) {
+void detailed_status(const sudoku_t& puzzle) {
     if (!verbose_g)
         return;
 
@@ -150,19 +150,19 @@ std::string name_with_subject(Iterator x) {
 
 /****************************************************************************************************/
 
-inline bool is_solved(const square_t &x) { return x.value_m != 0; }
+inline bool is_solved(const square_t& x) { return x.value_m != 0; }
 
 /****************************************************************************************************/
 
-inline bool is_unsolved(const square_t &x) { return !is_solved(x); }
+inline bool is_unsolved(const square_t& x) { return !is_solved(x); }
 
 /****************************************************************************************************/
 
-inline bool is_solved_for(const square_t &x, int n) { return x.value_m == n; }
+inline bool is_solved_for(const square_t& x, int n) { return x.value_m == n; }
 
 /****************************************************************************************************/
 
-inline bool is_unsolved_for(const square_t &x, int n) { return !is_solved_for(x, n); }
+inline bool is_unsolved_for(const square_t& x, int n) { return !is_solved_for(x, n); }
 
 /****************************************************************************************************/
 
@@ -222,7 +222,7 @@ bool verify_integrity_for_range(Iterator first, Iterator last) {
 /****************************************************************************************************/
 
 template <typename Iterator>
-bool verify_integrity_for_square(const sudoku_t &puzzle, Iterator square) {
+bool verify_integrity_for_square(const sudoku_t& puzzle, Iterator square) {
     std::size_t value(square->value_m);
 
     if (value == 0)
@@ -244,7 +244,7 @@ bool verify_integrity_for_square(const sudoku_t &puzzle, Iterator square) {
 
 /****************************************************************************************************/
 
-bool verify_integrity(const sudoku_t &puzzle) {
+bool verify_integrity(const sudoku_t& puzzle) {
     for (int i(0); i < 9; ++i) {
         if (!verify_integrity_for_range(puzzle.row_begin(i), puzzle.row_end(i)))
             return false;
@@ -266,7 +266,7 @@ bool verify_integrity(const sudoku_t &puzzle) {
 /****************************************************************************************************/
 
 template <typename Iterator>
-std::size_t pinned_reduction_for_square(const sudoku_t &puzzle, Iterator iterator,
+std::size_t pinned_reduction_for_square(const sudoku_t& puzzle, Iterator iterator,
                                         bool force = false) {
     if (iterator->value_m)
         return 0;
@@ -296,7 +296,7 @@ std::size_t pinned_reduction_for_square(const sudoku_t &puzzle, Iterator iterato
 
 /****************************************************************************************************/
 
-std::size_t pinned_reduction(sudoku_t &puzzle, bool force = false) {
+std::size_t pinned_reduction(sudoku_t& puzzle, bool force = false) {
     std::size_t usages(0);
 
     for (sudoku_t::iterator first(puzzle.begin()), last(puzzle.end()); first != last; ++first)
@@ -313,7 +313,7 @@ std::size_t pinned_reduction(sudoku_t &puzzle, bool force = false) {
 
 /****************************************************************************************************/
 
-std::size_t lone_candidate_reduction(sudoku_t &puzzle) {
+std::size_t lone_candidate_reduction(sudoku_t& puzzle) {
     /*
         Description of technique at
 
@@ -407,7 +407,7 @@ std::size_t unique_candidate_reduction_for_range(Iterator first, Iterator last) 
 
 /****************************************************************************************************/
 
-std::size_t unique_candidate_reduction(sudoku_t &puzzle) {
+std::size_t unique_candidate_reduction(sudoku_t& puzzle) {
     /*
         Description of technique at
 
@@ -557,7 +557,7 @@ template <typename Iterator>
 std::size_t disjoint_subset_reduction_for_range(Iterator first, Iterator last,
                                                 std::size_t set_size) {
     typedef typename std::iterator_traits<Iterator>::value_type value_type;
-    typedef boost::function<bool(const value_type &)> predicate_t;
+    typedef boost::function<bool(const value_type&)> predicate_t;
 
     if (count_unsolved_in_range(first, last) <= set_size)
         return false;
@@ -630,7 +630,7 @@ std::size_t disjoint_subset_reduction_for_range(Iterator first, Iterator last,
 
 /****************************************************************************************************/
 
-std::size_t disjoint_subset_reduction(sudoku_t &puzzle) {
+std::size_t disjoint_subset_reduction(sudoku_t& puzzle) {
     /*
         Description of technique at
 
@@ -669,7 +669,7 @@ std::size_t disjoint_subset_reduction(sudoku_t &puzzle) {
 template <typename Iterator>
 std::size_t unique_subset_reduction_for_range(Iterator first, Iterator last, std::size_t set_size) {
     typedef typename std::iterator_traits<Iterator>::value_type value_type;
-    typedef boost::function<bool(const value_type &)> predicate_t;
+    typedef boost::function<bool(const value_type&)> predicate_t;
 
     if (count_unsolved_in_range(first, last) <= set_size)
         return false;
@@ -747,7 +747,7 @@ std::size_t unique_subset_reduction_for_range(Iterator first, Iterator last, std
 
 /****************************************************************************************************/
 
-std::size_t unique_subset_reduction(sudoku_t &puzzle) {
+std::size_t unique_subset_reduction(sudoku_t& puzzle) {
     /*
         Description of technique at
 
@@ -869,7 +869,7 @@ std::size_t intersection_reduction_for_box_and_range(sudoku_t::box_iterator firs
 
 /****************************************************************************************************/
 
-std::size_t intersection_reduction(sudoku_t &puzzle) {
+std::size_t intersection_reduction(sudoku_t& puzzle) {
     /*
         Description of technique at
 
@@ -929,7 +929,7 @@ std::size_t intersection_reduction(sudoku_t &puzzle) {
 
 /****************************************************************************************************/
 
-void setup_links(sudoku_t &puzzle, adobe::dancing_links_t &links) {
+void setup_links(sudoku_t& puzzle, adobe::dancing_links_t& links) {
     /*
         Big thanks to Daniel Seiler for the matrix encoding chart below, found at
             http://www.setbb.com/phpbb/viewtopic.php?t=119&highlight=dancing+links&mforum=sudoku
@@ -994,7 +994,7 @@ void setup_links(sudoku_t &puzzle, adobe::dancing_links_t &links) {
 
             // iterator over all the possible columns c
             for (int c = 0; c < n; ++c) {
-                square_t &sq(puzzle.square(r, c));
+                square_t& sq(puzzle.square(r, c));
                 const int value(sq.value_m);
                 const int box_index(box_index_row + (c / 3));
 
@@ -1031,7 +1031,7 @@ void setup_links(sudoku_t &puzzle, adobe::dancing_links_t &links) {
 
 /****************************************************************************************************/
 
-std::size_t brute_force_solve(sudoku_t &puzzle, std::size_t max_solutions) {
+std::size_t brute_force_solve(sudoku_t& puzzle, std::size_t max_solutions) {
     adobe::dancing_links_t links(dlx_rows_k, dlx_cols_k);
 
     setup_links(puzzle, links);
@@ -1042,7 +1042,7 @@ std::size_t brute_force_solve(sudoku_t &puzzle, std::size_t max_solutions) {
 /****************************************************************************************************/
 
 template <typename ResultsCallback>
-std::size_t brute_force_solve(sudoku_t &puzzle, std::size_t max_solutions,
+std::size_t brute_force_solve(sudoku_t& puzzle, std::size_t max_solutions,
                               ResultsCallback callback) {
     adobe::dancing_links_t links(dlx_rows_k, dlx_cols_k);
 
@@ -1061,9 +1061,9 @@ std::size_t brute_force_solve(sudoku_t &puzzle, std::size_t max_solutions,
 /****************************************************************************************************/
 
 struct sodoku_filler_t {
-    sodoku_filler_t(sudoku_t &puzzle) : puzzle_m(puzzle), last_m(false) {}
+    sodoku_filler_t(sudoku_t& puzzle) : puzzle_m(puzzle), last_m(false) {}
 
-    sodoku_filler_t(const sodoku_filler_t &rhs) : puzzle_m(rhs.puzzle_m), last_m(rhs.last_m) {}
+    sodoku_filler_t(const sodoku_filler_t& rhs) : puzzle_m(rhs.puzzle_m), last_m(rhs.last_m) {}
 
     void operator()(std::size_t index, bool last) {
         if (last_m)
@@ -1080,13 +1080,13 @@ struct sodoku_filler_t {
     }
 
 private:
-    sudoku_t &puzzle_m;
+    sudoku_t& puzzle_m;
     bool last_m;
 };
 
 /****************************************************************************************************/
 
-void timed_solve(const sudoku_t &cpuzzle) {
+void timed_solve(const sudoku_t& cpuzzle) {
     sudoku_t puzzle(cpuzzle);
 
     adobe::timer_t timer;
@@ -1108,7 +1108,7 @@ private:
     typedef boost::array<int, 81> results_t;
 
 public:
-    solution_output_t(std::ofstream *output) : output_m(output) {}
+    solution_output_t(std::ofstream* output) : output_m(output) {}
 
     void operator()(std::size_t index, bool last) {
         std::size_t number(index / 81 + 1);
@@ -1130,12 +1130,12 @@ public:
 
 private:
     results_t results_m;
-    std::ofstream *output_m;
+    std::ofstream* output_m;
 };
 
 /****************************************************************************************************/
 
-void count_solutions(const sudoku_t &cpuzzle, bool save_solutions = false) {
+void count_solutions(const sudoku_t& cpuzzle, bool save_solutions = false) {
     sudoku_t puzzle(cpuzzle);
 
     adobe::timer_t timer;
@@ -1164,7 +1164,7 @@ void count_solutions(const sudoku_t &cpuzzle, bool save_solutions = false) {
 
 /****************************************************************************************************/
 
-std::size_t add_potential_squares(sudoku_t &puzzle, std::size_t hint_count) {
+std::size_t add_potential_squares(sudoku_t& puzzle, std::size_t hint_count) {
     // A puzzle is ready when removing two squares will leave an ambiguous
     // puzzle, and adding two squares leaves a puzzle with a unique solution
 
@@ -1251,30 +1251,30 @@ sudoku_t generate_puzzle(bool noisy = true) {
 
 /****************************************************************************************************/
 
-const char *score_to_string(std::size_t score) {
-    std::pair<std::size_t, const char *> titles[] = {
-        std::make_pair<std::size_t, const char *>(25, "trivial"),
-        std::make_pair<std::size_t, const char *>(50, "easier"),
-        std::make_pair<std::size_t, const char *>(75, "easy"),
-        std::make_pair<std::size_t, const char *>(100, "mostly easy"),
-        std::make_pair<std::size_t, const char *>(125, "nearly moderate"),
-        std::make_pair<std::size_t, const char *>(150, "moderate"),
-        std::make_pair<std::size_t, const char *>(175, "beyond moderate"),
-        std::make_pair<std::size_t, const char *>(200, "nearly tricky"),
-        std::make_pair<std::size_t, const char *>(225, "tricky"),
-        std::make_pair<std::size_t, const char *>(250, "beyond tricky"),
-        std::make_pair<std::size_t, const char *>(275, "nearly difficult"),
-        std::make_pair<std::size_t, const char *>(300, "difficult"),
-        std::make_pair<std::size_t, const char *>(325, "beyond difficult"),
-        std::make_pair<std::size_t, const char *>(350, "nearly hard"),
-        std::make_pair<std::size_t, const char *>(375, "hard"),
-        std::make_pair<std::size_t, const char *>(400, "beyond hard"),
-        std::make_pair<std::size_t, const char *>(425, "nearly diabolical"),
-        std::make_pair<std::size_t, const char *>(450, "diabolical"),
-        std::make_pair<std::size_t, const char *>(475, "beyond diabolical"),
-        std::make_pair<std::size_t, const char *>(500, "nearly wicked"),
-        std::make_pair<std::size_t, const char *>(525, "wicked"),
-        std::make_pair<std::size_t, const char *>(800, "beyond wicked")};
+const char* score_to_string(std::size_t score) {
+    std::pair<std::size_t, const char*> titles[] = {
+        std::make_pair<std::size_t, const char*>(25, "trivial"),
+        std::make_pair<std::size_t, const char*>(50, "easier"),
+        std::make_pair<std::size_t, const char*>(75, "easy"),
+        std::make_pair<std::size_t, const char*>(100, "mostly easy"),
+        std::make_pair<std::size_t, const char*>(125, "nearly moderate"),
+        std::make_pair<std::size_t, const char*>(150, "moderate"),
+        std::make_pair<std::size_t, const char*>(175, "beyond moderate"),
+        std::make_pair<std::size_t, const char*>(200, "nearly tricky"),
+        std::make_pair<std::size_t, const char*>(225, "tricky"),
+        std::make_pair<std::size_t, const char*>(250, "beyond tricky"),
+        std::make_pair<std::size_t, const char*>(275, "nearly difficult"),
+        std::make_pair<std::size_t, const char*>(300, "difficult"),
+        std::make_pair<std::size_t, const char*>(325, "beyond difficult"),
+        std::make_pair<std::size_t, const char*>(350, "nearly hard"),
+        std::make_pair<std::size_t, const char*>(375, "hard"),
+        std::make_pair<std::size_t, const char*>(400, "beyond hard"),
+        std::make_pair<std::size_t, const char*>(425, "nearly diabolical"),
+        std::make_pair<std::size_t, const char*>(450, "diabolical"),
+        std::make_pair<std::size_t, const char*>(475, "beyond diabolical"),
+        std::make_pair<std::size_t, const char*>(500, "nearly wicked"),
+        std::make_pair<std::size_t, const char*>(525, "wicked"),
+        std::make_pair<std::size_t, const char*>(800, "beyond wicked")};
     std::size_t num_titles(sizeof(titles) / sizeof(titles[0]));
 
     for (std::size_t i(0); i < num_titles; ++i)
@@ -1286,12 +1286,12 @@ const char *score_to_string(std::size_t score) {
 
 /****************************************************************************************************/
 
-std::size_t rate_puzzle(const sudoku_t &cpuzzle, bool noisy = true) {
+std::size_t rate_puzzle(const sudoku_t& cpuzzle, bool noisy = true) {
     // Considering this solution engine doesn't solve for anything more
     // complicated than box/row/col intersection reductions the rating
     // isn't very accurate, but gives a rough sketch of a rating mechanism.
 
-    typedef std::size_t (*solve_proc_t)(sudoku_t &);
+    typedef std::size_t (*solve_proc_t)(sudoku_t&);
     typedef std::pair<solve_proc_t, std::size_t> solve_rating_t;
 
     sudoku_t puzzle(cpuzzle);

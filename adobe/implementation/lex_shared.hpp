@@ -50,29 +50,29 @@ public:
     typedef boost::function<void()> parse_token_proc_t;
     typedef lex_token_t<E> token_type;
 
-    lex_base_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t &position);
+    lex_base_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t& position);
 
     virtual ~lex_base_t();
 
-    const token_type &get_token();
+    const token_type& get_token();
     void putback_token();
-    void put_token(const token_type &token);
+    void put_token(const token_type& token);
 
-    void init_token(token_type &token) { token.range_m.first = first_m; }
-    void finalize_token(token_type &token, E enumeration) {
+    void init_token(token_type& token) { token.range_m.first = first_m; }
+    void finalize_token(token_type& token, E enumeration) {
         token.range_m.second = first_m;
         token.enum_m = enumeration;
     }
-    void reset_lex(const token_type &token) { first_m = token.range_m.first; }
+    void reset_lex(const token_type& token) { first_m = token.range_m.first; }
 
     void advance_lex() { ++first_m; }
-    bool peek_char(char &c) {
+    bool peek_char(char& c) {
         if (first_m == last_m)
             return false;
         c = *first_m;
         return true;
     }
-    bool get_char(char &c) {
+    bool get_char(char& c) {
         bool result(peek_char(c));
         if (result)
             advance_lex();
@@ -82,13 +82,13 @@ public:
     void set_lex_position(uchar_ptr_t p) { first_m = p; }
 
     void throw_exception(E expected, E found);
-    void throw_parser_exception(const char *error_string);
+    void throw_parser_exception(const char* error_string);
 
     void set_skip_white_space(bool skip);
 
     void skip_white_space();
 
-    const line_position_t &next_position();
+    const line_position_t& next_position();
 
     bool is_eof();
     bool is_line_end();
@@ -97,8 +97,8 @@ public:
 
 private:
     struct lex_fragment_t {
-        lex_fragment_t(const token_type &token = token_type(),
-                       const line_position_t &line_position = line_position_t())
+        lex_fragment_t(const token_type& token = token_type(),
+                       const line_position_t& line_position = line_position_t())
             : token_value_m(token), line_position_m(line_position) {}
 
         token_type token_value_m;
@@ -122,7 +122,7 @@ private:
 /*************************************************************************************************/
 
 template <std::size_t S, typename E>
-lex_base_t<S, E>::lex_base_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t &position)
+lex_base_t<S, E>::lex_base_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t& position)
     : first_m(first), last_m(last), streampos_m(0), line_position_m(position), skip_white_m(true),
       index_m(0), last_token_m(S) {}
 
@@ -134,7 +134,7 @@ lex_base_t<S, E>::~lex_base_t() {}
 /*************************************************************************************************/
 
 template <std::size_t S, typename E>
-const typename lex_base_t<S, E>::token_type &lex_base_t<S, E>::get_token() {
+const typename lex_base_t<S, E>::token_type& lex_base_t<S, E>::get_token() {
     assert(parse_proc_m);
 
     if (last_token_m.empty()) {
@@ -147,7 +147,7 @@ const typename lex_base_t<S, E>::token_type &lex_base_t<S, E>::get_token() {
             parse_proc_m();
     }
 
-    token_type &result(last_token_m.front().token_value_m);
+    token_type& result(last_token_m.front().token_value_m);
 
     last_token_m.pop_front();
 
@@ -157,7 +157,7 @@ const typename lex_base_t<S, E>::token_type &lex_base_t<S, E>::get_token() {
 /*************************************************************************************************/
 
 template <std::size_t S, typename E>
-void lex_base_t<S, E>::put_token(const token_type &token) {
+void lex_base_t<S, E>::put_token(const token_type& token) {
     last_token_m.push_back(lex_fragment_t(token, line_position_m));
 }
 
@@ -171,7 +171,7 @@ void lex_base_t<S, E>::putback_token() {
 /*************************************************************************************************/
 
 template <std::size_t S, typename E>
-const line_position_t &lex_base_t<S, E>::next_position() {
+const line_position_t& lex_base_t<S, E>::next_position() {
     /*
         REVISIT (sparent) : Clean this up - this primes the ring buffer so we can get the next
        position
@@ -218,7 +218,7 @@ bool lex_base_t<S, E>::is_eof() {
 /*************************************************************************************************/
 
 template <std::size_t S, typename E>
-void lex_base_t<S, E>::throw_parser_exception(const char *error_string) {
+void lex_base_t<S, E>::throw_parser_exception(const char* error_string) {
     using adobe::throw_parser_exception;
 
     throw_parser_exception(error_string, line_position_m);
@@ -268,16 +268,16 @@ namespace implementation {
 
 struct lex_fragment_t {
     lex_fragment_t(stream_lex_token_t token = stream_lex_token_t(),
-                   const line_position_t &line_position = line_position_t())
+                   const line_position_t& line_position = line_position_t())
         : token_value_m(std::move(token)), line_position_m(line_position) {}
 
-    lex_fragment_t(lex_fragment_t &&x)
+    lex_fragment_t(lex_fragment_t&& x)
         : token_value_m(std::move(x.token_value_m)), line_position_m(std::move(x.line_position_m)) {
     }
 
-    lex_fragment_t(const lex_fragment_t &) = default;
+    lex_fragment_t(const lex_fragment_t&) = default;
 
-    lex_fragment_t &operator=(lex_fragment_t x) {
+    lex_fragment_t& operator=(lex_fragment_t x) {
         token_value_m = std::move(x.token_value_m);
         line_position_m = std::move(x.line_position_m);
         return *this;
@@ -295,27 +295,27 @@ public:
     typedef std::istream::pos_type pos_type;
     typedef boost::function<void(char)> parse_token_proc_t;
 
-    stream_lex_base_t(I first, I last, const line_position_t &position);
+    stream_lex_base_t(I first, I last, const line_position_t& position);
 
     virtual ~stream_lex_base_t();
 
-    const stream_lex_token_t &get_token();
+    const stream_lex_token_t& get_token();
     void putback_token();
     void put_token(stream_lex_token_t token);
 
-    bool get_char(char &c);
+    bool get_char(char& c);
     void putback_char(char c);
     int peek_char();
     void ignore_char();
 
-    void throw_exception(const name_t &expected, const name_t &found);
-    void throw_parser_exception(const char *error_string);
+    void throw_exception(const name_t& expected, const name_t& found);
+    void throw_parser_exception(const char* error_string);
 
     void set_skip_white_space(bool skip);
 
     void skip_white_space();
 
-    const line_position_t &next_position();
+    const line_position_t& next_position();
 
     bool is_line_end(char c);
 
@@ -341,7 +341,7 @@ private:
 /*************************************************************************************************/
 
 template <std::size_t S, typename I>
-stream_lex_base_t<S, I>::stream_lex_base_t(I first, I last, const line_position_t &position)
+stream_lex_base_t<S, I>::stream_lex_base_t(I first, I last, const line_position_t& position)
     : identifier_buffer_m(128), first_m(first), last_m(last), streampos_m(1),
       line_position_m(position), skip_white_m(true), index_m(0), last_token_m(S) {}
 
@@ -353,7 +353,7 @@ stream_lex_base_t<S, I>::~stream_lex_base_t() {}
 /*************************************************************************************************/
 
 template <std::size_t S, typename I>
-bool stream_lex_base_t<S, I>::get_char(char &c) {
+bool stream_lex_base_t<S, I>::get_char(char& c) {
     if (index_m) {
         c = static_cast<char>(putback_m[index_m]);
 
@@ -414,7 +414,7 @@ void stream_lex_base_t<S, I>::ignore_char() {
 /*************************************************************************************************/
 
 template <std::size_t S, typename I>
-const stream_lex_token_t &stream_lex_base_t<S, I>::get_token() {
+const stream_lex_token_t& stream_lex_base_t<S, I>::get_token() {
     assert(parse_proc_m);
 
     if (last_token_m.empty()) {
@@ -443,7 +443,7 @@ const stream_lex_token_t &stream_lex_base_t<S, I>::get_token() {
             parse_proc_m(c);
     }
 
-    stream_lex_token_t &result(last_token_m.front().token_value_m);
+    stream_lex_token_t& result(last_token_m.front().token_value_m);
 
     last_token_m.pop_front();
 
@@ -467,7 +467,7 @@ void stream_lex_base_t<S, I>::putback_token() {
 /*************************************************************************************************/
 
 template <std::size_t S, typename I>
-const line_position_t &stream_lex_base_t<S, I>::next_position() {
+const line_position_t& stream_lex_base_t<S, I>::next_position() {
     /*
         REVISIT (sparent) : Clean this up - this primes the ring buffer so we can get the next
        position
@@ -501,7 +501,7 @@ bool stream_lex_base_t<S, I>::is_line_end(char c) {
 /*************************************************************************************************/
 
 template <std::size_t S, typename I>
-void stream_lex_base_t<S, I>::throw_parser_exception(const char *error_string) {
+void stream_lex_base_t<S, I>::throw_parser_exception(const char* error_string) {
     using adobe::throw_parser_exception;
 
     throw_parser_exception(error_string, line_position_m);

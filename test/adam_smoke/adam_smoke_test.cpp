@@ -42,7 +42,7 @@ struct option_result_t {
 
 /****************************************************************************************************/
 
-void usage(const std::string &app_name) {
+void usage(const std::string& app_name) {
     std::cout << "\nAdam smoke test app v" << ADOBE_VERSION_MAJOR << "." << ADOBE_VERSION_MINOR
               << "." << ADOBE_VERSION_SUBMINOR << "\n\n";
     std::cout << "usage: " << app_name << " [ root_path_name ]\n\n";
@@ -60,7 +60,7 @@ void usage(const std::string &app_name) {
 
 /****************************************************************************************************/
 
-adobe::dictionary_t read_dictionary(const bfs::path &filepath) {
+adobe::dictionary_t read_dictionary(const bfs::path& filepath) {
     std::ifstream input_file(filepath.native().c_str());
     adobe::expression_parser parser(input_file, adobe::line_position_t("input dictionary"));
     adobe::array_t expression;
@@ -82,7 +82,7 @@ adobe::dictionary_t read_dictionary(const bfs::path &filepath) {
 
 /****************************************************************************************************/
 
-void read_sheet(const bfs::path &filepath, adobe::sheet_t &sheet) {
+void read_sheet(const bfs::path& filepath, adobe::sheet_t& sheet) {
     std::ifstream input_file(filepath.native().c_str());
 
     if (!input_file.is_open()) {
@@ -96,7 +96,7 @@ void read_sheet(const bfs::path &filepath, adobe::sheet_t &sheet) {
         adobe::parse(input_file, adobe::line_position_t(filepath.native().c_str()),
                      adobe::bind_to_sheet(sheet));
     }
-    catch (const adobe::stream_error_t &error) {
+    catch (const adobe::stream_error_t& error) {
         std::cerr << "adobe:: "
                   << ": " << format_stream_error(input_file, error) << "\n";
 
@@ -106,7 +106,7 @@ void read_sheet(const bfs::path &filepath, adobe::sheet_t &sheet) {
 
 /****************************************************************************************************/
 
-bool compare_arrays(const adobe::array_t &a, const adobe::array_t &b) {
+bool compare_arrays(const adobe::array_t& a, const adobe::array_t& b) {
 /*
     NOTE (sparent) : If we have precision loss due to serialization I would like to know about
     and fix it - so we simply compare the arrays directly here.
@@ -131,7 +131,7 @@ bool compare_arrays(const adobe::array_t &a, const adobe::array_t &b) {
 
 /****************************************************************************************************/
 
-bool test_sheet(const bfs::path &root) {
+bool test_sheet(const bfs::path& root) {
     using namespace adobe::literals;
 
     bool success(true);
@@ -197,7 +197,7 @@ bool test_sheet(const bfs::path &root) {
 
 /****************************************************************************************************/
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     int result(0);
 
     try {
@@ -209,7 +209,7 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    catch (const std::exception &error) {
+    catch (const std::exception& error) {
         std::cerr << "std::exception: " << typeid(error).name() << ": " << error.what() << "\n";
     }
     catch (...) {

@@ -35,7 +35,7 @@ namespace adobe {
     \brief fill implementation
 */
 template <class ForwardRange, class T>
-inline void fill(ForwardRange &range, const T &value) {
+inline void fill(ForwardRange& range, const T& value) {
     std::fill(boost::begin(range), boost::end(range), value);
 }
 

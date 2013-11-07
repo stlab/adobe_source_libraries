@@ -23,7 +23,7 @@ namespace adobe {
 
 /****************************************************************************************************/
 
-bool operator==(const adobe::extents_t &x, const adobe::extents_t &y) {
+bool operator==(const adobe::extents_t& x, const adobe::extents_t& y) {
     return x.slice_m[adobe::extents_slices_t::vertical] ==
                y.slice_m[adobe::extents_slices_t::vertical] &&
            x.slice_m[adobe::extents_slices_t::horizontal] ==
@@ -33,7 +33,7 @@ bool operator==(const adobe::extents_t &x, const adobe::extents_t &y) {
 /****************************************************************************************************/
 
 #if !defined(NDEBUG) && defined(ADOBE_STD_SERIALIZATION)
-std::ostream &operator<<(std::ostream &s, const adobe::extents_t &x) {
+std::ostream& operator<<(std::ostream& s, const adobe::extents_t& x) {
     s << adobe::begin_bag("[0]");
 
     s << adobe::begin_sequence;
@@ -54,7 +54,7 @@ std::ostream &operator<<(std::ostream &s, const adobe::extents_t &x) {
 
 /****************************************************************************************************/
 
-bool operator==(const adobe::extents_t::slice_t &x, const adobe::extents_t::slice_t &y) {
+bool operator==(const adobe::extents_t::slice_t& x, const adobe::extents_t::slice_t& y) {
     return x.length_m == y.length_m && x.outset_m == y.outset_m && x.frame_m == y.frame_m &&
            x.inset_m == y.inset_m && x.guide_set_m.size() == y.guide_set_m.size() &&
            adobe::equal(x.guide_set_m, y.guide_set_m.begin());
@@ -63,7 +63,7 @@ bool operator==(const adobe::extents_t::slice_t &x, const adobe::extents_t::slic
 /****************************************************************************************************/
 
 #if !defined(NDEBUG) && defined(ADOBE_STD_SERIALIZATION)
-std::ostream &operator<<(std::ostream &s, const adobe::extents_t::slice_t &x) {
+std::ostream& operator<<(std::ostream& s, const adobe::extents_t::slice_t& x) {
     adobe::guide_set_t::const_iterator first(x.guide_set_m.begin());
     adobe::guide_set_t::const_iterator last(x.guide_set_m.end());
 

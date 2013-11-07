@@ -98,7 +98,7 @@ public:
     /*!
         Initializes the instance with a custom allocator
     */
-    explicit copy_on_write(const allocator_type &a) : object_m(0) {
+    explicit copy_on_write(const allocator_type& a) : object_m(0) {
         implementation_allocator_type other_allocator(a);
 
         object_m = allocate(other_allocator);
@@ -115,12 +115,12 @@ public:
     Copy construction is a non-throwing operation and simply increments the
     reference count on the stored object.
     */
-    copy_on_write(const copy_on_write &x) : object_m(x.object_m) {
+    copy_on_write(const copy_on_write& x) : object_m(x.object_m) {
         if (object_m)
             object_m->header_m.get().count_m.increment();
     }
 
-    copy_on_write(copy_on_write &&x) : object_m(x.object_m) { x.object_m = 0; }
+    copy_on_write(copy_on_write&& x) : object_m(x.object_m) { x.object_m = 0; }
 
     ~copy_on_write() { release(object_m); }
 
@@ -129,13 +129,13 @@ public:
         releases the old value and increments the reference count of the item
         being assigned to.
     */
-    copy_on_write &operator=(copy_on_write x) {
+    copy_on_write& operator=(copy_on_write x) {
         swap(*this, x);
         return *this;
     }
 
 
-    copy_on_write &operator=(T x) {
+    copy_on_write& operator=(T x) {
         if (!object_m)
             object_m = allocate_move(0, std::move(x));
         else if (object_m->header_m.get().count_m.is_one())
@@ -158,7 +158,7 @@ public:
 
     \return A reference to the underlying object
     */
-    value_type &write() {
+    value_type& write() {
         assert(object_m && "FATAL (sparent) : using a moved copy_on_write object");
 
         if (!object_m->header_m.get().count_m.is_one())
@@ -172,7 +172,7 @@ public:
 
     \return A const reference to the underlying object
     */
-    const value_type &read() const {
+    const value_type& read() const {
         assert(object_m && "FATAL (sparent) : using a moved copy_on_write object");
         return object_m->value_m;
     }
@@ -182,7 +182,7 @@ public:
 
     \return A const reference to the underlying object
     */
-    operator const value_type &() const { return read(); }
+    operator const value_type&() const { return read(); }
 
     /*!
     \brief Obtain a const reference to the underlying object.
@@ -194,7 +194,7 @@ public:
 
     \return A const reference to the underlying object
     */
-    const value_type &operator*() const { return read(); }
+    const value_type& operator*() const { return read(); }
 
     /*!
     \brief Obtain a const pointer to the underlying object.
@@ -206,7 +206,7 @@ public:
 
     \return A const pointer to the underlying object
     */
-    const value_type *operator->() const { return &read(); }
+    const value_type* operator->() const { return &read(); }
 
     /*!
     \brief unique_instance returns whether or not the reference count to the
@@ -224,31 +224,31 @@ public:
     \return Boolean; <code>true</code> if the underlying object instance is
     shared by both objects.
     */
-    bool identity(const copy_on_write &x) const { return object_m == x.object_m; }
+    bool identity(const copy_on_write& x) const { return object_m == x.object_m; }
 
-    friend inline void swap(copy_on_write &x, copy_on_write &y) {
+    friend inline void swap(copy_on_write& x, copy_on_write& y) {
         std::swap(x.object_m, y.object_m);
     }
 
-    friend inline bool operator<(const copy_on_write &x, const copy_on_write &y) {
+    friend inline bool operator<(const copy_on_write& x, const copy_on_write& y) {
         return y.object_m && (!x.object_m || (!x.identity(y) && *x < *y));
     }
 
-    friend inline bool operator>(const copy_on_write &x, const copy_on_write &y) { return y < x; }
+    friend inline bool operator>(const copy_on_write& x, const copy_on_write& y) { return y < x; }
 
-    friend inline bool operator<=(const copy_on_write &x, const copy_on_write &y) {
+    friend inline bool operator<=(const copy_on_write& x, const copy_on_write& y) {
         return !(y < x);
     }
 
-    friend inline bool operator>=(const copy_on_write &x, const copy_on_write &y) {
+    friend inline bool operator>=(const copy_on_write& x, const copy_on_write& y) {
         return !(x < y);
     }
 
-    friend inline bool operator==(const copy_on_write &x, const copy_on_write &y) {
+    friend inline bool operator==(const copy_on_write& x, const copy_on_write& y) {
         return x.identity(y) || (x.object_m && y.object_m && *x == *y);
     }
 
-    friend inline bool operator!=(const copy_on_write &x, const copy_on_write &y) {
+    friend inline bool operator!=(const copy_on_write& x, const copy_on_write& y) {
         return !(x == y);
     }
 
@@ -258,18 +258,18 @@ public:
 
 private:
 #if !defined(ADOBE_NO_DOCUMENTATION)
-    static implementation_t *allocate(const implementation_t *alloc_src, const T &x = T()) {
+    static implementation_t* allocate(const implementation_t* alloc_src, const T& x = T()) {
         implementation_allocator_type allocator(alloc_src ? alloc_src->get_allocator()
                                                           : implementation_allocator_type());
 
         return allocate(allocator, x);
     }
 
-    static implementation_t *allocate(implementation_allocator_type &allocator, const T &x = T()) {
-        implementation_t *tmp(allocator.allocate(1));
+    static implementation_t* allocate(implementation_allocator_type& allocator, const T& x = T()) {
+        implementation_t* tmp(allocator.allocate(1));
 
         try {
-            ::new (static_cast<void *>(tmp)) implementation_t(x);
+            ::new (static_cast<void*>(tmp)) implementation_t(x);
         }
         catch (...) {
             tmp->get_allocator().deallocate(tmp, 1);
@@ -279,13 +279,13 @@ private:
         return tmp;
     }
 
-    static implementation_t *allocate_move(const implementation_t *alloc_src, T x) {
+    static implementation_t* allocate_move(const implementation_t* alloc_src, T x) {
         implementation_allocator_type allocator(alloc_src ? alloc_src->get_allocator()
                                                           : implementation_allocator_type());
-        implementation_t *tmp(allocator.allocate(1));
+        implementation_t* tmp(allocator.allocate(1));
 
         try {
-            ::new (static_cast<void *>(tmp)) implementation_t(std::move(x));
+            ::new (static_cast<void*>(tmp)) implementation_t(std::move(x));
         }
         catch (...) {
             tmp->get_allocator().deallocate(tmp, 1);
@@ -295,7 +295,7 @@ private:
         return tmp;
     }
 
-    static void release(implementation_t *x) {
+    static void release(implementation_t* x) {
         /*
             I thought about returning a bool from this routine (denoting whether
             or not a deallocation took place) but decided not to in the end.
@@ -315,15 +315,15 @@ private:
         allocator.deallocate(x, 1);
     }
 
-    void reset(implementation_t *to) {
+    void reset(implementation_t* to) {
         release(object_m);
         object_m = to;
     }
 
-    implementation_t *object_m;
+    implementation_t* object_m;
 
     static std::once_flag flag_s;
-    static implementation_t *default_s;
+    static implementation_t* default_s;
 
     static void release_default();
     static void init_default();
@@ -340,14 +340,14 @@ template <typename T, typename A>
 std::once_flag copy_on_write<T, A>::flag_s;
 
 template <typename T, typename A>
-typename copy_on_write<T, A>::implementation_t *copy_on_write<T, A>::default_s;
+typename copy_on_write<T, A>::implementation_t* copy_on_write<T, A>::default_s;
 
 template <typename T, typename A>
 struct copy_on_write<T, A>::implementation_t : private boost::noncopyable {
     // Assert proper size for counter_t
     BOOST_STATIC_ASSERT((sizeof(counter_t) == sizeof(std::size_t)));
     // Assert proper alignment for counter_t
-    BOOST_STATIC_ASSERT((sizeof(counter_t) == sizeof(void *)));
+    BOOST_STATIC_ASSERT((sizeof(counter_t) == sizeof(void*)));
 
     struct header_t {
         counter_t count_m;

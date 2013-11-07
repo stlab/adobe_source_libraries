@@ -32,7 +32,7 @@ class sheet_t;
    true if no checks failed.
 
  */
-bool parse(std::istream &stream, line_position_t line_pos, std::ostream &messages);
+bool parse(std::istream& stream, line_position_t line_pos, std::ostream& messages);
 
 
 /*************************************************************************************************/

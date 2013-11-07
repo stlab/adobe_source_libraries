@@ -51,13 +51,13 @@ namespace anonymous_adam_cpp { // can't instantiate templates on types from real
 #ifndef NDEBUG
 
 struct check_reentrancy {
-    check_reentrancy(bool &x) : check_m(x) {
+    check_reentrancy(bool& x) : check_m(x) {
         assert(!x && "FATAL (sparent) : Function Not Reentrant.");
         check_m = true;
     }
     ~check_reentrancy() { check_m = false; }
 
-    bool &check_m;
+    bool& check_m;
 };
 
 #endif // NDEBUG
@@ -72,8 +72,8 @@ struct check_reentrancy {
 template <typename T> // T models default constructable
 struct empty_copy : T {
     empty_copy() : T() {}
-    empty_copy(const empty_copy &) : T() {}
-    empty_copy &operator=(const empty_copy &) { return *this; }
+    empty_copy(const empty_copy&) : T() {}
+    empty_copy& operator=(const empty_copy&) { return *this; }
 };
 
 /**************************************************************************************************/
@@ -107,15 +107,15 @@ enum access_specifier_t {
     REVIST (sparent) : Some version of MSVC didn't like function level try blocks. Need to test.
 */
 
-void evaluate(adobe::virtual_machine_t &machine, const adobe::line_position_t &position,
-              const adobe::array_t &expression)
+void evaluate(adobe::virtual_machine_t& machine, const adobe::line_position_t& position,
+              const adobe::array_t& expression)
 #ifdef BOOST_MSVC
 {
 #endif
     try {
         machine.evaluate(expression);
     }
-    catch (const std::exception &error) {
+    catch (const std::exception& error) {
         throw adobe::stream_error_t(error, position);
     }
 #ifdef BOOST_MSVC
@@ -125,20 +125,20 @@ void evaluate(adobe::virtual_machine_t &machine, const adobe::line_position_t &p
 /**************************************************************************************************/
 
 struct scope_count : boost::noncopyable {
-    scope_count(std::size_t &x) : value_m(x) { ++value_m; }
+    scope_count(std::size_t& x) : value_m(x) { ++value_m; }
     ~scope_count() { --value_m; }
 
 private:
-    std::size_t &value_m;
+    std::size_t& value_m;
 };
 
 template <typename T>
 struct scope_value_t : boost::noncopyable {
-    scope_value_t(T &x, const T &v) : value_m(x), store_m(x) { x = v; }
+    scope_value_t(T& x, const T& v) : value_m(x), store_m(x) { x = v; }
     ~scope_value_t() { value_m = store_m; }
 
 private:
-    T &value_m;
+    T& value_m;
     T store_m;
 };
 
@@ -157,43 +157,43 @@ class sheet_t::implementation_t : boost::noncopyable {
 public:
     typedef sheet_t::connection_t connection_t;
 
-    explicit implementation_t(virtual_machine_t &machine);
+    explicit implementation_t(virtual_machine_t& machine);
 
-    any_regular_t inspect(const array_t &expression);
+    any_regular_t inspect(const array_t& expression);
 
-    void set(name_t, const any_regular_t &);    // input cell.
-    void touch(const name_t *, const name_t *); // range of input cells.
+    void set(name_t, const any_regular_t&);   // input cell.
+    void touch(const name_t*, const name_t*); // range of input cells.
 
     any_regular_t get(name_t);
-    const any_regular_t &operator[](name_t) const;
+    const any_regular_t& operator[](name_t) const;
 
-    void add_input(name_t, const line_position_t &, const array_t &initializer);
-    void add_output(name_t, const line_position_t &, const array_t &expression);
-    void add_constant(name_t, const line_position_t &, const array_t &initializer);
+    void add_input(name_t, const line_position_t&, const array_t& initializer);
+    void add_output(name_t, const line_position_t&, const array_t& expression);
+    void add_constant(name_t, const line_position_t&, const array_t& initializer);
     void add_constant(name_t, any_regular_t value);
-    void add_logic(name_t, const line_position_t &, const array_t &expression);
-    void add_invariant(name_t, const line_position_t &, const array_t &expression);
-    void add_interface(name_t, bool linked, const line_position_t &, const array_t &initializer,
-                       const line_position_t &, const array_t &expression);
+    void add_logic(name_t, const line_position_t&, const array_t& expression);
+    void add_invariant(name_t, const line_position_t&, const array_t& expression);
+    void add_interface(name_t, bool linked, const line_position_t&, const array_t& initializer,
+                       const line_position_t&, const array_t& expression);
     void add_interface(name_t, any_regular_t initial);
 
-    void add_relation(const line_position_t &, const array_t &conditional, const relation_t *first,
-                      const relation_t *last);
-    connection_t monitor_value(name_t, const monitor_value_t &); // output only
+    void add_relation(const line_position_t&, const array_t& conditional, const relation_t* first,
+                      const relation_t* last);
+    connection_t monitor_value(name_t, const monitor_value_t&); // output only
 
     // input only
-    connection_t monitor_enabled(name_t, const name_t *first, const name_t *last,
-                                 const monitor_enabled_t &);
+    connection_t monitor_enabled(name_t, const name_t* first, const name_t* last,
+                                 const monitor_enabled_t&);
 
 
-    connection_t monitor_contributing(name_t, const dictionary_t &, const monitor_contributing_t &);
+    connection_t monitor_contributing(name_t, const dictionary_t&, const monitor_contributing_t&);
 
 #if 0
     connection_t    monitor_invariant_contributing(name_t invariant, const monitor_invariant_t&); 
 // REVISIT (sparent) : UNIMPLEMENTED
 #endif
 
-    connection_t monitor_invariant_dependent(name_t invariant, const monitor_invariant_t &);
+    connection_t monitor_invariant_dependent(name_t invariant, const monitor_invariant_t&);
 
     bool has_input(name_t) const;
     bool has_output(name_t) const;
@@ -202,10 +202,10 @@ public:
 
     void reinitialize();
 
-    void set(const dictionary_t &dictionary);
+    void set(const dictionary_t& dictionary);
     // set input cells to corresponding values in dictionary.
 
-    dictionary_t contributing(const dictionary_t &) const;
+    dictionary_t contributing(const dictionary_t&) const;
     // all contributing values that have changed since mark
     dictionary_t contributing_to_cell(name_t) const;
 
@@ -213,12 +213,12 @@ private:
     struct relation_cell_t;
     struct cell_t;
 
-    typedef vector<relation_cell_t *> relation_index_t;
+    typedef vector<relation_cell_t*> relation_index_t;
     typedef vector<relation_t> relation_set_t;
 
     struct relation_cell_t {
-        relation_cell_t(const line_position_t &position, const array_t &conditional,
-                        const relation_t *first, const relation_t *last)
+        relation_cell_t(const line_position_t& position, const array_t& conditional,
+                        const relation_t* first, const relation_t* last)
             : resolved_m(false), position_m(position), conditional_m(conditional),
               terms_m(first, last) {}
 
@@ -227,7 +227,7 @@ private:
         line_position_t position_m;
         array_t conditional_m;
         relation_set_t terms_m;
-        vector<cell_t *> edges_m;
+        vector<cell_t*> edges_m;
 
         // REVISIT (sparent) : There should be a function object to set members
         void clear_resolved() { resolved_m = false; }
@@ -237,18 +237,18 @@ private:
         typedef boost::function<any_regular_t()> calculator_t;
 
         typedef empty_copy<boost::signals2::signal<void(bool)>> monitor_invariant_list_t;
-        typedef empty_copy<boost::signals2::signal<void(const any_regular_t &)>>
+        typedef empty_copy<boost::signals2::signal<void(const any_regular_t&)>>
         monitor_value_list_t;
-        typedef empty_copy<boost::signals2::signal<void(const cell_bits_t &)>>
+        typedef empty_copy<boost::signals2::signal<void(const cell_bits_t&)>>
         monitor_contributing_list_t;
 
-        cell_t(access_specifier_t specifier, name_t, const calculator_t &calculator,
-               std::size_t cell_set_pos, cell_t *); // output
+        cell_t(access_specifier_t specifier, name_t, const calculator_t& calculator,
+               std::size_t cell_set_pos, cell_t*); // output
         cell_t(access_specifier_t specifier, name_t, any_regular_t,
                std::size_t cell_set_pos); // constant
 
         cell_t(name_t, any_regular_t, std::size_t cell_set_pos); // input cell
-        cell_t(name_t, bool linked, const calculator_t &init_expression,
+        cell_t(name_t, bool linked, const calculator_t& init_expression,
                std::size_t cell_set_pos); // interface cell (input)
 
 #if 0
@@ -285,7 +285,7 @@ private:
 
         // For output half of interface cells this points to corresponding input half. NULL
         // otherwise.
-        cell_t *interface_input_m;
+        cell_t* interface_input_m;
 
         priority_t priority() const {
             assert(specifier_m == access_interface_input ||
@@ -328,25 +328,25 @@ private:
     friend struct cell_t;
     friend struct compare_contributing_t;
 
-    any_regular_t calculate_expression(const line_position_t &position, const array_t &expression);
+    any_regular_t calculate_expression(const line_position_t& position, const array_t& expression);
 
-    any_regular_t calculate_indexed(const line_position_t &position, const array_t &expression,
+    any_regular_t calculate_indexed(const line_position_t& position, const array_t& expression,
                                     std::size_t index) {
         return calculate_expression(position, expression).cast<array_t>()[index];
     }
 
-    dictionary_t contributing_set(const dictionary_t &, const cell_bits_t &) const;
+    dictionary_t contributing_set(const dictionary_t&, const cell_bits_t&) const;
 
-    void initialize_one(cell_t &cell);
+    void initialize_one(cell_t& cell);
 
-    void enabled_filter(const cell_bits_t &touch_set, std::size_t contributing_index_pos,
-                        monitor_enabled_t monitor, const cell_bits_t &new_priority_accessed_bits,
-                        const cell_bits_t &new_active_bits);
+    void enabled_filter(const cell_bits_t& touch_set, std::size_t contributing_index_pos,
+                        monitor_enabled_t monitor, const cell_bits_t& new_priority_accessed_bits,
+                        const cell_bits_t& new_active_bits);
 
     //    std::size_t cell_set_to_contributing(std::size_t cell_set_pos) const;
 
     priority_t name_to_priority(name_t name) const;
-    void flow(cell_bits_t &priority_accessed);
+    void flow(cell_bits_t& priority_accessed);
 
     /*
         NOTE (sparent) : cell_t contains boost::signals2::signal<> which is not copyable. The cells
@@ -361,7 +361,7 @@ private:
     typedef std::deque<relation_cell_t> relation_cell_set_t;
 
     typedef std::vector<pair<name_t, bool>> get_stack_t;
-    typedef std::vector<cell_t *> index_vector_t;
+    typedef std::vector<cell_t*> index_vector_t;
 
     typedef hash_index<cell_t, std::hash<name_t>, equal_to, mem_data_t<cell_t, const name_t>>
     index_t;
@@ -378,7 +378,7 @@ private:
 
     cell_bits_t conditional_indirect_contributing_m;
 
-    virtual_machine_t &machine_m;
+    virtual_machine_t& machine_m;
     get_stack_t get_stack_m;
     std::size_t get_count_m;
 
@@ -387,7 +387,7 @@ private:
     cell_bits_t value_accessed_m;
     cell_bits_t active_m;
 
-    typedef boost::signals2::signal<void(const cell_bits_t &, const cell_bits_t &)>
+    typedef boost::signals2::signal<void(const cell_bits_t&, const cell_bits_t&)>
     monitor_enabled_list_t;
     monitor_enabled_list_t monitor_enabled_m;
 
@@ -409,17 +409,17 @@ private:
 
 /**************************************************************************************************/
 
-void sheet_t::implementation_t::enabled_filter(const cell_bits_t &touch_set,
+void sheet_t::implementation_t::enabled_filter(const cell_bits_t& touch_set,
                                                std::size_t contributing_index_pos,
                                                monitor_enabled_t monitor,
-                                               const cell_bits_t &new_priority_accessed_bits,
-                                               const cell_bits_t &new_active_bits) {
+                                               const cell_bits_t& new_priority_accessed_bits,
+                                               const cell_bits_t& new_active_bits) {
     cell_bits_t new_priority_accessed_touch = new_priority_accessed_bits & touch_set;
     cell_bits_t old_priority_accessed_touch = priority_accessed_m & touch_set;
     bool unchanged_priority_accessed_touch =
         (new_priority_accessed_touch ^ old_priority_accessed_touch).none();
 
-    cell_t &cell = cell_set_m[contributing_index_pos];
+    cell_t& cell = cell_set_m[contributing_index_pos];
 
     bool active(active_m.test(contributing_index_pos));
     bool new_active(new_active_bits.test(contributing_index_pos));
@@ -472,7 +472,7 @@ sheet_t::implementation_t::cell_t::cell_t(name_t name, any_regular_t x, std::siz
 
 /**************************************************************************************************/
 
-sheet_t::implementation_t::cell_t::cell_t(name_t name, bool linked, const calculator_t &initializer,
+sheet_t::implementation_t::cell_t::cell_t(name_t name, bool linked, const calculator_t& initializer,
                                           std::size_t cell_set_pos)
     : specifier_m(access_interface_input), name_m(name), calculator_m(initializer),
       linked_m(linked), invariant_m(false), priority_m(0), resolved_m(true), evaluated_m(true),
@@ -484,8 +484,8 @@ sheet_t::implementation_t::cell_t::cell_t(name_t name, bool linked, const calcul
 /**************************************************************************************************/
 
 sheet_t::implementation_t::cell_t::cell_t(access_specifier_t specifier, name_t name,
-                                          const calculator_t &calculator, std::size_t cell_set_pos,
-                                          cell_t *input)
+                                          const calculator_t& calculator, std::size_t cell_set_pos,
+                                          cell_t* input)
     : specifier_m(specifier), name_m(name), calculator_m(calculator), linked_m(false),
       invariant_m(false), priority_m(0), resolved_m(false), evaluated_m(calculator_m.empty()),
       relation_count_m(0), initial_relation_count_m(0), cell_set_pos_m(cell_set_pos),
@@ -505,23 +505,23 @@ sheet_t::sheet_t() : object_m(new implementation_t(machine_m)) {}
 
 sheet_t::~sheet_t() { delete object_m; }
 
-any_regular_t sheet_t::inspect(const array_t &expression) { return object_m->inspect(expression); }
+any_regular_t sheet_t::inspect(const array_t& expression) { return object_m->inspect(expression); }
 
-void sheet_t::set(name_t input, const any_regular_t &value) { object_m->set(input, value); }
+void sheet_t::set(name_t input, const any_regular_t& value) { object_m->set(input, value); }
 
-void sheet_t::touch(const name_t *first, const name_t *last) { object_m->touch(first, last); }
+void sheet_t::touch(const name_t* first, const name_t* last) { object_m->touch(first, last); }
 
-void sheet_t::add_input(name_t input, const line_position_t &position, const array_t &initializer) {
+void sheet_t::add_input(name_t input, const line_position_t& position, const array_t& initializer) {
     object_m->add_input(input, position, initializer);
 }
 
-void sheet_t::add_output(name_t output, const line_position_t &position,
-                         const array_t &expression) {
+void sheet_t::add_output(name_t output, const line_position_t& position,
+                         const array_t& expression) {
     object_m->add_output(output, position, expression);
 }
 
-void sheet_t::add_constant(name_t constant, const line_position_t &position,
-                           const array_t &initializer) {
+void sheet_t::add_constant(name_t constant, const line_position_t& position,
+                           const array_t& initializer) {
     object_m->add_constant(constant, position, initializer);
 }
 
@@ -529,18 +529,18 @@ void sheet_t::add_constant(name_t name, any_regular_t value) {
     object_m->add_constant(name, std::move(value));
 }
 
-void sheet_t::add_logic(name_t logic, const line_position_t &position, const array_t &expression) {
+void sheet_t::add_logic(name_t logic, const line_position_t& position, const array_t& expression) {
     object_m->add_logic(logic, position, expression);
 }
 
-void sheet_t::add_invariant(name_t invariant, const line_position_t &position,
-                            const array_t &expression) {
+void sheet_t::add_invariant(name_t invariant, const line_position_t& position,
+                            const array_t& expression) {
     object_m->add_invariant(invariant, position, expression);
 }
 
-void sheet_t::add_interface(name_t name, bool linked, const line_position_t &position1,
-                            const array_t &initializer, const line_position_t &position2,
-                            const array_t &expression) {
+void sheet_t::add_interface(name_t name, bool linked, const line_position_t& position1,
+                            const array_t& initializer, const line_position_t& position2,
+                            const array_t& expression) {
     object_m->add_interface(name, linked, position1, initializer, position2, expression);
 }
 
@@ -548,23 +548,23 @@ void sheet_t::add_interface(name_t name, any_regular_t initial) {
     object_m->add_interface(name, std::move(initial));
 }
 
-void sheet_t::add_relation(const line_position_t &position, const array_t &conditional,
-                           const relation_t *first, const relation_t *last) {
+void sheet_t::add_relation(const line_position_t& position, const array_t& conditional,
+                           const relation_t* first, const relation_t* last) {
     object_m->add_relation(position, conditional, first, last);
 }
 
-sheet_t::connection_t sheet_t::monitor_value(name_t output, const monitor_value_t &monitor) {
+sheet_t::connection_t sheet_t::monitor_value(name_t output, const monitor_value_t& monitor) {
     return object_m->monitor_value(output, monitor);
 }
 
-sheet_t::connection_t sheet_t::monitor_contributing(name_t output, const dictionary_t &mark,
-                                                    const monitor_contributing_t &monitor) {
+sheet_t::connection_t sheet_t::monitor_contributing(name_t output, const dictionary_t& mark,
+                                                    const monitor_contributing_t& monitor) {
     return object_m->monitor_contributing(output, mark, monitor);
 }
 
-sheet_t::connection_t sheet_t::monitor_enabled(name_t input, const name_t *first,
-                                               const name_t *last,
-                                               const monitor_enabled_t &monitor) {
+sheet_t::connection_t sheet_t::monitor_enabled(name_t input, const name_t* first,
+                                               const name_t* last,
+                                               const monitor_enabled_t& monitor) {
     return object_m->monitor_enabled(input, first, last, monitor);
 }
 
@@ -575,7 +575,7 @@ sheet_t::connection_t sheet_t::monitor_invariant_contributing(name_t input,
 #endif
 
 sheet_t::connection_t sheet_t::monitor_invariant_dependent(name_t output,
-                                                           const monitor_invariant_t &monitor) {
+                                                           const monitor_invariant_t& monitor) {
     return object_m->monitor_invariant_dependent(output, monitor);
 }
 
@@ -587,13 +587,13 @@ void sheet_t::update() { object_m->update(); }
 
 void sheet_t::reinitialize() { object_m->reinitialize(); }
 
-void sheet_t::set(const dictionary_t &dictionary) { object_m->set(dictionary); }
+void sheet_t::set(const dictionary_t& dictionary) { object_m->set(dictionary); }
 
 any_regular_t sheet_t::get(name_t cell) { return object_m->get(cell); }
 
-const any_regular_t &sheet_t::operator[](name_t x) const { return (*object_m)[x]; }
+const any_regular_t& sheet_t::operator[](name_t x) const { return (*object_m)[x]; }
 
-dictionary_t sheet_t::contributing(const dictionary_t &mark) const {
+dictionary_t sheet_t::contributing(const dictionary_t& mark) const {
     return object_m->contributing(mark);
 }
 
@@ -605,7 +605,7 @@ dictionary_t sheet_t::contributing_to_cell(name_t x) const {
 
 /**************************************************************************************************/
 
-sheet_t::implementation_t::implementation_t(virtual_machine_t &machine)
+sheet_t::implementation_t::implementation_t(virtual_machine_t& machine)
     : name_index_m(std::hash<name_t>(), equal_to(), &cell_t::name_m),
       input_index_m(std::hash<name_t>(), equal_to(), &cell_t::name_m),
       output_index_m(std::hash<name_t>(), equal_to(), &cell_t::name_m), priority_high_m(0),
@@ -620,7 +620,7 @@ sheet_t::implementation_t::implementation_t(virtual_machine_t &machine)
 
 /**************************************************************************************************/
 
-any_regular_t sheet_t::implementation_t::inspect(const array_t &expression) {
+any_regular_t sheet_t::implementation_t::inspect(const array_t& expression) {
     machine_m.evaluate(expression);
 
     any_regular_t result = std::move(machine_m.back());
@@ -631,7 +631,7 @@ any_regular_t sheet_t::implementation_t::inspect(const array_t &expression) {
 
 /**************************************************************************************************/
 
-void sheet_t::implementation_t::set(name_t n, const any_regular_t &v) {
+void sheet_t::implementation_t::set(name_t n, const any_regular_t& v) {
 #ifndef NDEBUG
     assert(!check_update_reentrancy_m &&
            "sheet_t::set() cannot be called during call to sheet_t::update().");
@@ -655,7 +655,7 @@ void sheet_t::implementation_t::set(name_t n, const any_regular_t &v) {
 
 /**************************************************************************************************/
 
-void sheet_t::implementation_t::touch(const name_t *first, const name_t *last) {
+void sheet_t::implementation_t::touch(const name_t* first, const name_t* last) {
     // REVISIT (sparent) : This should be constrained to interface cells only.
     // REVISIT (sparent) : This logic is similar to the logic in flow and should be the same.
 
@@ -696,8 +696,8 @@ void sheet_t::implementation_t::touch(const name_t *first, const name_t *last) {
 
 /**************************************************************************************************/
 
-void sheet_t::implementation_t::add_input(name_t name, const line_position_t &position,
-                                          const array_t &initializer) {
+void sheet_t::implementation_t::add_input(name_t name, const line_position_t& position,
+                                          const array_t& initializer) {
     scope_value_t<bool> scope(initialize_mode_m, true);
 
     any_regular_t initial_value;
@@ -717,8 +717,8 @@ void sheet_t::implementation_t::add_input(name_t name, const line_position_t &po
 
 
 /**************************************************************************************************/
-void sheet_t::implementation_t::add_output(name_t name, const line_position_t &position,
-                                           const array_t &expression) {
+void sheet_t::implementation_t::add_output(name_t name, const line_position_t& position,
+                                           const array_t& expression) {
     // REVISIT (sparent) : Non-transactional on failure.
     cell_set_m.push_back(cell_t(access_output, name,
                                 boost::bind(&implementation_t::calculate_expression,
@@ -740,10 +740,10 @@ void sheet_t::implementation_t::add_output(name_t name, const line_position_t &p
 // REVISIT (sparent) : Hacked glom of input/output pair.
 
 void sheet_t::implementation_t::add_interface(name_t name, bool linked,
-                                              const line_position_t &position1,
-                                              const array_t &initializer_expression,
-                                              const line_position_t &position2,
-                                              const array_t &expression) {
+                                              const line_position_t& position1,
+                                              const array_t& initializer_expression,
+                                              const line_position_t& position2,
+                                              const array_t& expression) {
     scope_value_t<bool> scope(initialize_mode_m, true);
 
     if (initializer_expression.size()) {
@@ -785,7 +785,7 @@ void sheet_t::implementation_t::add_interface(name_t name, bool linked,
 void sheet_t::implementation_t::add_interface(name_t name, any_regular_t initial) {
     cell_set_m.push_back(cell_t(name, true, cell_t::calculator_t(), cell_set_m.size()));
 
-    cell_t &cell = cell_set_m.back();
+    cell_t& cell = cell_set_m.back();
 
     input_index_m.insert(cell);
 
@@ -805,8 +805,8 @@ void sheet_t::implementation_t::add_interface(name_t name, any_regular_t initial
 
 /**************************************************************************************************/
 
-void sheet_t::implementation_t::add_constant(name_t name, const line_position_t &position,
-                                             const array_t &initializer) {
+void sheet_t::implementation_t::add_constant(name_t name, const line_position_t& position,
+                                             const array_t& initializer) {
     scope_value_t<bool> scope(initialize_mode_m, true);
 
     cell_set_m.push_back(cell_t(access_constant, name, calculate_expression(position, initializer),
@@ -831,8 +831,8 @@ void sheet_t::implementation_t::add_constant(name_t name, any_regular_t value) {
 
 /**************************************************************************************************/
 
-void sheet_t::implementation_t::add_logic(name_t logic, const line_position_t &position,
-                                          const array_t &expression) {
+void sheet_t::implementation_t::add_logic(name_t logic, const line_position_t& position,
+                                          const array_t& expression) {
     cell_set_m.push_back(cell_t(access_logic, logic,
                                 boost::bind(&implementation_t::calculate_expression,
                                             boost::ref(*this), position, expression),
@@ -846,8 +846,8 @@ void sheet_t::implementation_t::add_logic(name_t logic, const line_position_t &p
 
 /**************************************************************************************************/
 
-void sheet_t::implementation_t::add_invariant(name_t name, const line_position_t &position,
-                                              const array_t &expression) {
+void sheet_t::implementation_t::add_invariant(name_t name, const line_position_t& position,
+                                              const array_t& expression) {
     // REVISIT (sparent) : Non-transactional on failure.
     cell_set_m.push_back(cell_t(access_invariant, name,
                                 boost::bind(&implementation_t::calculate_expression,
@@ -866,11 +866,11 @@ void sheet_t::implementation_t::add_invariant(name_t name, const line_position_t
 
 /**************************************************************************************************/
 
-void sheet_t::implementation_t::add_relation(const line_position_t &position,
-                                             const array_t &conditional, const relation_t *first,
-                                             const relation_t *last) {
+void sheet_t::implementation_t::add_relation(const line_position_t& position,
+                                             const array_t& conditional, const relation_t* first,
+                                             const relation_t* last) {
     relation_cell_set_m.push_back(relation_cell_t(position, conditional, first, last));
-    relation_cell_t &relation = relation_cell_set_m.back();
+    relation_cell_t& relation = relation_cell_set_m.back();
 
     // build a unique list of lhs cells
 
@@ -898,8 +898,8 @@ void sheet_t::implementation_t::add_relation(const line_position_t &position,
 
 /**************************************************************************************************/
 
-any_regular_t sheet_t::implementation_t::calculate_expression(const line_position_t &position,
-                                                              const array_t &expression) {
+any_regular_t sheet_t::implementation_t::calculate_expression(const line_position_t& position,
+                                                              const array_t& expression) {
     evaluate(machine_m, position, expression);
 
     any_regular_t result = std::move(machine_m.back());
@@ -910,9 +910,9 @@ any_regular_t sheet_t::implementation_t::calculate_expression(const line_positio
 
 /**************************************************************************************************/
 
-sheet_t::connection_t sheet_t::implementation_t::monitor_enabled(name_t n, const name_t *first,
-                                                                 const name_t *last,
-                                                                 const monitor_enabled_t &monitor) {
+sheet_t::connection_t sheet_t::implementation_t::monitor_enabled(name_t n, const name_t* first,
+                                                                 const name_t* last,
+                                                                 const monitor_enabled_t& monitor) {
     assert(updated_m && "Must call sheet_t::update() prior to monitor_enabled.");
     index_t::iterator iter(input_index_m.find(n));
 
@@ -944,7 +944,7 @@ sheet_t::connection_t sheet_t::implementation_t::monitor_enabled(name_t n, const
 /**************************************************************************************************/
 sheet_t::connection_t
 sheet_t::implementation_t::monitor_invariant_dependent(name_t n,
-                                                       const monitor_invariant_t &monitor) {
+                                                       const monitor_invariant_t& monitor) {
     assert(updated_m && "Must call sheet_t::update() prior to monitor_invariant_dependent.");
 
     index_t::iterator iter(output_index_m.find(n));
@@ -960,7 +960,7 @@ sheet_t::implementation_t::monitor_invariant_dependent(name_t n,
 /**************************************************************************************************/
 
 sheet_t::connection_t sheet_t::implementation_t::monitor_value(name_t name,
-                                                               const monitor_value_t &monitor) {
+                                                               const monitor_value_t& monitor) {
     assert(updated_m && "Must call sheet_t::update() prior to monitor_value.");
 
     index_t::iterator iter = output_index_m.find(name);
@@ -977,8 +977,8 @@ sheet_t::connection_t sheet_t::implementation_t::monitor_value(name_t name,
 /**************************************************************************************************/
 
 sheet_t::connection_t
-sheet_t::implementation_t::monitor_contributing(name_t n, const dictionary_t &mark,
-                                                const monitor_contributing_t &monitor) {
+sheet_t::implementation_t::monitor_contributing(name_t n, const dictionary_t& mark,
+                                                const monitor_contributing_t& monitor) {
     assert(updated_m && "Must call sheet_t::update() prior to monitor_contributing.");
 
     index_t::iterator iter(output_index_m.find(n));
@@ -1017,9 +1017,9 @@ priority_t sheet_t::implementation_t::name_to_priority(name_t name) const {
 
 /**************************************************************************************************/
 
-void sheet_t::implementation_t::flow(cell_bits_t &priority_accessed) {
+void sheet_t::implementation_t::flow(cell_bits_t& priority_accessed) {
     // Generate the set of cells connected to unresolved relations
-    vector<cell_t *> cells;
+    vector<cell_t*> cells;
     for (relation_cell_set_t::iterator f(relation_cell_set_m.begin()), l(relation_cell_set_m.end());
          f != l; ++f) {
         if (!f->resolved_m)
@@ -1035,7 +1035,7 @@ void sheet_t::implementation_t::flow(cell_bits_t &priority_accessed) {
     // REVISIT <seanparent@google.com> : This is an approximation for enablement that could do
     // better with connected components
 
-    for (vector<cell_t *>::iterator f = cells.begin(), l = cells.end(); f != l; ++f) {
+    for (vector<cell_t*>::iterator f = cells.begin(), l = cells.end(); f != l; ++f) {
         priority_accessed.set((*f)->interface_input_m->cell_set_pos_m);
     }
 
@@ -1051,7 +1051,7 @@ void sheet_t::implementation_t::flow(cell_bits_t &priority_accessed) {
     */
 
     while (!cells.empty()) {
-        cell_t &cell = *cells.back();
+        cell_t& cell = *cells.back();
         cells.pop_back();
 
         if (cell.relation_count_m == 0)
@@ -1068,7 +1068,7 @@ void sheet_t::implementation_t::flow(cell_bits_t &priority_accessed) {
 
             --cell.relation_count_m;
 
-            const relation_t *term = 0;
+            const relation_t* term = 0;
             bool at_least_one = false;
 
             for (relation_set_t::iterator tf((*f)->terms_m.begin()), tl((*f)->terms_m.end());
@@ -1115,7 +1115,7 @@ void sheet_t::implementation_t::flow(cell_bits_t &priority_accessed) {
                 index_t::iterator iter = output_index_m.find(term->name_set_m[n]);
                 assert(iter != output_index_m.end());
 
-                cell_t &cell = *iter;
+                cell_t& cell = *iter;
 
                 if (count == 1) {
                     cell.term_m =
@@ -1203,8 +1203,8 @@ void sheet_t::implementation_t::update() {
 
         if (!calculate_expression(current_cell->position_m, current_cell->conditional_m)
                  .cast<bool>()) {
-            for (vector<cell_t *>::iterator f = current_cell->edges_m.begin(),
-                                            l = current_cell->edges_m.end();
+            for (vector<cell_t*>::iterator f = current_cell->edges_m.begin(),
+                                           l = current_cell->edges_m.end();
                  f != l; ++f) {
                 --(*f)->relation_count_m;
             }
@@ -1234,7 +1234,7 @@ void sheet_t::implementation_t::update() {
 
     for (index_t::const_iterator iter(output_index_m.begin()), last(output_index_m.end());
          iter != last; ++iter) {
-        cell_t &cell(*iter);
+        cell_t& cell(*iter);
 
         // REVISIT (sparent) : This is a copy/paste of get();
 
@@ -1272,7 +1272,7 @@ void sheet_t::implementation_t::update() {
     for (index_vector_t::const_iterator iter(invariant_index_m.begin()),
          last(invariant_index_m.end());
          iter != last; ++iter) {
-        cell_t &cell(**iter);
+        cell_t& cell(**iter);
 
         if (!cell.state_m.cast<bool>())
             poison |= cell.contributing_m;
@@ -1303,7 +1303,7 @@ void sheet_t::implementation_t::update() {
 
     for (index_t::const_iterator iter(output_index_m.begin()), last(output_index_m.end());
          iter != last; ++iter) {
-        cell_t &cell(*iter);
+        cell_t& cell(*iter);
         bool invariant((poison & cell.contributing_m).none());
 
         if (invariant != cell.invariant_m)
@@ -1341,7 +1341,7 @@ void sheet_t::implementation_t::update() {
 
 /**************************************************************************************************/
 
-void sheet_t::implementation_t::initialize_one(cell_t &cell) {
+void sheet_t::implementation_t::initialize_one(cell_t& cell) {
     /*
         REVISIT (sparent) : Should have more checking here - detecting cycles (and forward
         references?)
@@ -1363,7 +1363,7 @@ void sheet_t::implementation_t::reinitialize() {
         if (!f->interface_input_m)
             continue;
 
-        cell_t &cell = *f->interface_input_m;
+        cell_t& cell = *f->interface_input_m;
 
         if ((init_dirty_m & cell.init_contributing_m).none())
             continue;
@@ -1376,7 +1376,7 @@ void sheet_t::implementation_t::reinitialize() {
 
 /**************************************************************************************************/
 
-dictionary_t sheet_t::implementation_t::contributing(const dictionary_t &mark) const {
+dictionary_t sheet_t::implementation_t::contributing(const dictionary_t& mark) const {
     cell_bits_t contributing;
 
     for (index_t::const_iterator iter(output_index_m.begin()), last(output_index_m.end());
@@ -1413,17 +1413,17 @@ dictionary_t sheet_t::implementation_t::contributing_to_cell(name_t x) const {
     having been touched.
 */
 
-dictionary_t sheet_t::implementation_t::contributing_set(const dictionary_t &mark,
-                                                         const cell_bits_t &contributing) const {
+dictionary_t sheet_t::implementation_t::contributing_set(const dictionary_t& mark,
+                                                         const cell_bits_t& contributing) const {
     dictionary_t changed;
     dictionary_t touched;
     bool include_touched(false);
 
     for (std::size_t index(0), last(cell_set_m.size()); index != last; ++index) {
         if (contributing[index]) {
-            const cell_t &cell = cell_set_m[index];
-            const name_t &name(cell.name_m);
-            const any_regular_t &value(cell.state_m);
+            const cell_t& cell = cell_set_m[index];
+            const name_t& name(cell.name_m);
+            const any_regular_t& value(cell.state_m);
             bool priority_accessed(priority_accessed_m.test(cell.cell_set_pos_m));
 
             if (!mark.count(name)) {
@@ -1444,7 +1444,7 @@ dictionary_t sheet_t::implementation_t::contributing_set(const dictionary_t &mar
 
 /**************************************************************************************************/
 
-void sheet_t::implementation_t::set(const dictionary_t &dict) {
+void sheet_t::implementation_t::set(const dictionary_t& dict) {
     for (dictionary_t::const_iterator iter(dict.begin()), last(dict.end()); iter != last; ++iter) {
         set(iter->first, iter->second);
     }
@@ -1453,7 +1453,7 @@ void sheet_t::implementation_t::set(const dictionary_t &dict) {
 
 /**************************************************************************************************/
 
-const any_regular_t &sheet_t::implementation_t::operator[](name_t variable_name) const {
+const any_regular_t& sheet_t::implementation_t::operator[](name_t variable_name) const {
     assert(updated_m && "Must call sheet_t::update() prior to operator[].");
 
     index_t::iterator iter = name_index_m.find(variable_name);
@@ -1491,7 +1491,7 @@ any_regular_t sheet_t::implementation_t::get(name_t variable_name) {
             }
         }
 
-        cell_t &cell = *iter;
+        cell_t& cell = *iter;
 
         accumulate_contributing_m |= cell.init_contributing_m;
         return cell.state_m;
@@ -1514,7 +1514,7 @@ any_regular_t sheet_t::implementation_t::get(name_t variable_name) {
         throw std::logic_error(make_string("variable ", variable_name.c_str(), " not found."));
     }
 
-    cell_t &cell = *iter;
+    cell_t& cell = *iter;
 
     // If the variable is on the top of the stack then we assume it
     // must refer to an input cell.

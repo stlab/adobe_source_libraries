@@ -47,7 +47,7 @@ inline OutputIterator transform(InputIterator first, InputIterator last, OutputI
     \brief transform implementation
 */
 template <class InputRange, class OutputIterator, class UnaryOperation>
-inline OutputIterator transform(InputRange &range, OutputIterator result, UnaryOperation op) {
+inline OutputIterator transform(InputRange& range, OutputIterator result, UnaryOperation op) {
     return adobe::transform(boost::begin(range), boost::end(range), result, op);
 }
 
@@ -58,7 +58,7 @@ inline OutputIterator transform(InputRange &range, OutputIterator result, UnaryO
     \brief transform implementation
 */
 template <class InputRange, class OutputIterator, class UnaryOperation>
-inline OutputIterator transform(const InputRange &range, OutputIterator result, UnaryOperation op) {
+inline OutputIterator transform(const InputRange& range, OutputIterator result, UnaryOperation op) {
     return adobe::transform(boost::begin(range), boost::end(range), result, op);
 }
 
@@ -80,7 +80,7 @@ inline OutputIterator transform(InputIterator1 first1, InputIterator1 last1, Inp
     \brief transform implementation
 */
 template <class InputRange1, class InputIterator2, class OutputIterator, class BinaryOperation>
-inline OutputIterator transform(InputRange1 &range1, InputIterator2 first2, OutputIterator result,
+inline OutputIterator transform(InputRange1& range1, InputIterator2 first2, OutputIterator result,
                                 BinaryOperation binary_op) {
     return adobe::transform(boost::begin(range1), boost::end(range1), first2, result, binary_op);
 }
@@ -91,7 +91,7 @@ inline OutputIterator transform(InputRange1 &range1, InputIterator2 first2, Outp
     \brief transform implementation
 */
 template <class InputRange1, class InputIterator2, class OutputIterator, class BinaryOperation>
-inline OutputIterator transform(const InputRange1 &range1, InputIterator2 first2,
+inline OutputIterator transform(const InputRange1& range1, InputIterator2 first2,
                                 OutputIterator result, BinaryOperation binary_op) {
     return adobe::transform(boost::begin(range1), boost::end(range1), first2, result, binary_op);
 }

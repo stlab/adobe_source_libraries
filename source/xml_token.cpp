@@ -14,7 +14,7 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-const char *token_to_string(xml_lex_token_set_t token) {
+const char* token_to_string(xml_lex_token_set_t token) {
     switch (token) {
     case xml_token_open_tag_k:
         return "xml_token_open_tag_k";

@@ -40,7 +40,7 @@ namespace adobe {
     \brief copy implementation
 */
 template <class InputRange, class OutputIterator>
-inline OutputIterator copy(const InputRange &range, OutputIterator result) {
+inline OutputIterator copy(const InputRange& range, OutputIterator result) {
     return std::copy(boost::begin(range), boost::end(range), result);
 }
 
@@ -50,7 +50,7 @@ inline OutputIterator copy(const InputRange &range, OutputIterator result) {
     \brief copy implementation
 */
 template <class BidirectionalRange1, class BidirectionalIterator2>
-inline BidirectionalIterator2 copy_backward(BidirectionalRange1 &range1,
+inline BidirectionalIterator2 copy_backward(BidirectionalRange1& range1,
                                             BidirectionalIterator2 result) {
     return std::copy_backward(boost::begin(range1), boost::end(range1), result);
 }
@@ -61,7 +61,7 @@ inline BidirectionalIterator2 copy_backward(BidirectionalRange1 &range1,
     \brief copy implementation
 */
 template <class BidirectionalRange1, class BidirectionalIterator2>
-inline BidirectionalIterator2 copy_backward(const BidirectionalRange1 &range1,
+inline BidirectionalIterator2 copy_backward(const BidirectionalRange1& range1,
                                             BidirectionalIterator2 result) {
     return std::copy_backward(boost::begin(range1), boost::end(range1), result);
 }
@@ -124,7 +124,8 @@ namespace implementation {
 /*!
     \ingroup copy
 
-    REVIST (sparent) : There is an assumption here that the difference types of the two ranges are
+    REVIST (sparent) : There is an assumption here that the difference types of the two ranges
+   are
     the same.  We need a way to promote the smaller integral type to the larger.
 */
 template <typename I, // I models RandomAccessIterator
@@ -186,7 +187,7 @@ template <typename I, // I models InputIterator
           typename O, // O models OutputIterator
           typename T>
 // T == value_type(I)
-inline std::pair<I, O> copy_sentinal(I f, O o, const T &x) {
+inline std::pair<I, O> copy_sentinal(I f, O o, const T& x) {
     while (*f != x) {
         *o = *f;
         ++f, ++o;

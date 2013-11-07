@@ -31,7 +31,7 @@ namespace adobe {
 */
 
 template <typename C> // C models AssociativeContainer
-bool exists(const C &c, const typename C::key_type &k) {
+bool exists(const C& c, const typename C::key_type& k) {
     return c.find(k) != c.end();
 }
 

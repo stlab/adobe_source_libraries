@@ -56,14 +56,14 @@ namespace adobe {
 #endif
 
 /* uuid_create -- generate a UUID */
-boost::int16_t uuid_create(uuid_t *uuid);
+boost::int16_t uuid_create(uuid_t* uuid);
 
 /* uuid_create_from_name -- create a UUID using a "name" from a "name space" */
-void uuid_create_from_name(uuid_t *uuid, /*  resulting UUID */
+void uuid_create_from_name(uuid_t* uuid, /*  resulting UUID */
                            uuid_t nsid,  /*  UUID to serve as context, so identical
-                                            names from different name spaces generate
-                                            different UUIDs */
-                           boost::uint8_t *name,     /*  the name from which to generate a UUID */
+                                          names from different name spaces generate
+                                          different UUIDs */
+                           boost::uint8_t* name,     /*  the name from which to generate a UUID */
                            boost::uint16_t namelen); /*  the length of the name */
 
 /*
@@ -74,7 +74,7 @@ uuid_compare --  Compare two UUID's "lexically" and return
 
 Note: lexical ordering is not temporal ordering!
 */
-boost::int16_t uuid_compare(const uuid_t *u1, const uuid_t *u2);
+boost::int16_t uuid_compare(const uuid_t* u1, const uuid_t* u2);
 
 /*************************************************************************************************/
 

@@ -36,7 +36,7 @@ namespace adobe {
     \brief lexicographical_compare implementation
 */
 template <class InputRange1, class InputRange2>
-inline bool lexicographical_compare(const InputRange1 &range1, const InputRange2 &range2) {
+inline bool lexicographical_compare(const InputRange1& range1, const InputRange2& range2) {
     return std::lexicographical_compare(boost::begin(range1), boost::end(range1),
                                         boost::begin(range2), boost::end(range2));
 }
@@ -58,7 +58,7 @@ inline bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
     \brief lexicographical_compare implementation
 */
 template <class InputRange1, class InputRange2, class Compare>
-inline bool lexicographical_compare(const InputRange1 &range1, const InputRange2 &range2,
+inline bool lexicographical_compare(const InputRange1& range1, const InputRange2& range2,
                                     Compare comp) {
     return adobe::lexicographical_compare(boost::begin(range1), boost::end(range1),
                                           boost::begin(range2), boost::end(range2), comp);

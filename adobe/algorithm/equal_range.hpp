@@ -47,7 +47,7 @@ template <typename I, // I models ForwardIterator
           typename C, // C models StrictWeakOrdering(T, T)
           typename P>
 // P models UnaryFunction(value_type(I)) -> T
-std::pair<I, I> equal_range_n(I f, N n, const T &x, C c, P p) {
+std::pair<I, I> equal_range_n(I f, N n, const T& x, C c, P p) {
     assert(!(n < 0) && "FATAL (sparent) : n must be >= 0");
 
     while (n != 0) {
@@ -98,7 +98,7 @@ template <typename I, // I models ForwardIterator
           typename N, // N models IntegralType
           typename T>
 // T == result_type(P)
-inline std::pair<I, I> equal_range_n(I f, N n, const T &x) {
+inline std::pair<I, I> equal_range_n(I f, N n, const T& x) {
     return implementation::equal_range_n(f, n, x, less(), identity<T>());
 }
 
@@ -113,7 +113,7 @@ template <typename I, // I models ForwardIterator
           typename T, // T == result_type(P)
           typename C>
 // C models StrictWeakOrdering(T, T)
-inline std::pair<I, I> equal_range_n(I f, N n, const T &x, C c) {
+inline std::pair<I, I> equal_range_n(I f, N n, const T& x, C c) {
     return implementation::equal_range_n(f, n, x, boost::bind(c, _1, _2), identity<T>());
 }
 
@@ -129,7 +129,7 @@ template <typename I, // I models ForwardIterator
           typename C, // C models StrictWeakOrdering(T, T)
           typename P>
 // P models UnaryFunction(value_type(I)) -> T
-inline std::pair<I, I> equal_range_n(I f, N n, const T &x, C c, P p) {
+inline std::pair<I, I> equal_range_n(I f, N n, const T& x, C c, P p) {
     return implementation::equal_range_n(f, n, x, boost::bind(c, _1, _2), boost::bind(p, _1));
 }
 
@@ -142,7 +142,7 @@ inline std::pair<I, I> equal_range_n(I f, N n, const T &x, C c, P p) {
 template <typename I, // I models ForwardIterator
           typename T>
 // T == value_type(I)
-inline std::pair<I, I> equal_range(I f, I l, const T &x) {
+inline std::pair<I, I> equal_range(I f, I l, const T& x) {
     return std::equal_range(f, l, x);
 }
 
@@ -156,7 +156,7 @@ template <typename I, // I models ForwardIterator
           typename T, // T == result_type(P)
           typename C>
 // C models StrictWeakOrdering(T, T)
-inline std::pair<I, I> equal_range(I f, I l, const T &x, C c) {
+inline std::pair<I, I> equal_range(I f, I l, const T& x, C c) {
     return std::equal_range(f, l, x, boost::bind(c, _1, _2));
 }
 
@@ -171,7 +171,7 @@ template <typename I, // I models ForwardIterator
           typename C, // C models StrictWeakOrdering(T, T)
           typename P>
 // P models UnaryFunction(value_type(I)) -> T
-inline std::pair<I, I> equal_range(I f, I l, const T &x, C c, P p) {
+inline std::pair<I, I> equal_range(I f, I l, const T& x, C c, P p) {
     return equal_range_n(f, std::distance(f, l), x, c, p);
 }
 
@@ -186,7 +186,7 @@ template <typename I, // I models ForwardRange
           typename C, // C models StrictWeakOrdering(T, T)
           typename P> // P models UnaryFunction(value_type(I)) -> T
 inline typename boost::lazy_disable_if<boost::is_same<I, T>, implementation::lazy_range<I>>::type
-equal_range(I &r, const T &x, C c, P p) {
+equal_range(I& r, const T& x, C c, P p) {
     return adobe::equal_range(boost::begin(r), boost::end(r), x, c, p);
 }
 
@@ -202,7 +202,7 @@ template <typename I, // I models ForwardRange
           typename P> // P models UnaryFunction(value_type(I)) -> T
 inline typename boost::lazy_disable_if<boost::is_same<I, T>,
                                        implementation::lazy_range_const<I>>::type
-equal_range(const I &r, const T &x, C c, P p) {
+equal_range(const I& r, const T& x, C c, P p) {
     return adobe::equal_range(boost::begin(r), boost::end(r), x, c, p);
 }
 
@@ -215,7 +215,7 @@ equal_range(const I &r, const T &x, C c, P p) {
 template <typename I, // I models ForwardRange
           typename T> // T == result_type(P)
 inline std::pair<typename boost::range_iterator<I>::type, typename boost::range_iterator<I>::type>
-equal_range(I &r, const T &x) {
+equal_range(I& r, const T& x) {
     return std::equal_range(boost::begin(r), boost::end(r), x);
 }
 
@@ -229,7 +229,7 @@ template <typename I, // I models ForwardRange
           typename T> // T == result_type(P)
 inline std::pair<typename boost::range_const_iterator<I>::type,
                  typename boost::range_const_iterator<I>::type>
-equal_range(const I &r, const T &x) {
+equal_range(const I& r, const T& x) {
     return std::equal_range(boost::begin(r), boost::end(r), x);
 }
 
@@ -243,7 +243,7 @@ template <typename I, // I models ForwardRange
           typename T, // T == result_type(P)
           typename C> // C models StrictWeakOrdering(T, T)
 inline typename boost::lazy_disable_if<boost::is_same<I, T>, implementation::lazy_range<I>>::type
-equal_range(I &r, const T &x, C c) {
+equal_range(I& r, const T& x, C c) {
     return adobe::equal_range(boost::begin(r), boost::end(r), x, c);
 }
 
@@ -258,7 +258,7 @@ template <typename I, // I models ForwardRange
           typename C> // C models StrictWeakOrdering(T, T)
 inline typename boost::lazy_disable_if<boost::is_same<I, T>,
                                        implementation::lazy_range_const<I>>::type
-equal_range(const I &r, const T &x, C c) {
+equal_range(const I& r, const T& x, C c) {
     return adobe::equal_range(boost::begin(r), boost::end(r), x, c);
 }
 

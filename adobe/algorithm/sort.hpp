@@ -38,7 +38,7 @@ namespace adobe {
     \brief sort implementation
 */
 template <class RandomAccessRange>
-inline void sort(RandomAccessRange &range) {
+inline void sort(RandomAccessRange& range) {
     return std::sort(boost::begin(range), boost::end(range));
 }
 
@@ -75,7 +75,7 @@ template <typename R, // I models RandomAccessRange
           typename C, // C models StrictWeakOrdering(T, T)
           typename P>
 // P models UnaryFunction(value_type(I)) -> T
-inline void sort(R &r, C c, P p) {
+inline void sort(R& r, C c, P p) {
     return adobe::sort(
         boost::begin(r), boost::end(r),
         std::bind(c, std::bind(p, std::placeholders::_1), std::bind(p, std::placeholders::_2)));
@@ -87,7 +87,7 @@ inline void sort(R &r, C c, P p) {
     \brief sort implementation
 */
 template <class RandomAccessRange, class Compare>
-inline void sort(RandomAccessRange &range, Compare comp) {
+inline void sort(RandomAccessRange& range, Compare comp) {
     return adobe::sort(boost::begin(range), boost::end(range), comp);
 }
 
@@ -97,7 +97,7 @@ inline void sort(RandomAccessRange &range, Compare comp) {
     \brief sort implementation
 */
 template <class RandomAccessRange>
-inline void stable_sort(RandomAccessRange &range) {
+inline void stable_sort(RandomAccessRange& range) {
     return std::stable_sort(boost::begin(range), boost::end(range));
 }
 
@@ -118,7 +118,7 @@ inline void stable_sort(RandomAccessIterator first, RandomAccessIterator last, C
     \brief sort implementation
 */
 template <class RandomAccessRange, class Compare>
-inline void stable_sort(RandomAccessRange &range, Compare comp) {
+inline void stable_sort(RandomAccessRange& range, Compare comp) {
     return adobe::stable_sort(boost::begin(range), boost::end(range), comp);
 }
 
@@ -128,7 +128,7 @@ inline void stable_sort(RandomAccessRange &range, Compare comp) {
     \brief sort implementation
 */
 template <class InputRange, class RandomAccessRange>
-inline void partial_sort_copy(InputRange &range, RandomAccessRange &result_range) {
+inline void partial_sort_copy(InputRange& range, RandomAccessRange& result_range) {
     return std::partial_sort_copy(boost::begin(range), boost::end(range),
                                   boost::begin(result_range), boost::end(result_range));
 }
@@ -139,7 +139,7 @@ inline void partial_sort_copy(InputRange &range, RandomAccessRange &result_range
     \brief sort implementation
 */
 template <class InputRange, class RandomAccessRange>
-inline void partial_sort_copy(const InputRange &range, RandomAccessRange &result_range) {
+inline void partial_sort_copy(const InputRange& range, RandomAccessRange& result_range) {
     return std::partial_sort_copy(boost::begin(range), boost::end(range),
                                   boost::begin(result_range), boost::end(result_range));
 }
@@ -163,7 +163,7 @@ inline void partial_sort_copy(InputIterator first, InputIterator last,
     \brief sort implementation
 */
 template <class InputRange, class RandomAccessRange, class Compare>
-inline void partial_sort_copy(InputRange &range, RandomAccessRange &result_range, Compare comp) {
+inline void partial_sort_copy(InputRange& range, RandomAccessRange& result_range, Compare comp) {
     return adobe::partial_sort_copy(boost::begin(range), boost::end(range),
                                     boost::begin(result_range), boost::end(result_range), comp);
 }
@@ -174,7 +174,7 @@ inline void partial_sort_copy(InputRange &range, RandomAccessRange &result_range
     \brief sort implementation
 */
 template <class InputRange, class RandomAccessRange, class Compare>
-inline void partial_sort_copy(const InputRange &range, RandomAccessRange &result_range,
+inline void partial_sort_copy(const InputRange& range, RandomAccessRange& result_range,
                               Compare comp) {
     return adobe::partial_sort_copy(boost::begin(range), boost::end(range),
                                     boost::begin(result_range), boost::end(result_range), comp);

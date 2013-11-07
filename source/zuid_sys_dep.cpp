@@ -135,7 +135,7 @@ adobe::md5_t::digest_t get_generic_random_info() {
             gethostname(hostname_m, 256);
 #endif
 #if defined(BOOST_HAS_GETTIMEOFDAY)
-            gettimeofday(&timeval_m, static_cast<struct timezone *>(0));
+            gettimeofday(&timeval_m, static_cast<struct timezone*>(0));
 #endif
         }
 
@@ -207,7 +207,7 @@ adobe::md5_t::digest_t get_random_info() { return get_generic_random_info(); }
 
 /*************************************************************************************************/
 
-void random_address(uuid_node_t *node) {
+void random_address(uuid_node_t* node) {
     adobe::md5_t::digest_t seed(get_random_info());
 
     seed[0] |= 0x80; // Mark this as multicast
@@ -221,7 +221,7 @@ void random_address(uuid_node_t *node) {
 
 /*************************************************************************************************/
 
-void get_system_time(uuid_time_t *uuid_time) {
+void get_system_time(uuid_time_t* uuid_time) {
     // REVISIT (fbrereto) : universal_time() is only available on the second_clock.
     //                      It would be nice if it was one on the microsec_clock.
 
@@ -239,11 +239,11 @@ void get_system_time(uuid_time_t *uuid_time) {
 
 /*************************************************************************************************/
 
-void get_ieee_node_identifier(uuid_node_t *node) {
+void get_ieee_node_identifier(uuid_node_t* node) {
     init_zuid_sys_dep_once();
 
-    bool &inited(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_ieee_node_inited));
-    adobe::uuid_node_t &saved_node(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_ieee_node));
+    bool& inited(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_ieee_node_inited));
+    adobe::uuid_node_t& saved_node(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_ieee_node));
 
     if (!inited) {
         random_address(&saved_node);
@@ -273,15 +273,15 @@ boost::uint64_t true_random() {
 /*************************************************************************************************/
 
 /* read_state -- read UUID generator state from non-volatile store */
-boost::int16_t read_state(boost::uint16_t *clockseq, uuid_time_t *timestamp, uuid_node_t *node) {
+boost::int16_t read_state(boost::uint16_t* clockseq, uuid_time_t* timestamp, uuid_node_t* node) {
     init_zuid_sys_dep_once();
 
-    bool &state_inited(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_uuid_state_inited));
+    bool& state_inited(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_uuid_state_inited));
 
     if (!state_inited)
         return boost::int16_t(0);
 
-    uuid_state_t &state(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_uuid_state));
+    uuid_state_t& state(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_uuid_state));
 
     *clockseq = state.cs_m;
     *timestamp = state.ts_m;
@@ -294,8 +294,8 @@ boost::int16_t read_state(boost::uint16_t *clockseq, uuid_time_t *timestamp, uui
 void write_state(boost::uint16_t clockseq, uuid_time_t timestamp, uuid_node_t node) {
     init_zuid_sys_dep_once();
 
-    bool &state_inited(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_uuid_state_inited));
-    uuid_state_t &state(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_uuid_state));
+    bool& state_inited(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_uuid_state_inited));
+    uuid_state_t& state(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_uuid_state));
 
     /* always save state to volatile shared state */
     state.cs_m = clockseq;

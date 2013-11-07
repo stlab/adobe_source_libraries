@@ -165,7 +165,7 @@ struct demotion_engine_t<T, 1, false> {
 template <std::size_t ByteCount, bool Header = true>
 struct promotion_engine_t {
     template <typename InputIterator>
-    inline boost::uint32_t operator()(InputIterator &first, InputIterator last) {
+    inline boost::uint32_t operator()(InputIterator& first, InputIterator last) {
         /*
             CodeWarrior 9.4 doesn't like this code composited into one line;
             GCC doesn't seem to have a problem.
@@ -189,7 +189,7 @@ struct promotion_engine_t {
 template <>
 struct promotion_engine_t<1, false> {
     template <typename InputIterator>
-    inline boost::uint32_t operator()(InputIterator &first, InputIterator) {
+    inline boost::uint32_t operator()(InputIterator& first, InputIterator) {
         boost::uint32_t result(promote_fragment<1>(utf8_strip_mask<0, false>(*first)));
 
         ++first;
@@ -201,7 +201,7 @@ struct promotion_engine_t<1, false> {
 /**************************************************************************************************/
 
 template <typename InputIterator, typename T>
-InputIterator to_utf32(InputIterator first, InputIterator last, T &result, unicode_size_type_<2>) {
+InputIterator to_utf32(InputIterator first, InputIterator last, T& result, unicode_size_type_<2>) {
     boost::uint16_t code = static_cast<boost::uint16_t>(*first);
     ++first;
 
@@ -232,7 +232,7 @@ InputIterator to_utf32(InputIterator first, InputIterator last, T &result, unico
 /**************************************************************************************************/
 
 template <typename InputIterator, typename T>
-InputIterator to_utf32(InputIterator first, InputIterator last, T &result, unicode_size_type_<1>) {
+InputIterator to_utf32(InputIterator first, InputIterator last, T& result, unicode_size_type_<1>) {
     unsigned char n(static_cast<unsigned char>(*first));
 
     if (n < to_utf32_pivot_1_k) {
@@ -261,7 +261,7 @@ InputIterator to_utf32(InputIterator first, InputIterator last, T &result, unico
 /**************************************************************************************************/
 
 template <typename InputIterator, typename T>
-InputIterator to_utf32(InputIterator first, InputIterator, T &result, unicode_size_type_<4>) {
+InputIterator to_utf32(InputIterator first, InputIterator, T& result, unicode_size_type_<4>) {
     result = static_cast<T>(*first);
 
     return ++first;

@@ -34,7 +34,7 @@ namespace adobe {
 */
 
 struct poly_regular_interface : poly_copyable_interface {
-    virtual bool equals(const poly_regular_interface &new_value) const = 0;
+    virtual bool equals(const poly_regular_interface& new_value) const = 0;
 };
 
 /*************************************************************************************************/
@@ -58,7 +58,7 @@ struct poly_regular_instance : optimized_storage_type<T, poly_regular_interface>
     /*!
         Construct from concrete regular
     */
-    poly_regular_instance(const T &x) : base_t(x) {}
+    poly_regular_instance(const T& x) : base_t(x) {}
 
     /*!
         Move constructor
@@ -66,9 +66,9 @@ struct poly_regular_instance : optimized_storage_type<T, poly_regular_interface>
     poly_regular_instance(move_from<poly_regular_instance> x)
         : base_t(move_from<base_t>(x.source)) {}
 
-    bool equals(const poly_regular_interface &x) const {
+    bool equals(const poly_regular_interface& x) const {
         return this->type_info() == x.type_info() &&
-               this->get() == *static_cast<const T *>(x.cast());
+               this->get() == *static_cast<const T*>(x.cast());
     }
 };
 
@@ -87,7 +87,7 @@ struct regular : poly_base<poly_regular_interface, poly_regular_instance> {
         Construct from concrete regular
     */
     template <typename T>
-    explicit regular(const T &s)
+    explicit regular(const T& s)
         : base_t(s) {}
 
     regular() : base_t(empty_t()) {}

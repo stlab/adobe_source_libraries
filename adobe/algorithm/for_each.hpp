@@ -49,7 +49,7 @@ inline void for_each(InputIterator first, InputIterator last, UnaryFunction f) {
     \brief for_each implementation
 */
 template <class InputRange, class UnaryFunction>
-inline void for_each(InputRange &range, UnaryFunction f) {
+inline void for_each(InputRange& range, UnaryFunction f) {
     adobe::for_each(boost::begin(range), boost::end(range), f);
 }
 
@@ -59,7 +59,7 @@ inline void for_each(InputRange &range, UnaryFunction f) {
     \brief for_each implementation
 */
 template <class InputRange, class UnaryFunction>
-inline void for_each(const InputRange &range, UnaryFunction f) {
+inline void for_each(const InputRange& range, UnaryFunction f) {
     adobe::for_each(boost::begin(range), boost::end(range), f);
 }
 

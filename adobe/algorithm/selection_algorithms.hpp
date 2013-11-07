@@ -85,7 +85,7 @@ template <typename C1,      // C1 models ConvertibleToBool
           typename C2 = C1> // C2 models ConvertibleToBool
 struct logical_xor : std::binary_function<C1, C2, bool> {
     /// \return <code>x ^ y</code>
-    bool operator()(const C1 &x, const C2 &y) const {
+    bool operator()(const C1& x, const C2& y) const {
         return static_cast<bool>(x) ^ static_cast<bool>(y);
     }
 };
@@ -251,7 +251,7 @@ inline bool selection_includes(S1 s1_first, S1 s1_last, S2 s2_first, S2 s2_last,
     \brief selection_intersection implementation
 */
 template <typename Selection1, typename Selection2>
-Selection1 selection_intersection(const Selection1 &x, const Selection2 &y) {
+Selection1 selection_intersection(const Selection1& x, const Selection2& y) {
     if (&x == &y)
         return x;
 
@@ -272,7 +272,7 @@ Selection1 selection_intersection(const Selection1 &x, const Selection2 &y) {
     \brief selection_union implementation
 */
 template <typename Selection1, typename Selection2>
-Selection1 selection_union(const Selection1 &x, const Selection2 &y) {
+Selection1 selection_union(const Selection1& x, const Selection2& y) {
     if (&x == &y)
         return x;
 
@@ -292,7 +292,7 @@ Selection1 selection_union(const Selection1 &x, const Selection2 &y) {
     \brief selection_difference implementation
 */
 template <typename Selection1, typename Selection2>
-Selection1 selection_difference(const Selection1 &x, const Selection2 &y) {
+Selection1 selection_difference(const Selection1& x, const Selection2& y) {
     if (&x == &y)
         return Selection1();
 
@@ -312,7 +312,7 @@ Selection1 selection_difference(const Selection1 &x, const Selection2 &y) {
     \brief selection_symmetric_difference implementation
 */
 template <typename Selection1, typename Selection2>
-Selection1 selection_symmetric_difference(const Selection1 &x, const Selection2 &y) {
+Selection1 selection_symmetric_difference(const Selection1& x, const Selection2& y) {
     if (&x == &y)
         return Selection1();
 
@@ -333,7 +333,7 @@ Selection1 selection_symmetric_difference(const Selection1 &x, const Selection2 
     \brief selection_includes implementation
 */
 template <typename Selection1, typename Selection2>
-bool selection_includes(const Selection1 &x, const Selection2 &y) {
+bool selection_includes(const Selection1& x, const Selection2& y) {
     if (&x == &y)
         return true;
 
@@ -349,7 +349,7 @@ bool selection_includes(const Selection1 &x, const Selection2 &y) {
     \brief invert implementation
 */
 template <typename Selection>
-inline void invert(Selection &x) {
+inline void invert(Selection& x) {
     x.invert();
 }
 
@@ -360,7 +360,7 @@ inline void invert(Selection &x) {
     \brief start_selected implementation
 */
 template <typename Selection>
-inline bool start_selected(const Selection &x) {
+inline bool start_selected(const Selection& x) {
     return x.start_selected();
 }
 
@@ -371,7 +371,7 @@ inline bool start_selected(const Selection &x) {
     \return the number of selection boundaries present in \c x.
 */
 template <typename Selection>
-inline typename boost::range_size<Selection>::type size(const Selection &x) {
+inline typename boost::range_size<Selection>::type size(const Selection& x) {
     return x.size();
 }
 
@@ -382,7 +382,7 @@ inline typename boost::range_size<Selection>::type size(const Selection &x) {
     \return Given a container, returns the number of elements selected by the selection \c x.
 */
 template <typename Selection, typename ForwardRange>
-typename boost::range_size<Selection>::type size(const Selection &x, const ForwardRange &range) {
+typename boost::range_size<Selection>::type size(const Selection& x, const ForwardRange& range) {
     typedef typename boost::range_const_iterator<Selection>::type selection_const_iterator;
     typedef typename boost::range_size<Selection>::type selection_size_type;
     typedef typename boost::range_const_iterator<ForwardRange>::type range_const_iterator;
@@ -429,7 +429,7 @@ typename boost::range_size<Selection>::type size(const Selection &x, const Forwa
     \return Whether or not \c index is contained within Selection \c x.
 */
 template <typename Selection>
-bool is_selected(const Selection &x, typename Selection::value_type index) {
+bool is_selected(const Selection& x, typename Selection::value_type index) {
     typename boost::range_const_iterator<Selection>::type found(
         std::upper_bound(boost::begin(x), boost::end(x), index));
     typename boost::range_size<Selection>::type count(std::distance(boost::begin(x), found));
@@ -445,7 +445,7 @@ bool is_selected(const Selection &x, typename Selection::value_type index) {
     with an "assign and advance" iterator adaptor wrapped over the output iterator.
 */
 template <typename Selection, typename ForwardRange, typename OutputIterator>
-OutputIterator selection_copy(const Selection &x, const ForwardRange &range,
+OutputIterator selection_copy(const Selection& x, const ForwardRange& range,
                               OutputIterator output) {
     typedef typename boost::range_const_iterator<Selection>::type selection_const_iterator;
     typedef typename boost::range_const_iterator<ForwardRange>::type range_const_iterator;
@@ -486,7 +486,7 @@ OutputIterator selection_copy(const Selection &x, const ForwardRange &range,
 template <typename Selection, typename ForwardRange, typename O1, // O1 models OutputIterator
           typename O2>
 // O2 models OutputIterator
-std::pair<O1, O2> selection_partition_copy(const Selection &selection, ForwardRange &range,
+std::pair<O1, O2> selection_partition_copy(const Selection& selection, ForwardRange& range,
                                            O1 false_output, O2 true_output) {
     typedef typename boost::range_const_iterator<Selection>::type selection_const_iterator;
     typedef typename boost::range_iterator<ForwardRange>::type range_iterator;
@@ -534,7 +534,7 @@ std::pair<O1, O2> selection_partition_copy(const Selection &selection, ForwardRa
     \brief selection_foreach implementation
 */
 template <typename Selection, typename ForwardRange, typename UnaryFunction>
-UnaryFunction selection_foreach(const Selection &x, const ForwardRange &range, UnaryFunction proc) {
+UnaryFunction selection_foreach(const Selection& x, const ForwardRange& range, UnaryFunction proc) {
     typedef typename boost::range_const_iterator<Selection>::type selection_const_iterator;
     typedef typename boost::range_const_iterator<ForwardRange>::type range_const_iterator;
 
@@ -571,7 +571,7 @@ UnaryFunction selection_foreach(const Selection &x, const ForwardRange &range, U
 template <typename Selection>
 inline std::pair<typename boost::range_const_iterator<Selection>::type,
                  typename boost::range_size<Selection>::type>
-selection_find_boundary(const Selection &selection, typename Selection::size_type p,
+selection_find_boundary(const Selection& selection, typename Selection::size_type p,
                         std::random_access_iterator_tag) {
     typedef typename boost::range_const_iterator<Selection>::type const_iterator;
     typedef typename boost::range_size<Selection>::type size_type;
@@ -592,7 +592,7 @@ selection_find_boundary(const Selection &selection, typename Selection::size_typ
 template <typename Selection>
 std::pair<typename boost::range_const_iterator<Selection>::type,
           typename boost::range_size<Selection>::type>
-selection_find_boundary(const Selection &selection, typename Selection::size_type p,
+selection_find_boundary(const Selection& selection, typename Selection::size_type p,
                         std::forward_iterator_tag) {
     typedef typename boost::range_const_iterator<Selection>::type const_iterator;
     typedef typename boost::range_size<Selection>::type size_type;
@@ -632,7 +632,7 @@ selection_find_boundary(const Selection &selection, typename Selection::size_typ
 template <typename Selection>
 inline std::pair<typename boost::range_const_iterator<Selection>::type,
                  typename boost::range_size<Selection>::type>
-selection_find_boundary(const Selection &selection, typename Selection::size_type p) {
+selection_find_boundary(const Selection& selection, typename Selection::size_type p) {
     typedef typename boost::range_const_iterator<Selection>::type const_iterator;
     typedef typename boost::range_size<Selection>::type size_type;
     typedef std::pair<const_iterator, size_type> result_type;
@@ -708,7 +708,7 @@ RangeIterator selection_stable_partition(SelectionIterator selection_first,
 */
 template <typename Selection, typename ForwardRange>
 inline typename boost::range_iterator<ForwardRange>::type
-selection_stable_partition(const Selection &selection, ForwardRange &range) {
+selection_stable_partition(const Selection& selection, ForwardRange& range) {
     return selection_stable_partition(boost::begin(selection), boost::end(selection),
                                       boost::begin(range), boost::begin(range), boost::end(range),
                                       start_selected(selection));
@@ -753,7 +753,7 @@ selection_stable_partition(const Selection &selection, ForwardRange &range) {
 template <typename Selection, typename ForwardRange>
 std::pair<typename boost::range_iterator<ForwardRange>::type,
           typename boost::range_iterator<ForwardRange>::type>
-selection_stable_partition_about(const Selection &selection, ForwardRange &range, std::size_t p,
+selection_stable_partition_about(const Selection& selection, ForwardRange& range, std::size_t p,
                                  typename boost::range_size<Selection>::type prior_boundary_count =
                                      0) {
     typedef typename boost::range_size<Selection>::type size_type;
@@ -783,7 +783,7 @@ selection_stable_partition_about(const Selection &selection, ForwardRange &range
     Takes a set of indices and converts them to a boundary-based Selection
 */
 template <typename Selection, typename ForwardRange>
-Selection index_set_to_selection(const ForwardRange &index_set) {
+Selection index_set_to_selection(const ForwardRange& index_set) {
     Selection result;
 
     // REVISIT (fbrereto) : This would go much faster using divide-and-conquer
@@ -813,7 +813,7 @@ Selection index_set_to_selection(const ForwardRange &index_set) {
     Takes a set of indices and converts them to a boundary-based Selection
 */
 template <typename Selection, typename OutputIterator>
-OutputIterator selection_to_index_set(const Selection &selection,
+OutputIterator selection_to_index_set(const Selection& selection,
                                       typename boost::range_size<Selection>::type max_index,
                                       OutputIterator output) {
     typedef typename boost::range_size<Selection>::type size_type;

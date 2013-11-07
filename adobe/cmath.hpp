@@ -198,7 +198,7 @@ inline long lround_half_up(float x) { return static_cast<long>(std::floor(x + 0.
 /*************************************************************************************************/
 
 template <typename R, typename A>
-inline R nearest_cast(const A &x) {
+inline R nearest_cast(const A& x) {
     return nearest_cast_fn<A, R>()(x);
 }
 
@@ -206,17 +206,17 @@ inline R nearest_cast(const A &x) {
 
 template <typename A, typename R>
 struct nearest_cast_fn : std::unary_function<A, R> {
-    R operator()(const A &x) const { return static_cast<R>(round_half_up(x)); }
+    R operator()(const A& x) const { return static_cast<R>(round_half_up(x)); }
 };
 
 template <typename A>
 struct nearest_cast_fn<A, float> : std::unary_function<A, float> {
-    float operator()(const A &x) const { return static_cast<float>(x); }
+    float operator()(const A& x) const { return static_cast<float>(x); }
 };
 
 template <typename A>
 struct nearest_cast_fn<A, double> : std::unary_function<A, double> {
-    double operator()(const A &x) const { return static_cast<double>(x); }
+    double operator()(const A& x) const { return static_cast<double>(x); }
 };
 
 /*************************************************************************************************/

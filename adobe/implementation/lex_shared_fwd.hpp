@@ -39,7 +39,7 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-typedef const unsigned char *uchar_ptr_t;
+typedef const unsigned char* uchar_ptr_t;
 
 /*************************************************************************************************/
 
@@ -118,7 +118,7 @@ Otherwise, the function returns false.
 template <typename R1, // models InputRange
           typename R2>
 // models InputRange
-inline bool bounded_equal(R1 &range1, R2 &range2) {
+inline bool bounded_equal(R1& range1, R2& range2) {
     return bounded_equal(boost::begin(range1), boost::end(range1), boost::begin(range2),
                          boost::end(range2));
 }
@@ -162,7 +162,7 @@ character-by-character comparison of the two ranges must be true.
 in equality for each set of characters. false otherwise.
 */
 
-inline bool token_range_equal(const token_range_t &x, const token_range_t &y) {
+inline bool token_range_equal(const token_range_t& x, const token_range_t& y) {
     return boost::size(x) == boost::size(y) && adobe::bounded_equal(x, y);
 }
 
@@ -191,7 +191,7 @@ as adobe::mismatch.
     - (false otherwise.)
 */
 
-inline bool token_range_less(const token_range_t &x, const token_range_t &y) {
+inline bool token_range_less(const token_range_t& x, const token_range_t& y) {
     std::size_t sizex(boost::size(x));
     std::size_t sizey(boost::size(y));
 
@@ -222,7 +222,7 @@ Serializes a token_range_t to an output stream
 \return the original output stream.
 */
 
-inline std::ostream &operator<<(std::ostream &s, const token_range_t &x) {
+inline std::ostream& operator<<(std::ostream& s, const token_range_t& x) {
     adobe::copy(x, std::ostream_iterator<char>(s));
 
     return s;
@@ -243,10 +243,10 @@ warranties as to string ownership.
 */
 
 template <typename T>
-inline token_range_t static_token_range(T *begin) {
+inline token_range_t static_token_range(T* begin) {
     BOOST_STATIC_ASSERT(sizeof(T) == sizeof(unsigned char));
 
-    T *end(begin);
+    T* end(begin);
 
     while (*end != 0)
         ++end;

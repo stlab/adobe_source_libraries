@@ -41,14 +41,14 @@ template <typename T>
 struct empty_ptr;
 
 template <typename T>
-struct empty_ptr<T *> : std::unary_function<T *, bool> {
-    bool operator()(const T *x) const throw() { return x == NULL; }
+struct empty_ptr<T*> : std::unary_function<T*, bool> {
+    bool operator()(const T* x) const throw() { return x == NULL; }
 };
 
 
 template <typename T>
-struct empty_ptr<T (*)[]> : std::unary_function<T *, bool> {
-    bool operator()(const T *x) const throw() { return x == NULL; }
+struct empty_ptr<T (*)[]> : std::unary_function<T*, bool> {
+    bool operator()(const T* x) const throw() { return x == NULL; }
 };
 
 /*
@@ -61,13 +61,13 @@ template <typename T>
 struct delete_ptr_trait;
 
 template <typename T>
-struct delete_ptr_trait<T *> : std::unary_function<T *, void> {
-    void operator()(const T *x) const { delete x; }
+struct delete_ptr_trait<T*> : std::unary_function<T*, void> {
+    void operator()(const T* x) const { delete x; }
 };
 
 template <typename T>
-struct delete_ptr_trait<T (*)[]> : std::unary_function<T *, void> {
-    void operator()(const T *x) const { delete[] x; }
+struct delete_ptr_trait<T (*)[]> : std::unary_function<T*, void> {
+    void operator()(const T* x) const { delete[] x; }
 };
 
 //@}
@@ -86,8 +86,8 @@ struct ptr_traits;
 template <typename T>
 struct ptr_traits<T (*)[]> {
     typedef T element_type;
-    typedef T *pointer_type;
-    typedef const T *const_pointer_type;
+    typedef T* pointer_type;
+    typedef const T* const_pointer_type;
 
     template <class U>
     struct rebind {
@@ -164,9 +164,9 @@ struct ptr_traits<T (*)[]> {
     </table>
 */
 template <typename T>
-struct ptr_traits<T *> {
+struct ptr_traits<T*> {
     typedef T element_type;
-    typedef T *pointer_type;
+    typedef T* pointer_type;
     typedef const pointer_type const_pointer_type;
 
     template <class U>
@@ -177,8 +177,8 @@ struct ptr_traits<T *> {
         is_array = false
     };
 
-    static void delete_ptr(pointer_type x) throw() { adobe::delete_ptr_trait<T *>()(x); }
-    static bool empty_ptr(const_pointer_type x) throw() { return adobe::empty_ptr<T *>()(x); }
+    static void delete_ptr(pointer_type x) throw() { adobe::delete_ptr_trait<T*>()(x); }
+    static bool empty_ptr(const_pointer_type x) throw() { return adobe::empty_ptr<T*>()(x); }
 };
 
 //!\ingroup memory
@@ -200,8 +200,8 @@ struct ptr_traits<std::auto_ptr<T>> {
 //!\ingroup memory
 template <typename R, typename T>
 struct runtime_cast_t<R, std::auto_ptr<T>> {
-    R operator()(std::auto_ptr<T> &x) const {
-        typedef typename R::element_type *dest_type;
+    R operator()(std::auto_ptr<T>& x) const {
+        typedef typename R::element_type* dest_type;
         dest_type result = dynamic_cast<dest_type>(x.get());
         if (result)
             x.release();
@@ -224,8 +224,8 @@ struct ptr_traits<auto_ptr<T, Traits>> {
 //!\ingroup memory
 template <typename R, typename T, typename Traits>
 struct runtime_cast_t<R, auto_ptr<T, Traits>> {
-    R operator()(auto_ptr<T, Traits> &x) const {
-        typedef typename R::element_type *dest_type;
+    R operator()(auto_ptr<T, Traits>& x) const {
+        typedef typename R::element_type* dest_type;
         dest_type result = dynamic_cast<dest_type>(x.get());
         if (result)
             x.release();
@@ -248,8 +248,8 @@ struct ptr_traits<auto_resource<T, Traits>> {
 //!\ingroup memory
 template <typename R, typename T, typename Traits>
 struct runtime_cast_t<R, auto_resource<T, Traits>> {
-    R operator()(auto_resource<T, Traits> &x) const {
-        typedef typename R::element_type *dest_type;
+    R operator()(auto_resource<T, Traits>& x) const {
+        typedef typename R::element_type* dest_type;
         dest_type result = dynamic_cast<dest_type>(x.get());
         if (result)
             x.release();
@@ -307,20 +307,19 @@ public:
     // 20.4.5.1 construct/copy/destroy:
     explicit auto_resource(pointer_type p = 0) throw();
 
-    auto_resource(auto_resource &) throw();
+    auto_resource(auto_resource&) throw();
     template <typename Y>
-    auto_resource(
-        const auto_resource<Y, typename traits_type::template rebind<Y>::other> &) throw();
+    auto_resource(const auto_resource<Y, typename traits_type::template rebind<Y>::other>&) throw();
 
-    auto_resource &operator=(auto_resource &) throw();
+    auto_resource& operator=(auto_resource&) throw();
     template <typename Y>
-    auto_resource &operator=(
+    auto_resource& operator=(
         auto_resource<Y, typename traits_type::template rebind<Y>::other>) throw();
 
     ~auto_resource() throw();
 
     // assignment from NULL
-    auto_resource &operator=(const clear_type *) throw();
+    auto_resource& operator=(const clear_type*) throw();
 
     // 20.4.5.2 members:
     pointer_type get() const throw();
@@ -417,9 +416,9 @@ private:
 
 */
 
-template <typename X, class Traits = ptr_traits<X *>>
-class auto_ptr : public auto_resource<X *, Traits> {
-    typedef auto_resource<X *, Traits> inherited;
+template <typename X, class Traits = ptr_traits<X*>>
+class auto_ptr : public auto_resource<X*, Traits> {
+    typedef auto_resource<X*, Traits> inherited;
     struct clear_type {};
 
 public:
@@ -429,32 +428,32 @@ public:
     // 20.4.5.1 construct/copy/destroy:
     explicit auto_ptr(pointer_type p = 0) throw();
 
-    auto_ptr(auto_ptr &) throw();
+    auto_ptr(auto_ptr&) throw();
     template <typename Y>
-    auto_ptr(const auto_ptr<Y, typename traits_type::template rebind<Y *>::other> &) throw();
+    auto_ptr(const auto_ptr<Y, typename traits_type::template rebind<Y*>::other>&) throw();
 
-    auto_ptr &operator=(auto_ptr &) throw();
+    auto_ptr& operator=(auto_ptr&) throw();
     template <typename Y>
-    auto_ptr &operator=(auto_ptr<Y, typename traits_type::template rebind<Y *>::other>) throw();
+    auto_ptr& operator=(auto_ptr<Y, typename traits_type::template rebind<Y*>::other>) throw();
 
     // assignment from NULL
-    auto_ptr &operator=(const clear_type *) throw();
+    auto_ptr& operator=(const clear_type*) throw();
 
     // additions for interop with std::auto_ptr
     auto_ptr(std::auto_ptr<X> r) throw();
     template <typename Y>
     auto_ptr(std::auto_ptr<Y> r) throw();
 
-    auto_ptr &operator=(std::auto_ptr<X>) throw();
+    auto_ptr& operator=(std::auto_ptr<X>) throw();
     template <typename Y>
-    auto_ptr &operator=(std::auto_ptr<Y>) throw();
+    auto_ptr& operator=(std::auto_ptr<Y>) throw();
 
     operator std::auto_ptr<X>() throw() { return std::auto_ptr<X>(inherited::release()); }
 
     // 20.4.5.2 members:
-    element_type &operator*() const throw();
+    element_type& operator*() const throw();
     pointer_type operator->() const throw();
-    element_type &operator[](std::size_t index) const throw(); // addition
+    element_type& operator[](std::size_t index) const throw(); // addition
 
 private:
 /*
@@ -479,25 +478,25 @@ inline auto_resource<X, Traits>::auto_resource(pointer_type p) throw()
     : pointer_m(p) {}
 
 template <typename X, class Traits>
-inline auto_resource<X, Traits>::auto_resource(auto_resource &x) throw()
+inline auto_resource<X, Traits>::auto_resource(auto_resource& x) throw()
     : pointer_m(x.release()) {}
 
 template <typename X, class Traits>
 template <typename Y>
 inline auto_resource<X, Traits>::auto_resource(
-    auto_resource<Y, typename traits_type::template rebind<Y>::other> const &x) throw()
-    : pointer_m(const_cast<auto_resource<Y, typename traits_type::template rebind<Y>::other> &>(x)
+    auto_resource<Y, typename traits_type::template rebind<Y>::other> const& x) throw()
+    : pointer_m(const_cast<auto_resource<Y, typename traits_type::template rebind<Y>::other>&>(x)
                     .release()) {}
 
 template <typename X, class Traits>
-inline auto_resource<X, Traits> &auto_resource<X, Traits>::operator=(auto_resource &x) throw() {
+inline auto_resource<X, Traits>& auto_resource<X, Traits>::operator=(auto_resource& x) throw() {
     reset(x.release());
     return *this;
 }
 
 template <typename X, class Traits>
 template <typename Y>
-inline auto_resource<X, Traits> &auto_resource<X, Traits>::
+inline auto_resource<X, Traits>& auto_resource<X, Traits>::
 operator=(auto_resource<Y, typename traits_type::template rebind<Y>::other> x) throw() {
     reset(x.release());
     return *this;
@@ -511,7 +510,7 @@ inline auto_resource<X, Traits>::~auto_resource() throw() {
 /*************************************************************************************************/
 
 template <typename X, class Traits>
-inline auto_resource<X, Traits> &auto_resource<X, Traits>::operator=(const clear_type *) throw() {
+inline auto_resource<X, Traits>& auto_resource<X, Traits>::operator=(const clear_type*) throw() {
     reset();
     return *this;
 }
@@ -554,25 +553,25 @@ inline auto_ptr<X, Traits>::auto_ptr(pointer_type p) throw()
     : inherited(p) {}
 
 template <typename X, class Traits>
-inline auto_ptr<X, Traits>::auto_ptr(auto_ptr &r) throw()
+inline auto_ptr<X, Traits>::auto_ptr(auto_ptr& r) throw()
     : inherited(r) {}
 
 template <typename X, class Traits>
 template <typename Y>
 inline auto_ptr<X, Traits>::auto_ptr(
-    const auto_ptr<Y, typename traits_type::template rebind<Y *>::other> &r) throw()
-    : inherited(const_cast<auto_ptr<Y, typename traits_type::template rebind<Y *>::other> &>(r)) {}
+    const auto_ptr<Y, typename traits_type::template rebind<Y*>::other>& r) throw()
+    : inherited(const_cast<auto_ptr<Y, typename traits_type::template rebind<Y*>::other>&>(r)) {}
 
 template <typename X, class Traits>
-inline auto_ptr<X, Traits> &auto_ptr<X, Traits>::operator=(auto_ptr &r) throw() {
+inline auto_ptr<X, Traits>& auto_ptr<X, Traits>::operator=(auto_ptr& r) throw() {
     inherited::operator=(r);
     return *this;
 }
 
 template <typename X, class Traits>
 template <typename Y>
-inline auto_ptr<X, Traits> &auto_ptr<X, Traits>::
-operator=(auto_ptr<Y, typename traits_type::template rebind<Y *>::other> r) throw() {
+inline auto_ptr<X, Traits>& auto_ptr<X, Traits>::
+operator=(auto_ptr<Y, typename traits_type::template rebind<Y*>::other> r) throw() {
     inherited::operator=(r);
     return *this;
 }
@@ -580,7 +579,7 @@ operator=(auto_ptr<Y, typename traits_type::template rebind<Y *>::other> r) thro
 /*************************************************************************************************/
 
 template <typename X, class Traits>
-inline auto_ptr<X, Traits> &auto_ptr<X, Traits>::operator=(const clear_type *) throw() {
+inline auto_ptr<X, Traits>& auto_ptr<X, Traits>::operator=(const clear_type*) throw() {
     inherited::reset();
     return *this;
 }
@@ -597,14 +596,14 @@ inline auto_ptr<X, Traits>::auto_ptr(std::auto_ptr<Y> r) throw()
     : inherited(r.release()) {}
 
 template <typename X, class Traits>
-inline auto_ptr<X, Traits> &auto_ptr<X, Traits>::operator=(std::auto_ptr<X> r) throw() {
+inline auto_ptr<X, Traits>& auto_ptr<X, Traits>::operator=(std::auto_ptr<X> r) throw() {
     inherited::reset(r.release());
     return *this;
 }
 
 template <typename X, class Traits>
 template <typename Y>
-inline auto_ptr<X, Traits> &auto_ptr<X, Traits>::operator=(std::auto_ptr<Y> r) throw() {
+inline auto_ptr<X, Traits>& auto_ptr<X, Traits>::operator=(std::auto_ptr<Y> r) throw() {
     inherited::reset(r.release());
     return *this;
 }
@@ -612,7 +611,7 @@ inline auto_ptr<X, Traits> &auto_ptr<X, Traits>::operator=(std::auto_ptr<Y> r) t
 /*************************************************************************************************/
 
 template <typename X, class Traits>
-inline typename auto_ptr<X, Traits>::element_type &auto_ptr<X, Traits>::operator*() const throw() {
+inline typename auto_ptr<X, Traits>::element_type& auto_ptr<X, Traits>::operator*() const throw() {
     assert(!traits_type::empty_ptr(this->get()));
     return *this->get();
 }
@@ -624,7 +623,7 @@ inline typename auto_ptr<X, Traits>::pointer_type auto_ptr<X, Traits>::operator-
 }
 
 template <typename X, class Traits>
-inline typename auto_ptr<X, Traits>::element_type &auto_ptr<X, Traits>::
+inline typename auto_ptr<X, Traits>::element_type& auto_ptr<X, Traits>::
 operator[](std::size_t index) const throw() {
     implementation::adobe_static_assert<traits_type::is_array>();
 
@@ -635,17 +634,17 @@ operator[](std::size_t index) const throw() {
 /*************************************************************************************************/
 
 template <typename T> // T models Regular
-inline void destroy(T *p) {
+inline void destroy(T* p) {
     p->~T();
 }
 
 template <typename T> // T models Regular
-inline void construct(T *p) {
-    ::new (static_cast<void *>(p)) T();
+inline void construct(T* p) {
+    ::new (static_cast<void*>(p)) T();
 }
 
 template <typename T> // T models Regular
-inline void construct(T *p, T x) {
+inline void construct(T* p, T x) {
     using std::swap;
 
     construct(p);
@@ -694,8 +693,8 @@ namespace version_1 {
 //! @{
 
 struct new_delete_t {
-    void *(*new_)(std::size_t);
-    void (*delete_)(void *);
+    void* (*new_)(std::size_t);
+    void (*delete_)(void*);
 };
 
 extern const new_delete_t local_new_delete_g;
@@ -703,19 +702,19 @@ extern const new_delete_t local_new_delete_g;
 template <>
 class capture_allocator<void> {
 public:
-    void *pointer;
-    typedef const void *const_pointer;
+    void* pointer;
+    typedef const void* const_pointer;
     typedef void value_type;
     template <class U>
     struct rebind {
         typedef capture_allocator<U> other;
     };
 
-    friend inline bool operator==(const capture_allocator &, const capture_allocator &) {
+    friend inline bool operator==(const capture_allocator&, const capture_allocator&) {
         return true;
     }
 
-    friend inline bool operator!=(const capture_allocator &, const capture_allocator &) {
+    friend inline bool operator!=(const capture_allocator&, const capture_allocator&) {
         return false;
     }
 };
@@ -725,10 +724,10 @@ class capture_allocator {
 public:
     typedef std::size_t size_type;
     typedef std::ptrdiff_t difference_type;
-    typedef T *pointer;
-    typedef const T *const_pointer;
-    typedef T &reference;
-    typedef const T &const_reference;
+    typedef T* pointer;
+    typedef const T* const_pointer;
+    typedef T& reference;
+    typedef const T& const_reference;
     typedef T value_type;
     template <typename U>
     struct rebind {
@@ -737,7 +736,7 @@ public:
 
     capture_allocator() : new_delete_m(&local_new_delete_g) {}
     template <typename U>
-    capture_allocator(const capture_allocator<U> &x)
+    capture_allocator(const capture_allocator<U>& x)
         : new_delete_m(x.new_delete()) {}
 
     pointer address(reference x) const { return &x; }
@@ -752,21 +751,21 @@ public:
     }
     void deallocate(pointer p, size_type) { new_delete_m->delete_(p); }
     size_type max_size() const { return size_type(-1) / sizeof(T); }
-    void construct(pointer p, const T &x) { adobe::construct(p, x); }
+    void construct(pointer p, const T& x) { adobe::construct(p, x); }
     void destroy(pointer p) { adobe::destroy(p); }
 
-    friend inline bool operator==(const capture_allocator &x, const capture_allocator &y) {
+    friend inline bool operator==(const capture_allocator& x, const capture_allocator& y) {
         return x.new_delete_m == y.new_delete_m;
     }
 
-    friend inline bool operator!=(const capture_allocator &x, const capture_allocator &y) {
+    friend inline bool operator!=(const capture_allocator& x, const capture_allocator& y) {
         return x.new_delete_m != y.new_delete_m;
     }
 
-    const new_delete_t *new_delete() const { return new_delete_m; }
+    const new_delete_t* new_delete() const { return new_delete_m; }
 
 private:
-    const new_delete_t *new_delete_m;
+    const new_delete_t* new_delete_m;
 };
 
 //! @} //end addtogroup memory
@@ -794,18 +793,18 @@ struct aligned_storage {
 
     ~aligned_storage() { destroy(&get()); }
 
-    aligned_storage(const aligned_storage &x) { construct(&get(), x.get()); }
-    aligned_storage(aligned_storage &&x) { construct(&get(), std::move(x.get())); }
+    aligned_storage(const aligned_storage& x) { construct(&get(), x.get()); }
+    aligned_storage(aligned_storage&& x) { construct(&get(), std::move(x.get())); }
 
-    aligned_storage &operator=(aligned_storage x) {
+    aligned_storage& operator=(aligned_storage x) {
         swap(*this, x);
         return *this;
     }
 
-    T &get() { return *static_cast<T *>(storage()); }
-    const T &get() const { return *static_cast<const T *>(storage()); }
+    T& get() { return *static_cast<T*>(storage()); }
+    const T& get() const { return *static_cast<const T*>(storage()); }
 
-    friend inline void swap(aligned_storage &x, aligned_storage &y) { swap(x.get(), y.get()); }
+    friend inline void swap(aligned_storage& x, aligned_storage& y) { swap(x.get(), y.get()); }
 
 private:
     enum {
@@ -815,8 +814,8 @@ private:
     typedef double storage_t
         [((sizeof(T) + (word_size - 1)) / word_size) * (word_size / sizeof(double))];
 
-    void *storage() { return &data_m; }
-    const void *storage() const { return &data_m; }
+    void* storage() { return &data_m; }
+    const void* storage() const { return &data_m; }
     storage_t data_m;
 
     BOOST_STATIC_ASSERT(sizeof(T) <= sizeof(storage_t));

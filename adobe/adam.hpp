@@ -70,8 +70,8 @@ public:
     struct relation_t;
 
     typedef boost::function<void(bool)> monitor_invariant_t;
-    typedef boost::function<void(const any_regular_t &)> monitor_value_t;
-    typedef boost::function<void(const dictionary_t &)> monitor_contributing_t;
+    typedef boost::function<void(const any_regular_t&)> monitor_value_t;
+    typedef boost::function<void(const dictionary_t&)> monitor_contributing_t;
     typedef boost::function<void(bool)> monitor_enabled_t;
 
     /*!
@@ -101,7 +101,7 @@ public:
 
       \return The value evaluated out of the expression.
     */
-    any_regular_t inspect(const array_t &expression);
+    any_regular_t inspect(const array_t& expression);
 
     /*!
 
@@ -109,7 +109,7 @@ public:
 
       \param value the value to set the input cell to.
     */
-    void set(name_t cell, const any_regular_t &value); // input cell.
+    void set(name_t cell, const any_regular_t& value); // input cell.
 
     /*!
 
@@ -132,7 +132,7 @@ public:
       \param last End of range <code>[first, last)</code> of <i>input
       cells</i> to touch.
     */
-    void touch(const name_t *first, const name_t *last); // range of input cells.
+    void touch(const name_t* first, const name_t* last); // range of input cells.
 
     /*!
         The get function is intended to be connected to the VM variable lookup by the client. During
@@ -150,7 +150,7 @@ public:
 
         \param cell name of cell to lookup.
     */
-    const any_regular_t &operator[](name_t cell) const;
+    const any_regular_t& operator[](name_t cell) const;
 
     /*!
 
@@ -163,7 +163,7 @@ public:
       \param initializer expression to be evaluated for the cell's
       starting value.
     */
-    void add_input(name_t name, const line_position_t &position, const array_t &initializer);
+    void add_input(name_t name, const line_position_t& position, const array_t& initializer);
 
     /*!
 
@@ -177,7 +177,7 @@ public:
       value.
     */
 
-    void add_output(name_t name, const line_position_t &position, const array_t &expression);
+    void add_output(name_t name, const line_position_t& position, const array_t& expression);
 
 
     /*!
@@ -193,7 +193,7 @@ public:
       \note This interface is deprecrecated and will be removed when the virtual machine is removed
       from the sheet.
     */
-    void add_constant(name_t name, const line_position_t &position, const array_t &initializer);
+    void add_constant(name_t name, const line_position_t& position, const array_t& initializer);
 
 
     /*!
@@ -218,7 +218,7 @@ public:
       \param expression expression to be evaluated for the cell's output
       value.
     */
-    void add_logic(name_t name, const line_position_t &position, const array_t &expression);
+    void add_logic(name_t name, const line_position_t& position, const array_t& expression);
 
     /*!
 
@@ -231,7 +231,7 @@ public:
       \param expression expression to be evaluated for the cell's output
       value.
     */
-    void add_invariant(name_t name, const line_position_t &position, const array_t &expression);
+    void add_invariant(name_t name, const line_position_t& position, const array_t& expression);
 
     /*!
 
@@ -253,9 +253,9 @@ public:
 
       \param expression expression to be evaluated for the cell's output value.
     */
-    void add_interface(name_t name, bool linked, const line_position_t &position1,
-                       const array_t &initializer, const line_position_t &position2,
-                       const array_t &expression);
+    void add_interface(name_t name, bool linked, const line_position_t& position1,
+                       const array_t& initializer, const line_position_t& position2,
+                       const array_t& expression);
 
     /*!
         REVISIT (sparent) : This interface is temporary to support the old basic_sheet_t
@@ -291,8 +291,8 @@ public:
 
       \param last one-past-the last relation in the relation set.
     */
-    void add_relation(const line_position_t &position, const array_t &conditional,
-                      const relation_t *first, const relation_t *last);
+    void add_relation(const line_position_t& position, const array_t& conditional,
+                      const relation_t* first, const relation_t* last);
 
 
     /*!
@@ -309,7 +309,7 @@ public:
       link. This link should be broken before the sheet or the client code
       are destroyed to prevent communication between destructing objects.
     */
-    connection_t monitor_value(name_t name, const monitor_value_t &proc);
+    connection_t monitor_value(name_t name, const monitor_value_t& proc);
 
     /*!
 
@@ -332,8 +332,8 @@ public:
       code are destroyed to prevent communication between destructing
       objects.
     */
-    connection_t monitor_contributing(name_t cell, const dictionary_t &mark,
-                                      const monitor_contributing_t &proc);
+    connection_t monitor_contributing(name_t cell, const dictionary_t& mark,
+                                      const monitor_contributing_t& proc);
     // output only
 
     /*!
@@ -388,8 +388,8 @@ public:
       link. This link should be broken before the sheet or the client code
       are destroyed to prevent communication between destructing objects.
     */
-    connection_t monitor_enabled(name_t cell, const name_t *first, const name_t *last,
-                                 const monitor_enabled_t &proc); // input only
+    connection_t monitor_enabled(name_t cell, const name_t* first, const name_t* last,
+                                 const monitor_enabled_t& proc); // input only
 
 #if 0
     connection_t monitor_invariant_contributing(name_t input, const monitor_invariant_t&);
@@ -411,7 +411,7 @@ public:
       code are destroyed to prevent communication between destructing
       objects.
     */
-    connection_t monitor_invariant_dependent(name_t output, const monitor_invariant_t &proc);
+    connection_t monitor_invariant_dependent(name_t output, const monitor_invariant_t& proc);
 
 
     /*!
@@ -479,7 +479,7 @@ public:
       sheet. The keys in the dictionary will be used to map thier values
       to cells in the sheet.
     */
-    void set(const dictionary_t &dictionary);
+    void set(const dictionary_t& dictionary);
 
 #if 0
     dictionary_t current_mark() const;
@@ -493,7 +493,7 @@ public:
       were to call set(mark), followed by set(result), the output state of
       the sheet would be restored.
     */
-    dictionary_t contributing(const dictionary_t &mark) const;
+    dictionary_t contributing(const dictionary_t& mark) const;
 
     /*!
       \return A dictionary of the currently contributing cells and their
@@ -525,7 +525,7 @@ public:
 
 private:
     class implementation_t;
-    implementation_t *object_m;
+    implementation_t* object_m;
 };
 
 /*************************************************************************************************/
@@ -537,9 +537,9 @@ private:
 */
 
 struct set_monitor_t : std::unary_function<any_regular_t, void> {
-    set_monitor_t(sheet_t &sheet, name_t cell_name) : cell_name_m(cell_name), sheet_m(sheet) {}
+    set_monitor_t(sheet_t& sheet, name_t cell_name) : cell_name_m(cell_name), sheet_m(sheet) {}
 
-    void operator()(const any_regular_t &x) { sheet_m.get().set(cell_name_m, x); }
+    void operator()(const any_regular_t& x) { sheet_m.get().set(cell_name_m, x); }
 
 private:
     name_t cell_name_m;
@@ -562,19 +562,19 @@ struct sheet_t::relation_t {
     relation_t(std::vector<name_t> n, line_position_t p, array_t e)
         : name_set_m(std::begin(n), std::end(n)), position_m(p), expression_m(std::move(e)) {}
 
-    friend void swap(relation_t &x, relation_t &y) {
+    friend void swap(relation_t& x, relation_t& y) {
         swap(x.name_set_m, y.name_set_m);
         swap(x.position_m, y.position_m);
         swap(x.expression_m, y.expression_m);
     }
 
-    relation_t(relation_t &&x) noexcept : name_set_m(x.name_set_m),
+    relation_t(relation_t&& x) noexcept : name_set_m(x.name_set_m),
                                           position_m(x.position_m),
                                           expression_m(std::move(x.expression_m)) {}
 
-    relation_t(const relation_t &) = default;
+    relation_t(const relation_t&) = default;
 
-    relation_t &operator=(relation_t x) {
+    relation_t& operator=(relation_t x) {
         swap(*this, x);
         return *this;
     }

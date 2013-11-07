@@ -19,7 +19,7 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-inline int strcmp(const char *x, const char *y) {
+inline int strcmp(const char* x, const char* y) {
     while (*x && *x == *y) {
         ++x;
         ++y;

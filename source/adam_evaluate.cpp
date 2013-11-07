@@ -18,9 +18,9 @@ namespace {
 
 /*************************************************************************************************/
 
-void add_cell(adobe::sheet_t &sheet, adobe::adam_callback_suite_t::cell_type_t type,
-              adobe::name_t name, const adobe::line_position_t &position,
-              const adobe::array_t &init_or_expr) {
+void add_cell(adobe::sheet_t& sheet, adobe::adam_callback_suite_t::cell_type_t type,
+              adobe::name_t name, const adobe::line_position_t& position,
+              const adobe::array_t& init_or_expr) {
     switch (type) {
     case adobe::adam_callback_suite_t::input_k:
         sheet.add_input(name, position, init_or_expr);
@@ -49,10 +49,10 @@ void add_cell(adobe::sheet_t &sheet, adobe::adam_callback_suite_t::cell_type_t t
 
 /*************************************************************************************************/
 
-void add_relation(adobe::sheet_t &sheet, const adobe::line_position_t &position,
-                  const adobe::array_t &conditional,
-                  const adobe::adam_callback_suite_t::relation_t *first,
-                  const adobe::adam_callback_suite_t::relation_t *last) {
+void add_relation(adobe::sheet_t& sheet, const adobe::line_position_t& position,
+                  const adobe::array_t& conditional,
+                  const adobe::adam_callback_suite_t::relation_t* first,
+                  const adobe::adam_callback_suite_t::relation_t* last) {
     typedef std::vector<adobe::sheet_t::relation_t> relation_buffer_t;
 
     relation_buffer_t relations;
@@ -84,7 +84,7 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-adam_callback_suite_t bind_to_sheet(sheet_t &sheet) {
+adam_callback_suite_t bind_to_sheet(sheet_t& sheet) {
     adam_callback_suite_t suite;
 
     suite.add_cell_proc_m = boost::bind(&add_cell, boost::ref(sheet), _1, _2, _3, _4);
@@ -97,7 +97,7 @@ adam_callback_suite_t bind_to_sheet(sheet_t &sheet) {
 
 /*************************************************************************************************/
 
-adam_callback_suite_t bind_to_sheet(sheet_t &sheet, external_model_t &external_model) {
+adam_callback_suite_t bind_to_sheet(sheet_t& sheet, external_model_t& external_model) {
     adam_callback_suite_t suite = bind_to_sheet(sheet);
 
     suite.add_external_proc_m =

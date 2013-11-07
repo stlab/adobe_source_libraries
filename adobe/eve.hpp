@@ -191,8 +191,8 @@ public:
     place subviews inside this one.
     */
 
-    iterator add_placeable(iterator parent, const layout_attributes_t &initial,
-                           bool is_container_type, poly_placeable_t &placeable,
+    iterator add_placeable(iterator parent, const layout_attributes_t& initial,
+                           bool is_container_type, poly_placeable_t& placeable,
                            bool reverse = false);
 
     /*!
@@ -243,13 +243,13 @@ private:
     friend struct implementation::view_proxy_t;
 
     class implementation_t;
-    implementation_t *object_m;
+    implementation_t* object_m;
 };
 
 
 /*************************************************************************************************/
 
-void set_margin(layout_attributes_t &container, int x);
+void set_margin(layout_attributes_t& container, int x);
 
 /*************************************************************************************************/
 

@@ -108,7 +108,8 @@ struct has_eof_member {
 \brief defines any traits that help with the implementation of arg_stream::call() and/or helper
 objects like arg_stream::chain.
 
-\par Currently only communicates if the type T has a member function eof() (which returns whether
+\par Currently only communicates if the type T has a member function eof() (which returns
+whether
 there are any arguements left in the stream).
 This may be specialized by various arg_streams.
 */
@@ -121,21 +122,21 @@ struct traits {
 namespace detail {
 template <class ArgStream>
 static bool
-eof_check(ArgStream &as,
-          typename boost::enable_if_c<traits<ArgStream>::has_eof_memberfunction>::type *dummy = 0) {
+eof_check(ArgStream& as,
+          typename boost::enable_if_c<traits<ArgStream>::has_eof_memberfunction>::type* dummy = 0) {
     return as.eof();
 }
 
 template <class ArgStream>
 static bool
-eof_check(ArgStream &as,
-          typename boost::disable_if_c<traits<ArgStream>::has_eof_memberfunction>::type *dummy =
+eof_check(ArgStream& as,
+          typename boost::disable_if_c<traits<ArgStream>::has_eof_memberfunction>::type* dummy =
               0) {
     return false;
 }
 
 template <class ArgStream>
-static bool eof_check(ArgStream *as) {
+static bool eof_check(ArgStream* as) {
     return as ? eof_check(*as) : true;
 }
 }
@@ -147,14 +148,16 @@ static bool eof_check(ArgStream *as) {
 
 \par
     This function is available for specialization by arg_streams.
-    If not specialized, the default implementation attempts to call the arg_stream's member function
+    If not specialized, the default implementation attempts to call the arg_stream's member
+function
 eof() if one is available.
     If there is no member function, it returns false - ie if it is not known, then it is assumed
 that more args exist, and
-    thus we must still always consider that the arg_stream::no_more_args exception may be thrown.
+    thus we must still always consider that the arg_stream::no_more_args exception may be
+thrown.
 */
 template <typename ArgStream>
-bool eof(ArgStream const &as) {
+bool eof(ArgStream const& as) {
     return detail::eof_check(as);
 }
 
@@ -169,23 +172,24 @@ bool eof(ArgStream const &as) {
     2. specialize arg_stream::get_next_arg<T>(YourArgStream & argstream)
     ie If not specialized, this default implementation attempts to call the arg_stream's member
 function get_next_arg<T>().
-    If there is no member function, and the global function is not specialized, it will not compile.
+    If there is no member function, and the global function is not specialized, it will not
+compile.
 */
 template <typename R, typename ArgStream>
-R get_next_arg(ArgStream const &as) {
+R get_next_arg(ArgStream const& as) {
     return as.get_next_arg<R>();
 }
 // specialize these or let them fallback to the above specialization
 template <typename R, typename ArgStream>
-R get_next_arg(ArgStream &as) {
+R get_next_arg(ArgStream& as) {
     return as.get_next_arg<R>();
 }
 template <typename R, typename ArgStream>
-R get_next_arg(ArgStream *as) {
+R get_next_arg(ArgStream* as) {
     return get_next_arg<R>(*as);
 }
 template <typename R, typename ArgStream>
-R get_next_arg(ArgStream const *as) {
+R get_next_arg(ArgStream const* as) {
     return get_next_arg<R>(*as);
 }
 
@@ -247,8 +251,8 @@ template <typename F,
 struct invoker {
     // add an argument to a Fusion cons-list for each parameter type
     template <typename Args, typename ArgStream>
-    static inline typename result_type<F>::type apply(F func, ArgStream &astream,
-                                                      Args const &args) {
+    static inline typename result_type<F>::type apply(F func, ArgStream& astream,
+                                                      Args const& args) {
         typedef typename remove_cv_ref<typename boost::mpl::deref<From>::type>::type arg_type;
         typedef typename boost::mpl::next<From>::type next_iter_type;
 
@@ -261,7 +265,7 @@ struct invoker {
 template <typename F, class To>
 struct invoker<F, To, To> {
     template <typename Args, typename ArgStream>
-    static inline typename result_type<F>::type apply(F func, ArgStream &, Args const &args) {
+    static inline typename result_type<F>::type apply(F func, ArgStream&, Args const& args) {
         return boost::fusion::invoke(func, args);
     }
 };
@@ -278,7 +282,7 @@ struct invoker<F, To, To> {
 abstracted object.
 */
 template <typename F, typename ArgStream>
-typename result_type<F>::type call(F f, ArgStream &astream) {
+typename result_type<F>::type call(F f, ArgStream& astream) {
     return detail::invoker<F>::template apply(f, astream, boost::fusion::nil());
 }
 
@@ -288,9 +292,10 @@ typename result_type<F>::type call(F f, ArgStream &astream) {
 \brief specialization of arg_stream::call for handling member function calls.
 */
 template <class T, typename F, typename ArgStream>
-typename result_type<F>::type call(T *that, F f, ArgStream &astream) {
+typename result_type<F>::type call(T* that, F f, ArgStream& astream) {
     // object gets pushed on as first arg of fusion list,
-    // and remove first arg from signature (the object that the member function belongs to) using
+    // and remove first arg from signature (the object that the member function belongs to)
+    // using
     // mpl::next
     boost::fusion::nil args;
     return detail::invoker<
@@ -316,16 +321,16 @@ second.
 template <typename ArgStreamFirst, typename ArgStreamSecond>
 struct chain {
     template <class ArgStream>
-    bool eof(ArgStream *as) {
+    bool eof(ArgStream* as) {
         return detail::eof_check(as);
     }
 
     typedef ArgStreamFirst first_type;
     typedef ArgStreamSecond second_type;
-    ArgStreamFirst *first;
-    ArgStreamSecond *second;
+    ArgStreamFirst* first;
+    ArgStreamSecond* second;
 
-    chain(ArgStreamFirst &first_stream, ArgStreamSecond &second_stream)
+    chain(ArgStreamFirst& first_stream, ArgStreamSecond& second_stream)
         : first(&first_stream), second(&second_stream) {}
 
     template <typename T>
@@ -334,7 +339,7 @@ struct chain {
             try {
                 return first->get_next_arg<T>();
             }
-            catch (arg_stream::no_more_args &) {
+            catch (arg_stream::no_more_args&) {
                 first = 0;
             }
         }
@@ -354,8 +359,8 @@ struct traits<chain<S1, S2>> {
 \brief given 2 arg_streams, returns an arg_stream of the 2 streams chained together
 */
 template <typename ArgStreamFirst, typename ArgStreamSecond>
-chain<ArgStreamFirst, ArgStreamSecond> make_chain(ArgStreamFirst &first_stream,
-                                                  ArgStreamSecond &second_stream) {
+chain<ArgStreamFirst, ArgStreamSecond> make_chain(ArgStreamFirst& first_stream,
+                                                  ArgStreamSecond& second_stream) {
     return chain<ArgStreamFirst, ArgStreamSecond>(first_stream, second_stream);
 }
 
@@ -369,8 +374,8 @@ struct nonarg {
     R get_next_arg() {
         throw arg_stream::no_more_args();
 
-        return *(R *)32; // some compilers need a return; here's a bad one (but that doesn't require
-                         // default construction)
+        return *(R*)32; // some compilers need a return; here's a bad one (but that doesn't require
+                        // default construction)
     }
 };
 
@@ -381,7 +386,8 @@ struct traits<nonarg> {
 
 /*!
 \brief holds a single value, and returns it as an arg n (default 1) times
-\par this is useful (in combination with arg_stream::chain) when you need to slip a single value at
+\par this is useful (in combination with arg_stream::chain) when you need to slip a single value
+at
 the front/back of an arg_stream.
 */
 template <typename T>
@@ -398,18 +404,18 @@ struct single {
 
     template <typename R>
     R
-    convert_or_throw(value_type &value,
-                     typename boost::enable_if<boost::is_convertible<value_type, R>>::type *dummy =
+    convert_or_throw(value_type& value,
+                     typename boost::enable_if<boost::is_convertible<value_type, R>>::type* dummy =
                          0) {
         return R(value);
     }
     template <typename R>
     R
-    convert_or_throw(value_type &value,
-                     typename boost::disable_if<boost::is_convertible<value_type, R>>::type *dummy =
+    convert_or_throw(value_type& value,
+                     typename boost::disable_if<boost::is_convertible<value_type, R>>::type* dummy =
                          0) {
         throw adobe::bad_cast();
-        return *(R *)value;
+        return *(R*)value;
     }
 
     template <typename R>
@@ -458,21 +464,21 @@ struct with_transform {
     typedef ArgStream arg_stream_type;
     typedef Transformer transformer_type;
 
-    ArgStream &argstream;
-    Transformer &transformer;
+    ArgStream& argstream;
+    Transformer& transformer;
 
-    with_transform(ArgStream &as, Transformer &trans) : argstream(as), transformer(trans) {}
+    with_transform(ArgStream& as, Transformer& trans) : argstream(as), transformer(trans) {}
 
     bool eof() { return detail::eof_check(argstream); }
 
     template <typename R>
-    R transforming_get(typename boost::enable_if<has_transform<Transformer, R>>::type *dummy = 0) {
+    R transforming_get(typename boost::enable_if<has_transform<Transformer, R>>::type* dummy = 0) {
         typedef typename Transformer::template arg_stream_inverse_lookup<R>::type Rfrom;
         return transformer.template arg_stream_transform<R>(
             arg_stream::get_next_arg<Rfrom>(argstream));
     }
     template <typename R>
-    R transforming_get(typename boost::disable_if<has_transform<Transformer, R>>::type *dummy = 0) {
+    R transforming_get(typename boost::disable_if<has_transform<Transformer, R>>::type* dummy = 0) {
         return arg_stream::get_next_arg<R>(argstream);
     }
 
@@ -483,7 +489,7 @@ struct with_transform {
 };
 
 template <typename ArgStream, typename Transformer>
-with_transform<ArgStream, Transformer> make_transforming(ArgStream &as, Transformer &transformer) {
+with_transform<ArgStream, Transformer> make_transforming(ArgStream& as, Transformer& transformer) {
     return with_transform<ArgStream, Transformer>(as, transformer);
 }
 

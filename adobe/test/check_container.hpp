@@ -24,7 +24,7 @@ namespace adobe {
 */
 
 template <typename T>
-void check_container(const T &c) {
+void check_container(const T& c) {
     adobe::check_traversable(c);
 
     // Containers add the requirement that each element visited once to traversable

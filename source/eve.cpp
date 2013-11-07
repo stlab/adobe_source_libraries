@@ -37,7 +37,7 @@ namespace {
 using adobe::eve_t;
 
 struct filter_visible : std::unary_function<adobe::implementation::view_proxy_t, bool> {
-    bool operator()(const adobe::implementation::view_proxy_t &x);
+    bool operator()(const adobe::implementation::view_proxy_t& x);
 };
 
 typedef adobe::filter_fullorder_iterator<adobe::eve_t::proxy_tree_t::iterator, filter_visible>
@@ -80,9 +80,9 @@ namespace implementation {
 /*************************************************************************************************/
 
 struct view_proxy_t : adobe::extents_slices_t {
-    view_proxy_t(const layout_attributes_t &, poly_placeable_t &);
+    view_proxy_t(const layout_attributes_t&, poly_placeable_t&);
 
-    poly_placeable_t &placeable_m;
+    poly_placeable_t& placeable_m;
 
     bool visible_m;
 
@@ -96,7 +96,7 @@ struct view_proxy_t : adobe::extents_slices_t {
     boost::array<int, 2> measured_length_m;  // length of container children only
 
     boost::array<fr_guide_set_t, 2> container_guide_set_m; // forward/reverse guide set for
-                                                           // container
+    // container
 
     void calculate();
     void calculate_vertical();
@@ -131,7 +131,7 @@ struct view_proxy_t : adobe::extents_slices_t {
 #if !defined(ADOBE_NO_DOCUMENTATION)
 namespace {
 
-inline bool filter_visible::operator()(const adobe::implementation::view_proxy_t &x) {
+inline bool filter_visible::operator()(const adobe::implementation::view_proxy_t& x) {
     return x.visible_m;
 }
 
@@ -224,7 +224,7 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-void set_margin(layout_attributes_t &container, int x) {
+void set_margin(layout_attributes_t& container, int x) {
     container.slice_m[eve_t::horizontal].margin_m.first = x;
     container.slice_m[eve_t::horizontal].margin_m.second = x;
     container.slice_m[eve_t::vertical].margin_m.first = x;
@@ -247,8 +247,8 @@ public:
 
     std::pair<int, int> evaluate(evaluate_options_t, int width, int height);
     std::pair<int, int> adjust(evaluate_options_t options, int width, int height);
-    iterator add_placeable(iterator parent, const layout_attributes_t &initial,
-                           bool is_container_type, poly_placeable_t &placeable, bool reverse);
+    iterator add_placeable(iterator parent, const layout_attributes_t& initial,
+                           bool is_container_type, poly_placeable_t& placeable, bool reverse);
     void set_visible(iterator, bool);
 
 private:
@@ -286,9 +286,9 @@ std::pair<int, int> eve_t::adjust(evaluate_options_t options, int width, int hei
     return object_m->adjust(options, width, height);
 }
 
-eve_t::iterator eve_t::add_placeable(iterator parent, const layout_attributes_t &initial,
+eve_t::iterator eve_t::add_placeable(iterator parent, const layout_attributes_t& initial,
                                      bool is_container_type,      // is the element a container?
-                                     poly_placeable_t &placeable, // signals to call for the element
+                                     poly_placeable_t& placeable, // signals to call for the element
                                      bool reverse) {
     return object_m->add_placeable(parent, initial, is_container_type, placeable, reverse);
 }
@@ -317,9 +317,9 @@ eve_t::implementation_t::~implementation_t() {}
 */
 
 eve_t::iterator eve_t::implementation_t::add_placeable(iterator parent,
-                                                       const layout_attributes_t &initial,
+                                                       const layout_attributes_t& initial,
                                                        bool is_container_type,
-                                                       poly_placeable_t &placeable, bool reverse) {
+                                                       poly_placeable_t& placeable, bool reverse) {
     if (parent == iterator())
         parent = proxies_m.end();
 
@@ -386,7 +386,7 @@ void eve_t::implementation_t::layout(slice_select_t select, int optional_length)
     // FILTER VISIBLE - this assumes a visible root
 
     if (!proxies_m.empty()) {
-        place_data_t::slice_t &pslice(proxies_m.front().place_m.slice_m[select]);
+        place_data_t::slice_t& pslice(proxies_m.front().place_m.slice_m[select]);
 
         /*
             REVISIT (sparent) : This allows us to go sub-minimum. May revisit for wrapped
@@ -486,14 +486,14 @@ namespace implementation {
 
 struct calculate : public boost::static_visitor<> {
     template <typename T>
-    void operator()(T &operand) const {
+    void operator()(T& operand) const {
         operand += operand;
     }
 };
 
 /*************************************************************************************************/
 
-view_proxy_t::view_proxy_t(const adobe::layout_attributes_t &d, poly_placeable_t &p)
+view_proxy_t::view_proxy_t(const adobe::layout_attributes_t& d, poly_placeable_t& p)
     : placeable_m(p), visible_m(true), geometry_m(d) {}
 
 /*************************************************************************************************/
@@ -502,8 +502,10 @@ void view_proxy_t::calculate() {
     /*
         REVISIT (sparent) : What we want is for the data from placeable widgets to be preserved
         unless they are explicity dirtied - rather than calling measure for every update.
-        For now, there are several bugs caused by the measuring code in widgets assuming that the
-        initial extents it is handed is a defaulted extents. Without that - some code accumulates
+        For now, there are several bugs caused by the measuring code in widgets assuming that
+       the
+        initial extents it is handed is a defaulted extents. Without that - some code
+       accumulates
         metrics into the extents giving ever increasing growth when a window is resized (as an
         example). This fix is a hack - to just always clear the extents before measuring.
     */
@@ -511,7 +513,7 @@ void view_proxy_t::calculate() {
 
     placeable_m.measure(geometry_m.extents_m);
 
-    extents_t::slice_t &eslice = geometry_m.extents_m.horizontal();
+    extents_t::slice_t& eslice = geometry_m.extents_m.horizontal();
 
     place_m.horizontal().length_m = eslice.length_m;
     place_m.horizontal().outset_m = eslice.outset_m;
@@ -524,13 +526,15 @@ void view_proxy_t::calculate() {
         we should address:
 
         1. Containers cannot have their own guides to align items in their frame.
-        2. Leaf nodes effectively have thier guides surpressed if they are aligned by anything other
+        2. Leaf nodes effectively have thier guides surpressed if they are aligned by anything
+       other
             than forward or reverse. Should probably allow for fill, but that would make fill
             orthoganal to alignment.
     */
 
     /*
-        REVISIT (sparent) : The vertical data should also be handled here to avoid the peformance
+        REVISIT (sparent) : The vertical data should also be handled here to avoid the
+       peformance
         hit in calculate_vertical() during a resize. I'll factor this code later.
     */
 
@@ -540,9 +544,9 @@ void view_proxy_t::calculate() {
 /*************************************************************************************************/
 
 void view_proxy_t::calculate_vertical() {
-    extents_t::slice_t &eslice = geometry_m.extents_m.vertical();
+    extents_t::slice_t& eslice = geometry_m.extents_m.vertical();
 
-    if (poly_placeable_twopass_t *p = poly_cast<poly_placeable_twopass_t *>(&placeable_m)) {
+    if (poly_placeable_twopass_t* p = poly_cast<poly_placeable_twopass_t*>(&placeable_m)) {
         // We pass a copy of the geometry so client can't modify horizontal properties.
         extents_t vertical_stuff(geometry_m.extents_m);
         p->measure_vertical(vertical_stuff, place_m);
@@ -569,7 +573,7 @@ void view_proxy_t::adjust(::child_iterator first, ::child_iterator last, slice_s
         return;
 
     for (::child_iterator iter(first); iter != last; ++iter) {
-        layout_attributes_t::alignment_t &child_alignment(
+        layout_attributes_t::alignment_t& child_alignment(
             iter->geometry_m.slice_m[select].alignment_m);
 
         if (child_alignment == layout_attributes_t::align_default) {
@@ -577,8 +581,10 @@ void view_proxy_t::adjust(::child_iterator first, ::child_iterator last, slice_s
         }
 
         /*
-            Now that we know the final alignment - we can copy the guides to the container guides.
-            This is only done on leaf nodes because the guides will be propogated to the containers
+            Now that we know the final alignment - we can copy the guides to the container
+           guides.
+            This is only done on leaf nodes because the guides will be propogated to the
+           containers
             through either adjust_with or _cross.
         */
         if (iter->geometry_m.placement_m == eve_t::place_leaf) {
@@ -590,7 +596,7 @@ void view_proxy_t::adjust(::child_iterator first, ::child_iterator last, slice_s
             } break;
             case layout_attributes_t::align_reverse:
             case layout_attributes_t::align_reverse_fill: {
-                guide_set_t &guide_set(
+                guide_set_t& guide_set(
                     iter->container_guide_set_m[select][layout_attributes_t::align_reverse]);
 
                 guide_set = iter->geometry_m.extents_m.slice_m[select].guide_set_m;
@@ -681,7 +687,7 @@ void view_proxy_t::flatten(::child_iterator first, ::child_iterator last, slice_
                            adobe::eve_t::evaluate_options_t options) {
     // Push the guides into the element being placed.
 
-    guide_set_t &guide_set(place_m.slice_m[select].guide_set_m);
+    guide_set_t& guide_set(place_m.slice_m[select].guide_set_m);
 
     switch (geometry_m.slice_m[select].alignment_m) {
     case layout_attributes_t::align_forward:
@@ -732,8 +738,8 @@ void view_proxy_t::adjust_outsets(::child_iterator first, ::child_iterator last,
 
 void view_proxy_t::adjust_outsets_with(::child_iterator first, ::child_iterator last,
                                        slice_select_t select) {
-    const extents_t::slice_t &eslice(geometry_m.extents_m.slice_m[select]);
-    place_data_t::slice_t &pslice(place_m.slice_m[select]);
+    const extents_t::slice_t& eslice(geometry_m.extents_m.slice_m[select]);
+    place_data_t::slice_t& pslice(place_m.slice_m[select]);
 
     if (first == last) {
         pslice.outset_m = eslice.outset_m;
@@ -742,8 +748,8 @@ void view_proxy_t::adjust_outsets_with(::child_iterator first, ::child_iterator 
 
     --last;
 
-    adobe::place_data_t::slice_t &leading_pslice(first->place_m.slice_m[select]);
-    adobe::place_data_t::slice_t &trailing_pslice(last->place_m.slice_m[select]);
+    adobe::place_data_t::slice_t& leading_pslice(first->place_m.slice_m[select]);
+    adobe::place_data_t::slice_t& trailing_pslice(last->place_m.slice_m[select]);
 
     int leading_outset_position = leading_pslice.position_m - leading_pslice.outset_m.first;
 
@@ -774,8 +780,8 @@ void view_proxy_t::adjust_outsets_with(::child_iterator first, ::child_iterator 
 
 void view_proxy_t::adjust_outsets_cross(::child_iterator first, ::child_iterator last,
                                         slice_select_t select) {
-    const extents_t::slice_t &eslice(geometry_m.extents_m.slice_m[select]);
-    place_data_t::slice_t &pslice(place_m.slice_m[select]);
+    const extents_t::slice_t& eslice(geometry_m.extents_m.slice_m[select]);
+    place_data_t::slice_t& pslice(place_m.slice_m[select]);
 
     if (first == last) {
         pslice.outset_m = eslice.outset_m;
@@ -787,7 +793,7 @@ void view_proxy_t::adjust_outsets_cross(::child_iterator first, ::child_iterator
     int trailing_outset_position = eslice.frame_m.second;
 
     for (::child_iterator iter(first); iter != last; ++iter) {
-        place_data_t::slice_t &iter_pslice(iter->place_m.slice_m[select]);
+        place_data_t::slice_t& iter_pslice(iter->place_m.slice_m[select]);
 
         leading_outset_position =
             std::min(leading_outset_position, iter_pslice.position_m - iter_pslice.outset_m.first);
@@ -824,9 +830,9 @@ void view_proxy_t::layout_with(::child_iterator first, ::child_iterator last,
     if (first == last)
         return;
 
-    const layout_attributes_t::slice_t &gslice(geometry_m.slice_m[select]);
-    const extents_t::slice_t &eslice(geometry_m.extents_m.slice_m[select]);
-    place_data_t::slice_t &pslice(place_m.slice_m[select]);
+    const layout_attributes_t::slice_t& gslice(geometry_m.slice_m[select]);
+    const extents_t::slice_t& eslice(geometry_m.extents_m.slice_m[select]);
+    place_data_t::slice_t& pslice(place_m.slice_m[select]);
 
     /*
     REVISIT (sparent) : Something to think about. Counting the number of children could be
@@ -873,14 +879,14 @@ void view_proxy_t::layout_with(::child_iterator first, ::child_iterator last,
         container_guide_set_m[select][layout_attributes_t::align_reverse].begin());
 
     for (; riter != rlast; ++riter) {
-        const layout_attributes_t::slice_t &iter_gslice(riter->geometry_m.slice_m[select]);
+        const layout_attributes_t::slice_t& iter_gslice(riter->geometry_m.slice_m[select]);
 
         if (iter_gslice.alignment_m != layout_attributes_t::align_reverse &&
             iter_gslice.alignment_m != layout_attributes_t::align_reverse_fill)
             break;
 
-        place_data_t::slice_t &iter_pslice(riter->place_m.slice_m[select]);
-        guide_set_t &reverse_child_guide_set(
+        place_data_t::slice_t& iter_pslice(riter->place_m.slice_m[select]);
+        guide_set_t& reverse_child_guide_set(
             riter->container_guide_set_m[select][layout_attributes_t::align_reverse]);
 
         iter_pslice.length_m = riter->container_length_m[select];
@@ -924,10 +930,10 @@ void view_proxy_t::layout_with(::child_iterator first, ::child_iterator last,
         container_guide_set_m[select][layout_attributes_t::align_forward].begin());
 
     for (::child_iterator iter(first); iter != riter.base(); ++iter) {
-        const layout_attributes_t::slice_t &iter_gslice(iter->geometry_m.slice_m[select]);
-        place_data_t::slice_t &iter_pslice(iter->place_m.slice_m[select]);
+        const layout_attributes_t::slice_t& iter_gslice(iter->geometry_m.slice_m[select]);
+        place_data_t::slice_t& iter_pslice(iter->place_m.slice_m[select]);
 
-        guide_set_t &forward_child_guide_set(
+        guide_set_t& forward_child_guide_set(
             iter->container_guide_set_m[select][layout_attributes_t::align_forward]);
 
         length += iter->space_before_m;
@@ -1005,9 +1011,9 @@ void view_proxy_t::layout_with(::child_iterator first, ::child_iterator last,
 
 void view_proxy_t::layout_cross(::child_iterator first, ::child_iterator last,
                                 slice_select_t select) {
-    const layout_attributes_t::slice_t &gslice(geometry_m.slice_m[select]);
-    const extents_t::slice_t &eslice(geometry_m.extents_m.slice_m[select]);
-    place_data_t::slice_t &pslice(place_m.slice_m[select]);
+    const layout_attributes_t::slice_t& gslice(geometry_m.slice_m[select]);
+    const extents_t::slice_t& eslice(geometry_m.extents_m.slice_m[select]);
+    place_data_t::slice_t& pslice(place_m.slice_m[select]);
 
     // calculate a base for the child position.
 
@@ -1015,12 +1021,12 @@ void view_proxy_t::layout_cross(::child_iterator first, ::child_iterator last,
     int rlength = pslice.length_m - (gslice.margin_m.second + eslice.frame_m.second);
 
     for (::child_iterator iter(first); iter != last; ++iter) {
-        const layout_attributes_t::slice_t &iter_gslice(iter->geometry_m.slice_m[select]);
-        place_data_t::slice_t &iter_pslice(iter->place_m.slice_m[select]);
+        const layout_attributes_t::slice_t& iter_gslice(iter->geometry_m.slice_m[select]);
+        place_data_t::slice_t& iter_pslice(iter->place_m.slice_m[select]);
 
-        guide_set_t &forward_child_guide_set(
+        guide_set_t& forward_child_guide_set(
             iter->container_guide_set_m[select][layout_attributes_t::align_forward]);
-        guide_set_t &reverse_child_guide_set(
+        guide_set_t& reverse_child_guide_set(
             iter->container_guide_set_m[select][layout_attributes_t::align_reverse]);
 
         if (iter_gslice.alignment_m != adobe::layout_attributes_t::align_fill) {
@@ -1098,7 +1104,8 @@ void view_proxy_t::adjust_with(::child_iterator first, ::child_iterator last,
     Things to note:
         1. we need a make_tranform_range().
         2. This function should be passed _range_ instead of first, last.
-        3. complain to boost again about bind/mem_fn not dealing with non-const member references.
+        3. complain to boost again about bind/mem_fn not dealing with non-const member
+    references.
 
     ----
 
@@ -1132,7 +1139,8 @@ void view_proxy_t::adjust_with(::child_iterator first, ::child_iterator last,
     // size the container guide set based on the number of guides our children have.
 
     /*
-    REVISIT (sparent) : I'm sure there is oportunity to do less work here but we clear the guides
+    REVISIT (sparent) : I'm sure there is oportunity to do less work here but we clear the
+    guides
     so we can re-adjust on a size adjust.
     */
 
@@ -1149,7 +1157,7 @@ void view_proxy_t::adjust_with(::child_iterator first, ::child_iterator last,
     std::size_t reverse_guide_count(0);
 
     for (::child_iterator iter(first); iter != last; ++iter) {
-        layout_attributes_t::slice_t &gslice(iter->geometry_m.slice_m[select]);
+        layout_attributes_t::slice_t& gslice(iter->geometry_m.slice_m[select]);
         if (!gslice.suppress_m) {
             switch (gslice.alignment_m) {
             case layout_attributes_t::align_forward: {
@@ -1185,7 +1193,8 @@ void view_proxy_t::adjust_cross(::child_iterator first, ::child_iterator last,
     // size the container guide set based on the number of guides our children have.
 
     /*
-    REVISIT (sparent) : I'm sure there is oportunity to do less work here but we clear the guides
+    REVISIT (sparent) : I'm sure there is oportunity to do less work here but we clear the
+    guides
     so we can re-adjust on a size adjust.
     */
 
@@ -1202,7 +1211,7 @@ void view_proxy_t::adjust_cross(::child_iterator first, ::child_iterator last,
     std::size_t reverse_guide_count(0);
 
     for (::child_iterator iter(first); iter != last; ++iter) {
-        layout_attributes_t::slice_t &gslice(iter->geometry_m.slice_m[select]);
+        layout_attributes_t::slice_t& gslice(iter->geometry_m.slice_m[select]);
 
         if (gslice.suppress_m)
             continue;
@@ -1241,14 +1250,14 @@ void view_proxy_t::adjust_cross(::child_iterator first, ::child_iterator last,
 
 void view_proxy_t::solve_up_with(::child_iterator first, ::child_iterator last,
                                  slice_select_t select) {
-    const layout_attributes_t::slice_t &gslice(geometry_m.slice_m[select]);
-    const extents_t::slice_t &eslice(geometry_m.extents_m.slice_m[select]);
+    const layout_attributes_t::slice_t& gslice(geometry_m.slice_m[select]);
+    const extents_t::slice_t& eslice(geometry_m.extents_m.slice_m[select]);
     int length(eslice.frame_m.first + gslice.margin_m.first);
     int rlength(eslice.frame_m.second + gslice.margin_m.second);
 
-    guide_set_t &forward_guide_set(
+    guide_set_t& forward_guide_set(
         container_guide_set_m[select][layout_attributes_t::align_forward]);
-    guide_set_t &reverse_guide_set(
+    guide_set_t& reverse_guide_set(
         container_guide_set_m[select][layout_attributes_t::align_reverse]);
     guide_set_t::iterator forward_guide_iter(forward_guide_set.begin());
     guide_set_t::iterator reverse_guide_iter(reverse_guide_set.begin());
@@ -1266,7 +1275,7 @@ void view_proxy_t::solve_up_with(::child_iterator first, ::child_iterator last,
                 break;
 
             guide_set_t::iterator reverse_first_guide(reverse_guide_iter);
-            guide_set_t &reverse_child_guide_set(
+            guide_set_t& reverse_child_guide_set(
                 rfirst->container_guide_set_m[select][layout_attributes_t::align_reverse]);
 
             for (guide_set_t::iterator guide(reverse_child_guide_set.begin());
@@ -1301,7 +1310,7 @@ void view_proxy_t::solve_up_with(::child_iterator first, ::child_iterator last,
                 break;
 
             guide_set_t::iterator forward_first_guide(forward_guide_iter);
-            guide_set_t &forward_child_guide_set(
+            guide_set_t& forward_child_guide_set(
                 iter->container_guide_set_m[select][layout_attributes_t::align_forward]);
 
             for (guide_set_t::iterator guide(forward_child_guide_set.begin());
@@ -1357,8 +1366,8 @@ void view_proxy_t::solve_up_with(::child_iterator first, ::child_iterator last,
 bool view_proxy_t::solve_down_with(::child_iterator first, ::child_iterator last,
                                    slice_select_t select) {
     bool result(false);
-    const layout_attributes_t::slice_t &gslice(geometry_m.slice_m[select]);
-    const extents_t::slice_t &eslice(geometry_m.extents_m.slice_m[select]);
+    const layout_attributes_t::slice_t& gslice(geometry_m.slice_m[select]);
+    const extents_t::slice_t& eslice(geometry_m.extents_m.slice_m[select]);
     int length(eslice.frame_m.first + gslice.margin_m.first);
     int rlength(eslice.frame_m.second + gslice.margin_m.second);
     guide_set_t::iterator guide_iter(
@@ -1371,9 +1380,11 @@ bool view_proxy_t::solve_down_with(::child_iterator first, ::child_iterator last
     /*
         REVISIT (sparent) : After we move the guides on a container we don't know if we need to
         move the guides on subsequent children because the container may (or may not) grow in
-        response. If it grows, it will shift the sibling over, which may resolve the guide for us.
+        response. If it grows, it will shift the sibling over, which may resolve the guide for
+       us.
 
-        Becuase of this, we break out of this loop once we've adjusted one guide on one container.
+        Becuase of this, we break out of this loop once we've adjusted one guide on one
+       container.
         ... I suspect there is a pathelogical case here that's tending towards N^2. I need to
         revist how we are solving but the actual case where this happens is complex enough
         (requiring 4 levels of nesting with two guides) that I don't think it is a huge problem.
@@ -1388,7 +1399,7 @@ bool view_proxy_t::solve_down_with(::child_iterator first, ::child_iterator last
             if (rfirst->geometry_m.slice_m[select].suppress_m)
                 break;
 
-            guide_set_t &child_guide_set(
+            guide_set_t& child_guide_set(
                 rfirst->container_guide_set_m[select][layout_attributes_t::align_reverse]);
 
             guide_set_t::iterator guide(child_guide_set.begin());
@@ -1432,7 +1443,7 @@ bool view_proxy_t::solve_down_with(::child_iterator first, ::child_iterator last
             if (iter->geometry_m.slice_m[select].suppress_m)
                 break;
 
-            guide_set_t &child_guide_set(
+            guide_set_t& child_guide_set(
                 iter->container_guide_set_m[select][layout_attributes_t::align_forward]);
 
             guide_set_t::iterator guide(child_guide_set.begin());
@@ -1470,19 +1481,19 @@ bool view_proxy_t::solve_down_with(::child_iterator first, ::child_iterator last
 
 void view_proxy_t::solve_up_cross(::child_iterator first, ::child_iterator last,
                                   slice_select_t select) {
-    const layout_attributes_t::slice_t &gslice(geometry_m.slice_m[select]);
-    const extents_t::slice_t &eslice(geometry_m.extents_m.slice_m[select]);
+    const layout_attributes_t::slice_t& gslice(geometry_m.slice_m[select]);
+    const extents_t::slice_t& eslice(geometry_m.extents_m.slice_m[select]);
     int near_additional(eslice.frame_m.first + gslice.margin_m.first);
     int far_additional(eslice.frame_m.second + gslice.margin_m.second);
-    guide_set_t &forward_guide_set(
+    guide_set_t& forward_guide_set(
         container_guide_set_m[select][layout_attributes_t::align_forward]);
-    guide_set_t &reverse_guide_set(
+    guide_set_t& reverse_guide_set(
         container_guide_set_m[select][layout_attributes_t::align_reverse]);
 
     // Solve for guides
 
     for (::child_iterator iter(first); iter != last; ++iter) {
-        const layout_attributes_t::slice_t &iter_gslice(iter->geometry_m.slice_m[select]);
+        const layout_attributes_t::slice_t& iter_gslice(iter->geometry_m.slice_m[select]);
 
         if (iter_gslice.suppress_m)
             continue;
@@ -1507,7 +1518,7 @@ void view_proxy_t::solve_up_cross(::child_iterator first, ::child_iterator last,
         case layout_attributes_t::align_forward:
         case layout_attributes_t::align_forward_fill:
         case layout_attributes_t::align_reverse_fill: {
-            guide_set_t &forward_child_guide_set(
+            guide_set_t& forward_child_guide_set(
                 iter->container_guide_set_m[select][layout_attributes_t::align_forward]);
 
             for (guide_set_t::iterator guide_first(forward_child_guide_set.begin()),
@@ -1525,7 +1536,7 @@ void view_proxy_t::solve_up_cross(::child_iterator first, ::child_iterator last,
         case layout_attributes_t::align_reverse:
         case layout_attributes_t::align_reverse_fill:
         case layout_attributes_t::align_forward_fill: {
-            guide_set_t &reverse_child_guide_set(
+            guide_set_t& reverse_child_guide_set(
                 iter->container_guide_set_m[select][layout_attributes_t::align_reverse]);
 
             for (guide_set_t::iterator guide_first(reverse_child_guide_set.begin()),
@@ -1548,7 +1559,7 @@ void view_proxy_t::solve_up_cross(::child_iterator first, ::child_iterator last,
     */
 
     for (::child_iterator iter(first); iter != last; ++iter) {
-        const layout_attributes_t::slice_t &iter_gslice(iter->geometry_m.slice_m[select]);
+        const layout_attributes_t::slice_t& iter_gslice(iter->geometry_m.slice_m[select]);
 
         int forward_iter_length(near_additional);
         int reverse_iter_length(far_additional);
@@ -1571,7 +1582,7 @@ void view_proxy_t::solve_up_cross(::child_iterator first, ::child_iterator last,
             case layout_attributes_t::align_forward:
             case layout_attributes_t::align_forward_fill:
             case layout_attributes_t::align_reverse_fill: {
-                guide_set_t &forward_child_guide_set(
+                guide_set_t& forward_child_guide_set(
                     iter->container_guide_set_m[select][layout_attributes_t::align_forward]);
 
                 if (forward_child_guide_set.size()) {
@@ -1586,7 +1597,7 @@ void view_proxy_t::solve_up_cross(::child_iterator first, ::child_iterator last,
             case layout_attributes_t::align_reverse:
             case layout_attributes_t::align_reverse_fill:
             case layout_attributes_t::align_forward_fill: {
-                guide_set_t &reverse_child_guide_set(
+                guide_set_t& reverse_child_guide_set(
                     iter->container_guide_set_m[select][layout_attributes_t::align_reverse]);
                 if (reverse_child_guide_set.size()) {
                     reverse_iter_length += reverse_guide_set.front() -
@@ -1613,15 +1624,15 @@ void view_proxy_t::solve_up_cross(::child_iterator first, ::child_iterator last,
 bool view_proxy_t::solve_down_cross(::child_iterator first, ::child_iterator last,
                                     slice_select_t select) {
     bool result(false);
-    const layout_attributes_t::slice_t &gslice(geometry_m.slice_m[select]);
-    const extents_t::slice_t &eslice(geometry_m.extents_m.slice_m[select]);
+    const layout_attributes_t::slice_t& gslice(geometry_m.slice_m[select]);
+    const extents_t::slice_t& eslice(geometry_m.extents_m.slice_m[select]);
     int near_additional(eslice.frame_m.first + gslice.margin_m.first);
     int far_additional(eslice.frame_m.second + gslice.margin_m.second);
 
     // Impose guide positions on containers.
 
     for (::child_iterator iter(first); iter != last; ++iter) {
-        const layout_attributes_t::slice_t &iter_gslice(iter->geometry_m.slice_m[select]);
+        const layout_attributes_t::slice_t& iter_gslice(iter->geometry_m.slice_m[select]);
 
         if (iter_gslice.suppress_m)
             continue;
@@ -1653,7 +1664,7 @@ bool view_proxy_t::solve_down_cross(::child_iterator first, ::child_iterator las
         case layout_attributes_t::align_forward:
         case layout_attributes_t::align_forward_fill:
         case layout_attributes_t::align_reverse_fill: {
-            guide_set_t &forward_child_guide_set(
+            guide_set_t& forward_child_guide_set(
                 iter->container_guide_set_m[select][layout_attributes_t::align_forward]);
 
             guide_set_t::iterator forward_guide_first(forward_child_guide_set.begin());
@@ -1680,7 +1691,7 @@ bool view_proxy_t::solve_down_cross(::child_iterator first, ::child_iterator las
         case layout_attributes_t::align_reverse:
         case layout_attributes_t::align_reverse_fill:
         case layout_attributes_t::align_forward_fill: {
-            guide_set_t &reverse_child_guide_set(
+            guide_set_t& reverse_child_guide_set(
                 iter->container_guide_set_m[select][layout_attributes_t::align_reverse]);
 
             guide_set_t::iterator reverse_guide_first(reverse_child_guide_set.begin());

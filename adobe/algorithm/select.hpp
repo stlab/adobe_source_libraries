@@ -47,7 +47,7 @@ equivalent elements, minimum should return the first and maximum the second.
     \brief select_0 implementation
 */
 template <class T, class R>
-inline const T &select_0_2(const T &a, const T &b, R r) {
+inline const T& select_0_2(const T& a, const T& b, R r) {
     return r(b, a) ? b : a;
 }
 
@@ -56,7 +56,7 @@ inline const T &select_0_2(const T &a, const T &b, R r) {
     \brief select_0 implementation
 */
 template <class T, class R>
-inline T &select_0_2(T &a, T &b, R r) {
+inline T& select_0_2(T& a, T& b, R r) {
     return r(b, a) ? b : a;
 }
 
@@ -65,7 +65,7 @@ inline T &select_0_2(T &a, T &b, R r) {
     \brief select_0 implementation
 */
 template <class T, class R>
-inline const T &select_1_2(const T &a, const T &b, R r) {
+inline const T& select_1_2(const T& a, const T& b, R r) {
     return r(b, a) ? a : b;
 }
 
@@ -74,7 +74,7 @@ inline const T &select_1_2(const T &a, const T &b, R r) {
     \brief select_0 implementation
 */
 template <class T, class R>
-inline T &select_1_2(T &a, T &b, R r) {
+inline T& select_1_2(T& a, T& b, R r) {
     return r(b, a) ? a : b;
 }
 
@@ -83,7 +83,7 @@ inline T &select_1_2(T &a, T &b, R r) {
     \brief select_1_ab implementation
 */
 template <typename T, typename R>
-inline const T &select_1_3_ac(const T &a, const T &b, const T &c, R r) {
+inline const T& select_1_3_ac(const T& a, const T& b, const T& c, R r) {
     assert(!r(c, a) && "WARNING (sparent) : a and b must be non-decreasing");
     return r(b, a) ? a : select_0_2(b, c, r);
 }
@@ -93,7 +93,7 @@ inline const T &select_1_3_ac(const T &a, const T &b, const T &c, R r) {
     \brief select_1_ab implementation
 */
 template <typename T, typename R>
-inline T &select_1_3_ac(T &a, T &b, T &c, R r) {
+inline T& select_1_3_ac(T& a, T& b, T& c, R r) {
     assert(!r(c, a) && "WARNING (sparent) : a and b must be non-decreasing");
     return r(b, a) ? a : select_0_2(b, c, r);
 }
@@ -103,7 +103,7 @@ inline T &select_1_3_ac(T &a, T &b, T &c, R r) {
     \brief select_1_ab implementation
 */
 template <typename T, typename R>
-inline const T &select_1_3_ab(const T &a, const T &b, const T &c, R r) {
+inline const T& select_1_3_ab(const T& a, const T& b, const T& c, R r) {
     assert(!r(b, a) && "WARNING (sparent) : a and b must be non-decreasing");
     return r(c, b) ? select_1_2(a, c, r) : b;
 }
@@ -113,7 +113,7 @@ inline const T &select_1_3_ab(const T &a, const T &b, const T &c, R r) {
     \brief select_1_ab implementation
 */
 template <typename T, typename R>
-inline T &select_1_3_ab(T &a, T &b, T &c, R r) {
+inline T& select_1_3_ab(T& a, T& b, T& c, R r) {
     assert(!r(b, a) && "WARNING (sparent) : a and b must be non-decreasing");
     return r(c, b) ? select_1_2(a, c, r) : b;
 }
@@ -123,7 +123,7 @@ inline T &select_1_3_ab(T &a, T &b, T &c, R r) {
     \brief select_1 implementation
 */
 template <typename T, typename R>
-inline const T &select_1_3(const T &a, const T &b, const T &c, R r) {
+inline const T& select_1_3(const T& a, const T& b, const T& c, R r) {
     return r(b, a) ? select_1_3_ab(b, a, c, r) : select_1_3_ab(a, b, c, r);
 }
 
@@ -132,7 +132,7 @@ inline const T &select_1_3(const T &a, const T &b, const T &c, R r) {
     \brief select_1 implementation
 */
 template <typename T, typename R>
-inline T &select_1_3(T &a, T &b, T &c, R r) {
+inline T& select_1_3(T& a, T& b, T& c, R r) {
     return r(b, a) ? select_1_3_ab(b, a, c, r) : select_1_3_ab(a, b, c, r);
 }
 

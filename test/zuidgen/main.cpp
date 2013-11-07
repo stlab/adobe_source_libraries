@@ -21,7 +21,7 @@ extern "C" void tss_cleanup_implemented() {}
 
 /****************************************************************************************************/
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     if (argc > 1) {
         if (std::string(argv[1]) == "--test") {
             std::string test_uuid("baadf00d-cafe-1337-d00d-feeddeadbeef");

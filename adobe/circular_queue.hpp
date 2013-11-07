@@ -223,10 +223,10 @@ template <typename T>
 class circular_queue;
 
 template <typename T>
-bool operator==(const circular_queue<T> &x, const circular_queue<T> &y);
+bool operator==(const circular_queue<T>& x, const circular_queue<T>& y);
 
 template <typename T>
-void swap(circular_queue<T> &, circular_queue<T> &);
+void swap(circular_queue<T>&, circular_queue<T>&);
 
 /*************************************************************************************************/
 
@@ -251,18 +251,18 @@ template <typename T>
 class circular_queue : boost::equality_comparable<circular_queue<T>> {
 public:
     typedef T value_type;
-    typedef T *pointer;
-    typedef const T *const_pointer;
-    typedef T &reference;
-    typedef const T &const_reference;
+    typedef T* pointer;
+    typedef const T* const_pointer;
+    typedef T& reference;
+    typedef const T& const_reference;
     typedef std::size_t size_type;
 
     circular_queue(std::size_t capacity = 0);
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
-    circular_queue(const circular_queue &rhs);
+    circular_queue(const circular_queue& rhs);
 
-    circular_queue &operator=(circular_queue rhs);
+    circular_queue& operator=(circular_queue rhs);
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 
     size_type size() const ADOBE_NOTHROW;
@@ -288,14 +288,14 @@ public:
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 private:
-    friend inline void swap(circular_queue &x, circular_queue &y) {
+    friend inline void swap(circular_queue& x, circular_queue& y) {
         swap(x.container_m, y.container_m);
         std::swap(x.begin_m, y.begin_m);
         std::swap(x.end_m, y.end_m);
         swap(x.is_empty_m, y.is_empty_m);
     }
 
-    friend bool operator==<>(const circular_queue &x, const circular_queue &y);
+    friend bool operator==<>(const circular_queue& x, const circular_queue& y);
 
     typedef typename std::vector<value_type> container_t;
     typedef typename container_t::iterator iterator;
@@ -337,7 +337,7 @@ circular_queue<T>::circular_queue(std::size_t capacity)
 /*************************************************************************************************/
 
 template <typename T>
-circular_queue<T>::circular_queue(const circular_queue &rhs)
+circular_queue<T>::circular_queue(const circular_queue& rhs)
     : container_m(rhs.capacity()), begin_m(boost::begin(container_m)),
       end_m(boost::begin(container_m)), is_empty_m(rhs.is_empty_m) {
     if (is_empty_m)
@@ -350,7 +350,7 @@ circular_queue<T>::circular_queue(const circular_queue &rhs)
 /*************************************************************************************************/
 
 template <typename T>
-inline circular_queue<T> &circular_queue<T>::operator=(circular_queue rhs) {
+inline circular_queue<T>& circular_queue<T>::operator=(circular_queue rhs) {
     swap(*this, rhs);
     return *this;
 }
@@ -422,7 +422,7 @@ typename circular_queue<T>::size_type circular_queue<T>::size() const ADOBE_NOTH
 /*************************************************************************************************/
 
 template <typename T>
-bool operator==(const circular_queue<T> &x, const circular_queue<T> &y) {
+bool operator==(const circular_queue<T>& x, const circular_queue<T>& y) {
     /*
         REVISIT (sparent) : I'm trying to move the code towards equality of containers to mean "the
         size is the same and all the parts are the same." By making the segmented iterators part of

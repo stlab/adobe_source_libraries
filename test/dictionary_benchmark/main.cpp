@@ -30,23 +30,23 @@ struct large // : boost::totally_ordered< large<N> >
 };
 
 template <std::size_t N>
-bool operator==(const large<N> &, const large<N> &) {
+bool operator==(const large<N>&, const large<N>&) {
     return true;
 }
 
 // GCC isn't happy without this operator
 template <std::size_t N>
-bool operator!=(const large<N> &, const large<N> &) {
+bool operator!=(const large<N>&, const large<N>&) {
     return false;
 }
 
 template <std::size_t N>
-bool operator<(const large<N> &, const large<N> &) {
+bool operator<(const large<N>&, const large<N>&) {
     return false;
 }
 
 template <std::size_t N>
-std::ostream &operator<<(std::ostream &s, const large<N> &) {
+std::ostream& operator<<(std::ostream& s, const large<N>&) {
     return s;
 }
 
@@ -106,7 +106,7 @@ adobe::name_t random_key() {
 
 /**************************************************************************************************/
 
-inline const adobe::any_regular_t &get_regular(int type) {
+inline const adobe::any_regular_t& get_regular(int type) {
     static const large_t large;
     static const adobe::any_regular_t small_s(42);
     static const adobe::any_regular_t large_s(large);
@@ -122,10 +122,10 @@ inline const adobe::any_regular_t &get_regular(int type) {
 /**************************************************************************************************/
 
 struct less_str {
-    bool operator()(const char *x, const char *y) const { return (strcmp(x, y) < 0); }
+    bool operator()(const char* x, const char* y) const { return (strcmp(x, y) < 0); }
 };
 
-typedef std::map<const char *, adobe::any_regular_t, less_str> std_map_dictionary_t;
+typedef std::map<const char*, adobe::any_regular_t, less_str> std_map_dictionary_t;
 
 std::pair<double, double> test_std_map(std::size_t n, int type, const std::string label,
                                        std::size_t Repeat) {
@@ -156,7 +156,7 @@ std::pair<double, double> test_std_map(std::size_t n, int type, const std::strin
     // create a random lookup order table to prevent order bias in the searches
     // that could be a huge problem with a binary search or tree structure search
     std_map_dictionary_t::iterator iter(d.begin());
-    std::vector<const char *> randomKeyList;
+    std::vector<const char*> randomKeyList;
 
     while (iter != d.end()) {
         randomKeyList.push_back(iter->first);
@@ -170,7 +170,7 @@ std::pair<double, double> test_std_map(std::size_t n, int type, const std::strin
     // time the dictionary lookup (vector iterator should have VERY little overhead)
     timer.reset();
     for (std::size_t i(0); i < Repeat; ++i) {
-        for (std::vector<const char *>::iterator j(randomKeyList.begin()); j != randomKeyList.end();
+        for (std::vector<const char*>::iterator j(randomKeyList.begin()); j != randomKeyList.end();
              ++j) {
             std_map_dictionary_t::iterator found(d.find(*j));
 
@@ -195,10 +195,10 @@ std::pair<double, double> test_std_map(std::size_t n, int type, const std::strin
 /**************************************************************************************************/
 
 struct equal_str {
-    bool operator()(const char *x, const char *y) const { return std::strcmp(x, y) == 0; }
+    bool operator()(const char* x, const char* y) const { return std::strcmp(x, y) == 0; }
 };
 
-typedef __gnu_cxx::hash_map<const char *, adobe::any_regular_t, __gnu_cxx::hash<const char *>,
+typedef __gnu_cxx::hash_map<const char*, adobe::any_regular_t, __gnu_cxx::hash<const char*>,
                             equal_str> hash_map_dictionary_t;
 
 std::pair<double, double> test_hash_map(std::size_t n, int type, const std::string label,
@@ -230,7 +230,7 @@ std::pair<double, double> test_hash_map(std::size_t n, int type, const std::stri
     // create a random lookup order table to prevent order bias in the searches
     // that could be a huge problem with a binary search or tree structure search
     hash_map_dictionary_t::iterator iter(d.begin());
-    std::vector<const char *> randomKeyList;
+    std::vector<const char*> randomKeyList;
 
     while (iter != d.end()) {
         randomKeyList.push_back(iter->first);
@@ -244,7 +244,7 @@ std::pair<double, double> test_hash_map(std::size_t n, int type, const std::stri
     // time the dictionary lookup (vector iterator should have VERY little overhead)
     timer.reset();
     for (std::size_t i(0); i < Repeat; ++i) {
-        for (std::vector<const char *>::iterator j(randomKeyList.begin()); j != randomKeyList.end();
+        for (std::vector<const char*>::iterator j(randomKeyList.begin()); j != randomKeyList.end();
              ++j) {
             hash_map_dictionary_t::iterator found(d.find(*j));
 
@@ -333,7 +333,7 @@ std::pair<double, double> test_adobe_dictionary(std::size_t n, int type, const s
 
 /**************************************************************************************************/
 
-void do_test(std::size_t n, std::ofstream &results, int Repeat) {
+void do_test(std::size_t n, std::ofstream& results, int Repeat) {
     std::pair<double, double> small(test_adobe_dictionary(n, 0, "small", Repeat));
     std::pair<double, double> large(test_adobe_dictionary(n, 1, "large", Repeat));
     std::pair<double, double> hashed_small(test_hash_map(n, 0, "hash_small", Repeat));

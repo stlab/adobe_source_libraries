@@ -51,23 +51,23 @@ class counting_output_iterator {
 public:
     typedef std::output_iterator_tag iterator_category;
     typedef counting_output_iterator value_type;
-    typedef counting_output_iterator &reference;
+    typedef counting_output_iterator& reference;
     typedef std::size_t size_type;
 
     counting_output_iterator() : count_m(0) {}
 
-    counting_output_iterator(const counting_output_iterator &x) : count_m(x.count_m) {}
+    counting_output_iterator(const counting_output_iterator& x) : count_m(x.count_m) {}
 
     size_type count() const { return count_m; }
 
     template <typename T>
-    reference operator=(const T &) {
+    reference operator=(const T&) {
         return *this;
     }
 
     reference operator*() { return *this; }
 
-    bool operator==(counting_output_iterator const &rhs) const { return this == &rhs; }
+    bool operator==(counting_output_iterator const& rhs) const { return this == &rhs; }
 
     counting_output_iterator operator++(int) {
         ++count_m;
@@ -144,15 +144,15 @@ public:
             current_m = boost::begin(*bucket_m);
     }
 
-    segmented_iterator(const segmented_iterator &x)
+    segmented_iterator(const segmented_iterator& x)
         : bucket_m(x.bucket_m), end_m(x.end_m), current_m(x.current_m) {}
 
-    segmented_iterator &operator=(segmented_iterator x) {
+    segmented_iterator& operator=(segmented_iterator x) {
         swap(*this, x);
         return *this;
     }
 
-    friend inline void swap(segmented_iterator &x, segmented_iterator &y) {
+    friend inline void swap(segmented_iterator& x, segmented_iterator& y) {
         swap(x.bucket_m, y.bucket_m);
         swap(x.end_m, y.end_m);
         swap(x.curent_m, y.curent_m);
@@ -175,7 +175,7 @@ private:
 
     reference_t dereference() const { return *current_m; }
 
-    bool equal(const segmented_iterator &x) const {
+    bool equal(const segmented_iterator& x) const {
         /*
         If the end of the top sequences are the same and we are in the same bucket then if we are
         at the very end or we are at the same local position then we are equal.
@@ -208,7 +208,7 @@ private:
 
 template <typename R> // R models ConvertibleToRange
 inline boost::iterator_range<segmented_iterator<typename boost::range_iterator<R>::type>>
-make_segmented_range(R &r) {
+make_segmented_range(R& r) {
     typedef segmented_iterator<typename boost::range_iterator<R>::type> iterator;
 
     return boost::make_iterator_range(iterator(boost::begin(r), boost::end(r)),
@@ -217,7 +217,7 @@ make_segmented_range(R &r) {
 
 
 template <typename R> // R models ConvertibleToRange
-inline segmented_iterator<typename boost::range_iterator<R>::type> make_segmented_iterator(R &r) {
+inline segmented_iterator<typename boost::range_iterator<R>::type> make_segmented_iterator(R& r) {
     typedef segmented_iterator<typename boost::range_iterator<R>::type> iterator;
 
     return iterator(boost::begin(r), boost::end(r));
@@ -233,7 +233,7 @@ inline segmented_iterator<typename boost::range_iterator<R>::type> make_segmente
 
 template <typename F,                 // F models Unary Function object
           typename T,                 // T models Regular Type
-          typename R = T &,           // R models Reference Type of T
+          typename R = T&,            // R models Reference Type of T
           typename I = std::size_t,   // I models Unsigned Integer
           typename D = std::ptrdiff_t // D models Signed Integer
           >
@@ -246,15 +246,15 @@ public:
     index_iterator() : index_m(0) {}
     index_iterator(F f, I i) : dereference_m(f), index_m(i) {}
 
-    index_iterator(const index_iterator &x) : dereference_m(x.dereference_m), index_m(x.index_m) {}
+    index_iterator(const index_iterator& x) : dereference_m(x.dereference_m), index_m(x.index_m) {}
 
-    index_iterator &operator=(const index_iterator &x) {
+    index_iterator& operator=(const index_iterator& x) {
         index_iterator temp(x);
         swap(temp, *this);
         return *this;
     }
 
-    friend inline void swap(index_iterator &x, index_iterator &y) {
+    friend inline void swap(index_iterator& x, index_iterator& y) {
         swap(x.dereference_m, y.dereference_m);
         swap(x.index_m, y.index_m);
     }
@@ -271,7 +271,7 @@ private:
 
     R dereference() const { return dereference_m(this->index_m); }
 
-    bool equal(const index_iterator &x) const {
+    bool equal(const index_iterator& x) const {
         // assert(dereference_m == x.dereference_m);
 
         return index_m == x.index_m;
@@ -281,7 +281,7 @@ private:
     void decrement() { --index_m; }
     void advance(D x) { index_m += x; }
 
-    D distance_to(const index_iterator &x) const {
+    D distance_to(const index_iterator& x) const {
         // assert(dereference_m == x.dereference_m);
 
         /*
@@ -326,7 +326,7 @@ public:
     typedef typename std::iterator_traits<IT>::reference reference;
 
     step_iterator_adaptor() {}
-    step_iterator_adaptor(const IT &it, S_FN step_fn = S_FN())
+    step_iterator_adaptor(const IT& it, S_FN step_fn = S_FN())
         : parent_type(it), _step_fn(step_fn) {}
 
     difference_type step() const { return _step_fn.step(); }
@@ -340,7 +340,7 @@ private:
     void increment() { _step_fn.advance(this->base_reference(), 1); }
     void decrement() { _step_fn.advance(this->base_reference(), -1); }
     void advance(base_difference_type d) { _step_fn.advance(this->base_reference(), d); }
-    difference_type distance_to(const step_iterator_adaptor &it) const {
+    difference_type distance_to(const step_iterator_adaptor& it) const {
         return _step_fn.difference(this->base_reference(), it.base_reference());
     }
 };
@@ -352,42 +352,42 @@ private:
 \ingroup adobe_iterator
 */
 template <typename D, typename IT, typename S_FN>
-inline bool operator>(const step_iterator_adaptor<D, IT, S_FN> &p1,
-                      const step_iterator_adaptor<D, IT, S_FN> &p2) {
+inline bool operator>(const step_iterator_adaptor<D, IT, S_FN>& p1,
+                      const step_iterator_adaptor<D, IT, S_FN>& p2) {
     return p1.step() > 0 ? p1.base() > p2.base() : p1.base() < p2.base();
 }
 
 
 template <typename D, typename IT, typename S_FN>
-inline bool operator<(const step_iterator_adaptor<D, IT, S_FN> &p1,
-                      const step_iterator_adaptor<D, IT, S_FN> &p2) {
+inline bool operator<(const step_iterator_adaptor<D, IT, S_FN>& p1,
+                      const step_iterator_adaptor<D, IT, S_FN>& p2) {
     return p1.step() > 0 ? p1.base() < p2.base() : p1.base() > p2.base();
 }
 
 template <typename D, typename IT, typename S_FN>
-inline bool operator>=(const step_iterator_adaptor<D, IT, S_FN> &p1,
-                       const step_iterator_adaptor<D, IT, S_FN> &p2) {
+inline bool operator>=(const step_iterator_adaptor<D, IT, S_FN>& p1,
+                       const step_iterator_adaptor<D, IT, S_FN>& p2) {
     return p1.step() > 0 ? p1.base() >= p2.base() : p1.base() <= p2.base();
 }
 
 
 template <typename D, typename IT, typename S_FN>
-inline bool operator<=(const step_iterator_adaptor<D, IT, S_FN> &p1,
-                       const step_iterator_adaptor<D, IT, S_FN> &p2) {
+inline bool operator<=(const step_iterator_adaptor<D, IT, S_FN>& p1,
+                       const step_iterator_adaptor<D, IT, S_FN>& p2) {
     return p1.step() > 0 ? p1.base() <= p2.base() : p1.base() >= p2.base();
 }
 
 
 template <typename D, typename IT, typename S_FN>
-inline bool operator==(const step_iterator_adaptor<D, IT, S_FN> &p1,
-                       const step_iterator_adaptor<D, IT, S_FN> &p2) {
+inline bool operator==(const step_iterator_adaptor<D, IT, S_FN>& p1,
+                       const step_iterator_adaptor<D, IT, S_FN>& p2) {
     return p1.base() == p2.base();
 }
 
 
 template <typename D, typename IT, typename S_FN>
-inline bool operator!=(const step_iterator_adaptor<D, IT, S_FN> &p1,
-                       const step_iterator_adaptor<D, IT, S_FN> &p2) {
+inline bool operator!=(const step_iterator_adaptor<D, IT, S_FN>& p1,
+                       const step_iterator_adaptor<D, IT, S_FN>& p2) {
     return p1.base() != p2.base();
 }
 
@@ -400,15 +400,15 @@ struct null_output_iterator_t {
     typedef std::output_iterator_tag iterator_category;
     typedef null_output_iterator_t value_type;
     typedef std::ptrdiff_t difference_type;
-    typedef value_type *pointer;
-    typedef value_type &reference;
+    typedef value_type* pointer;
+    typedef value_type& reference;
 
-    null_output_iterator_t &operator++(int) { return *this; }
-    null_output_iterator_t &operator++() { return *this; }
+    null_output_iterator_t& operator++(int) { return *this; }
+    null_output_iterator_t& operator++() { return *this; }
     reference operator*() { return *this; }
 
     template <typename T>
-    null_output_iterator_t &operator=(const T &) {
+    null_output_iterator_t& operator=(const T&) {
         return *this;
     }
 };

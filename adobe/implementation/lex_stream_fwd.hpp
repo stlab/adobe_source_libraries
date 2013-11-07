@@ -31,7 +31,7 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-typedef bool(keyword_extension_lookup_proc_signature_t)(const name_t &);
+typedef bool(keyword_extension_lookup_proc_signature_t)(const name_t&);
 typedef boost::function<keyword_extension_lookup_proc_signature_t> keyword_extension_lookup_proc_t;
 
 /*************************************************************************************************/

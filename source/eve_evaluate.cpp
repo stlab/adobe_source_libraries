@@ -29,7 +29,7 @@ namespace {
 
 /**************************************************************************************************/
 
-typedef std::pair<adobe::name_t *, adobe::name_t *> reflected_table_range_t;
+typedef std::pair<adobe::name_t*, adobe::name_t*> reflected_table_range_t;
 typedef adobe::static_table<adobe::name_t, adobe::layout_attributes_t::alignment_t, 7>
 alignment_table_t;
 typedef adobe::static_table<adobe::name_t, adobe::layout_attributes_placement_t::placement_t, 3>
@@ -72,9 +72,9 @@ adobe::static_name_t key_guide_label = "guide_label"_name;
 
 // blank(guide_attach: {left: @guide_baseline});
 
-alignment_table_t *alignment_table_g;
-placement_table_t *placement_table_g;
-reflected_table_range_t *reflected_range_g;
+alignment_table_t* alignment_table_g;
+placement_table_t* placement_table_g;
+reflected_table_range_t* reflected_range_g;
 
 /**************************************************************************************************/
 
@@ -124,8 +124,8 @@ void init_once() { call_once(flag, &init_once_); }
 
 /**************************************************************************************************/
 
-adobe::dictionary_t evaluate_named_arguments(adobe::virtual_machine_t &evaluator,
-                                             const adobe::array_t &arguments) {
+adobe::dictionary_t evaluate_named_arguments(adobe::virtual_machine_t& evaluator,
+                                             const adobe::array_t& arguments) {
     evaluator.evaluate(arguments);
 
     adobe::dictionary_t result(std::move(evaluator.back().cast<adobe::dictionary_t>()));
@@ -136,9 +136,9 @@ adobe::dictionary_t evaluate_named_arguments(adobe::virtual_machine_t &evaluator
 
 /**************************************************************************************************/
 
-void add_cell(adobe::sheet_t &sheet, adobe::eve_callback_suite_t::cell_type_t type,
-              adobe::name_t name, const adobe::line_position_t &position,
-              const adobe::array_t &init_or_expr) {
+void add_cell(adobe::sheet_t& sheet, adobe::eve_callback_suite_t::cell_type_t type,
+              adobe::name_t name, const adobe::line_position_t& position,
+              const adobe::array_t& init_or_expr) {
     switch (type) {
     case adobe::eve_callback_suite_t::constant_k:
         sheet.add_constant(name, position, init_or_expr);
@@ -155,10 +155,10 @@ void add_cell(adobe::sheet_t &sheet, adobe::eve_callback_suite_t::cell_type_t ty
 
 // REVISIT (sparent) : Copy & Paste from adam_evaluate.cpp
 
-void add_relation(adobe::sheet_t &sheet, const adobe::line_position_t &position,
-                  const adobe::array_t &conditional,
-                  const adobe::eve_callback_suite_t::relation_t *first,
-                  const adobe::eve_callback_suite_t::relation_t *last) {
+void add_relation(adobe::sheet_t& sheet, const adobe::line_position_t& position,
+                  const adobe::array_t& conditional,
+                  const adobe::eve_callback_suite_t::relation_t* first,
+                  const adobe::eve_callback_suite_t::relation_t* last) {
     typedef std::vector<adobe::sheet_t::relation_t> relation_buffer_t;
 
     relation_buffer_t relations;
@@ -190,8 +190,8 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-eve_callback_suite_t bind_layout(const bind_layout_proc_t &proc, sheet_t &sheet,
-                                 virtual_machine_t &evaluator) {
+eve_callback_suite_t bind_layout(const bind_layout_proc_t& proc, sheet_t& sheet,
+                                 virtual_machine_t& evaluator) {
     init_once();
 
     eve_callback_suite_t suite;
@@ -209,7 +209,7 @@ eve_callback_suite_t bind_layout(const bind_layout_proc_t &proc, sheet_t &sheet,
 
 /**************************************************************************************************/
 
-void apply_layout_parameters(layout_attributes_t &data, const dictionary_t &parameters) {
+void apply_layout_parameters(layout_attributes_t& data, const dictionary_t& parameters) {
     init_once();
 
     get_value(parameters, key_indent, data.indent_m);
@@ -314,7 +314,7 @@ void apply_layout_parameters(layout_attributes_t &data, const dictionary_t &para
         dictionary_t::const_iterator iter(parameters.find(key_spacing));
         if (iter != parameters.end()) {
             if (iter->second.type_info() == typeid(array_t)) {
-                const array_t &spacing_array = iter->second.cast<array_t>();
+                const array_t& spacing_array = iter->second.cast<array_t>();
                 data.spacing_m.resize(spacing_array.size() + 1);
 
                 layout_attributes_t::spacing_t::iterator dest_iter(data.spacing_m.begin() + 1);
@@ -337,7 +337,7 @@ void apply_layout_parameters(layout_attributes_t &data, const dictionary_t &para
         dictionary_t::const_iterator iter(parameters.find(key_margin));
         if (iter != parameters.end()) {
             if (iter->second.type_info() == typeid(array_t)) {
-                const array_t &margin_array = iter->second.cast<array_t>();
+                const array_t& margin_array = iter->second.cast<array_t>();
 
                 data.vertical().margin_m.first = margin_array[0].cast<long>();
                 data.horizontal().margin_m.first = margin_array[1].cast<long>();
@@ -357,8 +357,8 @@ void apply_layout_parameters(layout_attributes_t &data, const dictionary_t &para
 
 /**************************************************************************************************/
 
-adobe::any_regular_t layout_variables(adobe::sheet_t &layout_sheet, adobe::name_t name) {
-    adobe::name_t *found(
+adobe::any_regular_t layout_variables(adobe::sheet_t& layout_sheet, adobe::name_t name) {
+    adobe::name_t* found(
         std::lower_bound(reflected_range_g->first, reflected_range_g->second, name));
 
     if (found != reflected_range_g->second && *found == name)

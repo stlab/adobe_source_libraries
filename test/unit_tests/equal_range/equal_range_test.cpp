@@ -57,7 +57,7 @@ void equal_range_test() {
 
 using namespace boost::unit_test;
 
-test_suite *init_unit_test_suite(int, char * []) {
+test_suite* init_unit_test_suite(int, char * []) {
     framework::master_test_suite().add(BOOST_TEST_CASE(&equal_range_test));
 
     return 0;

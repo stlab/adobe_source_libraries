@@ -37,7 +37,7 @@ namespace adobe {
     \brief permutation implementation
 */
 template <class BidirectionalRange>
-inline bool next_permutation(BidirectionalRange &range) {
+inline bool next_permutation(BidirectionalRange& range) {
     return std::next_permutation(boost::begin(range), boost::end(range));
 }
 
@@ -58,7 +58,7 @@ inline bool next_permutation(BidirectionalIterator first, BidirectionalIterator 
     \brief permutation implementation
 */
 template <class BidirectionalRange, class Compare>
-inline bool next_permutation(BidirectionalRange &range, Compare comp) {
+inline bool next_permutation(BidirectionalRange& range, Compare comp) {
     return adobe::next_permutation(boost::begin(range), boost::end(range), comp);
 }
 
@@ -68,7 +68,7 @@ inline bool next_permutation(BidirectionalRange &range, Compare comp) {
     \brief permutation implementation
 */
 template <class BidirectionalRange>
-inline bool prev_permutation(BidirectionalRange &range) {
+inline bool prev_permutation(BidirectionalRange& range) {
     return std::prev_permutation(boost::begin(range), boost::end(range));
 }
 
@@ -89,7 +89,7 @@ inline bool prev_permutation(BidirectionalIterator first, BidirectionalIterator 
     \brief permutation implementation
 */
 template <class BidirectionalRange, class Compare>
-inline bool prev_permutation(BidirectionalRange &range, Compare comp) {
+inline bool prev_permutation(BidirectionalRange& range, Compare comp) {
     return adobe::prev_permutation(boost::begin(range), boost::end(range), comp);
 }
 

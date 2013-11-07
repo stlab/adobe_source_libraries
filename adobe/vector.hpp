@@ -58,49 +58,49 @@ template <typename T, // T models Regular
           typename A> // A models Allocator(T)
 class vector : boost::totally_ordered<vector<T, A>, vector<T, A>> {
 public:
-    typedef T &reference;
-    typedef const T &const_reference;
-    typedef T *iterator;
-    typedef const T *const_iterator;
+    typedef T& reference;
+    typedef const T& const_reference;
+    typedef T* iterator;
+    typedef const T* const_iterator;
     typedef std::size_t size_type;
     typedef std::ptrdiff_t difference_type;
     typedef T value_type;
     typedef A allocator_type;
-    typedef T *pointer;
-    typedef const T *const_pointer;
-    typedef std::reverse_iterator<T *> reverse_iterator;
-    typedef std::reverse_iterator<const T *> const_reverse_iterator;
+    typedef T* pointer;
+    typedef const T* const_pointer;
+    typedef std::reverse_iterator<T*> reverse_iterator;
+    typedef std::reverse_iterator<const T*> const_reverse_iterator;
 
 private:
     struct header_t {
         struct compact_header_t {
-            boost::compressed_pair<A, T *> allocate_finish_m;
-            T *end_of_storage_m;
+            boost::compressed_pair<A, T*> allocate_finish_m;
+            T* end_of_storage_m;
         };
         aligned_storage<compact_header_t> header_m;
         T storage_m[1];
 
-        allocator_type &allocator() { return header_m.get().allocate_finish_m.first(); }
-        const allocator_type &allocator() const { return header_m.get().allocate_finish_m.first(); }
+        allocator_type& allocator() { return header_m.get().allocate_finish_m.first(); }
+        const allocator_type& allocator() const { return header_m.get().allocate_finish_m.first(); }
 
-        pointer &finish() { return header_m.get().allocate_finish_m.second(); }
-        const pointer &finish() const { return header_m.get().allocate_finish_m.second(); }
+        pointer& finish() { return header_m.get().allocate_finish_m.second(); }
+        const pointer& finish() const { return header_m.get().allocate_finish_m.second(); }
 
-        pointer &end_of_storage() { return header_m.get().end_of_storage_m; }
-        const pointer &end_of_storage() const { return header_m.get().end_of_storage_m; }
+        pointer& end_of_storage() { return header_m.get().end_of_storage_m; }
+        const pointer& end_of_storage() const { return header_m.get().end_of_storage_m; }
     };
 
-    header_t *header_m;
+    header_t* header_m;
 
-    void set_finish(T *x) {
+    void set_finish(T* x) {
         assert(header_m != 0 || x == 0);
         if (header_m)
             header_m->finish() = x;
     }
 
-    const T *end_of_storage() const { return header_m ? header_m->end_of_storage() : 0; }
+    const T* end_of_storage() const { return header_m ? header_m->end_of_storage() : 0; }
 
-    static header_t *allocate(allocator_type, std::size_t);
+    static header_t* allocate(allocator_type, std::size_t);
 
     size_type remaining() const { return end_of_storage() - end(); }
 
@@ -135,7 +135,7 @@ private:
 public:
     // 23.2.4.1 construct/copy/destroy
 
-    explicit vector(const allocator_type &a) : header_m(allocate(a, 0)) {}
+    explicit vector(const allocator_type& a) : header_m(allocate(a, 0)) {}
     vector() : header_m(0) {}
 
     explicit vector(size_type n) : header_m(allocate(allocator_type(), n)) {
@@ -143,17 +143,17 @@ public:
         set_finish(end() + n);
     }
 
-    vector(size_type n, const value_type &x) : header_m(allocate(allocator_type(), n)) {
+    vector(size_type n, const value_type& x) : header_m(allocate(allocator_type(), n)) {
         std::uninitialized_fill_n(end(), n, x);
         set_finish(end() + n);
     }
 
-    vector(size_type n, const value_type &x, const allocator_type &a) : header_m(allocate(a, n)) {
+    vector(size_type n, const value_type& x, const allocator_type& a) : header_m(allocate(a, n)) {
         std::uninitialized_fill_n(end(), n, x);
         set_finish(end() + n);
     }
 
-    vector(const vector &x) : header_m(allocate(x.get_allocator(), x.size())) {
+    vector(const vector& x) : header_m(allocate(x.get_allocator(), x.size())) {
 #ifndef NDEBUG
         /* REVISIT (sparent) : MS stupid "safety check" doesn't known about empty ranges. */
         set_finish(x.begin() == x.end() ? end()
@@ -164,14 +164,14 @@ public:
     }
 
     template <typename I> // I models InputIterator
-    vector(I f, I l, typename boost::disable_if<boost::is_integral<I>>::type * = 0)
+    vector(I f, I l, typename boost::disable_if<boost::is_integral<I>>::type* = 0)
         : header_m(0) {
         append(f, l);
     }
 
     template <typename I> // I models InputIterator
-    vector(I f, I l, const allocator_type &a,
-           typename boost::disable_if<boost::is_integral<I>>::type * = 0)
+    vector(I f, I l, const allocator_type& a,
+           typename boost::disable_if<boost::is_integral<I>>::type* = 0)
         : header_m(allocate(a), 0) {
         append(f, l);
     }
@@ -181,7 +181,7 @@ public:
             clear();
 
             typename allocator_type::template rebind<char>::other alloc(get_allocator());
-            alloc.deallocate(reinterpret_cast<char *>(header_m),
+            alloc.deallocate(reinterpret_cast<char*>(header_m),
                              (end_of_storage() - begin()) * sizeof(T) +
                                  (sizeof(header_t) - sizeof(T)));
         }
@@ -227,7 +227,7 @@ public:
         which inherits from logic_error and uses std::string.
     */
 
-    vector &operator=(vector x) {
+    vector& operator=(vector x) {
         swap(x);
         return *this;
     }
@@ -259,20 +259,20 @@ public:
         resize(size() - 1);
     }
 
-    void swap(vector &x) { std::swap(header_m, x.header_m); }
+    void swap(vector& x) { std::swap(header_m, x.header_m); }
 
     iterator insert(iterator p, value_type x) { return insert_move(p, &x, &x + 1); }
 
     template <typename I> // I models InputIterator
     iterator insert(iterator p, I f, I l,
-                    typename boost::disable_if<boost::is_integral<I>>::type * = 0) {
+                    typename boost::disable_if<boost::is_integral<I>>::type* = 0) {
         return insert(p, f, l, typename std::iterator_traits<I>::iterator_category());
     }
 
     template <typename I> // I models ForwardIterator
     iterator insert_move(iterator p, I f, I l);
 
-    iterator insert(iterator p, size_type n, const T &x);
+    iterator insert(iterator p, size_type n, const T& x);
 
     iterator erase(iterator pos) {
         assert(pos != end());
@@ -285,9 +285,9 @@ public:
 
     void resize(size_type n);
 
-    void resize(size_type n, const value_type &x);
+    void resize(size_type n, const value_type& x);
 
-    friend inline bool operator==(const vector &x, const vector &y) {
+    friend inline bool operator==(const vector& x, const vector& y) {
 #if defined(_MSC_VER) && _MSC_VER == 1600 && _ITERATOR_DEBUG_LEVEL != 0
         return (x.size() == y.size()) &&
                std::_Equal1(x.begin(), x.end(), y.begin(), std::tr1::false_type());
@@ -296,15 +296,15 @@ public:
 #endif
     }
 
-    friend inline bool operator<(const vector &x, const vector &y) {
+    friend inline bool operator<(const vector& x, const vector& y) {
         return std::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end());
     }
 
-    friend inline void swap(vector &x, vector &y) { x.swap(y); }
+    friend inline void swap(vector& x, vector& y) { x.swap(y); }
 };
 
 template <typename T, typename A>
-typename vector<T, A>::header_t *vector<T, A>::allocate(allocator_type a, std::size_t n) {
+typename vector<T, A>::header_t* vector<T, A>::allocate(allocator_type a, std::size_t n) {
     if (n == 0) {
         if (a == allocator_type())
             return 0;
@@ -313,8 +313,8 @@ typename vector<T, A>::header_t *vector<T, A>::allocate(allocator_type a, std::s
 
     typename allocator_type::template rebind<char>::other alloc(a);
 
-    header_t *result =
-        reinterpret_cast<header_t *>(alloc.allocate(sizeof(header_t) - sizeof(T) + n * sizeof(T)));
+    header_t* result =
+        reinterpret_cast<header_t*>(alloc.allocate(sizeof(header_t) - sizeof(T) + n * sizeof(T)));
     construct(&result->allocator(), a);
     result->finish() = &result->storage_m[0];
     result->end_of_storage() = result->finish() + n;
@@ -448,7 +448,7 @@ void vector<T, A>::reserve(size_type n) {
 }
 
 template <typename T, typename A>
-typename vector<T, A>::iterator vector<T, A>::insert(iterator p, size_type n, const T &x) {
+typename vector<T, A>::iterator vector<T, A>::insert(iterator p, size_type n, const T& x) {
     iterator last = end();
     size_type before = p - begin();
 
@@ -496,7 +496,7 @@ void vector<T, A>::resize(size_type n) {
 }
 
 template <typename T, typename A>
-void vector<T, A>::resize(size_type n, const value_type &x) {
+void vector<T, A>::resize(size_type n, const value_type& x) {
     if (n < size())
         erase(begin() + n, end());
     else
@@ -508,7 +508,7 @@ void vector<T, A>::resize(size_type n, const value_type &x) {
 #ifdef ADOBE_STD_SERIALIZATION
 
 template <typename T, typename A>
-std::ostream &operator<<(std::ostream &out, const vector<T, A> &x) {
+std::ostream& operator<<(std::ostream& out, const vector<T, A>& x) {
     out << begin_sequence;
 
     for (typename vector<T, A>::const_iterator first(x.begin()), last(x.end()); first != last;
@@ -525,7 +525,7 @@ std::ostream &operator<<(std::ostream &out, const vector<T, A> &x) {
 
 /*************************************************************************************************/
 
-BOOST_STATIC_ASSERT(sizeof(vector<int>) == sizeof(void *));
+BOOST_STATIC_ASSERT(sizeof(vector<int>) == sizeof(void*));
 
 /*************************************************************************************************/
 

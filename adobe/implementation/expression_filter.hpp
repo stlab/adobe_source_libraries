@@ -30,7 +30,7 @@ namespace adobe {
     Note: The entity name does not contain the standard
           entity prefix ('&') or suffix (';')
 */
-const std::string &entity_map_find(boost::uint32_t code_point);
+const std::string& entity_map_find(boost::uint32_t code_point);
 
 /*!
     Takes an XML entity name and returns the equivalent unicode code point.
@@ -40,7 +40,7 @@ const std::string &entity_map_find(boost::uint32_t code_point);
     Note: The entity name must not contain the standard
           entity prefix ('&') or suffix (';')
 */
-boost::uint32_t entity_map_find(const std::string &entity);
+boost::uint32_t entity_map_find(const std::string& entity);
 
 /*!
     Returns whether or not a string has at least one character in it
@@ -48,7 +48,7 @@ boost::uint32_t entity_map_find(const std::string &entity);
     escape-and-compare, as it could return true before the entire string
     is scanned.
 */
-bool needs_entity_escape(const std::string &value);
+bool needs_entity_escape(const std::string& value);
 
 /*!
     Takes a string and converts certain ascii characters found within to
@@ -59,7 +59,7 @@ bool needs_entity_escape(const std::string &value);
         - non-printable ASCII characters
         - characters with the high-bit set
 */
-std::string entity_escape(const std::string &value);
+std::string entity_escape(const std::string& value);
 
 /*!
     Returns whether or not a string has at least one entity in it that
@@ -67,13 +67,13 @@ std::string entity_escape(const std::string &value);
     unescape-and-compare, as it could return true before the entire
     string is scanned.
 */
-bool needs_entity_unescape(const std::string &value);
+bool needs_entity_unescape(const std::string& value);
 
 /*!
     Takes a string and converts the xml entity declarations found within to
     their ASCII equivalents, returning the "entity flattened" string.
 */
-std::string entity_unescape(const std::string &value);
+std::string entity_unescape(const std::string& value);
 
 /*************************************************************************************************/
 

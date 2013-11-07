@@ -96,7 +96,7 @@ template <typename I, // I models ForwardRange
           typename C, // C models StrictWeakOrdering(T, T)
           typename P>
 // P models UnaryFunction(value_type(I)) -> T
-inline bool is_sorted(const I &r, C c, P p) {
+inline bool is_sorted(const I& r, C c, P p) {
     return is_sorted(boost::begin(r), boost::end(r), c, p);
 }
 
@@ -108,7 +108,7 @@ inline bool is_sorted(const I &r, C c, P p) {
 template <typename I, // I models ForwardRange
           typename C>
 // C models StrictWeakOrdering(T, T)
-inline bool is_sorted(const I &r, C c) {
+inline bool is_sorted(const I& r, C c) {
     return is_sorted(boost::begin(r), boost::end(r), c,
                      identity<typename std::iterator_traits<I>::value_type>());
 }
@@ -119,7 +119,7 @@ inline bool is_sorted(const I &r, C c) {
 \ingroup sorted
 */
 template <typename I> // I models ForwardRange
-inline bool is_sorted(const I &r) {
+inline bool is_sorted(const I& r) {
     return is_sorted(boost::begin(r), boost::end(r), less());
 }
 

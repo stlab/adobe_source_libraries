@@ -92,7 +92,7 @@ template <typename I, // I models InputRange
           typename O, // O models OutputIterator
           typename F>
 // F is a function type of the form O F()(value_type(I), O)
-O filter(I &source, O result, F op) {
+O filter(I& source, O result, F op) {
     return adobe::filter(boost::begin(source), boost::end(source), result, op);
 }
 
@@ -105,7 +105,7 @@ template <typename I, // I models InputRange
           typename O, // O models OutputIterator
           typename F>
 // F is a function type of the form O F()(value_type(I), O)
-O filter(const I &source, O result, F op) {
+O filter(const I& source, O result, F op) {
     return adobe::filter(boost::begin(source), boost::end(source), result, op);
 }
 

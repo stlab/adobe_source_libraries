@@ -32,7 +32,7 @@ constexpr static_name_t xml_name_k = "xml"_name;
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-std::ostream &begin_xml(std::ostream &os) {
+std::ostream& begin_xml(std::ostream& os) {
     replace_pword<format_base, xml_format>(os, format_base_idx());
     return os << begin_format;
 }
@@ -40,32 +40,32 @@ std::ostream &begin_xml(std::ostream &os) {
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-std::ostream &end_xml(std::ostream &os) { return os << end_format; }
+std::ostream& end_xml(std::ostream& os) { return os << end_format; }
 
 /*************************************************************************************************/
 
-void xml_format::begin_format(stream_type &os) { push_stack(os, format_element_t(xml_name_k)); }
+void xml_format::begin_format(stream_type& os) { push_stack(os, format_element_t(xml_name_k)); }
 
 /*************************************************************************************************/
 
-void xml_format::begin_bag(stream_type &os, const std::string &ident) {
+void xml_format::begin_bag(stream_type& os, const std::string& ident) {
     push_stack(os, format_element_t(bag_name_g, ident));
 }
 
 /*************************************************************************************************/
 
-void xml_format::begin_sequence(stream_type &os) { push_stack(os, format_element_t(seq_name_g)); }
+void xml_format::begin_sequence(stream_type& os) { push_stack(os, format_element_t(seq_name_g)); }
 
 /*************************************************************************************************/
 
-void xml_format::begin_atom(stream_type &os, const any_regular_t &value) {
+void xml_format::begin_atom(stream_type& os, const any_regular_t& value) {
     push_stack(os, format_element_t(atom_name_g, value));
 }
 
 /*************************************************************************************************/
 
-void xml_format::stack_event(stream_type &os, bool is_push) {
-    const format_element_t &top(stack_top());
+void xml_format::stack_event(stream_type& os, bool is_push) {
+    const format_element_t& top(stack_top());
     name_t self(top.tag());
     name_t parent(stack_depth() >= 2 ? stack_n(1).tag() : name_t());
 
@@ -106,12 +106,12 @@ void xml_format::stack_event(stream_type &os, bool is_push) {
 
 /*************************************************************************************************/
 
-void xml_format::handle_atom(stream_type &os, bool is_push) {
-    const format_element_t &top(stack_top());
+void xml_format::handle_atom(stream_type& os, bool is_push) {
+    const format_element_t& top(stack_top());
     name_t self(top.tag());
     name_t parent(stack_depth() >= 2 ? stack_n(1).tag() : name_t());
     name_t grandparent(stack_depth() >= 3 ? stack_n(2).tag() : name_t());
-    const any_regular_t &value(top.value());
+    const any_regular_t& value(top.value());
 
     if (is_push) {
         if (self != seq_name_g)

@@ -36,7 +36,7 @@ struct is_member {
 
     is_member(I f, I l, O o = O()) : first(f), last(l), compare(o) {}
 
-    bool operator()(const typename boost::iterator_value<I>::type &x) const {
+    bool operator()(const typename boost::iterator_value<I>::type& x) const {
         return binary_search(first, last, x, compare) != last;
     }
 
@@ -58,14 +58,14 @@ is_member<I, O> make_is_member(I f, I l, O o) {
 }
 
 template <typename I> // I models ForwardRange
-is_member<typename boost::range_const_iterator<I>::type, less> make_is_member(const I &r) {
+is_member<typename boost::range_const_iterator<I>::type, less> make_is_member(const I& r) {
     return make_is_member(begin(r), end(r));
 }
 
 template <typename I, // I models ForwardRange
           typename O>
 // O modles StrictWeakOrdering
-is_member<typename boost::range_const_iterator<I>::type, O> make_is_member(const I &r, O o) {
+is_member<typename boost::range_const_iterator<I>::type, O> make_is_member(const I& r, O o) {
     return make_is_member(begin(r), end(r), o);
 }
 

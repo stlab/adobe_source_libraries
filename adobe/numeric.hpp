@@ -89,7 +89,7 @@ ForwardIterator max_adjacent_difference(ForwardIterator first, ForwardIterator l
 */
 template <typename ForwardRange>
 inline typename boost::range_iterator<ForwardRange>::type
-max_adjacent_difference(ForwardRange &range) {
+max_adjacent_difference(ForwardRange& range) {
     return adobe::max_adjacent_difference(boost::begin(range), boost::end(range));
 }
 
@@ -98,7 +98,7 @@ max_adjacent_difference(ForwardRange &range) {
 */
 template <typename ForwardRange>
 inline typename boost::range_const_iterator<ForwardRange>::type
-max_adjacent_difference(const ForwardRange &range) {
+max_adjacent_difference(const ForwardRange& range) {
     return adobe::max_adjacent_difference(boost::begin(range), boost::end(range));
 }
 
@@ -119,7 +119,7 @@ max_adjacent_difference(const ForwardRange &range) {
     STL documentation for \ref stldoc_accumulate
 */
 template <typename InputRange, typename T>
-inline T accumulate(const InputRange &range, T init) {
+inline T accumulate(const InputRange& range, T init) {
     return std::accumulate(boost::begin(range), boost::end(range), init);
 }
 
@@ -139,7 +139,7 @@ inline T accumulate(InputIterator first, InputIterator last, T init, BinaryOpera
     STL documentation for \ref stldoc_accumulate
 */
 template <typename InputRange, typename T, typename BinaryOperation>
-inline T accumulate(const InputRange &range, T init, BinaryOperation binary_op) {
+inline T accumulate(const InputRange& range, T init, BinaryOperation binary_op) {
     return adobe::accumulate(boost::begin(range), boost::end(range), init, binary_op);
 }
 
@@ -154,7 +154,7 @@ inline T accumulate(const InputRange &range, T init, BinaryOperation binary_op) 
     STL documentation for \ref inner_product
 */
 template <typename InputRange, typename InputIterator, typename T>
-inline T inner_product(const InputRange &range, InputIterator first, T init) {
+inline T inner_product(const InputRange& range, InputIterator first, T init) {
     return std::inner_product(boost::begin(range), boost::end(range), first, init);
 }
 
@@ -178,7 +178,7 @@ inline T inner_product(InputIterator1 first1, InputIterator1 last1, InputIterato
 */
 template <typename InputRange, typename InputIterator, typename T, typename BinaryOperation1,
           typename BinaryOperation2>
-inline T inner_product(const InputRange &range, InputIterator first, T init,
+inline T inner_product(const InputRange& range, InputIterator first, T init,
                        BinaryOperation1 binary_op1, BinaryOperation2 binary_op2) {
     return adobe::inner_product(boost::begin(range), boost::end(range), first, init, binary_op1,
                                 binary_op2);
@@ -195,7 +195,7 @@ inline T inner_product(const InputRange &range, InputIterator first, T init,
     STL documentation for \ref stldoc_partial_sum
 */
 template <typename InputRange, typename OutputIterator>
-inline OutputIterator partial_sum(const InputRange &range, OutputIterator result) {
+inline OutputIterator partial_sum(const InputRange& range, OutputIterator result) {
     return std::partial_sum(boost::begin(range), boost::end(range), result);
 }
 
@@ -216,7 +216,7 @@ inline OutputIterator partial_sum(InputIterator first, InputIterator last, Outpu
     STL documentation for \ref stldoc_partial_sum
 */
 template <typename InputRange, typename OutputIterator, typename BinaryOperation>
-inline OutputIterator partial_sum(const InputRange &range, OutputIterator result,
+inline OutputIterator partial_sum(const InputRange& range, OutputIterator result,
                                   BinaryOperation binary_op) {
     return adobe::partial_sum(boost::begin(range), boost::end(range), result, binary_op);
 }
@@ -231,7 +231,7 @@ inline OutputIterator partial_sum(const InputRange &range, OutputIterator result
     STL documentation for \ref stldoc_adjacent_difference
 */
 template <typename InputRange, typename OutputIterator>
-inline OutputIterator adjacent_difference(const InputRange &range, OutputIterator result) {
+inline OutputIterator adjacent_difference(const InputRange& range, OutputIterator result) {
     return std::adjacent_difference(boost::begin(range), boost::end(range), result);
 }
 
@@ -252,7 +252,7 @@ inline OutputIterator adjacent_difference(InputIterator first, InputIterator las
     STL documentation for \ref stldoc_adjacent_difference
 */
 template <typename InputRange, typename OutputIterator, typename BinaryOperation>
-inline OutputIterator adjacent_difference(const InputRange &range, OutputIterator result,
+inline OutputIterator adjacent_difference(const InputRange& range, OutputIterator result,
                                           BinaryOperation binary_op) {
     return adobe::adjacent_difference(boost::begin(range), boost::end(range), result, binary_op);
 }

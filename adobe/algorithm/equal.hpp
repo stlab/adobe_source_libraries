@@ -43,7 +43,7 @@ inline bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 fi
     \ingroup equal
 */
 template <class InputRange1, class InputIterator2>
-inline bool equal(const InputRange1 &range1, InputIterator2 first2) {
+inline bool equal(const InputRange1& range1, InputIterator2 first2) {
     return std::equal(boost::begin(range1), boost::end(range1), first2);
 }
 
@@ -51,7 +51,7 @@ inline bool equal(const InputRange1 &range1, InputIterator2 first2) {
     \ingroup equal
 */
 template <class InputRange1, class InputIterator2, class BinaryPredicate>
-inline bool equal(const InputRange1 &range1, InputIterator2 first2, BinaryPredicate pred) {
+inline bool equal(const InputRange1& range1, InputIterator2 first2, BinaryPredicate pred) {
     return adobe::equal(boost::begin(range1), boost::end(range1), first2, pred);
 }
 

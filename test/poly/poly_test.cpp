@@ -35,7 +35,7 @@ inline double size(int x) { return static_cast<double>(std::abs(x)); }
 // Compile time polymorphism requiring MeasurableConcept
 
 template <class M1, class M2> // M1 models Measurable, M2 models Measurable
-double max_size(const M1 &x, const M2 &y) {
+double max_size(const M1& x, const M2& y) {
     boost::function_requires<MeasurableConcept<M1>>();
     boost::function_requires<MeasurableConcept<M2>>();
 
@@ -56,7 +56,7 @@ BOOST_AUTO_TEST_CASE(compile_time_poly) {
 // *runtime* generic function
 // (not a template)
 
-double max_size_poly(const poly_measurable &x, const poly_measurable &y) {
+double max_size_poly(const poly_measurable& x, const poly_measurable& y) {
     return std::max(size(x), size(y));
 }
 
@@ -82,11 +82,11 @@ struct concrete_measurable2d {
     double height_m;
 };
 
-bool operator==(const concrete_measurable2d &x, const concrete_measurable2d &y) {
+bool operator==(const concrete_measurable2d& x, const concrete_measurable2d& y) {
     return x.size() == y.size() && x.height() == y.height();
 }
 
-bool operator!=(const concrete_measurable2d &x, const concrete_measurable2d &y) {
+bool operator!=(const concrete_measurable2d& x, const concrete_measurable2d& y) {
     return !(x == y);
 }
 
@@ -97,13 +97,13 @@ BOOST_AUTO_TEST_CASE(refinement) {
 
     poly_measurable ma(a), mb(b);
     BOOST_CHECK_EQUAL(ma.size(), mb.size() + 1);
-    BOOST_CHECK_THROW(adobe::poly_cast<poly_measurable2d &>(ma), std::bad_cast);
-    BOOST_CHECK_EQUAL(adobe::poly_cast<poly_measurable2d *>(&ma) == NULL, true);
+    BOOST_CHECK_THROW(adobe::poly_cast<poly_measurable2d&>(ma), std::bad_cast);
+    BOOST_CHECK_EQUAL(adobe::poly_cast<poly_measurable2d*>(&ma) == NULL, true);
     poly_measurable2d m2a(a), m2b(b);
     BOOST_CHECK_EQUAL(ma.size(), m2a.size());
     BOOST_CHECK_EQUAL(perimeter(m2a), perimeter(m2b));
-    BOOST_CHECK_EQUAL(max_size_poly(adobe::poly_cast<poly_measurable &>(m2a),
-                                    adobe::poly_cast<poly_measurable &>(m2b)),
+    BOOST_CHECK_EQUAL(max_size_poly(adobe::poly_cast<poly_measurable&>(m2a),
+                                    adobe::poly_cast<poly_measurable&>(m2b)),
                       2);
     poly_measurable x(m2a);
     BOOST_CHECK_EQUAL(x.size(), m2a.size());

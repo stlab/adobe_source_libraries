@@ -40,7 +40,7 @@ keywords                += \"update\" | \"reinitialize\" | \"check\" | \"dump\" 
 
 namespace po = boost::program_options;
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     bool success = true;
     try {
         po::options_description cmd_only("Command line only options");
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    catch (adobe::stream_error_t &e) {
+    catch (adobe::stream_error_t& e) {
         std::cout << adobe::format_stream_error(e) << std::endl;
         success = false;
     }

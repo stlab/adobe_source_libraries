@@ -49,7 +49,7 @@ typedef boost::array<adobe::name_t, 7> keyword_table_t;
 
 using namespace adobe::literals;
 
-keyword_table_t *keyword_table_g;
+keyword_table_t* keyword_table_g;
 
 adobe::static_name_t update_k = "update"_name;
 adobe::static_name_t reinitialize_k = "reinitialize"_name;
@@ -74,7 +74,7 @@ void once_instance() { std::call_once(adobe_adam_test_parser, init_keyword_table
 
 /*************************************************************************************************/
 
-bool adam_test_keyword_lookup(const adobe::name_t &name) {
+bool adam_test_keyword_lookup(const adobe::name_t& name) {
     if (adobe::adam_keyword_lookup(name))
         return true;
     keyword_table_t::const_iterator iter(adobe::lower_bound(*keyword_table_g, name));
@@ -94,8 +94,8 @@ namespace implementation {
 
 /*************************************************************************************************/
 
-adam_test_parser::adam_test_parser(std::istream &in_stream, const line_position_t &position,
-                                   std::ostream &out)
+adam_test_parser::adam_test_parser(std::istream& in_stream, const line_position_t& position,
+                                   std::ostream& out)
     : adam_parser(in_stream, position), out_m(out), all_checks_passed_m(true) {
     once_instance();
     set_keyword_extension_lookup(&adam_test_keyword_lookup);
@@ -110,9 +110,9 @@ adam_test_parser::adam_test_parser(std::istream &in_stream, const line_position_
 //         adobe::find(sheets_m, boost::bind(&qs_name, _1) == sheet_name);
 // }
 
-queryable_sheet_t &adam_test_parser::sheet_from_name(name_t sheet_name) {
-    for (std::vector<queryable_sheet_t *>::iterator i = sheets_m.begin(), e = sheets_m.end();
-         i != e; ++i) {
+queryable_sheet_t& adam_test_parser::sheet_from_name(name_t sheet_name) {
+    for (std::vector<queryable_sheet_t*>::iterator i = sheets_m.begin(), e = sheets_m.end(); i != e;
+         ++i) {
         if ((*i)->name() == sheet_name)
             return **i;
     }
@@ -175,7 +175,7 @@ bool adam_test_parser::is_update_decl() {
         name_t name;
         if (!is_identifier(name))
             throw_exception("sheet name expected");
-        queryable_sheet_t &qs(sheet_from_name(name));
+        queryable_sheet_t& qs(sheet_from_name(name));
         require_token(comma_k);
         array_t expression;
         if (!is_dictionary(expression))
@@ -200,7 +200,7 @@ bool adam_test_parser::is_reinitialize_decl() {
         name_t name;
         if (!is_identifier(name))
             throw_exception("sheet name expected");
-        queryable_sheet_t &qs(sheet_from_name(name));
+        queryable_sheet_t& qs(sheet_from_name(name));
         require_token(comma_k);
         array_t expression;
         if (!is_dictionary(expression))
@@ -218,8 +218,8 @@ bool adam_test_parser::is_reinitialize_decl() {
 
 /*************************************************************************************************/
 
-void adam_test_parser::populate_dict(dictionary_t &dict, const queryable_sheet_t::index_t &index,
-                                     const queryable_sheet_t &qs, bool want_contributors,
+void adam_test_parser::populate_dict(dictionary_t& dict, const queryable_sheet_t::index_t& index,
+                                     const queryable_sheet_t& qs, bool want_contributors,
                                      bool want_active) const {
     for (queryable_sheet_t::index_t::iterator iter = index.begin(), e = index.end(); iter != e;
          ++iter) {
@@ -250,7 +250,7 @@ bool adam_test_parser::is_dump_decl() {
         name_t name;
         if (!is_identifier(name))
             throw_exception("sheet name expected");
-        queryable_sheet_t &qs(sheet_from_name(name));
+        queryable_sheet_t& qs(sheet_from_name(name));
         require_token(close_parenthesis_k);
         any_regular_t result;
 #if defined(ADOBE_STD_SERIALIZATION)
@@ -302,7 +302,7 @@ bool adam_test_parser::is_check_decl() {
         name_t name;
         if (!is_identifier(name))
             throw_exception("sheet name expected");
-        queryable_sheet_t &qs(sheet_from_name(name));
+        queryable_sheet_t& qs(sheet_from_name(name));
         require_token(comma_k);
         array_t expression;
         if (!is_dictionary(expression))
@@ -343,7 +343,7 @@ bool adam_test_parser::is_print_decl() {
         name_t name;
         if (!is_identifier(name))
             throw_exception("sheet name expected");
-        queryable_sheet_t &qs(sheet_from_name(name));
+        queryable_sheet_t& qs(sheet_from_name(name));
         require_token(comma_k);
         array_t expression;
         if (!is_expression(expression))
@@ -367,7 +367,7 @@ bool adam_test_parser::is_assert_decl() {
         name_t name;
         if (!is_identifier(name))
             throw_exception("sheet name expected");
-        queryable_sheet_t &qs(sheet_from_name(name));
+        queryable_sheet_t& qs(sheet_from_name(name));
         require_token(comma_k);
         array_t expression;
         if (!is_expression(expression))
@@ -396,7 +396,7 @@ bool adam_test_parser::is_contributing_decl() {
         name_t name;
         if (!is_identifier(name))
             throw_exception("sheet name expected");
-        queryable_sheet_t &qs(sheet_from_name(name));
+        queryable_sheet_t& qs(sheet_from_name(name));
         require_token(close_parenthesis_k);
         any_regular_t result;
         out_m << "\n### contributing of sheet " << name << "  ###\n";
@@ -414,7 +414,7 @@ bool adam_test_parser::is_contributing_decl() {
 
 /*************************************************************************************************/
 
-bool parse(std::istream &in_stream, line_position_t line_pos, std::ostream &out) {
+bool parse(std::istream& in_stream, line_position_t line_pos, std::ostream& out) {
     adobe::implementation::adam_test_parser p(in_stream, line_pos, out);
     return p.parse();
 }

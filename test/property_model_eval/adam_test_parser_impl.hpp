@@ -69,7 +69,7 @@ namespace implementation {
 
 class adam_test_parser : private adam_parser {
 public:
-    adam_test_parser(std::istream &in, const line_position_t &position, std::ostream &out);
+    adam_test_parser(std::istream& in, const line_position_t& position, std::ostream& out);
 
     // translation_unit        =  interaction_list .
     bool parse();
@@ -106,15 +106,15 @@ public:
     bool is_contributing_decl();
 
 private:
-    void populate_dict(dictionary_t &dict, const queryable_sheet_t::index_t &index,
-                       const queryable_sheet_t &qs, bool want_contributors = false,
+    void populate_dict(dictionary_t& dict, const queryable_sheet_t::index_t& index,
+                       const queryable_sheet_t& qs, bool want_contributors = false,
                        bool want_active = false) const;
 
-    queryable_sheet_t &sheet_from_name(name_t name);
+    queryable_sheet_t& sheet_from_name(name_t name);
 
 
-    std::ostream &out_m;
-    std::vector<queryable_sheet_t *> sheets_m;
+    std::ostream& out_m;
+    std::vector<queryable_sheet_t*> sheets_m;
     bool all_checks_passed_m;
 };
 

@@ -29,7 +29,7 @@ namespace has_swap_ {
 // might be found via ADL.
 struct anything {
     template <class T>
-    anything(T const &);
+    anything(T const&);
 };
 struct no_swap {
     char (&operator, (char))[2];
@@ -42,7 +42,7 @@ no_swap swap(anything, anything);
 #endif
 template <class T>
 struct has_swap_impl {
-    static T &x;
+    static T& x;
 
     BOOST_STATIC_CONSTANT(bool, value = sizeof(swap(x, x), 'x') == 1);
 

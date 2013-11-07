@@ -28,7 +28,7 @@ namespace adobe {
 */
 
 template <typename T>
-void test_movable(const T &x) {
+void test_movable(const T& x) {
     assert(x != T());
     // assert(is_movable<T>::value);
 
@@ -36,7 +36,7 @@ void test_movable(const T &x) {
 
     T y = x;
     // move construction (and RVO)
-    const void *addr = remote_address(y);
+    const void* addr = remote_address(y);
     T z = std::move(y);
     BOOST_CHECK(y == T());
     BOOST_CHECK(z == x);
@@ -49,19 +49,19 @@ void test_movable(const T &x) {
 }
 
 template <typename T>
-const void *remote_address(const std::vector<T> &x) {
+const void* remote_address(const std::vector<T>& x) {
     assert(!x.empty());
     return &*x.begin();
 }
 
 template <typename T>
-const void *remote_address(const closed_hash_set<T> &x) {
+const void* remote_address(const closed_hash_set<T>& x) {
     assert(!x.empty());
     return &*x.begin();
 }
 
 template <typename Key, typename Value>
-const void *remote_address(const closed_hash_map<Key, Value> &x) {
+const void* remote_address(const closed_hash_map<Key, Value>& x) {
     assert(!x.empty());
     return &*x.begin();
 }
@@ -222,7 +222,7 @@ BOOST_AUTO_TEST_CASE(closed_hash) {
                                         std::make_pair(2, vector_t(2, 2)),
                                         std::make_pair(3, vector_t(3, 3))};
         hash_map_vector_t x(boost::begin(a), boost::end(a));
-        const void *addr = remote_address(x.find(2)->second);
+        const void* addr = remote_address(x.find(2)->second);
 
         std::size_t c = x.capacity();
         x.reserve(2 * x.capacity());

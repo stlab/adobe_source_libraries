@@ -16,7 +16,7 @@ namespace adobe {
 */
 
 template <typename T>
-void check_null(const T &x) {
+void check_null(const T& x) {
     T t = T();
     if (t)
         BOOST_ERROR("operator bool");

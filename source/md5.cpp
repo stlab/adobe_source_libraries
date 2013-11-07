@@ -76,8 +76,8 @@ namespace {
 /*************************************************************************************************/
 
 void MD5Transform(boost::uint32_t[4], boost::uint8_t[64]);
-void Encode(boost::uint8_t *, boost::uint32_t *, boost::uint16_t);
-void Decode(boost::uint32_t *, boost::uint8_t *, boost::uint16_t);
+void Encode(boost::uint8_t*, boost::uint32_t*, boost::uint16_t);
+void Decode(boost::uint32_t*, boost::uint8_t*, boost::uint16_t);
 
 /*************************************************************************************************/
 
@@ -216,9 +216,10 @@ void MD5Transform(boost::uint32_t state[4], boost::uint8_t block[64]) {
 
 /*************************************************************************************************/
 
-/* Encodes input (boost::uint32_t) into output (boost::uint8_t). Assumes len is a multiple of 4. */
+/* Encodes input (boost::uint32_t) into output (boost::uint8_t). Assumes len is a multiple of 4.
+ */
 
-void Encode(boost::uint8_t *output, boost::uint32_t *input, boost::uint16_t len) {
+void Encode(boost::uint8_t* output, boost::uint32_t* input, boost::uint16_t len) {
     boost::uint16_t i, j;
 
     for (i = 0, j = 0; j < len; i++, j += 4) {
@@ -231,9 +232,10 @@ void Encode(boost::uint8_t *output, boost::uint32_t *input, boost::uint16_t len)
 
 /*************************************************************************************************/
 
-/* Decodes input (boost::uint8_t) into output (boost::uint32_t). Assumes len is a multiple of 4. */
+/* Decodes input (boost::uint8_t) into output (boost::uint32_t). Assumes len is a multiple of 4.
+ */
 
-void Decode(boost::uint32_t *output, boost::uint8_t *input, boost::uint16_t len) {
+void Decode(boost::uint32_t* output, boost::uint8_t* input, boost::uint16_t len) {
     boost::uint16_t i, j;
 
     for (i = 0, j = 0; j < len; i++, j += 4)
@@ -273,7 +275,7 @@ void md5_t::reset() {
     processing another message block, and updating the context.
 */
 
-void md5_t::update(void *input_block, std::size_t input_length) {
+void md5_t::update(void* input_block, std::size_t input_length) {
 
     /* Compute number of bytes mod 64 */
     std::size_t index((count_m[0] >> 3) & 0x3f);
@@ -295,13 +297,13 @@ void md5_t::update(void *input_block, std::size_t input_length) {
         MD5Transform(state_m, buffer_m);
 
         for (i = partLen; i + 63 < input_length; i += 64)
-            MD5Transform(state_m, &static_cast<boost::uint8_t *>(input_block)[i]);
+            MD5Transform(state_m, &static_cast<boost::uint8_t*>(input_block)[i]);
 
         index = 0;
     }
 
     /* Buffer remaining input */
-    std::memcpy(&buffer_m[index], &static_cast<boost::uint8_t *>(input_block)[i], input_length - i);
+    std::memcpy(&buffer_m[index], &static_cast<boost::uint8_t*>(input_block)[i], input_length - i);
 }
 
 /*************************************************************************************************/

@@ -98,7 +98,7 @@ public:
 
     md5_t();
 
-    void update(void *input_block, std::size_t input_length);
+    void update(void* input_block, std::size_t input_length);
 
     digest_t final();
 
@@ -122,7 +122,7 @@ Quick and dirty MD5 hash function for a single input block
 
 \return An MD5 digest of the input block for the length specified
 */
-inline md5_t::digest_t md5(void *input_block, std::size_t input_length) {
+inline md5_t::digest_t md5(void* input_block, std::size_t input_length) {
     md5_t m;
 
     m.update(input_block, input_length);

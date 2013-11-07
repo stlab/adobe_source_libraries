@@ -30,7 +30,7 @@ struct combine_ranges : std::binary_function<std::pair<I, I>, std::pair<I, I>, s
     typedef std::pair<I, I> first_argument_type;
     typedef std::pair<I, I> result_type;
 
-    result_type operator()(const first_argument_type &x, const second_argument_type &y) const {
+    result_type operator()(const first_argument_type& x, const second_argument_type& y) const {
         std::cout << "merging ( ";
         std::copy(x.first, x.second, std::ostream_iterator<ADOBE_VALUE_TYPE(I)>(std::cout, " "));
         std::cout << ") and ( ";
@@ -56,7 +56,7 @@ struct myplus : std::binary_function<T, T, T> {
     typedef T first_argument_type;
     typedef T result_type;
 
-    result_type operator()(const first_argument_type &x, const second_argument_type &y) const {
+    result_type operator()(const first_argument_type& x, const second_argument_type& y) const {
         result_type result(x + y);
 
         std::cout << x << " + " << y << " = " << result << std::endl;
@@ -97,7 +97,7 @@ template <typename I, // I models ForwardIterator
 struct partition_trivial : std::unary_function<I, std::pair<I, I>> {
     P p;
 
-    partition_trivial(const P &x) : p(x) {}
+    partition_trivial(const P& x) : p(x) {}
 
     std::pair<I, I> operator()(I i) const {
         if (p(*i))
@@ -137,7 +137,7 @@ template <typename T>
 struct is_odd : std::unary_function<T, bool> {
     typedef bool result_type;
 
-    bool operator()(const T &x) const { return x & 1; }
+    bool operator()(const T& x) const { return x & 1; }
 };
 
 /**************************************************************************************************/

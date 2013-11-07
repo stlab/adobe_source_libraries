@@ -41,7 +41,7 @@ namespace {
                          does not compile for Apple's iPod/iPhone/iPad.
 */
 template <typename Result, typename InputIterator>
-InputIterator xatoi(InputIterator first, InputIterator last, Result &result) {
+InputIterator xatoi(InputIterator first, InputIterator last, Result& result) {
     result = 0;
 
     while (first != last && std::isxdigit(*first)) {
@@ -75,7 +75,7 @@ InputIterator xatoi(InputIterator first, InputIterator last, Result &result) {
                          does not compile for Apple's iPod/iPhone/iPad.
 */
 template <typename Result, typename InputIterator>
-InputIterator datoi(InputIterator first, InputIterator last, Result &result) {
+InputIterator datoi(InputIterator first, InputIterator last, Result& result) {
     result = 0;
 
     while (first != last && std::isdigit(*first)) {
@@ -112,7 +112,7 @@ typedef vector<code_point_set_value_type> code_point_set_t;
 
 /**************************************************************************************************/
 
-const code_point_set_t &code_point_set() {
+const code_point_set_t& code_point_set() {
     typedef code_point_set_value_type value_type;
 
     static code_point_set_t code_point_set_s;
@@ -408,7 +408,7 @@ code_point_index_type;
 
 /**************************************************************************************************/
 
-const code_point_index_type &code_point_index() {
+const code_point_index_type& code_point_index() {
     static const code_point_index_type index(code_point_set().begin(), code_point_set().end(),
                                              &code_point_set_t::value_type::second);
     static bool inited(false);
@@ -416,7 +416,7 @@ const code_point_index_type &code_point_index() {
     if (!inited) {
         inited = true;
 
-        const_cast<code_point_index_type &>(index).sort();
+        const_cast<code_point_index_type&>(index).sort();
         // const_cast<code_point_index_type&>(index).unique();
 
         assert(index.size() == code_point_set().size());
@@ -428,7 +428,7 @@ const code_point_index_type &code_point_index() {
 /**************************************************************************************************/
 
 code_point_index_type::const_iterator code_point_index_find(boost::uint32_t code_point) {
-    const code_point_index_type &index(code_point_index());
+    const code_point_index_type& index(code_point_index());
     code_point_index_type::const_iterator found(adobe::lower_bound(
         index, code_point, adobe::compare_members(&code_point_set_t::value_type::second)));
 
@@ -441,7 +441,7 @@ typedef adobe::table_index<const string, const code_point_set_t::value_type> ent
 
 /**************************************************************************************************/
 
-const entity_name_index_type &entity_name_index() {
+const entity_name_index_type& entity_name_index() {
     static const entity_name_index_type index(code_point_set().begin(), code_point_set().end(),
                                               &code_point_set_t::value_type::first);
     static bool inited(false);
@@ -449,7 +449,7 @@ const entity_name_index_type &entity_name_index() {
     if (!inited) {
         inited = true;
 
-        const_cast<entity_name_index_type &>(index).sort();
+        const_cast<entity_name_index_type&>(index).sort();
         // const_cast<entity_name_index_type&>(index).unique();
 
         assert(index.size() == code_point_set().size());
@@ -460,8 +460,8 @@ const entity_name_index_type &entity_name_index() {
 
 /**************************************************************************************************/
 
-entity_name_index_type::const_iterator entity_name_index_find(const string &entity_name) {
-    const entity_name_index_type &index(entity_name_index());
+entity_name_index_type::const_iterator entity_name_index_find(const string& entity_name) {
+    const entity_name_index_type& index(entity_name_index());
     entity_name_index_type::const_iterator found(adobe::lower_bound(
         index, entity_name, adobe::compare_members(&code_point_set_t::value_type::first)));
 
@@ -478,7 +478,7 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-const string &entity_map_find(boost::uint32_t code_point) {
+const string& entity_map_find(boost::uint32_t code_point) {
     code_point_index_type::const_iterator found(code_point_index_find(code_point));
 
     if (found == code_point_index().end())
@@ -489,7 +489,7 @@ const string &entity_map_find(boost::uint32_t code_point) {
 
 /**************************************************************************************************/
 
-boost::uint32_t entity_map_find(const string &entity) {
+boost::uint32_t entity_map_find(const string& entity) {
     string::const_iterator first(entity.begin());
 
     if (entity.size() > 1 && *first == '#') {
@@ -516,7 +516,7 @@ boost::uint32_t entity_map_find(const string &entity) {
 
 /**************************************************************************************************/
 
-bool needs_entity_escape(const string &value) {
+bool needs_entity_escape(const string& value) {
     for (string::const_iterator iter(value.begin()); iter != value.end(); ++iter) {
         unsigned char c(*iter);
 
@@ -532,7 +532,7 @@ bool needs_entity_escape(const string &value) {
 
 /**************************************************************************************************/
 
-string entity_escape(const string &value) {
+string entity_escape(const string& value) {
     string result;
 
     result.reserve(value.size());
@@ -567,7 +567,7 @@ string entity_escape(const string &value) {
 
 /**************************************************************************************************/
 
-bool needs_entity_unescape(const string &value) {
+bool needs_entity_unescape(const string& value) {
     /*
         This isn't ideal; it's possible for any string to have an ampersand
         followed by a semicolon, which will return true in this case but the
@@ -581,7 +581,7 @@ bool needs_entity_unescape(const string &value) {
 
 /**************************************************************************************************/
 
-string entity_unescape(const string &value) {
+string entity_unescape(const string& value) {
     string result;
     string::const_iterator iter(value.begin());
 

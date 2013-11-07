@@ -93,7 +93,7 @@ template <typename BidirectionalRange, //
           typename Pred>               // Pred models UnaryPredicate
 std::pair<typename boost::range_iterator<BidirectionalRange>::type,
           typename boost::range_iterator<BidirectionalRange>::type>
-gather(BidirectionalRange &range, typename boost::range_iterator<BidirectionalRange>::type pivot,
+gather(BidirectionalRange& range, typename boost::range_iterator<BidirectionalRange>::type pivot,
        Pred pred) {
     return adobe::gather(boost::begin(range), boost::end(range), pivot, pred);
 }

@@ -42,8 +42,8 @@ typedef unsigned long uintptr_t;
 
 #endif
 
-BOOST_STATIC_ASSERT(!(sizeof(intptr_t) < sizeof(void *)));
-BOOST_STATIC_ASSERT(!(sizeof(uintptr_t) < sizeof(void *)));
+BOOST_STATIC_ASSERT(!(sizeof(intptr_t) < sizeof(void*)));
+BOOST_STATIC_ASSERT(!(sizeof(uintptr_t) < sizeof(void*)));
 
 //! @}
 /*************************************************************************************************/

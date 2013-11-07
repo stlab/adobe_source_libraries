@@ -13,7 +13,7 @@
 #include <boost/test/unit_test.hpp>
 
 struct test_t {
-    bool before(const test_t &) const { return false; }
+    bool before(const test_t&) const { return false; }
 };
 
 BOOST_AUTO_TEST_CASE(clamp_test) {

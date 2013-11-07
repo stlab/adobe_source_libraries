@@ -48,7 +48,7 @@ namespace implementation {
 
 struct serializable_t {
     virtual ~serializable_t() {};
-    virtual void operator()(std::ostream &out, const any_regular_t &x) const = 0;
+    virtual void operator()(std::ostream& out, const any_regular_t& x) const = 0;
 };
 
 /**************************************************************************************************/
@@ -56,7 +56,7 @@ struct serializable_t {
 template <typename T>
 struct serializable : serializable_t {
     serializable() {}
-    void operator()(std::ostream &out, const any_regular_t &x) const { out << format(x.cast<T>()); }
+    void operator()(std::ostream& out, const any_regular_t& x) const { out << format(x.cast<T>()); }
 };
 
 /**************************************************************************************************/
@@ -71,7 +71,7 @@ const serializable<T> make_serializable<T, Any>::value;
 
 /**************************************************************************************************/
 
-typedef aggregate_pair<const std::type_info *, const serializable_t *> serializable_lookup_t;
+typedef aggregate_pair<const std::type_info*, const serializable_t*> serializable_lookup_t;
 
 serializable_lookup_t serializable_table[] = {
     {&typeid(bool), &make_serializable<bool>::value},
@@ -90,7 +90,7 @@ serializable_lookup_t serializable_table[] = {
 
 namespace version_1 {
 
-std::ostream &operator<<(std::ostream &out, const any_regular_t &x) {
+std::ostream& operator<<(std::ostream& out, const any_regular_t& x) {
     using namespace implementation;
 
     static bool inited = false;
@@ -101,7 +101,7 @@ std::ostream &operator<<(std::ostream &out, const any_regular_t &x) {
              [](const serializable_lookup_t & x)->const std::type_info & { return *x.first; });
     }
 
-    serializable_lookup_t *i = binary_search(
+    serializable_lookup_t* i = binary_search(
         serializable_table, x.type_info(), &std::type_info::before,
         [](const serializable_lookup_t & x)->const std::type_info & { return *x.first; });
 
@@ -113,7 +113,7 @@ std::ostream &operator<<(std::ostream &out, const any_regular_t &x) {
     return out;
 }
 
-std::ostream &operator<<(std::ostream &out, const dictionary_t &x) {
+std::ostream& operator<<(std::ostream& out, const dictionary_t& x) {
     typedef table_index<const name_t, const dictionary_t::value_type> index_type;
 
     index_type index(x.begin(), x.end(), &dictionary_t::value_type::first);

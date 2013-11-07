@@ -14,14 +14,14 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-xml_lex_t::xml_lex_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t &position)
+xml_lex_t::xml_lex_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t& position)
     : _super(first, last, position), name_possible_m(false) {
     _super::set_parse_token_proc(boost::bind(&xml_lex_t::parse_token, boost::ref(*this)));
 }
 
 /*************************************************************************************************/
 
-xml_lex_t::xml_lex_t(const xml_lex_t &rhs) : _super(rhs), name_possible_m(rhs.name_possible_m) {
+xml_lex_t::xml_lex_t(const xml_lex_t& rhs) : _super(rhs), name_possible_m(rhs.name_possible_m) {
     _super::set_parse_token_proc(boost::bind(&xml_lex_t::parse_token, boost::ref(*this)));
 }
 
@@ -42,7 +42,7 @@ void xml_lex_t::parse_token() {
 
 /*************************************************************************************************/
 
-bool xml_lex_t::is_processing_instruction(token_type &result) {
+bool xml_lex_t::is_processing_instruction(token_type& result) {
     char c;
 
     init_token(result);
@@ -78,7 +78,7 @@ bool xml_lex_t::is_processing_instruction(token_type &result) {
 
 /*************************************************************************************************/
 
-bool xml_lex_t::is_comment(token_type &result) {
+bool xml_lex_t::is_comment(token_type& result) {
     char c;
 
     // REVISIT eberdahl - Although this code "works" in the sense
@@ -119,7 +119,7 @@ bool xml_lex_t::is_comment(token_type &result) {
 
 /*************************************************************************************************/
 
-bool xml_lex_t::is_tag_open(token_type &result) {
+bool xml_lex_t::is_tag_open(token_type& result) {
     char c;
 
     init_token(result);
@@ -146,7 +146,7 @@ bool xml_lex_t::is_tag_open(token_type &result) {
 
 /*************************************************************************************************/
 
-bool xml_lex_t::is_tag_close(token_type &result) {
+bool xml_lex_t::is_tag_close(token_type& result) {
     char c;
 
     init_token(result);
@@ -181,7 +181,7 @@ bool xml_lex_t::is_tag_close(token_type &result) {
 
 /*************************************************************************************************/
 
-bool xml_lex_t::is_name(token_type &result) {
+bool xml_lex_t::is_name(token_type& result) {
     init_token(result);
 
     if (!is_name_start_char())
@@ -201,7 +201,7 @@ bool xml_lex_t::is_name(token_type &result) {
 
 /*************************************************************************************************/
 
-bool xml_lex_t::is_equals(token_type &result) {
+bool xml_lex_t::is_equals(token_type& result) {
     char c;
 
     init_token(result);
@@ -219,7 +219,7 @@ bool xml_lex_t::is_equals(token_type &result) {
 
 /*************************************************************************************************/
 
-bool xml_lex_t::is_att_value(token_type &result) {
+bool xml_lex_t::is_att_value(token_type& result) {
     char c;
 
     if (!(peek_char(c) && (c == '"' || c == '\'')))
@@ -249,7 +249,7 @@ bool xml_lex_t::is_att_value(token_type &result) {
 
 /*************************************************************************************************/
 
-bool xml_lex_t::is_reference(token_type &result) {
+bool xml_lex_t::is_reference(token_type& result) {
     char c;
 
     if (!(peek_char(c) && c == '&'))
@@ -271,7 +271,7 @@ bool xml_lex_t::is_reference(token_type &result) {
 
 /*************************************************************************************************/
 
-bool xml_lex_t::is_char_data(token_type &result) {
+bool xml_lex_t::is_char_data(token_type& result) {
     char c;
 
     init_token(result);

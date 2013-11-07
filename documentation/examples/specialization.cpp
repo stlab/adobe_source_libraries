@@ -36,8 +36,8 @@ my_namespace::my_iterator std::find(my_namespace::my_iterator, my_namespace::my_
 template <>
 struct adobe::ptr_traits<my_namespace::my_class> {
     typedef my_namespace::my_class element_type;
-    typedef element_type *pointer_type;
-    typedef const element_type *const_pointer_type template <class U>
+    typedef element_type* pointer_type;
+    typedef const element_type* const_pointer_type template <class U>
     struct rebind {
         typedef adobe::ptr_traits<U> other;
     };

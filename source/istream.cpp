@@ -23,10 +23,10 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-std::ostream &operator<<(std::ostream &result, const line_position_t &position) {
+std::ostream& operator<<(std::ostream& result, const line_position_t& position) {
     typedef std::streampos pos_t;
 
-    const char *current_file("");
+    const char* current_file("");
 
     std::string line_string(position.file_snippet());
 
@@ -88,7 +88,7 @@ line_position_t::line_position_t(adobe::name_t file_path, getline_proc_t getline
     : line_number_m(line_number), line_start_m(line_start), position_m(position),
       file_name_m(file_path), getline_proc_m(getline_proc) {}
 
-line_position_t::line_position_t(const char *stream_name, int line_index)
+line_position_t::line_position_t(const char* stream_name, int line_index)
     : line_number_m(line_index + 1), line_start_m(0), position_m(-1),
       file_name_m(adobe::name_t(stream_name)) {}
 
@@ -98,7 +98,7 @@ line_position_t::line_position_t() : line_number_m(1), line_start_m(0), position
 
 /*************************************************************************************************/
 
-std::string format_stream_error(const stream_error_t &error) {
+std::string format_stream_error(const stream_error_t& error) {
     std::ostringstream result;
 
     result << error.what() << '\n';
@@ -114,7 +114,7 @@ std::string format_stream_error(const stream_error_t &error) {
 
 /*************************************************************************************************/
 
-std::string format_stream_error(std::istream &, const stream_error_t &error) {
+std::string format_stream_error(std::istream&, const stream_error_t& error) {
     // Format the error
 
     std::ostringstream result;

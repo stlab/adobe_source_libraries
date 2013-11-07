@@ -62,7 +62,7 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
     attribute_set_t::value_type.
     */
     struct less_t : std::binary_function<value_type, value_type, bool> {
-        bool operator()(const value_type &x, const value_type &y) const {
+        bool operator()(const value_type& x, const value_type& y) const {
             return token_range_less(x.first, y.first) ||
                    (!token_range_less(y.first, x.first) && token_range_less(x.second, y.second));
         }
@@ -74,7 +74,7 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
     comparing ONLY the key of a single attribute_set_t::value_type.
     */
     struct less_key_only_t : std::binary_function<value_type, value_type, bool> {
-        bool operator()(const value_type &x, const value_type &y) const {
+        bool operator()(const value_type& x, const value_type& y) const {
             return token_range_less(x.first, y.first);
         }
     };
@@ -90,7 +90,7 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
         \return true if the attribute key exists within the attribute_set_t.
         false otherwise.
     */
-    bool lower_bound(const value_type &attribute, set_type::iterator &result) {
+    bool lower_bound(const value_type& attribute, set_type::iterator& result) {
         result = adobe::lower_bound(set_m.write(), attribute, less_key_only_t());
 
         return result != set_m.write().end() && token_range_equal(result->first, attribute.first);
@@ -107,14 +107,14 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
         \return true if an attribute with this key exists within the attribute_set_t.
         false otherwise.
     */
-    bool lower_bound(const key_type &key, set_type::iterator &result) {
+    bool lower_bound(const key_type& key, set_type::iterator& result) {
         return lower_bound(value_type(key, mapped_type()), result);
     }
 
     /*!
         const-equivalent of lower_bound for attribute_set_t.
     */
-    bool lower_bound(const value_type &attribute, set_type::const_iterator &result) const {
+    bool lower_bound(const value_type& attribute, set_type::const_iterator& result) const {
         result = adobe::lower_bound(*set_m, attribute, less_key_only_t());
 
         return result != set_m->end() && token_range_equal(result->first, attribute.first);
@@ -123,7 +123,7 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
     /*!
         const-equivalent of lower_bound for attribute_set_t.
     */
-    bool lower_bound(const key_type &key, set_type::const_iterator &result) const {
+    bool lower_bound(const key_type& key, set_type::const_iterator& result) const {
         return lower_bound(value_type(key, mapped_type()), result);
     }
 
@@ -136,7 +136,7 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
         \return the value if one exists; otherwise the NULL-token (See
         token_range_t).
     */
-    mapped_type operator[](const key_type &key) const {
+    mapped_type operator[](const key_type& key) const {
         set_type::const_iterator result;
 
         if (lower_bound(key, result))
@@ -159,7 +159,7 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
         attribute_set_t with the one passed in. This attribute_set_t is
         left unchanged.
     */
-    attribute_set_t merge(const attribute_set_t &other_set) const {
+    attribute_set_t merge(const attribute_set_t& other_set) const {
 
         attribute_set_t merged;
 
@@ -180,7 +180,7 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
 
         \param attribute the key-value pair to be inserted.
     */
-    void insert(const value_type &attribute) {
+    void insert(const value_type& attribute) {
         set_type::iterator result;
 
         if (lower_bound(attribute, result))
@@ -213,7 +213,7 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
         \param key the key under which the value is to be inserted
         \param value the value to be inserted into the attribute set
     */
-    inline void insert(const key_type &key, const mapped_type &value) {
+    inline void insert(const key_type& key, const mapped_type& value) {
         insert(value_type(key, value));
     }
 
@@ -227,7 +227,7 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
         found under the respective keys. If false, only the existence of the
         keys are required for the two sets to be considered 'sharing' that key.
     */
-    std::size_t count_same(const attribute_set_t &other_set, bool mapped_matters = true) const;
+    std::size_t count_same(const attribute_set_t& other_set, bool mapped_matters = true) const;
 
     /*!
         A collision is defined as a key existing in both attribute sets but
@@ -242,7 +242,7 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
         \return Whether or not there is at least one collision between the
         two attribute sets.
     */
-    bool has_collisions(const attribute_set_t &other_set) const;
+    bool has_collisions(const attribute_set_t& other_set) const;
 
     /*!
         A collision is defined as a key existing in both attribute sets but
@@ -253,7 +253,7 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
 
         \return The number of collisions that exist between two sets.
     */
-    std::size_t count_collisions(const attribute_set_t &other_set) const;
+    std::size_t count_collisions(const attribute_set_t& other_set) const;
 
     /*!
         \return Specifies whether or not this attribute set is empty
@@ -287,8 +287,8 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
     void clear() { set_m.write().clear(); }
 
 private:
-    friend bool operator==(const attribute_set_t &x, const attribute_set_t &y);
-    friend std::ostream &operator<<(std::ostream &s, const attribute_set_t &attribute_set);
+    friend bool operator==(const attribute_set_t& x, const attribute_set_t& y);
+    friend std::ostream& operator<<(std::ostream& s, const attribute_set_t& attribute_set);
 
     copy_on_write<set_type> set_m;
 };
@@ -307,7 +307,7 @@ private:
 
     \return \c true if the two attribute sets are equal. \c false otherwise.
 */
-inline bool operator==(const attribute_set_t &x, const attribute_set_t &y) {
+inline bool operator==(const attribute_set_t& x, const attribute_set_t& y) {
     return x.set_m->size() == y.set_m->size() && x.count_same(y) == x.set_m->size();
 }
 
@@ -324,7 +324,7 @@ inline bool operator==(const attribute_set_t &x, const attribute_set_t &y) {
 
     \return the output stream
 */
-inline std::ostream &operator<<(std::ostream &s, const attribute_set_t &attribute_set) {
+inline std::ostream& operator<<(std::ostream& s, const attribute_set_t& attribute_set) {
     attribute_set_t::set_type::const_iterator first(attribute_set.set_m->begin());
     attribute_set_t::set_type::const_iterator last(attribute_set.set_m->end());
     bool not_first(false);
@@ -349,7 +349,7 @@ inline std::ostream &operator<<(std::ostream &s, const attribute_set_t &attribut
 
 /*************************************************************************************************/
 
-inline std::size_t attribute_set_t::count_same(const attribute_set_t &other_set,
+inline std::size_t attribute_set_t::count_same(const attribute_set_t& other_set,
                                                bool mapped_matters) const {
     std::size_t result(0);
 
@@ -372,7 +372,7 @@ inline std::size_t attribute_set_t::count_same(const attribute_set_t &other_set,
 
 /*************************************************************************************************/
 
-inline bool attribute_set_t::has_collisions(const attribute_set_t &other_set) const {
+inline bool attribute_set_t::has_collisions(const attribute_set_t& other_set) const {
     attribute_set_t::set_type::const_iterator first(set_m->begin());
     attribute_set_t::set_type::const_iterator last(set_m->end());
 
@@ -389,7 +389,7 @@ inline bool attribute_set_t::has_collisions(const attribute_set_t &other_set) co
 
 /*************************************************************************************************/
 
-inline std::size_t attribute_set_t::count_collisions(const attribute_set_t &other_set) const {
+inline std::size_t attribute_set_t::count_collisions(const attribute_set_t& other_set) const {
     attribute_set_t::set_type::const_iterator first(set_m->begin());
     attribute_set_t::set_type::const_iterator last(set_m->end());
     std::size_t collision_count(0);
@@ -408,10 +408,10 @@ inline std::size_t attribute_set_t::count_collisions(const attribute_set_t &othe
 
 // REVISIT (sparent) : Extra typedef just for the doxygen tool.
 
-typedef token_range_t(implementation_xml_element_proc_t)(const token_range_t &entire_element_range,
-                                                         const token_range_t &name,
-                                                         const attribute_set_t &attribute_set,
-                                                         const token_range_t &value);
+typedef token_range_t(implementation_xml_element_proc_t)(const token_range_t& entire_element_range,
+                                                         const token_range_t& name,
+                                                         const attribute_set_t& attribute_set,
+                                                         const token_range_t& value);
 
 typedef boost::function<implementation_xml_element_proc_t> xml_element_proc_t;
 
@@ -422,19 +422,19 @@ template <typename O> // O models OutputIterator
 class xml_parser_t : public boost::noncopyable {
 public:
     typedef xml_element_proc_t callback_proc_t;
-    typedef boost::function<bool(const token_range_t &)> preorder_predicate_t;
+    typedef boost::function<bool(const token_range_t&)> preorder_predicate_t;
     typedef xml_lex_t::token_type token_type;
 
-    xml_parser_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t &position,
+    xml_parser_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t& position,
                  preorder_predicate_t predicate, callback_proc_t callback, O output)
         : pred_m(predicate), callback_m(callback), output_m(output),
           token_stream_m(first, last, position), preorder_mode_m(false) {}
 
-    xml_parser_t(const xml_parser_t &rhs)
+    xml_parser_t(const xml_parser_t& rhs)
         : pred_m(rhs.pred_m), callback_m(rhs.callback_m), output_m(rhs.output_m),
           token_stream_m(rhs.token_stream_m), preorder_mode_m(rhs.preorder_mode_m) {}
 
-    xml_parser_t &operator=(const xml_parser_t &rhs) {
+    xml_parser_t& operator=(const xml_parser_t& rhs) {
         pred_m = rhs.pred_m;
         callback_m = rhs.callback_m;
         output_m = rhs.output_m;
@@ -446,7 +446,7 @@ public:
 
     virtual ~xml_parser_t() {}
 
-    const line_position_t &next_position() { return token_stream_m.next_position(); }
+    const line_position_t& next_position() { return token_stream_m.next_position(); }
 
     /*!
         Allows the client to specify a different preorder predicate after object instantiation
@@ -540,36 +540,36 @@ token_range_t top_level_callback(
     */
 
 protected:
-    const token_type &get_token() { return token_stream_m.get(); }
+    const token_type& get_token() { return token_stream_m.get(); }
     void putback() { token_stream_m.putback(); }
 
-    bool is_token(xml_lex_token_set_t name, token_range_t &value);
+    bool is_token(xml_lex_token_set_t name, token_range_t& value);
     bool is_token(xml_lex_token_set_t name);
-    void require_token(xml_lex_token_set_t name, token_range_t &value);
+    void require_token(xml_lex_token_set_t name, token_range_t& value);
     void require_token(xml_lex_token_set_t name);
 
     /* REVISIT (sparent) : Should these be const? And is there a way to specify the class to throw?
      */
 
-    void throw_exception(const char *error_string) {
+    void throw_exception(const char* error_string) {
         throw_parser_exception(error_string, next_position());
     }
     void throw_exception(xml_lex_token_set_t found, xml_lex_token_set_t expected) {
         throw_parser_exception(token_to_string(found), token_to_string(expected), next_position());
     }
 
-    bool is_element(token_range_t &element);
-    bool is_content(token_range_t &element);
-    bool is_e_tag(token_range_t &name, token_range_t &close_tag);
-    bool is_attribute_set(attribute_set_t &attribute_set);
-    bool is_attribute(token_range_t &name, token_range_t &value);
+    bool is_element(token_range_t& element);
+    bool is_content(token_range_t& element);
+    bool is_e_tag(token_range_t& name, token_range_t& close_tag);
+    bool is_attribute_set(attribute_set_t& attribute_set);
+    bool is_attribute(token_range_t& name, token_range_t& value);
     bool is_prolog();
-    bool is_bom(token_range_t &bom);
-    bool is_xml_decl(token_range_t &xml_decl);
+    bool is_bom(token_range_t& bom);
+    bool is_xml_decl(token_range_t& xml_decl);
 
-    void content_callback(token_range_t &result_element, const token_range_t &old_element,
-                          const token_range_t &start_tag, const attribute_set_t attribute_set,
-                          const token_range_t &content, bool preorder_parent);
+    void content_callback(token_range_t& result_element, const token_range_t& old_element,
+                          const token_range_t& start_tag, const attribute_set_t attribute_set,
+                          const token_range_t& content, bool preorder_parent);
 
     preorder_predicate_t pred_m;
     callback_proc_t callback_m;
@@ -582,28 +582,28 @@ private:
 
 /*************************************************************************************************/
 
-inline token_range_t xml_element_echo(const token_range_t &entire_element_range,
-                                      const token_range_t & /*name*/,
-                                      const attribute_set_t & /*attribute_set*/,
-                                      const token_range_t & /*value*/) {
+inline token_range_t xml_element_echo(const token_range_t& entire_element_range,
+                                      const token_range_t& /*name*/,
+                                      const attribute_set_t& /*attribute_set*/,
+                                      const token_range_t& /*value*/) {
     return entire_element_range;
 }
 
 /*************************************************************************************************/
 
-inline token_range_t xml_element_strip(const token_range_t & /*entire_element_range*/,
-                                       const token_range_t & /*name*/,
-                                       const attribute_set_t & /*attribute_set*/,
-                                       const token_range_t &value) {
+inline token_range_t xml_element_strip(const token_range_t& /*entire_element_range*/,
+                                       const token_range_t& /*name*/,
+                                       const attribute_set_t& /*attribute_set*/,
+                                       const token_range_t& value) {
     return value;
 }
 
 /*************************************************************************************************/
 
-inline token_range_t xml_element_linefeed(const token_range_t & /*entire_element_range*/,
-                                          const token_range_t &name,
-                                          const attribute_set_t &attribute_set,
-                                          const token_range_t &value) {
+inline token_range_t xml_element_linefeed(const token_range_t& /*entire_element_range*/,
+                                          const token_range_t& name,
+                                          const attribute_set_t& attribute_set,
+                                          const token_range_t& value) {
     if (token_range_equal(name, static_token_range("br")) && attribute_set.empty() &&
         boost::size(value) == 0) {
 #if ADOBE_PLATFORM_WIN
@@ -629,7 +629,7 @@ namespace implementation {
 
 /*************************************************************************************************/
 
-token_range_t transform_reference(const token_range_t &reference);
+token_range_t transform_reference(const token_range_t& reference);
 
 /*************************************************************************************************/
 
@@ -638,8 +638,8 @@ token_range_t transform_reference(const token_range_t &reference);
 /*************************************************************************************************/
 
 template <typename O> // O models OutputIterator
-bool xml_parser_t<O>::is_token(xml_lex_token_set_t token_name, token_range_t &token_range) {
-    const token_type &result(get_token());
+bool xml_parser_t<O>::is_token(xml_lex_token_set_t token_name, token_range_t& token_range) {
+    const token_type& result(get_token());
 
     if (result.enum_m == token_name) {
         token_range = result.range_m;
@@ -656,7 +656,7 @@ bool xml_parser_t<O>::is_token(xml_lex_token_set_t token_name, token_range_t &to
 
 template <typename O> // O models OutputIterator
 bool xml_parser_t<O>::is_token(xml_lex_token_set_t token_name) {
-    const token_type &result(get_token());
+    const token_type& result(get_token());
 
     if (result.enum_m == token_name)
         return true;
@@ -669,8 +669,8 @@ bool xml_parser_t<O>::is_token(xml_lex_token_set_t token_name) {
 /*************************************************************************************************/
 
 template <typename O> // O models OutputIterator
-void xml_parser_t<O>::require_token(xml_lex_token_set_t token_name, token_range_t &token_range) {
-    const token_type &result(get_token());
+void xml_parser_t<O>::require_token(xml_lex_token_set_t token_name, token_range_t& token_range) {
+    const token_type& result(get_token());
 
     if (result.enum_m != token_name)
         throw_exception(result.enum_m, token_name);
@@ -682,7 +682,7 @@ void xml_parser_t<O>::require_token(xml_lex_token_set_t token_name, token_range_
 
 template <typename O> // O models OutputIterator
 void xml_parser_t<O>::require_token(xml_lex_token_set_t token_name) {
-    const token_type &result(get_token());
+    const token_type& result(get_token());
 
     if (result.enum_m != token_name)
         throw_exception(result.enum_m, token_name);
@@ -691,11 +691,11 @@ void xml_parser_t<O>::require_token(xml_lex_token_set_t token_name) {
 /*************************************************************************************************/
 
 template <typename O> // O models OutputIterator
-void xml_parser_t<O>::content_callback(token_range_t &result_element,
-                                       const token_range_t &old_element,
-                                       const token_range_t &start_tag,
+void xml_parser_t<O>::content_callback(token_range_t& result_element,
+                                       const token_range_t& old_element,
+                                       const token_range_t& start_tag,
                                        const attribute_set_t attribute_set,
-                                       const token_range_t &content, bool preorder_parent) {
+                                       const token_range_t& content, bool preorder_parent) {
     if (preorder_parent) {
         // if we are in preorder mode and we are the preorder_parent,
         // we send the content to the client callback function.
@@ -736,7 +736,7 @@ void xml_parser_t<O>::content_callback(token_range_t &result_element,
 /*************************************************************************************************/
 
 template <typename O> // O models OutputIterator
-bool xml_parser_t<O>::is_element(token_range_t &element) {
+bool xml_parser_t<O>::is_element(token_range_t& element) {
     element = token_range_t();
 
     attribute_set_t attribute_set;
@@ -838,7 +838,7 @@ bool xml_parser_t<O>::is_element(token_range_t &element) {
 /*************************************************************************************************/
 
 template <typename O> // O models OutputIterator
-bool xml_parser_t<O>::is_content(token_range_t &content) {
+bool xml_parser_t<O>::is_content(token_range_t& content) {
     content = token_range_t();
 
     token_range_t char_data;
@@ -936,7 +936,7 @@ bool xml_parser_t<O>::is_content(token_range_t &content) {
 /*************************************************************************************************/
 
 template <typename O> // O models OutputIterator
-bool xml_parser_t<O>::is_e_tag(token_range_t &name, token_range_t &close_tag) {
+bool xml_parser_t<O>::is_e_tag(token_range_t& name, token_range_t& close_tag) {
     if (!is_token(xml_token_open_slash_tag_k))
         return false;
 
@@ -950,7 +950,7 @@ bool xml_parser_t<O>::is_e_tag(token_range_t &name, token_range_t &close_tag) {
 /*************************************************************************************************/
 
 template <typename O> // O models OutputIterator
-bool xml_parser_t<O>::is_attribute_set(attribute_set_t &attribute_set) {
+bool xml_parser_t<O>::is_attribute_set(attribute_set_t& attribute_set) {
     token_range_t att_name;
     token_range_t att_value;
 
@@ -984,7 +984,7 @@ bool xml_parser_t<O>::is_prolog() {
 /*************************************************************************************************/
 
 template <typename O> // O models OutputIterator
-bool xml_parser_t<O>::is_bom(token_range_t &bom) {
+bool xml_parser_t<O>::is_bom(token_range_t& bom) {
     const token_range_t utf8_bom = static_token_range("\xEF\xBB\xBF");
     const token_range_t utf16_be_bom = static_token_range("\xFE\xFF");
     const token_range_t utf16_le_bom = static_token_range("\xFF\xFE");
@@ -1019,7 +1019,7 @@ bool xml_parser_t<O>::is_bom(token_range_t &bom) {
 /*************************************************************************************************/
 
 template <typename O> // O models OutputIterator
-bool xml_parser_t<O>::is_xml_decl(token_range_t &xml_decl) {
+bool xml_parser_t<O>::is_xml_decl(token_range_t& xml_decl) {
     if (is_token(xml_token_processing_instruction_k, xml_decl)) {
         // REVISIT eberdahl 2006 Jun 18 - sanity check that the PI
         // encountered is, in fact, targeted at the xml application
@@ -1033,7 +1033,7 @@ bool xml_parser_t<O>::is_xml_decl(token_range_t &xml_decl) {
 /*************************************************************************************************/
 
 template <typename O> // O models OutputIterator
-bool xml_parser_t<O>::is_attribute(token_range_t &name, token_range_t &value) {
+bool xml_parser_t<O>::is_attribute(token_range_t& name, token_range_t& value) {
     if (is_token(xml_token_name_k, name)) {
         require_token(xml_token_equals_k);
 
@@ -1116,7 +1116,7 @@ functions indicated.
 */
 template <typename O> // O models OutputIterator
 inline xml_parser_t<O>
-make_xml_parser(uchar_ptr_t first, uchar_ptr_t last, const line_position_t &position,
+make_xml_parser(uchar_ptr_t first, uchar_ptr_t last, const line_position_t& position,
                 typename xml_parser_t<O>::preorder_predicate_t predicate,
                 typename xml_parser_t<O>::callback_proc_t callback, O output) {
     return xml_parser_t<O>(first, last, position, predicate, callback, output);
@@ -1129,7 +1129,7 @@ make_xml_parser(uchar_ptr_t first, uchar_ptr_t last, const line_position_t &posi
     Iterator-based atoi, but for hexadecimal number strings.
 */
 template <typename Result, typename InputIterator>
-InputIterator xatoi(InputIterator first, InputIterator last, Result &result) {
+InputIterator xatoi(InputIterator first, InputIterator last, Result& result) {
     result = 0;
 
     while (first != last && std::isxdigit(*first)) {
@@ -1158,7 +1158,7 @@ InputIterator xatoi(InputIterator first, InputIterator last, Result &result) {
     Iterator-based atoi
 */
 template <typename Result, typename InputIterator>
-InputIterator datoi(InputIterator first, InputIterator last, Result &result) {
+InputIterator datoi(InputIterator first, InputIterator last, Result& result) {
     result = 0;
 
     while (first != last && std::isdigit(*first)) {

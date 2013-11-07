@@ -19,7 +19,7 @@ namespace adobe {
 \ingroup testing
 */
 template <typename T>
-void check_traversable(const T &c) {
+void check_traversable(const T& c) {
 
     // http://www.sgi.com/tech/stl/Container.html
 

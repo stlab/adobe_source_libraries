@@ -28,8 +28,8 @@ namespace adobe {
 /*!
 \ingroup property_model_evaluate
  */
-adam_callback_suite_t bind_to_sheet(sheet_t &);
-adam_callback_suite_t bind_to_sheet(sheet_t &, external_model_t &);
+adam_callback_suite_t bind_to_sheet(sheet_t&);
+adam_callback_suite_t bind_to_sheet(sheet_t&, external_model_t&);
 
 /*************************************************************************************************/
 

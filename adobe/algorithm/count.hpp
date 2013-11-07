@@ -38,7 +38,7 @@ namespace adobe {
     \brief count implementation
 */
 template <class InputRange, class T>
-inline typename boost::range_difference<InputRange>::type count(InputRange &range, T &value) {
+inline typename boost::range_difference<InputRange>::type count(InputRange& range, T& value) {
     return std::count(boost::begin(range), boost::end(range), value);
 }
 
@@ -48,7 +48,7 @@ inline typename boost::range_difference<InputRange>::type count(InputRange &rang
     \brief count implementation
 */
 template <class InputRange, class T>
-inline typename boost::range_difference<InputRange>::type count(const InputRange &range, T &value) {
+inline typename boost::range_difference<InputRange>::type count(const InputRange& range, T& value) {
     return std::count(boost::begin(range), boost::end(range), value);
 }
 
@@ -69,7 +69,7 @@ count_if(InputIterator first, InputIterator last, Predicate pred) {
     \brief count implementation
 */
 template <class InputRange, class Predicate>
-inline typename boost::range_difference<InputRange>::type count_if(InputRange &range,
+inline typename boost::range_difference<InputRange>::type count_if(InputRange& range,
                                                                    Predicate pred) {
     return adobe::count_if(boost::begin(range), boost::end(range), pred);
 }
@@ -80,7 +80,7 @@ inline typename boost::range_difference<InputRange>::type count_if(InputRange &r
     \brief count implementation
 */
 template <class InputRange, class Predicate>
-inline typename boost::range_difference<InputRange>::type count_if(const InputRange &range,
+inline typename boost::range_difference<InputRange>::type count_if(const InputRange& range,
                                                                    Predicate pred) {
     return adobe::count_if(boost::begin(range), boost::end(range), pred);
 }

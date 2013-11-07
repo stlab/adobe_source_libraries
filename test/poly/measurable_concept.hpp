@@ -13,7 +13,7 @@
 
 // define default implementation of size operation to call member function size
 template <typename T>
-double size(const T &t) {
+double size(const T& t) {
     return static_cast<double>(t.size());
 }
 
@@ -22,7 +22,7 @@ struct MeasurableConcept {
     MeasurableConcept() {} // for gcc
 
     // operations
-    static double size(const T &t) {
+    static double size(const T& t) {
         using ::size;
         return size(t);
     }

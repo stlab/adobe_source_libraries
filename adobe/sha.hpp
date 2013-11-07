@@ -43,13 +43,13 @@ struct bit_packer {
     bit_packer(I first, std::uint64_t bitsize) : first_m(first), bitsize_m(bitsize) {}
 
     template <typename T>
-    inline std::size_t operator()(T &result) {
+    inline std::size_t operator()(T& result) {
         return byte_pack(result);
     }
 
 private:
     template <typename T>
-    std::size_t byte_pack(T &result) {
+    std::size_t byte_pack(T& result) {
         std::size_t to_pack(sizeof(T));
 
         result = 0;
@@ -91,14 +91,14 @@ constexpr std::size_t bitsizeof() {
 /*************************************************************************************************/
 
 template <std::size_t N, typename T>
-inline T shr(const T &x) {
+inline T shr(const T& x) {
     static_assert(N < bitsizeof<T>(), "shr size mismatch.");
 
     return x >> N;
 }
 
 template <std::size_t N, typename T>
-inline T rotr(const T &x) {
+inline T rotr(const T& x) {
     static_assert(N < bitsizeof<T>(), "rotr size mismatch.");
 
     constexpr std::size_t l_shift = bitsizeof<T>() - N;
@@ -107,7 +107,7 @@ inline T rotr(const T &x) {
 }
 
 template <std::size_t N, typename T>
-inline T rotl(const T &x) {
+inline T rotl(const T& x) {
     static_assert(N < bitsizeof<T>(), "rotl size mismatch.");
 
     constexpr std::size_t r_shift = bitsizeof<T>() - N;
@@ -143,7 +143,7 @@ struct message_block_part_14_set_t {
     static constexpr std::size_t half_max_message_bitsize_k =
         traits_type::max_message_bitsize_k / 2;
 
-    void operator()(message_block_value_type &mbp14, std::uint64_t num_bits) {
+    void operator()(message_block_value_type& mbp14, std::uint64_t num_bits) {
         message_block_value_type message_block_value_type_max(
             std::numeric_limits<message_block_value_type>::max());
 
@@ -160,13 +160,13 @@ struct message_block_part_14_set_t<false, HashTraits> {
     typedef typename traits_type::message_block_type message_block_type;
     typedef typename message_block_type::value_type message_block_value_type;
 
-    void operator()(message_block_value_type &mbp14, std::uint64_t) { mbp14 = 0; }
+    void operator()(message_block_value_type& mbp14, std::uint64_t) { mbp14 = 0; }
 };
 
 /*************************************************************************************************/
 
 template <typename HashTraits, typename I>
-void block_and_digest(typename HashTraits::process_type &digest, I first, std::uint64_t num_bits) {
+void block_and_digest(typename HashTraits::process_type& digest, I first, std::uint64_t num_bits) {
     typedef HashTraits traits_type;
     typedef typename traits_type::message_block_type message_block_type;
     typedef typename message_block_type::value_type message_block_value_type;
@@ -197,20 +197,28 @@ void block_and_digest(typename HashTraits::process_type &digest, I first, std::u
                 }
             } else {
                 if (num_blocks == 1) {
-                    // REVISIT (fbrereto) : According to the SHA standard the message length in the
+                    // REVISIT (fbrereto) : According to the SHA standard the message length in
+                    // the
                     //                      1024-block-size case can be up to 2^128 bits long,
-                    //                      but we only support messages up to 2^64 in length. In
-                    //                      all instances when padding in the generic case, block
+                    //                      but we only support messages up to 2^64 in length.
+                    // In
+                    //                      all instances when padding in the generic case,
+                    // block
                     //                      part 14 would be:
-                    //                          mbp14 = (num_bits >> (half_max_message_bitsize_k)) &
+                    //                          mbp14 = (num_bits >>
+                    // (half_max_message_bitsize_k)) &
                     //                              message_block_value_type_max
                     //                      But in the 1024-block-size case
-                    //                      half_max_message_bitsize_k == num_bits, and we will get
+                    //                      half_max_message_bitsize_k == num_bits, and we will
+                    // get
                     //                      a compiler error basically saying "hey, you're
-                    //                      overshifting this value to 0", which would be fine in
+                    //                      overshifting this value to 0", which would be fine
+                    // in
                     //                      this case because the number should be set to 0, but
-                    //                      the compiler is still (rightfully) noisy about it. This
-                    //                      workaround forces the right thing to do in that it sets
+                    //                      the compiler is still (rightfully) noisy about it.
+                    // This
+                    //                      workaround forces the right thing to do in that it
+                    // sets
                     //                      message block part 14 to zero in this special
                     //                      1024-block-size case, thus sliencing the compiler.
 
@@ -239,8 +247,8 @@ void block_and_digest(typename HashTraits::process_type &digest, I first, std::u
 /*************************************************************************************************/
 
 template <typename HashTraits>
-void sha_2_digest_message_block(typename HashTraits::process_type &digest,
-                                const typename HashTraits::message_block_type &message_block) {
+void sha_2_digest_message_block(typename HashTraits::process_type& digest,
+                                const typename HashTraits::message_block_type& message_block) {
     //  The "sha_2" in the name of this function is in
     //  reference to the second generation of SHA algorithms
     //  (224, 256, 384, and 512), all of which have the same
@@ -306,7 +314,7 @@ struct sha1_traits_t {
     static constexpr std::size_t max_message_bitsize_k = 64;
     static constexpr std::size_t message_blocksize_k = 512;
 
-    static inline void reset_digest(process_type &digest) {
+    static inline void reset_digest(process_type& digest) {
         digest[0] = 0x67452301;
         digest[1] = 0xefcdab89;
         digest[2] = 0x98badcfe;
@@ -314,8 +322,8 @@ struct sha1_traits_t {
         digest[4] = 0xc3d2e1f0;
     }
 
-    static inline void digest_message_block(process_type &digest,
-                                            const message_block_type &message_block) {
+    static inline void digest_message_block(process_type& digest,
+                                            const message_block_type& message_block) {
         schedule_type schedule;
 
         adobe::copy(message_block, &schedule[0]);
@@ -350,7 +358,7 @@ struct sha1_traits_t {
         std::memset(&schedule, 0, sizeof(schedule));
     }
 
-    static inline digest_type finalize(const process_type &process) { return process; }
+    static inline digest_type finalize(const process_type& process) { return process; }
 
 private:
     static inline std::uint32_t f(std::size_t t, std::uint32_t x, std::uint32_t y,
@@ -392,7 +400,7 @@ struct sha256_traits_t {
     static constexpr std::size_t max_message_bitsize_k = 64;
     static constexpr std::size_t message_blocksize_k = 512;
 
-    static inline void reset_digest(process_type &digest) {
+    static inline void reset_digest(process_type& digest) {
         digest[0] = 0x6a09e667;
         digest[1] = 0xbb67ae85;
         digest[2] = 0x3c6ef372;
@@ -403,8 +411,8 @@ struct sha256_traits_t {
         digest[7] = 0x5be0cd19;
     }
 
-    static inline void digest_message_block(process_type &digest,
-                                            const message_block_type &message_block) {
+    static inline void digest_message_block(process_type& digest,
+                                            const message_block_type& message_block) {
         sha_2_digest_message_block<sha256_traits_t>(digest, message_block);
     }
 
@@ -445,7 +453,7 @@ struct sha256_traits_t {
         return k_set[t];
     }
 
-    static inline digest_type finalize(const process_type &process) { return process; }
+    static inline digest_type finalize(const process_type& process) { return process; }
 };
 
 /*************************************************************************************************/
@@ -453,7 +461,7 @@ struct sha256_traits_t {
 struct sha224_traits_t : public sha256_traits_t {
     typedef std::array<std::uint32_t, 7> digest_type;
 
-    static inline void reset_digest(process_type &digest) {
+    static inline void reset_digest(process_type& digest) {
         digest[0] = 0xc1059ed8;
         digest[1] = 0x367cd507;
         digest[2] = 0x3070dd17;
@@ -464,7 +472,7 @@ struct sha224_traits_t : public sha256_traits_t {
         digest[7] = 0xbefa4fa4;
     }
 
-    static inline digest_type finalize(const process_type &process) {
+    static inline digest_type finalize(const process_type& process) {
         digest_type result = {{0}};
 
         std::copy(process.begin(), process.begin() + result.size(), &result[0]);
@@ -484,7 +492,7 @@ struct sha512_traits_t {
     static constexpr std::size_t max_message_bitsize_k = 128;
     static constexpr std::size_t message_blocksize_k = 1024;
 
-    static inline void reset_digest(process_type &digest) {
+    static inline void reset_digest(process_type& digest) {
         digest[0] = 0x6a09e667f3bcc908ULL;
         digest[1] = 0xbb67ae8584caa73bULL;
         digest[2] = 0x3c6ef372fe94f82bULL;
@@ -495,8 +503,8 @@ struct sha512_traits_t {
         digest[7] = 0x5be0cd19137e2179ULL;
     }
 
-    static inline void digest_message_block(process_type &digest,
-                                            const message_block_type &message_block) {
+    static inline void digest_message_block(process_type& digest,
+                                            const message_block_type& message_block) {
         sha_2_digest_message_block<sha512_traits_t>(digest, message_block);
     }
 
@@ -554,7 +562,7 @@ struct sha512_traits_t {
         return k_set[t];
     }
 
-    static inline digest_type finalize(const process_type &process) { return process; }
+    static inline digest_type finalize(const process_type& process) { return process; }
 };
 
 /*************************************************************************************************/
@@ -562,7 +570,7 @@ struct sha512_traits_t {
 struct sha384_traits_t : public sha512_traits_t {
     typedef std::array<std::uint64_t, 6> digest_type;
 
-    static inline void reset_digest(process_type &digest) {
+    static inline void reset_digest(process_type& digest) {
         digest[0] = 0xcbbb9d5dc1059ed8ULL;
         digest[1] = 0x629a292a367cd507ULL;
         digest[2] = 0x9159015a3070dd17ULL;
@@ -573,7 +581,7 @@ struct sha384_traits_t : public sha512_traits_t {
         digest[7] = 0x47b5481dbefa4fa4ULL;
     }
 
-    static inline digest_type finalize(const process_type &process) {
+    static inline digest_type finalize(const process_type& process) {
         digest_type result = {{0}};
 
         std::copy(process.begin(), process.begin() + result.size(), &result[0]);

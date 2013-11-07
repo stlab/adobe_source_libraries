@@ -11,7 +11,7 @@
 #include <adobe/md5.hpp>
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     if (argc != 3) {
         std::cout << "usage: " << argv[0] << " hash file " << std::endl;
         std::cout << "       check the MD5 hash of a file" << std::endl;
@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
             std::cout << "Expected: " << expected << " actual: " << oss.str() << std::endl;
     }
 
-    catch (const std::exception &error) {
+    catch (const std::exception& error) {
         std::cerr << "Exception: " << error.what() << std::endl;
     }
     catch (...) {

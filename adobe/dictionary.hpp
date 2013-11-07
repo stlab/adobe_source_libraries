@@ -34,14 +34,14 @@ namespace version_1 {
 /**************************************************************************************************/
 
 template <typename T>
-inline bool get_value(const dictionary_t &dict, name_t key, T &value) {
+inline bool get_value(const dictionary_t& dict, name_t key, T& value) {
     dictionary_t::const_iterator i = dict.find(key);
     if (i == dict.end())
         return false;
     return i->second.cast(value);
 }
 
-inline bool get_value(const dictionary_t &dict, name_t key, any_regular_t &value) {
+inline bool get_value(const dictionary_t& dict, name_t key, any_regular_t& value) {
     dictionary_t::const_iterator i = dict.find(key);
     if (i == dict.end())
         return false;
@@ -49,7 +49,7 @@ inline bool get_value(const dictionary_t &dict, name_t key, any_regular_t &value
     return true;
 }
 
-inline const any_regular_t &get_value(const dictionary_t &dict, name_t key) {
+inline const any_regular_t& get_value(const dictionary_t& dict, name_t key) {
     dictionary_t::const_iterator i = dict.find(key);
     if (i == dict.end())
         throw std::out_of_range(make_string("dictionary_t: key '", key.c_str(), "' not found"));
@@ -62,7 +62,7 @@ inline const any_regular_t &get_value(const dictionary_t &dict, name_t key) {
 #ifdef ADOBE_STD_SERIALIZATION
 
 // NOTE (sparent@adobe.com) : Code for serialization is located in source/any_regular.cpp.
-std::ostream &operator<<(std::ostream &out, const dictionary_t &x);
+std::ostream& operator<<(std::ostream& out, const dictionary_t& x);
 
 #endif
 

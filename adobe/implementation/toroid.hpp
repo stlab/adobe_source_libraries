@@ -29,12 +29,12 @@ struct toroid_header_t;
 /****************************************************************************************************/
 
 struct toroid_node_t {
-    toroid_node_t *left_m;     // node to the left
-    toroid_node_t *right_m;    // node to the right
-    toroid_node_t *up_m;       // node to the up
-    toroid_node_t *down_m;     // node to the down
-    toroid_header_t *column_m; // header at head of this column
-    toroid_header_t *row_m;    // header at head of this row
+    toroid_node_t* left_m;     // node to the left
+    toroid_node_t* right_m;    // node to the right
+    toroid_node_t* up_m;       // node to the up
+    toroid_node_t* down_m;     // node to the down
+    toroid_header_t* column_m; // header at head of this column
+    toroid_header_t* row_m;    // header at head of this row
     char color_m;
 
     bool covered_m; // debugging; is this node covered
@@ -69,7 +69,7 @@ public:
         for (row_header_set_iterator_t first(row_header_set_m.begin()),
              last(row_header_set_m.end());
              first != last; ++first) {
-            toroid_header_t *this_row(&(*first));
+            toroid_header_t* this_row(&(*first));
 
             first->left_m = this_row;
             first->right_m = this_row;
@@ -81,7 +81,7 @@ public:
         for (col_header_set_iterator_t first(col_header_set_m.begin()),
              last(col_header_set_m.end());
              first != last; ++first) {
-            toroid_header_t *this_col(&(*first));
+            toroid_header_t* this_col(&(*first));
 
             first->up_m = this_col;
             first->down_m = this_col;
@@ -114,15 +114,15 @@ public:
         assert(row < row_size() && col < column_size());
         assert(!finalized_m);
 
-        toroid_header_t &row_h(row_header_set_m[row]);
-        toroid_header_t &col_h(col_header_set_m[col]);
+        toroid_header_t& row_h(row_header_set_m[row]);
+        toroid_header_t& col_h(col_header_set_m[col]);
 
         if (node_block_count_m == block_size_k) {
             data_set_m.push_back(node_block_t());
             node_block_count_m = 0;
         }
 
-        toroid_node_t &node(data_set_m.back()[node_block_count_m]);
+        toroid_node_t& node(data_set_m.back()[node_block_count_m]);
 
         ++node_block_count_m;
 
@@ -140,7 +140,7 @@ public:
         node.row_m = &row_h;
 
         node.color_m = color; // we set the color even if this is a primary node;
-                              // in such case it is a user error and will be ignored.
+        // in such case it is a user error and will be ignored.
 
         node.covered_m = false;
 
@@ -161,7 +161,7 @@ public:
         // to itself, so we unlink it from the doubly-linked
         // header column list.
 
-        toroid_header_t &column(col_header_set_m[col]);
+        toroid_header_t& column(col_header_set_m[col]);
 
         column.left_m->right_m = column.right_m;
         column.right_m->left_m = column.left_m;
@@ -185,14 +185,14 @@ public:
         finalized_m = true;
     }
 
-    void cover_column(toroid_header_t *c) {
+    void cover_column(toroid_header_t* c) {
         assert(finalized_m);
 
         right_of(c)->left_m = left_of(c);
         left_of(c)->right_m = right_of(c);
 
-        for (toroid_node_t *i(down_of(c)); i != c; i = down_of(i)) {
-            for (toroid_node_t *j(right_of(i)); j != i; j = right_of(j)) {
+        for (toroid_node_t* i(down_of(c)); i != c; i = down_of(i)) {
+            for (toroid_node_t* j(right_of(i)); j != i; j = right_of(j)) {
                 down_of(j)->up_m = up_of(j);
 
                 up_of(j)->down_m = down_of(j);
@@ -206,13 +206,13 @@ public:
         c->covered_m = true;
     }
 
-    void uncover_column(toroid_header_t *c) {
+    void uncover_column(toroid_header_t* c) {
         assert(finalized_m);
 
         c->covered_m = false;
 
-        for (toroid_node_t *i(up_of(c)); i != c; i = up_of(i)) {
-            for (toroid_node_t *j(left_of(i)); j != i; j = left_of(j)) {
+        for (toroid_node_t* i(up_of(c)); i != c; i = up_of(i)) {
+            for (toroid_node_t* j(left_of(i)); j != i; j = left_of(j)) {
                 j->covered_m = false;
 
                 ++(column_of(j)->size_m);
@@ -227,15 +227,15 @@ public:
         left_of(c)->right_m = c;
     }
 
-    void purify(toroid_node_t *p) {
-        toroid_header_t *c(column_of(p));
+    void purify(toroid_node_t* p) {
+        toroid_header_t* c(column_of(p));
         int x(p->color_m);
 
         c->color_m = x;
 
-        for (toroid_node_t *rr = down_of(c); rr != c; rr = down_of(rr)) {
+        for (toroid_node_t* rr = down_of(c); rr != c; rr = down_of(rr)) {
             if (rr->color_m != x) {
-                for (toroid_node_t *nn = right_of(rr); nn != rr; nn = right_of(nn)) {
+                for (toroid_node_t* nn = right_of(rr); nn != rr; nn = right_of(nn)) {
                     up_of(nn)->down_m = down_of(nn);
                     down_of(nn)->up_m = up_of(nn);
                     column_of(nn)->size_m--;
@@ -248,15 +248,15 @@ public:
         }
     }
 
-    void unpurify(toroid_node_t *p) {
-        toroid_header_t *c(column_of(p));
+    void unpurify(toroid_node_t* p) {
+        toroid_header_t* c(column_of(p));
         int x(p->color_m);
 
-        for (toroid_node_t *rr = up_of(c); rr != c; rr = up_of(rr)) {
+        for (toroid_node_t* rr = up_of(c); rr != c; rr = up_of(rr)) {
             if (rr->color_m < 0) {
                 rr->color_m = x;
             } else if (rr != p) {
-                for (toroid_node_t *nn = left_of(rr); nn != rr; nn = left_of(nn)) {
+                for (toroid_node_t* nn = left_of(rr); nn != rr; nn = left_of(nn)) {
                     up_of(nn)->down_m = nn;
                     down_of(nn)->up_m = nn;
                     column_of(nn)->size_m++;
@@ -276,11 +276,11 @@ public:
     // taking the distance from the start of the row header list to the row
     // header referenced by this node.
 
-    std::size_t row_index_of(toroid_node_t *node) {
+    std::size_t row_index_of(toroid_node_t* node) {
         return static_cast<std::size_t>(std::distance(&(*(row_header_set_m.begin())), node->row_m));
     }
 
-    std::size_t column_index_of(toroid_node_t *node) {
+    std::size_t column_index_of(toroid_node_t* node) {
         return static_cast<std::size_t>(
             std::distance(&(*(col_header_set_m.begin())), node->column_m));
     }
@@ -297,17 +297,17 @@ public:
         return reinterpret_cast<ToroidDataPointer>(node->right_m);
     }
 
-    static inline toroid_node_t *up_of(toroid_node_t *node) {
+    static inline toroid_node_t* up_of(toroid_node_t* node) {
         assert(node->up_m != 0);
         return node->up_m;
     }
 
-    static inline toroid_node_t *down_of(toroid_node_t *node) {
+    static inline toroid_node_t* down_of(toroid_node_t* node) {
         assert(node->down_m != 0);
         return node->down_m;
     }
 
-    static inline toroid_header_t *column_of(toroid_node_t *node) {
+    static inline toroid_header_t* column_of(toroid_node_t* node) {
         assert(node->column_m != 0);
         return node->column_m;
     }
@@ -315,7 +315,7 @@ public:
     toroid_header_t header_m;
 
 #if ADOBE_STD_SERIALIZATION
-    friend std::ostream &operator<<(std::ostream &s, const byte_toroid_t &toroid);
+    friend std::ostream& operator<<(std::ostream& s, const byte_toroid_t& toroid);
 #endif
 
 private:
@@ -327,11 +327,11 @@ private:
 };
 
 #if ADOBE_STD_SERIALIZATION
-std::ostream &operator<<(std::ostream &s, const byte_toroid_t &toroid) {
+std::ostream& operator<<(std::ostream& s, const byte_toroid_t& toroid) {
     const std::size_t cols_k(toroid.column_size());
     const std::size_t rows_k(toroid.row_size());
 
-    byte_toroid_t &nctoroid(const_cast<byte_toroid_t &>(toroid));
+    byte_toroid_t& nctoroid(const_cast<byte_toroid_t&>(toroid));
 
     s << "    |";
 
@@ -347,7 +347,7 @@ std::ostream &operator<<(std::ostream &s, const byte_toroid_t &toroid) {
     s << std::endl << "    |";
 
     for (std::size_t i(0); i < cols_k; ++i) {
-        const toroid_header_t *col(&toroid.col_header_set_m[i]);
+        const toroid_header_t* col(&toroid.col_header_set_m[i]);
 
         if (toroid.right_of(col) == toroid.left_of(col) && toroid.right_of(col) == col) {
             s << "*|";
@@ -363,7 +363,7 @@ std::ostream &operator<<(std::ostream &s, const byte_toroid_t &toroid) {
         s << "-|";
 
     for (std::size_t i(0); i < rows_k; ++i) {
-        toroid_header_t *row(&nctoroid.row_header_set_m[i]);
+        toroid_header_t* row(&nctoroid.row_header_set_m[i]);
 
         s.width(4);
 
@@ -371,8 +371,8 @@ std::ostream &operator<<(std::ostream &s, const byte_toroid_t &toroid) {
 
         std::size_t cur_col(0);
 
-        toroid_node_t *first(nctoroid.right_of(row));
-        toroid_node_t *next(first);
+        toroid_node_t* first(nctoroid.right_of(row));
+        toroid_node_t* next(first);
 
         if (!toroid.finalized_m) {
             first = row;
@@ -384,7 +384,7 @@ std::ostream &operator<<(std::ostream &s, const byte_toroid_t &toroid) {
             first_time = false;
 
             std::size_t column(nctoroid.column_index_of(next));
-            toroid_header_t *col_h(nctoroid.column_of(next));
+            toroid_header_t* col_h(nctoroid.column_of(next));
 
             for (; cur_col < column; ++cur_col)
                 s << " |";

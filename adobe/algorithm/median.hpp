@@ -38,7 +38,7 @@ second argument.
     \brief median implementation
 */
 template <typename T, typename R>
-inline const T &median(const T &a, const T &b, const T &c, R r) {
+inline const T& median(const T& a, const T& b, const T& c, R r) {
     return select_1_3(a, b, c, boost::bind(r, _1, _2));
 }
 
@@ -47,7 +47,7 @@ inline const T &median(const T &a, const T &b, const T &c, R r) {
     \brief median implementation
 */
 template <typename T, typename R>
-inline T &median(T &a, T &b, T &c, R r) {
+inline T& median(T& a, T& b, T& c, R r) {
     return select_1_3(a, b, c, boost::bind(r, _1, _2));
 }
 
@@ -56,7 +56,7 @@ inline T &median(T &a, T &b, T &c, R r) {
     \brief median implementation
 */
 template <typename T>
-inline const T &median(const T &a, const T &b, const T &c) {
+inline const T& median(const T& a, const T& b, const T& c) {
     return select_1_3(a, b, c, less());
 }
 
@@ -65,7 +65,7 @@ inline const T &median(const T &a, const T &b, const T &c) {
     \brief median implementation
 */
 template <typename T>
-inline T &median(T &a, T &b, T &c) {
+inline T& median(T& a, T& b, T& c) {
     return select_1_3(a, b, c, less());
 }
 

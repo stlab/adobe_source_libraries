@@ -39,7 +39,7 @@ Linear: at most <code>last - first</code> applications of \c comp.
     \brief find_match implementation
 */
 template <class InputIterator, class T, class Compare>
-inline InputIterator find_match(InputIterator first, InputIterator last, const T &value,
+inline InputIterator find_match(InputIterator first, InputIterator last, const T& value,
                                 Compare comp) {
     return std::find_if(first, last, boost::bind(comp, value, _1));
 }
@@ -50,8 +50,8 @@ inline InputIterator find_match(InputIterator first, InputIterator last, const T
     \brief find_match implementation
 */
 template <class InputRange, class T, class Compare>
-inline typename boost::range_iterator<InputRange>::type find_match(InputRange &range,
-                                                                   const T &value, Compare comp) {
+inline typename boost::range_iterator<InputRange>::type find_match(InputRange& range,
+                                                                   const T& value, Compare comp) {
     return adobe::find_match(boost::begin(range), boost::end(range), value, comp);
 }
 
@@ -62,7 +62,7 @@ inline typename boost::range_iterator<InputRange>::type find_match(InputRange &r
 */
 template <class InputRange, class T, class Compare>
 inline typename boost::range_const_iterator<InputRange>::type
-find_match(const InputRange &range, const T &value, Compare comp) {
+find_match(const InputRange& range, const T& value, Compare comp) {
     return adobe::find_match(boost::begin(range), boost::end(range), value, comp);
 }
 
@@ -72,7 +72,7 @@ find_match(const InputRange &range, const T &value, Compare comp) {
     \brief find_match implementation
 */
 template <class InputIterator, class T, class Compare>
-inline InputIterator find_match(InputIterator first, InputIterator last, const T &value) {
+inline InputIterator find_match(InputIterator first, InputIterator last, const T& value) {
     return std::find_if(first, last, boost::bind(std::equal_to<T>(), value, _1));
 }
 
@@ -82,8 +82,8 @@ inline InputIterator find_match(InputIterator first, InputIterator last, const T
     \brief find_match implementation
 */
 template <class InputRange, class T, class Compare>
-inline typename boost::range_iterator<InputRange>::type find_match(InputRange &range,
-                                                                   const T &value) {
+inline typename boost::range_iterator<InputRange>::type find_match(InputRange& range,
+                                                                   const T& value) {
     return adobe::find_match(boost::begin(range), boost::end(range), value);
 }
 
@@ -93,8 +93,8 @@ inline typename boost::range_iterator<InputRange>::type find_match(InputRange &r
     \brief find_match implementation
 */
 template <class InputRange, class T, class Compare>
-inline typename boost::range_const_iterator<InputRange>::type find_match(const InputRange &range,
-                                                                         const T &value) {
+inline typename boost::range_const_iterator<InputRange>::type find_match(const InputRange& range,
+                                                                         const T& value) {
     return adobe::find_match(boost::begin(range), boost::end(range), value);
 }
 

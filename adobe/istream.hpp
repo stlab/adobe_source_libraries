@@ -168,13 +168,13 @@ public:
                     std::streampos line_start = 0, std::streampos position = -1);
 
     // This constructor is used with __FILE__ and __LINE__, line_index starts at 0
-    explicit line_position_t(const char *, int line_index = 0);
+    explicit line_position_t(const char*, int line_index = 0);
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
     line_position_t();
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 
-    const char *stream_name() const { return file_name_m.c_str(); }
+    const char* stream_name() const { return file_name_m.c_str(); }
 
     std::string file_snippet() const {
         return getline_proc_m ? (*getline_proc_m)(file_name_m, line_start_m) : std::string();
@@ -193,7 +193,7 @@ private:
 
 /*************************************************************************************************/
 
-std::ostream &operator<<(std::ostream &, const line_position_t &);
+std::ostream& operator<<(std::ostream&, const line_position_t&);
 
 /*************************************************************************************************/
 
@@ -201,10 +201,10 @@ class stream_error_t : public std::logic_error {
 public:
     typedef std::vector<line_position_t> position_set_t;
 
-    stream_error_t(const std::exception &base, const line_position_t &position)
+    stream_error_t(const std::exception& base, const line_position_t& position)
         : std::logic_error(base.what()) {
         try {
-            const stream_error_t *error = dynamic_cast<const stream_error_t *>(&base);
+            const stream_error_t* error = dynamic_cast<const stream_error_t*>(&base);
 
             if (error)
                 line_position_set_m = error->line_position_set_m;
@@ -215,13 +215,13 @@ public:
         }
     }
 
-    stream_error_t(const char *what, const line_position_t &position)
+    stream_error_t(const char* what, const line_position_t& position)
         : std::logic_error(what), line_position_set_m(1, position) {}
 
-    stream_error_t(const std::string &what, const line_position_t &position)
+    stream_error_t(const std::string& what, const line_position_t& position)
         : std::logic_error(what), line_position_set_m(1, position) {}
 
-    const position_set_t &line_position_set() const { return line_position_set_m; }
+    const position_set_t& line_position_set() const { return line_position_set_m; }
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
     ~stream_error_t() throw() {}
@@ -244,7 +244,7 @@ private:
 */
 
 template <typename I> // I models InputIterator
-bool is_line_end(I &first, I last) {
+bool is_line_end(I& first, I last) {
     // Handle any type of line ending.
 
     typename std::iterator_traits<I>::value_type c(*first);
@@ -263,7 +263,7 @@ bool is_line_end(I &first, I last) {
 /*************************************************************************************************/
 
 template <typename I> // I models InputIterator
-std::size_t is_line_end(I &first, I last, char c) {
+std::size_t is_line_end(I& first, I last, char c) {
     // Handle any type of line ending.
 
     if (c == '\n')

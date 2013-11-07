@@ -32,27 +32,27 @@ class javascript_format : public format_base {
 public:
     typedef inherited_t::stream_type stream_type;
 
-    virtual void begin_format(stream_type &os);
+    virtual void begin_format(stream_type& os);
 
-    virtual void begin_bag(stream_type &os, const std::string &ident);
+    virtual void begin_bag(stream_type& os, const std::string& ident);
 
-    virtual void begin_sequence(stream_type &os);
+    virtual void begin_sequence(stream_type& os);
 
-    virtual void begin_atom(stream_type &os, const any_regular_t &);
+    virtual void begin_atom(stream_type& os, const any_regular_t&);
 
 private:
-    virtual void stack_event(stream_type &os, bool is_push);
+    virtual void stack_event(stream_type& os, bool is_push);
 
-    void handle_atom(stream_type &os, bool is_push);
+    void handle_atom(stream_type& os, bool is_push);
 };
 
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-std::ostream &begin_javascript(std::ostream &os);
+std::ostream& begin_javascript(std::ostream& os);
 
 //!\ingroup manipulator
-std::ostream &end_javascript(std::ostream &os);
+std::ostream& end_javascript(std::ostream& os);
 
 /*************************************************************************************************/
 

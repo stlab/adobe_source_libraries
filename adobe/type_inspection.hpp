@@ -41,7 +41,7 @@ See ADOBE_HAS_TYPE.
     template <typename C##TypeInQuestion>                                                          \
     struct has_type##TypeInQuestion {                                                              \
         template <typename T##TypeInQuestion>                                                      \
-        static adobe::detail::yes_struct SFINAE(typename T##TypeInQuestion::TypeInQuestion *);     \
+        static adobe::detail::yes_struct SFINAE(typename T##TypeInQuestion::TypeInQuestion*);      \
         template <typename>                                                                        \
         static adobe::detail::no_struct SFINAE(...);                                               \
         static const bool value =                                                                  \
@@ -134,7 +134,7 @@ struct member_test_helper {};
     struct has_member##MemberInQuestion {                                                          \
         template <class T##MemberInQuestion>                                                       \
         static adobe::detail::yes_struct SFINAE(                                                   \
-            adobe::detail::member_test_helper<sizeof(&T##MemberInQuestion::MemberInQuestion)> *);  \
+            adobe::detail::member_test_helper<sizeof(&T##MemberInQuestion::MemberInQuestion)>*);   \
         template <class>                                                                           \
         static adobe::detail::no_struct SFINAE(...);                                               \
         static const bool value = sizeof(SFINAE<Class>(0)) == sizeof(adobe::detail::yes_struct);   \
@@ -183,7 +183,7 @@ See ADOBE_HAS_TEMPLATE1.
     struct has_template1##TemplateInQuestion {                                                     \
         template <typename T##TemplateInQuestion>                                                  \
         static adobe::detail::yes_struct                                                           \
-        SFINAE(typename T##TemplateInQuestion::template TemplateInQuestion<int> *);                \
+        SFINAE(typename T##TemplateInQuestion::template TemplateInQuestion<int>*);                 \
         template <typename>                                                                        \
         static adobe::detail::no_struct SFINAE(...);                                               \
         static const bool value =                                                                  \
@@ -227,7 +227,7 @@ Also, make sure the 2 macros are in the same namespace!
     struct has_template2##TemplateInQuestion {                                                     \
         template <typename T##TemplateInQuestion>                                                  \
         static adobe::detail::yes_struct                                                           \
-        SFINAE(typename T##TemplateInQuestion::template TemplateInQuestion<int, int> *);           \
+        SFINAE(typename T##TemplateInQuestion::template TemplateInQuestion<int, int>*);            \
         template <typename>                                                                        \
         static adobe::detail::no_struct SFINAE(...);                                               \
         static const bool value =                                                                  \
@@ -241,7 +241,7 @@ Also, make sure the 2 macros are in the same namespace!
     struct has_template3##TemplateInQuestion {                                                     \
         template <typename T##TemplateInQuestion>                                                  \
         static adobe::detail::yes_struct                                                           \
-        SFINAE(typename T##TemplateInQuestion::template TemplateInQuestion<int, int, int> *);      \
+        SFINAE(typename T##TemplateInQuestion::template TemplateInQuestion<int, int, int>*);       \
         template <typename>                                                                        \
         static adobe::detail::no_struct SFINAE(...);                                               \
         static const bool value =                                                                  \

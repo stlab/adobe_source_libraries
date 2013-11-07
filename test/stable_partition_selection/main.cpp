@@ -46,7 +46,7 @@ namespace {
 /****************************************************************************************************/
 
 template <typename ForwardRange>
-void print_selection(const ForwardRange &range, const adobe::selection_t &selection) {
+void print_selection(const ForwardRange& range, const adobe::selection_t& selection) {
     typedef typename ForwardRange::const_iterator set_const_iterator;
     typedef typename adobe::selection_t::const_iterator selection_const_iterator;
 
@@ -98,7 +98,7 @@ typedef selection_type::const_iterator selection_iterator;
 /****************************************************************************************************/
 
 template <typename IteratorCategory>
-void do_split_selection(const adobe::selection_t &selection, std::size_t p,
+void do_split_selection(const adobe::selection_t& selection, std::size_t p,
                         IteratorCategory iterator_category) {
     std::pair<selection_iterator, adobe::selection_t::difference_type> result =
         adobe::selection_find_boundary(selection, p, iterator_category);

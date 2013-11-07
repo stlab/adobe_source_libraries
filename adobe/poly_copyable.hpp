@@ -46,7 +46,7 @@ struct poly_copyable_instance : optimized_storage_type<T, poly_copyable_interfac
     /*!
         Construct from concrete copyable
     */
-    poly_copyable_instance(const T &x) : base_t(x) {}
+    poly_copyable_instance(const T& x) : base_t(x) {}
 
     /*!
         Move constructor
@@ -70,7 +70,7 @@ struct copyable : poly_base<poly_copyable_interface, poly_copyable_instance> {
         Construct from concrete copyable
     */
     template <typename T>
-    explicit copyable(const T &s)
+    explicit copyable(const T& s)
         : base_t(s) {}
 
     /*!

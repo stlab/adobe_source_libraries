@@ -41,7 +41,7 @@ namespace {
 /// \return     an any containing the created widget.
 //
 adobe::eve_callback_suite_t::position_t assemble(adobe::name_t name,
-                                                 const adobe::dictionary_t &parameters) {
+                                                 const adobe::dictionary_t& parameters) {
 #if defined(ADOBE_STD_SERIALIZATION)
     std::cout << adobe::begin_asl_cel << name << ' ' << parameters << adobe::end_asl_cel;
 #endif
@@ -58,7 +58,7 @@ adobe::eve_callback_suite_t::position_t assemble(adobe::name_t name,
 ///
 /// \param      fileName        the name of the file to parse.
 //
-void testParse(boost::filesystem::path &fileName) {
+void testParse(boost::filesystem::path& fileName) {
     //
     // Open our input stream.
     //
@@ -100,7 +100,7 @@ void testParse(boost::filesystem::path &fileName) {
 ///
 /// \return     always zero.
 //
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     bool success(true);
 
     //
@@ -119,7 +119,7 @@ int main(int argc, char *argv[]) {
 
         testParse(file_path);
     }
-    catch (const std::exception &error) {
+    catch (const std::exception& error) {
         //
         // Oops, something didn't work out.
         //

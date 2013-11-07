@@ -14,7 +14,7 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-queryable_sheet_t::queryable_sheet_t(adam_parser &p) : no_pure_outputs_m(true), parser_m(p) {
+queryable_sheet_t::queryable_sheet_t(adam_parser& p) : no_pure_outputs_m(true), parser_m(p) {
     //  attach the VM to the sheet.
     sheet_m.machine_m.set_variable_lookup(boost::bind(&adobe::sheet_t::get, &sheet_m, _1));
 
@@ -36,7 +36,7 @@ void queryable_sheet_t::begin_monitoring() {
                                               e = interface_index_m.end();
          iter != e; ++iter) {
         std::size_t i(iter->second);
-        name_t &name(name_m[i]);
+        name_t& name(name_m[i]);
         sheet_m.monitor_enabled(name, NULL, NULL,
                                 boost::bind(adobe::assign(), _1, boost::ref(active_m[i])));
 
@@ -86,7 +86,7 @@ dictionary_t queryable_sheet_t::contributing() { return sheet_m.contributing(); 
 
 /*************************************************************************************************/
 
-void queryable_sheet_t::set(const dictionary_t &d) {
+void queryable_sheet_t::set(const dictionary_t& d) {
 
     sheet_m.set(d);
     for (dictionary_t::const_iterator i = d.begin(), e = d.end(); i != e; ++i) {
@@ -98,7 +98,7 @@ void queryable_sheet_t::set(const dictionary_t &d) {
 
 /*************************************************************************************************/
 
-any_regular_t queryable_sheet_t::inspect(const array_t &expression) {
+any_regular_t queryable_sheet_t::inspect(const array_t& expression) {
     return sheet_m.inspect(expression);
 }
 
@@ -123,10 +123,10 @@ adam_callback_suite_t queryable_sheet_t::setup_callbacks() {
 
 void queryable_sheet_t::add_interface_trap(adam_callback_suite_t::add_interface_proc_t original,
                                            name_t cell_name, bool linked,
-                                           const line_position_t &position1,
-                                           const array_t &initializer,
-                                           const line_position_t &position2,
-                                           const array_t &expression) {
+                                           const line_position_t& position1,
+                                           const array_t& initializer,
+                                           const line_position_t& position2,
+                                           const array_t& expression) {
     original(cell_name, linked, position1, initializer, position2, expression, std::string(),
              std::string());
 
@@ -150,8 +150,8 @@ void queryable_sheet_t::add_interface_trap(adam_callback_suite_t::add_interface_
 
 void queryable_sheet_t::add_cell_trap(adam_callback_suite_t::add_cell_proc_t original,
                                       adam_callback_suite_t::cell_type_t type, name_t cell_name,
-                                      const line_position_t &position,
-                                      const array_t &expr_or_init) {
+                                      const line_position_t& position,
+                                      const array_t& expr_or_init) {
     original(type, cell_name, position, expr_or_init, std::string(), std::string());
 
     if (adam_callback_suite_t::input_k == type) {

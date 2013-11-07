@@ -25,7 +25,7 @@ typedef std::vector<std::uint8_t> data_t;
 /******************************************************************************/
 
 template <typename FNVType>
-bool print_expected_result(const FNVType &expected, const FNVType &result) {
+bool print_expected_result(const FNVType& expected, const FNVType& result) {
     std::cout << std::hex;
 
     bool match(expected == result);
@@ -47,7 +47,7 @@ bool print_expected_result(const FNVType &expected, const FNVType &result) {
 /******************************************************************************/
 
 template <typename FNVType>
-void test_expected_result(const FNVType &expected, const FNVType &result) {
+void test_expected_result(const FNVType& expected, const FNVType& result) {
     if (print_expected_result(expected, result))
         return;
 
@@ -57,14 +57,14 @@ void test_expected_result(const FNVType &expected, const FNVType &result) {
 /******************************************************************************/
 
 template <std::size_t Bits, typename Container>
-void fnvtest(const Container &data, const adobe::fnvtype<Bits> &expected) {
+void fnvtest(const Container& data, const adobe::fnvtype<Bits>& expected) {
     adobe::fnvtype<Bits> result(adobe::fnv1a<Bits>(data));
 
     std::cout << "Testing fnv1a<" << Bits << "> with { ";
 
     bool first(true);
 
-    for (auto &datum : data) {
+    for (auto& datum : data) {
         std::cout << (!first ? ", " : "") << "0x" << std::hex << static_cast<int>(datum)
                   << std::dec;
 
@@ -79,7 +79,7 @@ void fnvtest(const Container &data, const adobe::fnvtype<Bits> &expected) {
 /******************************************************************************/
 
 template <std::size_t Bits>
-void anybit_test(const std::string &data, const adobe::fnvtype<Bits> &expected) {
+void anybit_test(const std::string& data, const adobe::fnvtype<Bits>& expected) {
     std::cout << "  fnv1a<" << Bits << ">(" << data << "): ";
 
     test_expected_result(expected, adobe::fnv1a<Bits>(data));
@@ -87,12 +87,12 @@ void anybit_test(const std::string &data, const adobe::fnvtype<Bits> &expected) 
 
 /******************************************************************************/
 #ifndef ADOBE_FNV_NO_BIGINTS
-void multiprecision_test(const std::string &data, const adobe::fnvtype<32> &expected32,
-                         const adobe::fnvtype<64> &expected64,
-                         const adobe::fnvtype<128> &expected128,
-                         const adobe::fnvtype<256> &expected256,
-                         const adobe::fnvtype<512> &expected512,
-                         const adobe::fnvtype<1024> &expected1024) {
+void multiprecision_test(const std::string& data, const adobe::fnvtype<32>& expected32,
+                         const adobe::fnvtype<64>& expected64,
+                         const adobe::fnvtype<128>& expected128,
+                         const adobe::fnvtype<256>& expected256,
+                         const adobe::fnvtype<512>& expected512,
+                         const adobe::fnvtype<1024>& expected1024) {
     std::cout << "Data: '" << data << "'\n";
 
     test_expected_result(expected32, adobe::fnv1a<32>(data));

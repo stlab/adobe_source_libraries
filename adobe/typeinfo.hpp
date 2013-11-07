@@ -34,9 +34,9 @@ construct the object, it simply relays "bad_cast".
 class bad_cast : public std::bad_cast {
 public:
     bad_cast();
-    bad_cast(const std::type_info &from, const std::type_info &to);
-    bad_cast(const bad_cast &);
-    bad_cast &operator=(const bad_cast &);
+    bad_cast(const std::type_info& from, const std::type_info& to);
+    bad_cast(const bad_cast&);
+    bad_cast& operator=(const bad_cast&);
     virtual ~bad_cast() throw();
     /*!
     \return
@@ -45,7 +45,7 @@ public:
             - A string detailing the source and destination types that could not be cast
     successfully.
     */
-    const char *what() const throw();
+    const char* what() const throw();
 
 private:
     std::string what_m;

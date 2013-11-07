@@ -14,9 +14,9 @@
 
 struct unknown_type_t {};
 
-bool operator==(const unknown_type_t &, const unknown_type_t &) { return true; }
+bool operator==(const unknown_type_t&, const unknown_type_t&) { return true; }
 
-bool operator!=(const unknown_type_t &, const unknown_type_t &) { return false; }
+bool operator!=(const unknown_type_t&, const unknown_type_t&) { return false; }
 
 int main() {
     using namespace adobe;

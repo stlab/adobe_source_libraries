@@ -97,18 +97,18 @@ struct layout_attributes_t
     // containers only
     placement_t placement_m;
 
-    slice_t &vertical() { return slice_m[extents_slices_t::vertical]; }
-    slice_t &horizontal() { return slice_m[extents_slices_t::horizontal]; }
+    slice_t& vertical() { return slice_m[extents_slices_t::vertical]; }
+    slice_t& horizontal() { return slice_m[extents_slices_t::horizontal]; }
 
-    const slice_t &vertical() const { return slice_m[extents_slices_t::vertical]; }
-    const slice_t &horizontal() const { return slice_m[extents_slices_t::horizontal]; }
+    const slice_t& vertical() const { return slice_m[extents_slices_t::vertical]; }
+    const slice_t& horizontal() const { return slice_m[extents_slices_t::horizontal]; }
 
 
-    int &height() { return extents_m.height(); }
-    int &width() { return extents_m.width(); }
+    int& height() { return extents_m.height(); }
+    int& width() { return extents_m.width(); }
 
-    const int &height() const { return extents_m.height(); }
-    const int &width() const { return extents_m.width(); }
+    const int& height() const { return extents_m.height(); }
+    const int& width() const { return extents_m.width(); }
 };
 
 /*************************************************************************************************/
@@ -134,63 +134,63 @@ struct place_data_t
 
     boost::array<slice_t, 2> slice_m;
 
-    slice_t &vertical() { return slice_m[extents_slices_t::vertical]; }
-    slice_t &horizontal() { return slice_m[extents_slices_t::horizontal]; }
+    slice_t& vertical() { return slice_m[extents_slices_t::vertical]; }
+    slice_t& horizontal() { return slice_m[extents_slices_t::horizontal]; }
 
-    const slice_t &vertical() const { return slice_m[extents_slices_t::vertical]; }
-    const slice_t &horizontal() const { return slice_m[extents_slices_t::horizontal]; }
+    const slice_t& vertical() const { return slice_m[extents_slices_t::vertical]; }
+    const slice_t& horizontal() const { return slice_m[extents_slices_t::horizontal]; }
 };
 
 
 /*!
 \ingroup layout_attributes
 */
-inline int top(const place_data_t &place_data) { return place_data.vertical().position_m; }
+inline int top(const place_data_t& place_data) { return place_data.vertical().position_m; }
 
 /*!
 \ingroup layout_attributes
 */
-inline int left(const place_data_t &place_data) { return place_data.horizontal().position_m; }
+inline int left(const place_data_t& place_data) { return place_data.horizontal().position_m; }
 
 /*!
 \ingroup layout_attributes
 */
-inline int &top(place_data_t &place_data) { return place_data.vertical().position_m; }
+inline int& top(place_data_t& place_data) { return place_data.vertical().position_m; }
 
 /*!
 \ingroup layout_attributes
 */
-inline int &left(place_data_t &place_data) { return place_data.horizontal().position_m; }
+inline int& left(place_data_t& place_data) { return place_data.horizontal().position_m; }
 
 /*!
 \ingroup layout_attributes
 */
-inline int height(const place_data_t &place_data) { return place_data.vertical().length_m; }
+inline int height(const place_data_t& place_data) { return place_data.vertical().length_m; }
 
 /*!
 \ingroup layout_attributes
 */
-inline int width(const place_data_t &place_data) { return place_data.horizontal().length_m; }
+inline int width(const place_data_t& place_data) { return place_data.horizontal().length_m; }
 
 /*!
 \ingroup layout_attributes
 */
-inline int &height(place_data_t &place_data) { return place_data.vertical().length_m; }
+inline int& height(place_data_t& place_data) { return place_data.vertical().length_m; }
 
 /*!
 \ingroup layout_attributes
 */
-inline int &width(place_data_t &place_data) { return place_data.horizontal().length_m; }
+inline int& width(place_data_t& place_data) { return place_data.horizontal().length_m; }
 
 /*!
 \ingroup layout_attributes
 */
-inline int bottom(const place_data_t &place_data) { return top(place_data) + height(place_data); }
+inline int bottom(const place_data_t& place_data) { return top(place_data) + height(place_data); }
 
 /*!
 \ingroup layout_attributes
 */
-inline int right(const place_data_t &place_data) { return left(place_data) + width(place_data); }
+inline int right(const place_data_t& place_data) { return left(place_data) + width(place_data); }
 
 /*************************************************************************************************/
 }

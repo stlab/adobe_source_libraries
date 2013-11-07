@@ -8,7 +8,7 @@
 #include <boost/range.hpp>
 
 template <typename R> // R is a depth adaptor range
-void output(const R &f) {
+void output(const R& f) {
     typedef typename boost::range_iterator<R>::type iterator;
 
     for (iterator first(boost::begin(f)), last(boost::end(f)); first != last; ++first) {

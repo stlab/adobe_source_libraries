@@ -60,13 +60,13 @@ public:
     /// difference_type for selection_t
     typedef store_type::difference_type difference_type;
     /// reference for selection_t
-    typedef value_type &reference;
+    typedef value_type& reference;
     /// const_reference for selection_t
-    typedef const value_type &const_reference;
+    typedef const value_type& const_reference;
     /// pointer for selection_t
-    typedef value_type *pointer;
+    typedef value_type* pointer;
     /// const_pointer for selection_t
-    typedef const value_type *const_pointer;
+    typedef const value_type* const_pointer;
 
     /*!
         Default constructor.
@@ -104,7 +104,7 @@ public:
 
     /// pushes a toggle point onto the back of the selection.
     /// The index must be greater than the previous toggle point.
-    void push_back(const value_type &x) {
+    void push_back(const value_type& x) {
         assert(empty() || store_m.back() < x);
 
         store_m.push_back(x);
@@ -117,7 +117,7 @@ public:
     const_iterator end() const { return store_m.end(); }
 
     /// fetches a toggle point at index i of the toggle point sequence
-    const value_type &operator[](const size_type &i) const { return store_m[i]; }
+    const value_type& operator[](const size_type& i) const { return store_m[i]; }
 
     /*!
         inverts the selection.
@@ -129,7 +129,7 @@ public:
     */
     bool start_selected() const { return start_selected_m; }
 
-    friend inline bool operator==(const selection_t &x, const selection_t &y) {
+    friend inline bool operator==(const selection_t& x, const selection_t& y) {
         return x.size() == y.size() && std::equal(x.begin(), x.end(), y.begin());
     }
 

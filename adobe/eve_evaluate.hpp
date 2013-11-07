@@ -28,15 +28,15 @@ namespace adobe {
 /*************************************************************************************************/
 
 typedef boost::function<
-    eve_callback_suite_t::position_t(const eve_callback_suite_t::position_t &parent, name_t name,
+    eve_callback_suite_t::position_t(const eve_callback_suite_t::position_t& parent, name_t name,
                                      dictionary_t arguments)> bind_layout_proc_t;
 
-eve_callback_suite_t bind_layout(const bind_layout_proc_t &proc, sheet_t &layout_sheet,
-                                 virtual_machine_t &evaluator);
+eve_callback_suite_t bind_layout(const bind_layout_proc_t& proc, sheet_t& layout_sheet,
+                                 virtual_machine_t& evaluator);
 
-void apply_layout_parameters(layout_attributes_t &data, const dictionary_t &parameters);
+void apply_layout_parameters(layout_attributes_t& data, const dictionary_t& parameters);
 
-adobe::any_regular_t layout_variables(adobe::sheet_t &layout_sheet, adobe::name_t name);
+adobe::any_regular_t layout_variables(adobe::sheet_t& layout_sheet, adobe::name_t name);
 
 /*************************************************************************************************/
 

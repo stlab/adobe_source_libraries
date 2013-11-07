@@ -27,12 +27,12 @@ public:
 
     ~unique_string_pool_t();
 
-    const char *add(const char *str);
+    const char* add(const char* str);
 
 private:
     struct implementation_t;
 
-    implementation_t *object_m;
+    implementation_t* object_m;
 };
 
 

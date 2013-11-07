@@ -30,19 +30,17 @@ class noisy_allocator;
 template <>
 class noisy_allocator<void> {
 public:
-    void *pointer;
-    typedef const void *const_pointer;
+    void* pointer;
+    typedef const void* const_pointer;
     typedef void value_type;
     template <class U>
     struct rebind {
         typedef noisy_allocator<U> other;
     };
 
-    friend inline bool operator==(const noisy_allocator &, const noisy_allocator &) { return true; }
+    friend inline bool operator==(const noisy_allocator&, const noisy_allocator&) { return true; }
 
-    friend inline bool operator!=(const noisy_allocator &, const noisy_allocator &) {
-        return false;
-    }
+    friend inline bool operator!=(const noisy_allocator&, const noisy_allocator&) { return false; }
 };
 
 std::size_t noisy_check_allocation(bool count = false) {
@@ -76,10 +74,10 @@ class noisy_allocator {
 public:
     typedef std::size_t size_type;
     typedef std::ptrdiff_t difference_type;
-    typedef T *pointer;
-    typedef const T *const_pointer;
-    typedef T &reference;
-    typedef const T &const_reference;
+    typedef T* pointer;
+    typedef const T* const_pointer;
+    typedef T& reference;
+    typedef const T& const_reference;
     typedef T value_type;
     template <typename U>
     struct rebind {
@@ -88,7 +86,7 @@ public:
 
     noisy_allocator() {}
     template <typename U>
-    noisy_allocator(const noisy_allocator<U> &) {}
+    noisy_allocator(const noisy_allocator<U>&) {}
     pointer address(reference x) const { return &x; }
     const_pointer address(const_reference x) const { return &x; }
     pointer allocate(size_type n, noisy_allocator<void>::const_pointer = 0) {
@@ -97,7 +95,7 @@ public:
         pointer result = static_cast<pointer>(::operator new(n * sizeof(T), std::nothrow));
         if (!result)
             throw std::bad_alloc();
-        std::cout << "  alloc @ " << static_cast<void *>(result) << "; sizeof(T): " << sizeof(T);
+        std::cout << "  alloc @ " << static_cast<void*>(result) << "; sizeof(T): " << sizeof(T);
         if (n != 1)
             std::cout << "; n: " << n;
         std::cout << std::endl;
@@ -106,30 +104,30 @@ public:
     }
     void deallocate(pointer p, size_type) {
         ::operator delete(p, std::nothrow);
-        std::cout << "dealloc @ " << static_cast<void *>(p) << "; sizeof(T): " << sizeof(T)
+        std::cout << "dealloc @ " << static_cast<void*>(p) << "; sizeof(T): " << sizeof(T)
                   << std::endl;
         noisy_check_deallocation(true);
     }
     size_type max_size() const { return size_type(-1) / sizeof(T); }
-    void construct(pointer p, const T &x) { adobe::construct(p, x); }
+    void construct(pointer p, const T& x) { adobe::construct(p, x); }
     void destroy(pointer p) { adobe::destroy(p); }
 
-    friend inline bool operator==(const noisy_allocator &x, const noisy_allocator &y) {
+    friend inline bool operator==(const noisy_allocator& x, const noisy_allocator& y) {
         return true;
     }
 
-    friend inline bool operator!=(const noisy_allocator &x, const noisy_allocator &y) {
+    friend inline bool operator!=(const noisy_allocator& x, const noisy_allocator& y) {
         return false;
     }
 };
 
 template <typename R, typename T>
-R make_value(const T &x) {
+R make_value(const T& x) {
     return R(x);
 }
 
 template <>
-std::string make_value(const long &x) {
+std::string make_value(const long& x) {
     std::stringstream s;
     s << x;
     return std::string(s.str());
@@ -142,7 +140,7 @@ void test_copy_on_write() {
                                   noisy_allocator<typename CowType::value_type>>::value
     };
 
-    typename CowType::value_type (*mv)(const long &) =
+    typename CowType::value_type (*mv)(const long&) =
         &make_value<typename CowType::value_type, long>;
 
     if (is_noisy) {

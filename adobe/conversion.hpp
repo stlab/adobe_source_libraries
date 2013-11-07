@@ -67,14 +67,14 @@ struct promote<std::ptrdiff_t> {};
 #endif
 
 template <>
-struct promote<const char *> {
+struct promote<const char*> {
     typedef std::string type;
 };
 
 /*************************************************************************************************/
 
 template <typename lht, typename rht>
-inline lht explicit_cast(const rht &rhs) {
+inline lht explicit_cast(const rht& rhs) {
     return static_cast<lht>(rhs);
 }
 
@@ -82,22 +82,22 @@ inline lht explicit_cast(const rht &rhs) {
 
 template <typename R, typename T>
 struct runtime_cast_t {
-    R operator()(T &x) const { return dynamic_cast<R>(x); }
+    R operator()(T& x) const { return dynamic_cast<R>(x); }
 };
 
 template <typename R, typename T>
-inline R runtime_cast(T &x) {
+inline R runtime_cast(T& x) {
     return runtime_cast_t<R, T>()(x);
 }
 
 template <typename R, typename T>
-inline R runtime_cast(T *x) {
-    return runtime_cast_t<R, T *>()(x);
+inline R runtime_cast(T* x) {
+    return runtime_cast_t<R, T*>()(x);
 }
 
 template <typename R, typename T>
-inline bool runtime_cast(const T &x, R &r) {
-    const R *p = runtime_cast<const R *>(&x);
+inline bool runtime_cast(const T& x, R& r) {
+    const R* p = runtime_cast<const R*>(&x);
     if (!p)
         return false;
     r = *p;
@@ -107,8 +107,8 @@ inline bool runtime_cast(const T &x, R &r) {
 /*************************************************************************************************/
 
 template <typename T>
-inline T &remove_const(const T &x) {
-    return const_cast<T &>(x);
+inline T& remove_const(const T& x) {
+    return const_cast<T&>(x);
 }
 
 /*************************************************************************************************/

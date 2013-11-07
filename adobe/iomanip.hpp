@@ -59,15 +59,15 @@ static const static_name_t atom_name_g = "atom"_name;
 //!\ingroup manipulator
 class format_element_t {
 public:
-    explicit format_element_t(name_t tag = name_t(), const std::string &ident = std::string())
+    explicit format_element_t(name_t tag = name_t(), const std::string& ident = std::string())
         : ident_m(ident), num_out_m(0), tag_m(tag), value_m(0) {}
 
-    format_element_t(name_t tag, const any_regular_t &value)
+    format_element_t(name_t tag, const any_regular_t& value)
         : num_out_m(0), tag_m(tag), value_m(&value) {}
 
     name_t tag() const { return tag_m; }
 
-    const any_regular_t &value() const {
+    const any_regular_t& value() const {
         if (!value_m)
             throw std::runtime_error("invalid value");
 
@@ -79,7 +79,7 @@ public:
 
 private:
     name_t tag_m;
-    const any_regular_t *value_m;
+    const any_regular_t* value_m;
 };
 
 /*************************************************************************************************/
@@ -93,20 +93,20 @@ public:
 
     virtual ~format_base() {}
 
-    virtual void begin_format(stream_type &os) { push_stack(os); }
-    virtual void end_format(stream_type &os) { pop_stack(os); }
+    virtual void begin_format(stream_type& os) { push_stack(os); }
+    virtual void end_format(stream_type& os) { pop_stack(os); }
 
-    virtual void begin_bag(stream_type &os, const std::string &) { push_stack(os); }
-    virtual void end_bag(stream_type &os) { pop_stack(os); }
+    virtual void begin_bag(stream_type& os, const std::string&) { push_stack(os); }
+    virtual void end_bag(stream_type& os) { pop_stack(os); }
 
-    virtual void begin_sequence(stream_type &os) { push_stack(os); }
-    virtual void end_sequence(stream_type &os) { pop_stack(os); }
+    virtual void begin_sequence(stream_type& os) { push_stack(os); }
+    virtual void end_sequence(stream_type& os) { pop_stack(os); }
 
-    virtual void begin_alternate(stream_type &os) { push_stack(os); }
-    virtual void end_alternate(stream_type &os) { pop_stack(os); }
+    virtual void begin_alternate(stream_type& os) { push_stack(os); }
+    virtual void end_alternate(stream_type& os) { pop_stack(os); }
 
-    virtual void begin_atom(stream_type &os, const any_regular_t &) { push_stack(os); }
-    virtual void end_atom(stream_type &os) { pop_stack(os); }
+    virtual void begin_atom(stream_type& os, const any_regular_t&) { push_stack(os); }
+    virtual void end_atom(stream_type& os) { pop_stack(os); }
 
     format_base() : depth_m(0) {}
 
@@ -115,22 +115,22 @@ public:
     virtual std::size_t stack_depth() { return stack_m.size(); }
 
 protected:
-    void push_stack(stream_type &os, const stack_value_type &element = format_element_t()) {
+    void push_stack(stream_type& os, const stack_value_type& element = format_element_t()) {
         stack_m.push_front(element);
         stack_event(os, true);
     }
 
-    void pop_stack(stream_type &os) {
+    void pop_stack(stream_type& os) {
         assert(stack_m.empty() == false);
         stack_event(os, false);
         stack_m.pop_front();
     }
 
-    const stack_value_type &stack_top() const { return stack_n(0); }
+    const stack_value_type& stack_top() const { return stack_n(0); }
 
-    stack_value_type &stack_top() { return stack_n(0); }
+    stack_value_type& stack_top() { return stack_n(0); }
 
-    const stack_value_type &stack_n(std::size_t n) const {
+    const stack_value_type& stack_n(std::size_t n) const {
         if (n > stack_m.size()) {
             std::stringstream buf;
             buf << "stack_n: n(" << static_cast<unsigned int>(n) << ") > size("
@@ -141,7 +141,7 @@ protected:
         return *boost::next(stack_m.begin(), n);
     }
 
-    stack_value_type &stack_n(std::size_t n) {
+    stack_value_type& stack_n(std::size_t n) {
         if (n > stack_m.size()) {
             std::stringstream buf;
             buf << "stack_n: n(" << static_cast<unsigned int>(n) << ") > size("
@@ -160,7 +160,7 @@ protected:
     }
 
 private:
-    virtual void stack_event(stream_type &os, bool is_push) = 0;
+    virtual void stack_event(stream_type& os, bool is_push) = 0;
 
     std::size_t depth_m; // note: Visual "depth", NOT the depth of the stack
     stack_type stack_m;
@@ -168,18 +168,18 @@ private:
 
 /*************************************************************************************************/
 
-format_base::stream_type &begin_format(format_base::stream_type &os);
-format_base::stream_type &end_format(format_base::stream_type &os);
+format_base::stream_type& begin_format(format_base::stream_type& os);
+format_base::stream_type& end_format(format_base::stream_type& os);
 
-format_base::stream_type &end_bag(format_base::stream_type &os);
+format_base::stream_type& end_bag(format_base::stream_type& os);
 
-format_base::stream_type &begin_sequence(format_base::stream_type &os);
-format_base::stream_type &end_sequence(format_base::stream_type &os);
+format_base::stream_type& begin_sequence(format_base::stream_type& os);
+format_base::stream_type& end_sequence(format_base::stream_type& os);
 
-format_base::stream_type &begin_alternate(format_base::stream_type &os);
-format_base::stream_type &end_alternate(format_base::stream_type &os);
+format_base::stream_type& begin_alternate(format_base::stream_type& os);
+format_base::stream_type& end_alternate(format_base::stream_type& os);
 
-format_base::stream_type &end_atom(format_base::stream_type &os);
+format_base::stream_type& end_atom(format_base::stream_type& os);
 
 /*************************************************************************************************/
 
@@ -193,13 +193,13 @@ public:
 
     indents(argument_type num) : inherited_t(indents::fct, num) {}
 
-    inherited_t &operator()(argument_type i) {
+    inherited_t& operator()(argument_type i) {
         arg_m = i;
         return *this;
     }
 
 private:
-    static stream_type &fct(stream_type &os, const argument_type &i) {
+    static stream_type& fct(stream_type& os, const argument_type& i) {
         for (argument_type count(0); count < i; ++count)
             os.put('\t');
 
@@ -217,13 +217,13 @@ public:
     typedef inherited_t::stream_type stream_type;
     typedef inherited_t::argument_type argument_type;
 
-    begin_bag(const argument_type &index) : inherited_t(begin_bag::fct, index) {}
+    begin_bag(const argument_type& index) : inherited_t(begin_bag::fct, index) {}
 
-    inherited_t &operator()(argument_type /*i*/) { return *this; }
+    inherited_t& operator()(argument_type /*i*/) { return *this; }
 
 private:
-    static stream_type &fct(stream_type &os, const argument_type &i) {
-        format_base *format(get_formatter(os));
+    static stream_type& fct(stream_type& os, const argument_type& i) {
+        format_base* format(get_formatter(os));
         if (format)
             format->begin_bag(os, i);
         return os;
@@ -241,13 +241,13 @@ public:
     typedef inherited_t::stream_type stream_type;
     typedef inherited_t::argument_type argument_type;
 
-    explicit begin_atom(const T &x) : inherited_t(begin_atom::fct, any_regular_t(x)) {}
+    explicit begin_atom(const T& x) : inherited_t(begin_atom::fct, any_regular_t(x)) {}
 
-    inherited_t &operator()(argument_type /*i*/) { return *this; }
+    inherited_t& operator()(argument_type /*i*/) { return *this; }
 
 private:
-    static stream_type &fct(stream_type &os, const argument_type &atom) {
-        format_base *format(get_formatter(os));
+    static stream_type& fct(stream_type& os, const argument_type& atom) {
+        format_base* format(get_formatter(os));
 
         if (format == 0)
             return os << atom.cast<typename promote<T>::type>();
@@ -262,8 +262,8 @@ private:
 
 //!\ingroup manipulator
 template <typename T, class charT, class traits>
-std::basic_ostream<charT, traits> &operator<<(std::basic_ostream<charT, traits> &os,
-                                              const begin_atom<T> &manip) {
+std::basic_ostream<charT, traits>& operator<<(std::basic_ostream<charT, traits>& os,
+                                              const begin_atom<T>& manip) {
     if (os.good())
         manip.do_manip(os);
 
@@ -274,23 +274,23 @@ std::basic_ostream<charT, traits> &operator<<(std::basic_ostream<charT, traits> 
 
 //!\ingroup manipulator
 template <typename NewFormat>
-void callback(std::ios_base::event ev, std::ios_base &strm, int idx) {
+void callback(std::ios_base::event ev, std::ios_base& strm, int idx) {
     if (ev == std::ios_base::erase_event) {
         try {
-            delete static_cast<NewFormat *>(strm.pword(idx));
+            delete static_cast<NewFormat*>(strm.pword(idx));
 
             strm.pword(idx) = 0;
         }
         catch (...) {
         }
     } else if (ev == std::ios_base::copyfmt_event) {
-        NewFormat *old(static_cast<NewFormat *>(strm.pword(idx)));
+        NewFormat* old(static_cast<NewFormat*>(strm.pword(idx)));
 
         if (old != 0) {
             try {
                 strm.pword(idx) = new NewFormat(*old);
             }
-            catch (std::bad_alloc &) {
+            catch (std::bad_alloc&) {
             }
         }
     }
@@ -300,11 +300,11 @@ void callback(std::ios_base::event ev, std::ios_base &strm, int idx) {
 
 //!\ingroup manipulator
 template <typename OldFormat, typename NewFormat>
-void replace_pword(std::ios_base &iob, int idx) {
+void replace_pword(std::ios_base& iob, int idx) {
     iob.register_callback(callback<NewFormat>, idx);
 
-    NewFormat *new_format(new NewFormat());
-    OldFormat *old_format(static_cast<OldFormat *>(iob.pword(idx)));
+    NewFormat* new_format(new NewFormat());
+    OldFormat* old_format(static_cast<OldFormat*>(iob.pword(idx)));
     iob.pword(idx) = new_format;
     delete old_format;
 }
@@ -313,11 +313,11 @@ void replace_pword(std::ios_base &iob, int idx) {
 
 //!\ingroup manipulator
 template <typename OldFormat, typename NewFormat, typename T>
-void replace_pword(std::ios_base &iob, int idx, const T &x) {
+void replace_pword(std::ios_base& iob, int idx, const T& x) {
     iob.register_callback(callback<NewFormat>, idx);
 
-    NewFormat *new_format(new NewFormat(x));
-    OldFormat *old_format(static_cast<OldFormat *>(iob.pword(idx)));
+    NewFormat* new_format(new NewFormat(x));
+    OldFormat* old_format(static_cast<OldFormat*>(iob.pword(idx)));
     iob.pword(idx) = new_format;
     delete old_format;
 }
@@ -326,7 +326,7 @@ void replace_pword(std::ios_base &iob, int idx, const T &x) {
 
 //!\ingroup manipulator
 template <class T>
-std::ostream &fmt(std::ostream &os, const T &t) {
+std::ostream& fmt(std::ostream& os, const T& t) {
     os << begin_atom<T>(t) << end_atom;
 
     return os;
@@ -343,16 +343,16 @@ public:
     typedef typename inherited_t::stream_type stream_type;
     typedef typename inherited_t::argument_type argument_type;
 
-    basic_format(const argument_type &t) : inherited_t(fmt<T>, t) {}
+    basic_format(const argument_type& t) : inherited_t(fmt<T>, t) {}
 
-    inherited_t &operator()(const argument_type & /*i*/) { return *this; }
+    inherited_t& operator()(const argument_type& /*i*/) { return *this; }
 };
 
 /*************************************************************************************************/
 
 //!\ingroup manipulator
 template <class T>
-inline basic_format<T> format(const T &t) {
+inline basic_format<T> format(const T& t) {
     return basic_format<T>(t);
 }
 

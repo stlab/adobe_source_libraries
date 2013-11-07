@@ -23,7 +23,7 @@ namespace {
 
 /****************************************************************************************************/
 
-constexpr const char *empty_string_s = "";
+constexpr const char* empty_string_s = "";
 constexpr std::size_t empty_hash_s = adobe::detail::name_hash("");
 
 /****************************************************************************************************/
@@ -40,7 +40,7 @@ static_name_t::operator bool() const { return static_cast<bool>(static_cast<name
 
 /****************************************************************************************************/
 
-bool operator<(const static_name_t &x, const static_name_t &y) { return name_t(x) < name_t(y); }
+bool operator<(const static_name_t& x, const static_name_t& y) { return name_t(x) < name_t(y); }
 
 /****************************************************************************************************/
 
@@ -48,7 +48,7 @@ name_t::operator bool() const { return ptr_m != empty_string_s; }
 
 /****************************************************************************************************/
 
-const char *name_t::map_string(const char *str) {
+const char* name_t::map_string(const char* str) {
     if (!str || !*str)
         return map_string(empty_string_s, empty_hash_s);
 
@@ -61,8 +61,8 @@ const char *name_t::map_string(const char *str) {
 
 /****************************************************************************************************/
 
-const char *name_t::map_string(const char *str, std::size_t hash) {
-    typedef std::unordered_map<std::size_t, const char *> map_t;
+const char* name_t::map_string(const char* str, std::size_t hash) {
+    typedef std::unordered_map<std::size_t, const char*> map_t;
     typedef std::lock_guard<std::mutex> lock_t;
 
     static std::mutex sync_s;
@@ -79,11 +79,11 @@ const char *name_t::map_string(const char *str, std::size_t hash) {
 
 /****************************************************************************************************/
 
-std::ostream &operator<<(std::ostream &s, const static_name_t &name) { return s << name.string_m; }
+std::ostream& operator<<(std::ostream& s, const static_name_t& name) { return s << name.string_m; }
 
 /****************************************************************************************************/
 
-std::ostream &operator<<(std::ostream &s, const name_t &name) { return s << name.ptr_m; }
+std::ostream& operator<<(std::ostream& s, const name_t& name) { return s << name.ptr_m; }
 
 /****************************************************************************************************/
 

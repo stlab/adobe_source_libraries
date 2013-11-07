@@ -79,13 +79,13 @@ public:
     row_iterator_adaptor(Iterator iterator) : row_iterator_adaptor::iterator_adaptor_(iterator) {}
 
     template <class U>
-    row_iterator_adaptor(const row_iterator_adaptor<U> &iterator)
+    row_iterator_adaptor(const row_iterator_adaptor<U>& iterator)
         : row_iterator_adaptor::iterator_adaptor_(iterator.base()) {}
 
     int col() const { return this->base_reference().col_m; }
     int row() const { return this->base_reference().row_m; }
 
-    const char *traversal_subject_type() const { return "Row"; }
+    const char* traversal_subject_type() const { return "Row"; }
     std::size_t traversal_subject_identifier() const { return row() + 1; }
 
 private:
@@ -110,13 +110,13 @@ public:
     col_iterator_adaptor(Iterator iterator) : col_iterator_adaptor::iterator_adaptor_(iterator) {}
 
     template <class U>
-    col_iterator_adaptor(const col_iterator_adaptor<U> &iterator)
+    col_iterator_adaptor(const col_iterator_adaptor<U>& iterator)
         : col_iterator_adaptor::iterator_adaptor_(iterator.base()) {}
 
     int col() const { return this->base_reference().col_m; }
     int row() const { return this->base_reference().row_m; }
 
-    const char *traversal_subject_type() const { return "Col"; }
+    const char* traversal_subject_type() const { return "Col"; }
     std::size_t traversal_subject_identifier() const { return col() + 1; }
 
 private:
@@ -141,13 +141,13 @@ public:
     box_iterator_adaptor(Iterator iterator) : box_iterator_adaptor::iterator_adaptor_(iterator) {}
 
     template <class U>
-    box_iterator_adaptor(const box_iterator_adaptor<U> &iterator)
+    box_iterator_adaptor(const box_iterator_adaptor<U>& iterator)
         : box_iterator_adaptor::iterator_adaptor_(iterator.base()) {}
 
     int col() const { return this->base_reference().col_m; }
     int row() const { return this->base_reference().row_m; }
 
-    const char *traversal_subject_type() const { return "Box"; }
+    const char* traversal_subject_type() const { return "Box"; }
     std::size_t traversal_subject_identifier() const { return get_box(*this) + 1; }
 
 private:
@@ -186,9 +186,9 @@ public:
 
     explicit possibility_set_t(bool default_to = true) { reset_to(default_to); }
 
-    possibility_set_t(const possibility_set_t &rhs) : set_m(rhs.set_m) {}
+    possibility_set_t(const possibility_set_t& rhs) : set_m(rhs.set_m) {}
 
-    possibility_set_t &operator=(const possibility_set_t &rhs) {
+    possibility_set_t& operator=(const possibility_set_t& rhs) {
         set_m = rhs.set_m;
         return *this;
     }
@@ -211,7 +211,7 @@ public:
     }
     std::size_t count_impossibilities() const { return 9 - count_possibilities(); }
 
-    bool includes(const possibility_set_t &rhs) const {
+    bool includes(const possibility_set_t& rhs) const {
         for (const_iterator first1(set_m.begin()), last1(set_m.end()), first2(rhs.set_m.end());
              first1 != last1; ++first1)
             if (*first1 && !*first2)
@@ -222,8 +222,8 @@ public:
 
     // This is the reason we have a possibility_set_t : off-by-one access
 
-    bool &operator[](std::size_t x) { return set_m[x - 1]; }
-    const bool &operator[](std::size_t x) const { return set_m[x - 1]; }
+    bool& operator[](std::size_t x) { return set_m[x - 1]; }
+    const bool& operator[](std::size_t x) const { return set_m[x - 1]; }
 
 private:
     set_t set_m;
@@ -231,7 +231,7 @@ private:
 
 /****************************************************************************************************/
 
-inline std::ostream &operator<<(std::ostream &s, const possibility_set_t &x) {
+inline std::ostream& operator<<(std::ostream& s, const possibility_set_t& x) {
     s << "{";
 
     std::size_t count(0);
@@ -250,7 +250,7 @@ inline std::ostream &operator<<(std::ostream &s, const possibility_set_t &x) {
 
 /****************************************************************************************************/
 
-inline possibility_set_t operator|(const possibility_set_t &x, const possibility_set_t &y) {
+inline possibility_set_t operator|(const possibility_set_t& x, const possibility_set_t& y) {
     possibility_set_t result(x);
 
     for (int i(1); i <= 9; ++i)
@@ -261,14 +261,14 @@ inline possibility_set_t operator|(const possibility_set_t &x, const possibility
 
 /****************************************************************************************************/
 
-inline possibility_set_t &operator|=(possibility_set_t &x, const possibility_set_t &y) {
+inline possibility_set_t& operator|=(possibility_set_t& x, const possibility_set_t& y) {
     x = x | y;
     return x;
 }
 
 /****************************************************************************************************/
 
-inline possibility_set_t operator&(const possibility_set_t &x, const possibility_set_t &y) {
+inline possibility_set_t operator&(const possibility_set_t& x, const possibility_set_t& y) {
     possibility_set_t result(x);
 
     for (int i(1); i <= 9; ++i)
@@ -279,14 +279,14 @@ inline possibility_set_t operator&(const possibility_set_t &x, const possibility
 
 /****************************************************************************************************/
 
-inline possibility_set_t &operator&=(possibility_set_t &x, const possibility_set_t &y) {
+inline possibility_set_t& operator&=(possibility_set_t& x, const possibility_set_t& y) {
     x = x & y;
     return x;
 }
 
 /****************************************************************************************************/
 
-inline possibility_set_t operator-(const possibility_set_t &x, const possibility_set_t &y) {
+inline possibility_set_t operator-(const possibility_set_t& x, const possibility_set_t& y) {
     possibility_set_t result;
 
     for (int i(1); i <= 9; ++i)
@@ -297,27 +297,27 @@ inline possibility_set_t operator-(const possibility_set_t &x, const possibility
 
 /****************************************************************************************************/
 
-inline possibility_set_t &operator-=(possibility_set_t &x, const possibility_set_t &y) {
+inline possibility_set_t& operator-=(possibility_set_t& x, const possibility_set_t& y) {
     x = x - y;
     return x;
 }
 
 /****************************************************************************************************/
 
-inline possibility_set_t operator+(const possibility_set_t &x, const possibility_set_t &y) {
+inline possibility_set_t operator+(const possibility_set_t& x, const possibility_set_t& y) {
     return x | y;
 }
 
 /****************************************************************************************************/
 
-inline possibility_set_t &operator+=(possibility_set_t &x, const possibility_set_t &y) {
+inline possibility_set_t& operator+=(possibility_set_t& x, const possibility_set_t& y) {
     x = x + y;
     return x;
 }
 
 /****************************************************************************************************/
 
-inline bool operator==(const possibility_set_t &x, const possibility_set_t &y) {
+inline bool operator==(const possibility_set_t& x, const possibility_set_t& y) {
     for (int i(1); i <= 9; ++i)
         if (x[i] != y[i])
             return false;
@@ -327,7 +327,7 @@ inline bool operator==(const possibility_set_t &x, const possibility_set_t &y) {
 
 /****************************************************************************************************/
 
-inline bool operator!=(const possibility_set_t &x, const possibility_set_t &y) { return !(x == y); }
+inline bool operator!=(const possibility_set_t& x, const possibility_set_t& y) { return !(x == y); }
 
 /****************************************************************************************************/
 
@@ -341,9 +341,9 @@ class square_t {
 public:
     square_t() : value_m(0) {}
 
-    square_t(const square_t &rhs) : value_m(rhs.value_m), possibilities_m(rhs.possibilities_m) {}
+    square_t(const square_t& rhs) : value_m(rhs.value_m), possibilities_m(rhs.possibilities_m) {}
 
-    square_t &operator=(const square_t &rhs) {
+    square_t& operator=(const square_t& rhs) {
         value_m = rhs.value_m;
         possibilities_m = rhs.possibilities_m;
         return *this;
@@ -363,8 +363,8 @@ public:
 
 class sudoku_t {
 public:
-    square_t &square(int row, int col) { return grid_m[col * 9 + row]; }
-    const square_t &square(int row, int col) const { return grid_m[col * 9 + row]; }
+    square_t& square(int row, int col) { return grid_m[col * 9 + row]; }
+    const square_t& square(int row, int col) const { return grid_m[col * 9 + row]; }
 
     std::string name_m;
 
@@ -374,7 +374,7 @@ public:
     public:
         iter_base() : row_m(0), col_m(0), g_m(0) {}
 
-        explicit iter_base(Value *p, int row = 0, int col = 0) : row_m(row), col_m(col), g_m(p) {}
+        explicit iter_base(Value* p, int row = 0, int col = 0) : row_m(row), col_m(col), g_m(p) {}
 
         void inc_row() { ++row_m; }
         void dec_row() { --row_m; }
@@ -405,14 +405,14 @@ public:
             }
         }
 
-        bool equal(iter_base const &other) const {
+        bool equal(iter_base const& other) const {
             return this->row_m == other.row_m && this->col_m == other.col_m;
         }
 
-        Value &dereference() const { return g_m[col_m * 9 + row_m]; }
+        Value& dereference() const { return g_m[col_m * 9 + row_m]; }
 
     private:
-        Value *g_m; // always refers to square (0, 0) in the puzzle
+        Value* g_m; // always refers to square (0, 0) in the puzzle
     };
 
     typedef iter_base<square_t> iterator;
@@ -527,12 +527,12 @@ private:
 
 /****************************************************************************************************/
 
-std::ostream &operator<<(std::ostream &s, const sudoku_t &x) {
+std::ostream& operator<<(std::ostream& s, const sudoku_t& x) {
     sudoku_t::const_iterator first(x.begin());
     sudoku_t::const_iterator last(x.end());
     int col_count(0);
     int row_count(0);
-    const char *hr("------+-------+------");
+    const char* hr("------+-------+------");
 
     for (; first != last; ++first) {
         if (first->value_m)

@@ -38,7 +38,7 @@ enum xml_lex_token_set_t {
 
 /*************************************************************************************************/
 
-const char *token_to_string(xml_lex_token_set_t token);
+const char* token_to_string(xml_lex_token_set_t token);
 
 /*************************************************************************************************/
 

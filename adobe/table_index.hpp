@@ -566,10 +566,10 @@ public:
 
     typedef H hasher;
     typedef C key_equal;
-    typedef value_type *pointer;
-    typedef const value_type *const_pointer;
-    typedef value_type &reference;
-    typedef const value_type &const_reference;
+    typedef value_type* pointer;
+    typedef const value_type* const_pointer;
+    typedef value_type& reference;
+    typedef const value_type& const_reference;
     typedef std::size_t size_type;
     typedef std::ptrdiff_t difference_type;
 
@@ -619,7 +619,7 @@ public:
     const_reverse_iterator rbegin() const { return const_reverse_iterator(index_m.rbegin()); }
     const_reverse_iterator rend() const { return const_reverse_iterator(index_m.rend()); }
 
-    std::pair<iterator, bool> insert(value_type &x) {
+    std::pair<iterator, bool> insert(value_type& x) {
         std::pair<typename index_type::iterator, bool> result = index_m.insert(&x);
         return std::make_pair(iterator(result.first), result.second);
     }
@@ -630,35 +630,35 @@ public:
                        boost::make_transform_iterator(l, pointer_to<value_type>()));
     }
 
-    iterator insert(iterator i, value_type &x) { return iterator(index_m.insert(i, &x)); }
+    iterator insert(iterator i, value_type& x) { return iterator(index_m.insert(i, &x)); }
 
     iterator erase(iterator i) { return index_m.erase(i.base()); }
-    size_type erase(const key_type &x) { return index_m.erase(x); }
+    size_type erase(const key_type& x) { return index_m.erase(x); }
 
     void clear() { index_m.clear(); }
 
-    index_type &index() { return index_m; }
-    const index_type &index() const { return index_m; }
+    index_type& index() { return index_m; }
+    const index_type& index() const { return index_m; }
 
-    iterator find(const key_type &x) { return iterator(index_m.find(x)); }
-    const_iterator find(const key_type &x) const { return const_iterator(index_m.find(x)); }
-    size_type count(const key_type &x) const { return index_m.count(x); }
+    iterator find(const key_type& x) { return iterator(index_m.find(x)); }
+    const_iterator find(const key_type& x) const { return const_iterator(index_m.find(x)); }
+    size_type count(const key_type& x) const { return index_m.count(x); }
 
-    iterator lower_bound(const key_type &) { return iterator(index_m.lower_bound()); }
-    const_iterator lower_bound(const key_type &) const {
+    iterator lower_bound(const key_type&) { return iterator(index_m.lower_bound()); }
+    const_iterator lower_bound(const key_type&) const {
         return const_iterator(index_m.lower_bound());
     }
-    iterator upper_bound(const key_type &) { return iterator(index_m.upper_bound()); }
-    const_iterator upper_bound(const key_type &) const {
+    iterator upper_bound(const key_type&) { return iterator(index_m.upper_bound()); }
+    const_iterator upper_bound(const key_type&) const {
         return const_iterator(index_m.upper_bound());
     }
 
-    std::pair<iterator, iterator> equal_range(const key_type &x) {
+    std::pair<iterator, iterator> equal_range(const key_type& x) {
         std::pair<typename index_type::iterator, typename index_type::iterator> result =
             index_m.equal_range(x);
         return std::make_pair(iterator(result.first), iterator(result.second));
     }
-    std::pair<const_iterator, const_iterator> equal_range(const key_type &x) const {
+    std::pair<const_iterator, const_iterator> equal_range(const key_type& x) const {
         std::pair<typename index_type::const_iterator, typename index_type::const_iterator> result =
             index_m.equal_range(x);
 
@@ -669,7 +669,7 @@ public:
     hasher hash_function() const { return index_m.hash_function(); }
     key_equal key_eq() const { return index_m.key_eq(); }
 
-    friend void swap(hash_index &x, hash_index &y) { swap(x.index_m, y.index_m); }
+    friend void swap(hash_index& x, hash_index& y) { swap(x.index_m, y.index_m); }
 
 private:
     index_type index_m;
@@ -685,19 +685,19 @@ template <typename Key,                                  // models Regular
 class table_index {
 
 public:
-    typedef typename std::vector<T *> index_type;
+    typedef typename std::vector<T*> index_type;
     typedef Transform transform_type;
 
     typedef Key key_type;
     typedef T value_type;
     typedef Compare key_compare; // Revisit?
-                                 //  typedef Allocator                               allocator_type;
-    typedef T &reference;
-    typedef const T &const_reference;
+    //  typedef Allocator                               allocator_type;
+    typedef T& reference;
+    typedef const T& const_reference;
     typedef typename index_type::size_type size_type;
     typedef typename index_type::difference_type difference_type;
-    typedef T *pointer;
-    typedef const T *const_pointer;
+    typedef T* pointer;
+    typedef const T* const_pointer;
 
     typedef boost::indirect_iterator<typename index_type::iterator> iterator;
     typedef boost::indirect_iterator<typename index_type::const_iterator> const_iterator;
@@ -705,13 +705,13 @@ public:
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
     template <class TransformPrimitive>
-    explicit table_index(TransformPrimitive transform, const key_compare &compare = key_compare())
+    explicit table_index(TransformPrimitive transform, const key_compare& compare = key_compare())
         : transform_m(transform), compare_m(compare) {}
-    explicit table_index(const transform_type &, const key_compare & = key_compare());
+    explicit table_index(const transform_type&, const key_compare& = key_compare());
 
     template <typename InputIterator, typename TransformPrimitive>
     table_index(InputIterator first, InputIterator last, TransformPrimitive transform,
-                const key_compare &compare = key_compare())
+                const key_compare& compare = key_compare())
         : transform_m(transform), compare_m(compare) {
         insert(begin(), first, last);
     }
@@ -740,10 +740,10 @@ public:
     reference back();
     const_reference back() const;
 
-    void push_back(value_type &);
+    void push_back(value_type&);
     void pop_back();
 
-    iterator insert(iterator, value_type &);
+    iterator insert(iterator, value_type&);
     template <class InputIterator>
     void insert(iterator position, InputIterator first, InputIterator last);
 
@@ -751,8 +751,8 @@ public:
     iterator erase(iterator first, iterator last);
     void clear();
 
-    index_type &index();
-    const index_type &index() const;
+    index_type& index();
+    const index_type& index() const;
 
     /*
         REVISIT (sparent) : If we wanted to allow sort() and unique() - and other algoriths to
@@ -766,24 +766,24 @@ public:
 
     void unique();
 
-    reference operator[](const key_type &);
-    const_reference operator[](const key_type &) const;
+    reference operator[](const key_type&);
+    const_reference operator[](const key_type&) const;
 
-    iterator find(const key_type &x);
-    const_iterator find(const key_type &x) const;
-    size_type count(const key_type &x) const;
+    iterator find(const key_type& x);
+    const_iterator find(const key_type& x) const;
+    size_type count(const key_type& x) const;
 
-    iterator lower_bound(const key_type &x);
-    const_iterator lower_bound(const key_type &x) const;
-    iterator upper_bound(const key_type &x);
-    const_iterator upper_bound(const key_type &x) const;
+    iterator lower_bound(const key_type& x);
+    const_iterator lower_bound(const key_type& x) const;
+    iterator upper_bound(const key_type& x);
+    const_iterator upper_bound(const key_type& x) const;
 
-    std::pair<iterator, iterator> equal_range(const key_type &x);
-    std::pair<const_iterator, const_iterator> equal_range(const key_type &x) const;
+    std::pair<iterator, iterator> equal_range(const key_type& x);
+    std::pair<const_iterator, const_iterator> equal_range(const key_type& x) const;
 
     transform_type transform() const { return transform_m; }
 
-    friend void swap(table_index &x, table_index &y) {
+    friend void swap(table_index& x, table_index& y) {
         swap(x.transform_m, y.transform_m);
         swap(x.compare_m, y.compare_m);
         swap(x.index_m, y.index_m);
@@ -794,7 +794,7 @@ private:
     struct indirect_compare_t : std::binary_function<pointer, pointer, bool> {
         typedef bool result_type;
 
-        indirect_compare_t(transform_type &transform, const key_compare &compare)
+        indirect_compare_t(transform_type& transform, const key_compare& compare)
             : transform_m(transform), compare_m(compare) {}
 
         bool operator()(pointer x, pointer y) const {
@@ -816,8 +816,8 @@ private:
 /*************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
-table_index<Key, T, Compare, Transform>::table_index(const transform_type &transform,
-                                                     const key_compare &compare)
+table_index<Key, T, Compare, Transform>::table_index(const transform_type& transform,
+                                                     const key_compare& compare)
     : transform_m(transform), compare_m(compare) {}
 
 /*************************************************************************************************/
@@ -910,7 +910,7 @@ inline bool table_index<Key, T, Compare, Transform>::empty() const {
 /*************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
-inline void table_index<Key, T, Compare, Transform>::push_back(value_type &x) {
+inline void table_index<Key, T, Compare, Transform>::push_back(value_type& x) {
     index_m.push_back(&x);
 }
 
@@ -925,7 +925,7 @@ inline void table_index<Key, T, Compare, Transform>::pop_back() {
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::iterator
-table_index<Key, T, Compare, Transform>::insert(iterator position, value_type &x) {
+table_index<Key, T, Compare, Transform>::insert(iterator position, value_type& x) {
     return index_m.insert(position, &x);
 }
 
@@ -1009,7 +1009,7 @@ table_index<Key, T, Compare, Transform>::at(const size_type n) const {
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::reference
 table_index<Key, T, Compare, Transform>::
-operator[](const key_type &key) {
+operator[](const key_type& key) {
     iterator iter(find(key));
 
     if (iter == end())
@@ -1023,7 +1023,7 @@ operator[](const key_type &key) {
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::const_reference
 table_index<Key, T, Compare, Transform>::
-operator[](const key_type &key) const {
+operator[](const key_type& key) const {
     const_iterator iter(find(key));
 
     if (iter == end())
@@ -1036,7 +1036,7 @@ operator[](const key_type &key) const {
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::iterator
-table_index<Key, T, Compare, Transform>::find(const key_type &key) {
+table_index<Key, T, Compare, Transform>::find(const key_type& key) {
     typename index_type::iterator iter = lower_bound(key).base();
 
     if (iter != index_m.end() && transform_m(**iter) != key)
@@ -1049,7 +1049,7 @@ table_index<Key, T, Compare, Transform>::find(const key_type &key) {
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::const_iterator
-table_index<Key, T, Compare, Transform>::find(const key_type &key) const {
+table_index<Key, T, Compare, Transform>::find(const key_type& key) const {
     typename index_type::const_iterator iter = lower_bound(key).base();
 
     if (iter != index_m.end() && transform_m(**iter) != key)
@@ -1062,7 +1062,7 @@ table_index<Key, T, Compare, Transform>::find(const key_type &key) const {
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::size_type
-table_index<Key, T, Compare, Transform>::count(const key_type &key) const {
+table_index<Key, T, Compare, Transform>::count(const key_type& key) const {
     return adobe::count_if(index_m, bound_predicate_t(key, transform_m, compare_m));
 }
 
@@ -1070,7 +1070,7 @@ table_index<Key, T, Compare, Transform>::count(const key_type &key) const {
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::iterator
-table_index<Key, T, Compare, Transform>::lower_bound(const key_type &key) {
+table_index<Key, T, Compare, Transform>::lower_bound(const key_type& key) {
     return adobe::lower_bound(index_m, key, compare_m,
                               boost::bind(transform_m, bind(indirect<value_type>(), _1)));
 }
@@ -1079,7 +1079,7 @@ table_index<Key, T, Compare, Transform>::lower_bound(const key_type &key) {
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::const_iterator
-table_index<Key, T, Compare, Transform>::lower_bound(const key_type &key) const {
+table_index<Key, T, Compare, Transform>::lower_bound(const key_type& key) const {
     return adobe::lower_bound(index_m, key, compare_m,
                               boost::bind(transform_m, bind(indirect<value_type>(), _1)));
 }
@@ -1088,7 +1088,7 @@ table_index<Key, T, Compare, Transform>::lower_bound(const key_type &key) const 
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::iterator
-table_index<Key, T, Compare, Transform>::upper_bound(const key_type &key) {
+table_index<Key, T, Compare, Transform>::upper_bound(const key_type& key) {
     return adobe::upper_bound(index_m, key, compare_m,
                               boost::bind(transform_m, bind(indirect<value_type>(), _1)));
 }
@@ -1097,7 +1097,7 @@ table_index<Key, T, Compare, Transform>::upper_bound(const key_type &key) {
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::const_iterator
-table_index<Key, T, Compare, Transform>::upper_bound(const key_type &key) const {
+table_index<Key, T, Compare, Transform>::upper_bound(const key_type& key) const {
     return adobe::upper_bound(index_m, key, compare_m,
                               boost::bind(transform_m, bind(indirect<value_type>(), _1)));
 }
@@ -1107,7 +1107,7 @@ table_index<Key, T, Compare, Transform>::upper_bound(const key_type &key) const 
 template <class Key, class T, class Compare, class Transform>
 inline std::pair<typename table_index<Key, T, Compare, Transform>::iterator,
                  typename table_index<Key, T, Compare, Transform>::iterator>
-table_index<Key, T, Compare, Transform>::equal_range(const key_type &key) {
+table_index<Key, T, Compare, Transform>::equal_range(const key_type& key) {
     return adobe::equal_range(index_m, key, compare_m,
                               boost::bind(transform_m, bind(indirect<value_type>(), _1)));
 }
@@ -1117,7 +1117,7 @@ table_index<Key, T, Compare, Transform>::equal_range(const key_type &key) {
 template <class Key, class T, class Compare, class Transform>
 inline std::pair<typename table_index<Key, T, Compare, Transform>::const_iterator,
                  typename table_index<Key, T, Compare, Transform>::const_iterator>
-table_index<Key, T, Compare, Transform>::equal_range(const key_type &key) const {
+table_index<Key, T, Compare, Transform>::equal_range(const key_type& key) const {
     return adobe::equal_range(index_m, key, compare_m,
                               boost::bind(transform_m, bind(indirect<value_type>(), _1)));
 }
@@ -1125,7 +1125,7 @@ table_index<Key, T, Compare, Transform>::equal_range(const key_type &key) const 
 /*************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
-inline typename table_index<Key, T, Compare, Transform>::index_type &
+inline typename table_index<Key, T, Compare, Transform>::index_type&
 table_index<Key, T, Compare, Transform>::index() {
     return index_m;
 }
@@ -1133,7 +1133,7 @@ table_index<Key, T, Compare, Transform>::index() {
 /*************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
-inline const typename table_index<Key, T, Compare, Transform>::index_type &
+inline const typename table_index<Key, T, Compare, Transform>::index_type&
 table_index<Key, T, Compare, Transform>::index() const {
     return index_m;
 }

@@ -72,8 +72,8 @@ typedef boost::array<char, 6> uuid_node_t;
 
 /*************************************************************************************************/
 
-void get_ieee_node_identifier(uuid_node_t *node);
-void get_system_time(uuid_time_t *uuid_time);
+void get_ieee_node_identifier(uuid_node_t* node);
+void get_system_time(uuid_time_t* uuid_time);
 
 boost::uint64_t true_random();
 
@@ -130,7 +130,7 @@ inline I net_to_host(I net) {
 
 /*************************************************************************************************/
 
-boost::int16_t read_state(boost::uint16_t *clockseq, uuid_time_t *timestamp, uuid_node_t *node);
+boost::int16_t read_state(boost::uint16_t* clockseq, uuid_time_t* timestamp, uuid_node_t* node);
 void write_state(boost::uint16_t clockseq, uuid_time_t timestamp, uuid_node_t node);
 
 /*************************************************************************************************/

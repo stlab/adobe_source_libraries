@@ -24,21 +24,21 @@ void any_regular_test() {
 
     {
         any_regular_t x(10.0);
-        double y = runtime_cast<double &>(x);
+        double y = runtime_cast<double&>(x);
         BOOST_CHECK_EQUAL(y, 10.0);
-        runtime_cast<double &>(x) = 11.0;
-        y = runtime_cast<double &>(x);
+        runtime_cast<double&>(x) = 11.0;
+        y = runtime_cast<double&>(x);
         BOOST_CHECK_EQUAL(y, 11.0);
 
         BOOST_CHECK(runtime_cast(x, y));
 
-        BOOST_CHECK_EQUAL(*runtime_cast<double *>(&x), 11.0);
-        BOOST_CHECK(!runtime_cast<char *>(&x));
+        BOOST_CHECK_EQUAL(*runtime_cast<double*>(&x), 11.0);
+        BOOST_CHECK(!runtime_cast<char*>(&x));
     }
 
     {
         const any_regular_t x(10.0);
-        double y = runtime_cast<const double &>(x);
+        double y = runtime_cast<const double&>(x);
         BOOST_CHECK_EQUAL(y, 10.0);
     }
 
@@ -60,7 +60,7 @@ void any_regular_test() {
 
 using namespace boost::unit_test;
 
-test_suite *init_unit_test_suite(int, char * []) {
+test_suite* init_unit_test_suite(int, char * []) {
     framework::master_test_suite().add(BOOST_TEST_CASE(&any_regular_test));
 
     return 0;

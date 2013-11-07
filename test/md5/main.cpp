@@ -17,7 +17,7 @@
 
 /****************************************************************************************************/
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     if (argc <= 1) {
         std::cout << "usage: " << argv[0] << " [ file ]" << std::endl;
         std::cout << "       generate the MD5 hash of a file" << std::endl;
@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
 
         success = true;
     }
-    catch (const std::exception &error) {
+    catch (const std::exception& error) {
         std::cerr << "Exception: " << error.what() << std::endl;
     }
     catch (...) {

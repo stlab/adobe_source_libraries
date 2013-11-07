@@ -47,7 +47,7 @@ static_name_t keyword_table[] = {constant_k, interface_k, layout_k, logic_k,
 
 /*************************************************************************************************/
 
-bool keyword_lookup(const name_t &name) {
+bool keyword_lookup(const name_t& name) {
     using namespace adobe;
 
 #ifndef NDEBUG
@@ -68,8 +68,8 @@ class eve_parser : public expression_parser {
 public:
     typedef eve_callback_suite_t::position_t position_t;
 
-    eve_parser(const eve_callback_suite_t &assembler, std::istream &in,
-               const line_position_t &position)
+    eve_parser(const eve_callback_suite_t& assembler, std::istream& in,
+               const line_position_t& position)
         : expression_parser(in, position), assembler_m(assembler) {
         set_keyword_extension_lookup(boost::bind(&keyword_lookup, _1));
 
@@ -77,40 +77,40 @@ public:
         //  assert(assembler_m.add_cell_proc_m); Only required if you have a sheet state.
     }
 
-    void parse(const position_t &);
+    void parse(const position_t&);
 
 private:
     typedef eve_callback_suite_t::relation_t relation_t;
     typedef std::vector<relation_t> relation_set_t;
 
-    bool is_layout_specifier(const position_t &);
+    bool is_layout_specifier(const position_t&);
     bool is_qualified_cell_decl();
 
     bool is_interface_set_decl();
     bool is_constant_set_decl();
     bool is_logic_set_decl();
 
-    bool is_interface_cell_decl(const string &detailed);
-    bool is_constant_cell_decl(const string &detailed);
-    bool is_logic_cell_decl(const string &detailed);
+    bool is_interface_cell_decl(const string& detailed);
+    bool is_constant_cell_decl(const string& detailed);
+    bool is_logic_cell_decl(const string& detailed);
 
-    bool is_relate_decl(line_position_t &position, array_t &expression, relation_set_t &, string &);
-    bool is_relate_expression_decl(relation_t &);
-    bool is_named_decl(name_t &cell_name, line_position_t &position, array_t &expression, string &);
+    bool is_relate_decl(line_position_t& position, array_t& expression, relation_set_t&, string&);
+    bool is_relate_expression_decl(relation_t&);
+    bool is_named_decl(name_t& cell_name, line_position_t& position, array_t& expression, string&);
 
     // bool is_cell_decl(eve_callback_suite_t::cell_type_t);
-    bool is_initializer(line_position_t &position, array_t &expression);
-    bool is_conditional(line_position_t &position, array_t &expression);
+    bool is_initializer(line_position_t& position, array_t& expression);
+    bool is_conditional(line_position_t& position, array_t& expression);
 
-    bool is_define_expression(line_position_t &, array_t &);
+    bool is_define_expression(line_position_t&, array_t&);
 
-    void require_end_statement(string &);
-    bool is_view_definition(const position_t &);
-    bool is_view_statement_sequence(const position_t &);
-    bool is_view_class_decl(name_t &class_name, array_t &arguments);
-    void require_view_statement_list(const position_t &);
+    void require_end_statement(string&);
+    bool is_view_definition(const position_t&);
+    bool is_view_statement_sequence(const position_t&);
+    bool is_view_class_decl(name_t& class_name, array_t& arguments);
+    void require_view_statement_list(const position_t&);
 
-    typedef bool (eve_parser::*set_decl_t)(const string &detailed);
+    typedef bool (eve_parser::*set_decl_t)(const string& detailed);
     bool is_set_decl(name_t, set_decl_t);
 
     eve_callback_suite_t assembler_m;
@@ -118,14 +118,14 @@ private:
 
 /*************************************************************************************************/
 
-void eve_parser::parse(const position_t &position) {
+void eve_parser::parse(const position_t& position) {
     if (!is_layout_specifier(position))
         throw_exception("layout specifier required");
 }
 
 /*************************************************************************************************/
 
-bool eve_parser::is_layout_specifier(const position_t &position) {
+bool eve_parser::is_layout_specifier(const position_t& position) {
     /* REVISIT (sparent) : Top level block is ignored. */
 
     using namespace adobe;
@@ -200,7 +200,7 @@ bool eve_parser::is_logic_set_decl() {
 /*************************************************************************************************/
 
 //  interface_cell_decl     = ["unlink"] identifier [initializer] [define_expression] end_statement.
-bool eve_parser::is_interface_cell_decl(const string &detailed) {
+bool eve_parser::is_interface_cell_decl(const string& detailed) {
     name_t cell_name;
     array_t initializer, expression;
     line_position_t initializer_position, expression_position;
@@ -226,7 +226,7 @@ bool eve_parser::is_interface_cell_decl(const string &detailed) {
 /*************************************************************************************************/
 
 //  constant_cell_decl      = identifier initializer end_statement.
-bool eve_parser::is_constant_cell_decl(const string &detailed) {
+bool eve_parser::is_constant_cell_decl(const string& detailed) {
     name_t cell_name;
     line_position_t position;
     array_t initializer;
@@ -272,7 +272,7 @@ bool eve_parser::is_cell_decl(eve_callback_suite_t::cell_type_t type)
 /*************************************************************************************************/
 
 //  logic_cell_decl         = named_decl | relate_decl.
-bool eve_parser::is_logic_cell_decl(const string &detailed) {
+bool eve_parser::is_logic_cell_decl(const string& detailed) {
     name_t cell_name;
     line_position_t position;
     array_t expression;
@@ -296,8 +296,8 @@ bool eve_parser::is_logic_cell_decl(const string &detailed) {
 
 //  relate_decl             = [conditional] "relate" "{" relate_expression relate_expression {
 // relate_expression } "}" [trail_comment]
-bool eve_parser::is_relate_decl(line_position_t &position, array_t &expression,
-                                relation_set_t &relation_set, string &brief) {
+bool eve_parser::is_relate_decl(line_position_t& position, array_t& expression,
+                                relation_set_t& relation_set, string& brief) {
     /*
      REVISIT (sparent) : A relation_set_t needs a position independent of the continitional
      expression in order to report overconstraints. Here we "fudge" and reuse the conditional
@@ -343,7 +343,7 @@ bool eve_parser::is_relate_decl(line_position_t &position, array_t &expression,
 
 //  relate_expression       = [lead_comment] identifier { "," identifier } define_expression
 //                              end_statement.
-bool eve_parser::is_relate_expression_decl(relation_t &relation) {
+bool eve_parser::is_relate_expression_decl(relation_t& relation) {
     (void)is_lead_comment(relation.detailed_m);
 
     name_t cell_name;
@@ -366,8 +366,8 @@ bool eve_parser::is_relate_expression_decl(relation_t &relation) {
 /*************************************************************************************************/
 
 //  named_decl              = identifier define_expression end_statement.
-bool eve_parser::is_named_decl(name_t &cell_name, line_position_t &position, array_t &expression,
-                               string &brief) {
+bool eve_parser::is_named_decl(name_t& cell_name, line_position_t& position, array_t& expression,
+                               string& brief) {
     if (!is_identifier(cell_name))
         return false;
     if (!is_define_expression(position, expression))
@@ -379,7 +379,7 @@ bool eve_parser::is_named_decl(name_t &cell_name, line_position_t &position, arr
 /*************************************************************************************************/
 
 // initializer              = ":" expression.
-bool eve_parser::is_initializer(line_position_t &position, array_t &expression) {
+bool eve_parser::is_initializer(line_position_t& position, array_t& expression) {
     using namespace adobe;
 
     if (!is_token(colon_k))
@@ -394,7 +394,7 @@ bool eve_parser::is_initializer(line_position_t &position, array_t &expression) 
 /*************************************************************************************************/
 
 //  define_expression       = "<==" expression.
-bool eve_parser::is_define_expression(line_position_t &position, array_t &expression) {
+bool eve_parser::is_define_expression(line_position_t& position, array_t& expression) {
     if (!is_token(is_k))
         return false;
 
@@ -407,7 +407,7 @@ bool eve_parser::is_define_expression(line_position_t &position, array_t &expres
 
 //  conditional = "when" "(" expression ")".
 
-bool eve_parser::is_conditional(line_position_t &position, array_t &expression) {
+bool eve_parser::is_conditional(line_position_t& position, array_t& expression) {
     if (!is_keyword(when_k))
         return false;
 
@@ -424,14 +424,14 @@ bool eve_parser::is_conditional(line_position_t &position, array_t &expression) 
 /*************************************************************************************************/
 
 // end_statement            = ";" [trail_comment].
-void eve_parser::require_end_statement(string &brief) {
+void eve_parser::require_end_statement(string& brief) {
     require_token(semicolon_k);
     (void)is_trail_comment(brief);
 }
 
 /*************************************************************************************************/
 
-bool eve_parser::is_view_definition(const position_t &location) {
+bool eve_parser::is_view_definition(const position_t& location) {
     using namespace adobe;
 
     string detailed;
@@ -457,7 +457,7 @@ bool eve_parser::is_view_definition(const position_t &location) {
         node_location = assembler_m.add_view_proc_m(location, line_position, class_name, arguments,
                                                     brief, detailed);
     }
-    catch (const std::exception &error) {
+    catch (const std::exception& error) {
         throw stream_error_t(error, line_position);
     }
 
@@ -470,7 +470,7 @@ bool eve_parser::is_view_definition(const position_t &location) {
 
 /*************************************************************************************************/
 
-bool eve_parser::is_view_statement_sequence(const position_t &location) {
+bool eve_parser::is_view_statement_sequence(const position_t& location) {
     while (is_view_definition(location)) {
     }
     return true;
@@ -478,7 +478,7 @@ bool eve_parser::is_view_statement_sequence(const position_t &location) {
 
 /*************************************************************************************************/
 
-bool eve_parser::is_view_class_decl(name_t &class_name, array_t &arguments) {
+bool eve_parser::is_view_class_decl(name_t& class_name, array_t& arguments) {
     using namespace adobe;
 
     if (!is_identifier(class_name))
@@ -494,7 +494,7 @@ bool eve_parser::is_view_class_decl(name_t &class_name, array_t &arguments) {
 
 /*************************************************************************************************/
 
-void eve_parser::require_view_statement_list(const position_t &location) {
+void eve_parser::require_view_statement_list(const position_t& location) {
     using namespace adobe;
 
     require_token(open_brace_k);
@@ -510,9 +510,9 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-line_position_t parse(std::istream &in, const line_position_t &line_position,
-                      const eve_callback_suite_t::position_t &position,
-                      const eve_callback_suite_t &assembler) {
+line_position_t parse(std::istream& in, const line_position_t& line_position,
+                      const eve_callback_suite_t::position_t& position,
+                      const eve_callback_suite_t& assembler) {
     eve_parser parser(assembler, in, line_position);
     parser.parse(position);
     return parser.next_position();

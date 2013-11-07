@@ -46,27 +46,27 @@ namespace adobe {
 /*************************************************************************************************/
 
 template <typename ValueType>
-struct static_table_traits<const std::type_info *, ValueType> {
+struct static_table_traits<const std::type_info*, ValueType> {
     typedef bool result_type;
-    typedef const std::type_info *key_type;
+    typedef const std::type_info* key_type;
     typedef ValueType value_type;
     typedef std::pair<key_type, value_type> entry_type;
 
-    result_type operator()(const entry_type &x, const entry_type &y) const {
+    result_type operator()(const entry_type& x, const entry_type& y) const {
         return (*this)(x, y.first);
     }
 
     // revisit: MM. For debugging purposes, VC 8 requires the definition of
     // this (unnecessary overload) in debug versions.
-    result_type operator()(const key_type &x, const entry_type &y) const {
+    result_type operator()(const key_type& x, const entry_type& y) const {
         return !(operator()(y, x)) && !equal(x, y.first);
     }
 
-    result_type operator()(const entry_type &x, const key_type &y) const {
+    result_type operator()(const entry_type& x, const key_type& y) const {
         return x.first->before(*y) != 0;
     }
 
-    result_type equal(const key_type &x, const key_type &y) const { return *x == *y; }
+    result_type equal(const key_type& x, const key_type& y) const { return *x == *y; }
 };
 
 /*************************************************************************************************/
@@ -82,17 +82,17 @@ namespace {
 using namespace adobe::literals;
 
 typedef void (adobe::virtual_machine_t::implementation_t::*operator_t)();
-typedef boost::function<adobe::any_regular_t(const adobe::array_t &)> array_function_t;
-typedef boost::function<adobe::any_regular_t(const adobe::dictionary_t &)> dictionary_function_t;
+typedef boost::function<adobe::any_regular_t(const adobe::array_t&)> array_function_t;
+typedef boost::function<adobe::any_regular_t(const adobe::dictionary_t&)> dictionary_function_t;
 
 typedef vector<adobe::any_regular_t> stack_type; // REVISIT (sparent) : GCC 3.1 the symbol stack_t
-                                                 // conflicts with a symbol in signal.h
+// conflicts with a symbol in signal.h
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 typedef adobe::static_table<adobe::name_t, operator_t, 27> operator_table_t;
 typedef adobe::static_table<adobe::name_t, array_function_t, 7> array_function_table_t;
 typedef adobe::static_table<adobe::name_t, dictionary_function_t, 1> dictionary_function_table_t;
-typedef adobe::static_table<const std::type_info *, adobe::name_t, 7> type_table_t;
+typedef adobe::static_table<const std::type_info*, adobe::name_t, 7> type_table_t;
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 
 /*************************************************************************************************/
@@ -102,14 +102,14 @@ struct make {
     typedef Result result_type;
 
     template <typename T>
-    Result operator()(const T &x) {
+    Result operator()(const T& x) {
         return Result(x);
     }
 };
 
 /*************************************************************************************************/
 
-static type_table_t *type_table_g;
+static type_table_t* type_table_g;
 
 /*************************************************************************************************/
 
@@ -135,7 +135,7 @@ void get_type_name_init() { call_once(get_type_name_flag, &get_type_name_init_);
 
 /*************************************************************************************************/
 
-adobe::name_t get_type_name(const adobe::any_regular_t &val) {
+adobe::name_t get_type_name(const adobe::any_regular_t& val) {
     get_type_name_init();
 
     adobe::name_t result;
@@ -156,7 +156,7 @@ adobe::name_t get_type_name(const adobe::any_regular_t &val) {
 
 /*************************************************************************************************/
 
-adobe::any_regular_t xml_escape_function(const adobe::array_t &parameters) {
+adobe::any_regular_t xml_escape_function(const adobe::array_t& parameters) {
     if (parameters.size() != 1 || parameters[0].type_info() != typeid(string))
         throw std::runtime_error("xml_escape: parameter error");
 
@@ -165,7 +165,7 @@ adobe::any_regular_t xml_escape_function(const adobe::array_t &parameters) {
 
 /*************************************************************************************************/
 
-adobe::any_regular_t xml_unescape_function(const adobe::array_t &parameters) {
+adobe::any_regular_t xml_unescape_function(const adobe::array_t& parameters) {
     if (parameters.size() != 1 || parameters[0].type_info() != typeid(string))
         throw std::runtime_error("xml_unescape: parameter error");
 
@@ -174,7 +174,7 @@ adobe::any_regular_t xml_unescape_function(const adobe::array_t &parameters) {
 
 /*************************************************************************************************/
 
-adobe::any_regular_t localize_function(const adobe::array_t &parameters) {
+adobe::any_regular_t localize_function(const adobe::array_t& parameters) {
     if (parameters.size() != 1)
         throw std::runtime_error("localize: parameter error");
 
@@ -186,7 +186,7 @@ adobe::any_regular_t localize_function(const adobe::array_t &parameters) {
 
 /*************************************************************************************************/
 
-adobe::any_regular_t round_function(const adobe::array_t &parameters) {
+adobe::any_regular_t round_function(const adobe::array_t& parameters) {
     if (parameters.size() == 0)
         throw std::runtime_error("round: parameter error");
 
@@ -195,7 +195,7 @@ adobe::any_regular_t round_function(const adobe::array_t &parameters) {
 
 /*************************************************************************************************/
 
-adobe::any_regular_t min_function(const adobe::array_t &parameters) {
+adobe::any_regular_t min_function(const adobe::array_t& parameters) {
     if (parameters.size() == 0)
         throw std::runtime_error("min: parameter error");
 
@@ -208,7 +208,7 @@ adobe::any_regular_t min_function(const adobe::array_t &parameters) {
 
 /*************************************************************************************************/
 
-adobe::any_regular_t max_function(const adobe::array_t &parameters) {
+adobe::any_regular_t max_function(const adobe::array_t& parameters) {
     if (parameters.size() == 0)
         throw std::runtime_error("max: parameter error");
 
@@ -221,7 +221,7 @@ adobe::any_regular_t max_function(const adobe::array_t &parameters) {
 
 /*************************************************************************************************/
 
-adobe::any_regular_t typeof_function(const adobe::array_t &parameters) {
+adobe::any_regular_t typeof_function(const adobe::array_t& parameters) {
     if (parameters.size() == 0)
         throw std::runtime_error("typeof: parameter error");
 
@@ -236,7 +236,7 @@ adobe::any_regular_t typeof_function(const adobe::array_t &parameters) {
 
 /*************************************************************************************************/
 
-adobe::any_regular_t scale_function(const adobe::dictionary_t &parameters) {
+adobe::any_regular_t scale_function(const adobe::dictionary_t& parameters) {
     double m(1.0);
     double x(0.0);
     double b(0.0);
@@ -324,10 +324,10 @@ class virtual_machine_t::implementation_t {
 public:
     implementation_t();
 
-    void evaluate(const array_t &expression);
+    void evaluate(const array_t& expression);
 
-    const any_regular_t &back() const;
-    any_regular_t &back();
+    const any_regular_t& back() const;
+    any_regular_t& back();
     void pop_back();
 
     variable_lookup_t variable_lookup_m;
@@ -371,16 +371,16 @@ public:
     void array_operator();
     void dictionary_operator();
 
-    static operator_table_t *operator_table_g;
-    static array_function_table_t *array_function_table_g;
-    static dictionary_function_table_t *dictionary_function_table_g;
+    static operator_table_t* operator_table_g;
+    static array_function_table_t* array_function_table_g;
+    static dictionary_function_table_t* dictionary_function_table_g;
 };
 
 /*************************************************************************************************/
 
-operator_table_t *virtual_machine_t::implementation_t::operator_table_g;
-array_function_table_t *virtual_machine_t::implementation_t::array_function_table_g;
-dictionary_function_table_t *virtual_machine_t::implementation_t::dictionary_function_table_g;
+operator_table_t* virtual_machine_t::implementation_t::operator_table_g;
+array_function_table_t* virtual_machine_t::implementation_t::array_function_table_g;
+dictionary_function_table_t* virtual_machine_t::implementation_t::dictionary_function_table_g;
 
 /*************************************************************************************************/
 
@@ -490,7 +490,7 @@ virtual_machine_t::implementation_t::implementation_t() { virtual_machine_init()
 
 /*************************************************************************************************/
 
-void virtual_machine_t::implementation_t::evaluate(const array_t &expression) {
+void virtual_machine_t::implementation_t::evaluate(const array_t& expression) {
     for (expression_t::const_iterator iter(expression.begin()); iter != expression.end(); ++iter) {
         adobe::name_t op_name;
 
@@ -507,13 +507,13 @@ void virtual_machine_t::implementation_t::evaluate(const array_t &expression) {
 
 /*************************************************************************************************/
 
-const any_regular_t &virtual_machine_t::implementation_t::back() const {
+const any_regular_t& virtual_machine_t::implementation_t::back() const {
     return value_stack_m.back();
 }
 
 /*************************************************************************************************/
 
-any_regular_t &virtual_machine_t::implementation_t::back() { return value_stack_m.back(); }
+any_regular_t& virtual_machine_t::implementation_t::back() { return value_stack_m.back(); }
 
 /*************************************************************************************************/
 
@@ -543,8 +543,8 @@ void virtual_machine_t::implementation_t::binary_operator() {
     stack_type::iterator iter(
         value_stack_m.end()); // REVISIT (sparent) : GCC 3.1 requires :: qualifier
 
-    adobe::any_regular_t &operand1 = *(iter - 2);
-    adobe::any_regular_t &operand2 = *(iter - 1);
+    adobe::any_regular_t& operand1 = *(iter - 2);
+    adobe::any_regular_t& operand2 = *(iter - 1);
 
     operand1.assign(
         operator_class()(operand1.template cast<operand_t>(), operand2.template cast<operand_t>()));
@@ -562,8 +562,8 @@ bool virtual_machine_t::implementation_t::operator_override(adobe::name_t name) 
         stack_type::iterator iter(
             value_stack_m.end()); // REVISIT (sparent) : GCC 3.1 requires :: qualifier
 
-        adobe::any_regular_t &operand1 = *(iter - 2);
-        adobe::any_regular_t &operand2 = *(iter - 1);
+        adobe::any_regular_t& operand1 = *(iter - 2);
+        adobe::any_regular_t& operand2 = *(iter - 1);
 
         operand1.assign(binary_op_found->second(operand1, operand2));
 
@@ -584,7 +584,7 @@ void virtual_machine_t::implementation_t::unary_operator() {
 
     stack_type::iterator iter(value_stack_m.end());
 
-    adobe::any_regular_t &operand1 = *(iter - 1);
+    adobe::any_regular_t& operand1 = *(iter - 1);
 
     operand1.assign(operator_class()(operand1.template cast<operand_t>()));
 }
@@ -601,7 +601,7 @@ void virtual_machine_t::implementation_t::logical_operator(bool do_and) {
         pop_back();
         evaluate(operand_exp);
 
-        any_regular_t &operand2(value_stack_m.back());
+        any_regular_t& operand2(value_stack_m.back());
 
         if (operand2.type_info() != typeid(bool))
             throw std::bad_cast();
@@ -621,8 +621,8 @@ void virtual_machine_t::implementation_t::logical_or_operator() { logical_operat
 void virtual_machine_t::implementation_t::index_operator() {
     stack_type::iterator iter(value_stack_m.end());
 
-    any_regular_t &operand1(*(iter - 2));
-    any_regular_t &operand2(*(iter - 1));
+    any_regular_t& operand1(*(iter - 2));
+    any_regular_t& operand2(*(iter - 1));
 
     adobe::any_regular_t result;
 
@@ -640,7 +640,7 @@ void virtual_machine_t::implementation_t::index_operator() {
         if (numeric_index_lookup_m) {
             result = numeric_index_lookup_m(operand1, index);
         } else {
-            const array_t &array = operand1.cast<array_t>();
+            const array_t& array = operand1.cast<array_t>();
 
             if (!(index < array.size()))
                 throw std::runtime_error("index: array index out of range");
@@ -773,7 +773,7 @@ void virtual_machine_t::implementation_t::bitwise_binary_operator() {
 
     pop_back(); // pop operand2
 
-    adobe::any_regular_t &operand1 = back();
+    adobe::any_regular_t& operand1 = back();
     boost::uint32_t operand1_value(static_cast<boost::uint32_t>(operand1.cast<double>()));
 
     boost::uint32_t result(BitwiseOp()(operand1_value, operand2_value));
@@ -784,7 +784,7 @@ void virtual_machine_t::implementation_t::bitwise_binary_operator() {
 
 template <typename BitwiseOp>
 void virtual_machine_t::implementation_t::bitwise_unary_operator() {
-    adobe::any_regular_t &operand1 = back();
+    adobe::any_regular_t& operand1 = back();
     boost::uint32_t operand1_value(static_cast<boost::uint32_t>(operand1.cast<double>()));
     boost::uint32_t result(BitwiseOp()(operand1_value));
 
@@ -838,10 +838,10 @@ void virtual_machine_t::implementation_t::function_operator() {
 
 virtual_machine_t::virtual_machine_t() : object_m(new implementation_t) {}
 
-virtual_machine_t::virtual_machine_t(const virtual_machine_t &rhs)
+virtual_machine_t::virtual_machine_t(const virtual_machine_t& rhs)
     : object_m(new implementation_t(*rhs.object_m)) {}
 
-virtual_machine_t &virtual_machine_t::operator=(const virtual_machine_t &rhs) {
+virtual_machine_t& virtual_machine_t::operator=(const virtual_machine_t& rhs) {
     *object_m = *(rhs.object_m);
 
     return *this;
@@ -852,53 +852,53 @@ virtual_machine_t::~virtual_machine_t() { delete object_m; }
 
 /*************************************************************************************************/
 
-void virtual_machine_t::set_variable_lookup(const variable_lookup_t &lookup) {
+void virtual_machine_t::set_variable_lookup(const variable_lookup_t& lookup) {
     object_m->variable_lookup_m = lookup;
 }
 
 /*************************************************************************************************/
 
-void virtual_machine_t::set_array_function_lookup(const array_function_lookup_t &function) {
+void virtual_machine_t::set_array_function_lookup(const array_function_lookup_t& function) {
     object_m->array_function_lookup_m = function;
 }
 
 /*************************************************************************************************/
 
 void
-virtual_machine_t::set_dictionary_function_lookup(const dictionary_function_lookup_t &function) {
+virtual_machine_t::set_dictionary_function_lookup(const dictionary_function_lookup_t& function) {
     object_m->dictionary_function_lookup_m = function;
 }
 
 /*************************************************************************************************/
 
-void virtual_machine_t::set_named_index_lookup(const named_index_lookup_t &function) {
+void virtual_machine_t::set_named_index_lookup(const named_index_lookup_t& function) {
     object_m->named_index_lookup_m = function;
 }
 
 /*************************************************************************************************/
 
-void virtual_machine_t::set_numeric_index_lookup(const numeric_index_lookup_t &function) {
+void virtual_machine_t::set_numeric_index_lookup(const numeric_index_lookup_t& function) {
     object_m->numeric_index_lookup_m = function;
 }
 
 /*************************************************************************************************/
 
 void virtual_machine_t::override_operator(name_t operator_name,
-                                          const binary_op_override_t &override) {
+                                          const binary_op_override_t& override) {
     object_m->binary_op_override_map_m[operator_name] = override;
 }
 
 /*************************************************************************************************/
 
-void virtual_machine_t::evaluate(const expression_t &expression) { object_m->evaluate(expression); }
+void virtual_machine_t::evaluate(const expression_t& expression) { object_m->evaluate(expression); }
 
 /*************************************************************************************************/
 
-const any_regular_t &virtual_machine_t::back() const { return object_m->back(); }
+const any_regular_t& virtual_machine_t::back() const { return object_m->back(); }
 
 /*************************************************************************************************/
 
-any_regular_t &virtual_machine_t::back() { return object_m->back(); }
+any_regular_t& virtual_machine_t::back() { return object_m->back(); }
 
 /*************************************************************************************************/
 

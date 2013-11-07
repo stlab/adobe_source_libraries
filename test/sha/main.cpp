@@ -51,29 +51,29 @@ namespace {
 /****************************************************************************************************/
 
 struct unit_test_t {
-    unit_test_t(const char *message, boost::uint64_t bitsize, const char *digest)
+    unit_test_t(const char* message, boost::uint64_t bitsize, const char* digest)
         : message_m(message, static_cast<std::size_t>(bitsize / 8 + ((bitsize % 8 == 0) ? 0 : 1))),
           bitsize_m(bitsize), digest_m(digest) {}
 
-    unit_test_t(const std::string &message, const char *digest)
+    unit_test_t(const std::string& message, const char* digest)
         : message_m(message), bitsize_m(std::numeric_limits<boost::uint64_t>::max()),
           digest_m(digest) {}
 
     std::string message_m;
     boost::uint64_t bitsize_m;
-    const char *digest_m;
+    const char* digest_m;
 };
 
 /****************************************************************************************************/
 
 template <typename DigestType>
-std::string digest_string(const DigestType &digest, bool spaces = true) {
+std::string digest_string(const DigestType& digest, bool spaces = true) {
     std::stringstream digest_str;
     bool first(true);
 
     digest_str << std::hex;
 
-    for (auto &curdigest : digest) {
+    for (auto& curdigest : digest) {
         if (!first && spaces)
             digest_str << ' ';
 
@@ -91,7 +91,7 @@ std::string digest_string(const DigestType &digest, bool spaces = true) {
 /****************************************************************************************************/
 
 template <typename DigestType>
-std::string digest_binary(const DigestType &digest) {
+std::string digest_binary(const DigestType& digest) {
     enum {
         num_bytes = sizeof(typename DigestType::value_type)
     };
@@ -100,7 +100,7 @@ std::string digest_binary(const DigestType &digest) {
 
     digest_str.reserve(digest.size() * num_bytes + 1);
 
-    for (auto &curdigest : digest) {
+    for (auto& curdigest : digest) {
         for (int i(num_bytes - 1); i >= 0; --i) {
             std::size_t shift_amt(8 * i);
 
@@ -113,7 +113,7 @@ std::string digest_binary(const DigestType &digest) {
 
 /****************************************************************************************************/
 
-void print_binary_message(const std::string &str, std::size_t unit_size) {
+void print_binary_message(const std::string& str, std::size_t unit_size) {
     std::cout << std::hex;
 
     std::size_t count(0);
@@ -214,7 +214,7 @@ void pgmt(std::string seed) {
 /****************************************************************************************************/
 
 template <typename HashT, typename C> // I models Sequence
-void test_hash(const C &container) {
+void test_hash(const C& container) {
     typedef HashT hash_type;
     typedef typename hash_type::digest_type digest_type;
 
@@ -223,8 +223,8 @@ void test_hash(const C &container) {
 
     std::cout << "*** " << typeid(hash).name() << " unit testing\n";
 
-    for (auto &cur_test : container) {
-        const std::string &test_string(cur_test.message_m);
+    for (auto& cur_test : container) {
+        const std::string& test_string(cur_test.message_m);
         std::string::const_iterator test_string_first(test_string.begin());
         std::string::const_iterator test_string_last(test_string.end());
         bool modified_bitsize(cur_test.bitsize_m != std::numeric_limits<boost::uint64_t>::max());

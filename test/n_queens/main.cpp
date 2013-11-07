@@ -85,7 +85,7 @@ int main() try {
 
     return 0;
 }
-catch (std::exception &error) {
+catch (std::exception& error) {
     std::cout << "Error: " << error.what() << '\n';
 
     return 1;

@@ -93,22 +93,22 @@ class zuid_t
 public:
 #if !defined(ADOBE_NO_DOCUMENTATION)
     zuid_t();
-    zuid_t(const zuid_t &);
+    zuid_t(const zuid_t&);
 #endif
 
-    explicit zuid_t(const uuid_t &);
-    explicit zuid_t(const std::string &);
-    explicit zuid_t(const char *);
+    explicit zuid_t(const uuid_t&);
+    explicit zuid_t(const std::string&);
+    explicit zuid_t(const char*);
 
-    zuid_t(const zuid_t &name_space, const std::string &name);
+    zuid_t(const zuid_t& name_space, const std::string& name);
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
-    zuid_t &operator=(const zuid_t &);
-    zuid_t &operator=(const uuid_t &);
+    zuid_t& operator=(const zuid_t&);
+    zuid_t& operator=(const uuid_t&);
 #endif
 
     std::string str() const;
-    char *c_str() const;
+    char* c_str() const;
 
     static const zuid_t null;
 
@@ -118,8 +118,8 @@ public:
     };
 
 private:
-    friend bool operator==(const zuid_t &a, const zuid_t &b);
-    friend bool operator<(const zuid_t &a, const zuid_t &b);
+    friend bool operator==(const zuid_t& a, const zuid_t& b);
+    friend bool operator<(const zuid_t& a, const zuid_t& b);
 
     struct zeroed {};
 
@@ -132,8 +132,8 @@ private:
 /*************************************************************************************************/
 #if !defined(ADOBE_NO_DOCUMENTATION)
 
-bool operator==(const zuid_t &a, const zuid_t &b);
-bool operator<(const zuid_t &a, const zuid_t &b);
+bool operator==(const zuid_t& a, const zuid_t& b);
+bool operator<(const zuid_t& a, const zuid_t& b);
 
 #endif
 

@@ -40,7 +40,7 @@ namespace implementation {
 
 /****************************************************************************************************/
 
-inline bool xstring_preorder_predicate(const token_range_t &range) {
+inline bool xstring_preorder_predicate(const token_range_t& range) {
     // we want to check for both xstr and marker tags because both are
     // handled by the xstring system
 
@@ -54,36 +54,36 @@ struct null_output_t {
     typedef std::output_iterator_tag iterator_category;
     typedef null_output_t value_type;
     typedef std::ptrdiff_t difference_type;
-    typedef value_type *pointer;
-    typedef value_type &reference;
+    typedef value_type* pointer;
+    typedef value_type& reference;
 
-    null_output_t &operator++(int) { return *this; }
-    null_output_t &operator++() { return *this; }
+    null_output_t& operator++(int) { return *this; }
+    null_output_t& operator++() { return *this; }
     reference operator*() { return *this; }
 
     template <typename T>
-    null_output_t &operator=(const T &) {
+    null_output_t& operator=(const T&) {
         return *this;
     }
 };
 
 /****************************************************************************************************/
 
-token_range_t xml_xstr_store(const token_range_t &entire_element_range, const token_range_t &name,
-                             const attribute_set_t &attribute_set, const token_range_t &value);
+token_range_t xml_xstr_store(const token_range_t& entire_element_range, const token_range_t& name,
+                             const attribute_set_t& attribute_set, const token_range_t& value);
 
-token_range_t xml_xstr_lookup(const token_range_t &entire_element_range, const token_range_t &name,
-                              const attribute_set_t &attribute_set, const token_range_t &value);
+token_range_t xml_xstr_lookup(const token_range_t& entire_element_range, const token_range_t& name,
+                              const attribute_set_t& attribute_set, const token_range_t& value);
 
-token_range_t xml_element_finalize(const token_range_t &entire_element_range,
-                                   const token_range_t &name, const attribute_set_t &attribute_set,
-                                   const token_range_t &value);
+token_range_t xml_element_finalize(const token_range_t& entire_element_range,
+                                   const token_range_t& name, const attribute_set_t& attribute_set,
+                                   const token_range_t& value);
 
 /*************************************************************************************************/
 
 struct context_frame_t {
     struct comp_t {
-        bool operator()(const token_range_t &x, const token_range_t &y) const {
+        bool operator()(const token_range_t& x, const token_range_t& y) const {
             return token_range_less(x, y);
         }
     };
@@ -94,12 +94,12 @@ struct context_frame_t {
     typedef store_t::value_type store_value_type;
     typedef std::pair<store_iterator, store_iterator> store_range_pair_t;
 
-    typedef xml_parser_t<char *>::callback_proc_t callback_proc_t;
-    typedef xml_parser_t<char *>::preorder_predicate_t preorder_predicate_t;
+    typedef xml_parser_t<char*>::callback_proc_t callback_proc_t;
+    typedef xml_parser_t<char*>::preorder_predicate_t preorder_predicate_t;
 
     context_frame_t() : parse_info_m("xstring context_frame_t"), parsed_m(false) {}
 
-    context_frame_t(const context_frame_t &rhs)
+    context_frame_t(const context_frame_t& rhs)
         : parse_info_m(rhs.parse_info_m), parsed_m(rhs.parsed_m),
           attribute_set_m(rhs.attribute_set_m), glossary_m(rhs.glossary_m),
           callback_m(rhs.callback_m), predicate_m(rhs.predicate_m)
@@ -107,7 +107,7 @@ struct context_frame_t {
           // pool_m(rhs.pool_m), // not to be transferred from context to context
     {}
 
-    context_frame_t &operator=(const context_frame_t &rhs) {
+    context_frame_t& operator=(const context_frame_t& rhs) {
         parse_info_m = rhs.parse_info_m;
         parsed_m = rhs.parsed_m;
         attribute_set_m = rhs.attribute_set_m;
@@ -125,21 +125,21 @@ struct context_frame_t {
             delete[] slurp_m.first;
     }
 
-    inline store_range_pair_t range_for_key(const store_t::key_type &key) {
+    inline store_range_pair_t range_for_key(const store_t::key_type& key) {
         return glossary_m.equal_range(key);
     }
 
-    std::pair<bool, store_iterator> exact_match_exists(const attribute_set_t &attribute_set,
-                                                       const token_range_t &value);
+    std::pair<bool, store_iterator> exact_match_exists(const attribute_set_t& attribute_set,
+                                                       const token_range_t& value);
 
-    store_t::mapped_type *store(const store_t::key_type &key, const attribute_set_t &attribute_set,
-                                const token_range_t &value, bool copy = false);
+    store_t::mapped_type* store(const store_t::key_type& key, const attribute_set_t& attribute_set,
+                                const token_range_t& value, bool copy = false);
 
-    store_iterator closest_match(store_range_pair_t range, const attribute_set_t &searching);
+    store_iterator closest_match(store_range_pair_t range, const attribute_set_t& searching);
 
-    token_range_t element_handler(const token_range_t &entire_element_range,
-                                  const token_range_t &name, const attribute_set_t &attribute_set,
-                                  const token_range_t &value) const {
+    token_range_t element_handler(const token_range_t& entire_element_range,
+                                  const token_range_t& name, const attribute_set_t& attribute_set,
+                                  const token_range_t& value) const {
         if (xstring_preorder_predicate(name))
             // Note that this implicitly handles "marker" elements (by echoing them)
             return xml_xstr_lookup(entire_element_range, name, attribute_set, value);
@@ -149,7 +149,7 @@ struct context_frame_t {
             return xml_element_strip(entire_element_range, name, attribute_set, value);
     }
 
-    token_range_t clone(const token_range_t &token);
+    token_range_t clone(const token_range_t& token);
 
     line_position_t parse_info_m;
     bool parsed_m;
@@ -163,13 +163,13 @@ struct context_frame_t {
 
 /*************************************************************************************************/
 
-inline bool operator==(const context_frame_t::element_t &x, const context_frame_t::element_t &y) {
+inline bool operator==(const context_frame_t::element_t& x, const context_frame_t::element_t& y) {
     return x.first == y.first && token_range_equal(x.second, y.second);
 }
 
 /*************************************************************************************************/
 
-implementation::context_frame_t &top_frame();
+implementation::context_frame_t& top_frame();
 
 /*************************************************************************************************/
 
@@ -187,7 +187,7 @@ void xstring_clear_glossary();
 
 template <typename O> // O models OutputIterator
 inline void parse_xml_fragment(uchar_ptr_t fragment, std::size_t n, O output) {
-    const implementation::context_frame_t &context(implementation::top_frame());
+    const implementation::context_frame_t& context(implementation::top_frame());
 
     make_xml_parser(fragment, fragment + n, line_position_t("parse_xml_fragment"),
                     always_true<token_range_t>(),
@@ -198,13 +198,13 @@ inline void parse_xml_fragment(uchar_ptr_t fragment, std::size_t n, O output) {
 }
 
 template <typename O> // O models OutputIterator
-inline void parse_xml_fragment(const std::string &fragment, O output) {
+inline void parse_xml_fragment(const std::string& fragment, O output) {
     return parse_xml_fragment(reinterpret_cast<uchar_ptr_t>(fragment.c_str()), fragment.size(),
                               output);
 }
 
 template <typename O> // O models OutputIterator
-inline void parse_xml_fragment(const char *fragment, O output) {
+inline void parse_xml_fragment(const char* fragment, O output) {
     return parse_xml_fragment(reinterpret_cast<uchar_ptr_t>(fragment), std::strlen(fragment),
                               output);
 }
@@ -214,12 +214,12 @@ inline void parse_xml_fragment(const char *fragment, O output) {
 // xstring lookup with OutputIterator; all of these functions return a valid XML fragment
 
 template <typename O> // O models OutputIterator; required: sizeof(value_type(O)) >= 21 bits
-inline void xstring(const char *xstr, std::size_t n, O output) {
+inline void xstring(const char* xstr, std::size_t n, O output) {
     parse_xml_fragment(reinterpret_cast<uchar_ptr_t>(xstr), n, output);
 }
 
 template <typename O> // O models OutputIterator; required: sizeof(value_type(O)) >= 21 bits
-inline void xstring(const char *xstr, O output) {
+inline void xstring(const char* xstr, O output) {
     xstring(xstr, std::strlen(xstr), output);
 }
 
@@ -227,7 +227,7 @@ inline void xstring(const char *xstr, O output) {
 
 // xstring lookup; all of these functions return a valid XML fragment
 
-inline std::string xstring(const char *xstr, std::size_t n) {
+inline std::string xstring(const char* xstr, std::size_t n) {
     std::string result;
 
     xstring(xstr, n, std::back_inserter(result));
@@ -235,21 +235,21 @@ inline std::string xstring(const char *xstr, std::size_t n) {
     return result;
 }
 
-inline std::string xstring(const std::string &xstr) { return xstring(xstr.c_str(), xstr.size()); }
+inline std::string xstring(const std::string& xstr) { return xstring(xstr.c_str(), xstr.size()); }
 
 /*************************************************************************************************/
 
 // Context-sensitive marker replacement
 
-std::string xstring_replace(const std::string &xstr, const std::string &marker);
+std::string xstring_replace(const std::string& xstr, const std::string& marker);
 
-std::string xstring_replace(const std::string &xstr, const std::string *first,
-                            const std::string *last);
+std::string xstring_replace(const std::string& xstr, const std::string* first,
+                            const std::string* last);
 
-std::string xstring_replace(const name_t &xstr_id, const std::string &marker);
+std::string xstring_replace(const name_t& xstr_id, const std::string& marker);
 
-std::string xstring_replace(const name_t &xstr_id, const std::string *first,
-                            const std::string *last);
+std::string xstring_replace(const name_t& xstr_id, const std::string* first,
+                            const std::string* last);
 
 /*************************************************************************************************/
 
@@ -257,11 +257,11 @@ struct xstring_context_t : boost::noncopyable {
     typedef implementation::context_frame_t::callback_proc_t callback_proc_t;
     typedef implementation::context_frame_t::preorder_predicate_t preorder_predicate_t;
 
-    xstring_context_t(const char *parse_first, const char *parse_last,
-                      const line_position_t &parse_info = line_position_t("xstring_context_t"))
+    xstring_context_t(const char* parse_first, const char* parse_last,
+                      const line_position_t& parse_info = line_position_t("xstring_context_t"))
         : back_frame_m(implementation::top_frame()) // save snapshot of stack
     {
-        implementation::context_frame_t &context(implementation::top_frame());
+        implementation::context_frame_t& context(implementation::top_frame());
 
         context.slurp_m.first = reinterpret_cast<uchar_ptr_t>(parse_first);
         context.slurp_m.second = reinterpret_cast<uchar_ptr_t>(parse_last);
@@ -279,12 +279,12 @@ struct xstring_context_t : boost::noncopyable {
     }
 
     template <typename I> // I models InputIterator
-    xstring_context_t(I first_attribute, I last_attribute, const unsigned char *parse_first,
-                      const unsigned char *parse_last,
-                      const line_position_t &parse_info = line_position_t("xstring_context_t"))
+    xstring_context_t(I first_attribute, I last_attribute, const unsigned char* parse_first,
+                      const unsigned char* parse_last,
+                      const line_position_t& parse_info = line_position_t("xstring_context_t"))
         : back_frame_m(implementation::top_frame()) // save snapshot of stack
     {
-        implementation::context_frame_t &context(implementation::top_frame());
+        implementation::context_frame_t& context(implementation::top_frame());
 
         context.attribute_set_m.insert(first_attribute, last_attribute);
         context.slurp_m.first = parse_first;
@@ -307,7 +307,7 @@ struct xstring_context_t : boost::noncopyable {
 
 private:
     void glossary_parse() {
-        implementation::context_frame_t &context(implementation::top_frame());
+        implementation::context_frame_t& context(implementation::top_frame());
 
         if (context.parsed_m || !boost::size(context.slurp_m))
             return;
@@ -316,7 +316,7 @@ private:
                         implementation::xstring_preorder_predicate, &implementation::xml_xstr_store,
                         implementation::null_output_t())
             .parse_element_sequence(); // REVISIT (fbrereto) : More or less legible than having it
-                                       // after the above declaration?
+        // after the above declaration?
 
         context.parsed_m = true;
     }

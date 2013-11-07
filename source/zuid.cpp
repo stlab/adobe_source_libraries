@@ -113,7 +113,7 @@ void init_zuid_once() { call_once(init_zuid_flag, &init_zuid_once_); }
 
 /*************************************************************************************************/
 
-void format_uuid(zuid_char_buffer_t &buffer, const adobe::uuid_t &uuid) {
+void format_uuid(zuid_char_buffer_t& buffer, const adobe::uuid_t& uuid) {
 #if ADOBE_PLATFORM_CYGWIN
     typedef unsigned int tmp_t;
 #else
@@ -130,7 +130,7 @@ void format_uuid(zuid_char_buffer_t &buffer, const adobe::uuid_t &uuid) {
 
 /*************************************************************************************************/
 
-const adobe::uuid_t &empty_uuid() {
+const adobe::uuid_t& empty_uuid() {
     static adobe::uuid_t uuid_s = {0};
 
     return uuid_s;
@@ -151,16 +151,16 @@ zuid_t::zuid_t() : uuid_m(empty_uuid()) { uuid_create(&uuid_m); }
 
 /*************************************************************************************************/
 
-zuid_t::zuid_t(const zuid_t &zuid_t) : uuid_m(zuid_t.uuid_m) {}
+zuid_t::zuid_t(const zuid_t& zuid_t) : uuid_m(zuid_t.uuid_m) {}
 
 #endif
 /*************************************************************************************************/
 
-zuid_t::zuid_t(const uuid_t &uuid) : uuid_m(uuid) {}
+zuid_t::zuid_t(const uuid_t& uuid) : uuid_m(uuid) {}
 
 /*************************************************************************************************/
 
-zuid_t::zuid_t(const std::string &zuid) : uuid_m(empty_uuid()) {
+zuid_t::zuid_t(const std::string& zuid) : uuid_m(empty_uuid()) {
     /*
     Initially this constructor was written using streams. It was overly
     complicated because the zuid_t is formatted well to be read directly with an
@@ -177,7 +177,7 @@ zuid_t::zuid_t(const std::string &zuid) : uuid_m(empty_uuid()) {
 
 /*************************************************************************************************/
 
-zuid_t::zuid_t(const char *zuid_t) : uuid_m(empty_uuid()) {
+zuid_t::zuid_t(const char* zuid_t) : uuid_m(empty_uuid()) {
     unsigned long temp_data1;
     int temp_data[8];
 
@@ -193,10 +193,10 @@ zuid_t::zuid_t(const char *zuid_t) : uuid_m(empty_uuid()) {
 
 /*************************************************************************************************/
 
-zuid_t::zuid_t(const zuid_t &name_space, const std::string &name) : uuid_m(empty_uuid()) {
+zuid_t::zuid_t(const zuid_t& name_space, const std::string& name) : uuid_m(empty_uuid()) {
     uuid_create_from_name(
         &uuid_m, name_space.uuid_m,
-        const_cast<boost::uint8_t *>(reinterpret_cast<const boost::uint8_t *>(name.data())),
+        const_cast<boost::uint8_t*>(reinterpret_cast<const boost::uint8_t*>(name.data())),
         static_cast<boost::uint16_t>(name.length()));
 }
 
@@ -207,7 +207,7 @@ zuid_t::zuid_t(zeroed) : uuid_m(empty_uuid()) {}
 
 /*************************************************************************************************/
 
-zuid_t &zuid_t::operator=(const zuid_t &zuid_t) {
+zuid_t& zuid_t::operator=(const zuid_t& zuid_t) {
     uuid_m = zuid_t.uuid_m;
 
     return *this;
@@ -215,7 +215,7 @@ zuid_t &zuid_t::operator=(const zuid_t &zuid_t) {
 
 /*************************************************************************************************/
 
-zuid_t &zuid_t::operator=(const uuid_t &uuid) {
+zuid_t& zuid_t::operator=(const uuid_t& uuid) {
     uuid_m = uuid;
 
     return *this;
@@ -236,10 +236,10 @@ std::string zuid_t::str() const {
 
 /*************************************************************************************************/
 
-char *zuid_t::c_str() const {
+char* zuid_t::c_str() const {
     init_zuid_once();
 
-    zuid_char_buffer_t &buffer(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_char_buffer));
+    zuid_char_buffer_t& buffer(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_char_buffer));
 
     format_uuid(buffer, uuid_m);
 
@@ -250,13 +250,13 @@ char *zuid_t::c_str() const {
 
 /*************************************************************************************************/
 
-bool operator==(const zuid_t &a, const zuid_t &b) {
+bool operator==(const zuid_t& a, const zuid_t& b) {
     return uuid_compare(&a.uuid_m, &b.uuid_m) == 0;
 }
 
 /*************************************************************************************************/
 
-bool operator<(const zuid_t &a, const zuid_t &b) {
+bool operator<(const zuid_t& a, const zuid_t& b) {
     return uuid_compare(&a.uuid_m, &b.uuid_m) == -1;
 }
 

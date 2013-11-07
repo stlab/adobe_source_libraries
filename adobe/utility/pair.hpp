@@ -41,29 +41,29 @@ struct aggregate_pair {
     T1 first;
     T2 second;
 
-    friend inline bool operator==(const aggregate_pair &x, const aggregate_pair &y) {
+    friend inline bool operator==(const aggregate_pair& x, const aggregate_pair& y) {
         return x.first == y.first && x.second == y.second;
     }
 
-    friend inline bool operator<(const aggregate_pair &x, const aggregate_pair &y) {
+    friend inline bool operator<(const aggregate_pair& x, const aggregate_pair& y) {
         return x.first < y.first || (!(y.first < x.first) && x.second < y.second);
     }
 
-    friend inline bool operator!=(const aggregate_pair &x, const aggregate_pair &y) {
+    friend inline bool operator!=(const aggregate_pair& x, const aggregate_pair& y) {
         return !(x == y);
     }
 
-    friend inline bool operator>(const aggregate_pair &x, const aggregate_pair &y) { return y < x; }
+    friend inline bool operator>(const aggregate_pair& x, const aggregate_pair& y) { return y < x; }
 
-    friend inline bool operator<=(const aggregate_pair &x, const aggregate_pair &y) {
+    friend inline bool operator<=(const aggregate_pair& x, const aggregate_pair& y) {
         return !(y < x);
     }
 
-    friend inline bool operator>=(const aggregate_pair &x, const aggregate_pair &y) {
+    friend inline bool operator>=(const aggregate_pair& x, const aggregate_pair& y) {
         return !(x < y);
     }
 
-    friend inline void swap(aggregate_pair &x, aggregate_pair &y) {
+    friend inline void swap(aggregate_pair& x, aggregate_pair& y) {
         swap(x.first, y.first);
         swap(x.second, y.second);
     }

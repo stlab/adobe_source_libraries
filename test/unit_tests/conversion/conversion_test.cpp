@@ -33,27 +33,27 @@ void conversion_test() {
     using adobe::runtime_cast;
 
     {
-        base *x = new derived;
-        BOOST_CHECK(runtime_cast<derived *>(x));
-        BOOST_CHECK(runtime_cast<const derived *>(x));
+        base* x = new derived;
+        BOOST_CHECK(runtime_cast<derived*>(x));
+        BOOST_CHECK(runtime_cast<const derived*>(x));
         // BOOST_CHECK(runtime_cast<not_derived*>(x));
 
-        BOOST_CHECK(runtime_cast<other_derived *>(x) == 0);
+        BOOST_CHECK(runtime_cast<other_derived*>(x) == 0);
 
-        runtime_cast<derived &>(*x) = derived();
+        runtime_cast<derived&>(*x) = derived();
     }
 
     {
-        const base *x = new derived;
+        const base* x = new derived;
         // BOOST_CHECK(runtime_cast<derived*>(x));
-        BOOST_CHECK(runtime_cast<const derived *>(x));
-        derived y = runtime_cast<const derived &>(*x);
+        BOOST_CHECK(runtime_cast<const derived*>(x));
+        derived y = runtime_cast<const derived&>(*x);
     }
 }
 
 using namespace boost::unit_test;
 
-test_suite *init_unit_test_suite(int, char * []) {
+test_suite* init_unit_test_suite(int, char * []) {
     framework::master_test_suite().add(BOOST_TEST_CASE(&conversion_test));
 
     return 0;

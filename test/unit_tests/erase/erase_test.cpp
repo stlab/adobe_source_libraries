@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(test_erase_ifs) {
     //              test framework. Commenting out for now, does not
     //              appear to affect test results.
     // ut::unit_test_log.set_stream(null_output);
-    ut::test_suite *test = BOOST_TEST_SUITE("");
+    ut::test_suite* test = BOOST_TEST_SUITE("");
     // END BOILERPLATE
 
     // CUSTOM CODE
@@ -109,7 +109,7 @@ BOOST_AUTO_TEST_CASE(test_erase_ifs) {
 
     // BOILERPLATE
     ut::framework::run(test);
-    ut::test_results const &tr = ut::results_collector.results(test->p_id);
+    ut::test_results const& tr = ut::results_collector.results(test->p_id);
 
     // (fbrereto) : set_stream is failing to link, and am unsure why
     //              given that it appears to exist within the boost

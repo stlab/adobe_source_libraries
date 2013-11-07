@@ -39,11 +39,11 @@ namespace {
 
 /**************************************************************************************************/
 
-adobe::token_range_t *xstr_tag_g = 0;
-adobe::token_range_t *marker_tag_g = 0;
-adobe::token_range_t *attribute_id_g = 0;
-adobe::token_range_t *attribute_lang_g = 0;
-adobe::token_range_t *attribute_platform_g = 0;
+adobe::token_range_t* xstr_tag_g = 0;
+adobe::token_range_t* marker_tag_g = 0;
+adobe::token_range_t* attribute_id_g = 0;
+adobe::token_range_t* attribute_lang_g = 0;
+adobe::token_range_t* attribute_platform_g = 0;
 
 /**************************************************************************************************/
 
@@ -65,7 +65,7 @@ void init_xstr_once() {
 
     ADOBE_THREAD_LOCAL_STORAGE_INITIALIZE(thread_context);
 
-    adobe::implementation::context_frame_t &context(
+    adobe::implementation::context_frame_t& context(
         ADOBE_THREAD_LOCAL_STORAGE_ACCESS(thread_context));
 
     static adobe::token_range_t xstr_tag_s(adobe::static_token_range("xstr"));
@@ -144,7 +144,7 @@ namespace implementation {
 
 /**************************************************************************************************/
 
-adobe::implementation::context_frame_t &top_frame() {
+adobe::implementation::context_frame_t& top_frame() {
     xstr_once();
     return ADOBE_THREAD_LOCAL_STORAGE_ACCESS(thread_context);
 }
@@ -157,7 +157,7 @@ adobe::implementation::context_frame_t &top_frame() {
 
 /**************************************************************************************************/
 #if ADOBE_DOING_SERIALIZATION
-std::ostream &operator<<(std::ostream &s, const context_frame_t::element_t &element) {
+std::ostream& operator<<(std::ostream& s, const context_frame_t::element_t& element) {
     s << "<xstr " << element.first << ">"
       << std::string(element.second.first, element.second.second) << "</xstr>";
 
@@ -173,8 +173,8 @@ std::ostream &operator<<(std::ostream &s, const context_frame_t::element_t &elem
 /**************************************************************************************************/
 
 inline std::pair<bool, context_frame_t::store_iterator>
-context_frame_t::exact_match_exists(const adobe::attribute_set_t &attribute_set,
-                                    const adobe::token_range_t &value) {
+context_frame_t::exact_match_exists(const adobe::attribute_set_t& attribute_set,
+                                    const adobe::token_range_t& value) {
     xstr_once();
 
     store_range_pair_t the_range(range_for_key(attribute_set[*attribute_id_g]));
@@ -191,10 +191,10 @@ context_frame_t::exact_match_exists(const adobe::attribute_set_t &attribute_set,
 
 /**************************************************************************************************/
 
-token_range_t context_frame_t::clone(const token_range_t &range) {
+token_range_t context_frame_t::clone(const token_range_t& range) {
     // std::size_t len(boost::size(range));
     std::string str(boost::begin(range), boost::end(range));
-    const char *added(pool_m.add(str.c_str()));
+    const char* added(pool_m.add(str.c_str()));
 
     return token_range_t(reinterpret_cast<uchar_ptr_t>(added),
                          reinterpret_cast<uchar_ptr_t>(added) + str.length());
@@ -202,9 +202,9 @@ token_range_t context_frame_t::clone(const token_range_t &range) {
 
 /**************************************************************************************************/
 
-context_frame_t::store_t::mapped_type *
-context_frame_t::store(const store_t::key_type &key, const adobe::attribute_set_t &attribute_set,
-                       const adobe::token_range_t &value, bool copy) {
+context_frame_t::store_t::mapped_type*
+context_frame_t::store(const store_t::key_type& key, const adobe::attribute_set_t& attribute_set,
+                       const adobe::token_range_t& value, bool copy) {
     assert(std::distance(boost::begin(key), boost::end(key)));
 
     store_t::key_type to_key(key);
@@ -268,9 +268,9 @@ struct store_count_same_t : std::binary_function<const context_frame_t::store_va
                                                  const adobe::attribute_set_t, std::size_t> {
     typedef std::size_t result_type;
 
-    result_type operator()(const context_frame_t::store_value_type &x,
-                           const adobe::attribute_set_t &y) const {
-        const adobe::attribute_set_t &lhs(x.second.first);
+    result_type operator()(const context_frame_t::store_value_type& x,
+                           const adobe::attribute_set_t& y) const {
+        const adobe::attribute_set_t& lhs(x.second.first);
 
         return lhs.has_collisions(y) ? 0 : lhs.count_same(y);
     }
@@ -289,7 +289,7 @@ struct transform_range {
     typedef typename std::iterator_traits<base_iterator>::pointer pointer;
     typedef typename std::iterator_traits<base_iterator>::difference_type difference_type;
 
-    transform_range(Range &range, UnaryFunction f) : range_m(range), f_m(f) {}
+    transform_range(Range& range, UnaryFunction f) : range_m(range), f_m(f) {}
 
     iterator begin() { return iterator(boost::begin(range_m), f_m); }
 
@@ -302,7 +302,7 @@ struct transform_range {
         { return const_iterator(boost::end(range_m), f_m); }
 #endif
 private:
-    Range &range_m;
+    Range& range_m;
     UnaryFunction f_m;
 };
 
@@ -310,7 +310,7 @@ private:
 
 template <typename Range, typename UnaryFunction>
 boost::tuple<std::size_t, std::size_t, typename boost::range_iterator<Range>::type>
-count_max_element_tuple(Range &x, UnaryFunction f) {
+count_max_element_tuple(Range& x, UnaryFunction f) {
     typedef transform_range<UnaryFunction, Range> transform_range_t;
 
     transform_range_t container(x, f);
@@ -326,7 +326,7 @@ count_max_element_tuple(Range &x, UnaryFunction f) {
 /**************************************************************************************************/
 
 context_frame_t::store_iterator
-context_frame_t::closest_match(store_range_pair_t range, const adobe::attribute_set_t &searching) {
+context_frame_t::closest_match(store_range_pair_t range, const adobe::attribute_set_t& searching) {
     typedef std::iterator_traits<store_iterator>::difference_type difference_type;
 
     difference_type range_size(std::distance(boost::begin(range), boost::end(range)));
@@ -365,10 +365,10 @@ context_frame_t::closest_match(store_range_pair_t range, const adobe::attribute_
 
 /**************************************************************************************************/
 
-adobe::token_range_t xml_xstr_store(const adobe::token_range_t &entire_element_range,
-                                    const adobe::token_range_t &name,
-                                    const adobe::attribute_set_t &attribute_set,
-                                    const adobe::token_range_t &value) {
+adobe::token_range_t xml_xstr_store(const adobe::token_range_t& entire_element_range,
+                                    const adobe::token_range_t& name,
+                                    const adobe::attribute_set_t& attribute_set,
+                                    const adobe::token_range_t& value) {
     xstr_once();
 
     if (token_range_equal(name, *xstr_tag_g)) {
@@ -386,10 +386,10 @@ adobe::token_range_t xml_xstr_store(const adobe::token_range_t &entire_element_r
 
 /**************************************************************************************************/
 
-adobe::token_range_t xml_xstr_lookup(const adobe::token_range_t &entire_element_range,
-                                     const adobe::token_range_t &name,
-                                     const adobe::attribute_set_t &attribute_set,
-                                     const adobe::token_range_t &value) {
+adobe::token_range_t xml_xstr_lookup(const adobe::token_range_t& entire_element_range,
+                                     const adobe::token_range_t& name,
+                                     const adobe::attribute_set_t& attribute_set,
+                                     const adobe::token_range_t& value) {
     xstr_once();
 
     if (token_range_equal(name, *xstr_tag_g)) {
@@ -397,7 +397,7 @@ adobe::token_range_t xml_xstr_lookup(const adobe::token_range_t &entire_element_
         std::cerr << "xml_xstr_lookup \"" << entire_element_range << "\"..." << std::endl;
 #endif
 
-        context_frame_t &context(top_frame());
+        context_frame_t& context(top_frame());
         adobe::attribute_set_t merged(attribute_set.merge(context.attribute_set_m));
         adobe::token_range_t id(merged[*attribute_id_g]);
         context_frame_t::store_iterator closest(
@@ -440,7 +440,7 @@ adobe::token_range_t xml_xstr_lookup(const adobe::token_range_t &entire_element_
 #ifndef NDEBUG
 
 void xstring_clear_glossary() {
-    adobe::implementation::context_frame_t::store_t &glossary(
+    adobe::implementation::context_frame_t::store_t& glossary(
         adobe::implementation::top_frame().glossary_m);
 
     glossary.erase(glossary.begin(), glossary.end());
@@ -464,7 +464,7 @@ namespace anonymous_xstring_cpp { // can't instantiate templates on types from r
 /**************************************************************************************************/
 
 struct marker_t {
-    marker_t(const adobe::attribute_set_t &attribute_set, const adobe::token_range_t &value)
+    marker_t(const adobe::attribute_set_t& attribute_set, const adobe::token_range_t& value)
         : attribute_set_m(attribute_set), value_m(value) {}
 
     adobe::attribute_set_t attribute_set_m;
@@ -473,7 +473,7 @@ struct marker_t {
 
 /**************************************************************************************************/
 
-bool operator==(const marker_t &x, const marker_t &y) {
+bool operator==(const marker_t& x, const marker_t& y) {
     // value is noncritical data
 
     return x.attribute_set_m == y.attribute_set_m;
@@ -496,10 +496,10 @@ namespace adobe {
 struct replacement_engine_t {
     typedef std::vector<marker_t> marker_set_t;
 
-    replacement_engine_t(const adobe::name_t &id)
+    replacement_engine_t(const adobe::name_t& id)
         : score_m(-1), xstring_id_m(adobe::static_token_range(id.c_str())) {}
 
-    replacement_engine_t(const std::string &xstr) : score_m(-1) {
+    replacement_engine_t(const std::string& xstr) : score_m(-1) {
         adobe::make_xml_parser(
             reinterpret_cast<uchar_ptr_t>(&xstr[0]),
             reinterpret_cast<uchar_ptr_t>(&xstr[0]) + xstr.size(),
@@ -509,7 +509,7 @@ struct replacement_engine_t {
             adobe::implementation::null_output_t()).parse_content();
     }
 
-    void add_marker(const std::string &marker) {
+    void add_marker(const std::string& marker) {
         adobe::make_xml_parser(
             reinterpret_cast<uchar_ptr_t>(&marker[0]),
             reinterpret_cast<uchar_ptr_t>(&marker[0]) + marker.size(),
@@ -528,7 +528,7 @@ struct replacement_engine_t {
 
         for (; range.first != range.second; ++range.first) {
             int score(0);
-            const token_range_t &cur_token_range(range.first->second.second);
+            const token_range_t& cur_token_range(range.first->second.second);
             uchar_ptr_t first(cur_token_range.first);
             uchar_ptr_t last(cur_token_range.second);
             std::string temp_result;
@@ -563,10 +563,10 @@ struct replacement_engine_t {
     }
 
 private:
-    adobe::token_range_t xstr_id_harvest(const adobe::token_range_t & /*entire_element_range*/,
-                                         const adobe::token_range_t &name,
-                                         const adobe::attribute_set_t &attribute_set,
-                                         const adobe::token_range_t & /*value*/) {
+    adobe::token_range_t xstr_id_harvest(const adobe::token_range_t& /*entire_element_range*/,
+                                         const adobe::token_range_t& name,
+                                         const adobe::attribute_set_t& attribute_set,
+                                         const adobe::token_range_t& /*value*/) {
         xstr_once();
 
         if (token_range_equal(name, *xstr_tag_g) &&
@@ -576,10 +576,10 @@ private:
         return adobe::token_range_t();
     }
 
-    adobe::token_range_t marker_parse(const adobe::token_range_t &entire_element_range,
-                                      const adobe::token_range_t &name,
-                                      const adobe::attribute_set_t &attribute_set,
-                                      const adobe::token_range_t &value) {
+    adobe::token_range_t marker_parse(const adobe::token_range_t& entire_element_range,
+                                      const adobe::token_range_t& name,
+                                      const adobe::attribute_set_t& attribute_set,
+                                      const adobe::token_range_t& value) {
         if (token_range_equal(name, *marker_tag_g)) {
             marker_set_m.push_back(marker_t(attribute_set, value));
 
@@ -594,10 +594,10 @@ private:
         }
     }
 
-    adobe::token_range_t candidate_parse(const adobe::token_range_t & /*entire_element_range*/,
-                                         const adobe::token_range_t &name,
-                                         const adobe::attribute_set_t &attribute_set,
-                                         const adobe::token_range_t & /*value*/, int &score) {
+    adobe::token_range_t candidate_parse(const adobe::token_range_t& /*entire_element_range*/,
+                                         const adobe::token_range_t& name,
+                                         const adobe::attribute_set_t& attribute_set,
+                                         const adobe::token_range_t& /*value*/, int& score) {
         xstr_once();
 
         if (token_range_equal(name, *marker_tag_g)) {
@@ -634,7 +634,7 @@ private:
 
 /**************************************************************************************************/
 
-std::string xstring_replace(const std::string &xstr, const std::string &marker) {
+std::string xstring_replace(const std::string& xstr, const std::string& marker) {
     replacement_engine_t engine(xstr);
 
     engine.add_marker(marker);
@@ -644,8 +644,8 @@ std::string xstring_replace(const std::string &xstr, const std::string &marker) 
 
 /**************************************************************************************************/
 
-std::string xstring_replace(const std::string &xstr, const std::string *first,
-                            const std::string *last) {
+std::string xstring_replace(const std::string& xstr, const std::string* first,
+                            const std::string* last) {
     replacement_engine_t engine(xstr);
 
     for (; first != last; ++first)
@@ -656,7 +656,7 @@ std::string xstring_replace(const std::string &xstr, const std::string *first,
 
 /**************************************************************************************************/
 
-std::string xstring_replace(const adobe::name_t &xstr_id, const std::string &marker) {
+std::string xstring_replace(const adobe::name_t& xstr_id, const std::string& marker) {
     replacement_engine_t engine(xstr_id);
 
     engine.add_marker(marker);
@@ -666,8 +666,8 @@ std::string xstring_replace(const adobe::name_t &xstr_id, const std::string &mar
 
 /**************************************************************************************************/
 
-std::string xstring_replace(const adobe::name_t &xstr_id, const std::string *first,
-                            const std::string *last) {
+std::string xstring_replace(const adobe::name_t& xstr_id, const std::string* first,
+                            const std::string* last) {
     replacement_engine_t engine(xstr_id);
 
     for (; first != last; ++first)

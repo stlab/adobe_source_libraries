@@ -61,7 +61,7 @@ constexpr std::size_t name_fnv_basis_k = sizesz_k == 8
                                              ? static_cast<std::size_t>(0xcbf29ce484222325ULL)
                                              : static_cast<std::size_t>(0x811c9dc5);
 
-constexpr std::size_t name_hash(const char *str, std::size_t len, std::size_t n,
+constexpr std::size_t name_hash(const char* str, std::size_t len, std::size_t n,
                                 std::size_t state) {
     static_assert(sizeok_k, "Unknown sizeof std::size_t (must be 4 or 8).");
 
@@ -70,7 +70,7 @@ constexpr std::size_t name_hash(const char *str, std::size_t len, std::size_t n,
                    : state;
 }
 
-constexpr std::size_t name_hash(const char *str, std::size_t len) {
+constexpr std::size_t name_hash(const char* str, std::size_t len) {
     static_assert(sizeok_k, "Unknown sizeof std::size_t (must be 4 or 8).");
 
     return name_hash(str, len, 0, name_fnv_basis_k);
@@ -97,7 +97,7 @@ namespace literals {
 
 /****************************************************************************************************/
 
-inline constexpr static_name_t operator"" _name(const char *str, std::size_t n);
+inline constexpr static_name_t operator"" _name(const char* str, std::size_t n);
 
 /****************************************************************************************************/
 
@@ -141,26 +141,26 @@ struct static_name_t {
     */
     explicit operator bool() const;
 
-    friend bool operator==(const static_name_t &x, const static_name_t &y) {
+    friend bool operator==(const static_name_t& x, const static_name_t& y) {
         return x.hash_m == y.hash_m;
     }
 
-    friend bool operator!=(const static_name_t &x, const static_name_t &y) { return !(x == y); }
+    friend bool operator!=(const static_name_t& x, const static_name_t& y) { return !(x == y); }
 
-    friend bool operator<(const static_name_t &x, const static_name_t &y);
+    friend bool operator<(const static_name_t& x, const static_name_t& y);
 
 private:
     static_name_t() = delete;
 
-    constexpr static_name_t(const char *str, std::size_t hash) : string_m(str), hash_m(hash) {}
+    constexpr static_name_t(const char* str, std::size_t hash) : string_m(str), hash_m(hash) {}
 
     friend struct name_t;
 
-    friend constexpr static_name_t literals::operator"" _name(const char *str, std::size_t n);
+    friend constexpr static_name_t literals::operator"" _name(const char* str, std::size_t n);
 
-    friend std::ostream &operator<<(std::ostream &s, const static_name_t &name);
+    friend std::ostream& operator<<(std::ostream& s, const static_name_t& name);
 
-    const char *string_m;
+    const char* string_m;
 
     std::size_t hash_m;
 };
@@ -197,7 +197,7 @@ namespace literals {
         static_name_t foo("foo"_name); // OK
         name_t        bar("bar"_name); // OK
 */
-inline constexpr static_name_t operator"" _name(const char *str, std::size_t n) {
+inline constexpr static_name_t operator"" _name(const char* str, std::size_t n) {
     return static_name_t{str, detail::name_hash(str, n)};
 }
 
@@ -214,15 +214,15 @@ inline constexpr static_name_t operator"" _name(const char *str, std::size_t n) 
     that make it a preferred alternative to other string-based key types.
 */
 struct name_t : boost::totally_ordered<name_t, name_t> {
-    explicit name_t(const char *s = "") : ptr_m(map_string(s)) {}
+    explicit name_t(const char* s = "") : ptr_m(map_string(s)) {}
 
     /**
         Implicit conversion constructor from a static_name_t.
     */
-    name_t(const static_name_t &static_name)
+    name_t(const static_name_t& static_name)
         : ptr_m(map_string(static_name.string_m, static_name.hash_m)) {}
 
-    friend std::ostream &operator<<(std::ostream &s, const name_t &name);
+    friend std::ostream& operator<<(std::ostream& s, const name_t& name);
 
     /**
         \return
@@ -237,7 +237,7 @@ struct name_t : boost::totally_ordered<name_t, name_t> {
         \complexity
             O(1)
     */
-    friend bool operator==(const name_t &x, const name_t &y) { return x.ptr_m == y.ptr_m; }
+    friend bool operator==(const name_t& x, const name_t& y) { return x.ptr_m == y.ptr_m; }
 
     /**
         Lexicographical comparison of two names. For a faster comparsion
@@ -246,11 +246,11 @@ struct name_t : boost::totally_ordered<name_t, name_t> {
         \complexity
             O(N)
     */
-    friend bool operator<(const name_t &x, const name_t &y) {
+    friend bool operator<(const name_t& x, const name_t& y) {
         return std::strcmp(x.ptr_m, y.ptr_m) < 0;
     }
 
-    const char *c_str() const { return ptr_m; }
+    const char* c_str() const { return ptr_m; }
 
     /**
         for use with sorting, e.g.:
@@ -266,7 +266,7 @@ struct name_t : boost::totally_ordered<name_t, name_t> {
         \complexity
             O(1)
     */
-    static inline bool fast_sort(const name_t &x, const name_t &y) { return hash(x) < hash(y); }
+    static inline bool fast_sort(const name_t& x, const name_t& y) { return hash(x) < hash(y); }
 
 private:
     friend std::hash<name_t>;
@@ -278,14 +278,14 @@ private:
         \complexity
             O(N)
     */
-    static inline std::size_t hash(const name_t &x) {
+    static inline std::size_t hash(const name_t& x) {
         return reinterpret_cast<std::size_t>(x.ptr_m);
     }
 
-    static const char *map_string(const char *str);
-    static const char *map_string(const char *str, std::size_t hash);
+    static const char* map_string(const char* str);
+    static const char* map_string(const char* str, std::size_t hash);
 
-    const char *ptr_m;
+    const char* ptr_m;
 };
 
 /****************************************************************************************************/
@@ -322,7 +322,7 @@ namespace std {
 template <>
 struct hash<adobe::name_t> {
 public:
-    inline std::size_t operator()(adobe::name_t const &name) const {
+    inline std::size_t operator()(adobe::name_t const& name) const {
         return adobe::name_t::hash(name);
     }
 };
@@ -339,7 +339,7 @@ public:
 template <>
 struct hash<adobe::static_name_t> {
 public:
-    inline std::size_t operator()(adobe::static_name_t const &name) const {
+    inline std::size_t operator()(adobe::static_name_t const& name) const {
         return std::hash<adobe::name_t>()(name);
     }
 };

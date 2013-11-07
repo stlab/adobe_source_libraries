@@ -21,7 +21,7 @@ T arbitrary_regular_value();
 
 
 template <typename T>
-void check_regular(const T &x) {
+void check_regular(const T& x) {
     using std::swap;
 
     BOOST_CHECK(x != T());

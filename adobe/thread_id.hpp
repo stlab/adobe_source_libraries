@@ -17,7 +17,7 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-typedef const struct thread_id_opaque_t *thread_id_t;
+typedef const struct thread_id_opaque_t* thread_id_t;
 
 thread_id_t thread_id();
 

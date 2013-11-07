@@ -8,8 +8,8 @@
 #include <adobe/iomanip_asl_cel.hpp>
 #include <adobe/virtual_machine.hpp>
 
-void test_expression(const char *expression_string,
-                     const boost::function<adobe::array_t(const adobe::array_t &)> &process_func) {
+void test_expression(const char* expression_string,
+                     const boost::function<adobe::array_t(const adobe::array_t&)>& process_func) {
     adobe::array_t expression;
     std::stringstream stream(expression_string);
 

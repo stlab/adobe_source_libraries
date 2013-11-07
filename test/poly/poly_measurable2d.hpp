@@ -36,7 +36,7 @@ struct poly_measurable_2d_instance
 
     BOOST_CLASS_REQUIRE(T, , Measurable_2DConcept);
 
-    poly_measurable_2d_instance(const T &x) : base_t(x) {}
+    poly_measurable_2d_instance(const T& x) : base_t(x) {}
 
     poly_measurable_2d_instance(adobe::move_from<poly_measurable_2d_instance> x)
         : base_t(adobe::move_from<base_t>(x.source)) {}
@@ -55,7 +55,7 @@ struct measurable_2d : adobe::poly_base<poly_measurable_2d_interface, poly_measu
 
     // No delegating constructors (yet), so we call base constructor manually
     template <typename T>
-    explicit measurable_2d(const T &s)
+    explicit measurable_2d(const T& s)
         : base_t(s) {}
 
     measurable_2d(adobe::move_from<measurable_2d> x) : base_t(adobe::move_from<base_t>(x.source)) {}

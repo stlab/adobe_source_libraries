@@ -148,23 +148,23 @@ struct adam_callback_suite_t {
     };
 
     typedef boost::function<void(cell_type_t type, name_t cell_name,
-                                 const line_position_t &position, const array_t &expr_or_init,
-                                 const std::string &brief,
-                                 const std::string &detailed)> add_cell_proc_t;
+                                 const line_position_t& position, const array_t& expr_or_init,
+                                 const std::string& brief,
+                                 const std::string& detailed)> add_cell_proc_t;
 
     typedef boost::function<
-        void(const line_position_t &position, const array_t &conditional, const relation_t *first,
-             const relation_t *last, const std::string &brief,
-             const std::string &detailed)> add_relation_proc_t; // REVISIT (sparent) where's brief?
+        void(const line_position_t& position, const array_t& conditional, const relation_t* first,
+             const relation_t* last, const std::string& brief,
+             const std::string& detailed)> add_relation_proc_t; // REVISIT (sparent) where's brief?
 
-    typedef boost::function<void(name_t cell_name, bool linked, const line_position_t &position1,
-                                 const array_t &initializer, const line_position_t &position2,
-                                 const array_t &expression, const std::string &brief,
-                                 const std::string &detailed)> add_interface_proc_t;
+    typedef boost::function<void(name_t cell_name, bool linked, const line_position_t& position1,
+                                 const array_t& initializer, const line_position_t& position2,
+                                 const array_t& expression, const std::string& brief,
+                                 const std::string& detailed)> add_interface_proc_t;
 
-    typedef boost::function<void(name_t cell_name, const line_position_t &position,
-                                 const std::string &brief,
-                                 const std::string &detailed)> add_external_proc_t;
+    typedef boost::function<void(name_t cell_name, const line_position_t& position,
+                                 const std::string& brief,
+                                 const std::string& detailed)> add_external_proc_t;
 
     add_cell_proc_t add_cell_proc_m;
     add_relation_proc_t add_relation_proc_m;
@@ -174,12 +174,12 @@ struct adam_callback_suite_t {
 
 /*************************************************************************************************/
 
-void parse(std::istream &stream, const line_position_t &position,
-           const adam_callback_suite_t &callbacks);
+void parse(std::istream& stream, const line_position_t& position,
+           const adam_callback_suite_t& callbacks);
 
 /*************************************************************************************************/
 
-array_t parse_adam_expression(const std::string &expression);
+array_t parse_adam_expression(const std::string& expression);
 
 /*************************************************************************************************/
 

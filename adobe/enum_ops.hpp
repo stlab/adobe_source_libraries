@@ -102,9 +102,9 @@ inline unsigned long long promote_enum(unsigned long long e) { return e; }
         return EnumType(adobe::implementation::promote_enum(lhs) ^                                 \
                         adobe::implementation::promote_enum(rhs));                                 \
     }                                                                                              \
-    inline EnumType &operator&=(EnumType &lhs, EnumType rhs) { return lhs = lhs & rhs; }           \
-    inline EnumType &operator|=(EnumType &lhs, EnumType rhs) { return lhs = lhs | rhs; }           \
-    inline EnumType &operator^=(EnumType &lhs, EnumType rhs) { return lhs = lhs ^ rhs; }
+    inline EnumType& operator&=(EnumType& lhs, EnumType rhs) { return lhs = lhs & rhs; }           \
+    inline EnumType& operator|=(EnumType& lhs, EnumType rhs) { return lhs = lhs | rhs; }           \
+    inline EnumType& operator^=(EnumType& lhs, EnumType rhs) { return lhs = lhs ^ rhs; }
 
 /*************************************************************************************************/
 
@@ -135,11 +135,11 @@ inline unsigned long long promote_enum(unsigned long long e) { return e; }
         return EnumType(adobe::implementation::promote_enum(lhs) %                                 \
                         adobe::implementation::promote_enum(rhs));                                 \
     }                                                                                              \
-    inline EnumType &operator+=(EnumType &lhs, EnumType rhs) { return lhs = lhs + rhs; }           \
-    inline EnumType &operator-=(EnumType &lhs, EnumType rhs) { return lhs = lhs - rhs; }           \
-    inline EnumType &operator*=(EnumType &lhs, EnumType rhs) { return lhs = lhs * rhs; }           \
-    inline EnumType &operator/=(EnumType &lhs, EnumType rhs) { return lhs = lhs / rhs; }           \
-    inline EnumType &operator%=(EnumType &lhs, EnumType rhs) { return lhs = lhs % rhs; }
+    inline EnumType& operator+=(EnumType& lhs, EnumType rhs) { return lhs = lhs + rhs; }           \
+    inline EnumType& operator-=(EnumType& lhs, EnumType rhs) { return lhs = lhs - rhs; }           \
+    inline EnumType& operator*=(EnumType& lhs, EnumType rhs) { return lhs = lhs * rhs; }           \
+    inline EnumType& operator/=(EnumType& lhs, EnumType rhs) { return lhs = lhs / rhs; }           \
+    inline EnumType& operator%=(EnumType& lhs, EnumType rhs) { return lhs = lhs % rhs; }
 
 /*************************************************************************************************/
 

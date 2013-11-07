@@ -63,7 +63,7 @@ namespace implementation {
 
 /*************************************************************************************************/
 
-adobe::token_range_t transform_reference(const adobe::token_range_t &reference) try {
+adobe::token_range_t transform_reference(const adobe::token_range_t& reference) try {
     return reference.first && *reference.first == '&'
                ? to_token_range(adobe::entity_map_find(
                      std::string(boost::next(reference.first), boost::prior(reference.second))))

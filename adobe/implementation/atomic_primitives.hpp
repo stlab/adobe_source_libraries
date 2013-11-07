@@ -40,7 +40,7 @@ struct atomic {
 
 #ifndef NDEBUG
 template <typename T>
-std::ostream &operator<<(std::ostream &s, const typename atomic<T>::type &x) {
+std::ostream& operator<<(std::ostream& s, const typename atomic<T>::type& x) {
     return s << static_cast<T>(x);
 }
 #endif

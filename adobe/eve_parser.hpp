@@ -171,24 +171,24 @@ struct eve_callback_suite_t {
 
     typedef boost::any position_t;
 
-    typedef boost::function<position_t(const position_t &parent,
-                                       const line_position_t &parse_location, name_t name,
-                                       const array_t &parameters, const std::string &brief,
-                                       const std::string &detailed)> add_view_proc_t;
+    typedef boost::function<position_t(const position_t& parent,
+                                       const line_position_t& parse_location, name_t name,
+                                       const array_t& parameters, const std::string& brief,
+                                       const std::string& detailed)> add_view_proc_t;
 
-    typedef boost::function<void(cell_type_t type, name_t name, const line_position_t &position,
-                                 const array_t &initializer, const std::string &brief,
-                                 const std::string &detailed)> add_cell_proc_t;
+    typedef boost::function<void(cell_type_t type, name_t name, const line_position_t& position,
+                                 const array_t& initializer, const std::string& brief,
+                                 const std::string& detailed)> add_cell_proc_t;
 
-    typedef boost::function<void(const line_position_t &position, const array_t &conditional,
-                                 const relation_t *first, const relation_t *last,
-                                 const std::string &brief,
-                                 const std::string &detailed)> add_relation_proc_t;
+    typedef boost::function<void(const line_position_t& position, const array_t& conditional,
+                                 const relation_t* first, const relation_t* last,
+                                 const std::string& brief,
+                                 const std::string& detailed)> add_relation_proc_t;
 
-    typedef boost::function<void(name_t cell_name, bool linked, const line_position_t &position1,
-                                 const array_t &initializer, const line_position_t &position2,
-                                 const array_t &expression, const std::string &brief,
-                                 const std::string &detailed)> add_interface_proc_t;
+    typedef boost::function<void(name_t cell_name, bool linked, const line_position_t& position1,
+                                 const array_t& initializer, const line_position_t& position2,
+                                 const array_t& expression, const std::string& brief,
+                                 const std::string& detailed)> add_interface_proc_t;
 
     typedef boost::function<void()> finalize_sheet_proc_t;
 
@@ -200,8 +200,8 @@ struct eve_callback_suite_t {
     add_interface_proc_t add_interface_proc_m;
 };
 
-line_position_t parse(std::istream &in, const line_position_t &,
-                      const eve_callback_suite_t::position_t &, const eve_callback_suite_t &);
+line_position_t parse(std::istream& in, const line_position_t&,
+                      const eve_callback_suite_t::position_t&, const eve_callback_suite_t&);
 
 /*************************************************************************************************/
 

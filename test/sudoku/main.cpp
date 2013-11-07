@@ -36,7 +36,7 @@ namespace {
 
 class application_t {
     typedef std::vector<sudoku::sudoku_t> sudoku_set_t;
-    typedef std::size_t (*solver_proc_t)(sudoku::sudoku_t &);
+    typedef std::size_t (*solver_proc_t)(sudoku::sudoku_t&);
 
 public:
     enum {
@@ -131,7 +131,7 @@ void application_t::import_preferences() {
 
 /****************************************************************************************************/
 
-const char *solver_enum_to_string(int solver_enum) {
+const char* solver_enum_to_string(int solver_enum) {
     switch (solver_enum) {
     case application_t::setting_detailed_printout_k:
         return "Iterative Puzzle Printout";
@@ -241,7 +241,7 @@ void application_t::solve_puzzle() {
             if (solver_usage_m[setting_use_intersection_k])
                 usages += deductive_step(sudoku::intersection_reduction);
         }
-        catch (const std::exception &error) {
+        catch (const std::exception& error) {
             std::cerr << "Exception: " << error.what() << std::endl;
 
             break;
@@ -381,7 +381,7 @@ void application_t::run() {
 
 /****************************************************************************************************/
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     std::srand(std::time(0));
 
     std::string db_name("sudokus.txt");

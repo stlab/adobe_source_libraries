@@ -13,9 +13,9 @@
 
 namespace {
 
-void *new_s(std::size_t n) { return ::operator new(n, std::nothrow); }
+void* new_s(std::size_t n) { return ::operator new(n, std::nothrow); }
 
-void delete_s(void *p) { return ::operator delete(p, std::nothrow); }
+void delete_s(void* p) { return ::operator delete(p, std::nothrow); }
 
 } // namespace
 

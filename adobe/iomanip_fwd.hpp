@@ -31,7 +31,7 @@ class format_base;
 
 int format_base_idx();
 
-format_base *get_formatter(std::ostream &os);
+format_base* get_formatter(std::ostream& os);
 
 /*************************************************************************************************/
 

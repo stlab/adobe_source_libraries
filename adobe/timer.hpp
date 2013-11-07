@@ -147,7 +147,7 @@ public:
         reset();
     }
 
-    timer_t(const timer_t &rhs)
+    timer_t(const timer_t& rhs)
         : epoch_m(rhs.epoch_m), split_m(rhs.split_m), time_set_m(rhs.time_set_m)
 #if ADOBE_PLATFORM_WIN
           ,
@@ -156,7 +156,7 @@ public:
     {
     }
 
-    timer_t &operator=(const timer_t &rhs) {
+    timer_t& operator=(const timer_t& rhs) {
         epoch_m = rhs.epoch_m;
         split_m = rhs.split_m;
         time_set_m = rhs.time_set_m;
@@ -180,7 +180,7 @@ public:
 #elif defined(BOOST_HAS_THREADS)
         boost::xtime_get(&epoch_m, boost::TIME_UTC_);
 #elif defined(BOOST_HAS_GETTIMEOFDAY)
-        gettimeofday(&epoch_m, static_cast<struct timezone *>(0));
+        gettimeofday(&epoch_m, static_cast<struct timezone*>(0));
 #endif
     }
 
@@ -205,7 +205,7 @@ public:
         return ((split_m.sec - epoch_m.sec) * double(1e3) +
                 (split_m.nsec - epoch_m.nsec) / double(1e6));
 #elif defined(BOOST_HAS_GETTIMEOFDAY)
-        gettimeofday(&split_m, static_cast<struct timezone *>(0));
+        gettimeofday(&split_m, static_cast<struct timezone*>(0));
         return ((split_m.tv_sec - epoch_m.tv_sec) * double(1e3) +
                 (split_m.tv_usec - epoch_m.tv_usec) / double(1e3));
 #else
@@ -289,7 +289,7 @@ public:
        <code>std::cout</code>
     */
 
-    inline void report(const char *decoration, std::ostream &s = std::cout) {
+    inline void report(const char* decoration, std::ostream& s = std::cout) {
         double time(split());
 
         s << decoration << " took " << time << " milliseconds (" << time / 1e3 << " sec)"
@@ -300,8 +300,8 @@ public:
 
 private:
 #ifndef ADOBE_NO_DOCUMENTATION
-    friend bool operator==(const timer_t &x, const timer_t &y);
-    friend bool operator<(const timer_t &x, const timer_t &y);
+    friend bool operator==(const timer_t& x, const timer_t& y);
+    friend bool operator<(const timer_t& x, const timer_t& y);
 #endif
 
     value_type epoch_m;
@@ -316,11 +316,11 @@ private:
 
 #ifndef ADOBE_NO_DOCUMENTATION
 
-inline bool operator==(const timer_t & /*x*/, const timer_t & /*y*/) { return true; }
+inline bool operator==(const timer_t& /*x*/, const timer_t& /*y*/) { return true; }
 
 /****************************************************************************************************/
 
-inline bool operator<(const timer_t & /*x*/, const timer_t & /*y*/) { return false; }
+inline bool operator<(const timer_t& /*x*/, const timer_t& /*y*/) { return false; }
 
 #endif
 

@@ -29,7 +29,7 @@ typedef std::size_t (*hash_proc_t)(adobe::name_t name);
 std::size_t hash_value(adobe::name_t name) {
     std::size_t seed(0);
 
-    for (const char *first(name.c_str()); *first; ++first)
+    for (const char* first(name.c_str()); *first; ++first)
         seed = 5 * seed + *first;
 
     return seed;
@@ -60,7 +60,7 @@ std::vector<adobe::name_t> lexed_number_corpus_init() {
 
 /****************************************************************************************************/
 
-const std::vector<adobe::name_t> &lexed_number_corpus() {
+const std::vector<adobe::name_t>& lexed_number_corpus() {
     static std::vector<adobe::name_t> result_s(lexed_number_corpus_init());
 
     return result_s;
@@ -83,7 +83,7 @@ std::vector<adobe::name_t> zuid_corpus_init() {
 
 /****************************************************************************************************/
 
-const std::vector<adobe::name_t> &zuid_corpus() {
+const std::vector<adobe::name_t>& zuid_corpus() {
     static std::vector<adobe::name_t> result_s(zuid_corpus_init());
 
     return result_s;
@@ -91,7 +91,7 @@ const std::vector<adobe::name_t> &zuid_corpus() {
 
 /****************************************************************************************************/
 
-std::vector<adobe::name_t> word_corpus_init(boost::filesystem::ifstream &stream) {
+std::vector<adobe::name_t> word_corpus_init(boost::filesystem::ifstream& stream) {
     std::vector<adobe::name_t> result;
 
     while (stream) {
@@ -107,7 +107,7 @@ std::vector<adobe::name_t> word_corpus_init(boost::filesystem::ifstream &stream)
 
 /****************************************************************************************************/
 
-const std::vector<adobe::name_t> &word_corpus(boost::filesystem::ifstream &stream) {
+const std::vector<adobe::name_t>& word_corpus(boost::filesystem::ifstream& stream) {
     static std::vector<adobe::name_t> result_s(word_corpus_init(stream));
 
     return result_s;
@@ -123,8 +123,8 @@ struct collision_t {
 
 /****************************************************************************************************/
 
-void hash_test_specific(const std::vector<adobe::name_t> &corpus, const char *corpus_name,
-                        hash_proc_t hash_proc, const char *hash_name) {
+void hash_test_specific(const std::vector<adobe::name_t>& corpus, const char* corpus_name,
+                        hash_proc_t hash_proc, const char* hash_name) {
     typedef std::map<std::size_t, adobe::name_t> collider_t;
 
     collider_t collider;
@@ -136,12 +136,12 @@ void hash_test_specific(const std::vector<adobe::name_t> &corpus, const char *co
 
     adobe::timer_t timer;
 
-    for (auto &datum : corpus)
+    for (auto& datum : corpus)
         hash_result.emplace_back(collider_t::value_type{hash_proc(datum), datum});
 
     double time(timer.split());
 
-    for (auto &value : hash_result) {
+    for (auto& value : hash_result) {
         collider_t::const_iterator found(collider.find(value.first));
 
         if (found == collider.end()) {
@@ -159,7 +159,7 @@ void hash_test_specific(const std::vector<adobe::name_t> &corpus, const char *co
     if (!collision_vector.empty() && collision_vector.size() < 50) {
         std::cout << "Details:\n";
 
-        for (auto &collision : collision_vector) {
+        for (auto& collision : collision_vector) {
             std::cout << "  " << collision.name1_m << "/" << collision.name2_m << ": 0x" << std::hex
                       << collision.hash_m << std::dec << '\n';
         }
@@ -168,7 +168,7 @@ void hash_test_specific(const std::vector<adobe::name_t> &corpus, const char *co
 
 /****************************************************************************************************/
 
-void hash_test_corpus(const std::vector<adobe::name_t> &corpus, const char *corpus_name) {
+void hash_test_corpus(const std::vector<adobe::name_t>& corpus, const char* corpus_name) {
     hash_test_specific(corpus, corpus_name, &hash_value, "hash_value");
 
     hash_test_specific(corpus, corpus_name, &fnv1a64, "fnv1a64");
@@ -178,7 +178,7 @@ void hash_test_corpus(const std::vector<adobe::name_t> &corpus, const char *corp
 
 /****************************************************************************************************/
 
-void hash_test(boost::filesystem::ifstream &&corpus_file) {
+void hash_test(boost::filesystem::ifstream&& corpus_file) {
     hash_test_corpus(lexed_number_corpus(), "lexed numbers");
     hash_test_corpus(zuid_corpus(), "zuids");
 
@@ -194,7 +194,7 @@ void hash_test(boost::filesystem::ifstream &&corpus_file) {
 
 /****************************************************************************************************/
 
-int main(int argc, char **argv) try {
+int main(int argc, char** argv) try {
     boost::filesystem::path corpus_file;
 
     if (argc > 1)
@@ -204,7 +204,7 @@ int main(int argc, char **argv) try {
 
     return 0;
 }
-catch (std::exception &error) {
+catch (std::exception& error) {
     std::cout << "Error: " << error.what() << '\n';
 
     return 1;

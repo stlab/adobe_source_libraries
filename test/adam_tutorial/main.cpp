@@ -37,7 +37,7 @@ typedef std::map<adobe::name_t, adobe::any_regular_t> cell_set_t;
 
 /****************************************************************************************************/
 
-void simple_display(cell_set_t::value_type &cell_m, const adobe::any_regular_t &new_value) {
+void simple_display(cell_set_t::value_type& cell_m, const adobe::any_regular_t& new_value) {
     cell_m.second = new_value;
 
     std::cout << "U \'" << cell_m.first.c_str() << "\' ==> " << adobe::begin_asl_cel
@@ -47,14 +47,14 @@ void simple_display(cell_set_t::value_type &cell_m, const adobe::any_regular_t &
 
 /****************************************************************************************************/
 
-void stream_cell_state(const cell_set_t::value_type &cell) {
+void stream_cell_state(const cell_set_t::value_type& cell) {
     std::cout << "   '" << cell.first.c_str() << "': " << adobe::begin_asl_cel << cell.second
               << adobe::end_asl_cel << std::endl;
 }
 
 /****************************************************************************************************/
 
-adobe::dictionary_t parse_input_dictionary(const bfs::path &input_path) {
+adobe::dictionary_t parse_input_dictionary(const bfs::path& input_path) {
     std::string path_str(input_path.native());
     std::ifstream input_stream(path_str.c_str());
     adobe::array_t token_stream;
@@ -80,7 +80,7 @@ adobe::dictionary_t parse_input_dictionary(const bfs::path &input_path) {
 /****************************************************************************************************/
 
 struct sheet_tracker {
-    sheet_tracker(const bfs::path &sheet_path, const bfs::path &input_path)
+    sheet_tracker(const bfs::path& sheet_path, const bfs::path& input_path)
         : callbacks_m(adobe::bind_to_sheet(sheet_m)) {
         //  attach the VM to the sheet.
         sheet_m.machine_m.set_variable_lookup(boost::bind(&adobe::sheet_t::get, &sheet_m, _1));
@@ -108,20 +108,20 @@ struct sheet_tracker {
     void loop();
 
 private:
-    sheet_tracker();                                 // unimplemented
-    sheet_tracker(const sheet_tracker &);            // unimplemented
-    sheet_tracker &operator=(const sheet_tracker &); // unimplemented
+    sheet_tracker();                                // unimplemented
+    sheet_tracker(const sheet_tracker&);            // unimplemented
+    sheet_tracker& operator=(const sheet_tracker&); // unimplemented
 
     void add_cell_trap(adobe::adam_callback_suite_t::add_cell_proc_t original,
                        adobe::adam_callback_suite_t::cell_type_t type, adobe::name_t cell_name,
-                       const adobe::line_position_t &position, const adobe::array_t &expr_or_init);
+                       const adobe::line_position_t& position, const adobe::array_t& expr_or_init);
 
     void add_interface_trap(adobe::adam_callback_suite_t::add_interface_proc_t original,
                             adobe::name_t cell_name, bool linked,
-                            const adobe::line_position_t &position1,
-                            const adobe::array_t &initializer,
-                            const adobe::line_position_t &position2,
-                            const adobe::array_t &expression);
+                            const adobe::line_position_t& position1,
+                            const adobe::array_t& initializer,
+                            const adobe::line_position_t& position2,
+                            const adobe::array_t& expression);
 
     adobe::sheet_t sheet_m;
     adobe::adam_callback_suite_t callbacks_m;
@@ -159,8 +159,8 @@ adobe::name_t cell_type_to_name(adobe::adam_callback_suite_t::cell_type_t type) 
 
 void sheet_tracker::add_cell_trap(adobe::adam_callback_suite_t::add_cell_proc_t original,
                                   adobe::adam_callback_suite_t::cell_type_t type,
-                                  adobe::name_t cell_name, const adobe::line_position_t &position,
-                                  const adobe::array_t &expr_or_init) {
+                                  adobe::name_t cell_name, const adobe::line_position_t& position,
+                                  const adobe::array_t& expr_or_init) {
     using namespace adobe::literals;
 
     original(type, cell_name, position, expr_or_init, std::string(), std::string());
@@ -176,10 +176,10 @@ void sheet_tracker::add_cell_trap(adobe::adam_callback_suite_t::add_cell_proc_t 
 
 void sheet_tracker::add_interface_trap(adobe::adam_callback_suite_t::add_interface_proc_t original,
                                        adobe::name_t cell_name, bool linked,
-                                       const adobe::line_position_t &position1,
-                                       const adobe::array_t &initializer,
-                                       const adobe::line_position_t &position2,
-                                       const adobe::array_t &expression) {
+                                       const adobe::line_position_t& position1,
+                                       const adobe::array_t& initializer,
+                                       const adobe::line_position_t& position2,
+                                       const adobe::array_t& expression) {
     original(cell_name, linked, position1, initializer, position2, expression, std::string(),
              std::string());
 
@@ -237,7 +237,7 @@ void sheet_tracker::loop() {
 
 /****************************************************************************************************/
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     try {
         std::cout << "Adobe Adam Tutorial" << std::endl;
         std::cout << "Compiler: " << BOOST_COMPILER << std::endl;
@@ -254,7 +254,7 @@ int main(int argc, char *argv[]) {
 
         sheet_tracker(sheet_filepath, input_filepath).loop();
     }
-    catch (const std::exception &error) {
+    catch (const std::exception& error) {
         std::cerr << "Exception: " << error.what() << "\n";
     }
     catch (...) {

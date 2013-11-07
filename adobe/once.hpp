@@ -104,7 +104,7 @@ inline void call_once(void (*func)(), adobe::once_flag& flag)
 #define ADOBE_GLOBAL_MUTEX_DEFINITION(signature)                                                   \
     namespace {                                                                                    \
     adobe::once_flag adobe_once_flag_##signature##_s = ADOBE_ONCE_INIT;                            \
-    boost::mutex *adobe_mutex_ptr_##signature##_s = 0;                                             \
+    boost::mutex* adobe_mutex_ptr_##signature##_s = 0;                                             \
     void adobe_init_once_##signature() {                                                           \
         static boost::mutex mutex_s;                                                               \
         adobe_mutex_ptr_##signature##_s = &mutex_s;                                                \
@@ -133,10 +133,10 @@ inline void call_once(void (*func)(), adobe::once_flag& flag)
 #define ADOBE_THREAD_LOCAL_STORAGE_1(type, signature, ctor_p1)                                     \
     namespace {                                                                                    \
     typedef boost::thread_specific_ptr<type> adobe_thread_local_storage_##signature##_t;           \
-    adobe_thread_local_storage_##signature##_t *adobe_thread_local_storage_##signature##_g = 0;    \
-    type &adobe_thread_local_storage_##signature##_access();                                       \
-    type &adobe_thread_local_storage_##signature##_access() {                                      \
-        type *result = adobe_thread_local_storage_##signature##_g->get();                          \
+    adobe_thread_local_storage_##signature##_t* adobe_thread_local_storage_##signature##_g = 0;    \
+    type& adobe_thread_local_storage_##signature##_access();                                       \
+    type& adobe_thread_local_storage_##signature##_access() {                                      \
+        type* result = adobe_thread_local_storage_##signature##_g->get();                          \
         if (result)                                                                                \
             return *result;                                                                        \
         result = new type(ctor_p1);                                                                \
@@ -148,10 +148,10 @@ inline void call_once(void (*func)(), adobe::once_flag& flag)
 #define ADOBE_THREAD_LOCAL_STORAGE(type, signature)                                                \
     namespace {                                                                                    \
     typedef boost::thread_specific_ptr<type> adobe_thread_local_storage_##signature##_t;           \
-    adobe_thread_local_storage_##signature##_t *adobe_thread_local_storage_##signature##_g = 0;    \
-    type &adobe_thread_local_storage_##signature##_access();                                       \
-    type &adobe_thread_local_storage_##signature##_access() {                                      \
-        type *result = adobe_thread_local_storage_##signature##_g->get();                          \
+    adobe_thread_local_storage_##signature##_t* adobe_thread_local_storage_##signature##_g = 0;    \
+    type& adobe_thread_local_storage_##signature##_access();                                       \
+    type& adobe_thread_local_storage_##signature##_access() {                                      \
+        type* result = adobe_thread_local_storage_##signature##_g->get();                          \
         if (result)                                                                                \
             return *result;                                                                        \
         result = new type();                                                                       \
@@ -167,15 +167,15 @@ inline void call_once(void (*func)(), adobe::once_flag& flag)
 #else
 
 #define ADOBE_THREAD_LOCAL_STORAGE_1(type, signature, ctor_p1)                                     \
-    type &adobe_thread_local_storage_##signature##_access();                                       \
-    type &adobe_thread_local_storage_##signature##_access() {                                      \
+    type& adobe_thread_local_storage_##signature##_access();                                       \
+    type& adobe_thread_local_storage_##signature##_access() {                                      \
         static type adobe_thread_local_storage_##signature##_s(ctor_p1);                           \
         return adobe_thread_local_storage_##signature##_s;                                         \
     }
 
 #define ADOBE_THREAD_LOCAL_STORAGE(type, signature)                                                \
-    type &adobe_thread_local_storage_##signature##_access();                                       \
-    type &adobe_thread_local_storage_##signature##_access() {                                      \
+    type& adobe_thread_local_storage_##signature##_access();                                       \
+    type& adobe_thread_local_storage_##signature##_access() {                                      \
         static type adobe_thread_local_storage_##signature##_s;                                    \
         return adobe_thread_local_storage_##signature##_s;                                         \
     }
