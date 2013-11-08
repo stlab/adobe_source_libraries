@@ -311,7 +311,7 @@ BOOST_AUTO_TEST_CASE(sha)
                     "54bea6ea b8195a2e b0a7906a 4b4a8766 66300eef bd1f3b84 74f9cd57")
     };
 
-//    test_hash<adobe::sha224_t>(sha224_test_set);
+   test_hash<adobe::sha224_t>(sha224_test_set);
 
     /************************** SHA-256 Unit Tests **************************/
 
@@ -333,7 +333,7 @@ BOOST_AUTO_TEST_CASE(sha)
 //                    "3e9ad646 8bbbad2a c3c2cdc2 92e018ba 5fd70b96 0cf16797 77fce708 fdb066e9")
     };
 
-    test_hash<adobe::sha256_t>(sha256_test_set);
+    // test_hash<adobe::sha256_t>(sha256_test_set);
 
     /************************** SHA-384 Unit Tests **************************/
 

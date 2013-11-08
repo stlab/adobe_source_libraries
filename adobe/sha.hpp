@@ -37,6 +37,7 @@ std::string to_hex(Container data, bool spaces = true)
 
     constexpr const char* lut_k = "0123456789abcdef";
     constexpr std::size_t value_size_k = sizeof(value_type);
+    constexpr std::size_t value_bitsize_k = value_size_k * 8;
 
     std::string result;
     bool        first(true);
@@ -50,7 +51,7 @@ std::string to_hex(Container data, bool spaces = true)
 
         for (std::size_t i(0); i < value_size_k; ++i)
         {
-            char c((element >> (i * 8)) & 0xff);
+            char c((element >> (value_bitsize_k - (i + 1) * 8)) & 0xff);
             char hi(lut_k[(c >> 4) & 0xf]);
             char lo(lut_k[c & 0xf]);
 
@@ -528,7 +529,7 @@ void sha_2_digest_message_block(typename HashTraits::state_digest_type&         
                                 const typename HashTraits::message_block_type&  message_block)
 {
     std::cout << "MB: " << to_hex(message_block) << '\n';
-
+    //
     //  The "sha_2" in the name of this function is in
     //  reference to the second generation of SHA algorithms
     //  (224, 256, 384, and 512), all of which have the same
