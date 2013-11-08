@@ -190,13 +190,13 @@ struct message_block_part_14_set_t<false, HashTraits>
     they pass in some data. Whenever the current state fills to capacity with
     said data, we digest the block. In the end there is (very very likely) to be
     some data left over, which we keep in the state and track its size with
-    state_bits. In finalize, then, we add the 1-bit, do the zero-pad, add the
+    stuffed_size. In finalize, then, we add the 1-bit, do the zero-pad, add the
     overall length of the message, and digest that final block, returning
     whatever comes out back to the user.
 */
 template <typename HashTraits, typename I>
 void block_and_digest(typename HashTraits::message_block_type& state,
-                      std::uint16_t                            state_bits,
+                      std::uint16_t                            stuffed_size,
                       typename HashTraits::state_digest_type&  digest,
                       I                                        first,
                       std::uint64_t                            num_bits)
@@ -241,7 +241,7 @@ void block_and_digest(typename HashTraits::message_block_type& state,
         - zero-or-more bits of zero-bit padding
         - the length of the message (max_message_bitsize_k bits)
     */
-
+#if 1
     while (num_blocks)
     {
         for (std::size_t i(0); i < 16; ++i)
@@ -294,11 +294,23 @@ void block_and_digest(typename HashTraits::message_block_type& state,
 
         --num_blocks;
     }
+#else
+    std::size_t bits_to_stuff(message_blocksize_k - stuffed_size);
 
-#if 0
-    // This should move to the finalize call.
-    // clears potentially sensitive information
-    std::memset(&state_m, 0, sizeof(state_m));
+    while (num_bits > bits_to_stuff)
+    {
+        stuff_into_state(state, stuffed_size, bits_to_stuff, first);
+
+        traits_type().digest_message_block(digest, state);
+
+        num_bits -= bits_to_stuff;
+
+        stuffed_size = 0;
+
+        bits_to_stuff = message_blocksize_k;
+    }
+
+    stuff_into_state();
 #endif
 }
 
@@ -306,12 +318,17 @@ void block_and_digest(typename HashTraits::message_block_type& state,
 
 template <typename HashTraits>
 typename HashTraits::digest_type finalize(typename HashTraits::message_block_type& state,
-                                          std::uint16_t                            state_bits,
+                                          std::uint16_t                            stuffed_size,
                                           typename HashTraits::state_digest_type&  digest)
 {
     typename HashTraits::digest_type result = {{0}};
 
     std::copy(digest.begin(), digest.begin() + result.size(), &result[0]);
+
+    // clears potentially sensitive information
+    std::memset(&state, 0, sizeof(state));
+
+    stuffed_size = 0;
 
     return result;
 }
@@ -740,7 +757,7 @@ public:
     inline void update(I first, std::uint64_t num_bits)
     {
         implementation::block_and_digest<traits_type>(state_m,
-                                                      state_bits_m,
+                                                      stuffed_size_m,
                                                       state_digest_m,
                                                       first,
                                                       num_bits);
@@ -754,7 +771,7 @@ public:
     inline digest_type finalize()
     {
         return implementation::finalize<traits_type>(state_m,
-                                                     state_bits_m,
+                                                     stuffed_size_m,
                                                      state_digest_m);
     }
 
@@ -810,7 +827,7 @@ public:
 #ifndef ADOBE_NO_DOCUMENTATION
 private:
     typename traits_type::message_block_type state_m;
-    std::uint16_t                            state_bits_m;
+    std::uint16_t                            stuffed_size_m;
     std::uint64_t                            message_bits_m;
     typename traits_type::state_digest_type  state_digest_m;
 #endif
