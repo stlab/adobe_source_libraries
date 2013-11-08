@@ -4,12 +4,12 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_SHA_HPP
 #define ADOBE_SHA_HPP
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 // config
 #include <adobe/config.hpp>
@@ -24,15 +24,14 @@
 // asl
 #include <adobe/algorithm/copy.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
 /**************************************************************************************************/
 /**
-    Copies a binary digest and outputs it as an ASCII string. There is also
-    an optional parameter to add spaces between elements of the digest,
-    defaulting to true.
+Copies a binary digest and outputs it as an ASCII string. There is also an optional parameter to add
+spaces between elements of the digest, defaulting to true.
 */
 template <typename Container>
 std::string to_hex(Container data, bool spaces = true)
@@ -67,21 +66,21 @@ std::string to_hex(Container data, bool spaces = true)
     return result;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace implementation {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 constexpr std::size_t bitsizeof()
 { return sizeof(T) * 8; }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t N, typename T>
 inline T shr(const T& x)
@@ -111,7 +110,7 @@ inline T rotl(const T& x)
     return (x << N) | (x >> r_shift);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 inline T ch(T x, T y, T z)
@@ -125,7 +124,7 @@ template <typename T>
 inline T maj(T x, T y, T z)
     { return (x & y) ^ (x & z) ^ (y & z); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename HashTraits, typename I>
 void stuff_into_state(typename HashTraits::message_block_type& state,
@@ -140,15 +139,14 @@ void stuff_into_state(typename HashTraits::message_block_type& state,
     constexpr std::size_t value_bitsize_k = value_size_k * 8;
 
     /*
-        We are given the stuff bit offset in terms of the whole message block.
-        From there we need to derive which element of the array we are going
-        to stuff into, and the shift within that element. Then we stuff bytes
-        from *first, decreasing the internal shift until we hit zero (stuffing
-        from most significant bit to least significant). Then we advance to the
-        next element, reset the shift to far-right, and keep going.
+    We are given the stuff bit offset in terms of the whole message block. From there we need to
+    derive which element of the array we are going to stuff into, and the shift within that element.
+    Then we stuff bytes from *first, decreasing the internal shift until we hit zero (stuffing from
+    most significant bit to least significant). Then we advance to the next element, reset the shift
+    to far-right, and keep going.
 
-        For values that come in less than a byte the high bits are where the
-        value is stored, not the low bits.
+    For values that come in less than a byte the high bits are where the value is stored, not the
+    low bits.
     */
 
     std::size_t element = stuff_bit_offset / value_bitsize_k;
@@ -156,10 +154,11 @@ void stuff_into_state(typename HashTraits::message_block_type& state,
                         stuff_bit_offset % value_bitsize_k; // bits already stuffed.
     value_type* dst(&state[element]);
 
-    // As soon as we've gone once through this loop, we'll be on a byte
-    // boundary. If we don't go through the loop we'll be off a byte
-    // boundary and will have to shift the next byte appropriately (it
-    // should shift 0 when we've been through this loop, effectively a nop.)
+    /*
+    As soon as we've gone once through this loop, we'll be on a byte boundary. If we don't go
+    through the loop we'll be off a byte boundary and will have to shift the next byte appropriately
+    (it should shift 0 when we've been through this loop, effectively a nop.)
+    */
     while (num_bits >= 8)
     {
         *dst |= (value_type(*first++) & value_type(0xff)) << shift;
@@ -183,16 +182,16 @@ void stuff_into_state(typename HashTraits::message_block_type& state,
     // sub-byte leftovers which need to be shifted into place.
     if (num_bits)
     {
-        // dst is a window of size value_bitsize_k. The message ends somewhere
-        // in the window [ value_bitsize_k .. 1 ], meaning our leftovers get
-        // their high order bit pushed to position [ value_bitsize_k - 1 .. 0 ].
-        // Since we know the value is in the low-8-bits of a value_bitsize_k-sized
-        // window, we need to shift the value either up or down, depending on
-        // where the message ended.
-        //
-        // message_end is the bit location of the last bit of the message. This
-        // can be value_bitsize_k, implying the message ended on the value_type
-        // boundary.
+        /*
+        dst is a window of size value_bitsize_k. The message ends somewhere in the window
+        [ value_bitsize_k .. 1 ], meaning our leftovers get their high order bit pushed to position
+        [ value_bitsize_k - 1 .. 0 ]. Since we know the value is in the low-8-bits of a
+        value_bitsize_k-sized window, we need to shift the value either up or down, depending on
+        where the message ended.
+
+        message_end is the bit location of the last bit of the message. This can be value_bitsize_k,
+        implying the message ended on the value_type boundary.
+        */
         std::size_t message_end(value_bitsize_k - (stuff_bit_offset % value_bitsize_k));
         value_type  v(*first++ & 0xff); // our value in the low 8 bits.
 
@@ -207,22 +206,19 @@ void stuff_into_state(typename HashTraits::message_block_type& state,
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
-    We keep a running message block as state, along with info about the total
-    message length to this point, as well as the number of bits stuffed in the
-    current message block. Whenever the user wants to update the message
-    they pass in some data, which we use to stuff the current message block.
-    When that block fills to capacity we digest it and reset the state to
-    prepare to digest the next message block. In the end there is work to be 
-    done with whatever data might be left over. In finalize, then, we add the
-    spec'd 1-bit, zero-pad the message if need be, append the length of the
-    message, and digest that final block. The user gets whatever comes out.
+We keep a running message block as state, along with info about the total message length to this
+point, as well as the number of bits stuffed in the current message block. Whenever the user wants
+to update the message they pass in some data, which we use to stuff the current message block. When
+that block fills to capacity we digest it and reset the state to prepare to digest the next message
+block. In the end there is work to be done with whatever data might be left over. In finalize, then,
+we add the spec'd 1-bit, zero-pad the message if need be, append the length of the message, and
+digest that final block. The user gets whatever comes out.
 
-    This routine expects whole-byte input until the end of the message, at which
-    point the remainder of the message can be a subset of 8 bytes. If you're
-    going to be busting up a messages into chunks to hash it, then you need to
-    do so at the byte boundary until the last chunk.
+This routine expects whole-byte input until the end of the message, at which point the remainder of
+the message can be a subset of 8 bytes. If you're going to be busting up a messages into chunks to
+hash it, then you need to do so at the byte boundary until the last chunk.
 */
 template <typename HashTraits, typename I>
 void block_and_digest(typename HashTraits::message_block_type& state,
@@ -251,11 +247,10 @@ void block_and_digest(typename HashTraits::message_block_type& state,
         - zero padding (varies)
         - the number of bits of the message (max_message_bitsize_k bits)
 
-    This is the padding and blocking phase. Pack the message into 512- or
-    1024-bit blocks for digest, padding the message out with a varible number of
-    zero bits such that the last message block is also 512- or 1024-bits long.
-    All blocks will be 100% message except for the last block in the digest
-    That last block, then, will be:
+    This is the padding and blocking phase. Pack the message into 512- or 1024-bit blocks for
+    digest, padding the message out with a varible number of zero bits such that the last message
+    block is also 512- or 1024-bits long. All blocks will be 100% message except for the last block
+    in the digest That last block, then, will be:
         - zero-or-more bits of message
         - the 1 bit
         - zero-or-more bits of zero-bit padding
@@ -281,7 +276,7 @@ void block_and_digest(typename HashTraits::message_block_type& state,
     message_size += num_bits;
 }
 
-/************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename HashTraits>
 typename HashTraits::digest_type finalize(typename HashTraits::message_block_type& state,
@@ -290,15 +285,14 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
                                           typename HashTraits::state_digest_type&  digest)
 {
     /*
-        A couple things we have to do in this routine:
-            - add a single 1-bit to the end of the message
-            - pad out the final block to message_blocksize_k bits, less
-              the size of the message
-            - add the size of the message to the end.
+    A couple things we have to do in this routine:
+        - add a single 1-bit to the end of the message
+        - pad out the final block to message_blocksize_k bits, less
+          the size of the message
+        - add the size of the message to the end.
 
-        There are concessions we make for when these three elements cause us to
-        cross over the block boundary, requiring us to digest more than one
-        block as we finalize.
+    There are concessions we make for when these three elements cause us to cross over the block
+    boundary, requiring us to digest more than one block as we finalize.
     */
 
     typedef HashTraits                               traits_type;
@@ -313,46 +307,53 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
     constexpr std::size_t value_size_k = sizeof(value_type);
     constexpr std::size_t value_bitsize_k = value_size_k * 8;
 
-    // Stuff into state needs to operate from the assumption that it is taking
-    // the most significant bits of a value and stuffing them into the message.
-    // As such our 1-bit here needs to be in the MSB, hence 0x80 and not 1.
+    /*
+    Stuff into state needs to operate from the assumption that it is taking the most significant
+    bits of a value and stuffing them into the message. As such our 1-bit here needs to be in the
+    MSB, hence 0x80 and not 1.
+    */
     std::uint8_t  one_bit(0x80);
     std::uint8_t* one_bit_ptr(&one_bit);
 
     stuff_into_state<traits_type>(state, stuffed_size, 1, one_bit_ptr);
 
-    // If that one bit pushed us to the message block boundary, congratulations.
-    // Digest the message and reset the machine. Do NOT update the message
-    // length - the end bit isn't counted as part of the message.
+    /*
+    If that one bit pushed us to the message block boundary, congratulations. Digest the message and
+    reset the machine. Do NOT update the message length - the end bit isn't counted as part of the
+    message.
+    */
     if (stuffed_size == message_blocksize_k)
         traits_type::digest_message_block(digest, state, stuffed_size);
 
-    // Now that we have the last block with (maybe) enough space, find the end
-    // and insert the length of the message. Fortunately we have a routine for
-    // that.
-    //
-    // Note that if there is not enough space to insert the length of the
-    // message (i.e., offset will be less than stuffed_size) we need to
-    // digest the block and try again with an empty one.
+    /*
+    Now that we have the last block with (maybe) enough space, find the end and insert the length of
+    the message. Fortunately we have a routine for that.
+
+    Note that if there is not enough space to insert the length of the message (i.e., offset will be
+    less than stuffed_size) we need to digest the block and try again with an empty one.
+    */
     std::size_t length_offset(message_blocksize_k - max_message_bitsize_k);
 
-    // The length of the message will always go into message block elements 14
-    // and/or 15. (i.e., the last two.) State block 15 gets the first half of
-    // the size, and state block 14 gets the second half.
-    //
-    // In the event we dont have enough room at the end of the message block
-    // to add the length of the message, digest the block as-is (that is,
-    // with some amount of zero-padding at the end), then clear it and process
-    // another block whose contents are just the length of the message.
+    /*
+    The length of the message will always go into message block elements 14 and/or 15. (i.e., the
+    last two.) State block 15 gets the first half of the size, and state block 14 gets the second
+    half.
+
+    In the event we dont have enough room at the end of the message block to add the length of the
+    message, digest the block as-is (that is, with some amount of zero-padding at the end), then
+    clear it and process another block whose contents are just the length of the message.
+    */
     if (stuffed_size > length_offset)
         traits_type::digest_message_block(digest, state, stuffed_size);
 
     constexpr value_type value_type_mask = static_cast<value_type>(-1);
 
-    // If the message length is longer than what will fit in the last element of
-    // the message block, slice the high bits of the length off and stuff them
-    // into the next-to-last element. Note that because of the checks above, we
-    // are guaranteed the space will be zero-padded, so we can write over it OK.
+    /*
+    If the message length is longer than what will fit in the last element of the message block,
+    slice the high bits of the length off and stuff them into the next-to-last element. Note that
+    because of the checks above, we are guaranteed the space will be zero-padded, so we can write
+    over it OK.
+    */
 #ifdef __clang__
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wshift-count-overflow"
@@ -369,10 +370,9 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
     traits_type::digest_message_block(digest, state, stuffed_size);
 
     /*
-    Once the finalized block(s) have been digested, copy the result to the
-    digest type and get outta here. Note that this could crop the number of
-    bits between the state digest and the resulting digest, depending on the
-    requirements of the hash algorithm being used.
+    Once the finalized block(s) have been digested, copy the result to the digest type and get outta
+    here. Note that this could crop the number of bits between the state digest and the resulting
+    digest, depending on the requirements of the hash algorithm being used.
     */
     typename HashTraits::digest_type result = {{ 0 }};
 
@@ -381,17 +381,18 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
     return result;
 }
 
-/************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename HashTraits>
 void sha_2_digest_message_block(typename HashTraits::state_digest_type&  digest,
                                 typename HashTraits::message_block_type& message_block,
                                 std::uint16_t&                           stuffed_size)
 {
-    //  The "sha_2" in the name of this function is in
-    //  reference to the second generation of SHA algorithms
-    //  (224, 256, 384, and 512), all of which have the same
-    //  message block process implementation.
+    /*
+    The "sha_2" in the name of this function is in reference to the second generation of SHA
+    algorithms (224, 256, 384, and 512), all of which have the same message block process
+    implementation.
+    */
 
     typedef HashTraits                                          traits_type;
     typedef typename traits_type::message_block_type            message_block_type;
@@ -451,7 +452,7 @@ void sha_2_digest_message_block(typename HashTraits::state_digest_type&  digest,
     stuffed_size = 0;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 struct sha1_traits_t
 {
@@ -465,14 +466,7 @@ struct sha1_traits_t
 
     static constexpr state_digest_type initial_state()
     {
-        return
-        {{
-            0x67452301,
-            0xefcdab89,
-            0x98badcfe,
-            0x10325476,
-            0xc3d2e1f0
-        }};
+        return {{ 0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0 }};
     }
 
     static inline void digest_message_block(state_digest_type&  digest,
@@ -549,7 +543,7 @@ private:
     }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 struct sha256_traits_t
 {
@@ -565,14 +559,7 @@ struct sha256_traits_t
     {
         return
         {{
-            0x6a09e667,
-            0xbb67ae85,
-            0x3c6ef372,
-            0xa54ff53a,
-            0x510e527f,
-            0x9b05688c,
-            0x1f83d9ab,
-            0x5be0cd19
+            0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19
         }};
     }
 
@@ -613,7 +600,7 @@ struct sha256_traits_t
     }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 struct sha224_traits_t : public sha256_traits_t
 {
@@ -623,19 +610,13 @@ struct sha224_traits_t : public sha256_traits_t
     {
         return
         {{
-            0xc1059ed8,
-            0x367cd507,
-            0x3070dd17,
-            0xf70e5939,
-            0xffc00b31,
-            0x68581511,
-            0x64f98fa7,
-            0xbefa4fa4
+            0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
+            0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4
         }};
     }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 struct sha512_traits_t
 {
@@ -651,14 +632,8 @@ struct sha512_traits_t
     {
         return
         {{
-            0x6a09e667f3bcc908ULL,
-            0xbb67ae8584caa73bULL,
-            0x3c6ef372fe94f82bULL,
-            0xa54ff53a5f1d36f1ULL,
-            0x510e527fade682d1ULL,
-            0x9b05688c2b3e6c1fULL,
-            0x1f83d9abfb41bd6bULL,
-            0x5be0cd19137e2179ULL
+            0x6a09e667f3bcc908ULL, 0xbb67ae8584caa73bULL, 0x3c6ef372fe94f82bULL, 0xa54ff53a5f1d36f1ULL,
+            0x510e527fade682d1ULL, 0x9b05688c2b3e6c1fULL, 0x1f83d9abfb41bd6bULL, 0x5be0cd19137e2179ULL
         }};
     }
 
@@ -711,7 +686,7 @@ struct sha512_traits_t
     }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 struct sha384_traits_t : public sha512_traits_t
 {
@@ -721,44 +696,35 @@ struct sha384_traits_t : public sha512_traits_t
     {
         return
         {{
-            0xcbbb9d5dc1059ed8ULL,
-            0x629a292a367cd507ULL,
-            0x9159015a3070dd17ULL,
-            0x152fecd8f70e5939ULL,
-            0x67332667ffc00b31ULL,
-            0x8eb44a8768581511ULL,
-            0xdb0c2e0d64f98fa7ULL,
-            0x47b5481dbefa4fa4ULL
+            0xcbbb9d5dc1059ed8ULL, 0x629a292a367cd507ULL, 0x9159015a3070dd17ULL, 0x152fecd8f70e5939ULL,
+            0x67332667ffc00b31ULL, 0x8eb44a8768581511ULL, 0xdb0c2e0d64f98fa7ULL, 0x47b5481dbefa4fa4ULL
         }};
     }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace implementation
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /**
-    \defgroup sha SHA (Secure Hash Algorithm)
-
-    \todo Need to implement sentinel variants of the SHA routines to
-          eliminate std::distance altogether.
+\defgroup sha SHA (Secure Hash Algorithm)
 */
 /**
-    \ingroup sha
+\ingroup sha
 
-    Generic engine implementation for SHA-*.
+Generic engine implementation for SHA-*.
 
-    Given the similarity of behavior between the SHA-* class of algorithms,
-    the core functionality has been encapsulated in this class.
+Given the similarity of behavior between the SHA-* class of algorithms,
+the core functionality has been encapsulated in this class.
 
-    Users of the class can either call one of the one-shot sha::digest
-    routines or instantiate the class and call sha::update repeatedly,
-    then retrieve the digest with sha::finalize.
+Users of the class can either call one of the one-shot sha::digest
+routines or instantiate the class and call sha::update repeatedly,
+then retrieve the digest with sha::finalize.
 */
 template <class Traits>
 class sha
@@ -806,6 +772,7 @@ public:
           2^128 bits, this routine is limited to
           `sizeof(std::iterator_traits<I>::difference_type) * 8` bits. A
           workaround to the limitation is to call this routine multiple times.
+          Even then, the total message length is limited to 2^64 bits.
     */
     template <typename I>
     inline void update(I first, I last)
@@ -830,8 +797,7 @@ public:
     \param num_bits number of bits to digest
 
     \note While the SHA standard specifies the ability to process messages up to
-          2^128 bits, this routine is limited to 2^64 bits. A workaround to the
-          limitation is to call this routine multiple times.
+          2^128 bits, this routine is limited to messages of 2^64 bits in length.
     */
     template <typename I>
     inline void update(I first, std::uint64_t num_bits)
@@ -892,7 +858,7 @@ public:
     \param num_bits number of bits to digest
 
     \note While the SHA standard specifies the ability to process messages up to
-          2^128 bits, this routine is limited to 2^64 bits.
+          2^128 bits, this routine is limited to messages of 2^64 bits in length.
 
     \return The SHA-* digest of the message
     */
@@ -915,7 +881,7 @@ private:
 #endif
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \ingroup sha
@@ -957,12 +923,12 @@ typedef sha<implementation::sha384_traits_t> sha384_t;
 
 typedef sha<implementation::sha512_traits_t> sha512_t;
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
