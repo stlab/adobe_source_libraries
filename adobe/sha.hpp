@@ -40,10 +40,7 @@ namespace implementation {
         uint32_t:     |-------|-------|-------|-------|
         value_type:   |--v[0]-|--v[1]-|--v[2]-|--v[3]-|
 
-    In the event the iterators run dry and there is nothing more to pack,
-    the bit_packer returns the remaining number of bits that were not
-    stuffed. (This implies that it will return 0 when a complete stuffing
-    takes place.)
+    bit_packer always returns the number of bits that were stuffed.
 */
 template <typename I> // I models InputIterator
 struct bit_packer
@@ -72,10 +69,10 @@ private:
 
         result = 0;
 
-        while (to_pack != 0 && bitsize_m != 0)
+        while (to_pack && bitsize_m)
         {
             std::size_t shift_count(8 * (to_pack - 1));
-            T           mask(T(255) << shift_count);
+            const T     mask(T(255) << shift_count);
 
             result |= (T(*first_m) << shift_count) & mask;
 
@@ -85,14 +82,15 @@ private:
             }
             else
             {
-                std::size_t remaining(static_cast<std::size_t>(to_pack * 8 - bitsize_m));
+                std::size_t result(static_cast<std::size_t>(to_pack * 8 - bitsize_m));
 
                 bitsize_m = 0;
 
-                return remaining;
+                return result;
             }
 
             ++first_m;
+
             --to_pack;
         }
 
@@ -186,37 +184,75 @@ struct message_block_part_14_set_t<false, HashTraits>
 };
 
 /*************************************************************************************************/
-
+/*
+    The plan is to make this far better than it is now by keeping a running
+    message block as state. Whenever the user wants to update the message
+    they pass in some data. Whenever the current state fills to capacity with
+    said data, we digest the block. In the end there is (very very likely) to be
+    some data left over, which we keep in the state and track its size with
+    state_bits. In finalize, then, we add the 1-bit, do the zero-pad, add the
+    overall length of the message, and digest that final block, returning
+    whatever comes out back to the user.
+*/
 template <typename HashTraits, typename I>
-void block_and_digest(typename HashTraits::process_type& digest, I first, std::uint64_t num_bits)
+void block_and_digest(typename HashTraits::message_block_type& state,
+                      std::uint16_t                            state_bits,
+                      typename HashTraits::process_type&       digest,
+                      I                                        first,
+                      std::uint64_t                            num_bits)
 {
     typedef HashTraits                               traits_type;
     typedef typename traits_type::message_block_type message_block_type;
     typedef typename message_block_type::value_type  message_block_value_type;
 
+    // Maximum length of message in bits (2^n); this is n. Either 64 or 128.
     static constexpr std::size_t max_message_bitsize_k = traits_type::max_message_bitsize_k;
     static constexpr std::size_t half_max_message_bitsize_k = max_message_bitsize_k / 2;
+
+    // The size of the message block in bits. Either 512 or 1024.
     static constexpr std::size_t message_blocksize_k = traits_type::message_blocksize_k;
     static constexpr std::size_t use_mb_14 = half_max_message_bitsize_k < bitsizeof<std::uint64_t>();
 
     message_block_value_type message_block_value_type_max(std::numeric_limits<message_block_value_type>::max());
-    message_block_type       message_block;
-    std::uint64_t            message_size(num_bits + max_message_bitsize_k);
+    std::uint64_t            message_size(num_bits + 1 + max_message_bitsize_k);
     std::uint64_t            num_blocks(message_size / message_blocksize_k + 1);
     bool                     in_padding(false);
     bit_packer<I>            bits(first, num_bits);
 
-    while (num_blocks != 0)
+    /*
+    The SHA description has three phases for preparing to digest a message:
+        - padding
+        - parsing (aka blocking)
+        - hash initialization
+
+    All messages are composed of the following:
+        - the message (length: num_bits bits)
+        - a 1-bit (length: 1 bit)
+        - zero padding (varies)
+        - the number of bits of the message (max_message_bitsize_k bits)
+
+    This is the padding and blocking phase. Pack the message into 512- or
+    1024-bit blocks for digest, padding the message out with a varible number of
+    zero bits such that the last message block is also 512- or 1024-bits long.
+    All blocks will be 100% message except for the last block in the digest
+    That last block, then, will be:
+        - zero-or-more bits of message
+        - the 1 bit
+        - zero-or-more bits of zero-bit padding
+        - the length of the message (max_message_bitsize_k bits)
+    */
+
+    while (num_blocks)
     {
         for (std::size_t i(0); i < 16; ++i)
         {
             if (!in_padding)
             {
-                std::size_t unset_bits(bits(message_block[i]));
+                std::size_t unset_bits(bits(state[i]));
 
                 if (unset_bits != 0)
                 {
-                    message_block[i] |= message_block_value_type(1) << (unset_bits - 1);
+                    state[i] |= message_block_value_type(1) << (unset_bits - 1);
 
                     in_padding = true;
                 }
@@ -243,27 +279,30 @@ void block_and_digest(typename HashTraits::process_type& digest, I first, std::u
                     //                      1024-block-size case, thus sliencing the compiler.
 
                     if (i == 14)
-                        message_block_part_14_set_t<use_mb_14, traits_type>()(message_block[i], num_bits);
+                        message_block_part_14_set_t<use_mb_14, traits_type>()(state[i], num_bits);
                     else if (i == 15)
-                        message_block[i] = static_cast<message_block_value_type>(num_bits & message_block_value_type_max);
+                        state[i] = static_cast<message_block_value_type>(num_bits & message_block_value_type_max);
                     else
-                        message_block[i] = 0;
+                        state[i] = 0;
                 }
                 else
-                    message_block[i] = 0;
+                    state[i] = 0;
             }
         }
 
-        traits_type().digest_message_block(digest, message_block);
+        traits_type().digest_message_block(digest, state);
 
         --num_blocks;
     }
 
-    // clears potentioally sensitive information
-    std::memset(&message_block, 0, sizeof(message_block));
+#if 0
+    // This should move to the finalize call.
+    // clears potentially sensitive information
+    std::memset(&state_m, 0, sizeof(state_m));
+#endif
 }
 
-/*************************************************************************************************/
+/************************************************************************************************/
 
 template <typename HashTraits>
 void sha_2_digest_message_block(typename HashTraits::process_type&              digest,
@@ -324,7 +363,7 @@ void sha_2_digest_message_block(typename HashTraits::process_type&              
     digest[6] += g;
     digest[7] += h;
 
-    // clears potentioally sensitive information
+    // clears potentially sensitive information
     std::memset(&schedule, 0, sizeof(schedule));
 }
 
@@ -713,7 +752,11 @@ public:
     template <typename I>
     inline void update(I first, std::uint64_t num_bits)
     {
-        implementation::block_and_digest<traits_type>(process_m, first, num_bits);
+        implementation::block_and_digest<traits_type>(state_m,
+                                                      state_bits_m,
+                                                      process_m,
+                                                      first,
+                                                      num_bits);
     }
 
     /**
@@ -777,7 +820,9 @@ public:
 
 #ifndef ADOBE_NO_DOCUMENTATION
 private:
-    typename traits_type::process_type process_m;
+    typename traits_type::message_block_type state_m;
+    std::uint16_t                            state_bits_m;
+    typename traits_type::process_type       process_m;
 #endif
 };
 
