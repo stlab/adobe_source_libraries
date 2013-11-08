@@ -33,8 +33,10 @@ namespace adobe {
 template <typename Container>
 std::string to_hex(Container data, bool spaces = true)
 {
+    typedef typename Container::value_type value_type;
+
     static constexpr const char* lut_k = "0123456789abcdef";
-    static constexpr std::size_t value_size_k = sizeof(typename Container::value_type);
+    static constexpr std::size_t value_size_k = sizeof(value_type);
 
     std::string result;
     bool        first(true);
@@ -46,14 +48,9 @@ std::string to_hex(Container data, bool spaces = true)
 
         first = false;
 
-        const char* p(reinterpret_cast<const char*>(&element));
-
-#error Forgot you're in little endian, jack.
-#error Also, you're stuffing things big endian. That won't work, either.
-
-        for (std::size_t i(0); i < value_size_k; ++i, ++p)
+        for (std::size_t i(0); i < value_size_k; ++i)
         {
-            char c(*p);
+            char c((element >> (i * 8)) & 0xff);
             char hi(lut_k[(c >> 4) & 0xf]);
             char lo(lut_k[c & 0xf]);
 
@@ -234,21 +231,46 @@ void stuff_into_state(typename HashTraits::message_block_type& state,
                       std::size_t                              bits_available,
                       I                                        first)
 {
-    char* dst(reinterpret_cast<char*>(&state[0]));
+    typedef HashTraits                                           traits_type;
+    typedef typename traits_type::message_block_type::value_type value_type;
 
-    dst += (stuff_bit_offset / 8);
+    constexpr std::size_t value_size_k = sizeof(value_type);
+    constexpr std::size_t value_bitsize_k = value_size_k * 8;
+
+    /*
+        We are given the stuff bit offset in terms of the whole message block.
+        From there we need to derive which element of the array we are going
+        to stuff into, and the shift within that element. Then we stuff bytes
+        from *first, increasing the internal shift until we hit the size of the
+        element. Then we advance to the next element, reset the shift to zero,
+        and keep going.
+    */
+
+    std::size_t element = stuff_bit_offset / value_bitsize_k;
+    std::size_t shift = stuff_bit_offset % value_bitsize_k;
+
+    value_type* dst(&state[element]);
 
     while (bits_available >= 8)
     {
-        *dst++ = *first++;
+        *dst |= (value_type(*first++) << shift);
 
         bits_available -= 8;
+
+        shift += 8;
+
+        if (shift == value_bitsize_k)
+        {
+            ++dst;
+
+            shift = 0;
+        }
     }
 
     // sub-byte leftovers. Should happen once per message digest, and at the
     // very end of the message.
     if (bits_available)
-        *dst++ = *first++;
+        *dst |= (value_type(*first++) << shift);
 }
 
 /*************************************************************************************************/
@@ -423,16 +445,12 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
     // The size of the message block in bits. Either 512 or 1024.
     static constexpr std::size_t message_blocksize_k = traits_type::message_blocksize_k;
 
-    char* dst(reinterpret_cast<char*>(&state[0]));
-
-    dst += stuffed_size / 8;
-
-    // Add the 1-bit to the end of the message.
-    std::size_t one_shift((8 - stuffed_size % 8) - 1);
-    *dst |= 1 << one_shift;
+    std::uint8_t one_bit(1);
 
     // account for the 1-bit.
     ++stuffed_size;
+
+    stuff_into_state<traits_type>(state, stuffed_size, 1, &one_bit);
 
     // This has to be handled better than this. It's a gnarly edge case.
     if (stuffed_size == message_blocksize_k)
@@ -455,18 +473,7 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
 
     if (stuffed_size < length_offset)
     {
-        dst = reinterpret_cast<char*>(&state.back());
-
-        dst -= (max_message_bitsize_k / 8) - sizeof(state[0]);
-
-#ifdef BOOST_LITTLE_ENDIAN
-        char* msfirst(reinterpret_cast<char*>(&message_size));
-        char* mslast(msfirst + sizeof(message_size));
-
-        std::reverse(msfirst, mslast);
-#endif
-
-        *reinterpret_cast<std::uint64_t*>(dst) = message_size;
+        stuff_into_state<traits_type>(state, length_offset, max_message_bitsize_k, &message_size);
     }
     else
     {
