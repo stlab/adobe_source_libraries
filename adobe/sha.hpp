@@ -28,10 +28,42 @@
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename Container>
-std::string to_hex(Container data, bool spaces = true);
+std::string to_hex(Container data, bool spaces = true)
+{
+    static constexpr const char* lut_k = "0123456789abcdef";
+    static constexpr std::size_t value_size_k = sizeof(typename Container::value_type);
+
+    std::string result;
+    bool        first(true);
+
+    for (const auto& element : data)
+    {
+        if (!first && spaces)
+            result += ' ';
+
+        first = false;
+
+        const char* p(reinterpret_cast<const char*>(&element));
+
+#error Forgot you're in little endian, jack.
+#error Also, you're stuffing things big endian. That won't work, either.
+
+        for (std::size_t i(0); i < value_size_k; ++i, ++p)
+        {
+            char c(*p);
+            char hi(lut_k[(c >> 4) & 0xf]);
+            char lo(lut_k[c & 0xf]);
+
+            result += hi;
+            result += lo;
+        }
+    }
+
+    return result;
+}
 
 /*************************************************************************************************/
 
@@ -1021,40 +1053,6 @@ typedef sha<implementation::sha384_traits_t> sha384_t;
 */
 
 typedef sha<implementation::sha512_traits_t> sha512_t;
-
-/**************************************************************************************************/
-
-template <typename Container>
-std::string to_hex(Container data, bool spaces)
-{
-    static constexpr const char* lut_k = "0123456789abcdef";
-    static constexpr std::size_t value_size_k = sizeof(typename Container::value_type);
-
-    std::string result;
-    bool        first(true);
-
-    for (const auto& element : data)
-    {
-        if (!first && spaces)
-            result += ' ';
-
-        first = false;
-
-        const char* p(reinterpret_cast<const char*>(&element));
-
-        for (std::size_t i(0); i < value_size_k; ++i, ++p)
-        {
-            char c(*p);
-            char hi(lut_k[(c >> 4) & 0xf]);
-            char lo(lut_k[c & 0xf]);
-
-            result += hi;
-            result += lo;
-        }
-    }
-
-    return result;
-}
 
 /*************************************************************************************************/
 
