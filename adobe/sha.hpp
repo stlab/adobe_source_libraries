@@ -35,8 +35,8 @@ std::string to_hex(Container data, bool spaces = true)
 {
     typedef typename Container::value_type value_type;
 
-    static constexpr const char* lut_k = "0123456789abcdef";
-    static constexpr std::size_t value_size_k = sizeof(value_type);
+    constexpr const char* lut_k = "0123456789abcdef";
+    constexpr std::size_t value_size_k = sizeof(value_type);
 
     std::string result;
     bool        first(true);
@@ -247,30 +247,38 @@ void stuff_into_state(typename HashTraits::message_block_type& state,
     */
 
     std::size_t element = stuff_bit_offset / value_bitsize_k;
-    std::size_t shift = stuff_bit_offset % value_bitsize_k;
+    std::size_t shift = value_bitsize_k - (stuff_bit_offset % value_bitsize_k) - 8;
 
     value_type* dst(&state[element]);
 
     while (bits_available >= 8)
     {
-        *dst |= (value_type(*first++) << shift);
+        const value_type mask(value_type(0xff) << shift);
 
-        bits_available -= 8;
+        *dst |= (value_type(*first++) << shift) & mask;
 
-        shift += 8;
-
-        if (shift == value_bitsize_k)
+        if (shift == 0)
         {
             ++dst;
 
-            shift = 0;
+            shift = value_bitsize_k;
         }
+        else
+        {
+            shift -= 8;
+        }
+
+        bits_available -= 8;
     }
 
     // sub-byte leftovers. Should happen once per message digest, and at the
     // very end of the message.
     if (bits_available)
-        *dst |= (value_type(*first++) << shift);
+    {
+        const value_type mask(value_type(0xff) << shift);
+
+        *dst |= (value_type(*first++) << shift) & mask;
+    }
 }
 
 /*************************************************************************************************/
@@ -302,7 +310,7 @@ void block_and_digest(typename HashTraits::message_block_type& state,
     typedef typename message_block_type::value_type  message_block_value_type;
 
     // The size of the message block in bits. Either 512 or 1024.
-    static constexpr std::size_t message_blocksize_k = traits_type::message_blocksize_k;
+    constexpr std::size_t message_blocksize_k = traits_type::message_blocksize_k;
 
     /*
     The SHA description has three phases for preparing to digest a message:
@@ -328,9 +336,9 @@ void block_and_digest(typename HashTraits::message_block_type& state,
     */
 #if 0
     // Maximum length of message in bits (2^n); this is n. Either 64 or 128.
-    static constexpr std::size_t max_message_bitsize_k = traits_type::max_message_bitsize_k;
-    static constexpr std::size_t half_max_message_bitsize_k = max_message_bitsize_k / 2;
-    static constexpr std::size_t use_mb_14 = half_max_message_bitsize_k < bitsizeof<std::uint64_t>();
+    constexpr std::size_t max_message_bitsize_k = traits_type::max_message_bitsize_k;
+    constexpr std::size_t half_max_message_bitsize_k = max_message_bitsize_k / 2;
+    constexpr std::size_t use_mb_14 = half_max_message_bitsize_k < bitsizeof<std::uint64_t>();
 
     message_block_value_type message_block_value_type_max(std::numeric_limits<message_block_value_type>::max());
     std::uint64_t            message_size(num_bits + 1 + max_message_bitsize_k);
@@ -438,19 +446,27 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
         message block, a message that is 1023 or 1024 bits.
     */
 
-    typedef HashTraits traits_type;
+    typedef HashTraits                               traits_type;
+    typedef typename traits_type::message_block_type message_block_type;
+    typedef typename message_block_type::value_type  value_type;
 
     // Maximum length of message in bits (2^n); this is n. Either 64 or 128.
-    static constexpr std::size_t max_message_bitsize_k = traits_type::max_message_bitsize_k;
+    constexpr std::size_t max_message_bitsize_k = traits_type::max_message_bitsize_k;
     // The size of the message block in bits. Either 512 or 1024.
-    static constexpr std::size_t message_blocksize_k = traits_type::message_blocksize_k;
+    constexpr std::size_t message_blocksize_k = traits_type::message_blocksize_k;
 
-    std::uint8_t one_bit(1);
+    constexpr std::size_t value_size_k = sizeof(value_type);
+    constexpr std::size_t value_bitsize_k = value_size_k * 8;
+
+    // 0x80 because it's immediately at the end of the message, i.e., at the
+    // most significant bit. If it were just 1, that would introduce 7 bits
+    // of pad where we don't want it.
+    std::uint8_t one_bit(0x80);
+
+    stuff_into_state<traits_type>(state, stuffed_size, 1, &one_bit);
 
     // account for the 1-bit.
     ++stuffed_size;
-
-    stuff_into_state<traits_type>(state, stuffed_size, 1, &one_bit);
 
     // This has to be handled better than this. It's a gnarly edge case.
     if (stuffed_size == message_blocksize_k)
@@ -462,8 +478,8 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
         state = typename HashTraits::message_block_type({{0}});
     }
 
-    // Now that we have the last block with enough space, find the end and
-    // insert the length of the message. Fortunately we have a routine for
+    // Now that we have the last block with (maybe) enough space, find the end
+    // and insert the length of the message. Fortunately we have a routine for
     // that.
     //
     // Note that if there is not enough space to insert the length of the
@@ -471,9 +487,16 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
     // digest the block and try again with an empty one.
     std::size_t length_offset(message_blocksize_k - max_message_bitsize_k);
 
+    // The length of the message will always go into state blocks 14 and/or 15.
+    // (i.e., the last two.) State block 15 gets the first half of the size, and
+    // state block 14 gets the second half.
     if (stuffed_size < length_offset)
     {
-        stuff_into_state<traits_type>(state, length_offset, max_message_bitsize_k, &message_size);
+        constexpr value_type value_type_mask = static_cast<value_type>(-1);
+
+        state[14] = (message_size >> value_bitsize_k) & value_type_mask;
+
+        state[15] = message_size & value_type_mask;
     }
     else
     {
