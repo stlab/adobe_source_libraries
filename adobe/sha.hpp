@@ -24,6 +24,11 @@ namespace adobe {
 
 /*************************************************************************************************/
 
+template <typename Container>
+std::string to_hex(Container data, bool spaces = true);
+
+/*************************************************************************************************/
+
 namespace implementation {
 
 /*************************************************************************************************/
@@ -188,24 +193,24 @@ struct message_block_part_14_set_t<false, HashTraits>
 template <typename HashTraits, typename I>
 void stuff_into_state(typename HashTraits::message_block_type& state,
                       std::uint16_t                            stuff_bit_offset,
-                      std::size_t                              bits_to_stuff,
+                      std::size_t                              bits_available,
                       I                                        first)
 {
     char* dst(reinterpret_cast<char*>(&state[0]));
 
     dst += (stuff_bit_offset / 8);
 
-    while (bits_to_stuff >= 8)
+    while (bits_available >= 8)
     {
-        *dst++ = *first;
+        *dst++ = *first++;
 
-        bits_to_stuff -= 8;
+        bits_available -= 8;
     }
 
     // sub-byte leftovers. Should happen once per message digest, and at the
     // very end of the message.
-    if (bits_to_stuff)
-        *dst++ = *first;
+    if (bits_available)
+        *dst++ = *first++;
 }
 
 /*************************************************************************************************/
@@ -226,7 +231,8 @@ void stuff_into_state(typename HashTraits::message_block_type& state,
 */
 template <typename HashTraits, typename I>
 void block_and_digest(typename HashTraits::message_block_type& state,
-                      std::uint16_t                            stuffed_size,
+                      std::uint16_t&                           stuffed_size,
+                      std::uint64_t&                           message_size,
                       typename HashTraits::state_digest_type&  digest,
                       I                                        first,
                       std::uint64_t                            num_bits)
@@ -320,27 +326,33 @@ void block_and_digest(typename HashTraits::message_block_type& state,
             }
         }
 
-        traits_type().digest_message_block(digest, state);
+        traits_type::digest_message_block(digest, state);
 
         --num_blocks;
     }
 #else
-    std::size_t bits_to_stuff(message_blocksize_k - stuffed_size);
+    std::size_t bits_available(message_blocksize_k - stuffed_size);
 
-    while (num_bits > bits_to_stuff)
+    while (num_bits > bits_available)
     {
-        stuff_into_state<traits_type>(state, stuffed_size, bits_to_stuff, first);
+        stuff_into_state<traits_type>(state, stuffed_size, bits_available, first);
 
-        traits_type().digest_message_block(digest, state);
+        traits_type::digest_message_block(digest, state);
 
-        num_bits -= bits_to_stuff;
+        message_size += bits_available;
+
+        num_bits -= bits_available;
 
         stuffed_size = 0;
 
-        bits_to_stuff = message_blocksize_k;
+        bits_available = message_blocksize_k;
     }
 
     stuff_into_state<traits_type>(state, stuffed_size, num_bits, first);
+
+    message_size += num_bits;
+
+    // num_bits = 0;
 
     stuffed_size += num_bits;
 #endif
@@ -351,8 +363,76 @@ void block_and_digest(typename HashTraits::message_block_type& state,
 template <typename HashTraits>
 typename HashTraits::digest_type finalize(typename HashTraits::message_block_type& state,
                                           std::uint16_t                            stuffed_size,
+                                          const std::uint64_t                      message_size,
                                           typename HashTraits::state_digest_type&  digest)
 {
+    /*
+        A couple things we have to do in this routine:
+            - add a single 1-bit to the end of the message
+            - pad out the final block to message_blocksize_k bits, less
+              the size of the message
+            - add the size of the message to the end.
+
+        There are concessions we'll have to make for when these three elements
+        cause us to cross over the block boundary. For example, in a 1024-bit
+        message block, a message that is 1023 or 1024 bits.
+    */
+
+    typedef HashTraits traits_type;
+
+    // Maximum length of message in bits (2^n); this is n. Either 64 or 128.
+    static constexpr std::size_t max_message_bitsize_k = traits_type::max_message_bitsize_k;
+    // The size of the message block in bits. Either 512 or 1024.
+    static constexpr std::size_t message_blocksize_k = traits_type::message_blocksize_k;
+
+    char* dst(reinterpret_cast<char*>(&state[0]));
+
+    dst += stuffed_size / 8;
+
+    // Add the 1-bit to the end of the message.
+    std::size_t one_shift((8 - stuffed_size % 8) - 1);
+    *dst |= 1 << one_shift;
+
+    // account for the 1-bit.
+    ++stuffed_size;
+
+    // This has to be handled better than this. It's a gnarly edge case.
+    if (stuffed_size == message_blocksize_k)
+    {
+        traits_type::digest_message_block(digest, state);
+
+        stuffed_size = 0;
+
+        state = typename HashTraits::message_block_type({{0}});
+    }
+
+    // Now that we have the last block with enough space, find the end and
+    // insert the length of the message. Fortunately we have a routine for
+    // that.
+    //
+    // Note that if there is not enough space to insert the length of the
+    // message (i.e., offset will be less than stuffed_size) we need to
+    // digest the block and try again with an empty one.
+    std::size_t length_offset(message_blocksize_k - max_message_bitsize_k);
+
+    if (stuffed_size < length_offset)
+    {
+        stuff_into_state<traits_type>(state,
+                                      length_offset,
+                                      max_message_bitsize_k,
+                                      reinterpret_cast<const char*>(&message_size));
+    }
+    else
+    {
+        // gotta handle this case...
+    }
+
+    traits_type::digest_message_block(digest, state);
+
+    /*
+        Once the final block(s) have been digested, copy the result to the
+        digest type and get outta here.
+    */
     typename HashTraits::digest_type result = {{0}};
 
     std::copy(digest.begin(), digest.begin() + result.size(), &result[0]);
@@ -368,9 +448,11 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
 /************************************************************************************************/
 
 template <typename HashTraits>
-void sha_2_digest_message_block(typename HashTraits::state_digest_type&              digest,
+void sha_2_digest_message_block(typename HashTraits::state_digest_type&         digest,
                                 const typename HashTraits::message_block_type&  message_block)
 {
+    std::cout << "MB: " << to_hex(message_block) << '\n';
+
     //  The "sha_2" in the name of this function is in
     //  reference to the second generation of SHA algorithms
     //  (224, 256, 384, and 512), all of which have the same
@@ -442,13 +524,16 @@ struct sha1_traits_t
     static constexpr std::size_t max_message_bitsize_k = 64;
     static constexpr std::size_t message_blocksize_k = 512;
 
-    static inline void reset_digest(state_digest_type& digest)
+    static constexpr state_digest_type initial_state()
     {
-        digest[0] = 0x67452301;
-        digest[1] = 0xefcdab89;
-        digest[2] = 0x98badcfe;
-        digest[3] = 0x10325476;
-        digest[4] = 0xc3d2e1f0;
+        return
+        {{
+            0x67452301,
+            0xefcdab89,
+            0x98badcfe,
+            0x10325476,
+            0xc3d2e1f0
+        }};
     }
 
     static inline void digest_message_block(state_digest_type& digest, const message_block_type& message_block)
@@ -531,16 +616,19 @@ struct sha256_traits_t
     static constexpr std::size_t max_message_bitsize_k = 64;
     static constexpr std::size_t message_blocksize_k = 512;
 
-    static inline void reset_digest(state_digest_type& digest)
+    static constexpr state_digest_type initial_state()
     {
-        digest[0] = 0x6a09e667;
-        digest[1] = 0xbb67ae85;
-        digest[2] = 0x3c6ef372;
-        digest[3] = 0xa54ff53a;
-        digest[4] = 0x510e527f;
-        digest[5] = 0x9b05688c;
-        digest[6] = 0x1f83d9ab;
-        digest[7] = 0x5be0cd19;
+        return
+        {{
+            0x6a09e667,
+            0xbb67ae85,
+            0x3c6ef372,
+            0xa54ff53a,
+            0x510e527f,
+            0x9b05688c,
+            0x1f83d9ab,
+            0x5be0cd19
+        }};
     }
 
     static inline void digest_message_block(state_digest_type& digest, const message_block_type& message_block)
@@ -584,16 +672,19 @@ struct sha224_traits_t : public sha256_traits_t
 {
     typedef std::array<std::uint32_t, 7> digest_type;
 
-    static inline void reset_digest(state_digest_type& digest)
+    static constexpr state_digest_type initial_state()
     {
-        digest[0] = 0xc1059ed8;
-        digest[1] = 0x367cd507;
-        digest[2] = 0x3070dd17;
-        digest[3] = 0xf70e5939;
-        digest[4] = 0xffc00b31;
-        digest[5] = 0x68581511;
-        digest[6] = 0x64f98fa7;
-        digest[7] = 0xbefa4fa4;
+        return
+        {{
+            0xc1059ed8,
+            0x367cd507,
+            0x3070dd17,
+            0xf70e5939,
+            0xffc00b31,
+            0x68581511,
+            0x64f98fa7,
+            0xbefa4fa4
+        }};
     }
 };
 
@@ -609,16 +700,19 @@ struct sha512_traits_t
     static constexpr std::size_t max_message_bitsize_k = 128;
     static constexpr std::size_t message_blocksize_k = 1024;
 
-    static inline void reset_digest(state_digest_type& digest)
+    static constexpr state_digest_type initial_state()
     {
-        digest[0] = 0x6a09e667f3bcc908ULL;
-        digest[1] = 0xbb67ae8584caa73bULL;
-        digest[2] = 0x3c6ef372fe94f82bULL;
-        digest[3] = 0xa54ff53a5f1d36f1ULL;
-        digest[4] = 0x510e527fade682d1ULL;
-        digest[5] = 0x9b05688c2b3e6c1fULL;
-        digest[6] = 0x1f83d9abfb41bd6bULL;
-        digest[7] = 0x5be0cd19137e2179ULL;
+        return
+        {{
+            0x6a09e667f3bcc908ULL,
+            0xbb67ae8584caa73bULL,
+            0x3c6ef372fe94f82bULL,
+            0xa54ff53a5f1d36f1ULL,
+            0x510e527fade682d1ULL,
+            0x9b05688c2b3e6c1fULL,
+            0x1f83d9abfb41bd6bULL,
+            0x5be0cd19137e2179ULL
+        }};
     }
 
     static inline void digest_message_block(state_digest_type& digest, const message_block_type& message_block)
@@ -674,16 +768,19 @@ struct sha384_traits_t : public sha512_traits_t
 {
     typedef std::array<std::uint64_t, 6> digest_type;
 
-    static inline void reset_digest(state_digest_type& digest)
+    static constexpr state_digest_type initial_state()
     {
-        digest[0] = 0xcbbb9d5dc1059ed8ULL;
-        digest[1] = 0x629a292a367cd507ULL;
-        digest[2] = 0x9159015a3070dd17ULL;
-        digest[3] = 0x152fecd8f70e5939ULL;
-        digest[4] = 0x67332667ffc00b31ULL;
-        digest[5] = 0x8eb44a8768581511ULL;
-        digest[6] = 0xdb0c2e0d64f98fa7ULL;
-        digest[7] = 0x47b5481dbefa4fa4ULL;
+        return
+        {{
+            0xcbbb9d5dc1059ed8ULL,
+            0x629a292a367cd507ULL,
+            0x9159015a3070dd17ULL,
+            0x152fecd8f70e5939ULL,
+            0x67332667ffc00b31ULL,
+            0x8eb44a8768581511ULL,
+            0xdb0c2e0d64f98fa7ULL,
+            0x47b5481dbefa4fa4ULL
+        }};
     }
 };
 
@@ -737,10 +834,12 @@ public:
 
     Sets the state of the digest machine to its default.
     */
-    sha()
-    {
-        traits_type().reset_digest(state_digest_m);
-    }
+    sha() :
+        state_m({{0}}),
+        stuffed_size_m(0),
+        message_size_m(0),
+        state_digest_m(traits_type::initial_state())
+    { }
 
     /**
     \ingroup sha
@@ -790,6 +889,7 @@ public:
     {
         implementation::block_and_digest<traits_type>(state_m,
                                                       stuffed_size_m,
+                                                      message_size_m,
                                                       state_digest_m,
                                                       first,
                                                       num_bits);
@@ -804,6 +904,7 @@ public:
     {
         return implementation::finalize<traits_type>(state_m,
                                                      stuffed_size_m,
+                                                     message_size_m,
                                                      state_digest_m);
     }
 
@@ -860,7 +961,7 @@ public:
 private:
     typename traits_type::message_block_type state_m;
     std::uint16_t                            stuffed_size_m;
-    std::uint64_t                            message_bits_m;
+    std::uint64_t                            message_size_m;
     typename traits_type::state_digest_type  state_digest_m;
 #endif
 };
@@ -906,6 +1007,38 @@ typedef sha<implementation::sha384_traits_t> sha384_t;
 */
 
 typedef sha<implementation::sha512_traits_t> sha512_t;
+
+/**************************************************************************************************/
+
+template <typename Container>
+std::string to_hex(Container data, bool spaces)
+{
+    static constexpr const char* lut_k = "0123456789abcdef";
+    static constexpr std::size_t value_size_k = sizeof(typename Container::value_type);
+
+    std::string result;
+    bool        first(true);
+
+    for (const auto& element : data)
+    {
+        if (!first && spaces)
+            result += ' ';
+
+        first = false;
+
+        const char* p(reinterpret_cast<const char*>(&element));
+
+        for (std::size_t i(0); i < value_size_k; ++i, ++p)
+        {
+            char c(*p);
+
+            result += lut_k[c >> 4];
+            result += lut_k[c & 0xf];
+        }
+    }
+
+    return result;
+}
 
 /*************************************************************************************************/
 
