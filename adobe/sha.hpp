@@ -11,11 +11,17 @@
 
 /*************************************************************************************************/
 
+// config
 #include <adobe/config.hpp>
 
+// stdc++
 #include <array>
 #include <limits>
 
+// boost
+#include <boost/detail/endian.hpp>
+
+// asl
 #include <adobe/algorithm/copy.hpp>
 
 /*************************************************************************************************/
@@ -363,7 +369,7 @@ void block_and_digest(typename HashTraits::message_block_type& state,
 template <typename HashTraits>
 typename HashTraits::digest_type finalize(typename HashTraits::message_block_type& state,
                                           std::uint16_t                            stuffed_size,
-                                          const std::uint64_t                      message_size,
+                                          std::uint64_t                            message_size,
                                           typename HashTraits::state_digest_type&  digest)
 {
     /*
@@ -417,10 +423,18 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
 
     if (stuffed_size < length_offset)
     {
-        stuff_into_state<traits_type>(state,
-                                      length_offset,
-                                      max_message_bitsize_k,
-                                      reinterpret_cast<const char*>(&message_size));
+        dst = reinterpret_cast<char*>(&state.back());
+
+        dst -= (max_message_bitsize_k / 8) - sizeof(state[0]);
+
+#ifdef BOOST_LITTLE_ENDIAN
+        char* msfirst(reinterpret_cast<char*>(&message_size));
+        char* mslast(msfirst + sizeof(message_size));
+
+        std::reverse(msfirst, mslast);
+#endif
+
+        *reinterpret_cast<std::uint64_t*>(dst) = message_size;
     }
     else
     {
@@ -1031,9 +1045,11 @@ std::string to_hex(Container data, bool spaces)
         for (std::size_t i(0); i < value_size_k; ++i, ++p)
         {
             char c(*p);
+            char hi(lut_k[(c >> 4) & 0xf]);
+            char lo(lut_k[c & 0xf]);
 
-            result += lut_k[c >> 4];
-            result += lut_k[c & 0xf];
+            result += hi;
+            result += lo;
         }
     }
 
