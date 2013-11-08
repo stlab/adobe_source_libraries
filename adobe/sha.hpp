@@ -197,7 +197,7 @@ struct message_block_part_14_set_t<false, HashTraits>
 template <typename HashTraits, typename I>
 void block_and_digest(typename HashTraits::message_block_type& state,
                       std::uint16_t                            state_bits,
-                      typename HashTraits::process_type&       digest,
+                      typename HashTraits::state_digest_type&  digest,
                       I                                        first,
                       std::uint64_t                            num_bits)
 {
@@ -305,7 +305,21 @@ void block_and_digest(typename HashTraits::message_block_type& state,
 /************************************************************************************************/
 
 template <typename HashTraits>
-void sha_2_digest_message_block(typename HashTraits::process_type&              digest,
+typename HashTraits::digest_type finalize(typename HashTraits::message_block_type& state,
+                                          std::uint16_t                            state_bits,
+                                          typename HashTraits::state_digest_type&  digest)
+{
+    typename HashTraits::digest_type result = {{0}};
+
+    std::copy(digest.begin(), digest.begin() + result.size(), &result[0]);
+
+    return result;
+}
+
+/************************************************************************************************/
+
+template <typename HashTraits>
+void sha_2_digest_message_block(typename HashTraits::state_digest_type&              digest,
                                 const typename HashTraits::message_block_type&  message_block)
 {
     //  The "sha_2" in the name of this function is in
@@ -313,10 +327,10 @@ void sha_2_digest_message_block(typename HashTraits::process_type&              
     //  (224, 256, 384, and 512), all of which have the same
     //  message block process implementation.
 
-    typedef HashTraits                                     traits_type;
-    typedef typename traits_type::message_block_type       message_block_type;
-    typedef typename traits_type::schedule_type            schedule_type;
-    typedef typename traits_type::process_type::value_type digest_value_type;
+    typedef HashTraits                                          traits_type;
+    typedef typename traits_type::message_block_type            message_block_type;
+    typedef typename traits_type::schedule_type                 schedule_type;
+    typedef typename traits_type::state_digest_type::value_type digest_value_type;
 
     schedule_type schedule;
 
@@ -371,15 +385,15 @@ void sha_2_digest_message_block(typename HashTraits::process_type&              
 
 struct sha1_traits_t
 {
-    typedef std::array<std::uint32_t, 5>  process_type;
+    typedef std::array<std::uint32_t, 5>  state_digest_type;
     typedef std::array<std::uint32_t, 16> message_block_type;
     typedef std::array<std::uint32_t, 80> schedule_type;
-    typedef process_type                  digest_type;
+    typedef state_digest_type             digest_type;
 
     static constexpr std::size_t max_message_bitsize_k = 64;
     static constexpr std::size_t message_blocksize_k = 512;
 
-    static inline void reset_digest(process_type& digest)
+    static inline void reset_digest(state_digest_type& digest)
     {
         digest[0] = 0x67452301;
         digest[1] = 0xefcdab89;
@@ -388,7 +402,7 @@ struct sha1_traits_t
         digest[4] = 0xc3d2e1f0;
     }
 
-    static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
+    static inline void digest_message_block(state_digest_type& digest, const message_block_type& message_block)
     {   
         schedule_type schedule;
 
@@ -429,9 +443,6 @@ struct sha1_traits_t
         std::memset(&schedule, 0, sizeof(schedule));
     }
 
-    static inline digest_type finalize(const process_type& process)
-        { return process; }
-
 private:
     static inline std::uint32_t f(std::size_t   t,
                                   std::uint32_t x,
@@ -463,15 +474,15 @@ private:
 
 struct sha256_traits_t
 {
-    typedef std::array<std::uint32_t, 8>  process_type;
+    typedef std::array<std::uint32_t, 8>  state_digest_type;
     typedef std::array<std::uint32_t, 16> message_block_type;
     typedef std::array<std::uint32_t, 64> schedule_type;
-    typedef process_type                  digest_type;
+    typedef state_digest_type             digest_type;
 
     static constexpr std::size_t max_message_bitsize_k = 64;
     static constexpr std::size_t message_blocksize_k = 512;
 
-    static inline void reset_digest(process_type& digest)
+    static inline void reset_digest(state_digest_type& digest)
     {
         digest[0] = 0x6a09e667;
         digest[1] = 0xbb67ae85;
@@ -483,7 +494,7 @@ struct sha256_traits_t
         digest[7] = 0x5be0cd19;
     }
 
-    static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
+    static inline void digest_message_block(state_digest_type& digest, const message_block_type& message_block)
         { sha_2_digest_message_block<sha256_traits_t>(digest, message_block); }
 
     static inline std::uint32_t big_sigma_0(std::uint32_t x)
@@ -516,9 +527,6 @@ struct sha256_traits_t
 
         return k_set[t];
     }
-
-    static inline digest_type finalize(const process_type& process)
-        { return process; }
 };
 
 /*************************************************************************************************/
@@ -527,7 +535,7 @@ struct sha224_traits_t : public sha256_traits_t
 {
     typedef std::array<std::uint32_t, 7> digest_type;
 
-    static inline void reset_digest(process_type& digest)
+    static inline void reset_digest(state_digest_type& digest)
     {
         digest[0] = 0xc1059ed8;
         digest[1] = 0x367cd507;
@@ -538,30 +546,21 @@ struct sha224_traits_t : public sha256_traits_t
         digest[6] = 0x64f98fa7;
         digest[7] = 0xbefa4fa4;
     }
-
-    static inline digest_type finalize(const process_type& process)
-    {
-        digest_type result = {{0}};
-
-        std::copy(process.begin(), process.begin() + result.size(), &result[0]);
-
-        return result;
-    }
 };
 
 /*************************************************************************************************/
 
 struct sha512_traits_t
 {
-    typedef std::array<std::uint64_t, 8>  process_type;
+    typedef std::array<std::uint64_t, 8>  state_digest_type;
     typedef std::array<std::uint64_t, 16> message_block_type;
     typedef std::array<std::uint64_t, 80> schedule_type;
-    typedef process_type                  digest_type;
+    typedef state_digest_type             digest_type;
 
     static constexpr std::size_t max_message_bitsize_k = 128;
     static constexpr std::size_t message_blocksize_k = 1024;
 
-    static inline void reset_digest(process_type& digest)
+    static inline void reset_digest(state_digest_type& digest)
     {
         digest[0] = 0x6a09e667f3bcc908ULL;
         digest[1] = 0xbb67ae8584caa73bULL;
@@ -573,7 +572,7 @@ struct sha512_traits_t
         digest[7] = 0x5be0cd19137e2179ULL;
     }
 
-    static inline void digest_message_block(process_type& digest, const message_block_type& message_block)
+    static inline void digest_message_block(state_digest_type& digest, const message_block_type& message_block)
         { sha_2_digest_message_block<sha512_traits_t>(digest, message_block); }
 
     static inline std::uint64_t big_sigma_0(std::uint64_t x)
@@ -618,9 +617,6 @@ struct sha512_traits_t
 
         return k_set[t];
     }
-
-    static inline digest_type finalize(const process_type& process)
-        { return process; }
 };
 
 /*************************************************************************************************/
@@ -629,7 +625,7 @@ struct sha384_traits_t : public sha512_traits_t
 {
     typedef std::array<std::uint64_t, 6> digest_type;
 
-    static inline void reset_digest(process_type& digest)
+    static inline void reset_digest(state_digest_type& digest)
     {
         digest[0] = 0xcbbb9d5dc1059ed8ULL;
         digest[1] = 0x629a292a367cd507ULL;
@@ -639,15 +635,6 @@ struct sha384_traits_t : public sha512_traits_t
         digest[5] = 0x8eb44a8768581511ULL;
         digest[6] = 0xdb0c2e0d64f98fa7ULL;
         digest[7] = 0x47b5481dbefa4fa4ULL;
-    }
-
-    static inline digest_type finalize(const process_type& process)
-    {
-        digest_type result = {{0}};
-
-        std::copy(process.begin(), process.begin() + result.size(), &result[0]);
-
-        return result;
     }
 };
 
@@ -703,7 +690,7 @@ public:
     */
     sha()
     {
-        traits_type().reset_digest(process_m);
+        traits_type().reset_digest(state_digest_m);
     }
 
     /**
@@ -754,7 +741,7 @@ public:
     {
         implementation::block_and_digest<traits_type>(state_m,
                                                       state_bits_m,
-                                                      process_m,
+                                                      state_digest_m,
                                                       first,
                                                       num_bits);
     }
@@ -764,9 +751,11 @@ public:
 
     \return The SHA-* digest of the message
     */
-    inline digest_type finalize() const
+    inline digest_type finalize()
     {
-        return traits_type::finalize(process_m);
+        return implementation::finalize<traits_type>(state_m,
+                                                     state_bits_m,
+                                                     state_digest_m);
     }
 
     /**
@@ -822,7 +811,8 @@ public:
 private:
     typename traits_type::message_block_type state_m;
     std::uint16_t                            state_bits_m;
-    typename traits_type::process_type       process_m;
+    std::uint64_t                            message_bits_m;
+    typename traits_type::state_digest_type  state_digest_m;
 #endif
 };
 
