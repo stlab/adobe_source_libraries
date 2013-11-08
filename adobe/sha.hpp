@@ -184,6 +184,31 @@ struct message_block_part_14_set_t<false, HashTraits>
 };
 
 /*************************************************************************************************/
+
+template <typename HashTraits, typename I>
+void stuff_into_state(typename HashTraits::message_block_type& state,
+                      std::uint16_t                            stuff_bit_offset,
+                      std::size_t                              bits_to_stuff,
+                      I                                        first)
+{
+    char* dst(reinterpret_cast<char*>(&state[0]));
+
+    dst += (stuff_bit_offset / 8);
+
+    while (bits_to_stuff >= 8)
+    {
+        *dst++ = *first;
+
+        bits_to_stuff -= 8;
+    }
+
+    // sub-byte leftovers. Should happen once per message digest, and at the
+    // very end of the message.
+    if (bits_to_stuff)
+        *dst++ = *first;
+}
+
+/*************************************************************************************************/
 /*
     The plan is to make this far better than it is now by keeping a running
     message block as state. Whenever the user wants to update the message
@@ -193,6 +218,11 @@ struct message_block_part_14_set_t<false, HashTraits>
     stuffed_size. In finalize, then, we add the 1-bit, do the zero-pad, add the
     overall length of the message, and digest that final block, returning
     whatever comes out back to the user.
+
+    This routine expects whole-byte input until the end of the message, at which
+    point the remainder of the message can be a subset of 8 bytes. If you're
+    going to be busting up a messages into pieces to hash it, then, you need to
+    do so at the byte boundary until the last byte.
 */
 template <typename HashTraits, typename I>
 void block_and_digest(typename HashTraits::message_block_type& state,
@@ -205,19 +235,8 @@ void block_and_digest(typename HashTraits::message_block_type& state,
     typedef typename traits_type::message_block_type message_block_type;
     typedef typename message_block_type::value_type  message_block_value_type;
 
-    // Maximum length of message in bits (2^n); this is n. Either 64 or 128.
-    static constexpr std::size_t max_message_bitsize_k = traits_type::max_message_bitsize_k;
-    static constexpr std::size_t half_max_message_bitsize_k = max_message_bitsize_k / 2;
-
     // The size of the message block in bits. Either 512 or 1024.
     static constexpr std::size_t message_blocksize_k = traits_type::message_blocksize_k;
-    static constexpr std::size_t use_mb_14 = half_max_message_bitsize_k < bitsizeof<std::uint64_t>();
-
-    message_block_value_type message_block_value_type_max(std::numeric_limits<message_block_value_type>::max());
-    std::uint64_t            message_size(num_bits + 1 + max_message_bitsize_k);
-    std::uint64_t            num_blocks(message_size / message_blocksize_k + 1);
-    bool                     in_padding(false);
-    bit_packer<I>            bits(first, num_bits);
 
     /*
     The SHA description has three phases for preparing to digest a message:
@@ -241,7 +260,18 @@ void block_and_digest(typename HashTraits::message_block_type& state,
         - zero-or-more bits of zero-bit padding
         - the length of the message (max_message_bitsize_k bits)
     */
-#if 1
+#if 0
+    // Maximum length of message in bits (2^n); this is n. Either 64 or 128.
+    static constexpr std::size_t max_message_bitsize_k = traits_type::max_message_bitsize_k;
+    static constexpr std::size_t half_max_message_bitsize_k = max_message_bitsize_k / 2;
+    static constexpr std::size_t use_mb_14 = half_max_message_bitsize_k < bitsizeof<std::uint64_t>();
+
+    message_block_value_type message_block_value_type_max(std::numeric_limits<message_block_value_type>::max());
+    std::uint64_t            message_size(num_bits + 1 + max_message_bitsize_k);
+    std::uint64_t            num_blocks(message_size / message_blocksize_k + 1);
+    bool                     in_padding(false);
+    bit_packer<I>            bits(first, num_bits);
+
     while (num_blocks)
     {
         for (std::size_t i(0); i < 16; ++i)
@@ -299,7 +329,7 @@ void block_and_digest(typename HashTraits::message_block_type& state,
 
     while (num_bits > bits_to_stuff)
     {
-        stuff_into_state(state, stuffed_size, bits_to_stuff, first);
+        stuff_into_state<traits_type>(state, stuffed_size, bits_to_stuff, first);
 
         traits_type().digest_message_block(digest, state);
 
@@ -310,7 +340,9 @@ void block_and_digest(typename HashTraits::message_block_type& state,
         bits_to_stuff = message_blocksize_k;
     }
 
-    stuff_into_state();
+    stuff_into_state<traits_type>(state, stuffed_size, num_bits, first);
+
+    stuffed_size += num_bits;
 #endif
 }
 
