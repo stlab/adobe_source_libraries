@@ -3,5 +3,8 @@ import testing ;
 project adobe/sha
     ;
 
-unit-test sha_test
+unit-test sha_test1
     : main.cpp ;
+
+unit-test shavs
+    : shavs.cpp ;
