@@ -258,7 +258,7 @@ void block_and_digest(typename HashTraits::message_block_type& state,
     */
     std::size_t bits_available(message_blocksize_k - stuffed_size);
 
-    while (num_bits > bits_available)
+    while (num_bits >= bits_available)
     {
         stuff_into_state<traits_type>(state, stuffed_size, bits_available, first);
 
