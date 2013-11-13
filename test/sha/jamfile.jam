@@ -3,8 +3,15 @@ import testing ;
 project adobe/sha
     ;
 
-unit-test sha_test1
+unit-test smoketest
     : main.cpp ;
 
 unit-test shavs
     : shavs.cpp ;
+
+unit-test benchmark
+    : bench.cpp
+    :
+    : <warnings>off
+      <linkflags>"-lcrypto"
+    ;
