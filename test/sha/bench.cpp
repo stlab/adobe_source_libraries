@@ -13,7 +13,7 @@
 #include <iostream>
 #include <sstream>
 
-#define USING_OPENSSL 0
+#define USING_OPENSSL 1
 
 #if USING_OPENSSL
 // openssl
@@ -451,8 +451,16 @@ try
 
     return 0;
 }
+catch (const std::exception& error)
+{
+    std::cerr << "Error: " << error.what() << '\n';
+
+    return 1;
+}
 catch (...)
 {
+    std::cerr << "Error: unknown\n";
+
     return 1;
 }
 

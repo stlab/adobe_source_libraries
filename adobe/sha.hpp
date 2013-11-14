@@ -11,60 +11,12 @@
 
 /**************************************************************************************************/
 
-// config
-#include <adobe/config.hpp>
-
-// stdc++
 #include <array>
-#include <limits>
-
-// boost
-#include <boost/detail/endian.hpp>
-
-// asl
-#include <adobe/algorithm/copy.hpp>
+#include <cassert>
 
 /**************************************************************************************************/
 
 namespace adobe {
-
-/**************************************************************************************************/
-/**
-Copies a binary digest and outputs it as an ASCII string. There is also an optional parameter to add
-spaces between elements of the digest, defaulting to true.
-*/
-template <typename Container>
-std::string to_hex(Container data, bool spaces = true)
-{
-    typedef typename Container::value_type value_type;
-
-    constexpr const char* lut_k = "0123456789abcdef";
-    constexpr std::size_t value_size_k = sizeof(value_type);
-    constexpr std::size_t value_bitsize_k = value_size_k * 8;
-
-    std::string result;
-    bool        first(true);
-
-    for (const auto& element : data)
-    {
-        if (!first && spaces)
-            result += ' ';
-
-        first = false;
-
-        for (std::size_t i(0); i < value_size_k; ++i)
-        {
-            char c((element >> (value_bitsize_k - (i + 1) * 8)) & 0xff);
-            char hi(lut_k[(c >> 4) & 0xf]);
-            char lo(lut_k[c & 0xf]);
-
-            result += hi;
-            result += lo;
-        }
-    }
-
-    return result;
-}
 
 /**************************************************************************************************/
 
@@ -401,7 +353,7 @@ void sha_2_digest_message_block(typename HashTraits::state_digest_type&  digest,
 
     schedule_type schedule;
 
-    adobe::copy(message_block, &schedule[0]);
+    std::copy(message_block.begin(), message_block.end(), &schedule[0]);
 
     for (std::size_t t(message_block.size()); t < schedule.size(); ++t)
         schedule[t] = traits_type::small_sigma_1(schedule[t - 2]) + schedule[t - 7] +
@@ -476,7 +428,7 @@ struct sha1_traits_t
         schedule_type               schedule;
         constexpr std::uint_fast8_t schedule_size = schedule.size();
 
-        adobe::copy(message_block, &schedule[0]);
+        std::copy(message_block.begin(), message_block.end(), &schedule[0]);
 
         for (std::size_t t(message_block.size()); t < schedule_size; ++t)
             schedule[t] = implementation::rotl<1>(schedule[t - 3] ^ schedule[t - 8] ^
@@ -761,10 +713,10 @@ public:
     Sets the state of the digest machine to its default.
     */
     sha() :
-        state_m({{0}}),
-        stuffed_size_m(0),
         message_size_m(0),
-        state_digest_m(traits_type::initial_state())
+        state_m({{0}}),
+        state_digest_m(traits_type::initial_state()),
+        stuffed_size_m(0)
     { }
 
     /**
@@ -828,10 +780,15 @@ public:
     */
     inline digest_type finalize()
     {
-        return implementation::finalize<traits_type>(state_m,
-                                                     stuffed_size_m,
-                                                     message_size_m,
-                                                     state_digest_m);
+        std::uint64_t                            message_size(message_size_m);
+        typename traits_type::message_block_type state(state_m);
+        typename traits_type::state_digest_type  state_digest(state_digest_m);
+        std::uint16_t                            stuffed_size(stuffed_size_m);
+
+        return implementation::finalize<traits_type>(state,
+                                                     stuffed_size,
+                                                     message_size,
+                                                     state_digest);
     }
 
     /**
@@ -883,12 +840,60 @@ public:
         return instance.finalize();
     }
 
+    /**
+    Returns the finalized digest as an ASCII string.
+
+    There is also an
+    optional parameter to add spaces between elements of the digest, defaulting
+    to false.
+    */
+    static std::string to_string(const typename traits_type::digest_type& digest,
+                                 bool spaces = false)
+    {
+        typedef typename traits_type::digest_type::value_type value_type;
+
+        constexpr const char* lut_k = "0123456789abcdef";
+        constexpr std::size_t size_k = sizeof(value_type);
+        constexpr std::size_t bitsize_k = implementation::bitsizeof<value_type>();
+
+        bool        first(true);
+        std::string result;
+
+        for (const auto& element : digest)
+        {
+            if (!first && spaces)
+                result += ' ';
+
+            first = false;
+
+            for (std::size_t i(0); i < size_k; ++i)
+            {
+                // shifting instead of a char* pointer walk avoids endian issues
+                char c((element >> (bitsize_k - (i + 1) * 8)) & 0xff);
+                char hi(lut_k[(c >> 4) & 0xf]);
+                char lo(lut_k[c & 0xf]);
+
+                result += hi;
+                result += lo;
+            }
+        }
+
+        return result;
+    }
+
+    inline std::string to_string(bool spaces = false)
+    {
+        return to_string(finalize(), spaces);
+    }
+
 #ifndef ADOBE_NO_DOCUMENTATION
 private:
-    typename traits_type::message_block_type state_m;
-    std::uint16_t                            stuffed_size_m;
+    // ordered to try and maximize fastest cache alignment. This
+    // could be improved.
     std::uint64_t                            message_size_m;
+    typename traits_type::message_block_type state_m;
     typename traits_type::state_digest_type  state_digest_m;
+    std::uint16_t                            stuffed_size_m;
 #endif
 };
 

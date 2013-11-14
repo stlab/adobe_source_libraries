@@ -219,7 +219,7 @@ void test_hash(const C& container)
             hash_digest = hash.digest(test_string_first, test_string_last);
 
         double      time(timer.split());
-        std::string digest(adobe::to_hex(hash_digest));
+        std::string digest(hash_type::to_string(hash_digest, true));
         bool        test_passed(digest == cur_test.digest_m);
 
         if (test_passed)
