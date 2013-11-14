@@ -11,7 +11,8 @@ unit-test shavs
 
 unit-test benchmark
     : bench.cpp
-    :
+     [ glob ./crypto_v01/libs/crypto/src/*.cpp ]
+    : <include>./crypto_v01
     : <warnings>off
       <linkflags>"-lcrypto"
       <link>static

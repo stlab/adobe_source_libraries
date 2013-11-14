@@ -13,7 +13,13 @@
 #include <iostream>
 #include <sstream>
 
+#ifndef USING_OPENSSL
 #define USING_OPENSSL 1
+#endif
+
+#ifndef USING_BOOSTCRYPTO
+#define USING_BOOSTCRYPTO 0
+#endif
 
 #if USING_OPENSSL
 // openssl
@@ -27,6 +33,22 @@
 #if ADOBE_PLATFORM_MAC
 // Mac OS X Common Crypto
 #include <CommonCrypto/CommonDigest.h>
+#endif
+
+/*
+    Boost.crypto can be obtained from here:
+
+    https://github.com/boost-vault/Miscellaneous/blob/master/crypto_v01.zip
+
+    Unzip the folder and leave it unmodified as a sibling to this source file.
+
+    Then build using:
+
+        bjam define=USING_BOOSTCRYPTO=1 release
+*/
+#if USING_BOOSTCRYPTO
+#include <boost/crypto/sha1.hpp>
+#include <boost/crypto/sha2.hpp>
 #endif
 
 /**************************************************************************************************/
@@ -59,7 +81,7 @@ std::string digest_binary(const DigestType& digest)
 
 /**************************************************************************************************/
 
-void print_binary_message(const std::string& str, std::size_t unit_size)
+void print_binary_message(const std::string& str, std::size_t unit_size = 0)
 {
     std::cout << std::hex;
 
@@ -115,7 +137,7 @@ template <typename Hash>
 std::vector<std::string> asl_bench(const std::vector<std::string>& corpus)
 {
     return bench(corpus,
-                 "  adobesl",
+                 "    adobe",
                  [&](const std::string& element)
                  {
                      return digest_binary(Hash::digest(element.begin(),
@@ -266,6 +288,71 @@ std::vector<std::string> openssl_bench_512(const std::vector<std::string>& corpu
 #endif
 /**************************************************************************************************/
 
+#if USING_BOOSTCRYPTO
+
+/**************************************************************************************************/
+
+template <typename Hash>
+std::vector<std::string> boostcrypto_bench(const std::vector<std::string>& corpus)
+{
+    return bench(corpus,
+                 "    boost",
+                 [&](const std::string& element)
+                 {
+                     Hash sha(reinterpret_cast<const std::uint8_t*>(&element[0]),
+                              element.size());
+
+                     const std::uint8_t* digest(reinterpret_cast<const std::uint8_t*>(sha.digest()));
+
+                     return std::string(digest, digest + Hash::digest_length);
+                 });
+}
+
+/**************************************************************************************************/
+
+inline std::vector<std::string> boostcrypto_bench_1(const std::vector<std::string>& corpus)
+{
+    return boostcrypto_bench<boost::crypto::sha1>(corpus);
+}
+
+/**************************************************************************************************/
+
+inline std::vector<std::string> boostcrypto_bench_224(const std::vector<std::string>& corpus)
+{
+    return boostcrypto_bench<boost::crypto::sha224>(corpus);
+}
+
+/**************************************************************************************************/
+
+inline std::vector<std::string> boostcrypto_bench_256(const std::vector<std::string>& corpus)
+{
+    return boostcrypto_bench<boost::crypto::sha256>(corpus);
+}
+
+/**************************************************************************************************/
+
+inline std::vector<std::string> boostcrypto_bench_384(const std::vector<std::string>& corpus)
+{
+    return boostcrypto_bench<boost::crypto::sha384>(corpus);
+}
+
+/**************************************************************************************************/
+
+inline std::vector<std::string> boostcrypto_bench_512(const std::vector<std::string>& corpus)
+{
+    return boostcrypto_bench<boost::crypto::sha512>(corpus);
+}
+
+/**************************************************************************************************/
+
+#endif // USING_BOOSTCRYPTO
+
+/**************************************************************************************************/
+#if 0
+#pragma mark -
+#endif
+/**************************************************************************************************/
+
 #if ADOBE_PLATFORM_MAC
 
 /**************************************************************************************************/
@@ -275,7 +362,7 @@ std::vector<std::string> commoncrypto_bench_1(const std::vector<std::string>& co
     std::vector<std::uint8_t> digest(CC_SHA1_DIGEST_LENGTH, 0);
 
     return bench(corpus,
-                 "  applecc",
+                 "    apple",
                  [&](const std::string& element)
                  {
                      CC_SHA1(reinterpret_cast<const std::uint8_t*>(&element[0]),
@@ -293,7 +380,7 @@ std::vector<std::string> commoncrypto_bench_224(const std::vector<std::string>& 
     std::vector<std::uint8_t> digest(CC_SHA224_DIGEST_LENGTH, 0);
 
     return bench(corpus,
-                 "  applecc",
+                 "    apple",
                  [&](const std::string& element)
                  {
                      CC_SHA224(reinterpret_cast<const std::uint8_t*>(&element[0]),
@@ -311,7 +398,7 @@ std::vector<std::string> commoncrypto_bench_256(const std::vector<std::string>& 
     std::vector<std::uint8_t> digest(CC_SHA256_DIGEST_LENGTH, 0);
 
     return bench(corpus,
-                 "  applecc",
+                 "    apple",
                  [&](const std::string& element)
                  {
                      CC_SHA256(reinterpret_cast<const std::uint8_t*>(&element[0]),
@@ -329,7 +416,7 @@ std::vector<std::string> commoncrypto_bench_384(const std::vector<std::string>& 
     std::vector<std::uint8_t> digest(CC_SHA384_DIGEST_LENGTH, 0);
 
     return bench(corpus,
-                 "  applecc",
+                 "    apple",
                  [&](const std::string& element)
                  {
                      CC_SHA384(reinterpret_cast<const std::uint8_t*>(&element[0]),
@@ -347,7 +434,7 @@ std::vector<std::string> commoncrypto_bench_512(const std::vector<std::string>& 
     std::vector<std::uint8_t> digest(CC_SHA512_DIGEST_LENGTH, 0);
 
     return bench(corpus,
-                 "  applecc",
+                 "    apple",
                  [&](const std::string& element)
                  {
                      CC_SHA512(reinterpret_cast<const std::uint8_t*>(&element[0]),
@@ -370,8 +457,20 @@ void validate(const std::vector<std::string>& x, const std::vector<std::string>&
         throw std::runtime_error("Hash vector size mismatch");
 
     for (std::size_t i(0); i < x.size(); ++i)
-        if (x[i] != y[i])
-            throw std::runtime_error("Digest mismatch");
+    {
+        if (x[i] == y[i])
+            continue;
+
+        std::cout << "    x: ";
+        print_binary_message(x[i]);
+        std::cout << '\n';
+
+        std::cout << "    y: ";
+        print_binary_message(y[i]);
+        std::cout << '\n';
+
+        throw std::runtime_error("Digest mismatch");
+    }
 }
 
 /**************************************************************************************************/
@@ -404,6 +503,9 @@ try
 #if ADOBE_PLATFORM_MAC
     validate(asl_result_1, commoncrypto_bench_1(corpus));
 #endif // ADOBE_PLATFORM_MAC
+#if USING_BOOSTCRYPTO
+    validate(asl_result_1, boostcrypto_bench_1(corpus));
+#endif // USING_BOOSTCRYPTO
 
     // It would be very surprising to find a difference in timing between
     // SHA-224 and SHA-256. They are, after all, the same fundamental algorithm.
@@ -417,6 +519,9 @@ try
 #if ADOBE_PLATFORM_MAC
     validate(asl_result_224, commoncrypto_bench_224(corpus));
 #endif // ADOBE_PLATFORM_MAC
+#if USING_BOOSTCRYPTO
+    validate(asl_result_224, boostcrypto_bench_224(corpus));
+#endif // USING_BOOSTCRYPTO
 
     std::cout << "SHA-256:\n";
     std::vector<std::string> asl_result_256(asl_bench_256(corpus));
@@ -426,6 +531,9 @@ try
 #if ADOBE_PLATFORM_MAC
     validate(asl_result_256, commoncrypto_bench_256(corpus));
 #endif // ADOBE_PLATFORM_MAC
+#if USING_BOOSTCRYPTO
+    validate(asl_result_256, boostcrypto_bench_256(corpus));
+#endif // USING_BOOSTCRYPTO
 
     // It would be very surprising to find a difference in timing between
     // SHA-384 and SHA-512. They are, after all, the same fundamental algorithm.
@@ -439,6 +547,9 @@ try
 #if ADOBE_PLATFORM_MAC
     validate(asl_result_384, commoncrypto_bench_384(corpus));
 #endif // ADOBE_PLATFORM_MAC
+#if USING_BOOSTCRYPTO
+    validate(asl_result_384, boostcrypto_bench_384(corpus));
+#endif // USING_BOOSTCRYPTO
 
     std::cout << "SHA-512:\n";
     std::vector<std::string> asl_result_512(asl_bench_512(corpus));
@@ -448,6 +559,9 @@ try
 #if ADOBE_PLATFORM_MAC
     validate(asl_result_512, commoncrypto_bench_512(corpus));
 #endif // ADOBE_PLATFORM_MAC
+#if USING_BOOSTCRYPTO
+    validate(asl_result_512, boostcrypto_bench_512(corpus));
+#endif // USING_BOOSTCRYPTO
 
     return 0;
 }
