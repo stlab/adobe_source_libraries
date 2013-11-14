@@ -83,7 +83,7 @@ constexpr std::size_t bitsizeof()
 /**************************************************************************************************/
 
 template <std::size_t N, typename T>
-inline T shr(const T& x)
+inline T shr(T x)
 {
     static_assert(N < bitsizeof<T>(), "shr size mismatch.");
 
@@ -91,7 +91,7 @@ inline T shr(const T& x)
 }
 
 template <std::size_t N, typename T>
-inline T rotr(const T& x)
+inline T rotr(T x)
 {
     static_assert(N < bitsizeof<T>(), "rotr size mismatch.");
 
@@ -101,7 +101,7 @@ inline T rotr(const T& x)
 }
 
 template <std::size_t N, typename T>
-inline T rotl(const T& x)
+inline T rotl(T x)
 {
     static_assert(N < bitsizeof<T>(), "rotl size mismatch.");
 
@@ -332,7 +332,7 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
     Note that if there is not enough space to insert the length of the message (i.e., offset will be
     less than stuffed_size) we need to digest the block and try again with an empty one.
     */
-    std::size_t length_offset(message_blocksize_k - max_message_bitsize_k);
+    constexpr std::size_t length_offset(message_blocksize_k - max_message_bitsize_k);
 
     /*
     The length of the message will always go into message block elements 14 and/or 15. (i.e., the
@@ -473,11 +473,12 @@ struct sha1_traits_t
                                             message_block_type& message_block,
                                             std::uint16_t&      stuffed_size)
     {   
-        schedule_type schedule;
+        schedule_type               schedule;
+        constexpr std::uint_fast8_t schedule_size = schedule.size();
 
         adobe::copy(message_block, &schedule[0]);
 
-        for (std::size_t t(message_block.size()); t < schedule.size(); ++t)
+        for (std::size_t t(message_block.size()); t < schedule_size; ++t)
             schedule[t] = implementation::rotl<1>(schedule[t - 3] ^ schedule[t - 8] ^
                                                   schedule[t - 14] ^ schedule[t - 16]);
 
@@ -487,7 +488,7 @@ struct sha1_traits_t
         std::uint32_t d(digest[3]);
         std::uint32_t e(digest[4]);
 
-        for (std::size_t t(0); t < schedule.size(); ++t)
+        for (std::uint_fast8_t t(0); t < schedule.size(); ++t)
         {
             std::uint32_t T = implementation::rotl<5>(a) +
                               f(t, b, c, d)              +
@@ -517,28 +518,38 @@ struct sha1_traits_t
     }
 
 private:
-    static inline std::uint32_t f(std::size_t   t,
-                                  std::uint32_t x,
-                                  std::uint32_t y,
-                                  std::uint32_t z)
+    static inline std::uint32_t f(std::uint_fast8_t t,
+                                  std::uint32_t     x,
+                                  std::uint32_t     y,
+                                  std::uint32_t     z)
     {
         assert (t < 80);
-    
-        if (t <= 19)      return implementation::ch(x, y, z);
-        else if (t <= 39) return implementation::parity(x, y, z);
-        else if (t <= 59) return implementation::maj(x, y, z);
-    
+
+        if (t < 20)
+            return implementation::ch(x, y, z);
+
+        if (t < 40)
+            return implementation::parity(x, y, z);
+
+        if (t < 60)
+            return implementation::maj(x, y, z);
+
         return implementation::parity(x, y, z);
     }
 
-    static inline std::uint32_t k(std::size_t t)
+    static inline std::uint32_t k(std::uint_fast8_t t)
     {
-        assert(t < 80);
-    
-        if (t <= 19)      return 0x5a827999;
-        else if (t <= 39) return 0x6ed9eba1;
-        else if (t <= 59) return 0x8f1bbcdc;
-    
+        assert (t < 80);
+
+        if (t < 20)
+            return 0x5a827999;
+
+        if (t < 40)
+            return 0x6ed9eba1;
+
+        if (t < 60)
+            return 0x8f1bbcdc;
+
         return 0xca62c1d6;
     }
 };

@@ -13,8 +13,12 @@
 #include <iostream>
 #include <sstream>
 
+#define USING_OPENSSL 0
+
+#if USING_OPENSSL
 // openssl
 #include <openssl/sha.h>
+#endif
 
 // asl
 #include <adobe/sha.hpp>
@@ -160,6 +164,10 @@ inline std::vector<std::string> asl_bench_512(const std::vector<std::string>& co
 #endif
 /**************************************************************************************************/
 
+#if USING_OPENSSL
+
+/**************************************************************************************************/
+
 std::vector<std::string> openssl_bench_1(const std::vector<std::string>& corpus)
 {
     std::vector<std::uint8_t> digest(SHA_DIGEST_LENGTH, 0);
@@ -247,6 +255,10 @@ std::vector<std::string> openssl_bench_512(const std::vector<std::string>& corpu
                      return digest_binary(digest);
                  });
 }
+
+/**************************************************************************************************/
+
+#endif // USING_OPENSSL
 
 /**************************************************************************************************/
 #if 0
@@ -386,7 +398,9 @@ try
 
     std::cout << "SHA-1:\n";
     std::vector<std::string> asl_result_1(asl_bench_1(corpus));
+#if USING_OPENSSL
     validate(asl_result_1, openssl_bench_1(corpus));
+#endif
 #if ADOBE_PLATFORM_MAC
     validate(asl_result_1, commoncrypto_bench_1(corpus));
 #endif // ADOBE_PLATFORM_MAC
@@ -397,14 +411,18 @@ try
 
     std::cout << "SHA-224:\n";
     std::vector<std::string> asl_result_224(asl_bench_224(corpus));
+#if USING_OPENSSL
     validate(asl_result_224, openssl_bench_224(corpus));
+#endif
 #if ADOBE_PLATFORM_MAC
     validate(asl_result_224, commoncrypto_bench_224(corpus));
 #endif // ADOBE_PLATFORM_MAC
 
     std::cout << "SHA-256:\n";
     std::vector<std::string> asl_result_256(asl_bench_256(corpus));
+#if USING_OPENSSL
     validate(asl_result_256, openssl_bench_256(corpus));
+#endif
 #if ADOBE_PLATFORM_MAC
     validate(asl_result_256, commoncrypto_bench_256(corpus));
 #endif // ADOBE_PLATFORM_MAC
@@ -415,14 +433,18 @@ try
 
     std::cout << "SHA-384:\n";
     std::vector<std::string> asl_result_384(asl_bench_384(corpus));
+#if USING_OPENSSL
     validate(asl_result_384, openssl_bench_384(corpus));
+#endif
 #if ADOBE_PLATFORM_MAC
     validate(asl_result_384, commoncrypto_bench_384(corpus));
 #endif // ADOBE_PLATFORM_MAC
 
     std::cout << "SHA-512:\n";
     std::vector<std::string> asl_result_512(asl_bench_512(corpus));
+#if USING_OPENSSL
     validate(asl_result_512, openssl_bench_512(corpus));
+#endif
 #if ADOBE_PLATFORM_MAC
     validate(asl_result_512, commoncrypto_bench_512(corpus));
 #endif // ADOBE_PLATFORM_MAC
