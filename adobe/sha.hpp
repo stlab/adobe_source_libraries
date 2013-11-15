@@ -326,9 +326,11 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
     here. Note that this could crop the number of bits between the state digest and the resulting
     digest, depending on the requirements of the hash algorithm being used.
     */
-    typename HashTraits::digest_type result = {{ 0 }};
+    typedef typename HashTraits::digest_type digest_type;
 
-    std::copy(digest.begin(), digest.begin() + result.size(), &result[0]);
+    digest_type result = {{ 0 }};
+
+    std::memcpy(&result[0], &digest[0], sizeof(digest_type));
 
     return result;
 }
@@ -424,15 +426,21 @@ struct sha1_traits_t
     static inline void digest_message_block(state_digest_type&  digest,
                                             message_block_type& message_block,
                                             std::uint16_t&      stuffed_size)
-    {   
+    {
+        typedef typename schedule_type::value_type schedule_word;
+
         schedule_type               schedule;
         constexpr std::uint_fast8_t schedule_size = schedule.size();
 
-        std::copy(message_block.begin(), message_block.end(), &schedule[0]);
+        std::memcpy(&schedule[0], &message_block[0], sizeof(message_block_type));
 
         for (std::size_t t(message_block.size()); t < schedule_size; ++t)
-            schedule[t] = implementation::rotl<1>(schedule[t - 3] ^ schedule[t - 8] ^
-                                                  schedule[t - 14] ^ schedule[t - 16]);
+        {
+            schedule_word a(schedule[t - 3] ^ schedule[t - 8]);
+            schedule_word b(schedule[t - 14] ^ schedule[t - 16]);
+
+            schedule[t] = implementation::rotl<1>(a^b);
+        }
 
         std::uint32_t a(digest[0]);
         std::uint32_t b(digest[1]);
@@ -440,12 +448,57 @@ struct sha1_traits_t
         std::uint32_t d(digest[3]);
         std::uint32_t e(digest[4]);
 
-        for (std::uint_fast8_t t(0); t < schedule.size(); ++t)
+        for (std::uint_fast8_t t(0); t < 20; ++t)
         {
-            std::uint32_t T = implementation::rotl<5>(a) +
-                              f(t, b, c, d)              +
-                              e                          +
-                              k(t)                       +
+            std::uint32_t T = implementation::rotl<5>(a)  +
+                              implementation::ch(b, c, d) +
+                              e                           +
+                              std::uint32_t(0x5a827999)   +
+                              schedule[t];
+
+            e = d;
+            d = c;
+            c = implementation::rotl<30>(b);
+            b = a;
+            a = T;
+        }
+
+        for (std::uint_fast8_t t(20); t < 40; ++t)
+        {
+            std::uint32_t T = implementation::rotl<5>(a)      +
+                              implementation::parity(b, c, d) +
+                              e                               +
+                              std::uint32_t(0x6ed9eba1)       +
+                              schedule[t];
+
+            e = d;
+            d = c;
+            c = implementation::rotl<30>(b);
+            b = a;
+            a = T;
+        }
+
+        for (std::uint_fast8_t t(40); t < 60; ++t)
+        {
+            std::uint32_t T = implementation::rotl<5>(a)   +
+                              implementation::maj(b, c, d) +
+                              e                            +
+                              std::uint32_t(0x8f1bbcdc)    +
+                              schedule[t];
+
+            e = d;
+            d = c;
+            c = implementation::rotl<30>(b);
+            b = a;
+            a = T;
+        }
+
+        for (std::uint_fast8_t t(60); t < 80; ++t)
+        {
+            std::uint32_t T = implementation::rotl<5>(a)      +
+                              implementation::parity(b, c, d) +
+                              e                               +
+                              std::uint32_t(0xca62c1d6)       +
                               schedule[t];
 
             e = d;
@@ -461,48 +514,12 @@ struct sha1_traits_t
         digest[3] += d;
         digest[4] += e;
 
-        // clears potentioally sensitive information
+        // clears potentially sensitive information
         schedule = {{ 0 }};
 
         // reset the state machine to digest the upcoming block
         message_block = {{ 0 }};
         stuffed_size = 0;
-    }
-
-private:
-    static inline std::uint32_t f(std::uint_fast8_t t,
-                                  std::uint32_t     x,
-                                  std::uint32_t     y,
-                                  std::uint32_t     z)
-    {
-        assert (t < 80);
-
-        if (t < 20)
-            return implementation::ch(x, y, z);
-
-        if (t < 40)
-            return implementation::parity(x, y, z);
-
-        if (t < 60)
-            return implementation::maj(x, y, z);
-
-        return implementation::parity(x, y, z);
-    }
-
-    static inline std::uint32_t k(std::uint_fast8_t t)
-    {
-        assert (t < 80);
-
-        if (t < 20)
-            return 0x5a827999;
-
-        if (t < 40)
-            return 0x6ed9eba1;
-
-        if (t < 60)
-            return 0x8f1bbcdc;
-
-        return 0xca62c1d6;
     }
 };
 
