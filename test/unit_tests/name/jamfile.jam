@@ -13,6 +13,9 @@ unit-test smoke32
     : <address-model>32
       <architecture>x86
       <instruction-set>native
+      <link>static
     ;
+
+explicit smoke32 ;
 
 compile-fail fail_int_test.cpp ;
