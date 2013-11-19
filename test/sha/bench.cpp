@@ -482,6 +482,7 @@ void validate(const std::vector<std::string>& x, const std::vector<std::string>&
 int main()
 try
 {
+#if 0
     std::vector<std::string> corpus;
 
     for (std::size_t i(0); i < 4; ++i)
@@ -494,6 +495,26 @@ try
         for (char c('0'); c < '9'; ++c)
             corpus.emplace_back(sz, c);
     }
+#else
+    const std::size_t        factor(1000000);
+    std::size_t              n1(1);
+    std::size_t              n2(1);
+    std::vector<std::string> corpus;
+
+    while (n2 <= 5702887)
+    {
+        std::size_t count(std::min<std::size_t>(1000000, n2 / factor));
+
+        for (std::size_t i(0); i < count; ++i)
+            corpus.emplace_back(n2, static_cast<char>(i));
+
+        // advance the counters
+        std::size_t n(n1 + n2);
+
+        n1 = n2;
+        n2 = n;        
+    }
+#endif
 
     std::cout << "SHA-1:\n";
     std::vector<std::string> asl_result_1(asl_bench_1(corpus));
