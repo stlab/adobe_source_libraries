@@ -13,6 +13,7 @@
 
 #include <array>
 #include <cassert>
+#include <cstring>
 
 /**************************************************************************************************/
 
@@ -305,16 +306,17 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
     slice the high bits of the length off and stuff them into the next-to-last element. Note that
     because of the checks above, we are guaranteed the space will be zero-padded, so we can write
     over it OK.
+
+    The 15th block requires a shift down of the message size, which in the SHA-512 case is a 64-bit
+    shift of a 64-bit value, which is undefined according to the C++ standard. (This step is were we
+    to store message_size as a 128-bit value, as is allowed by the SHA standard.) As such we derive
+    the overshift boolean and give the compiler the freedom to elide the overshift-and-assignment at
+    compile-time, eliminating the undefined behavior.
     */
-#ifdef __clang__
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Wshift-count-overflow"
-#endif
-    if (message_size > value_type_mask)
+    constexpr bool overshift = value_bitsize_k >= (sizeof(message_size) * 8);
+
+    if (!overshift && message_size > value_type_mask)
         state[14] = (message_size >> value_bitsize_k) & value_type_mask;
-#ifdef __clang__
-    #pragma clang diagnostic pop
-#endif
 
     state[15] = message_size & value_type_mask;
 
@@ -435,78 +437,48 @@ struct sha1_traits_t
         std::memcpy(&schedule[0], &message_block[0], sizeof(message_block_type));
 
         for (std::size_t t(message_block.size()); t < schedule_size; ++t)
-        {
-            schedule_word a(schedule[t - 3] ^ schedule[t - 8]);
-            schedule_word b(schedule[t - 14] ^ schedule[t - 16]);
-
-            schedule[t] = implementation::rotl<1>(a^b);
-        }
+            schedule[t] = implementation::rotl<1>(schedule[t - 3] ^ schedule[t - 8] ^
+                                                  schedule[t - 14] ^ schedule[t - 16]);
 
         std::uint32_t a(digest[0]);
         std::uint32_t b(digest[1]);
         std::uint32_t c(digest[2]);
         std::uint32_t d(digest[3]);
         std::uint32_t e(digest[4]);
+        std::uint32_t T(0);
 
-        for (std::uint_fast8_t t(0); t < 20; ++t)
-        {
-            std::uint32_t T = implementation::rotl<5>(a)  +
-                              implementation::ch(b, c, d) +
-                              e                           +
-                              std::uint32_t(0x5a827999)   +
-                              schedule[t];
+        // Manually unrolling the loop in this fasion
+        // improves the digest speed by about 20%.
 
-            e = d;
-            d = c;
-            c = implementation::rotl<30>(b);
-            b = a;
-            a = T;
-        }
+        #define A_ROUND(t, F, k) \
+                T = implementation::rotl<5>(a) + \
+                    F(b, c, d) + \
+                    e + \
+                    std::uint32_t(k) + \
+                    schedule[t]; \
+                    e = d; \
+                    d = c; \
+                    c = implementation::rotl<30>(b); \
+                    b = a; \
+                    a = T
 
-        for (std::uint_fast8_t t(20); t < 40; ++t)
-        {
-            std::uint32_t T = implementation::rotl<5>(a)      +
-                              implementation::parity(b, c, d) +
-                              e                               +
-                              std::uint32_t(0x6ed9eba1)       +
-                              schedule[t];
+        #define FIVE_ROUNDS(t, F, k) \
+            A_ROUND((t+0), F, k); \
+            A_ROUND((t+1), F, k); \
+            A_ROUND((t+2), F, k); \
+            A_ROUND((t+3), F, k); \
+            A_ROUND((t+4), F, k)
 
-            e = d;
-            d = c;
-            c = implementation::rotl<30>(b);
-            b = a;
-            a = T;
-        }
+        #define TWENTY_ROUNDS(t, F, k) \
+            FIVE_ROUNDS((t+0), F, k); \
+            FIVE_ROUNDS((t+5), F, k); \
+            FIVE_ROUNDS((t+10), F, k); \
+            FIVE_ROUNDS((t+15), F, k)
 
-        for (std::uint_fast8_t t(40); t < 60; ++t)
-        {
-            std::uint32_t T = implementation::rotl<5>(a)   +
-                              implementation::maj(b, c, d) +
-                              e                            +
-                              std::uint32_t(0x8f1bbcdc)    +
-                              schedule[t];
-
-            e = d;
-            d = c;
-            c = implementation::rotl<30>(b);
-            b = a;
-            a = T;
-        }
-
-        for (std::uint_fast8_t t(60); t < 80; ++t)
-        {
-            std::uint32_t T = implementation::rotl<5>(a)      +
-                              implementation::parity(b, c, d) +
-                              e                               +
-                              std::uint32_t(0xca62c1d6)       +
-                              schedule[t];
-
-            e = d;
-            d = c;
-            c = implementation::rotl<30>(b);
-            b = a;
-            a = T;
-        }
+        TWENTY_ROUNDS(0,  implementation::ch,     0x5a827999);
+        TWENTY_ROUNDS(20, implementation::parity, 0x6ed9eba1);
+        TWENTY_ROUNDS(40, implementation::maj,    0x8f1bbcdc);
+        TWENTY_ROUNDS(60, implementation::parity, 0xca62c1d6);
 
         digest[0] += a;
         digest[1] += b;

@@ -4,7 +4,11 @@ project adobe/sha
     ;
 
 unit-test smoketest
-    : main.cpp ;
+    : main.cpp
+    :
+    :
+      <link>static
+    ;
 
 unit-test shavs
     : shavs.cpp ;
