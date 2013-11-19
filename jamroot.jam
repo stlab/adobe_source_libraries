@@ -50,8 +50,21 @@ feature.feature cpp11 :
     ;
 
 feature.compose <cpp11>on :
-        <cxxflags>"-stdlib=libc++ -std=c++11 -fconstexpr-depth=1024 -ftemplate-depth=1024"
+        <cxxflags>"-std=c++11 -fconstexpr-depth=1024 -ftemplate-depth=1024"
         <define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
+        <linkflags>"-lc++"
+    ;
+
+# Set up c++11 library support as a feature so it will propagate into the
+# boost dependencies
+
+feature.feature libc++ :
+    on :
+    composite optional propagated
+    ;
+
+feature.compose <libc++>on :
+        <cxxflags>"-stdlib=libc++"
         <linkflags>"-lc++"
     ;
 
@@ -80,6 +93,7 @@ asl_requirements =
 
     # Clang toolset specializations
     <toolset>clang:<cpp11>on
+    <toolset>clang:<libc++>on
     <toolset>clang:<runtime-link>shared
 
     # Darwin (Mac OS X gcc) toolset specializations
@@ -88,7 +102,7 @@ asl_requirements =
 
     # GCC toolset specializations
     <toolset>gcc:<define>NOMINMAX
-    <toolset>gcc:<cxxflags>"-std=c++11"
+    <toolset>gcc:<cpp11>on
 
     # GCC debug specializations
     <toolset>gcc,<variant>debug:<cxxflags>"-Werror -Wall -Wno-trigraphs -Wreturn-type -Wnon-virtual-dtor -Woverloaded-virtual -Wformat -Wmissing-braces -Wparentheses -Wswitch -Wunused-function -Wunused-label -Wunused-parameter -Wunused-variable -Wunused-value -Wunknown-pragmas -Wsign-compare -Wno-parentheses -Wno-unused-local-typedefs -Wno-overloaded-virtual -Wno-unused-function"
