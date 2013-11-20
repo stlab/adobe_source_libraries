@@ -14,7 +14,7 @@
 #include <atomic>
 #include <cstddef>
 #ifndef NDEBUG
-    #include <iostream>
+#include <iostream>
 #endif
 
 #include <boost/static_assert.hpp>
@@ -30,8 +30,7 @@ namespace implementation {
 
 /******************************************************************************/
 template <typename T>
-struct atomic
-{
+struct atomic {
     typedef T value_type;
 
     typedef std::atomic<T> type;
@@ -41,8 +40,7 @@ struct atomic
 
 #ifndef NDEBUG
 template <typename T>
-std::ostream& operator<<(std::ostream& s, const typename atomic<T>::type& x)
-{
+std::ostream& operator<<(std::ostream& s, const typename atomic<T>::type& x) {
     return s << static_cast<T>(x);
 }
 #endif
@@ -51,8 +49,7 @@ std::ostream& operator<<(std::ostream& s, const typename atomic<T>::type& x)
 
 typedef adobe::implementation::atomic<std::size_t> atomic_t;
 
-BOOST_STATIC_ASSERT((sizeof(atomic_t::type) ==
-                     sizeof(atomic_t::value_type)));
+BOOST_STATIC_ASSERT((sizeof(atomic_t::type) == sizeof(atomic_t::value_type)));
 
 /******************************************************************************/
 

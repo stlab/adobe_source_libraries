@@ -22,10 +22,10 @@ These defines allow <Carbon/Carbon.h> to build
 */
 
 #ifndef __NOEXTENSIONS__
-    #define __NOEXTENSIONS__
+#define __NOEXTENSIONS__
 #endif
 #ifndef __CF_USE_FRAMEWORK_INCLUDES__
-    #define __CF_USE_FRAMEWORK_INCLUDES__
+#define __CF_USE_FRAMEWORK_INCLUDES__
 #endif
 
 

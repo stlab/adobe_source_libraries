@@ -36,8 +36,7 @@ namespace adobe {
     This is the bidirectional optimization for rotate.
 */
 template <typename I> // I models Bidirectional Iterator
-std::pair<I, I> rotate(I f, I m, I l, std::bidirectional_iterator_tag)
-{
+std::pair<I, I> rotate(I f, I m, I l, std::bidirectional_iterator_tag) {
     using std::reverse;
 
     reverse(f, m);
@@ -62,8 +61,7 @@ std::pair<I, I> rotate(I f, I m, I l, std::bidirectional_iterator_tag)
         m and m' as a pair in the order in which they appear in the range.
 */
 template <typename I> // I models Forward Iterator
-std::pair<I, I> rotate(I f, I m, I l)
-{
+std::pair<I, I> rotate(I f, I m, I l) {
     typedef typename std::iterator_traits<I>::iterator_category iterator_category;
 
     return rotate(f, m, l, iterator_category());

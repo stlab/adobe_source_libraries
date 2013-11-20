@@ -37,8 +37,7 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-inline std::string make_string(const char* a, const char * b)
-{
+inline std::string make_string(const char* a, const char* b) {
     std::string result;
     result.reserve(std::strlen(a) + std::strlen(b));
     result += a;
@@ -48,8 +47,7 @@ inline std::string make_string(const char* a, const char * b)
 
 /**************************************************************************************************/
 
-inline std::string make_string(const char* a, const char * b, const char* c)
-{
+inline std::string make_string(const char* a, const char* b, const char* c) {
     std::string result;
     result.reserve(std::strlen(a) + std::strlen(b) + std::strlen(b));
     result += a;
@@ -61,10 +59,8 @@ inline std::string make_string(const char* a, const char * b, const char* c)
 /**************************************************************************************************/
 
 //!\ingroup misc_functional
-struct str_less_t : std::binary_function<const char*, const char*, bool>
-{
-    bool operator()(const char* x, const char* y) const
-    { return adobe::strcmp(x, y) < 0; }
+struct str_less_t : std::binary_function<const char*, const char*, bool> {
+    bool operator()(const char* x, const char* y) const { return adobe::strcmp(x, y) < 0; }
 };
 
 /**************************************************************************************************/

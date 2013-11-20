@@ -29,16 +29,16 @@ namespace adobe {
 @{
 */
 
-template <typename I,           // I ForwardIterator
-          typename O = less>    // O modles StrictWeakOrdering
-struct is_member
-{
+template <typename I,        // I ForwardIterator
+          typename O = less> // O modles StrictWeakOrdering
+struct is_member {
     typedef bool result_type;
 
-    is_member(I f, I l, O o = O()) : first(f), last(l), compare(o) { }
+    is_member(I f, I l, O o = O()) : first(f), last(l), compare(o) {}
 
-    bool operator()(const typename boost::iterator_value<I>::type& x) const
-    { return binary_search(first, last, x, compare) != last; }
+    bool operator()(const typename boost::iterator_value<I>::type& x) const {
+        return binary_search(first, last, x, compare) != last;
+    }
 
     I first;
     I last;
@@ -46,20 +46,28 @@ struct is_member
 };
 
 template <typename I> // I models ForwardIterator
-is_member<I, less> make_is_member(I f, I l) { return is_member<I, less>(f, l); }
+is_member<I, less> make_is_member(I f, I l) {
+    return is_member<I, less>(f, l);
+}
 
 template <typename I, // I models ForwardIterator
-          typename O> // O modles StrictWeakOrdering
-is_member<I, O> make_is_member(I f, I l, O o) { return is_member<I, O>(f, l, o); }
+          typename O>
+// O modles StrictWeakOrdering
+is_member<I, O> make_is_member(I f, I l, O o) {
+    return is_member<I, O>(f, l, o);
+}
 
 template <typename I> // I models ForwardRange
-is_member<typename boost::range_const_iterator<I>::type, less> make_is_member(const I& r)
-{ return make_is_member(begin(r), end(r)); }
+is_member<typename boost::range_const_iterator<I>::type, less> make_is_member(const I& r) {
+    return make_is_member(begin(r), end(r));
+}
 
 template <typename I, // I models ForwardRange
-          typename O> // O modles StrictWeakOrdering
-is_member<typename boost::range_const_iterator<I>::type, O> make_is_member(const I& r, O o)
-{ return make_is_member(begin(r), end(r), o); }
+          typename O>
+// O modles StrictWeakOrdering
+is_member<typename boost::range_const_iterator<I>::type, O> make_is_member(const I& r, O o) {
+    return make_is_member(begin(r), end(r), o);
+}
 
 //!@}
 

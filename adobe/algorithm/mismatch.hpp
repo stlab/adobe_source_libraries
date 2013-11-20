@@ -20,7 +20,9 @@
 
 #if ADOBE_HAS_CPLUS0X_CONCEPTS
 
-namespace std { concept_map CopyConstructible<pair<const unsigned char*, const unsigned char*> > {}}
+namespace std {
+concept_map CopyConstructible<pair<const unsigned char*, const unsigned char*>> {}
+}
 
 #endif
 /*************************************************************************************************/
@@ -43,8 +45,7 @@ namespace adobe {
 */
 template <class InputRange1, class InputIterator2>
 inline std::pair<typename boost::range_iterator<InputRange1>::type, InputIterator2>
-mismatch(InputRange1& range1, InputIterator2 first2)
-{
+mismatch(InputRange1& range1, InputIterator2 first2) {
     return std::mismatch(boost::begin(range1), boost::end(range1), first2);
 }
 
@@ -56,8 +57,7 @@ mismatch(InputRange1& range1, InputIterator2 first2)
 */
 template <class InputRange1, class InputIterator2>
 inline std::pair<typename boost::range_const_iterator<InputRange1>::type, InputIterator2>
-mismatch(const InputRange1& range1, InputIterator2 first2)
-{
+mismatch(const InputRange1& range1, InputIterator2 first2) {
     return std::mismatch(boost::begin(range1), boost::end(range1), first2);
 }
 
@@ -67,11 +67,8 @@ mismatch(const InputRange1& range1, InputIterator2 first2)
     \brief mismatch implementation
 */
 template <class InputIterator1, class InputIterator2, class BinaryPredicate>
-inline std::pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1,
-                                                          InputIterator1 last1, 
-                                                          InputIterator2 first2,
-                                                          BinaryPredicate pred)
-{
+inline std::pair<InputIterator1, InputIterator2>
+mismatch(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, BinaryPredicate pred) {
     return std::mismatch(first1, last1, first2, boost::bind(pred, _1, _2));
 }
 
@@ -82,8 +79,7 @@ inline std::pair<InputIterator1, InputIterator2> mismatch(InputIterator1 first1,
 */
 template <class InputRange1, class InputIterator2, class BinaryPredicate>
 inline std::pair<typename boost::range_iterator<InputRange1>::type, InputIterator2>
-mismatch(InputRange1& range1, InputIterator2 first2, BinaryPredicate pred)
-{
+mismatch(InputRange1& range1, InputIterator2 first2, BinaryPredicate pred) {
     return adobe::mismatch(boost::begin(range1), boost::end(range1), first2, pred);
 }
 
@@ -94,8 +90,7 @@ mismatch(InputRange1& range1, InputIterator2 first2, BinaryPredicate pred)
 */
 template <class InputRange1, class InputIterator2, class BinaryPredicate>
 inline std::pair<typename boost::range_const_iterator<InputRange1>::type, InputIterator2>
-mismatch(const InputRange1& range1, InputIterator2 first2, BinaryPredicate pred)
-{
+mismatch(const InputRange1& range1, InputIterator2 first2, BinaryPredicate pred) {
     return adobe::mismatch(boost::begin(range1), boost::end(range1), first2, pred);
 }
 

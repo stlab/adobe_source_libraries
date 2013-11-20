@@ -66,7 +66,7 @@
 
     `((value >> (sizeof(T) * 8 - Bits)) ^ value) & ((1 << Bits) - 1)`
 
-    However, `xor_fold` is not really necessary given the excellent distribution 
+    However, `xor_fold` is not really necessary given the excellent distribution
     of the algorithm class, and a straightforward mask will result in bits that
     are as well distributed as result from `xor_fold`. So we mask.
 
@@ -85,56 +85,44 @@ namespace detail {
 
 /*************************************************************************************************/
 
-constexpr std::size_t rollup(std::size_t n)
-{
-    return n == 0    ? 0 :
-           n <= 32   ? 32 :
-           n <= 64   ? 64 :
-           n <= 128  ? 128 :
-           n <= 256  ? 256 :
-           n <= 512  ? 512 :
-           n <= 1024 ? 1024 :
-           0;
+constexpr std::size_t rollup(std::size_t n) {
+    return n == 0 ? 0 : n <= 32 ? 32 : n <= 64 ? 64 : n <= 128 ? 128 : n <= 256
+                                                                           ? 256
+                                                                           : n <= 512
+                                                                                 ? 512
+                                                                                 : n <= 1024 ? 1024
+                                                                                             : 0;
 }
 
 /*************************************************************************************************/
 
 template <std::size_t Bits>
-struct fnv_base_traits
-{ };
+struct fnv_base_traits {};
 
 /*************************************************************************************************/
 
 template <>
-struct fnv_base_traits<32>
-{
+struct fnv_base_traits<32> {
     typedef std::uint32_t value_type;
 
-    static constexpr std::size_t size()
-    { return 32; }
+    static constexpr std::size_t size() { return 32; }
 
-    static constexpr value_type offset_basis()
-    { return 0x811c9dc5; }
+    static constexpr value_type offset_basis() { return 0x811c9dc5; }
 
-    static constexpr value_type prime()
-    { return 0x1000193; }
+    static constexpr value_type prime() { return 0x1000193; }
 };
 
 /*************************************************************************************************/
 
 template <>
-struct fnv_base_traits<64>
-{
+struct fnv_base_traits<64> {
     typedef std::uint64_t value_type;
 
-    static constexpr std::size_t size()
-    { return 64; }
+    static constexpr std::size_t size() { return 64; }
 
-    static constexpr value_type offset_basis()
-    { return 0xcbf29ce484222325; }
+    static constexpr value_type offset_basis() { return 0xcbf29ce484222325; }
 
-    static constexpr value_type prime()
-    { return 0x100000001b3; }
+    static constexpr value_type prime() { return 0x100000001b3; }
 };
 
 /*************************************************************************************************/
@@ -144,89 +132,83 @@ using namespace boost::multiprecision::literals;
 /*************************************************************************************************/
 
 template <>
-struct fnv_base_traits<128>
-{
+struct fnv_base_traits<128> {
     typedef boost::multiprecision::uint128_t value_type;
 
-    static constexpr std::size_t size()
-    { return 128; }
+    static constexpr std::size_t size() { return 128; }
 
-    static constexpr value_type offset_basis()
-    { return 0x6C62272E07BB014262B821756295C58D_cppui128; }
+    static constexpr value_type offset_basis() {
+        return 0x6C62272E07BB014262B821756295C58D_cppui128;
+    }
 
-    static constexpr value_type prime()
-    { return 0x1000000000000000000013B_cppui128; }
+    static constexpr value_type prime() { return 0x1000000000000000000013B_cppui128; }
 };
 
 /*************************************************************************************************/
 
 template <>
-struct fnv_base_traits<256>
-{
+struct fnv_base_traits<256> {
     typedef boost::multiprecision::uint256_t value_type;
 
-    static constexpr std::size_t size()
-    { return 256; }
+    static constexpr std::size_t size() { return 256; }
 
-    static constexpr value_type offset_basis()
-    { return 0xDD268DBCAAC550362D98C384C4E576CCC8B1536847B6BBB31023B4C8CAEE0535_cppui256; }
+    static constexpr value_type offset_basis() {
+        return 0xDD268DBCAAC550362D98C384C4E576CCC8B1536847B6BBB31023B4C8CAEE0535_cppui256;
+    }
 
-    static constexpr value_type prime()
-    { return 0x1000000000000000000000000000000000000000163_cppui256; }
+    static constexpr value_type prime() {
+        return 0x1000000000000000000000000000000000000000163_cppui256;
+    }
 };
 
 /*************************************************************************************************/
 
 template <>
-struct fnv_base_traits<512>
-{
+struct fnv_base_traits<512> {
     typedef boost::multiprecision::uint512_t value_type;
 
-    static constexpr std::size_t size()
-    { return 512; }
+    static constexpr std::size_t size() { return 512; }
 
-    static constexpr value_type offset_basis()
-    { return 0xB86DB0B1171F4416DCA1E50F309990ACAC87D059C90000000000000000000D21E948F68A34C192F62EA79BC942DBE7CE182036415F56E34BAC982AAC4AFE9FD9_cppui512; }
+    static constexpr value_type offset_basis() {
+        return 0xB86DB0B1171F4416DCA1E50F309990ACAC87D059C90000000000000000000D21E948F68A34C192F62EA79BC942DBE7CE182036415F56E34BAC982AAC4AFE9FD9_cppui512;
+    }
 
-    static constexpr value_type prime()
-    { return 0x100000000000000000000000000000000000000000000000000000000000000000000000000000000000157_cppui512; }
+    static constexpr value_type prime() {
+        return 0x100000000000000000000000000000000000000000000000000000000000000000000000000000000000157_cppui512;
+    }
 };
 
 /*************************************************************************************************/
 
 template <>
-struct fnv_base_traits<1024>
-{
+struct fnv_base_traits<1024> {
     typedef boost::multiprecision::uint1024_t value_type;
 
-    static constexpr std::size_t size()
-    { return 1024; }
+    static constexpr std::size_t size() { return 1024; }
 
-    static constexpr value_type offset_basis()
-    { return 0x5F7A76758ECC4D32E56D5A591028B74B29FC4223FDADA16C3BF34EDA3674DA9A21D9000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004C6D7EB6E73802734510A555F256CC005AE556BDE8CC9C6A93B21AFF4B16C71EE90B3_cppui1024; }
+    static constexpr value_type offset_basis() {
+        return 0x5F7A76758ECC4D32E56D5A591028B74B29FC4223FDADA16C3BF34EDA3674DA9A21D9000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004C6D7EB6E73802734510A555F256CC005AE556BDE8CC9C6A93B21AFF4B16C71EE90B3_cppui1024;
+    }
 
-    static constexpr value_type prime()
-    { return 0x10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018D_cppui1024; }
+    static constexpr value_type prime() {
+        return 0x10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018D_cppui1024;
+    }
 };
 #endif
 /*************************************************************************************************/
 
 template <std::size_t FromBits, std::size_t ToBits>
-struct bitmask
-{
+struct bitmask {
     template <typename T>
-    inline static T mask(T value)
-    {
+    inline static T mask(T value) {
         return value & ((T(1) << ToBits) - 1);
     }
 };
 
 template <std::size_t SameBits>
-struct bitmask<SameBits, SameBits>
-{
+struct bitmask<SameBits, SameBits> {
     template <typename T>
-    inline static T mask(T value)
-    {
+    inline static T mask(T value) {
         return value;
     }
 };
@@ -240,7 +222,7 @@ struct bitmask<SameBits, SameBits>
     \ingroup fnv
 
     Traits class used by adobe::fnv1a.
-    
+
     \note
     In the case the implementation is not defined for the bit size passed, this will bump to the
     next highest implementation and mask the automatically. For example, fnv1a<56> will roll up
@@ -253,7 +235,7 @@ using fnv_traits = typename detail::fnv_base_traits<detail::rollup(Bits)>;
     \ingroup fnv
 
     Integral type used to return the result of a call to adobe::fnv1a.
-    
+
     The size of the type depends on the version of fnv called.
 */
 template <std::size_t Bits>
@@ -270,9 +252,8 @@ using fnvtype = typename fnv_traits<Bits>::value_type;
     implementation of the algorithm in this header.
 */
 template <std::size_t Bits, typename Iterator, typename Predicate>
-fnvtype<Bits> fnv1a(Iterator first, Predicate p)
-{
-    static_assert(sizeof (typename std::iterator_traits<Iterator>::value_type) == 1,
+fnvtype<Bits> fnv1a(Iterator first, Predicate p) {
+    static_assert(sizeof(typename std::iterator_traits<Iterator>::value_type) == 1,
                   "Iterator value_type must be 1 byte.");
 
     typedef fnvtype<Bits> result_type;
@@ -295,9 +276,8 @@ fnvtype<Bits> fnv1a(Iterator first, Predicate p)
     implementation of the algorithm in this header.
 */
 template <std::size_t Bits, typename Iterator>
-inline fnvtype<Bits> fnv1a(Iterator first, Iterator last)
-{
-    static_assert(sizeof (typename std::iterator_traits<Iterator>::value_type) == 1,
+inline fnvtype<Bits> fnv1a(Iterator first, Iterator last) {
+    static_assert(sizeof(typename std::iterator_traits<Iterator>::value_type) == 1,
                   "Iterator value_type must be 1 byte.");
 
     typedef fnvtype<Bits> result_type;
@@ -317,8 +297,7 @@ inline fnvtype<Bits> fnv1a(Iterator first, Iterator last)
     Performs the FNV-1a hash over the specified container.
 */
 template <std::size_t Bits, typename Container>
-inline fnvtype<Bits> fnv1a(Container c)
-{
+inline fnvtype<Bits> fnv1a(Container c) {
     return fnv1a<Bits>(begin(c), end(c));
 }
 

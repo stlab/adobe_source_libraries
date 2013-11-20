@@ -1,0 +1,11 @@
+BasedOnStyle: LLVM
+
+AccessModifierOffset: -4
+AlwaysBreakTemplateDeclarations: true
+ColumnLimit: 100
+Cpp11BracedListStyle: true
+IndentWidth: 4
+MaxEmptyLinesToKeep: 2
+PointerBindsToType: true
+Standard: Cpp11
+TabWidth: 4

@@ -9,43 +9,39 @@
 #include <adobe/algorithm.hpp>
 #include <adobe/forest.hpp>
 
-int main()
-{
+int main() {
 
-// qualified_usage
-{ 
-// Fully qualified names
+    // qualified_usage
+    {
+        // Fully qualified names
 
-    adobe::forest<int> my_forest;
-    
-    adobe::find(my_forest, 5);
+        adobe::forest<int> my_forest;
 
-}
+        adobe::find(my_forest, 5);
+    }
 
-// alias_usage
-{
-// Using aliases to shorten qualifiers
+    // alias_usage
+    {
+        // Using aliases to shorten qualifiers
 
-    namespace asl = adobe;
-    
-    asl::forest<int> my_forest;
-    
-    asl::find(my_forest, 5);
+        namespace asl = adobe;
 
-}
+        asl::forest<int> my_forest;
 
-// using_usage
-{
-// Qualifying names to avoid ambiguity
+        asl::find(my_forest, 5);
+    }
 
-    using namespace std;
-    using namespace adobe;
-    
-    bool my_predicate(int);
-    forest<int> my_forest;
-    
-// qualifier required on find_if to avoid ambiguity
-    adobe::find_if(my_forest.begin(), my_forest.end(), &my_predicate);
-}
+    // using_usage
+    {
+        // Qualifying names to avoid ambiguity
 
+        using namespace std;
+        using namespace adobe;
+
+        bool my_predicate(int);
+        forest<int> my_forest;
+
+        // qualifier required on find_if to avoid ambiguity
+        adobe::find_if(my_forest.begin(), my_forest.end(), &my_predicate);
+    }
 }

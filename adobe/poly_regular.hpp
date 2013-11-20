@@ -21,7 +21,7 @@
 
 /*************************************************************************************************/
 
-namespace adobe {  
+namespace adobe {
 
 /*!
   \ingroup poly_related
@@ -32,9 +32,8 @@ namespace adobe {
   \brief Virtual interface for RegularConcept. Used in poly<regular> implementation.
   \sa regular, poly_regular_instance, poly_copyable_interface, RegularConcept
 */
-    
-struct poly_regular_interface : poly_copyable_interface
-{
+
+struct poly_regular_interface : poly_copyable_interface {
     virtual bool equals(const poly_regular_interface& new_value) const = 0;
 };
 
@@ -46,10 +45,9 @@ struct poly_regular_interface : poly_copyable_interface
   Used in poly<regular> implementation.
   \sa regular, poly_regular_interface, poly_copyable_interface, optimized_storage_type
 */
-    
+
 template <typename T>
-struct poly_regular_instance : optimized_storage_type<T, poly_regular_interface>::type
-{
+struct poly_regular_instance : optimized_storage_type<T, poly_regular_interface>::type {
     typedef typename optimized_storage_type<T, poly_regular_interface>::type base_t;
 
     /*!
@@ -65,13 +63,14 @@ struct poly_regular_instance : optimized_storage_type<T, poly_regular_interface>
     /*!
         Move constructor
     */
-    poly_regular_instance(move_from<poly_regular_instance> x) 
+    poly_regular_instance(move_from<poly_regular_instance> x)
         : base_t(move_from<base_t>(x.source)) {}
 
-    bool equals(const poly_regular_interface& x) const 
-    { return this->type_info() == x.type_info() && this->get() == *static_cast<const T*>(x.cast()); }
-
-}; 
+    bool equals(const poly_regular_interface& x) const {
+        return this->type_info() == x.type_info() &&
+               this->get() == *static_cast<const T*>(x.cast());
+    }
+};
 
 /*************************************************************************************************/
 
@@ -81,8 +80,7 @@ struct poly_regular_instance : optimized_storage_type<T, poly_regular_interface>
   \sa poly_regular_instance, poly_regular_interface, poly_copyable_interface, poly_base
 */
 
-struct regular : poly_base<poly_regular_interface, poly_regular_instance>
-{
+struct regular : poly_base<poly_regular_interface, poly_regular_instance> {
     typedef poly_base<poly_regular_interface, poly_regular_instance> base_t;
 
     /*!
@@ -90,17 +88,14 @@ struct regular : poly_base<poly_regular_interface, poly_regular_instance>
     */
     template <typename T>
     explicit regular(const T& s)
-      : base_t(s)  { }
+        : base_t(s) {}
 
-    regular()
-      : base_t(empty_t())  { }
+    regular() : base_t(empty_t()) {}
 
     /*!
         Move constructor
     */
-    regular(move_from<regular> x)
-        : base_t(move_from<base_t>(x.source)) {}
-
+    regular(move_from<regular> x) : base_t(move_from<base_t>(x.source)) {}
 };
 
 

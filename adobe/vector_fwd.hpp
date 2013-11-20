@@ -22,7 +22,8 @@ namespace version_1 {
 
 /*************************************************************************************************/
 
-template <typename T, typename A = capture_allocator<T> > class vector;
+template <typename T, typename A = capture_allocator<T>>
+class vector;
 
 /*************************************************************************************************/
 

@@ -21,8 +21,7 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-class unique_string_pool_t : boost::noncopyable
-{
+class unique_string_pool_t : boost::noncopyable {
 public:
     unique_string_pool_t();
 

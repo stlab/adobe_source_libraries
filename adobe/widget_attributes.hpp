@@ -37,40 +37,35 @@ namespace adobe {
     operations.
 */
 
-enum theme_t
-{
+enum theme_t {
     /// No theme
-    theme_none_s                =   0,
+    theme_none_s = 0,
 
     /// For dialogs & windows (atypical)
-    theme_large_s               =   1,
+    theme_large_s = 1,
     /// For dialogs & windows
-    theme_normal_s              =   2,
+    theme_normal_s = 2,
     /// For palettes
-    theme_small_s               =   3,
+    theme_small_s = 3,
     /// For palettes (atypical)
-    theme_mini_s                =   4,
+    theme_mini_s = 4,
 
     /// Adornment for displaying a label
-    theme_adornment_label_s     =   1L << 29,
+    theme_adornment_label_s = 1L << 29,
     /// Adornment for displaying a number
-    theme_adornment_number_s    =   1L << 30,
+    theme_adornment_number_s = 1L << 30,
     /// Adornment for monospacing widget text
-    theme_adornment_mono_s      =   1L << 31,
+    theme_adornment_mono_s = 1L << 31,
 
     /// Theme mask to obtain widget size
-    theme_mask_s                =   theme_large_s   |
-                                    theme_normal_s  |
-                                    theme_small_s   |
-                                    theme_mini_s,
+    theme_mask_s = theme_large_s | theme_normal_s | theme_small_s | theme_mini_s,
 
     /// Theme mask to obtain widget adornments
-    theme_adornment_mask_s      =   theme_adornment_mono_s      |
-                                    theme_adornment_number_s    |
-                                    theme_adornment_label_s,
+    theme_adornment_mask_s =
+        theme_adornment_mono_s | theme_adornment_number_s | theme_adornment_label_s,
 
     /// Default theme
-    theme_default_s             =   theme_normal_s
+    theme_default_s = theme_normal_s
 };
 
 /*************************************************************************************************/
@@ -90,46 +85,44 @@ ADOBE_DEFINE_BITSET_OPS(theme_t)
     behaviors
 */
 
-enum modifiers_t
-{
+enum modifiers_t {
     /// No modifiers
-    modifiers_none_s                = 0,
+    modifiers_none_s = 0,
 
     /// Left-shift key (if applicable)
-    modifiers_left_shift_s          = 1 << 0,
+    modifiers_left_shift_s = 1 << 0,
 
     /// Right-shift key (if applicable)
-    modifiers_right_shift_s         = 1 << 1,
+    modifiers_right_shift_s = 1 << 1,
 
     /// Left-option (or alt) key (if applicable)
-    modifiers_left_option_s         = 1 << 2,
+    modifiers_left_option_s = 1 << 2,
 
     /// Right-option (or alt) key (if applicable)
-    modifiers_right_option_s        = 1 << 3,
+    modifiers_right_option_s = 1 << 3,
 
     /// Left-control key (if applicable)
-    modifiers_left_control_s        = 1 << 4,
+    modifiers_left_control_s = 1 << 4,
 
     /// Right-control key (if applicable)
-    modifiers_right_control_s       = 1 << 5,
+    modifiers_right_control_s = 1 << 5,
 
     /// Caps lock key
-    modifiers_caps_lock_s           = 1 << 6,
+    modifiers_caps_lock_s = 1 << 6,
 
 
     /// Any command key
-    modifiers_any_command_s         = 1 << 7,
+    modifiers_any_command_s = 1 << 7,
 
     /// Any shift key
-    modifiers_any_shift_s           = modifiers_left_shift_s | modifiers_right_shift_s,
+    modifiers_any_shift_s = modifiers_left_shift_s | modifiers_right_shift_s,
 
     /// Any option (or alt) key (if applicable)
-    modifiers_any_option_s          = modifiers_left_option_s | modifiers_right_option_s,
+    modifiers_any_option_s = modifiers_left_option_s | modifiers_right_option_s,
 
     /// Any control key (if applicable)
-    modifiers_any_control_s         = modifiers_left_control_s | modifiers_right_control_s,
-    
-    modifiers_all_s                 = UINT_MAX
+    modifiers_any_control_s = modifiers_left_control_s | modifiers_right_control_s,
+    modifiers_all_s = UINT_MAX
 };
 
 /*************************************************************************************************/

@@ -45,12 +45,15 @@ namespace implementation {
 
 
 template <typename T> // T models Container
-typename T::iterator erase(T& x, typename T::iterator f, typename T::iterator l, block_tag)
-{ return x.erase(f, l); }
+typename T::iterator erase(T& x, typename T::iterator f, typename T::iterator l, block_tag) {
+    return x.erase(f, l);
+}
 
 template <typename T> // T models Container
-typename T::iterator erase(T& x, typename T::iterator f, typename T::iterator l, node_tag)
-{ x.erase(f, l); return l; }
+typename T::iterator erase(T& x, typename T::iterator f, typename T::iterator l, node_tag) {
+    x.erase(f, l);
+    return l;
+}
 
 } // implementation
 
@@ -60,8 +63,7 @@ typename T::iterator erase(T& x, typename T::iterator f, typename T::iterator l,
     \ingroup erase
 */
 template <typename T> // T models Container
-typename T::iterator erase(T& x, typename T::iterator f, typename T::iterator l)
-{
+typename T::iterator erase(T& x, typename T::iterator f, typename T::iterator l) {
     return implementation::erase(x, f, l, typename storage_category<T>::type());
 }
 
@@ -70,10 +72,10 @@ typename T::iterator erase(T& x, typename T::iterator f, typename T::iterator l)
 /*!
     \ingroup erase
 */
-template <  typename T, // T models Container
-            typename R> // R models Range(iterator(T), iterator(T))
-typename T::iterator erase(T& x, const R& r)
-{
+template <typename T, // T models Container
+          typename R>
+// R models Range(iterator(T), iterator(T))
+typename T::iterator erase(T& x, const R& r) {
     return erase(x, boost::begin(r), boost::end(r));
 }
 
@@ -82,8 +84,7 @@ typename T::iterator erase(T& x, const R& r)
 */
 
 template <typename T> // T models Container
-typename T::iterator erase(T& x, typename T::iterator f)
-{
+typename T::iterator erase(T& x, typename T::iterator f) {
     assert(f != end(x) && "FATAL (sparent) : Attempt to erase the end of a container.");
     return erase(x, f, boost::next(f));
 }
@@ -92,15 +93,17 @@ typename T::iterator erase(T& x, typename T::iterator f)
 
 namespace implementation {
 
-template <  typename T, // T models Container
-            typename P> // P models UnaryPredicate
-void erase_if(T& x, typename T::iterator f, typename T::iterator l, P p, block_tag)
-{ x.erase(adobe::remove_if(f, l, p), l); }
+template <typename T, // T models Container
+          typename P>
+// P models UnaryPredicate
+void erase_if(T& x, typename T::iterator f, typename T::iterator l, P p, block_tag) {
+    x.erase(adobe::remove_if(f, l, p), l);
+}
 
-template <  typename T, // T models Container
-            typename P> // P models UnaryPredicate
-void erase_if(T& x, typename T::iterator f, typename T::iterator l, P p, node_tag)
-{
+template <typename T, // T models Container
+          typename P>
+// P models UnaryPredicate
+void erase_if(T& x, typename T::iterator f, typename T::iterator l, P p, node_tag) {
     while (f != l) {
         f = adobe::erase(x, find_range_if(f, l, p));
     }
@@ -114,10 +117,10 @@ void erase_if(T& x, typename T::iterator f, typename T::iterator l, P p, node_ta
     \ingroup erase
 */
 
-template <  typename T, // T models Container
-            typename P> // P models UnaryPredicate
-void erase_if(T& x, typename T::iterator f, typename T::iterator l, P p)
-{
+template <typename T, // T models Container
+          typename P>
+// P models UnaryPredicate
+void erase_if(T& x, typename T::iterator f, typename T::iterator l, P p) {
     implementation::erase_if(x, f, l, p, typename storage_category<T>::type());
 }
 
@@ -125,10 +128,10 @@ void erase_if(T& x, typename T::iterator f, typename T::iterator l, P p)
     \ingroup erase
 */
 
-template <  typename T, // T models Container
-            typename P> // P models UnaryPredicate
-void erase_if(T& x, P p)
-{
+template <typename T, // T models Container
+          typename P>
+// P models UnaryPredicate
+void erase_if(T& x, P p) {
     erase_if(x, boost::begin(x), boost::end(x), p);
 }
 
