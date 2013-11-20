@@ -61,8 +61,8 @@ boost::int16_t uuid_create(uuid_t* uuid);
 /* uuid_create_from_name -- create a UUID using a "name" from a "name space" */
 void uuid_create_from_name(uuid_t* uuid, /*  resulting UUID */
                            uuid_t nsid,  /*  UUID to serve as context, so identical
-                                          names from different name spaces generate
-                                          different UUIDs */
+                                        names from different name spaces generate
+                                        different UUIDs */
                            boost::uint8_t* name,     /*  the name from which to generate a UUID */
                            boost::uint16_t namelen); /*  the length of the name */
 
