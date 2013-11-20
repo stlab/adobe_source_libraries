@@ -14,13 +14,13 @@
 #include <adobe/config.hpp>
 
 #ifdef __MWERKS__
-    #pragma warn_implicitconv off
+#pragma warn_implicitconv off
 #endif
 
 #include <adobe/implementation/lex_shared_fwd.hpp>
 
 #ifdef __MWERKS__
-    #pragma warn_implicitconv reset
+#pragma warn_implicitconv reset
 #endif
 
 #include <boost/function.hpp>
@@ -31,7 +31,7 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-typedef bool (keyword_extension_lookup_proc_signature_t)(const name_t&);
+typedef bool(keyword_extension_lookup_proc_signature_t)(const name_t&);
 typedef boost::function<keyword_extension_lookup_proc_signature_t> keyword_extension_lookup_proc_t;
 
 /*************************************************************************************************/

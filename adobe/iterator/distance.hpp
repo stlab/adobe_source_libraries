@@ -26,8 +26,9 @@ namespace adobe {
 */
 
 template <typename I> // I models InputRange
-inline boost::difference_type<I>::type distance(I& range)
-{ return std::distance(boost::begin(range), boost::end(range)); }
+inline boost::difference_type<I>::type distance(I& range) {
+    return std::distance(boost::begin(range), boost::end(range));
+}
 
 /*************************************************************************************************/
 

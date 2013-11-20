@@ -3,10 +3,10 @@
     Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
     or a copy at http://stlab.adobe.com/licenses.html)
 */
-// $Id: $ 
-// $DateTime: $ 
-// $Change: $ 
-// $Author: $ 
+// $Id: $
+// $DateTime: $
+// $Change: $
+// $Author: $
 
 /*************************************************************************************************/
 
@@ -23,41 +23,39 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-std::ostream& operator<<(std::ostream& result, const line_position_t& position)
-{
+std::ostream& operator<<(std::ostream& result, const line_position_t& position) {
     typedef std::streampos pos_t;
 
-    const char* current_file ("");
+    const char* current_file("");
 
-    std::string         line_string(position.file_snippet());
-    
+    std::string line_string(position.file_snippet());
+
     // Replace any tabs with spaces
     std::replace(line_string.begin(), line_string.end(), '\t', ' ');
-    
+
     // Count any leading spaces
-    std::string::size_type leading_spaces (line_string.find_first_not_of(' '));
+    std::string::size_type leading_spaces(line_string.find_first_not_of(' '));
 
-	if ( leading_spaces != std::string::npos )
-		line_string.erase(0, leading_spaces);
+    if (leading_spaces != std::string::npos)
+        line_string.erase(0, leading_spaces);
 
-    std::string::size_type trailing_nulls (line_string.find_last_not_of((char)0));
+    std::string::size_type trailing_nulls(line_string.find_last_not_of((char)0));
 
-    if ( trailing_nulls != std::string::npos )
-      line_string.erase(trailing_nulls+1);
+    if (trailing_nulls != std::string::npos)
+        line_string.erase(trailing_nulls + 1);
 
     // Determine the carret position
     pos_t width = (position.position_m == pos_t(-1))
-            ? pos_t(std::streamoff(line_string.size()))
-            : pos_t(position.position_m - position.line_start_m);
-        
+                      ? pos_t(std::streamoff(line_string.size()))
+                      : pos_t(position.position_m - position.line_start_m);
+
     width -= std::streamoff(leading_spaces);
-    
-    size_t width_int (static_cast<size_t>(std::streamoff(width))); // convert to size_t
-    
+
+    size_t width_int(static_cast<size_t>(std::streamoff(width))); // convert to size_t
+
     // If the file name has changed then output it
-    
-    if (position.stream_name() && (std::strcmp(position.stream_name(), current_file) != 0))
-    {
+
+    if (position.stream_name() && (std::strcmp(position.stream_name(), current_file) != 0)) {
         current_file = position.stream_name();
         result << "File: " << current_file << '\n';
     }
@@ -71,57 +69,43 @@ std::ostream& operator<<(std::ostream& result, const line_position_t& position)
     result << "Line " << std::setw(5) << std::setfill('0') << position.line_number_m;
     result << ": " << line_string << "\nchar ";
     result << std::setw(5) << std::setfill('0') << width_int;
-	
-	//This used to crash when line_string is empty from the start
-	//putting a more defensive check.
-	if(line_string.size() > width_int)
-		line_string.erase (width_int);
+
+    // This used to crash when line_string is empty from the start
+    // putting a more defensive check.
+    if (line_string.size() > width_int)
+        line_string.erase(width_int);
 
     result << ": " << line_string << "^^^\n";
-    
+
     return result;
 }
 
 /*************************************************************************************************/
 
-line_position_t::line_position_t(   adobe::name_t   file_path,
-                                    getline_proc_t  getline_proc,
-                                    int             line_number,
-                                    std::streampos  line_start,
-                                    std::streampos  position) :
-        line_number_m(line_number),
-        line_start_m(line_start),
-        position_m(position),
-        file_name_m(file_path),
-        getline_proc_m(getline_proc)
-    { }
+line_position_t::line_position_t(adobe::name_t file_path, getline_proc_t getline_proc,
+                                 int line_number, std::streampos line_start,
+                                 std::streampos position)
+    : line_number_m(line_number), line_start_m(line_start), position_m(position),
+      file_name_m(file_path), getline_proc_m(getline_proc) {}
 
-line_position_t::line_position_t(const char* stream_name, int line_index) :
-    line_number_m(line_index + 1),
-    line_start_m(0),
-    position_m(-1),
-    file_name_m(adobe::name_t(stream_name))
-{ }
+line_position_t::line_position_t(const char* stream_name, int line_index)
+    : line_number_m(line_index + 1), line_start_m(0), position_m(-1),
+      file_name_m(adobe::name_t(stream_name)) {}
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
-line_position_t::line_position_t() :
-        line_number_m(1),
-        line_start_m(0),
-        position_m(-1)
-    { }
+line_position_t::line_position_t() : line_number_m(1), line_start_m(0), position_m(-1) {}
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 
 /*************************************************************************************************/
 
-std::string format_stream_error(const stream_error_t& error)
-{
-    std::ostringstream  result;
+std::string format_stream_error(const stream_error_t& error) {
+    std::ostringstream result;
 
     result << error.what() << '\n';
 
-    for (stream_error_t::position_set_t::const_iterator iter (error.line_position_set().begin()),
-            last (error.line_position_set().end()); iter != last; ++iter)
-    {
+    for (stream_error_t::position_set_t::const_iterator iter(error.line_position_set().begin()),
+         last(error.line_position_set().end());
+         iter != last; ++iter) {
         result << *iter;
     }
 
@@ -130,20 +114,19 @@ std::string format_stream_error(const stream_error_t& error)
 
 /*************************************************************************************************/
 
-std::string format_stream_error(std::istream& , const stream_error_t& error)
-{
+std::string format_stream_error(std::istream&, const stream_error_t& error) {
     // Format the error
 
-    std::ostringstream  result;
-    
+    std::ostringstream result;
+
     result << error.what() << '\n';
-    
-    for (stream_error_t::position_set_t::const_iterator iter (error.line_position_set().begin()),
-            last (error.line_position_set().end()); iter != last; ++iter)
-    {
+
+    for (stream_error_t::position_set_t::const_iterator iter(error.line_position_set().begin()),
+         last(error.line_position_set().end());
+         iter != last; ++iter) {
         result << *iter;
     }
-    
+
     return result.str();
 }
 
@@ -199,14 +182,13 @@ std::istream& getline(std::istream& is, std::string& str)
 /*************************************************************************************************/
 
 /*
-    REVISIT (t_schwinger) : This is needed to disable automatic CR-LF conversion, which seems 
+    REVISIT (t_schwinger) : This is needed to disable automatic CR-LF conversion, which seems
     to be broken in MinGW 3.2 (GCC 3.4).
 */
-#ifdef __MINGW32__ 
-extern "C"
-{
-    #include <fcntl.h>
-    unsigned int _CRT_fmode = _O_BINARY;
+#ifdef __MINGW32__
+extern "C" {
+#include <fcntl.h>
+unsigned int _CRT_fmode = _O_BINARY;
 }
 #endif
 

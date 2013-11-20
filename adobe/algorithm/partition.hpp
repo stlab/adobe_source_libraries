@@ -37,9 +37,8 @@ namespace adobe {
     \brief partition implementation
 */
 template <class BidirectionalIterator, class Predicate>
-inline BidirectionalIterator
-partition(BidirectionalIterator first, BidirectionalIterator last, Predicate pred)
-{
+inline BidirectionalIterator partition(BidirectionalIterator first, BidirectionalIterator last,
+                                       Predicate pred) {
     return std::partition(first, last, boost::bind(pred, _1));
 }
 
@@ -49,9 +48,8 @@ partition(BidirectionalIterator first, BidirectionalIterator last, Predicate pre
     \brief partition implementation
 */
 template <class BidirectionalRange, class Predicate>
-inline typename boost::range_iterator<BidirectionalRange>::type
-partition(BidirectionalRange& range, Predicate pred)
-{
+inline typename boost::range_iterator<BidirectionalRange>::type partition(BidirectionalRange& range,
+                                                                          Predicate pred) {
     return adobe::partition(boost::begin(range), boost::end(range), pred);
 }
 
@@ -61,9 +59,8 @@ partition(BidirectionalRange& range, Predicate pred)
     \brief partition implementation
 */
 template <class BidirectionalIterator, class Predicate>
-inline BidirectionalIterator
-stable_partition(BidirectionalIterator first, BidirectionalIterator last, Predicate pred)
-{
+inline BidirectionalIterator stable_partition(BidirectionalIterator first,
+                                              BidirectionalIterator last, Predicate pred) {
     return std::stable_partition(first, last, boost::bind(pred, _1));
 }
 
@@ -74,8 +71,7 @@ stable_partition(BidirectionalIterator first, BidirectionalIterator last, Predic
 */
 template <class BidirectionalRange, class Predicate>
 inline typename boost::range_iterator<BidirectionalRange>::type
-stable_partition(BidirectionalRange& range, Predicate pred)
-{
+stable_partition(BidirectionalRange& range, Predicate pred) {
     return adobe::stable_partition(boost::begin(range), boost::end(range), pred);
 }
 

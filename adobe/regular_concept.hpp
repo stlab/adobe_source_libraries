@@ -20,17 +20,15 @@
 /*************************************************************************************************/
 
 namespace adobe {
-    
+
 /*************************************************************************************************/
 
-auto concept RegularConcept<typename T>
-: std::CopyConstructible<T>, 
-  std::Assignable<T>, 
-  std::EqualityComparable<T>, 
-  std::Swappable<T>,
-  std::DefaultConstructible<T> // not yet
-{
-};
+auto concept RegularConcept<typename T> : std::CopyConstructible<T>,
+                                          std::Assignable<T>,
+                                          std::EqualityComparable<T>,
+                                          std::Swappable<T>,
+                                          std::DefaultConstructible<T> // not yet
+                                          {};
 
 /*************************************************************************************************/
 
@@ -53,20 +51,19 @@ namespace adobe {
 /*************************************************************************************************/
 
 template <class T>
-struct RegularConcept
-{
+struct RegularConcept {
 
-// Concept checking:
+    // Concept checking:
 
     void constraints() {
         // refinement of:
-        boost::function_requires<boost::CopyConstructibleConcept<T> >();
-        boost::function_requires<boost::AssignableConcept<T> >();
-        boost::function_requires<boost::EqualityComparableConcept<T> >();
+        boost::function_requires<boost::CopyConstructibleConcept<T>>();
+        boost::function_requires<boost::AssignableConcept<T>>();
+        boost::function_requires<boost::EqualityComparableConcept<T>>();
         //        boost::function_requires<boost::SwappableConcept<T> >();
-        
+
         using std::swap;
-        swap(t,t);
+        swap(t, t);
     }
 #if !defined(ADOBE_NO_DOCUMENTATION)
     T t;

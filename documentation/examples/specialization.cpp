@@ -14,14 +14,12 @@
 
 namespace my_namespace {
 
-class my_iterator
-{
-// ...
+class my_iterator {
+    // ...
 };
 
-class my_class
-{
-// ...
+class my_class {
+    // ...
 };
 
 } // my_namespace
@@ -29,23 +27,24 @@ class my_class
 // specialize find for my_iterator - specialize in the std namespace
 
 template <>
-my_namespace::my_iterator std::find(my_namespace::my_iterator, my_namespace::my_iterator)
-{
+my_namespace::my_iterator std::find(my_namespace::my_iterator, my_namespace::my_iterator) {
     // do special find
 }
 
 // specialize ptr_traits for my_class
 
 template <>
-struct adobe::ptr_traits<my_namespace::my_class>
-{
-    typedef my_namespace::my_class  element_type;
-    typedef element_type*           pointer_type;
-    typedef const element_type*     const_pointer_type
-    
-    template <class U> struct rebind { typedef adobe::ptr_traits<U> other; };
-    enum { is_array = false };
-    
+struct adobe::ptr_traits<my_namespace::my_class> {
+    typedef my_namespace::my_class element_type;
+    typedef element_type* pointer_type;
+    typedef const element_type* const_pointer_type template <class U>
+    struct rebind {
+        typedef adobe::ptr_traits<U> other;
+    };
+    enum {
+        is_array = false
+    };
+
     static void delete_ptr(pointer_type x) throw() { delete x; }
 };
 

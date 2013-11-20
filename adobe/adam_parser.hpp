@@ -81,7 +81,7 @@ keywords                += "sheet" | "interface" | "input" | "output" | "constan
 \subsection cell_qualifiers Cell Access Specifiers
 
 
-\subsection initialization Initialization 
+\subsection initialization Initialization
 
 \subsection advanced_features Advanced Features
 
@@ -130,63 +130,52 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-struct adam_callback_suite_t
-{
-    enum cell_type_t
-    {
-        input_k,            // array_t is an initializer
-        output_k,           // array_t is an expression
-        constant_k,         // array_t is an initializer
-        logic_k,            // array_t is an expression
-        invariant_k         // array_t is an expression
+struct adam_callback_suite_t {
+    enum cell_type_t {
+        input_k,    // array_t is an initializer
+        output_k,   // array_t is an expression
+        constant_k, // array_t is an initializer
+        logic_k,    // array_t is an expression
+        invariant_k // array_t is an expression
     };
 
-    struct relation_t
-    {
+    struct relation_t {
         std::vector<name_t> name_set_m;
-        line_position_t     position_m;
-        array_t             expression_m;
-        std::string              detailed_m;
-        std::string              brief_m;
+        line_position_t position_m;
+        array_t expression_m;
+        std::string detailed_m;
+        std::string brief_m;
     };
 
-    typedef boost::function<void (  cell_type_t             type,
-                                    name_t                  cell_name,
-                                    const line_position_t&  position,
-                                    const array_t&          expr_or_init,
-                                    const std::string&      brief,
-                                    const std::string&      detailed)>      add_cell_proc_t;
+    typedef boost::function<void(cell_type_t type, name_t cell_name,
+                                 const line_position_t& position, const array_t& expr_or_init,
+                                 const std::string& brief,
+                                 const std::string& detailed)> add_cell_proc_t;
 
-    typedef boost::function<void (  const line_position_t&  position,
-                                    const array_t&          conditional,
-                                    const relation_t*       first,
-                                    const relation_t*       last,
-                                    const std::string&      brief,
-                                    const std::string&      detailed)>      add_relation_proc_t; // REVISIT (sparent) where's brief?
-    
-    typedef boost::function<void (  name_t                  cell_name,
-                                    bool                    linked,
-                                    const line_position_t&  position1,
-                                    const array_t&          initializer,
-                                    const line_position_t&  position2,
-                                    const array_t&          expression,
-                                    const std::string&      brief,
-                                    const std::string&      detailed)>      add_interface_proc_t;
-                                    
-    typedef boost::function<void (  name_t                  cell_name,
-                                    const line_position_t&  position,
-                                    const std::string&      brief,
-                                    const std::string&      detailed)>      add_external_proc_t;
+    typedef boost::function<
+        void(const line_position_t& position, const array_t& conditional, const relation_t* first,
+             const relation_t* last, const std::string& brief,
+             const std::string& detailed)> add_relation_proc_t; // REVISIT (sparent) where's brief?
 
-    add_cell_proc_t         add_cell_proc_m;
-    add_relation_proc_t     add_relation_proc_m;
-    add_interface_proc_t    add_interface_proc_m;
-    add_external_proc_t     add_external_proc_m;
+    typedef boost::function<void(name_t cell_name, bool linked, const line_position_t& position1,
+                                 const array_t& initializer, const line_position_t& position2,
+                                 const array_t& expression, const std::string& brief,
+                                 const std::string& detailed)> add_interface_proc_t;
+
+    typedef boost::function<void(name_t cell_name, const line_position_t& position,
+                                 const std::string& brief,
+                                 const std::string& detailed)> add_external_proc_t;
+
+    add_cell_proc_t add_cell_proc_m;
+    add_relation_proc_t add_relation_proc_m;
+    add_interface_proc_t add_interface_proc_m;
+    add_external_proc_t add_external_proc_m;
 };
 
 /*************************************************************************************************/
 
-void parse(std::istream& stream, const line_position_t& position, const adam_callback_suite_t& callbacks);
+void parse(std::istream& stream, const line_position_t& position,
+           const adam_callback_suite_t& callbacks);
 
 /*************************************************************************************************/
 

@@ -21,8 +21,7 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-enum xml_lex_token_set_t
-{
+enum xml_lex_token_set_t {
     xml_token_open_tag_k = 0,
     xml_token_open_slash_tag_k,
     xml_token_close_tag_k,
@@ -32,8 +31,8 @@ enum xml_lex_token_set_t
     xml_token_char_data_k,
     xml_token_equals_k,
     xml_token_reference_k,
-	xml_token_comment_k,
-	xml_token_processing_instruction_k,
+    xml_token_comment_k,
+    xml_token_processing_instruction_k,
     xml_token_eof_k
 };
 
@@ -44,8 +43,9 @@ const char* token_to_string(xml_lex_token_set_t token);
 /*************************************************************************************************/
 
 template <>
-inline xml_lex_token_set_t eof_token<xml_lex_token_set_t>()
-    { return xml_token_eof_k; }
+inline xml_lex_token_set_t eof_token<xml_lex_token_set_t>() {
+    return xml_token_eof_k;
+}
 
 /*************************************************************************************************/
 

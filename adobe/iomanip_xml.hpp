@@ -26,8 +26,7 @@ namespace adobe {
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-class xml_format : public format_base
-{
+class xml_format : public format_base {
     typedef format_base inherited_t;
 
 public:

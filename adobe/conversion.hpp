@@ -19,20 +19,40 @@ namespace adobe {
 /*************************************************************************************************/
 
 template <typename T>
-struct promote
-{
+struct promote {
     typedef T type;
 };
 
-template <> struct promote<short>           { typedef double type; };
-template <> struct promote<int>             { typedef double type; };
-template <> struct promote<long>            { typedef double type; };
+template <>
+struct promote<short> {
+    typedef double type;
+};
+template <>
+struct promote<int> {
+    typedef double type;
+};
+template <>
+struct promote<long> {
+    typedef double type;
+};
 
-template <> struct promote<unsigned short>  { typedef double type; };
-template <> struct promote<unsigned int>    { typedef double type; };
-template <> struct promote<unsigned long>   { typedef double type; };
+template <>
+struct promote<unsigned short> {
+    typedef double type;
+};
+template <>
+struct promote<unsigned int> {
+    typedef double type;
+};
+template <>
+struct promote<unsigned long> {
+    typedef double type;
+};
 
-template <> struct promote<float>           { typedef double type; };
+template <>
+struct promote<float> {
+    typedef double type;
+};
 
 // Under 64-bit Windows size_t and ptrdiff_t do not fall into the categories above,
 // and can cause bad cast failures in any_regular_t when one presumes it would, as
@@ -40,17 +60,23 @@ template <> struct promote<float>           { typedef double type; };
 // attempt is made to promote these types. You can turn off the error by defining
 // ADOBE_NO_MSVC64_PROMOTION_ERROR in your project.
 #if defined(BOOST_MSVC) && defined(_M_X64) && !defined(ADOBE_NO_MSVC64_PROMOTION_ERROR)
-template <> struct promote<std::size_t>    { };
-template <> struct promote<std::ptrdiff_t> { };
+template <>
+struct promote<std::size_t> {};
+template <>
+struct promote<std::ptrdiff_t> {};
 #endif
 
-template <> struct promote<const char*>     { typedef std::string type; };
+template <>
+struct promote<const char*> {
+    typedef std::string type;
+};
 
 /*************************************************************************************************/
 
 template <typename lht, typename rht>
-inline lht explicit_cast(const rht& rhs)
-{ return static_cast<lht>(rhs); }
+inline lht explicit_cast(const rht& rhs) {
+    return static_cast<lht>(rhs);
+}
 
 /*************************************************************************************************/
 
@@ -60,18 +86,20 @@ struct runtime_cast_t {
 };
 
 template <typename R, typename T>
-inline R runtime_cast(T& x)
-{ return runtime_cast_t<R, T>()(x); }
+inline R runtime_cast(T& x) {
+    return runtime_cast_t<R, T>()(x);
+}
 
 template <typename R, typename T>
-inline R runtime_cast(T* x)
-{ return runtime_cast_t<R, T*>()(x); }
+inline R runtime_cast(T* x) {
+    return runtime_cast_t<R, T*>()(x);
+}
 
 template <typename R, typename T>
-inline bool runtime_cast(const T& x, R& r)
-{
+inline bool runtime_cast(const T& x, R& r) {
     const R* p = runtime_cast<const R*>(&x);
-    if (!p) return false;
+    if (!p)
+        return false;
     r = *p;
     return true;
 }
@@ -79,8 +107,9 @@ inline bool runtime_cast(const T& x, R& r)
 /*************************************************************************************************/
 
 template <typename T>
-inline T& remove_const(const T& x)
-{ return const_cast<T&>(x); }
+inline T& remove_const(const T& x) {
+    return const_cast<T&>(x);
+}
 
 /*************************************************************************************************/
 

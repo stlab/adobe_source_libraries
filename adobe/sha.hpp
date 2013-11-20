@@ -30,8 +30,9 @@ namespace implementation {
 /**************************************************************************************************/
 
 template <typename T>
-constexpr std::size_t bitsizeof()
-{ return sizeof(T) * 8; }
+constexpr std::size_t bitsizeof() {
+    return sizeof(T) * 8;
+}
 
 /**************************************************************************************************/
 
@@ -66,16 +67,19 @@ inline T rotl(T x)
 /**************************************************************************************************/
 
 template <typename T>
-inline T ch(T x, T y, T z)
-    { return (x & y) ^ (~x & z); }
+inline T ch(T x, T y, T z) {
+    return (x & y) ^ (~x & z);
+}
 
 template <typename T>
-inline T parity(T x, T y, T z)
-    { return x ^ y ^ z; }
+inline T parity(T x, T y, T z) {
+    return x ^ y ^ z;
+}
 
 template <typename T>
-inline T maj(T x, T y, T z)
-    { return (x & y) ^ (x & z) ^ (y & z); }
+inline T maj(T x, T y, T z) {
+    return (x & y) ^ (x & z) ^ (y & z);
+}
 
 /**************************************************************************************************/
 
@@ -183,7 +187,7 @@ void block_and_digest(typename HashTraits::message_block_type& state,
 {
     typedef HashTraits                               traits_type;
     typedef typename traits_type::message_block_type message_block_type;
-    typedef typename message_block_type::value_type  message_block_value_type;
+    typedef typename message_block_type::value_type message_block_value_type;
 
     // The size of the message block in bits. Either 512 or 1024.
     constexpr std::size_t message_blocksize_k = traits_type::message_blocksize_k;
@@ -372,15 +376,10 @@ void sha_2_digest_message_block(typename HashTraits::state_digest_type&  digest,
     digest_value_type g(digest[6]);
     digest_value_type h(digest[7]);
 
-    for (std::size_t t(0); t < schedule.size(); ++t)
-    {
-        digest_value_type T1 = h                           +
-                               traits_type::big_sigma_1(e) +
-                               implementation::ch(e, f, g) +
-                               traits_type::k(t)           +
-                               schedule[t];
-        digest_value_type T2 = traits_type::big_sigma_0(a) +
-                               implementation::maj(a, b, c);
+    for (std::size_t t(0); t < schedule.size(); ++t) {
+        digest_value_type T1 = h + traits_type::big_sigma_1(e) + implementation::ch(e, f, g) +
+                               traits_type::k(t) + schedule[t];
+        digest_value_type T2 = traits_type::big_sigma_0(a) + implementation::maj(a, b, c);
         h = g;
         g = f;
         f = e;
@@ -520,33 +519,39 @@ struct sha256_traits_t
                                             std::uint16_t&      stuffed_size)
         { sha_2_digest_message_block<sha256_traits_t>(digest, message_block, stuffed_size); }
 
-    static inline std::uint32_t big_sigma_0(std::uint32_t x)
-        { return implementation::rotr<2>(x) ^ implementation::rotr<13>(x) ^ implementation::rotr<22>(x); }
+    static inline std::uint32_t big_sigma_0(std::uint32_t x) {
+        return implementation::rotr<2>(x) ^ implementation::rotr<13>(x) ^
+               implementation::rotr<22>(x);
+    }
 
-    static inline std::uint32_t big_sigma_1(std::uint32_t x)
-        { return implementation::rotr<6>(x) ^ implementation::rotr<11>(x) ^ implementation::rotr<25>(x); }
+    static inline std::uint32_t big_sigma_1(std::uint32_t x) {
+        return implementation::rotr<6>(x) ^ implementation::rotr<11>(x) ^
+               implementation::rotr<25>(x);
+    }
 
-    static inline std::uint32_t small_sigma_0(std::uint32_t x)
-        { return implementation::rotr<7>(x) ^ implementation::rotr<18>(x) ^ implementation::shr<3>(x); }
+    static inline std::uint32_t small_sigma_0(std::uint32_t x) {
+        return implementation::rotr<7>(x) ^ implementation::rotr<18>(x) ^ implementation::shr<3>(x);
+    }
 
-    static inline std::uint32_t small_sigma_1(std::uint32_t x)
-        { return implementation::rotr<17>(x) ^ implementation::rotr<19>(x) ^ implementation::shr<10>(x); }
+    static inline std::uint32_t small_sigma_1(std::uint32_t x) {
+        return implementation::rotr<17>(x) ^ implementation::rotr<19>(x) ^
+               implementation::shr<10>(x);
+    }
 
-    static inline std::uint32_t k(std::size_t t)
-    {
-        static const std::uint32_t k_set[] =
-        {
-            0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
-            0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
-            0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
-            0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
-            0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
-            0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
-            0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
-            0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
-        };
+    static inline std::uint32_t k(std::size_t t) {
+        static const std::uint32_t k_set[] = {
+            0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4,
+            0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe,
+            0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f,
+            0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7,
+            0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc,
+            0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b,
+            0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070, 0x19a4c116,
+            0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+            0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7,
+            0xc67178f2};
 
-        assert (t < 64);
+        assert(t < 64);
 
         return k_set[t];
     }
@@ -554,8 +559,7 @@ struct sha256_traits_t
 
 /**************************************************************************************************/
 
-struct sha224_traits_t : public sha256_traits_t
-{
+struct sha224_traits_t : public sha256_traits_t {
     typedef std::array<std::uint32_t, 7> digest_type;
 
     static constexpr state_digest_type initial_state()
@@ -640,8 +644,7 @@ struct sha512_traits_t
 
 /**************************************************************************************************/
 
-struct sha384_traits_t : public sha512_traits_t
-{
+struct sha384_traits_t : public sha512_traits_t {
     typedef std::array<std::uint64_t, 6> digest_type;
 
     static constexpr state_digest_type initial_state()
@@ -679,8 +682,7 @@ routines or instantiate the class and call sha::update repeatedly,
 then retrieve the digest with sha::finalize.
 */
 template <class Traits>
-class sha
-{
+class sha {
 public:
 #if !defined(ADOBE_NO_DOCUMENTATION)
     typedef Traits traits_type;
@@ -690,7 +692,7 @@ public:
     \ingroup sha
 
     A statically-sized, contiguous array for the resulting SHA-* digest.
-    
+
     \note the size of this digest will change depending on the SHA
           routine in use.
     */
@@ -727,8 +729,7 @@ public:
           Even then, the total message length is limited to 2^64 bits.
     */
     template <typename I>
-    inline void update(I first, I last)
-    {
+    inline void update(I first, I last) {
         typedef typename std::iterator_traits<I>::value_type value_type;
 
         constexpr std::size_t ibits_k = implementation::bitsizeof<value_type>();
@@ -796,8 +797,7 @@ public:
     \return The SHA-* digest of the message
     */
     template <typename I>
-    static inline digest_type digest(I first, I last)
-    {
+    static inline digest_type digest(I first, I last) {
         typedef typename std::iterator_traits<I>::value_type value_type;
 
         constexpr std::size_t ibits_k = implementation::bitsizeof<value_type>();
@@ -820,8 +820,7 @@ public:
     \return The SHA-* digest of the message
     */
     template <typename I>
-    static inline digest_type digest(I first, std::uint64_t num_bits)
-    {
+    static inline digest_type digest(I first, std::uint64_t num_bits) {
         sha instance;
 
         instance.update(first, num_bits);
@@ -894,7 +893,7 @@ private:
 \brief A bit-oriented implementation of the SHA-1 Secure Hash Algorithm
 */
 
-typedef sha<implementation::sha1_traits_t>   sha1_t;
+typedef sha<implementation::sha1_traits_t> sha1_t;
 
 /*!
 \ingroup sha

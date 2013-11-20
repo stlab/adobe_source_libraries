@@ -22,37 +22,39 @@ namespace {
 /**************************************************************************************************/
 
 template <std::size_t N = 4>
-struct large    // : boost::totally_ordered< large<N> >
-{
-    large()
-    { }
+struct large // : boost::totally_ordered< large<N> >
+    {
+    large() {}
 
     double a[N];
 };
 
 template <std::size_t N>
-bool operator==(const large<N>&, const large<N>&)
-{ return true; }
+bool operator==(const large<N>&, const large<N>&) {
+    return true;
+}
 
 // GCC isn't happy without this operator
 template <std::size_t N>
-bool operator!=(const large<N>&, const large<N>&)
-{ return false; }
+bool operator!=(const large<N>&, const large<N>&) {
+    return false;
+}
 
 template <std::size_t N>
-bool operator<(const large<N>&, const large<N>&)
-{ return false; }
+bool operator<(const large<N>&, const large<N>&) {
+    return false;
+}
 
 template <std::size_t N>
-std::ostream& operator<<(std::ostream& s, const large<N>&)
-{ return s; }
+std::ostream& operator<<(std::ostream& s, const large<N>&) {
+    return s;
+}
 
 typedef large<> large_t;
 
 /**************************************************************************************************/
 
-adobe::name_t random_key()
-{
+adobe::name_t random_key() {
 #if 0
 
     // random low ASCII string -- faster than a zuid, more randomness to the characters (less aliasing by the hash function)
@@ -88,24 +90,24 @@ adobe::name_t random_key()
     
     
     return adobe::name_t( keyBuffer );
-    
+
 #else
 
-    // random zuid string - slightly slower, because it uses only a subset of ASCII (more aliasing by the hash function)
+    // random zuid string - slightly slower, because it uses only a subset of ASCII (more aliasing
+    // by the hash function)
     static adobe::zuid_t base_zuid("3AD0DB88-4B21-4E42-A899-A8338C19BF16");
-    adobe::zuid_t        tmp_zuid;
-    adobe::zuid_t        final_zuid(base_zuid, tmp_zuid.str());
+    adobe::zuid_t tmp_zuid;
+    adobe::zuid_t final_zuid(base_zuid, tmp_zuid.str());
 
     return adobe::name_t(final_zuid.c_str());
-    
+
 #endif
 }
 
 /**************************************************************************************************/
 
-inline const adobe::any_regular_t& get_regular(int type)
-{
-    static const large_t              large;
+inline const adobe::any_regular_t& get_regular(int type) {
+    static const large_t large;
     static const adobe::any_regular_t small_s(42);
     static const adobe::any_regular_t large_s(large);
 
@@ -120,19 +122,18 @@ inline const adobe::any_regular_t& get_regular(int type)
 /**************************************************************************************************/
 
 struct less_str {
-    bool operator() ( const char *x, const char *y) const
-    { return (strcmp(x, y) < 0); }
+    bool operator()(const char* x, const char* y) const { return (strcmp(x, y) < 0); }
 };
 
-typedef  std::map< const char *, adobe::any_regular_t, less_str> std_map_dictionary_t;
+typedef std::map<const char*, adobe::any_regular_t, less_str> std_map_dictionary_t;
 
-std::pair<double, double> test_std_map(std::size_t n, int type, const std::string label, std::size_t Repeat)
-{
-   std_map_dictionary_t d;
+std::pair<double, double> test_std_map(std::size_t n, int type, const std::string label,
+                                       std::size_t Repeat) {
+    std_map_dictionary_t d;
 
     // initialize the dictionary with semi-random keys
     for (std::size_t i(0); i < n; ++i)
-        d[ random_key().c_str() ] = get_regular(type);
+        d[random_key().c_str()] = get_regular(type);
 
     // sanity check the dictionary size
     assert(d.size() == n);
@@ -142,55 +143,49 @@ std::pair<double, double> test_std_map(std::size_t n, int type, const std::strin
     adobe::timer_t timer;
 
     timer.reset();
-    for (std::size_t i(0); i < Repeat; ++i)
-    {
+    for (std::size_t i(0); i < Repeat; ++i) {
         std_map_dictionary_t cctor_test(d);
-        
+
         // sanity check!
         assert(cctor_test.size() == n);
     }
 
-    double cctor_avg(timer.split()/Repeat);
+    double cctor_avg(timer.split() / Repeat);
 
 
-    
     // create a random lookup order table to prevent order bias in the searches
     // that could be a huge problem with a binary search or tree structure search
     std_map_dictionary_t::iterator iter(d.begin());
-    std::vector< const char * > randomKeyList;
-    
-    while (iter != d.end())
-    {
-        randomKeyList.push_back( iter->first );
+    std::vector<const char*> randomKeyList;
+
+    while (iter != d.end()) {
+        randomKeyList.push_back(iter->first);
         ++iter;
     }
-    
+
     // randomize the key list
-    std::random_shuffle( randomKeyList.begin(), randomKeyList.end() );
+    std::random_shuffle(randomKeyList.begin(), randomKeyList.end());
 
 
     // time the dictionary lookup (vector iterator should have VERY little overhead)
     timer.reset();
-    for (std::size_t i(0); i < Repeat; ++i)
-    {
-        for ( std::vector< const char * >::iterator j(randomKeyList.begin()); j != randomKeyList.end(); ++j )
-        {
-            std_map_dictionary_t::iterator found( d.find( *j ) );
-            
+    for (std::size_t i(0); i < Repeat; ++i) {
+        for (std::vector<const char*>::iterator j(randomKeyList.begin()); j != randomKeyList.end();
+             ++j) {
+            std_map_dictionary_t::iterator found(d.find(*j));
+
             // sanity check!  (if this is optimized out, then the search may be optimized out)
-            if ( found->first != *j )
-                throw -1;
+            if (found->first != *j)
+                throw - 1;
         }
     }
 
-    double find_avg( timer.split()/(n*Repeat) );
-    
+    double find_avg(timer.split() / (n * Repeat));
+
     // report quick results to stdout
-    std::cout << n << "/"
-              << label << ":"
+    std::cout << n << "/" << label << ":"
               << " cctor: " << cctor_avg << "ms"
-              << " lookup: " << find_avg << "ms"
-              << std::endl;
+              << " lookup: " << find_avg << "ms" << std::endl;
 
     // and return a pair of results
     return std::make_pair(cctor_avg, find_avg);
@@ -200,20 +195,19 @@ std::pair<double, double> test_std_map(std::size_t n, int type, const std::strin
 /**************************************************************************************************/
 
 struct equal_str {
-    bool operator()(const char* x, const char* y) const
-    { return std::strcmp(x, y) == 0; }
+    bool operator()(const char* x, const char* y) const { return std::strcmp(x, y) == 0; }
 };
 
-typedef  __gnu_cxx::hash_map< const char *, adobe::any_regular_t, __gnu_cxx::hash<const char*>,
-    equal_str> hash_map_dictionary_t;
+typedef __gnu_cxx::hash_map<const char*, adobe::any_regular_t, __gnu_cxx::hash<const char*>,
+                            equal_str> hash_map_dictionary_t;
 
-std::pair<double, double> test_hash_map(std::size_t n, int type, const std::string label, std::size_t Repeat)
-{
-   hash_map_dictionary_t d;
+std::pair<double, double> test_hash_map(std::size_t n, int type, const std::string label,
+                                        std::size_t Repeat) {
+    hash_map_dictionary_t d;
 
     // initialize the dictionary with semi-random keys
     for (std::size_t i(0); i < n; ++i)
-        d[ random_key().c_str() ] = get_regular(type);
+        d[random_key().c_str()] = get_regular(type);
 
     // sanity check the dictionary size
     assert(d.size() == n);
@@ -223,55 +217,49 @@ std::pair<double, double> test_hash_map(std::size_t n, int type, const std::stri
     adobe::timer_t timer;
 
     timer.reset();
-    for (std::size_t i(0); i < Repeat; ++i)
-    {
+    for (std::size_t i(0); i < Repeat; ++i) {
         hash_map_dictionary_t cctor_test(d);
-        
+
         // sanity check!
         assert(cctor_test.size() == n);
     }
 
-    double cctor_avg(timer.split()/Repeat);
+    double cctor_avg(timer.split() / Repeat);
 
 
-    
     // create a random lookup order table to prevent order bias in the searches
     // that could be a huge problem with a binary search or tree structure search
     hash_map_dictionary_t::iterator iter(d.begin());
-    std::vector< const char * > randomKeyList;
-    
-    while (iter != d.end())
-    {
-        randomKeyList.push_back( iter->first );
+    std::vector<const char*> randomKeyList;
+
+    while (iter != d.end()) {
+        randomKeyList.push_back(iter->first);
         ++iter;
     }
-    
+
     // randomize the key list
-    std::random_shuffle( randomKeyList.begin(), randomKeyList.end() );
+    std::random_shuffle(randomKeyList.begin(), randomKeyList.end());
 
 
     // time the dictionary lookup (vector iterator should have VERY little overhead)
     timer.reset();
-    for ( std::size_t i(0); i < Repeat; ++i)
-    {
-        for ( std::vector< const char * >::iterator j(randomKeyList.begin()); j != randomKeyList.end(); ++j )
-        {
-            hash_map_dictionary_t::iterator found( d.find( *j ) );
-            
+    for (std::size_t i(0); i < Repeat; ++i) {
+        for (std::vector<const char*>::iterator j(randomKeyList.begin()); j != randomKeyList.end();
+             ++j) {
+            hash_map_dictionary_t::iterator found(d.find(*j));
+
             // sanity check!  (if this is optimized out, then the search may be optimized out)
-            if ( found->first != *j )
-                throw -1;
+            if (found->first != *j)
+                throw - 1;
         }
     }
 
-    double find_avg( timer.split()/(n*Repeat) );
-    
+    double find_avg(timer.split() / (n * Repeat));
+
     // report quick results to stdout
-    std::cout << n << "/"
-              << label << ":"
+    std::cout << n << "/" << label << ":"
               << " cctor: " << cctor_avg << "ms"
-              << " lookup: " << find_avg << "ms"
-              << std::endl;
+              << " lookup: " << find_avg << "ms" << std::endl;
 
     // and return a pair of results
     return std::make_pair(cctor_avg, find_avg);
@@ -279,8 +267,8 @@ std::pair<double, double> test_hash_map(std::size_t n, int type, const std::stri
 
 /**************************************************************************************************/
 
-std::pair<double, double> test_adobe_dictionary(std::size_t n, int type, const std::string label, std::size_t Repeat)
-{
+std::pair<double, double> test_adobe_dictionary(std::size_t n, int type, const std::string label,
+                                                std::size_t Repeat) {
     adobe::dictionary_t d;
 
     // initialize the dictionary with semi-random keys
@@ -295,55 +283,49 @@ std::pair<double, double> test_adobe_dictionary(std::size_t n, int type, const s
     adobe::timer_t timer;
 
     timer.reset();
-    for (std::size_t i(0); i < Repeat; ++i)
-    {
+    for (std::size_t i(0); i < Repeat; ++i) {
         adobe::dictionary_t cctor_test(d);
-        
+
         // sanity check!
         assert(cctor_test.size() == n);
     }
 
-    double cctor_avg(timer.split()/Repeat);
+    double cctor_avg(timer.split() / Repeat);
 
 
-    
     // create a random lookup order table to prevent order bias in the searches
     // that could be a huge problem with a binary search or tree structure search
     adobe::dictionary_t::iterator iter(d.begin());
-    std::vector< adobe::name_t > randomKeyList;
-    
-    while (iter != d.end())
-    {
-        randomKeyList.push_back( iter->first );
+    std::vector<adobe::name_t> randomKeyList;
+
+    while (iter != d.end()) {
+        randomKeyList.push_back(iter->first);
         ++iter;
     }
-    
+
     // randomize the key list
-    std::random_shuffle( randomKeyList.begin(), randomKeyList.end() );
+    std::random_shuffle(randomKeyList.begin(), randomKeyList.end());
 
 
     // time the dictionary lookup (vector iterator should have VERY little overhead)
     timer.reset();
-    for ( std::size_t i(0); i < Repeat; ++i)
-    {
-        for ( std::vector< adobe::name_t >::iterator j(randomKeyList.begin()); j != randomKeyList.end(); ++j )
-        {
-            adobe::dictionary_t::iterator found( d.find( *j ) );
-            
+    for (std::size_t i(0); i < Repeat; ++i) {
+        for (std::vector<adobe::name_t>::iterator j(randomKeyList.begin());
+             j != randomKeyList.end(); ++j) {
+            adobe::dictionary_t::iterator found(d.find(*j));
+
             // sanity check!  (if this is optimized out, then the search may be optimized out)
-            if ( found->first != *j )
-                throw -1;
+            if (found->first != *j)
+                throw - 1;
         }
     }
 
-    double find_avg( timer.split()/(n*Repeat) );
+    double find_avg(timer.split() / (n * Repeat));
 
     // report quick results to stdout
-    std::cout << n << "/"
-              << label << ":"
+    std::cout << n << "/" << label << ":"
               << " cctor: " << cctor_avg << "ms"
-              << " lookup: " << find_avg << "ms"
-              << std::endl;
+              << " lookup: " << find_avg << "ms" << std::endl;
 
     // and return a pair of results
     return std::make_pair(cctor_avg, find_avg);
@@ -351,8 +333,7 @@ std::pair<double, double> test_adobe_dictionary(std::size_t n, int type, const s
 
 /**************************************************************************************************/
 
-void do_test(std::size_t n, std::ofstream& results, int Repeat)
-{
+void do_test(std::size_t n, std::ofstream& results, int Repeat) {
     std::pair<double, double> small(test_adobe_dictionary(n, 0, "small", Repeat));
     std::pair<double, double> large(test_adobe_dictionary(n, 1, "large", Repeat));
     std::pair<double, double> hashed_small(test_hash_map(n, 0, "hash_small", Repeat));
@@ -361,21 +342,11 @@ void do_test(std::size_t n, std::ofstream& results, int Repeat)
     std::pair<double, double> std_large(test_std_map(n, 0, "std_large", Repeat));
 
     // report the results in a comma separated file
-    results << n << ","
-            << small.first << ","
-            << large.first << ","
-            << small.second << ","
-            << large.second << ","
-            << hashed_small.first << ","
-            << hashed_large.first << ","
-            << hashed_small.second << ","
-            << hashed_large.second << ","
-            << std_small.first << ","
-            << std_large.first << ","
-            << std_small.second << ","
-            << std_large.second << ","
+    results << n << "," << small.first << "," << large.first << "," << small.second << ","
+            << large.second << "," << hashed_small.first << "," << hashed_large.first << ","
+            << hashed_small.second << "," << hashed_large.second << "," << std_small.first << ","
+            << std_large.first << "," << std_small.second << "," << std_large.second << ","
             << std::endl;
-
 }
 
 /**************************************************************************************************/
@@ -384,12 +355,11 @@ void do_test(std::size_t n, std::ofstream& results, int Repeat)
 
 /**************************************************************************************************/
 
-int main()
-{
+int main() {
     std::cerr << "dictionary_benchmark compiled " << __DATE__ << " " << __TIME__ << std::endl;
 
-    //std::srand(std::time(0));
-    std::srand(4242);       // we need repeatable results
+    // std::srand(std::time(0));
+    std::srand(4242); // we need repeatable results
 
 #ifndef NDEBUG
     std::ofstream output("results_debug.csv");
@@ -398,9 +368,9 @@ int main()
 #endif
 
     output << "elements,small cctor,large cctor,small find,large find,"
-        << "hash_map small cctor,hash_map large cctor,hash_map small find,hash_map large find,"
-        << "std::map small cctor,std::map large cctor,std::map small find,std::map large find"
-        << std::endl;
+           << "hash_map small cctor,hash_map large cctor,hash_map small find,hash_map large find,"
+           << "std::map small cctor,std::map large cctor,std::map small find,std::map large find"
+           << std::endl;
 
 #if 0
     for (int i(0); i < 20; ++i)
@@ -410,12 +380,11 @@ int main()
     const std::size_t sizeIncrement = 25;
     const std::size_t repeatMaximum = 500000000L / maximumSize;
 
-    for (std::size_t i(0); i <= maximumSize; i += sizeIncrement)
-    {
+    for (std::size_t i(0); i <= maximumSize; i += sizeIncrement) {
         // try to keep the execution time close to constant per size
         // this is entirely for the sanity and patience of the
         // person running and debugging this code :-)
-        std::size_t iterations = repeatMaximum / (i+1);
+        std::size_t iterations = repeatMaximum / (i + 1);
 
         if (iterations < 2)
             iterations = 2;

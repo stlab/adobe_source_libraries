@@ -20,8 +20,7 @@ namespace version_1 {
 /**************************************************************************************************/
 
 #if defined(ADOBE_STD_SERIALIZATION)
-std::ostream& operator << (std::ostream& stream, const empty_t&)
-{
+std::ostream& operator<<(std::ostream& stream, const empty_t&) {
     stream << "empty"; // REVISIT (sparent) : Go through formatter.
     return stream;
 }

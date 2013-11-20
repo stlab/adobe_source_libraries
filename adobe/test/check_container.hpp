@@ -1,7 +1,7 @@
 /*
-	Copyright 2005-2007 Adobe Systems Incorporated
-	Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
-	or a copy at http://stlab.adobe.com/licenses.html)
+    Copyright 2005-2007 Adobe Systems Incorporated
+    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
+    or a copy at http://stlab.adobe.com/licenses.html)
 */
 
 /*************************************************************************************************/
@@ -14,7 +14,7 @@
 
 #include <adobe/test/check_regular.hpp>
 #include <adobe/implementation/swap.hpp>
-#include <iostream> 
+#include <iostream>
 
 namespace adobe {
 /*!
@@ -24,12 +24,11 @@ namespace adobe {
 */
 
 template <typename T>
-void check_container(const T& c)
-{
-	adobe::check_traversable(c);
+void check_container(const T& c) {
+    adobe::check_traversable(c);
 
-// Containers add the requirement that each element visited once to traversable
-	BOOST_CHECK_MESSAGE(c.size() == std::distance(c.begin(), c.end()), "container size");
+    // Containers add the requirement that each element visited once to traversable
+    BOOST_CHECK_MESSAGE(c.size() == std::distance(c.begin(), c.end()), "container size");
     BOOST_CHECK_MESSAGE(d.size() == std::distance(d.begin(), d.end()), "container size");
 }
 
@@ -43,4 +42,3 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION(check_containers, T)
 
 //!@}
 }
-

@@ -29,7 +29,7 @@
 /**************************************************************************************************/
 /*
     A note about this testing
-    
+
     A lot of this testing comes from documents on the National Institute of
     Standards and Technology (NIST) website
         - http://csrc.nist.gov/cryptval/
@@ -50,44 +50,58 @@ namespace {
 
 /**************************************************************************************************/
 
-struct unit_test_t
-{
-    unit_test_t(const char*         message,
-                boost::uint64_t     bitsize,
-                const char*         digest) :
-        message_m(message,
-                  static_cast<std::size_t>(bitsize / 8 + ((bitsize % 8 == 0) ? 0 : 1))),
-        bitsize_m(bitsize),
-        digest_m(digest)
-    { }
+struct unit_test_t {
+    unit_test_t(const char* message, boost::uint64_t bitsize, const char* digest)
+        : message_m(message, static_cast<std::size_t>(bitsize / 8 + ((bitsize % 8 == 0) ? 0 : 1))),
+          bitsize_m(bitsize), digest_m(digest) {}
 
-    unit_test_t(const std::string&  message,
-                const char*         digest) :
-        message_m(message),
-        bitsize_m(std::numeric_limits<boost::uint64_t>::max()),
-        digest_m(digest)
-    { }
+    unit_test_t(const std::string& message, const char* digest)
+        : message_m(message), bitsize_m(std::numeric_limits<boost::uint64_t>::max()),
+          digest_m(digest) {}
 
-    std::string     message_m;
+    std::string message_m;
     boost::uint64_t bitsize_m;
-    const char*     digest_m;
+    const char* digest_m;
 };
 
 /**************************************************************************************************/
 
 template <typename DigestType>
-std::string digest_binary(const DigestType& digest)
-{
-    enum { num_bytes = sizeof(typename DigestType::value_type) };
+std::string digest_string(const DigestType& digest, bool spaces = true) {
+    std::stringstream digest_str;
+    bool first(true);
+
+    digest_str << std::hex;
+
+    for (auto& curdigest : digest) {
+        if (!first && spaces)
+            digest_str << ' ';
+
+        first = false;
+
+        digest_str.width(sizeof(typename DigestType::value_type) * 2);
+        digest_str.fill('0');
+
+        digest_str << curdigest;
+    }
+
+    return digest_str.str();
+}
+
+/**************************************************************************************************/
+
+template <typename DigestType>
+std::string digest_binary(const DigestType& digest) {
+    enum {
+        num_bytes = sizeof(typename DigestType::value_type)
+    };
 
     std::string digest_str;
 
     digest_str.reserve(digest.size() * num_bytes + 1);
 
-    for (auto& curdigest : digest)
-    {
-        for (int i(num_bytes - 1); i >= 0; --i)
-        {
+    for (auto& curdigest : digest) {
+        for (int i(num_bytes - 1); i >= 0; --i) {
             std::size_t shift_amt(8 * i);
 
             digest_str += char((curdigest >> shift_amt) & 0xff);
@@ -99,15 +113,12 @@ std::string digest_binary(const DigestType& digest)
 
 /**************************************************************************************************/
 
-void print_binary_message(const std::string& str, std::size_t unit_size)
-{
+void print_binary_message(const std::string& str, std::size_t unit_size) {
     std::cout << std::hex;
 
     std::size_t count(0);
 
-    for (   std::string::const_iterator first(str.begin()),
-            last(str.end()); first != last; ++first)
-    {
+    for (std::string::const_iterator first(str.begin()), last(str.end()); first != last; ++first) {
         int value(int(*first) & 0xff);
 
         std::cout.width(2);
@@ -115,8 +126,7 @@ void print_binary_message(const std::string& str, std::size_t unit_size)
 
         std::cout << value;
 
-        if (++count == unit_size)
-        {
+        if (++count == unit_size) {
             std::cout << ' ';
             count = 0;
         }
@@ -131,51 +141,61 @@ template <typename HashT>
 std::string pgmt_seed();
 
 template <>
-std::string pgmt_seed<adobe::sha1_t>()
-{ return "\xd0\x56\x9c\xb3\x66\x5a\x8a\x43\xeb\x6e\xa2\x3d\x75\xa3\xc4\xd2\x05\x4a\x0d\x7d"; }
+std::string pgmt_seed<adobe::sha1_t>() {
+    return "\xd0\x56\x9c\xb3\x66\x5a\x8a\x43\xeb\x6e\xa2\x3d\x75\xa3\xc4\xd2\x05\x4a\x0d\x7d";
+}
 
 template <>
-std::string pgmt_seed<adobe::sha224_t>()
-{ return "\xd0\x56\x9c\xb3\x66\x5a\x8a\x43\xeb\x6e\xa2\x3d\x75\xa3\xc4\xd2\x05\x4a\x0d\x7d\x66\xa9\xca\x99\xc9\xce\xb0\x27"; }
+std::string pgmt_seed<adobe::sha224_t>() {
+    return "\xd0\x56\x9c\xb3\x66\x5a\x8a\x43\xeb\x6e\xa2\x3d\x75\xa3\xc4\xd2\x05\x4a\x0d\x7d\x66"
+           "\xa9\xca\x99\xc9\xce\xb0\x27";
+}
 
 template <>
-std::string pgmt_seed<adobe::sha256_t>()
-{ return "\xf4\x1e\xce\x26\x13\xe4\x57\x39\x15\x69\x6b\x5a\xdc\xd5\x1c\xa3\x28\xbe\x3b\xf5\x66\xa9\xca\x99\xc9\xce\xb0\x27\x9c\x1c\xb0\xa7"; }
+std::string pgmt_seed<adobe::sha256_t>() {
+    return "\xf4\x1e\xce\x26\x13\xe4\x57\x39\x15\x69\x6b\x5a\xdc\xd5\x1c\xa3\x28\xbe\x3b\xf5\x66"
+           "\xa9\xca\x99\xc9\xce\xb0\x27\x9c\x1c\xb0\xa7";
+}
 
 template <>
-std::string pgmt_seed<adobe::sha384_t>()
-{ return "\x82\x40\xbc\x51\xe4\xec\x7e\xf7\x6d\x18\xe3\x52\x04\xa1\x9f\x51\xa5\x21\x3a\x73\xa8\x1d\x6f\x94\x46\x80\xd3\x07\x59\x48\xb7\xe4\x63\x80\x4e\xa3\xd2\x6e\x13\xea\x82\x0d\x65\xa4\x84\xbe\x74\x53"; }
+std::string pgmt_seed<adobe::sha384_t>() {
+    return "\x82\x40\xbc\x51\xe4\xec\x7e\xf7\x6d\x18\xe3\x52\x04\xa1\x9f\x51\xa5\x21\x3a\x73\xa8"
+           "\x1d\x6f\x94\x46\x80\xd3\x07\x59\x48\xb7\xe4\x63\x80\x4e\xa3\xd2\x6e\x13\xea\x82\x0d"
+           "\x65\xa4\x84\xbe\x74\x53";
+}
 
 template <>
-std::string pgmt_seed<adobe::sha512_t>()
-{ return "\x47\x3f\xf1\xb9\xb3\xff\xdf\xa1\x26\x69\x9a\xc7\xef\x9e\x8e\x78\x77\x73\x09\x58\x24\xc6\x42\x55\x7c\x13\x99\xd9\x8e\x42\x20\x44\x8d\xc3\x5b\x99\xbf\xdd\x44\x77\x95\x43\x92\x4c\x1c\xe9\x3b\xc5\x94\x15\x38\x89\x5d\xb9\x88\x26\x1b\x00\x77\x4b\x12\x27\x20\x39"; }
+std::string pgmt_seed<adobe::sha512_t>() {
+    return "\x47\x3f\xf1\xb9\xb3\xff\xdf\xa1\x26\x69\x9a\xc7\xef\x9e\x8e\x78\x77\x73\x09\x58\x24"
+           "\xc6\x42\x55\x7c\x13\x99\xd9\x8e\x42\x20\x44\x8d\xc3\x5b\x99\xbf\xdd\x44\x77\x95\x43"
+           "\x92\x4c\x1c\xe9\x3b\xc5\x94\x15\x38\x89\x5d\xb9\x88\x26\x1b\x00\x77\x4b\x12\x27\x20"
+           "\x39";
+}
 
 /**************************************************************************************************/
 
 template <typename HashT>
-void pgmt(std::string seed)
-{
+void pgmt(std::string seed) {
     // Pseudorandomly Generated Messages Test
     // REVISIT (fbrereto) : Automate verification of output
 
-    typedef HashT                           hash_type;
+    typedef HashT hash_type;
     typedef typename hash_type::digest_type digest_type;
 
-    std::cout << "*** pseudorandomly generated messages test for " << typeid(hash_type).name() << '\n';
+    std::cout << "*** pseudorandomly generated messages test for " << typeid(hash_type).name()
+              << '\n';
 
     std::string md[1003];
-    hash_type   hash;
+    hash_type hash;
 
-    for (std::size_t j(0); j < 4; ++j)
-    {
+    for (std::size_t j(0); j < 4; ++j) {
         md[0] = seed;
         md[1] = seed;
         md[2] = seed;
 
         std::string m[1003];
 
-        for (std::size_t i(3); i < 1003; ++i)
-        {
+        for (std::size_t i(3); i < 1003; ++i) {
             m[i] = md[i - 3] + md[i - 2] + md[i - 1];
 
             md[i] = digest_binary(hash.digest(m[i].begin(), m[i].end()));
@@ -194,51 +214,47 @@ void pgmt(std::string seed)
 /**************************************************************************************************/
 
 template <typename HashT, typename C> // I models Sequence
-void test_hash(const C& container)
-{
-    typedef HashT                           hash_type;
+void test_hash(const C& container) {
+    typedef HashT hash_type;
     typedef typename hash_type::digest_type digest_type;
 
-    hash_type   hash;
+    hash_type hash;
     std::size_t test_count(0);
 
     std::cout << "*** " << typeid(hash).name() << " unit testing\n";
 
-    for (auto& cur_test : container)
-    {
-        const std::string&          test_string(cur_test.message_m);
+    for (auto& cur_test : container) {
+        const std::string& test_string(cur_test.message_m);
         std::string::const_iterator test_string_first(test_string.begin());
         std::string::const_iterator test_string_last(test_string.end());
-        bool                        modified_bitsize(cur_test.bitsize_m != std::numeric_limits<boost::uint64_t>::max());
-        digest_type                 hash_digest = {{0}};
-        adobe::timer_t              timer;
+        bool modified_bitsize(cur_test.bitsize_m != std::numeric_limits<boost::uint64_t>::max());
+        digest_type hash_digest = {{0}};
+        adobe::timer_t timer;
 
         if (modified_bitsize)
             hash_digest = hash.digest(test_string_first, cur_test.bitsize_m);
         else
             hash_digest = hash.digest(test_string_first, test_string_last);
 
-        double      time(timer.split());
-        std::string digest(hash_type::to_string(hash_digest, true));
-        bool        test_passed(digest == cur_test.digest_m);
+        double time(timer.split());
+        std::string digest(digest_string(hash_digest));
+        bool test_passed(digest == cur_test.digest_m);
 
-        if (test_passed)
-        {
-            std::cout   << "    test " << static_cast<unsigned int>(++test_count) << " passed in "
-                        << time << " miliseconds (" << (time / 1e3)
-                        << " seconds)\n";
-        }
-        else
-        {
-            std::cout   << "test " << static_cast<unsigned int>(++test_count) << ":\n"
-                        << "    message length: " << static_cast<unsigned int>(test_string.size()) << " bytes ("
-                            << static_cast<unsigned int>(modified_bitsize ? cur_test.bitsize_m : test_string.size() * 8)
-                            << " bits)\n"
-                        << "    digest:         " << digest << '\n'
-                        << "    known good:     " << cur_test.digest_m << '\n'
-                        << "    same?:          " << (test_passed ? "Yes" : "NO") << '\n'
-                        << "    time to digest: " << time << " miliseconds (" << (time / 1e3) << " seconds)"
-                        << '\n';
+        if (test_passed) {
+            std::cout << "    test " << static_cast<unsigned int>(++test_count) << " passed in "
+                      << time << " miliseconds (" << (time / 1e3) << " seconds)\n";
+        } else {
+            std::cout << "test " << static_cast<unsigned int>(++test_count) << ":\n"
+                      << "    message length: " << static_cast<unsigned int>(test_string.size())
+                      << " bytes ("
+                      << static_cast<unsigned int>(modified_bitsize ? cur_test.bitsize_m
+                                                                    : test_string.size() * 8)
+                      << " bits)\n"
+                      << "    digest:         " << digest << '\n'
+                      << "    known good:     " << cur_test.digest_m << '\n'
+                      << "    same?:          " << (test_passed ? "Yes" : "NO") << '\n'
+                      << "    time to digest: " << time << " miliseconds (" << (time / 1e3)
+                      << " seconds)" << '\n';
         }
 
         BOOST_CHECK(test_passed);
@@ -257,13 +273,12 @@ void test_hash(const C& container)
 
 /**************************************************************************************************/
 
-BOOST_AUTO_TEST_CASE(sha)
-{
+BOOST_AUTO_TEST_CASE(sha) {
 #if ADOBE_TEST_SHA_MILLION_A_STRING
     const std::string million_a_k(1000000, 'a');
 #endif
 
-   /************************** SHA-1 Unit Tests **************************/
+    /************************** SHA-1 Unit Tests **************************/
 
     std::vector<unit_test_t> sha1_test_set =
     {

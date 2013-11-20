@@ -34,27 +34,26 @@ namespace version_1 {
 /**************************************************************************************************/
 
 template <typename T>
-inline bool get_value(const dictionary_t& dict, name_t key, T& value)
-{
+inline bool get_value(const dictionary_t& dict, name_t key, T& value) {
     dictionary_t::const_iterator i = dict.find(key);
-    if (i == dict.end()) return false;
+    if (i == dict.end())
+        return false;
     return i->second.cast(value);
 }
 
-inline bool get_value(const dictionary_t& dict, name_t key, any_regular_t& value)
-{
+inline bool get_value(const dictionary_t& dict, name_t key, any_regular_t& value) {
     dictionary_t::const_iterator i = dict.find(key);
-    if (i == dict.end()) return false;
+    if (i == dict.end())
+        return false;
     value = i->second;
     return true;
 }
 
-inline const any_regular_t& get_value(const dictionary_t& dict, name_t key)
-{
+inline const any_regular_t& get_value(const dictionary_t& dict, name_t key) {
     dictionary_t::const_iterator i = dict.find(key);
     if (i == dict.end())
         throw std::out_of_range(make_string("dictionary_t: key '", key.c_str(), "' not found"));
-        
+
     return i->second;
 }
 
@@ -80,4 +79,3 @@ using version_1::get_value;
 #endif
 
 /**************************************************************************************************/
-

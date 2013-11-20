@@ -34,14 +34,10 @@ namespace adobe {
 
     \brief reduce implementation
 */
-template <typename I,  // I models InputIterator 
-          typename Op> // Op model BinaryOperation 
-typename std::iterator_traits<I>::value_type reduce_nonzeros(I f,
-                                                             I l,
-                                                             Op op,
-                                                             ADOBE_VALUE_TYPE(I) z =
-                                                                 adobe::identity_element<Op>()())
-{
+template <typename I,  // I models InputIterator
+          typename Op> // Op model BinaryOperation
+typename std::iterator_traits<I>::value_type
+reduce_nonzeros(I f, I l, Op op, ADOBE_VALUE_TYPE(I) z = adobe::identity_element<Op>()()) {
     // skip zeros
     f = adobe::find_not(f, l, z);
 
@@ -52,8 +48,7 @@ typename std::iterator_traits<I>::value_type reduce_nonzeros(I f,
 
     ++f;
 
-    while (f != l)
-    {
+    while (f != l) {
         if (*f != z)
             result = op(result, *f);
 
@@ -71,29 +66,21 @@ typename std::iterator_traits<I>::value_type reduce_nonzeros(I f,
 */
 template <typename I,  // I models Forward Iterator
           typename Op> // Op models Binary Operation
-typename std::iterator_traits<I>::value_type add_to_counter(I                   f,
-                                                            I                   l,
-                                                            Op                  op,
-                                                            ADOBE_VALUE_TYPE(I) x,
-                                                            ADOBE_VALUE_TYPE(I) z =
-                                                                adobe::identity_element<Op>()())
-{
+typename std::iterator_traits<I>::value_type
+add_to_counter(I f, I l, Op op, ADOBE_VALUE_TYPE(I) x,
+               ADOBE_VALUE_TYPE(I) z = adobe::identity_element<Op>()()) {
     if (x == z)
         return z;
 
-    while (f != l)
-    {
-        if (*f != z)
-        {
+    while (f != l) {
+        if (*f != z) {
             // NOTE (stepanov) : op(*f, x) and not op(x, *f) because the partial
             //                   result pointed to by f is the result of adding elements
             //                   earlier in the sequence.
             x = op(*f, x);
 
             *f = z;
-        }
-        else
-        {
+        } else {
             *f = x;
 
             return z;
@@ -113,16 +100,11 @@ typename std::iterator_traits<I>::value_type add_to_counter(I                   
 */
 template <typename I,  // I models InputIterator
           typename Op> // Op models BinaryOperation
-typename std::iterator_traits<I>::value_type reduce_balanced(I                   f,
-                                                             I                   l,
-                                                             Op                  op,
-                                                             ADOBE_VALUE_TYPE(I) z =
-                                                                 adobe::identity_element<Op>()())
-{
+typename std::iterator_traits<I>::value_type
+reduce_balanced(I f, I l, Op op, ADOBE_VALUE_TYPE(I) z = adobe::identity_element<Op>()()) {
     std::vector<ADOBE_VALUE_TYPE(I)> v;
 
-    while (f != l)
-    {
+    while (f != l) {
         ADOBE_VALUE_TYPE(I) tmp = add_to_counter(v.begin(), v.end(), op, *f, z);
 
         if (tmp != z)

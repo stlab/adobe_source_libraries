@@ -42,15 +42,15 @@ namespace implementation {
   dump: dumps the current interface and output values to a stream.
   check: requires that the current interface and output values match those in the dictionary.
   print: prints value of an expression
-  assert: asserts truth of an expression 
+  assert: asserts truth of an expression
 
 
   \code
 
   translation_unit        = interaction_list .
   interaction_list        = interaction [ ";" ] [ interaction_list ].
-  interaction             = update_decl | reinitialize_decl  
-  | dump_decl | check_decl | print_decl | assert_decl 
+  interaction             = update_decl | reinitialize_decl
+  | dump_decl | check_decl | print_decl | assert_decl
   | contributing_decl | trailing_comment |  sheet .
   update_decl             = "update" "(" identifier "," dictionary ")".
   reinitialize_decl       = "reinitialize" "(" identifier "," dictionary ")".
@@ -67,59 +67,55 @@ namespace implementation {
 
 /*************************************************************************************************/
 
-class adam_test_parser : private adam_parser
-{
+class adam_test_parser : private adam_parser {
 public:
-    adam_test_parser(std::istream& in, const line_position_t& position,  
-                     std::ostream& out);
+    adam_test_parser(std::istream& in, const line_position_t& position, std::ostream& out);
 
-// translation_unit        =  interaction_list .
+    // translation_unit        =  interaction_list .
     bool parse();
 
-// sheet
+    // sheet
     bool is_sheet();
 
-// interaction_list        = [ lead_comment_decl ] interaction [ ";" ] [ interaction_list ].
+    // interaction_list        = [ lead_comment_decl ] interaction [ ";" ] [ interaction_list ].
     bool is_interaction_list();
 
-// interaction             = update_decl | reinitialize_decl | dump_decl | check_decl | 
-//                           print_decl | assert_decl | sheet .
+    // interaction             = update_decl | reinitialize_decl | dump_decl | check_decl |
+    //                           print_decl | assert_decl | sheet .
     bool is_interaction();
 
-// update_decl             = "update" "(" identifier "," dictionary ")".
+    // update_decl             = "update" "(" identifier "," dictionary ")".
     bool is_update_decl();
 
-// reinitialize_decl       = "reinitialize"  "(" identifier "," dictionary ")".
+    // reinitialize_decl       = "reinitialize"  "(" identifier "," dictionary ")".
     bool is_reinitialize_decl();
 
-// dump_decl               = "dump" "(" identifier ")"
+    // dump_decl               = "dump" "(" identifier ")"
     bool is_dump_decl();
 
-// check_decl              = "check" "(" identifier "," dictionary ")".
+    // check_decl              = "check" "(" identifier "," dictionary ")".
     bool is_check_decl();
 
-// print_decl              = "print" "(" identifier "," expression ")".
+    // print_decl              = "print" "(" identifier "," expression ")".
     bool is_print_decl();
 
-// assert_decl             = "assert" "(" identifier "," expression ")".
+    // assert_decl             = "assert" "(" identifier "," expression ")".
     bool is_assert_decl();
 
-// contributing_decl       = "contributing" "(" identifier ")".
+    // contributing_decl       = "contributing" "(" identifier ")".
     bool is_contributing_decl();
 
 private:
-    void populate_dict(dictionary_t& dict, 
-                       const queryable_sheet_t::index_t& index, 
-                       const queryable_sheet_t& qs,
-                       bool want_contributors=false,
-                       bool want_active=false) const;
+    void populate_dict(dictionary_t& dict, const queryable_sheet_t::index_t& index,
+                       const queryable_sheet_t& qs, bool want_contributors = false,
+                       bool want_active = false) const;
 
     queryable_sheet_t& sheet_from_name(name_t name);
 
-    
-    std::ostream&                   out_m;
+
+    std::ostream& out_m;
     std::vector<queryable_sheet_t*> sheets_m;
-    bool                            all_checks_passed_m;
+    bool all_checks_passed_m;
 };
 
 
