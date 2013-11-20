@@ -19,8 +19,8 @@
 
 #ifdef BOOST_MSVC
 namespace std {
-    using ::isxdigit;
-    using ::isdigit;
+using ::isxdigit;
+using ::isdigit;
 } // namespace std
 #endif
 
@@ -30,11 +30,11 @@ namespace {
 
 /*************************************************************************************************/
 
-adobe::token_range_t to_token_range(boost::uint32_t code)
-{
+adobe::token_range_t to_token_range(boost::uint32_t code) {
     // REVISIT (fbrereto) : Allocation in this function needs to go
 
-    if (code == 0) return adobe::token_range_t();
+    if (code == 0)
+        return adobe::token_range_t();
 
     std::string utf8;
 
@@ -63,16 +63,13 @@ namespace implementation {
 
 /*************************************************************************************************/
 
-adobe::token_range_t transform_reference(const adobe::token_range_t& reference)
-try
-{
-    return reference.first && *reference.first == '&' ?
-               to_token_range(adobe::entity_map_find(std::string(boost::next(reference.first),
-                                                                 boost::prior(reference.second)))) :
-               adobe::token_range_t();
+adobe::token_range_t transform_reference(const adobe::token_range_t& reference) try {
+    return reference.first && *reference.first == '&'
+               ? to_token_range(adobe::entity_map_find(
+                     std::string(boost::next(reference.first), boost::prior(reference.second))))
+               : adobe::token_range_t();
 }
-catch (...)
-{
+catch (...) {
     // A throw here means the entity could not be found. Return an empty token
     // range in line with the previous implementation.
     return adobe::token_range_t();

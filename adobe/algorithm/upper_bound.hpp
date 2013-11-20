@@ -31,23 +31,26 @@ namespace implementation {
 
 /*************************************************************************************************/
 
-template <  typename I, // I models ForwardIterator
-            typename N, // N models IntegralType
-            typename T, // T == result_type(P)
-            typename C, // C models StrictWeakOrdering(T, T)
-            typename P> // P models UnaryFunction(value_type(I)) -> T
-I upper_bound_n(I f, N n, const T& x, C c, P p)
-{
+template <typename I, // I models ForwardIterator
+          typename N, // N models IntegralType
+          typename T, // T == result_type(P)
+          typename C, // C models StrictWeakOrdering(T, T)
+          typename P>
+// P models UnaryFunction(value_type(I)) -> T
+I upper_bound_n(I f, N n, const T& x, C c, P p) {
     assert(!(n < 0) && "FATAL (sparent) : n must be >= 0");
 
-    while (n != 0)
-    {
+    while (n != 0) {
         N h = n >> 1;
-        
+
         I m = boost::next(f, h);
 
-        if (!c(x, p(*m))) { f = boost::next(m); n -= h + N(1); }
-        else { n = h; }
+        if (!c(x, p(*m))) {
+            f = boost::next(m);
+            n -= h + N(1);
+        } else {
+            n = h;
+        }
     }
     return f;
 }
@@ -68,34 +71,34 @@ I upper_bound_n(I f, N n, const T& x, C c, P p)
 
 /*************************************************************************************************/
 
-template <  typename I, // I models ForwardIterator
-            typename N, // N models IntegralType
-            typename T> // T == value_type(I)
-inline I upper_bound_n(I f, N n, const T& x)
-{
+template <typename I, // I models ForwardIterator
+          typename N, // N models IntegralType
+          typename T>
+// T == value_type(I)
+inline I upper_bound_n(I f, N n, const T& x) {
     return implementation::upper_bound_n(f, n, x, less(), identity<T>());
 }
 
 /*************************************************************************************************/
 
-template <  typename I, // I models FowardIterator
-            typename N, // N models IntegralType
-            typename T, // T == value_type(I)
-            typename C> // C models StrictWeakOrdering(T, T)
-inline I upper_bound_n(I f, N n, const T& x, C c)
-{
+template <typename I, // I models FowardIterator
+          typename N, // N models IntegralType
+          typename T, // T == value_type(I)
+          typename C>
+// C models StrictWeakOrdering(T, T)
+inline I upper_bound_n(I f, N n, const T& x, C c) {
     return implementation::upper_bound_n(f, n, x, boost::bind(c, _1, _2), identity<T>());
 }
 
 /*************************************************************************************************/
 
-template <  typename I, // I models ForwardIterator
-            typename N, // N models IntegralType
-            typename T, // T == result_type(P)
-            typename C, // C models StrictWeakOrdering(T, T)
-            typename P> // P models UnaryFunction(value_type(I)) -> T
-inline I upper_bound_n(I f, N n, const T& x, C c, P p)
-{
+template <typename I, // I models ForwardIterator
+          typename N, // N models IntegralType
+          typename T, // T == result_type(P)
+          typename C, // C models StrictWeakOrdering(T, T)
+          typename P>
+// P models UnaryFunction(value_type(I)) -> T
+inline I upper_bound_n(I f, N n, const T& x, C c, P p) {
     return implementation::upper_bound_n(f, n, x, boost::bind(c, _1, _2), boost::bind(p, _1));
 }
 
@@ -107,60 +110,61 @@ inline I upper_bound_n(I f, N n, const T& x, C c, P p)
     fn namespace.
 */
 
-namespace fn { } using namespace fn;
+namespace fn {}
+using namespace fn;
 namespace fn {
 
 /*************************************************************************************************/
 
-template <  typename I, // I models ForwardIterator
-            typename T> // T == value_type(I)
-inline I upper_bound(I f, I l, const T& x)
-{
+template <typename I, // I models ForwardIterator
+          typename T>
+// T == value_type(I)
+inline I upper_bound(I f, I l, const T& x) {
     return std::upper_bound(f, l, x);
 }
 
 /*************************************************************************************************/
 
-template <  typename I, // I models FowardIterator
-            typename T, // T == value_type(I)
-            typename C> // C models StrictWeakOrdering(T, T)
-inline I upper_bound(I f, I l, const T& x, C c)
-{
+template <typename I, // I models FowardIterator
+          typename T, // T == value_type(I)
+          typename C>
+// C models StrictWeakOrdering(T, T)
+inline I upper_bound(I f, I l, const T& x, C c) {
     return std::upper_bound(f, l, x, boost::bind(c, _1, _2));
 }
 
 /*************************************************************************************************/
 
-template <  typename I, // I models ForwardIterator
-            typename T, // T == result_type(P)
-            typename C, // C models StrictWeakOrdering(T, T)
-            typename P> // P models UnaryFunction(value_type(I)) -> T
-inline I upper_bound(I f, I l, const T& x, C c, P p)
-{
+template <typename I, // I models ForwardIterator
+          typename T, // T == result_type(P)
+          typename C, // C models StrictWeakOrdering(T, T)
+          typename P>
+// P models UnaryFunction(value_type(I)) -> T
+inline I upper_bound(I f, I l, const T& x, C c, P p) {
     return upper_bound_n(f, std::distance(f, l), x, c, p);
 }
 
 /*************************************************************************************************/
 
-template <  typename I, // I models ForwardRange
-            typename T, // T == result_type(P)
-            typename C, // C models StrictWeakOrdering(T, T)
-            typename P> // P models UnaryFunction(value_type(I)) -> T
-inline
-    typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_iterator<I> >::type
-        upper_bound(I& r, const T& x, C c, P p)
-{ return adobe::upper_bound(boost::begin(r), boost::end(r), x, c, p); }
+template <typename I, // I models ForwardRange
+          typename T, // T == result_type(P)
+          typename C, // C models StrictWeakOrdering(T, T)
+          typename P> // P models UnaryFunction(value_type(I)) -> T
+inline typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_iterator<I>>::type
+upper_bound(I& r, const T& x, C c, P p) {
+    return adobe::upper_bound(boost::begin(r), boost::end(r), x, c, p);
+}
 
 /*************************************************************************************************/
 
-template <  typename I, // I models ForwardRange
-            typename T, // T == result_type(P)
-            typename C, // C models StrictWeakOrdering(T, T)
-            typename P> // P models UnaryFunction(value_type(I)) -> T
-inline
-    typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_const_iterator<I> >::type
-        upper_bound(const I& r, const T& x, C c, P p)
-{ return adobe::upper_bound(boost::begin(r), boost::end(r), x, c, p); }
+template <typename I, // I models ForwardRange
+          typename T, // T == result_type(P)
+          typename C, // C models StrictWeakOrdering(T, T)
+          typename P> // P models UnaryFunction(value_type(I)) -> T
+inline typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_const_iterator<I>>::type
+upper_bound(const I& r, const T& x, C c, P p) {
+    return adobe::upper_bound(boost::begin(r), boost::end(r), x, c, p);
+}
 
 /*************************************************************************************************/
 /*!
@@ -169,8 +173,8 @@ inline
     \brief upper_bound implementation
 */
 template <class ForwardRange, class T>
-inline typename boost::range_iterator<ForwardRange>::type upper_bound(ForwardRange& range, const T& value)
-{
+inline typename boost::range_iterator<ForwardRange>::type upper_bound(ForwardRange& range,
+                                                                      const T& value) {
     return std::upper_bound(boost::begin(range), boost::end(range), value);
 }
 
@@ -180,8 +184,8 @@ inline typename boost::range_iterator<ForwardRange>::type upper_bound(ForwardRan
     \brief upper_bound implementation
 */
 template <class ForwardRange, class T>
-inline typename boost::range_const_iterator<ForwardRange>::type upper_bound(const ForwardRange& range, const T& value)
-{
+inline typename boost::range_const_iterator<ForwardRange>::type
+upper_bound(const ForwardRange& range, const T& value) {
     return std::upper_bound(boost::begin(range), boost::end(range), value);
 }
 
@@ -196,9 +200,8 @@ inline typename boost::range_const_iterator<ForwardRange>::type upper_bound(cons
     \brief upper_bound implementation
 */
 template <typename I, class T, class Compare>
-inline typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_iterator<I> >::type
-        upper_bound(I& range, const T& value, Compare comp)
-{
+inline typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_iterator<I>>::type
+upper_bound(I& range, const T& value, Compare comp) {
     return adobe::upper_bound(boost::begin(range), boost::end(range), value, comp);
 }
 
@@ -208,9 +211,8 @@ inline typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_iterat
     \brief upper_bound implementation
 */
 template <class I, class T, class Compare>
-inline typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_const_iterator<I> >::type
-        upper_bound(const I& range, const T& value, Compare comp)
-{
+inline typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_const_iterator<I>>::type
+upper_bound(const I& range, const T& value, Compare comp) {
     return adobe::upper_bound(boost::begin(range), boost::end(range), value, comp);
 }
 

@@ -23,29 +23,24 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-class xml_lex_t : lex_base_t<2, xml_lex_token_set_t>
-{
-    typedef lex_base_t<2, xml_lex_token_set_t>  _super;
+class xml_lex_t : lex_base_t<2, xml_lex_token_set_t> {
+    typedef lex_base_t<2, xml_lex_token_set_t> _super;
 
 public:
-    typedef _super::token_type                  token_type;
+    typedef _super::token_type token_type;
 
     xml_lex_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t& position);
 
     xml_lex_t(const xml_lex_t& rhs);
 
-    const token_type&       get()
-        { return _super::get_token(); } 
+    const token_type& get() { return _super::get_token(); }
 
-    void                    putback()
-        { _super::putback_token(); } 
+    void putback() { _super::putback_token(); }
 
-    const line_position_t&  next_position()
-        { return _super::next_position(); } 
+    const line_position_t& next_position() { return _super::next_position(); }
 
-    void                    set_skip_white_space(bool skip)
-		{ return _super::set_skip_white_space(skip); }
-	
+    void set_skip_white_space(bool skip) { return _super::set_skip_white_space(skip); }
+
 #if !defined(ADOBE_NO_DOCUMENTATION)
 private:
     typedef std::istream::pos_type pos_type;
@@ -65,8 +60,8 @@ private:
     bool is_name_start_char();
     bool is_name_char();
 
-    bool name_possible_m;   // names only possible within tags
-#endif // !defined(ADOBE_NO_DOCUMENTATION)
+    bool name_possible_m; // names only possible within tags
+#endif                    // !defined(ADOBE_NO_DOCUMENTATION)
 };
 
 /**************************************************************************************************/

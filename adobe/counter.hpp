@@ -28,15 +28,19 @@ namespace adobe {
 \ingroup thread
 
 \class adobe::counter_t
-\ingroup asl_counter 
+\ingroup asl_counter
 
 \brief A thread safe counter
 
-A counter_t is a noncopyable thread safe counter, useful for managing the reference count of a shared resource.
+A counter_t is a noncopyable thread safe counter, useful for managing the reference count of a
+shared resource.
 
 \par Rationale:
 
-counter_t wraps reference count operations that require thread safety into a single class. While this does not guarantee client code will be thread safe, it helps to take a step in that direction. It also cleans up client code and keeps thread-handling scoped to a single file. Consider copy_on_write as an example class that leverages counter_t.
+counter_t wraps reference count operations that require thread safety into a single class. While
+this does not guarantee client code will be thread safe, it helps to take a step in that direction.
+It also cleans up client code and keeps thread-handling scoped to a single file. Consider
+copy_on_write as an example class that leverages counter_t.
 
 \note
 The counter_t class is thread safe when compiled with BOOST_HAS_THREADS defined.
@@ -59,7 +63,8 @@ Increments the counter by one.
 
 Decrements the counter by one.
 
-\return <code>true</code> if the counter is zero at the end of this operation; <code>false</code> otherwise.
+\return <code>true</code> if the counter is zero at the end of this operation; <code>false</code>
+otherwise.
 */
 
 /*!
@@ -75,27 +80,15 @@ class counter_t
 #if !defined(ADOBE_NO_DOCUMENTATION)
     : boost::noncopyable
 #endif
-{
+      {
 public:
-    counter_t()
-    {
-        count_m = implementation::atomic_t::value_type(1);
-    }
+    counter_t() { count_m = implementation::atomic_t::value_type(1); }
 
-    void increment()
-    {
-        ++count_m;
-    }
+    void increment() { ++count_m; }
 
-    bool decrement()
-    {
-        return --count_m == implementation::atomic_t::value_type(0);
-    }
+    bool decrement() { return --count_m == implementation::atomic_t::value_type(0); }
 
-    bool is_one() const
-    {
-        return count_m == implementation::atomic_t::value_type(1);
-    }
+    bool is_one() const { return count_m == implementation::atomic_t::value_type(1); }
 
 private:
     implementation::atomic_t::type count_m;

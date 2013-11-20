@@ -18,53 +18,47 @@ namespace {
 
 /*************************************************************************************************/
 
-void add_cell(  adobe::sheet_t&                             sheet,
-                adobe::adam_callback_suite_t::cell_type_t   type,
-                adobe::name_t                               name,
-                const adobe::line_position_t&               position,
-                const adobe::array_t&                       init_or_expr)
-{
-    switch(type)
-    {
-        case adobe::adam_callback_suite_t::input_k:
-            sheet.add_input(name, position, init_or_expr);
-            break;
+void add_cell(adobe::sheet_t& sheet, adobe::adam_callback_suite_t::cell_type_t type,
+              adobe::name_t name, const adobe::line_position_t& position,
+              const adobe::array_t& init_or_expr) {
+    switch (type) {
+    case adobe::adam_callback_suite_t::input_k:
+        sheet.add_input(name, position, init_or_expr);
+        break;
 
-        case adobe::adam_callback_suite_t::output_k:
-            sheet.add_output(name, position, init_or_expr);
-            break;
+    case adobe::adam_callback_suite_t::output_k:
+        sheet.add_output(name, position, init_or_expr);
+        break;
 
-        case adobe::adam_callback_suite_t::constant_k:
-            sheet.add_constant(name, position, init_or_expr);
-            break;
+    case adobe::adam_callback_suite_t::constant_k:
+        sheet.add_constant(name, position, init_or_expr);
+        break;
 
-        case adobe::adam_callback_suite_t::logic_k:
-            sheet.add_logic(name, position, init_or_expr);
-            break;
+    case adobe::adam_callback_suite_t::logic_k:
+        sheet.add_logic(name, position, init_or_expr);
+        break;
 
-        case adobe::adam_callback_suite_t::invariant_k:
-            sheet.add_invariant(name, position, init_or_expr);
-            break;
+    case adobe::adam_callback_suite_t::invariant_k:
+        sheet.add_invariant(name, position, init_or_expr);
+        break;
 
-        default:
-            assert(false); // Type not supported
+    default:
+        assert(false); // Type not supported
     }
 }
 
 /*************************************************************************************************/
 
-void add_relation(  adobe::sheet_t&                                 sheet,
-                    const adobe::line_position_t&                   position,
-                    const adobe::array_t&                           conditional,
-                    const adobe::adam_callback_suite_t::relation_t* first,
-                    const adobe::adam_callback_suite_t::relation_t* last)
-{
+void add_relation(adobe::sheet_t& sheet, const adobe::line_position_t& position,
+                  const adobe::array_t& conditional,
+                  const adobe::adam_callback_suite_t::relation_t* first,
+                  const adobe::adam_callback_suite_t::relation_t* last) {
     typedef std::vector<adobe::sheet_t::relation_t> relation_buffer_t;
-    
-    relation_buffer_t   relations;
-    
+
+    relation_buffer_t relations;
+
     relations.reserve(relation_buffer_t::size_type(last - first));
-        
+
     /*
         REVISIT (sparent) : It would be nice to find a simple way to handle a transformed copy
         in a generic fashion when multiple members are needed.
@@ -72,7 +66,8 @@ void add_relation(  adobe::sheet_t&                                 sheet,
 
     while (first != last) // copy
     {
-        relations.push_back(adobe::sheet_t::relation_t(first->name_set_m, first->position_m, first->expression_m));
+        relations.push_back(
+            adobe::sheet_t::relation_t(first->name_set_m, first->position_m, first->expression_m));
         ++first;
     }
 
@@ -89,24 +84,24 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-adam_callback_suite_t bind_to_sheet(sheet_t& sheet)
-{
+adam_callback_suite_t bind_to_sheet(sheet_t& sheet) {
     adam_callback_suite_t suite;
 
-    suite.add_cell_proc_m       = boost::bind(&add_cell, boost::ref(sheet), _1, _2, _3, _4);
-    suite.add_relation_proc_m   = boost::bind(&add_relation, boost::ref(sheet), _1, _2, _3, _4);
-    suite.add_interface_proc_m  = boost::bind(&adobe::sheet_t::add_interface, boost::ref(sheet), _1, _2, _3, _4, _5, _6);
+    suite.add_cell_proc_m = boost::bind(&add_cell, boost::ref(sheet), _1, _2, _3, _4);
+    suite.add_relation_proc_m = boost::bind(&add_relation, boost::ref(sheet), _1, _2, _3, _4);
+    suite.add_interface_proc_m =
+        boost::bind(&adobe::sheet_t::add_interface, boost::ref(sheet), _1, _2, _3, _4, _5, _6);
 
     return suite;
 }
 
 /*************************************************************************************************/
 
-adam_callback_suite_t bind_to_sheet(sheet_t& sheet, external_model_t& external_model)
-{
+adam_callback_suite_t bind_to_sheet(sheet_t& sheet, external_model_t& external_model) {
     adam_callback_suite_t suite = bind_to_sheet(sheet);
-    
-    suite.add_external_proc_m   = boost::bind(&adobe::external_model_t::add_cell, boost::ref(external_model), _1);
+
+    suite.add_external_proc_m =
+        boost::bind(&adobe::external_model_t::add_cell, boost::ref(external_model), _1);
 
     return suite;
 }

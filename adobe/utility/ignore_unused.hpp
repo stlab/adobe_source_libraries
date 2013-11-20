@@ -19,21 +19,21 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-//! \ingroup testing 
+//! \ingroup testing
 template <typename T0>
-inline void ignore_unused(const T0&) { }
+inline void ignore_unused(const T0&) {}
 
-//! \ingroup testing 
+//! \ingroup testing
 template <typename T0, typename T1>
-inline void ignore_unused(const T0&, const T1&) { }
+inline void ignore_unused(const T0&, const T1&) {}
 
 //! \ingroup testing
 template <typename T0, typename T1, typename T2>
-inline void ignore_unused(const T0&, const T1&, const T2&) { }
+inline void ignore_unused(const T0&, const T1&, const T2&) {}
 
 //! \ingroup testing
 template <typename T0, typename T1, typename T2, typename T3>
-inline void ignore_unused(const T0&, const T1&, const T2&, const T3&) { }
+inline void ignore_unused(const T0&, const T1&, const T2&, const T3&) {}
 
 /*************************************************************************************************/
 

@@ -1,7 +1,7 @@
 /*
-	Copyright 2005-2007 Adobe Systems Incorporated
-	Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
-	or a copy at http://stlab.adobe.com/licenses.html)
+    Copyright 2005-2007 Adobe Systems Incorporated
+    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
+    or a copy at http://stlab.adobe.com/licenses.html)
 */
 
 /*************************************************************************************************/
@@ -15,11 +15,14 @@
 #include <adobe/enum_ops.hpp>
 
 
-
-
-
-enum A { min_a = INT_MIN, max_a = INT_MAX };
-enum B { min_b = INT_MIN, max_b = INT_MAX };
+enum A {
+    min_a = INT_MIN,
+    max_a = INT_MAX
+};
+enum B {
+    min_b = INT_MIN,
+    max_b = INT_MAX
+};
 
 ADOBE_DEFINE_ARITHMETIC_OPS(A)
 ADOBE_DEFINE_ARITHMETIC_OPS(B)

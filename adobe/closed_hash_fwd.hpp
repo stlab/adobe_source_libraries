@@ -27,18 +27,12 @@ namespace version_1 {
 
 /*************************************************************************************************/
 
-template<   typename T,
-            typename KeyTransform = identity<const T>,
-            typename Hash = std::hash<T>,
-            typename Pred = std::equal_to<T>,
-            typename A = capture_allocator<T> >
+template <typename T, typename KeyTransform = identity<const T>, typename Hash = std::hash<T>,
+          typename Pred = std::equal_to<T>, typename A = capture_allocator<T>>
 class closed_hash_set;
 
-template<typename Key,
-         typename T,
-         typename Hash = std::hash<Key>,
-         typename Pred = std::equal_to<Key>,
-         typename A = capture_allocator<std::pair<Key, T> > >
+template <typename Key, typename T, typename Hash = std::hash<Key>,
+          typename Pred = std::equal_to<Key>, typename A = capture_allocator<std::pair<Key, T>>>
 class closed_hash_map;
 
 /*************************************************************************************************/

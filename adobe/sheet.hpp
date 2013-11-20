@@ -23,55 +23,49 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-auto concept BasicSheetConcept<typename T> {};
+auto concept BasicSheetConcept<typename T>{};
 
 /*************************************************************************************************/
 
-auto concept SheetConcept<typename T> : BasicSheetConcept<T>
-{
-    void touch(T& t, const name_t*, const name_t*);
+auto concept SheetConcept<typename T> : BasicSheetConcept<T> {
+    void touch(T & t, const name_t*, const name_t*);
 };
 
 /*************************************************************************************************/
 
-auto concept SheetMFConcept<typename T> : BasicSheetConcept<T>
-{
+auto concept SheetMFConcept<typename T> : BasicSheetConcept<T> {
     void T::touch(const name_t*, const name_t*);
 };
 
 /*************************************************************************************************/
 
-template <SheetMFConcept T> 
-concept_map SheetConcept<T> 
-{
-    inline void touch(T& t, const name_t* x, const name_t* y)
-    {
-        t.touch(x, y);
-    }
-};
+template <SheetMFConcept T>
+concept_map SheetConcept<T>{
+    inline void touch(T& t, const name_t* x, const name_t* y) {t.touch(x, y);
+}
+}
+;
 
 /*************************************************************************************************/
 
 template <BasicSheetConcept T>
-concept_map BasicSheetConcept<boost::reference_wrapper<T> > {};
+concept_map BasicSheetConcept<boost::reference_wrapper<T>>{};
 
 /*************************************************************************************************/
 
 template <SheetConcept T>
-concept_map SheetConcept<boost::reference_wrapper<T> > 
-{
-    inline void touch(boost::reference_wrapper<T>& r, const name_t* x, const name_t* y)
-    { 
-        SheetConcept<T>::touch(static_cast<T&>(r), x, y); 
-    }
-};
+concept_map SheetConcept<boost::reference_wrapper<T>>{
+    inline void touch(boost::reference_wrapper<T>& r, const name_t* x,
+                      const name_t* y) {SheetConcept<T>::touch(static_cast<T&>(r), x, y);
+}
+}
+;
 
 /*************************************************************************************************/
 
 #endif
 
 /*************************************************************************************************/
-
 }
 
 /*************************************************************************************************/

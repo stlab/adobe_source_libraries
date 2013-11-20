@@ -8,63 +8,56 @@
 #include <boost/range.hpp>
 
 template <typename R> // R is a depth adaptor range
-void output(const R& f)
-{
+void output(const R& f) {
     typedef typename boost::range_iterator<R>::type iterator;
 
-    for (iterator first(boost::begin(f)), last(boost::end(f)); first != last; ++first)
-    {
-        for (typename iterator::difference_type i(first.depth()); i != 0; --i)
-        {
+    for (iterator first(boost::begin(f)), last(boost::end(f)); first != last; ++first) {
+        for (typename iterator::difference_type i(first.depth()); i != 0; --i) {
             std::cout << "\t";
         }
-        if (first.edge() == adobe::forest_leading_edge)
-        {
+        if (first.edge() == adobe::forest_leading_edge) {
             std::cout << "<" << *first << ">" << std::endl;
-        }
-        else
-        {
+        } else {
             std::cout << "</" << *first << ">" << std::endl;
         }
     }
 }
-    
-int main()
-{
+
+int main() {
     typedef adobe::forest<std::string> forest;
     typedef forest::iterator iterator;
 
     std::cout << "<- default construction and insert ->" << std::endl;
     forest f;
-    iterator i (f.begin());
+    iterator i(f.begin());
     i = adobe::trailing_of(f.insert(i, "grandmother"));
     {
-        iterator p (adobe::trailing_of(f.insert(i, "mother")));
+        iterator p(adobe::trailing_of(f.insert(i, "mother")));
         f.insert(p, "me");
         f.insert(p, "sister");
         f.insert(p, "brother");
     }
     {
-        iterator p (adobe::trailing_of(f.insert(i, "aunt")));
+        iterator p(adobe::trailing_of(f.insert(i, "aunt")));
         f.insert(p, "cousin");
     }
     f.insert(i, "uncle");
-    
+
     output(adobe::depth_range(f));
     std::cout << "<- copy construction and reverse ->" << std::endl;
-    
+
     forest f2(f);
     iterator f2_grandmother(adobe::find(adobe::preorder_range(f2), "grandmother").base());
     f2.reverse(adobe::child_begin(f2_grandmother), adobe::child_end(f2_grandmother));
-    
+
     output(adobe::depth_range(f2));
-    
+
     std::cout << "<- reverse iterator ->" << std::endl;
-    
+
     output(adobe::depth_range(adobe::reverse_fullorder_range(f)));
 
     std::cout << "<- node deletion ->" << std::endl;
-    
+
     forest f3(f);
     iterator f3_aunt(adobe::find(adobe::preorder_range(f3), "aunt").base());
     iterator f3_uncle(adobe::find(adobe::preorder_range(f3), "uncle").base());
@@ -84,7 +77,7 @@ int main()
     // Note that because f4_aunt is on the leading edge, the spliced forest's
     // top nodes will be siblings to f4_aunt.
 
-    f4.splice(f4_aunt, f5);    
+    f4.splice(f4_aunt, f5);
 
     output(adobe::depth_range(f4));
 
@@ -105,7 +98,7 @@ int main()
     // Note that because f6_aunt is on the trailing edge, the spliced forest's
     // top nodes will be children to f6_aunt.
 
-    f6.splice(f6_aunt, f7);    
+    f6.splice(f6_aunt, f7);
 
     output(adobe::depth_range(f6));
 

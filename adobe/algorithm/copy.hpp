@@ -40,8 +40,7 @@ namespace adobe {
     \brief copy implementation
 */
 template <class InputRange, class OutputIterator>
-inline OutputIterator copy(const InputRange& range, OutputIterator result)
-{
+inline OutputIterator copy(const InputRange& range, OutputIterator result) {
     return std::copy(boost::begin(range), boost::end(range), result);
 }
 
@@ -51,8 +50,8 @@ inline OutputIterator copy(const InputRange& range, OutputIterator result)
     \brief copy implementation
 */
 template <class BidirectionalRange1, class BidirectionalIterator2>
-inline BidirectionalIterator2 copy_backward(BidirectionalRange1& range1, BidirectionalIterator2 result)
-{
+inline BidirectionalIterator2 copy_backward(BidirectionalRange1& range1,
+                                            BidirectionalIterator2 result) {
     return std::copy_backward(boost::begin(range1), boost::end(range1), result);
 }
 
@@ -62,8 +61,8 @@ inline BidirectionalIterator2 copy_backward(BidirectionalRange1& range1, Bidirec
     \brief copy implementation
 */
 template <class BidirectionalRange1, class BidirectionalIterator2>
-inline BidirectionalIterator2 copy_backward(const BidirectionalRange1& range1, BidirectionalIterator2 result)
-{
+inline BidirectionalIterator2 copy_backward(const BidirectionalRange1& range1,
+                                            BidirectionalIterator2 result) {
     return std::copy_backward(boost::begin(range1), boost::end(range1), result);
 }
 
@@ -77,16 +76,14 @@ namespace implementation {
     \brief taken from SGI STL.
 */
 template <class InputIter, class Size, class OutputIter>
-std::pair<InputIter, OutputIter> copy_n(InputIter first, Size count,
-                                        OutputIter result,
-                                        std::input_iterator_tag) 
-{
-   for ( ; count > 0; --count) {
-      *result = *first;
-      ++first;
-      ++result;
-   }
-   return std::pair<InputIter, OutputIter>(first, result);
+std::pair<InputIter, OutputIter> copy_n(InputIter first, Size count, OutputIter result,
+                                        std::input_iterator_tag) {
+    for (; count > 0; --count) {
+        *result = *first;
+        ++first;
+        ++result;
+    }
+    return std::pair<InputIter, OutputIter>(first, result);
 }
 
 /*!
@@ -95,11 +92,10 @@ std::pair<InputIter, OutputIter> copy_n(InputIter first, Size count,
     \brief copy implementation
 */
 template <class RAIter, class Size, class OutputIter>
-inline std::pair<RAIter, OutputIter>
-copy_n(RAIter first, Size count, OutputIter result, std::random_access_iterator_tag) 
-{
-   RAIter last = first + count;
-   return std::pair<RAIter, OutputIter>(last, std::copy(first, last, result));
+inline std::pair<RAIter, OutputIter> copy_n(RAIter first, Size count, OutputIter result,
+                                            std::random_access_iterator_tag) {
+    RAIter last = first + count;
+    return std::pair<RAIter, OutputIter>(last, std::copy(first, last, result));
 }
 
 /*************************************************************************************************/
@@ -114,10 +110,9 @@ copy_n(RAIter first, Size count, OutputIter result, std::random_access_iterator_
     \brief copy implementation
 */
 template <class InputIter, class Size, class OutputIter>
-inline std::pair<InputIter, OutputIter> copy_n(InputIter first, Size count, OutputIter result) 
-{
+inline std::pair<InputIter, OutputIter> copy_n(InputIter first, Size count, OutputIter result) {
     return implementation::copy_n(first, count, result,
-        typename std::iterator_traits<InputIter>::iterator_category());
+                                  typename std::iterator_traits<InputIter>::iterator_category());
 }
 
 /*************************************************************************************************/
@@ -129,15 +124,16 @@ namespace implementation {
 /*!
     \ingroup copy
 
-    REVIST (sparent) : There is an assumption here that the difference types of the two ranges are
+    REVIST (sparent) : There is an assumption here that the difference types of the two ranges
+   are
     the same.  We need a way to promote the smaller integral type to the larger.
 */
 template <typename I, // I models RandomAccessIterator
-          typename F> // F models RandomAccessIterator
-inline std::pair<I, F> copy_bounded(I first, I last,
-                                  F result_first, F result_last,
-                                  std::random_access_iterator_tag, std::random_access_iterator_tag)
-{
+          typename F>
+// F models RandomAccessIterator
+inline std::pair<I, F> copy_bounded(I first, I last, F result_first, F result_last,
+                                    std::random_access_iterator_tag,
+                                    std::random_access_iterator_tag) {
     return adobe::copy_n(first, std::min(last - first, result_last - result_first), result_first);
 }
 
@@ -147,17 +143,16 @@ inline std::pair<I, F> copy_bounded(I first, I last,
     \brief copy implementation
 */
 template <typename I, // I models InputIterator
-          typename F> // F models ForwardIterator
-inline std::pair<I, F> copy_bounded(I first, I last,
-                                    F result_first, F result_last,
-                                    std::input_iterator_tag, std::forward_iterator_tag)
-{
-    while (first != last && result_first != result_last)
-    {
+          typename F>
+// F models ForwardIterator
+inline std::pair<I, F> copy_bounded(I first, I last, F result_first, F result_last,
+                                    std::input_iterator_tag, std::forward_iterator_tag) {
+    while (first != last && result_first != result_last) {
         *result_first = *first;
-        ++first; ++result_first;
+        ++first;
+        ++result_first;
     }
-    
+
     return std::make_pair(first, result_first);
 }
 
@@ -173,26 +168,26 @@ inline std::pair<I, F> copy_bounded(I first, I last,
     \brief copy implementation
 */
 template <typename I, // I models InputIterator
-          typename F> // F models ForwardIterator
-inline std::pair<I, F> copy_bounded(I first, I last, F result_first, F result_last)
-{
+          typename F>
+// F models ForwardIterator
+inline std::pair<I, F> copy_bounded(I first, I last, F result_first, F result_last) {
     return implementation::copy_bounded(first, last, result_first, result_last,
-        typename std::iterator_traits<I>::iterator_category(),
-        typename std::iterator_traits<F>::iterator_category());
+                                        typename std::iterator_traits<I>::iterator_category(),
+                                        typename std::iterator_traits<F>::iterator_category());
 }
 
 /*************************************************************************************************/
 
 /*!
     \ingroup copy
-    
+
     \brief copy implementation
 */
 template <typename I, // I models InputIterator
           typename O, // O models OutputIterator
-          typename T> // T == value_type(I)
-inline std::pair<I, O> copy_sentinal(I f, O o, const T& x)
-{
+          typename T>
+// T == value_type(I)
+inline std::pair<I, O> copy_sentinal(I f, O o, const T& x) {
     while (*f != x) {
         *o = *f;
         ++f, ++o;
@@ -204,13 +199,13 @@ inline std::pair<I, O> copy_sentinal(I f, O o, const T& x)
 
 /*!
     \ingroup copy
-    
+
     \brief copy implementation
 */
 template <typename I, // I models InputIterator
-          typename O> // O models OutputIterator
-inline std::pair<I, O> copy_sentinal(I f, O o)
-{
+          typename O>
+// O models OutputIterator
+inline std::pair<I, O> copy_sentinal(I f, O o) {
     return copy_sentinal(f, o, typename std::iterator_traits<I>::value_type());
 }
 

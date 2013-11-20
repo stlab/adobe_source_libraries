@@ -39,8 +39,7 @@ namespace adobe {
     \brief replace implementation
 */
 template <class ForwardRange, class T>
-inline void replace(ForwardRange& range, const T& old_value, const T& new_value)
-{
+inline void replace(ForwardRange& range, const T& old_value, const T& new_value) {
     std::replace(boost::begin(range), boost::end(range), old_value, new_value);
 }
 
@@ -50,9 +49,8 @@ inline void replace(ForwardRange& range, const T& old_value, const T& new_value)
     \brief replace implementation
 */
 template <class ForwardIterator, class Predicate, class T>
-inline void
-replace_if(ForwardIterator first, ForwardIterator last, Predicate pred, const T& new_value)
-{
+inline void replace_if(ForwardIterator first, ForwardIterator last, Predicate pred,
+                       const T& new_value) {
     std::replace_if(first, last, boost::bind(pred, _1), new_value);
 }
 
@@ -62,8 +60,7 @@ replace_if(ForwardIterator first, ForwardIterator last, Predicate pred, const T&
     \brief replace implementation
 */
 template <class ForwardRange, class Predicate, class T>
-inline void replace_if(ForwardRange& range, Predicate pred, const T& new_value)
-{
+inline void replace_if(ForwardRange& range, Predicate pred, const T& new_value) {
     adobe::replace_if(boost::begin(range), boost::end(range), pred, new_value);
 }
 
@@ -73,9 +70,8 @@ inline void replace_if(ForwardRange& range, Predicate pred, const T& new_value)
     \brief replace implementation
 */
 template <class ForwardRange, class OutputIterator, class T>
-inline OutputIterator
-replace_copy(ForwardRange& range, OutputIterator result, const T& old_value, const T& new_value)
-{
+inline OutputIterator replace_copy(ForwardRange& range, OutputIterator result, const T& old_value,
+                                   const T& new_value) {
     return std::replace_copy(boost::begin(range), boost::end(range), result, old_value, new_value);
 }
 
@@ -85,10 +81,8 @@ replace_copy(ForwardRange& range, OutputIterator result, const T& old_value, con
     \brief replace implementation
 */
 template <class ForwardRange, class OutputIterator, class T>
-inline OutputIterator
-replace_copy(const ForwardRange& range, OutputIterator result,
-             const T& old_value, const T& new_value)
-{
+inline OutputIterator replace_copy(const ForwardRange& range, OutputIterator result,
+                                   const T& old_value, const T& new_value) {
     return std::replace_copy(boost::begin(range), boost::end(range), result, old_value, new_value);
 }
 
@@ -98,10 +92,8 @@ replace_copy(const ForwardRange& range, OutputIterator result,
     \brief replace implementation
 */
 template <class ForwardIterator, class OutputIterator, class Predicate, class T>
-inline OutputIterator
-replace_copy_if(ForwardIterator first, ForwardIterator last,
-                OutputIterator result, Predicate pred, const T& new_value)
-{
+inline OutputIterator replace_copy_if(ForwardIterator first, ForwardIterator last,
+                                      OutputIterator result, Predicate pred, const T& new_value) {
     return std::replace_copy_if(first, last, result, boost::bind(pred, _1), new_value);
 }
 
@@ -111,9 +103,8 @@ replace_copy_if(ForwardIterator first, ForwardIterator last,
     \brief replace implementation
 */
 template <class ForwardRange, class OutputIterator, class Predicate, class T>
-inline OutputIterator
-replace_copy_if(ForwardRange& range, OutputIterator result, Predicate pred, const T& new_value)
-{
+inline OutputIterator replace_copy_if(ForwardRange& range, OutputIterator result, Predicate pred,
+                                      const T& new_value) {
     return adobe::replace_copy_if(boost::begin(range), boost::end(range), result, pred, new_value);
 }
 
@@ -123,10 +114,8 @@ replace_copy_if(ForwardRange& range, OutputIterator result, Predicate pred, cons
     \brief replace implementation
 */
 template <class ForwardRange, class OutputIterator, class Predicate, class T>
-inline OutputIterator
-replace_copy_if(const ForwardRange& range, OutputIterator result,
-                Predicate pred, const T& new_value)
-{
+inline OutputIterator replace_copy_if(const ForwardRange& range, OutputIterator result,
+                                      Predicate pred, const T& new_value) {
     return adobe::replace_copy_if(boost::begin(range), boost::end(range), result, pred, new_value);
 }
 

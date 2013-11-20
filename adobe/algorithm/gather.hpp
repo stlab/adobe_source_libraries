@@ -12,13 +12,13 @@
 */
 
 #ifndef ADOBE_ALGORITHM_GATHER_HPP
-#define	ADOBE_ALGORITHM_GATHER_HPP
+#define ADOBE_ALGORITHM_GATHER_HPP
 
-#include <algorithm>				// for std::table_partition
+#include <algorithm> // for std::table_partition
 
-#include <boost/bind.hpp>			// for boost::bind
-#include <boost/range/begin.hpp>	// for boost::begin(range)
-#include <boost/range/end.hpp>		// for boost::end(range)
+#include <boost/bind.hpp>        // for boost::bind
+#include <boost/range/begin.hpp> // for boost::begin(range)
+#include <boost/range/end.hpp>   // for boost::end(range)
 
 
 /**************************************************************************************************/
@@ -52,8 +52,8 @@
 
     \par Storage Requirements:
 
-	The algorithm uses stable_partition, which will attempt to allocate temporary memory,
-	but will work in-situ if there is none available.
+    The algorithm uses stable_partition, which will attempt to allocate temporary memory,
+    but will work in-situ if there is none available.
 
     \par Time Complexity:
 
@@ -72,16 +72,14 @@ namespace adobe {
     \brief iterator-based gather implementation
 */
 
-template <
-	typename Iter,	// Iter models BidirectionalIterator
-	typename Pred>	// Pred models UnaryPredicate
-std::pair<Iter,Iter> gather ( Iter first, Iter last, Iter pivot, Pred pred )
-{
-//	The first call partitions everything up to (but not including) the pivot element,
-//	while the second call partitions the rest of the sequence.
-	return std::make_pair (
-		std::stable_partition ( first, pivot, !boost::bind ( pred, _1 )),
-		std::stable_partition ( pivot, last,   boost::bind ( pred, _1 ))  );
+template <typename Iter, // Iter models BidirectionalIterator
+          typename Pred>
+// Pred models UnaryPredicate
+std::pair<Iter, Iter> gather(Iter first, Iter last, Iter pivot, Pred pred) {
+    //	The first call partitions everything up to (but not including) the pivot element,
+    //	while the second call partitions the rest of the sequence.
+    return std::make_pair(std::stable_partition(first, pivot, !boost::bind(pred, _1)),
+                          std::stable_partition(pivot, last, boost::bind(pred, _1)));
 }
 
 /**************************************************************************************************/
@@ -91,25 +89,19 @@ std::pair<Iter,Iter> gather ( Iter first, Iter last, Iter pivot, Pred pred )
     \brief range-based gather implementation
 */
 
-template <
-	typename BidirectionalRange,	//
-	typename Pred>					// Pred models UnaryPredicate
-std::pair<
-	typename boost::range_iterator<BidirectionalRange>::type,
-	typename boost::range_iterator<BidirectionalRange>::type>
-gather (
-	BidirectionalRange &range,
-	typename boost::range_iterator<BidirectionalRange>::type pivot,
-	Pred pred )
-{
-	return adobe::gather ( boost::begin ( range ), boost::end ( range ), pivot, pred );
+template <typename BidirectionalRange, //
+          typename Pred>               // Pred models UnaryPredicate
+std::pair<typename boost::range_iterator<BidirectionalRange>::type,
+          typename boost::range_iterator<BidirectionalRange>::type>
+gather(BidirectionalRange& range, typename boost::range_iterator<BidirectionalRange>::type pivot,
+       Pred pred) {
+    return adobe::gather(boost::begin(range), boost::end(range), pivot, pred);
 }
 
 /**************************************************************************************************/
 
-}	// namespace adobe
+} // namespace adobe
 
 /**************************************************************************************************/
 
 #endif
-

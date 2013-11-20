@@ -26,16 +26,13 @@ namespace adobe {
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-class asl_cel_format : public format_base
-{
+class asl_cel_format : public format_base {
     typedef format_base inherited_t;
 
 public:
     typedef inherited_t::stream_type stream_type;
 
-    explicit asl_cel_format(bool safe_strings) :
-        escape_m(safe_strings)
-    { }
+    explicit asl_cel_format(bool safe_strings) : escape_m(safe_strings) {}
 
     virtual void begin_format(stream_type& os);
 

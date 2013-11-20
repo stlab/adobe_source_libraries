@@ -1,7 +1,7 @@
 /*
-	Copyright 2005-2007 Adobe Systems Incorporated
-	Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
-	or a copy at http://stlab.adobe.com/licenses.html)
+    Copyright 2005-2007 Adobe Systems Incorporated
+    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
+    or a copy at http://stlab.adobe.com/licenses.html)
 */
 
 /*************************************************************************************************/
@@ -16,18 +16,15 @@ namespace adobe {
 */
 
 template <typename T>
-void check_null(const T& x)
-{
+void check_null(const T& x) {
     T t = T();
-    if(t)
+    if (t)
         BOOST_ERROR("operator bool");
     BOOST_CHECK_MESSAGE(!t, "operator!");
 
     BOOST_CHECK_MESSAGE(x, "operator!");
-    if(!x)
+    if (!x)
         BOOST_ERROR("operator bool");
-
 }
 //! @}
 }
-

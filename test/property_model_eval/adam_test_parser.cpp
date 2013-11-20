@@ -26,7 +26,9 @@
 
 /*************************************************************************************************/
 
-namespace { void init_keyword_table(); }
+namespace {
+void init_keyword_table();
+}
 
 std::once_flag adobe_adam_test_parser;
 
@@ -49,50 +51,37 @@ using namespace adobe::literals;
 
 keyword_table_t* keyword_table_g;
 
-adobe::static_name_t update_k       = "update"_name;
+adobe::static_name_t update_k = "update"_name;
 adobe::static_name_t reinitialize_k = "reinitialize"_name;
-adobe::static_name_t dump_k         = "dump"_name;
-adobe::static_name_t check_k        = "check"_name;
-adobe::static_name_t print_k        = "print"_name;
-adobe::static_name_t assert_k       = "assert"_name;
+adobe::static_name_t dump_k = "dump"_name;
+adobe::static_name_t check_k = "check"_name;
+adobe::static_name_t print_k = "print"_name;
+adobe::static_name_t assert_k = "assert"_name;
 adobe::static_name_t contributing_k = "contributing"_name;
 
 /*************************************************************************************************/
 
-void init_keyword_table()
-{
-    static keyword_table_t keyword_table_s =
-    {{
-        assert_k,
-        check_k,
-        contributing_k,
-        dump_k,
-        print_k,
-        reinitialize_k,
-        update_k
-    }};
+void init_keyword_table() {
+    static keyword_table_t keyword_table_s = {
+        {assert_k, check_k, contributing_k, dump_k, print_k, reinitialize_k, update_k}};
 
     adobe::sort(keyword_table_s);
 
     keyword_table_g = &keyword_table_s;
 }
 
-void once_instance()
-{
-    std::call_once(adobe_adam_test_parser, init_keyword_table);
-}
+void once_instance() { std::call_once(adobe_adam_test_parser, init_keyword_table); }
 
 /*************************************************************************************************/
 
-bool adam_test_keyword_lookup(const adobe::name_t& name)
-{
-    if(adobe::adam_keyword_lookup(name)) return true;
+bool adam_test_keyword_lookup(const adobe::name_t& name) {
+    if (adobe::adam_keyword_lookup(name))
+        return true;
     keyword_table_t::const_iterator iter(adobe::lower_bound(*keyword_table_g, name));
-    return (iter != keyword_table_g->end() && *iter == name);           
+    return (iter != keyword_table_g->end() && *iter == name);
 }
 
 /*************************************************************************************************/
- 
 }
 
 /*************************************************************************************************/
@@ -105,13 +94,11 @@ namespace implementation {
 
 /*************************************************************************************************/
 
-adam_test_parser::adam_test_parser(std::istream& in_stream, const line_position_t& position,  
-                                   std::ostream& out) 
-    : adam_parser(in_stream, position),
-      out_m(out), all_checks_passed_m(true)  
-{
+adam_test_parser::adam_test_parser(std::istream& in_stream, const line_position_t& position,
+                                   std::ostream& out)
+    : adam_parser(in_stream, position), out_m(out), all_checks_passed_m(true) {
     once_instance();
-    set_keyword_extension_lookup(&adam_test_keyword_lookup);    
+    set_keyword_extension_lookup(&adam_test_keyword_lookup);
 }
 
 
@@ -123,23 +110,20 @@ adam_test_parser::adam_test_parser(std::istream& in_stream, const line_position_
 //         adobe::find(sheets_m, boost::bind(&qs_name, _1) == sheet_name);
 // }
 
-queryable_sheet_t& adam_test_parser::sheet_from_name(name_t sheet_name)
-{
-    for(std::vector<queryable_sheet_t*>::iterator i=sheets_m.begin(), e=sheets_m.end(); 
-        i != e; ++i) 
-    {
-        if((*i)->name() == sheet_name) return **i;
+queryable_sheet_t& adam_test_parser::sheet_from_name(name_t sheet_name) {
+    for (std::vector<queryable_sheet_t*>::iterator i = sheets_m.begin(), e = sheets_m.end(); i != e;
+         ++i) {
+        if ((*i)->name() == sheet_name)
+            return **i;
     }
 
     throw std::logic_error(make_string("Couldn't find sheet named ", sheet_name.c_str()));
-
 }
 
 /*************************************************************************************************/
 
 // translation_unit        = interaction_list .
-bool adam_test_parser::parse() 
-{
+bool adam_test_parser::parse() {
     is_interaction_list();
     require_token(eof_k);
     return all_checks_passed_m;
@@ -148,29 +132,26 @@ bool adam_test_parser::parse()
 /*************************************************************************************************/
 
 // sheet .
-bool adam_test_parser::is_sheet()
-{
-    if(!is_keyword(name_t("sheet"))) return false;
+bool adam_test_parser::is_sheet() {
+    if (!is_keyword(name_t("sheet")))
+        return false;
     putback();
     sheets_m.push_back(new queryable_sheet_t(*this));
     return true;
-
 }
 
 /*************************************************************************************************/
 
 // interaction_list        = [ lead_comment_decl ] interaction [ ";" ] [ interaction_list ].
-bool adam_test_parser::is_interaction_list()
-{
-// REVISIT (mmarcus) : fix up grammar here
+bool adam_test_parser::is_interaction_list() {
+    // REVISIT (mmarcus) : fix up grammar here
     std::string comment;
     bool result(true);
-    while(result)
-    {
-        while(is_lead_comment(comment))
+    while (result) {
+        while (is_lead_comment(comment))
             ;
         result = is_interaction();
-        while(is_lead_comment(comment) || is_token(semicolon_k))
+        while (is_lead_comment(comment) || is_token(semicolon_k))
             ;
     }
     return result;
@@ -178,30 +159,28 @@ bool adam_test_parser::is_interaction_list()
 
 /*************************************************************************************************/
 
-// interaction             = update_decl | reinitialize_decl | dump_decl | check_decl | 
+// interaction             = update_decl | reinitialize_decl | dump_decl | check_decl |
 //                           print_decl | assert_decl | contributing_decl |.
-bool adam_test_parser::is_interaction()
-{
+bool adam_test_parser::is_interaction() {
     return is_update_decl() || is_reinitialize_decl() || is_dump_decl() || is_check_decl() ||
-        is_print_decl() || is_assert_decl() || is_contributing_decl() || is_sheet();
+           is_print_decl() || is_assert_decl() || is_contributing_decl() || is_sheet();
 }
 
 /*************************************************************************************************/
 
 // update_decl             = "update" "(" identifier "," dictionary ")".
-bool adam_test_parser::is_update_decl()
-{
-    if(is_keyword(update_k)) {
+bool adam_test_parser::is_update_decl() {
+    if (is_keyword(update_k)) {
         require_token(open_parenthesis_k);
         name_t name;
-        if(!is_identifier(name))
+        if (!is_identifier(name))
             throw_exception("sheet name expected");
         queryable_sheet_t& qs(sheet_from_name(name));
         require_token(comma_k);
         array_t expression;
-        if(!is_dictionary(expression))
+        if (!is_dictionary(expression))
             throw_exception("dictionary expected");
-        require_token(close_parenthesis_k);        
+        require_token(close_parenthesis_k);
         any_regular_t dict(qs.inspect(expression));
         dictionary_t d(dict.cast<adobe::dictionary_t>());
         qs.set(d);
@@ -215,17 +194,16 @@ bool adam_test_parser::is_update_decl()
 
 // reinitialize_decl       = "reinitialize" "(" identifier "," dictionary ")".
 
-bool adam_test_parser::is_reinitialize_decl()
-{
-    if(is_keyword(reinitialize_k)) {
+bool adam_test_parser::is_reinitialize_decl() {
+    if (is_keyword(reinitialize_k)) {
         require_token(open_parenthesis_k);
         name_t name;
-        if(!is_identifier(name))
+        if (!is_identifier(name))
             throw_exception("sheet name expected");
         queryable_sheet_t& qs(sheet_from_name(name));
         require_token(comma_k);
         array_t expression;
-        if(!is_dictionary(expression))
+        if (!is_dictionary(expression))
             throw_exception("dictionary expected");
         require_token(close_parenthesis_k);
         any_regular_t dict = qs.inspect(expression);
@@ -240,60 +218,53 @@ bool adam_test_parser::is_reinitialize_decl()
 
 /*************************************************************************************************/
 
-void 
-adam_test_parser::populate_dict(dictionary_t& dict, 
-                                const queryable_sheet_t::index_t& index,
-                                const queryable_sheet_t& qs,
-                                bool want_contributors,
-                                bool want_active) const
-{
-    for(queryable_sheet_t::index_t::iterator iter=index.begin(),  e=index.end(); iter != e; ++iter)
-    {
+void adam_test_parser::populate_dict(dictionary_t& dict, const queryable_sheet_t::index_t& index,
+                                     const queryable_sheet_t& qs, bool want_contributors,
+                                     bool want_active) const {
+    for (queryable_sheet_t::index_t::iterator iter = index.begin(), e = index.end(); iter != e;
+         ++iter) {
         std::size_t i(iter->second);
-            
-        if(want_contributors)
-        {
+
+        if (want_contributors) {
             dictionary_t cell_dict;
             cell_dict[name_t("contributors")] = any_regular_t(qs.cell_contributors()[i]);
-            if(want_active)
-            {
+            if (want_active) {
                 cell_dict[name_t("active")] = any_regular_t(qs.cell_active()[i]);
-                cell_dict[name_t("priority_accessed")] = any_regular_t(qs.cell_priority_accessed()[i]);
+                cell_dict[name_t("priority_accessed")] =
+                    any_regular_t(qs.cell_priority_accessed()[i]);
             }
-            cell_dict[name_t("_value")] =  qs.cell_value()[i];
+            cell_dict[name_t("_value")] = qs.cell_value()[i];
             dict[qs.cell_name()[i]] = any_regular_t(cell_dict);
-            
-        }
-        else
-            dict[qs.cell_name()[i]] =  qs.cell_value()[i];
+
+        } else
+            dict[qs.cell_name()[i]] = qs.cell_value()[i];
     }
 }
 
 /*************************************************************************************************/
 
 // dump_decl               = "dump" "(" identifier ")"
-bool adam_test_parser::is_dump_decl()
-{
-    if(is_keyword(dump_k)) {
+bool adam_test_parser::is_dump_decl() {
+    if (is_keyword(dump_k)) {
         require_token(open_parenthesis_k);
         name_t name;
-        if(!is_identifier(name))
+        if (!is_identifier(name))
             throw_exception("sheet name expected");
-        queryable_sheet_t& qs(sheet_from_name(name));        
+        queryable_sheet_t& qs(sheet_from_name(name));
         require_token(close_parenthesis_k);
         any_regular_t result;
 #if defined(ADOBE_STD_SERIALIZATION)
-        out_m << "\n### dump\nsheet " << name << " {\n";        
+        out_m << "\n### dump\nsheet " << name << " {\n";
         out_m << "input:\n";
-        
+
         {
             dictionary_t input_dict;
             populate_dict(input_dict, qs.input_index(), qs);
             out_m << begin_asl_cel << input_dict << end_asl_cel << std::endl;
         }
 
- 
-        out_m  << "interface:\n";
+
+        out_m << "interface:\n";
         {
             dictionary_t interface_dict;
             populate_dict(interface_dict, qs.interface_index(), qs, true, true);
@@ -301,20 +272,20 @@ bool adam_test_parser::is_dump_decl()
         }
 
 
-        out_m  << "output:\n";
+        out_m << "output:\n";
         {
             dictionary_t output_dict;
             populate_dict(output_dict, qs.output_index(), qs, true);
             out_m << begin_asl_cel << output_dict << end_asl_cel << std::endl;
         }
 
-        out_m  << "invariant:\n";
+        out_m << "invariant:\n";
         {
             dictionary_t invariant_dict;
             populate_dict(invariant_dict, qs.invariant_index(), qs);
             out_m << begin_asl_cel << invariant_dict << end_asl_cel << std::endl;
         }
-    
+
         out_m << "}" << std::endl;
 #endif
         return true;
@@ -325,17 +296,16 @@ bool adam_test_parser::is_dump_decl()
 /*************************************************************************************************/
 
 // check_decl              = "check" "(" identifier "," dictionary ")".
-bool adam_test_parser::is_check_decl()
-{
-    if(is_keyword(check_k)) {
+bool adam_test_parser::is_check_decl() {
+    if (is_keyword(check_k)) {
         require_token(open_parenthesis_k);
         name_t name;
-        if(!is_identifier(name))
+        if (!is_identifier(name))
             throw_exception("sheet name expected");
         queryable_sheet_t& qs(sheet_from_name(name));
         require_token(comma_k);
         array_t expression;
-        if(!is_dictionary(expression))
+        if (!is_dictionary(expression))
             throw_exception("dictionary expected");
         require_token(close_parenthesis_k);
         any_regular_t reg_dict = qs.inspect(expression);
@@ -345,7 +315,7 @@ bool adam_test_parser::is_check_decl()
         populate_dict(expected, qs.interface_index(), qs);
 
         bool success = (expected == dict);
-        if(success){
+        if (success) {
             out_m << "\n### check of sheet " << name << "  succeeded ###\n";
 #if defined(ADOBE_STD_SERIALIZATION)
             out_m << "with: " << begin_asl_cel << dict << end_asl_cel << std::endl;
@@ -354,7 +324,7 @@ bool adam_test_parser::is_check_decl()
             out_m << "\n### check of sheet " << name << " failed\n";
 #if defined(ADOBE_STD_SERIALIZATION)
             out_m << "check expected: " << begin_asl_cel << dict << end_asl_cel << std::endl;
-            out_m << "sheet cache contains: " << begin_asl_cel << expected << end_asl_cel 
+            out_m << "sheet cache contains: " << begin_asl_cel << expected << end_asl_cel
                   << std::endl;
 #endif
             all_checks_passed_m = false;
@@ -367,17 +337,16 @@ bool adam_test_parser::is_check_decl()
 /*************************************************************************************************/
 
 // print_decl              = "print" "(" identifier "," expression ")".
-bool adam_test_parser::is_print_decl()
-{
-    if(is_keyword(print_k)) {
+bool adam_test_parser::is_print_decl() {
+    if (is_keyword(print_k)) {
         require_token(open_parenthesis_k);
         name_t name;
-        if(!is_identifier(name))
+        if (!is_identifier(name))
             throw_exception("sheet name expected");
         queryable_sheet_t& qs(sheet_from_name(name));
         require_token(comma_k);
         array_t expression;
-        if(!is_expression(expression))
+        if (!is_expression(expression))
             throw_exception("expression expected");
         require_token(close_parenthesis_k);
         any_regular_t result = qs.inspect(expression);
@@ -392,27 +361,27 @@ bool adam_test_parser::is_print_decl()
 /*************************************************************************************************/
 
 // assert_decl             = "assert" "(" identifier "," expression ")".
-bool adam_test_parser::is_assert_decl()
-{
-    if(is_keyword(assert_k)) {
+bool adam_test_parser::is_assert_decl() {
+    if (is_keyword(assert_k)) {
         require_token(open_parenthesis_k);
         name_t name;
-        if(!is_identifier(name))
+        if (!is_identifier(name))
             throw_exception("sheet name expected");
         queryable_sheet_t& qs(sheet_from_name(name));
         require_token(comma_k);
         array_t expression;
-        if(!is_expression(expression))
+        if (!is_expression(expression))
             throw_exception("expression expected");
         require_token(close_parenthesis_k);
         any_regular_t result = qs.inspect(expression);
         bool success = result.cast<bool>();
-        out_m <<"\n### assert " << (success ? std::string("succeeded: ") : std::string("failed: ")) 
+        out_m << "\n### assert " << (success ? std::string("succeeded: ") : std::string("failed: "))
 #if defined(ADOBE_STD_SERIALIZATION)
-              << begin_asl_cel << expression << end_asl_cel 
-#endif        
+              << begin_asl_cel << expression << end_asl_cel
+#endif
               << " in sheet " << name << std::endl;
-        if(!success) all_checks_passed_m = false;
+        if (!success)
+            all_checks_passed_m = false;
         return true;
     }
     return false;
@@ -421,39 +390,37 @@ bool adam_test_parser::is_assert_decl()
 /*************************************************************************************************/
 
 // contributing_decl       = "contributing" "(" identifier ")".
-bool adam_test_parser::is_contributing_decl()
-{
-    if(is_keyword(contributing_k)) {
+bool adam_test_parser::is_contributing_decl() {
+    if (is_keyword(contributing_k)) {
         require_token(open_parenthesis_k);
         name_t name;
-        if(!is_identifier(name))
+        if (!is_identifier(name))
             throw_exception("sheet name expected");
-        queryable_sheet_t& qs(sheet_from_name(name));        
+        queryable_sheet_t& qs(sheet_from_name(name));
         require_token(close_parenthesis_k);
         any_regular_t result;
         out_m << "\n### contributing of sheet " << name << "  ###\n";
 #if defined(ADOBE_STD_SERIALIZATION)
-        out_m << begin_asl_cel << qs.contributing()  << end_asl_cel << std::endl;
+        out_m << begin_asl_cel << qs.contributing() << end_asl_cel << std::endl;
 #endif
-        return true; 
+        return true;
     }
     return false;
 }
 
 /*************************************************************************************************/
 
-} //namespace implementation
+} // namespace implementation
 
 /*************************************************************************************************/
 
-bool parse(std::istream& in_stream, line_position_t line_pos, std::ostream& out)
-{
+bool parse(std::istream& in_stream, line_position_t line_pos, std::ostream& out) {
     adobe::implementation::adam_test_parser p(in_stream, line_pos, out);
     return p.parse();
 }
 
 /*************************************************************************************************/
 
-} //namespace adobe
+} // namespace adobe
 
 /*************************************************************************************************/

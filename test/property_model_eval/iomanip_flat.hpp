@@ -26,16 +26,13 @@ namespace adobe {
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-class flat_format : public format_base
-{
+class flat_format : public format_base {
     typedef format_base inherited_t;
 
 public:
     typedef inherited_t::stream_type stream_type;
 
-    explicit flat_format(bool safe_strings) :
-        escape_m(safe_strings)
-    { }
+    explicit flat_format(bool safe_strings) : escape_m(safe_strings) {}
 
     virtual void begin_format(stream_type& os);
 
@@ -56,8 +53,7 @@ private:
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-static std::ostream& begin_flat(std::ostream& os)
-{
+static std::ostream& begin_flat(std::ostream& os) {
     replace_pword<format_base, flat_format>(os, format_base_idx(), true);
     return os << begin_format;
 }
@@ -65,14 +61,12 @@ static std::ostream& begin_flat(std::ostream& os)
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-static std::ostream& end_flat(std::ostream& os)
-{ return os << end_format; }
+static std::ostream& end_flat(std::ostream& os) { return os << end_format; }
 
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-static std::ostream& begin_flat_unsafe(std::ostream& os)
-{
+static std::ostream& begin_flat_unsafe(std::ostream& os) {
     replace_pword<format_base, flat_format>(os, format_base_idx(), false);
     return os << begin_format;
 }
@@ -80,8 +74,7 @@ static std::ostream& begin_flat_unsafe(std::ostream& os)
 /*************************************************************************************************/
 
 //!\ingroup manipulator
-static std::ostream& end_flat_unsafe(std::ostream& os)
-{ return os << end_format; }
+static std::ostream& end_flat_unsafe(std::ostream& os) { return os << end_format; }
 
 /*************************************************************************************************/
 

@@ -79,7 +79,8 @@ variants for all algorithms but it is our intention to provide them. Specificall
     - <code><em>algorithm</em>_n</code> - range is specified with an iterator, i, and an integral
 type, n, representing the range [i, i + n).
     - <code><em>algorithm</em>_bounded</code> - rather than an OutputIterator a mutable ForwardRange
-specifies the destination and the algorithm ends when either the source or destination are exhausted.
+specifies the destination and the algorithm ends when either the source or destination are
+exhausted.
 The returned value of such algorithms is a pair of the last source and destination iterators.
     - Algorithms which take a comparison function can also talke a unary function which is a
 projection to a key value.
@@ -93,7 +94,7 @@ using.
     - \ref rotate
 
 \sa \ref stldoc_index
-    
+
 \defgroup mutating_algorithm Mutating Algorithms
 \ingroup algorithm
 

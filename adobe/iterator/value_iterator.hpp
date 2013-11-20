@@ -27,15 +27,14 @@ namespace adobe {
 //! @{
 
 
-template <typename I,                // I models Incrementable    
-          typename F = identity<I> > // F models UnaryFunction 
-class value_iterator
-{
+template <typename I,               // I models Incrementable
+          typename F = identity<I>> // F models UnaryFunction
+class value_iterator {
 public:
-    typedef typename F::result_type   value_type;
-    typedef value_type*               pointer;
-    typedef value_type&               reference;
-    typedef ptrdiff_t                 difference_type;
+    typedef typename F::result_type value_type;
+    typedef value_type* pointer;
+    typedef value_type& reference;
+    typedef ptrdiff_t difference_type;
     typedef std::forward_iterator_tag iterator_category;
 
 private:
@@ -43,21 +42,16 @@ private:
     F f;
 
 public:
-    value_iterator()
-    { }
+    value_iterator() {}
 
-    value_iterator(const I& x, const F& y) :
-        i(x), f(y)
-    { }
+    value_iterator(const I& x, const F& y) : i(x), f(y) {}
 
-    value_iterator& operator++()
-    {
+    value_iterator& operator++() {
         ++i;
         return *this;
     }
 
-    value_iterator operator++(int)
-    {
+    value_iterator operator++(int) {
         value_iterator tmp = *this;
 
         ++*this;
@@ -65,27 +59,17 @@ public:
         return tmp;
     }
 
-    const value_type& operator*() const
-    {
-        return f(i);
-    }
+    const value_type& operator*() const { return f(i); }
 
-    value_type operator*()
-    {
-        return f(i);
-    }
+    value_type operator*() { return f(i); }
 
-    friend bool operator==(const value_iterator& a, const value_iterator& b)
-    {
+    friend bool operator==(const value_iterator& a, const value_iterator& b) {
         // assert(a.f == b.f);
 
         return a.i == b.i;
     }
 
-    friend bool operator!=(const value_iterator& a, const value_iterator& b)
-    {
-        return !(a == b);
-    }
+    friend bool operator!=(const value_iterator& a, const value_iterator& b) { return !(a == b); }
 };
 
 //! @}

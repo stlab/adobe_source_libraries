@@ -28,8 +28,7 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-class lex_stream_t
-{
+class lex_stream_t {
 public:
     lex_stream_t(std::istream& in, const line_position_t& position);
 
@@ -38,16 +37,16 @@ public:
 
     ~lex_stream_t();
 
-    lex_stream_t& operator = (const lex_stream_t& rhs);
+    lex_stream_t& operator=(const lex_stream_t& rhs);
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 
-    const stream_lex_token_t&   get();
+    const stream_lex_token_t& get();
 
-    void                        putback();
+    void putback();
 
-    const line_position_t&      next_position();
+    const line_position_t& next_position();
 
-    void                        set_keyword_extension_lookup(const keyword_extension_lookup_proc_t& proc);
+    void set_keyword_extension_lookup(const keyword_extension_lookup_proc_t& proc);
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 private:
@@ -65,8 +64,7 @@ private:
 
 /*************************************************************************************************/
 
-inline void swap(adobe::lex_stream_t& x, adobe::lex_stream_t& y)
-{
+inline void swap(adobe::lex_stream_t& x, adobe::lex_stream_t& y) {
     std::swap(x.object_m, y.object_m);
 }
 

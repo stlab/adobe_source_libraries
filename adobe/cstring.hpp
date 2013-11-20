@@ -19,9 +19,11 @@ namespace adobe {
 
 /*************************************************************************************************/
 
-inline int strcmp(const char* x, const char* y)
-{
-    while (*x && *x == *y) { ++x; ++y; }
+inline int strcmp(const char* x, const char* y) {
+    while (*x && *x == *y) {
+        ++x;
+        ++y;
+    }
     return *x - *y;
 }
 

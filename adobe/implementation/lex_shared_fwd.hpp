@@ -30,7 +30,7 @@
 #include <adobe/utility.hpp>
 
 #ifndef NDEBUG
-    #include <iostream>
+#include <iostream>
 #endif
 
 /*************************************************************************************************/
@@ -46,7 +46,7 @@ typedef const unsigned char* uchar_ptr_t;
 /*!
 \ingroup asl_xml_parser
 
-Compares two ranges of data with a binary predicate. 
+Compares two ranges of data with a binary predicate.
 
 \param first1 Iterator to the first element of the first range
 \param last1 Iterator to one-past the last element of the first range
@@ -60,13 +60,14 @@ ranges' elements returns true, the function itself returns true.
 Otherwise, the function returns false.
 */
 
-template <  typename I1, // models InputIterator
-            typename I2, // models InputIterator
-            typename BP> // models BinaryPredicate
-inline bool bounded_equal(I1 first1, I1 last1, I2 first2, I2 last2, BP pred)
-{
+template <typename I1, // models InputIterator
+          typename I2, // models InputIterator
+          typename BP>
+// models BinaryPredicate
+inline bool bounded_equal(I1 first1, I1 last1, I2 first2, I2 last2, BP pred) {
     for (; first1 != last1 && first2 != last2; ++first1, ++first2)
-        if (!pred(*first1, *first2)) return false;
+        if (!pred(*first1, *first2))
+            return false;
 
     return first1 == last1 && first2 == last2;
 }
@@ -76,7 +77,7 @@ inline bool bounded_equal(I1 first1, I1 last1, I2 first2, I2 last2, BP pred)
 /*!
 \ingroup asl_xml_parser
 
-Compares two ranges of data with a default binary predicate (std::equal_to<>()). 
+Compares two ranges of data with a default binary predicate (std::equal_to<>()).
 
 \param first1 Iterator to the first element of the first range
 \param last1 Iterator to one-past the last element of the first range
@@ -89,10 +90,10 @@ ranges' elements returns true, the function itself returns true.
 Otherwise, the function returns false.
 */
 
-template <  typename I1, // models InputIterator
-            typename I2> // models InputIterator
-inline bool bounded_equal(I1 first1, I1 last1, I2 first2, I2 last2)
-{
+template <typename I1, // models InputIterator
+          typename I2>
+// models InputIterator
+inline bool bounded_equal(I1 first1, I1 last1, I2 first2, I2 last2) {
     typedef typename std::iterator_traits<I1>::value_type value_type;
 
     return bounded_equal(first1, last1, first2, last2, std::equal_to<value_type>());
@@ -103,7 +104,7 @@ inline bool bounded_equal(I1 first1, I1 last1, I2 first2, I2 last2)
 /*!
 \ingroup asl_xml_parser
 
-Compares two ranges of data with a default binary predicate (std::equal_to<>()). 
+Compares two ranges of data with a default binary predicate (std::equal_to<>()).
 
 \param range1 Iterator range to the first range
 \param range2 Iterator range to the second range
@@ -114,12 +115,12 @@ ranges' elements returns true, the function itself returns true.
 Otherwise, the function returns false.
 */
 
-template <  typename R1, // models InputRange
-            typename R2> // models InputRange
-inline bool bounded_equal(R1& range1, R2& range2)
-{
-    return bounded_equal(   boost::begin(range1), boost::end(range1),
-                            boost::begin(range2), boost::end(range2));
+template <typename R1, // models InputRange
+          typename R2>
+// models InputRange
+inline bool bounded_equal(R1& range1, R2& range2) {
+    return bounded_equal(boost::begin(range1), boost::end(range1), boost::begin(range2),
+                         boost::end(range2));
 }
 
 /*************************************************************************************************/
@@ -161,8 +162,7 @@ character-by-character comparison of the two ranges must be true.
 in equality for each set of characters. false otherwise.
 */
 
-inline bool token_range_equal(const token_range_t& x, const token_range_t& y)
-{
+inline bool token_range_equal(const token_range_t& x, const token_range_t& y) {
     return boost::size(x) == boost::size(y) && adobe::bounded_equal(x, y);
 }
 
@@ -191,17 +191,19 @@ as adobe::mismatch.
     - (false otherwise.)
 */
 
-inline bool token_range_less(const token_range_t& x, const token_range_t& y)
-{
+inline bool token_range_less(const token_range_t& x, const token_range_t& y) {
     std::size_t sizex(boost::size(x));
     std::size_t sizey(boost::size(y));
 
-    if (sizex < sizey) return true;
-    else if (sizey < sizex) return false;
+    if (sizex < sizey)
+        return true;
+    else if (sizey < sizex)
+        return false;
 
     std::pair<uchar_ptr_t, uchar_ptr_t> diff(adobe::mismatch(x, boost::begin(y)));
 
-    if (diff.first == boost::end(x)) return false;
+    if (diff.first == boost::end(x))
+        return false;
 
     return *diff.first < *diff.second;
 }
@@ -220,8 +222,7 @@ Serializes a token_range_t to an output stream
 \return the original output stream.
 */
 
-inline std::ostream& operator << (std::ostream& s, const token_range_t& x)
-{
+inline std::ostream& operator<<(std::ostream& s, const token_range_t& x) {
     adobe::copy(x, std::ostream_iterator<char>(s));
 
     return s;
@@ -242,8 +243,7 @@ warranties as to string ownership.
 */
 
 template <typename T>
-inline token_range_t static_token_range(T* begin)
-{
+inline token_range_t static_token_range(T* begin) {
     BOOST_STATIC_ASSERT(sizeof(T) == sizeof(unsigned char));
 
     T* end(begin);
@@ -257,17 +257,14 @@ inline token_range_t static_token_range(T* begin)
 /*************************************************************************************************/
 
 template <typename E> // E models Enumeration
-struct lex_token_t
-{
-    lex_token_t()
-    { }
+struct lex_token_t {
+    lex_token_t() {}
 
-    explicit lex_token_t(E enumeration, uchar_ptr_t first = 0, uchar_ptr_t last = 0) :
-        enum_m(enumeration), range_m(first, last)
-    { }
+    explicit lex_token_t(E enumeration, uchar_ptr_t first = 0, uchar_ptr_t last = 0)
+        : enum_m(enumeration), range_m(first, last) {}
 
-    E               enum_m;
-    token_range_t   range_m;
+    E enum_m;
+    token_range_t range_m;
 };
 
 /*************************************************************************************************/
@@ -280,7 +277,8 @@ extern static_name_t eof_k; // EOF token name
 
 /*************************************************************************************************/
 
-template <typename E> inline E eof_token(); // specialize
+template <typename E>
+inline E eof_token(); // specialize
 
 /*************************************************************************************************/
 

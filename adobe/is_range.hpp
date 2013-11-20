@@ -22,21 +22,17 @@
 
 #include <adobe/type_inspection.hpp>
 
-namespace adobe
-{
+namespace adobe {
 
-	/*!
-	\ingroup inspection
+/*!
+\ingroup inspection
 
-	\brief does T model the boost::range concepts?
-	*/
-	template <typename T>
-	struct is_range
-	{
-		static const bool value = has_type_type<boost::range_iterator<T> >::value;
-	};
-
+\brief does T model the boost::range concepts?
+*/
+template <typename T>
+struct is_range {
+    static const bool value = has_type_type<boost::range_iterator<T>>::value;
+};
 }
 
 #endif // include guard
-
