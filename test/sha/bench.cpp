@@ -58,18 +58,17 @@ namespace {
 /**************************************************************************************************/
 
 template <typename DigestType>
-std::string digest_binary(const DigestType& digest)
-{
-    enum { num_bytes = sizeof(typename DigestType::value_type) };
+std::string digest_binary(const DigestType& digest) {
+    enum {
+        num_bytes = sizeof(typename DigestType::value_type)
+    };
 
     std::string digest_str;
 
     digest_str.reserve(digest.size() * num_bytes + 1);
 
-    for (auto& curdigest : digest)
-    {
-        for (int i(num_bytes - 1); i >= 0; --i)
-        {
+    for (auto& curdigest : digest) {
+        for (int i(num_bytes - 1); i >= 0; --i) {
             std::size_t shift_amt(8 * i);
 
             digest_str += char((curdigest >> shift_amt) & 0xff);
@@ -81,15 +80,12 @@ std::string digest_binary(const DigestType& digest)
 
 /**************************************************************************************************/
 
-void print_binary_message(const std::string& str, std::size_t unit_size = 0)
-{
+void print_binary_message(const std::string& str, std::size_t unit_size = 0) {
     std::cout << std::hex;
 
     std::size_t count(0);
 
-    for (   std::string::const_iterator first(str.begin()),
-            last(str.end()); first != last; ++first)
-    {
+    for (std::string::const_iterator first(str.begin()), last(str.end()); first != last; ++first) {
         int value(int(*first) & 0xff);
 
         std::cout.width(2);
@@ -97,8 +93,7 @@ void print_binary_message(const std::string& str, std::size_t unit_size = 0)
 
         std::cout << value;
 
-        if (++count == unit_size)
-        {
+        if (++count == unit_size) {
             std::cout << ' ';
             count = 0;
         }
@@ -110,17 +105,16 @@ void print_binary_message(const std::string& str, std::size_t unit_size = 0)
 /**************************************************************************************************/
 
 template <typename Hash>
-std::vector<std::string> bench(const std::vector<std::string>& corpus,
-                               const char*                     timer_header,
-                               Hash                            hash)
-{
+std::vector<std::string> bench(const std::vector<std::string>& corpus, const char* timer_header,
+                               Hash hash) {
     std::vector<std::string> result;
 
     result.reserve(corpus.size());
 
     adobe::timer_t timer;
 
-    std::for_each(corpus.begin(), corpus.end(), [&](const std::string& element) { result.emplace_back(hash(element)); });
+    std::for_each(corpus.begin(), corpus.end(),
+                  [&](const std::string& element) { result.emplace_back(hash(element)); });
 
     timer.report(timer_header);
 
@@ -134,49 +128,39 @@ std::vector<std::string> bench(const std::vector<std::string>& corpus,
 /**************************************************************************************************/
 
 template <typename Hash>
-std::vector<std::string> asl_bench(const std::vector<std::string>& corpus)
-{
-    return bench(corpus,
-                 "    adobe",
-                 [&](const std::string& element)
-                 {
-                     return digest_binary(Hash::digest(element.begin(),
-                                                       element.end()));
-                 });
+std::vector<std::string> asl_bench(const std::vector<std::string>& corpus) {
+    return bench(corpus, "    adobe", [&](const std::string& element) {
+        return digest_binary(Hash::digest(element.begin(), element.end()));
+    });
 }
 
 /**************************************************************************************************/
 
-inline std::vector<std::string> asl_bench_1(const std::vector<std::string>& corpus)
-{
+inline std::vector<std::string> asl_bench_1(const std::vector<std::string>& corpus) {
     return asl_bench<adobe::sha1_t>(corpus);
 }
 
 /**************************************************************************************************/
 
-inline std::vector<std::string> asl_bench_224(const std::vector<std::string>& corpus)
-{
+inline std::vector<std::string> asl_bench_224(const std::vector<std::string>& corpus) {
     return asl_bench<adobe::sha224_t>(corpus);
 }
 
 /**************************************************************************************************/
 
-inline std::vector<std::string> asl_bench_256(const std::vector<std::string>& corpus)
-{
+inline std::vector<std::string> asl_bench_256(const std::vector<std::string>& corpus) {
     return asl_bench<adobe::sha256_t>(corpus);
 }
 
 /**************************************************************************************************/
 
-inline std::vector<std::string> asl_bench_384(const std::vector<std::string>& corpus)
-{
+inline std::vector<std::string> asl_bench_384(const std::vector<std::string>& corpus) {
     return asl_bench<adobe::sha384_t>(corpus);
 }
 
 /**************************************************************************************************/
 
-inline std::vector<std::string> asl_bench_512(const std::vector<std::string>& corpus)
-{
+inline std::vector<std::string> asl_bench_512(const std::vector<std::string>& corpus) {
     return asl_bench<adobe::sha512_t>(corpus);
 }
 
@@ -190,92 +174,62 @@ inline std::vector<std::string> asl_bench_512(const std::vector<std::string>& co
 
 /**************************************************************************************************/
 
-std::vector<std::string> openssl_bench_1(const std::vector<std::string>& corpus)
-{
+std::vector<std::string> openssl_bench_1(const std::vector<std::string>& corpus) {
     std::vector<std::uint8_t> digest(SHA_DIGEST_LENGTH, 0);
 
-    return bench(corpus,
-                 "  openssl",
-                 [&](const std::string& element)
-                 {
-                     SHA1(reinterpret_cast<const std::uint8_t*>(&element[0]),
-                          element.size(),
-                          &digest[0]);
+    return bench(corpus, "  openssl", [&](const std::string& element) {
+        SHA1(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
 
-                     return digest_binary(digest);
-                 });
+        return digest_binary(digest);
+    });
 }
 
 /**************************************************************************************************/
 
-std::vector<std::string> openssl_bench_224(const std::vector<std::string>& corpus)
-{
+std::vector<std::string> openssl_bench_224(const std::vector<std::string>& corpus) {
     std::vector<std::uint8_t> digest(SHA224_DIGEST_LENGTH, 0);
 
-    return bench(corpus,
-                 "  openssl",
-                 [&](const std::string& element)
-                 {
-                     SHA224(reinterpret_cast<const std::uint8_t*>(&element[0]),
-                            element.size(),
-                            &digest[0]);
+    return bench(corpus, "  openssl", [&](const std::string& element) {
+        SHA224(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
 
-                     return digest_binary(digest);
-                 });
+        return digest_binary(digest);
+    });
 }
 
 /**************************************************************************************************/
 
-std::vector<std::string> openssl_bench_256(const std::vector<std::string>& corpus)
-{
+std::vector<std::string> openssl_bench_256(const std::vector<std::string>& corpus) {
     std::vector<std::uint8_t> digest(SHA256_DIGEST_LENGTH, 0);
 
-    return bench(corpus,
-                 "  openssl",
-                 [&](const std::string& element)
-                 {
-                     SHA256(reinterpret_cast<const std::uint8_t*>(&element[0]),
-                            element.size(),
-                            &digest[0]);
+    return bench(corpus, "  openssl", [&](const std::string& element) {
+        SHA256(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
 
-                     return digest_binary(digest);
-                 });
+        return digest_binary(digest);
+    });
 }
 
 /**************************************************************************************************/
 
-std::vector<std::string> openssl_bench_384(const std::vector<std::string>& corpus)
-{
+std::vector<std::string> openssl_bench_384(const std::vector<std::string>& corpus) {
     std::vector<std::uint8_t> digest(SHA384_DIGEST_LENGTH, 0);
 
-    return bench(corpus,
-                 "  openssl",
-                 [&](const std::string& element)
-                 {
-                     SHA384(reinterpret_cast<const std::uint8_t*>(&element[0]),
-                            element.size(),
-                            &digest[0]);
+    return bench(corpus, "  openssl", [&](const std::string& element) {
+        SHA384(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
 
-                     return digest_binary(digest);
-                 });
+        return digest_binary(digest);
+    });
 }
 
 /**************************************************************************************************/
 
-std::vector<std::string> openssl_bench_512(const std::vector<std::string>& corpus)
-{
+std::vector<std::string> openssl_bench_512(const std::vector<std::string>& corpus) {
     std::vector<std::uint8_t> digest(SHA512_DIGEST_LENGTH, 0);
 
-    return bench(corpus,
-                 "  openssl",
-                 [&](const std::string& element)
-                 {
-                     SHA512(reinterpret_cast<const std::uint8_t*>(&element[0]),
-                            element.size(),
-                            &digest[0]);
+    return bench(corpus, "  openssl", [&](const std::string& element) {
+        SHA512(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
 
-                     return digest_binary(digest);
-                 });
+        return digest_binary(digest);
+    });
 }
 
 /**************************************************************************************************/
@@ -293,53 +247,43 @@ std::vector<std::string> openssl_bench_512(const std::vector<std::string>& corpu
 /**************************************************************************************************/
 
 template <typename Hash>
-std::vector<std::string> boostcrypto_bench(const std::vector<std::string>& corpus)
-{
-    return bench(corpus,
-                 "    boost",
-                 [&](const std::string& element)
-                 {
-                     Hash sha(reinterpret_cast<const std::uint8_t*>(&element[0]),
-                              element.size());
+std::vector<std::string> boostcrypto_bench(const std::vector<std::string>& corpus) {
+    return bench(corpus, "    boost", [&](const std::string& element) {
+        Hash sha(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size());
 
-                     const std::uint8_t* digest(reinterpret_cast<const std::uint8_t*>(sha.digest()));
+        const std::uint8_t* digest(reinterpret_cast<const std::uint8_t*>(sha.digest()));
 
-                     return std::string(digest, digest + Hash::digest_length);
-                 });
+        return std::string(digest, digest + Hash::digest_length);
+    });
 }
 
 /**************************************************************************************************/
 
-inline std::vector<std::string> boostcrypto_bench_1(const std::vector<std::string>& corpus)
-{
+inline std::vector<std::string> boostcrypto_bench_1(const std::vector<std::string>& corpus) {
     return boostcrypto_bench<boost::crypto::sha1>(corpus);
 }
 
 /**************************************************************************************************/
 
-inline std::vector<std::string> boostcrypto_bench_224(const std::vector<std::string>& corpus)
-{
+inline std::vector<std::string> boostcrypto_bench_224(const std::vector<std::string>& corpus) {
     return boostcrypto_bench<boost::crypto::sha224>(corpus);
 }
 
 /**************************************************************************************************/
 
-inline std::vector<std::string> boostcrypto_bench_256(const std::vector<std::string>& corpus)
-{
+inline std::vector<std::string> boostcrypto_bench_256(const std::vector<std::string>& corpus) {
     return boostcrypto_bench<boost::crypto::sha256>(corpus);
 }
 
 /**************************************************************************************************/
 
-inline std::vector<std::string> boostcrypto_bench_384(const std::vector<std::string>& corpus)
-{
+inline std::vector<std::string> boostcrypto_bench_384(const std::vector<std::string>& corpus) {
     return boostcrypto_bench<boost::crypto::sha384>(corpus);
 }
 
 /**************************************************************************************************/
 
-inline std::vector<std::string> boostcrypto_bench_512(const std::vector<std::string>& corpus)
-{
+inline std::vector<std::string> boostcrypto_bench_512(const std::vector<std::string>& corpus) {
     return boostcrypto_bench<boost::crypto::sha512>(corpus);
 }
 
@@ -357,92 +301,62 @@ inline std::vector<std::string> boostcrypto_bench_512(const std::vector<std::str
 
 /**************************************************************************************************/
 
-std::vector<std::string> commoncrypto_bench_1(const std::vector<std::string>& corpus)
-{
+std::vector<std::string> commoncrypto_bench_1(const std::vector<std::string>& corpus) {
     std::vector<std::uint8_t> digest(CC_SHA1_DIGEST_LENGTH, 0);
 
-    return bench(corpus,
-                 "    apple",
-                 [&](const std::string& element)
-                 {
-                     CC_SHA1(reinterpret_cast<const std::uint8_t*>(&element[0]),
-                             element.size(),
-                             &digest[0]);
+    return bench(corpus, "    apple", [&](const std::string& element) {
+        CC_SHA1(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
 
-                     return digest_binary(digest);
-                 });
+        return digest_binary(digest);
+    });
 }
 
 /**************************************************************************************************/
 
-std::vector<std::string> commoncrypto_bench_224(const std::vector<std::string>& corpus)
-{
+std::vector<std::string> commoncrypto_bench_224(const std::vector<std::string>& corpus) {
     std::vector<std::uint8_t> digest(CC_SHA224_DIGEST_LENGTH, 0);
 
-    return bench(corpus,
-                 "    apple",
-                 [&](const std::string& element)
-                 {
-                     CC_SHA224(reinterpret_cast<const std::uint8_t*>(&element[0]),
-                               element.size(),
-                               &digest[0]);
+    return bench(corpus, "    apple", [&](const std::string& element) {
+        CC_SHA224(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
 
-                     return digest_binary(digest);
-                 });
+        return digest_binary(digest);
+    });
 }
 
 /**************************************************************************************************/
 
-std::vector<std::string> commoncrypto_bench_256(const std::vector<std::string>& corpus)
-{
+std::vector<std::string> commoncrypto_bench_256(const std::vector<std::string>& corpus) {
     std::vector<std::uint8_t> digest(CC_SHA256_DIGEST_LENGTH, 0);
 
-    return bench(corpus,
-                 "    apple",
-                 [&](const std::string& element)
-                 {
-                     CC_SHA256(reinterpret_cast<const std::uint8_t*>(&element[0]),
-                               element.size(),
-                               &digest[0]);
+    return bench(corpus, "    apple", [&](const std::string& element) {
+        CC_SHA256(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
 
-                     return digest_binary(digest);
-                 });
+        return digest_binary(digest);
+    });
 }
 
 /**************************************************************************************************/
 
-std::vector<std::string> commoncrypto_bench_384(const std::vector<std::string>& corpus)
-{
+std::vector<std::string> commoncrypto_bench_384(const std::vector<std::string>& corpus) {
     std::vector<std::uint8_t> digest(CC_SHA384_DIGEST_LENGTH, 0);
 
-    return bench(corpus,
-                 "    apple",
-                 [&](const std::string& element)
-                 {
-                     CC_SHA384(reinterpret_cast<const std::uint8_t*>(&element[0]),
-                               element.size(),
-                               &digest[0]);
+    return bench(corpus, "    apple", [&](const std::string& element) {
+        CC_SHA384(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
 
-                     return digest_binary(digest);
-                 });
+        return digest_binary(digest);
+    });
 }
 
 /**************************************************************************************************/
 
-std::vector<std::string> commoncrypto_bench_512(const std::vector<std::string>& corpus)
-{
+std::vector<std::string> commoncrypto_bench_512(const std::vector<std::string>& corpus) {
     std::vector<std::uint8_t> digest(CC_SHA512_DIGEST_LENGTH, 0);
 
-    return bench(corpus,
-                 "    apple",
-                 [&](const std::string& element)
-                 {
-                     CC_SHA512(reinterpret_cast<const std::uint8_t*>(&element[0]),
-                               element.size(),
-                               &digest[0]);
+    return bench(corpus, "    apple", [&](const std::string& element) {
+        CC_SHA512(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
 
-                     return digest_binary(digest);
-                 });
+        return digest_binary(digest);
+    });
 }
 
 /**************************************************************************************************/
@@ -451,13 +365,11 @@ std::vector<std::string> commoncrypto_bench_512(const std::vector<std::string>& 
 
 /**************************************************************************************************/
 
-void validate(const std::vector<std::string>& x, const std::vector<std::string>& y)
-{
+void validate(const std::vector<std::string>& x, const std::vector<std::string>& y) {
     if (x.size() != y.size())
         throw std::runtime_error("Hash vector size mismatch");
 
-    for (std::size_t i(0); i < x.size(); ++i)
-    {
+    for (std::size_t i(0); i < x.size(); ++i) {
         if (x[i] == y[i])
             continue;
 
@@ -479,9 +391,7 @@ void validate(const std::vector<std::string>& x, const std::vector<std::string>&
 
 /**************************************************************************************************/
 
-int main()
-try
-{
+int main() try {
 #if 0
     std::vector<std::string> corpus;
 
@@ -496,13 +406,12 @@ try
             corpus.emplace_back(sz, c);
     }
 #else
-    const std::size_t        factor(1000000);
-    std::size_t              n1(1);
-    std::size_t              n2(1);
+    const std::size_t factor(1000000);
+    std::size_t n1(1);
+    std::size_t n2(1);
     std::vector<std::string> corpus;
 
-    while (n2 <= 5702887)
-    {
+    while (n2 <= 5702887) {
         std::size_t count(std::min<std::size_t>(1000000, n2 / factor));
 
         for (std::size_t i(0); i < count; ++i)
@@ -512,7 +421,7 @@ try
         std::size_t n(n1 + n2);
 
         n1 = n2;
-        n2 = n;        
+        n2 = n;
     }
 #endif
 
@@ -586,14 +495,12 @@ try
 
     return 0;
 }
-catch (const std::exception& error)
-{
+catch (const std::exception& error) {
     std::cerr << "Error: " << error.what() << '\n';
 
     return 1;
 }
-catch (...)
-{
+catch (...) {
     std::cerr << "Error: unknown\n";
 
     return 1;
