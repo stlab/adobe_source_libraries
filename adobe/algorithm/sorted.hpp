@@ -14,7 +14,6 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <adobe/functional/operator.hpp>
 
@@ -36,9 +35,10 @@ template <typename I, // I models InputIterator
 // O models StrictWeakOrdering on value_type(I)
 I sorted(I f, I l, O o) {
 
-    f = std::adjacent_find(f, l, !boost::bind(o, _1, _2));
+    f = std::adjacent_find(f, l, std::bind(std::logical_not<bool>(), std::bind(o, std::placeholders::_1, std::placeholders::_2)));
     if (f != l)
         ++f;
+    return f;
 }
 
 /*************************************************************************************************/
@@ -60,7 +60,7 @@ template <typename I, // I models InputIterator
           typename O>
 // O models StrictWeakOrdering on value_type(I)
 inline bool is_sorted(I f, I l, O o) {
-    return std::adjacent_find(f, l, !boost::bind(o, _1, _2)) == l;
+    return std::adjacent_find(f, l, std::bind(std::logical_not<bool>(), std::bind(o, std::placeholders::_1, std::placeholders::_2))) == l;
 }
 
 /*************************************************************************************************/
@@ -83,7 +83,7 @@ template <typename I, // I models ForwardIterator
           typename P>
 // P models UnaryFunction(value_type(I)) -> T
 inline bool is_sorted(I f, I l, C c, P p) {
-    return std::adjacent_find(f, l, !boost::bind(c, boost::bind(p, _1), boost::bind(p, _2))) == l;
+    return std::adjacent_find(f, l, std::bind(std::logical_not<bool>(), std::bind(c, std::bind(p, std::placeholders::_1), std::bind(p, std::placeholders::_2)))) == l;
 }
 
 /*************************************************************************************************/

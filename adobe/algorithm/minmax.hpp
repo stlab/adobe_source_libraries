@@ -11,10 +11,10 @@
 #include <adobe/config.hpp>
 
 #include <algorithm>
+#include <functional>
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <adobe/algorithm/select.hpp>
 
@@ -67,7 +67,7 @@ assert(a == 10);
 
 template <class T, class R>
 inline const T&(min)(const T& a, const T& b, R r) {
-    return select_0_2(a, b, boost::bind(r, _1, _2));
+    return select_0_2(a, b, std::bind(r, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -78,7 +78,7 @@ inline const T&(min)(const T& a, const T& b, R r) {
 
 template <class T, class R>
 inline T&(min)(T& a, T& b, R r) {
-    return select_0_2(a, b, boost::bind(r, _1, _2));
+    return select_0_2(a, b, std::bind(r, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -111,7 +111,7 @@ inline T&(min)(T& a, T& b) {
 
 template <class T, class R>
 inline const T&(max)(const T& a, const T& b, R r) {
-    return select_1_2(a, b, boost::bind(r, _1, _2));
+    return select_1_2(a, b, std::bind(r, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -122,7 +122,7 @@ inline const T&(max)(const T& a, const T& b, R r) {
 
 template <class T, class R>
 inline T&(max)(T& a, T& b, R r) {
-    return select_1_2(a, b, boost::bind(r, _1, _2));
+    return select_1_2(a, b, std::bind(r, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -176,7 +176,7 @@ min_element(const ForwardRange& range) {
 */
 template <class ForwardIterator, class R>
 inline ForwardIterator min_element(ForwardIterator first, ForwardIterator last, R r) {
-    return std::min_element(first, last, boost::bind(r, _1, _2));
+    return std::min_element(first, last, std::bind(r, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -228,7 +228,7 @@ max_element(const ForwardRange& range) {
 */
 template <class ForwardIterator, class R>
 inline ForwardIterator max_element(ForwardIterator first, ForwardIterator last, R r) {
-    return std::max_element(first, last, boost::bind(r, _1, _2));
+    return std::max_element(first, last, std::bind(r, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!

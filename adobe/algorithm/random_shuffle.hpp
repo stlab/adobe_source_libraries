@@ -12,9 +12,9 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <functional>
 
 /*************************************************************************************************/
 
@@ -47,7 +47,7 @@ inline void random_shuffle(RandomAccessRange& range) {
 template <class RandomAccessIterator, class RandomNumberGenerator>
 inline void random_shuffle(RandomAccessIterator first, RandomAccessIterator last,
                            RandomNumberGenerator& rand) {
-    return std::random_shuffle(first, last, boost::bind(rand, _1));
+    return std::random_shuffle(first, last, std::bind(rand, std::placeholders::_1));
 }
 
 /*!
