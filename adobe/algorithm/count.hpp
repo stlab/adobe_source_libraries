@@ -13,9 +13,9 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/difference_type.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <functional>
 
 /*************************************************************************************************/
 
@@ -59,7 +59,7 @@ inline typename boost::range_difference<InputRange>::type count(const InputRange
 template <class InputIterator, class Predicate>
 inline typename std::iterator_traits<InputIterator>::difference_type
 count_if(InputIterator first, InputIterator last, Predicate pred) {
-    return std::count_if(first, last, boost::bind(pred, _1));
+    return std::count_if(first, last, std::bind(pred, std::placeholders::_1));
 }
 
 /*!

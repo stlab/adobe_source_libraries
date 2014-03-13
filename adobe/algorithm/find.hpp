@@ -17,7 +17,6 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/next_prior.hpp>
-#include <boost/bind.hpp>
 
 /*************************************************************************************************/
 
@@ -78,7 +77,7 @@ Returns \c last if no such iterator exists.
 */
 template <class InputIterator, class Predicate>
 inline InputIterator find_if_not(InputIterator first, InputIterator last, Predicate pred) {
-    return std::find_if(first, last, !boost::bind(pred, _1));
+    return std::find_if_not(first, last, std::bind(pred, std::placeholders::_1));
 }
 
 /*!
@@ -110,7 +109,7 @@ inline typename boost::range_const_iterator<InputRange>::type find_if_not(const 
 */
 template <class InputIterator, class T>
 inline InputIterator find_not(InputIterator first, InputIterator last, const T& value) {
-    return std::find_if(first, last, !boost::bind(std::equal_to<T>(), value, _1));
+    return std::find_if_not(first, last, std::bind(std::equal_to<T>(), value, std::placeholders::_1));
 }
 
 /*!
@@ -163,7 +162,7 @@ inline typename boost::range_const_iterator<InputRange>::type find(const InputRa
 */
 template <class InputIterator, class Predicate>
 inline InputIterator find_if(InputIterator first, InputIterator last, Predicate pred) {
-    return std::find_if(first, last, boost::bind(pred, _1));
+    return std::find_if(first, last, std::bind(pred, std::placeholders::_1));
 }
 
 /*!
@@ -248,7 +247,7 @@ template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
 inline ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1,
                                  ForwardIterator2 first2, ForwardIterator2 last2,
                                  BinaryPredicate comp) {
-    return std::find_end(first1, last1, first2, last2, boost::bind(comp, _1, _2));
+    return std::find_end(first1, last1, first2, last2, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -316,7 +315,7 @@ inline InputIterator find_first_of(InputIterator first1, InputIterator last1,
                                    BinaryPredicate comp)
 
 {
-    return std::find_first_of(first1, last1, first2, last2, boost::bind(comp, _1, _2));
+    return std::find_first_of(first1, last1, first2, last2, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -378,7 +377,7 @@ adjacent_find(const ForwardRange& range) {
 template <class ForwardIterator, class BinaryPredicate>
 inline ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last,
                                      BinaryPredicate pred) {
-    return std::adjacent_find(first, last, boost::bind(pred, _1, _2));
+    return std::adjacent_find(first, last, std::bind(pred, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!

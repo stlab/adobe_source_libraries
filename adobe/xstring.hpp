@@ -22,6 +22,7 @@
 
 #include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/bind.hpp>
 
 #include <sstream>
 #include <vector>

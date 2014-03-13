@@ -9,6 +9,8 @@
 
 #include <mutex>
 
+#include <boost/bind.hpp>
+
 #include <adobe/algorithm/sort.hpp>
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>

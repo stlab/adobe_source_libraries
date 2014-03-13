@@ -12,9 +12,9 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <functional>
 
 /*************************************************************************************************/
 
@@ -49,7 +49,7 @@ inline void push_heap(RandomAccessRange& range) {
 */
 template <class RandomAccessIterator, class Compare>
 inline void push_heap(RandomAccessIterator first, RandomAccessIterator last, Compare comp) {
-    return std::push_heap(first, last, boost::bind(comp, _1, _2));
+    return std::push_heap(first, last, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -79,7 +79,7 @@ inline void pop_heap(RandomAccessRange& range) {
 */
 template <class RandomAccessIterator, class Compare>
 inline void pop_heap(RandomAccessIterator first, RandomAccessIterator last, Compare comp) {
-    return std::pop_heap(first, last, boost::bind(comp, _1, _2));
+    return std::pop_heap(first, last, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -109,7 +109,7 @@ inline void make_heap(RandomAccessRange& range) {
 */
 template <class RandomAccessIterator, class Compare>
 inline void make_heap(RandomAccessIterator first, RandomAccessIterator last, Compare comp) {
-    return std::make_heap(first, last, boost::bind(comp, _1, _2));
+    return std::make_heap(first, last, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -139,7 +139,7 @@ inline void sort_heap(RandomAccessRange& range) {
 */
 template <class RandomAccessIterator, class Compare>
 inline void sort_heap(RandomAccessIterator first, RandomAccessIterator last, Compare comp) {
-    return std::sort_heap(first, last, boost::bind(comp, _1, _2));
+    return std::sort_heap(first, last, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!

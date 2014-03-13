@@ -20,6 +20,7 @@
 #include <boost/test/test_case_template.hpp>
 #include <boost/test/results_collector.hpp>
 #include <boost/mpl/list.hpp>
+#include <boost/bind.hpp>
 
 
 #include <boost/bind.hpp>

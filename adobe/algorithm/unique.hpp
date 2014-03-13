@@ -12,9 +12,9 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <functional>
 
 /*************************************************************************************************/
 
@@ -47,7 +47,7 @@ inline typename boost::range_iterator<ForwardRange>::type unique(ForwardRange& r
 */
 template <class ForwardIterator, class BinaryPredicate>
 inline ForwardIterator unique(ForwardIterator first, ForwardIterator last, BinaryPredicate pred) {
-    return std::unique(first, last, boost::bind(pred, _1, _2));
+    return std::unique(first, last, std::bind(pred, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -89,7 +89,7 @@ inline OutputIterator unique_copy(const InputRange& range, OutputIterator result
 template <class InputIterator, class OutputIterator, class BinaryPredicate>
 inline OutputIterator unique_copy(InputIterator first, InputIterator last, OutputIterator result,
                                   BinaryPredicate pred) {
-    return std::unique_copy(first, last, result, boost::bind(pred, _1, _2));
+    return std::unique_copy(first, last, result, std::bind(pred, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!

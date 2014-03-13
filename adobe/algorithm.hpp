@@ -12,9 +12,9 @@
 #include <adobe/config.hpp>
 
 #include <adobe/algorithm/binary_search.hpp>
+#include <adobe/algorithm/clamp.hpp>
 #include <adobe/algorithm/copy.hpp>
 #include <adobe/algorithm/count.hpp>
-#include <adobe/algorithm/clamp.hpp>
 #include <adobe/algorithm/equal.hpp>
 #include <adobe/algorithm/equal_range.hpp>
 #include <adobe/algorithm/erase_if.hpp>
@@ -25,6 +25,7 @@
 #include <adobe/algorithm/find_match.hpp>
 #include <adobe/algorithm/for_each.hpp>
 #include <adobe/algorithm/for_each_position.hpp>
+#include <adobe/algorithm/gather.hpp>
 #include <adobe/algorithm/generate.hpp>
 #include <adobe/algorithm/heap.hpp>
 #include <adobe/algorithm/identity_element.hpp>
@@ -52,6 +53,7 @@
 #include <adobe/algorithm/selection_algorithms.hpp>
 #include <adobe/algorithm/set.hpp>
 #include <adobe/algorithm/sort.hpp>
+#include <adobe/algorithm/sorted.hpp>
 #include <adobe/algorithm/swap_ranges.hpp>
 #include <adobe/algorithm/transform.hpp>
 #include <adobe/algorithm/unique.hpp>

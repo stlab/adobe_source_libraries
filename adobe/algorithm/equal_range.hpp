@@ -13,8 +13,8 @@
 #include <algorithm>
 #include <cassert>
 #include <utility>
+#include <functional>
 
-#include <boost/bind.hpp>
 #include <boost/next_prior.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
@@ -113,7 +113,7 @@ template <typename I, // I models ForwardIterator
           typename C>
 // C models StrictWeakOrdering(T, T)
 inline std::pair<I, I> equal_range_n(I f, N n, const T& x, C c) {
-    return implementation::equal_range_n(f, n, x, boost::bind(c, _1, _2), identity<T>());
+    return implementation::equal_range_n(f, n, x, std::bind(c, std::placeholders::_1, std::placeholders::_2), identity<T>());
 }
 
 /*************************************************************************************************/
@@ -129,7 +129,7 @@ template <typename I, // I models ForwardIterator
           typename P>
 // P models UnaryFunction(value_type(I)) -> T
 inline std::pair<I, I> equal_range_n(I f, N n, const T& x, C c, P p) {
-    return implementation::equal_range_n(f, n, x, boost::bind(c, _1, _2), boost::bind(p, _1));
+    return implementation::equal_range_n(f, n, x, std::bind(c, std::placeholders::_1, std::placeholders::_2), std::bind(p, std::placeholders::_1));
 }
 
 /*************************************************************************************************/
@@ -156,7 +156,7 @@ template <typename I, // I models ForwardIterator
           typename C>
 // C models StrictWeakOrdering(T, T)
 inline std::pair<I, I> equal_range(I f, I l, const T& x, C c) {
-    return std::equal_range(f, l, x, boost::bind(c, _1, _2));
+    return std::equal_range(f, l, x, std::bind(c, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*************************************************************************************************/

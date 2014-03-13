@@ -12,9 +12,9 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <functional>
 
 /*************************************************************************************************/
 
@@ -63,7 +63,7 @@ template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
 inline ForwardIterator1 search(ForwardIterator1 first1, ForwardIterator1 last1,
                                ForwardIterator2 first2, ForwardIterator2 last2,
                                BinaryPredicate pred) {
-    return std::search(first1, last1, first2, last2, boost::bind(pred, _1, _2));
+    return std::search(first1, last1, first2, last2, std::bind(pred, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -120,7 +120,7 @@ search_n(const ForwardRange& range, Size count, const T& value) {
 template <class ForwardIterator, class Size, class T, class BinaryPredicate>
 inline ForwardIterator search_n(ForwardIterator first, ForwardIterator last, Size count,
                                 const T& value, BinaryPredicate pred) {
-    return std::search_n(first, last, count, value, boost::bind(pred, _1, _2));
+    return std::search_n(first, last, count, value, std::bind(pred, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!

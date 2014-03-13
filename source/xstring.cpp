@@ -17,6 +17,7 @@
 #include <adobe/once.hpp>
 
 #include <boost/cstdint.hpp>
+#include <boost/bind.hpp>
 
 #include <boost/iterator/transform_iterator.hpp>
 

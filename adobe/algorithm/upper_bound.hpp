@@ -13,8 +13,8 @@
 #include <algorithm>
 #include <cassert>
 #include <iterator>
+#include <functional>
 
-#include <boost/bind.hpp>
 #include <boost/next_prior.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
@@ -86,7 +86,7 @@ template <typename I, // I models FowardIterator
           typename C>
 // C models StrictWeakOrdering(T, T)
 inline I upper_bound_n(I f, N n, const T& x, C c) {
-    return implementation::upper_bound_n(f, n, x, boost::bind(c, _1, _2), identity<T>());
+    return implementation::upper_bound_n(f, n, x, std::bind(c, std::placeholders::_1, std::placeholders::_2), identity<T>());
 }
 
 /*************************************************************************************************/
@@ -98,7 +98,7 @@ template <typename I, // I models ForwardIterator
           typename P>
 // P models UnaryFunction(value_type(I)) -> T
 inline I upper_bound_n(I f, N n, const T& x, C c, P p) {
-    return implementation::upper_bound_n(f, n, x, boost::bind(c, _1, _2), boost::bind(p, _1));
+    return implementation::upper_bound_n(f, n, x, std::bind(c, std::placeholders::_1, std::placeholders::_2), std::bind(p, std::placeholders::_1));
 }
 
 /*************************************************************************************************/
@@ -129,7 +129,7 @@ template <typename I, // I models FowardIterator
           typename C>
 // C models StrictWeakOrdering(T, T)
 inline I upper_bound(I f, I l, const T& x, C c) {
-    return std::upper_bound(f, l, x, boost::bind(c, _1, _2));
+    return std::upper_bound(f, l, x, std::bind(c, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*************************************************************************************************/

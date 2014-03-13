@@ -12,9 +12,9 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <functional>
 
 /*************************************************************************************************/
 
@@ -35,7 +35,7 @@ namespace adobe {
 template <class InputIterator1, class InputIterator2, class BinaryPredicate>
 inline bool equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2,
                   BinaryPredicate pred) {
-    return std::equal(first1, last1, first2, boost::bind(pred, _1, _2));
+    return std::equal(first1, last1, first2, std::bind(pred, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!

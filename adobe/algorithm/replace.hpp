@@ -12,9 +12,9 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <functional>
 
 /*************************************************************************************************/
 
@@ -50,7 +50,7 @@ inline void replace(ForwardRange& range, const T& old_value, const T& new_value)
 template <class ForwardIterator, class Predicate, class T>
 inline void replace_if(ForwardIterator first, ForwardIterator last, Predicate pred,
                        const T& new_value) {
-    std::replace_if(first, last, boost::bind(pred, _1), new_value);
+    std::replace_if(first, last, std::bind(pred, std::placeholders::_1), new_value);
 }
 
 /*!
@@ -93,7 +93,7 @@ inline OutputIterator replace_copy(const ForwardRange& range, OutputIterator res
 template <class ForwardIterator, class OutputIterator, class Predicate, class T>
 inline OutputIterator replace_copy_if(ForwardIterator first, ForwardIterator last,
                                       OutputIterator result, Predicate pred, const T& new_value) {
-    return std::replace_copy_if(first, last, result, boost::bind(pred, _1), new_value);
+    return std::replace_copy_if(first, last, result, std::bind(pred, std::placeholders::_1), new_value);
 }
 
 /*!

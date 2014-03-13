@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <functional>
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>

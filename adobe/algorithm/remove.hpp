@@ -12,9 +12,9 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <functional>
 
 /*************************************************************************************************/
 
@@ -49,7 +49,7 @@ inline typename boost::range_iterator<InputRange>::type remove(InputRange& range
 */
 template <class InputIterator, class Predicate>
 inline InputIterator remove_if(InputIterator first, InputIterator last, Predicate pred) {
-    return std::remove_if(first, last, boost::bind(pred, _1));
+    return std::remove_if(first, last, std::bind(pred, std::placeholders::_1));
 }
 
 /*!
@@ -93,7 +93,7 @@ remove_copy(const InputRange& range, OutputIterator result, const T& value) {
 template <class InputIterator, class OutputIterator, class Predicate>
 inline InputIterator remove_copy_if(InputIterator first, InputIterator last, OutputIterator result,
                                     Predicate pred) {
-    return std::remove_copy_if(first, last, result, boost::bind(pred, _1));
+    return std::remove_copy_if(first, last, result, std::bind(pred, std::placeholders::_1));
 }
 
 /*!

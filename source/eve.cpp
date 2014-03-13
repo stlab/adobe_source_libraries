@@ -14,6 +14,7 @@
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/variant.hpp>
+#include <boost/bind.hpp>
 
 #include <adobe/algorithm/for_each.hpp>
 #include <adobe/algorithm/for_each_position.hpp>
