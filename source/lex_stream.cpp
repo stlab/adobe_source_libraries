@@ -12,6 +12,7 @@
 #include <mutex>
 
 #include <boost/array.hpp>
+#include <boost/bind.hpp>
 
 #include <adobe/once.hpp>
 #include <adobe/string.hpp>

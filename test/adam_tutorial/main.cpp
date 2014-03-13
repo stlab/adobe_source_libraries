@@ -13,6 +13,7 @@
 #include <boost/version.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/bind.hpp>
 
 #include <adobe/adam_evaluate.hpp>
 #include <adobe/adam_parser.hpp>

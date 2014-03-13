@@ -10,6 +10,7 @@
 #include <string>
 
 #include <boost/array.hpp>
+#include <boost/bind.hpp>
 
 #include <adobe/algorithm/sorted.hpp>
 #include <adobe/algorithm/binary_search.hpp>
