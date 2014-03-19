@@ -12,9 +12,9 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <functional>
 
 /*************************************************************************************************/
 
@@ -40,7 +40,7 @@ Linear: at most <code>last - first</code> applications of \c comp.
 template <class InputIterator, class T, class Compare>
 inline InputIterator find_match(InputIterator first, InputIterator last, const T& value,
                                 Compare comp) {
-    return std::find_if(first, last, boost::bind(comp, value, _1));
+    return std::find_if(first, last, std::bind(comp, value, std::placeholders::_1));
 }
 
 /*!
@@ -72,7 +72,7 @@ find_match(const InputRange& range, const T& value, Compare comp) {
 */
 template <class InputIterator, class T, class Compare>
 inline InputIterator find_match(InputIterator first, InputIterator last, const T& value) {
-    return std::find_if(first, last, boost::bind(std::equal_to<T>(), value, _1));
+    return std::find_if(first, last, std::bind(std::equal_to<T>(), value, std::placeholders::_1));
 }
 
 /*!

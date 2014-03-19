@@ -12,7 +12,6 @@
 
 #include <functional>
 
-#include <boost/bind.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/const_iterator.hpp>
 #include <boost/range/end.hpp>

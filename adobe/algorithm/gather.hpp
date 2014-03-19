@@ -15,8 +15,8 @@
 #define ADOBE_ALGORITHM_GATHER_HPP
 
 #include <algorithm> // for std::table_partition
+#include <functional>
 
-#include <boost/bind.hpp>        // for boost::bind
 #include <boost/range/begin.hpp> // for boost::begin(range)
 #include <boost/range/end.hpp>   // for boost::end(range)
 
@@ -78,8 +78,8 @@ template <typename Iter, // Iter models BidirectionalIterator
 std::pair<Iter, Iter> gather(Iter first, Iter last, Iter pivot, Pred pred) {
     //	The first call partitions everything up to (but not including) the pivot element,
     //	while the second call partitions the rest of the sequence.
-    return std::make_pair(std::stable_partition(first, pivot, !boost::bind(pred, _1)),
-                          std::stable_partition(pivot, last, boost::bind(pred, _1)));
+    return std::make_pair(std::stable_partition(first, pivot, std::bind( std::logical_not<bool>(), std::bind(pred, std::placeholders::_1))),
+                          std::stable_partition(pivot, last, std::bind(pred, std::placeholders::_1)));
 }
 
 /**************************************************************************************************/

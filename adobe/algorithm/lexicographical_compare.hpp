@@ -12,9 +12,9 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <functional>
 
 /*************************************************************************************************/
 
@@ -48,7 +48,7 @@ inline bool lexicographical_compare(const InputRange1& range1, const InputRange2
 template <class InputIterator1, class InputIterator2, class Compare>
 inline bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
                                     InputIterator2 first2, InputIterator2 last2, Compare comp) {
-    return std::lexicographical_compare(first1, last1, first2, last2, boost::bind(comp, _1, _2));
+    return std::lexicographical_compare(first1, last1, first2, last2, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!

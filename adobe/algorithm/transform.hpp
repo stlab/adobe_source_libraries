@@ -12,9 +12,9 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <functional>
 
 /*************************************************************************************************/
 
@@ -37,7 +37,7 @@ namespace adobe {
 template <class InputIterator, class OutputIterator, class UnaryOperation>
 inline OutputIterator transform(InputIterator first, InputIterator last, OutputIterator result,
                                 UnaryOperation op) {
-    return std::transform(first, last, result, boost::bind(op, _1));
+    return std::transform(first, last, result, std::bind(op, std::placeholders::_1));
 }
 
 /*!
@@ -70,7 +70,7 @@ inline OutputIterator transform(const InputRange& range, OutputIterator result, 
 template <class InputIterator1, class InputIterator2, class OutputIterator, class BinaryOperation>
 inline OutputIterator transform(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2,
                                 OutputIterator result, BinaryOperation binary_op) {
-    return std::transform(first1, last1, first2, result, boost::bind(binary_op, _1, _2));
+    return std::transform(first1, last1, first2, result, std::bind(binary_op, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!

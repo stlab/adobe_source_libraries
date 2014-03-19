@@ -12,8 +12,7 @@
 
 #include <iterator>
 #include <numeric>
-
-#include <boost/bind.hpp>
+#include <functional>
 
 // REVISIT (sparent): dissable warnings for unused arguments in boost 1.32.0
 #if defined(__MWERKS__)
@@ -129,7 +128,7 @@ inline T accumulate(const InputRange& range, T init) {
 */
 template <typename InputIterator, typename T, typename BinaryOperation>
 inline T accumulate(InputIterator first, InputIterator last, T init, BinaryOperation binary_op) {
-    return std::accumulate(first, last, init, boost::bind(binary_op, _1, _2));
+    return std::accumulate(first, last, init, std::bind(binary_op, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -166,8 +165,8 @@ template <typename InputIterator1, typename InputIterator2, typename T, typename
           typename BinaryOperation2>
 inline T inner_product(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, T init,
                        BinaryOperation1 binary_op1, BinaryOperation2 binary_op2) {
-    return std::inner_product(first1, last1, first2, init, boost::bind(binary_op1, _1, _2),
-                              boost::bind(binary_op2, _1, _2));
+    return std::inner_product(first1, last1, first2, init, std::bind(binary_op1, std::placeholders::_1, std::placeholders::_2),
+                              std::bind(binary_op2, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -206,7 +205,7 @@ inline OutputIterator partial_sum(const InputRange& range, OutputIterator result
 template <typename InputIterator, typename OutputIterator, typename BinaryOperation>
 inline OutputIterator partial_sum(InputIterator first, InputIterator last, OutputIterator result,
                                   BinaryOperation binary_op) {
-    return std::partial_sum(first, last, result, boost::bind(binary_op, _1, _2));
+    return std::partial_sum(first, last, result, std::bind(binary_op, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -242,7 +241,7 @@ inline OutputIterator adjacent_difference(const InputRange& range, OutputIterato
 template <typename InputIterator, typename OutputIterator, typename BinaryOperation>
 inline OutputIterator adjacent_difference(InputIterator first, InputIterator last,
                                           OutputIterator result, BinaryOperation binary_op) {
-    return std::adjacent_difference(first, last, result, boost::bind(binary_op, _1, _2));
+    return std::adjacent_difference(first, last, result, std::bind(binary_op, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!

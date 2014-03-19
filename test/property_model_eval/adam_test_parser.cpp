@@ -14,6 +14,7 @@
 #include <mutex>
 
 #include <boost/array.hpp>
+#include <boost/bind.hpp>
 
 #include <adobe/adam_evaluate.hpp>
 #include <adobe/once.hpp>

@@ -8,10 +8,10 @@
 #ifndef ADOBE_ALGORITHM_CLAMP_HPP
 #define ADOBE_ALGORITHM_CLAMP_HPP
 
-#include <boost/bind.hpp>
-
 #include <adobe/algorithm/select.hpp>
 #include <adobe/functional.hpp>
+
+#include <functional>
 
 namespace adobe {
 
@@ -44,7 +44,7 @@ equivalent to <code>median(min, x, max)</code>.
 
 template <typename T, typename R>
 inline const T& clamp(const T& x, const T& min, const T& max, R r) {
-    return select_1_3_ac(min, x, max, boost::bind(r, _1, _2));
+    return select_1_3_ac(min, x, max, std::bind(r, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -55,7 +55,7 @@ inline const T& clamp(const T& x, const T& min, const T& max, R r) {
 
 template <typename T, typename R>
 inline T& clamp(T& x, T& min, T& max, R r) {
-    return select_1_3_ac(min, x, max, boost::bind(r, _1, _2));
+    return select_1_3_ac(min, x, max, std::bind(r, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -87,7 +87,7 @@ inline T& clamp(T& x, T& min, T& max) {
 
 template <typename T, typename R>
 inline const T& clamp_unordered(const T& x, const T& min, const T& max, R r) {
-    return select_1_3(min, x, max, boost::bind(r, _1, _2));
+    return select_1_3(min, x, max, std::bind(r, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -97,7 +97,7 @@ inline const T& clamp_unordered(const T& x, const T& min, const T& max, R r) {
 
 template <typename T, typename R>
 inline T& clamp_unordered(T& x, T& min, T& max, R r) {
-    return select_1_3(min, x, max, boost::bind(r, _1, _2));
+    return select_1_3(min, x, max, std::bind(r, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!

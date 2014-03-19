@@ -12,9 +12,9 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <functional>
 
 /*************************************************************************************************/
 
@@ -38,7 +38,7 @@ namespace adobe {
 template <class BidirectionalIterator, class Predicate>
 inline BidirectionalIterator partition(BidirectionalIterator first, BidirectionalIterator last,
                                        Predicate pred) {
-    return std::partition(first, last, boost::bind(pred, _1));
+    return std::partition(first, last, std::bind(pred, std::placeholders::_1));
 }
 
 /*!
@@ -60,7 +60,7 @@ inline typename boost::range_iterator<BidirectionalRange>::type partition(Bidire
 template <class BidirectionalIterator, class Predicate>
 inline BidirectionalIterator stable_partition(BidirectionalIterator first,
                                               BidirectionalIterator last, Predicate pred) {
-    return std::stable_partition(first, last, boost::bind(pred, _1));
+    return std::stable_partition(first, last, std::bind(pred, std::placeholders::_1));
 }
 
 /*!

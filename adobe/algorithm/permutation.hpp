@@ -12,9 +12,9 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <functional>
 
 /*************************************************************************************************/
 
@@ -48,7 +48,7 @@ inline bool next_permutation(BidirectionalRange& range) {
 template <class BidirectionalIterator, class Compare>
 inline bool next_permutation(BidirectionalIterator first, BidirectionalIterator last,
                              Compare comp) {
-    return std::next_permutation(first, last, boost::bind(comp, _1, _2));
+    return std::next_permutation(first, last, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -79,7 +79,7 @@ inline bool prev_permutation(BidirectionalRange& range) {
 template <class BidirectionalIterator, class Compare>
 inline bool prev_permutation(BidirectionalIterator first, BidirectionalIterator last,
                              Compare comp) {
-    return std::prev_permutation(first, last, boost::bind(comp, _1, _2));
+    return std::prev_permutation(first, last, std::bind(comp, std::placeholders::_1,std::placeholders:: _2));
 }
 
 /*!

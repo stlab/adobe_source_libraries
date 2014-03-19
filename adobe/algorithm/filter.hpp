@@ -12,9 +12,9 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <functional>
 
 /*************************************************************************************************/
 
@@ -79,7 +79,7 @@ template <typename I, // I models InputIterator
           typename F>
 // F is a function type of the form O F()(value_type(I), O)
 inline O filter(I first, I last, O result, F op) {
-    return implementation::filter(first, last, result, boost::bind<O>(op, _1, _2));
+    return implementation::filter(first, last, result, std::bind<O>(op, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!

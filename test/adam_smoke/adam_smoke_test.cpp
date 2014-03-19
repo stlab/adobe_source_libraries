@@ -9,6 +9,7 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/bind.hpp>
 
 #include <adobe/adam.hpp>
 #include <adobe/adam_evaluate.hpp>

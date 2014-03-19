@@ -8,10 +8,10 @@
 #ifndef ADOBE_ALGORITHM_MEDIAN_HPP
 #define ADOBE_ALGORITHM_MEDIAN_HPP
 
-#include <boost/bind.hpp>
-
 #include <adobe/algorithm/select.hpp>
 #include <adobe/functional.hpp>
+
+#include <functional>
 
 namespace adobe {
 
@@ -39,7 +39,7 @@ second argument.
 */
 template <typename T, typename R>
 inline const T& median(const T& a, const T& b, const T& c, R r) {
-    return select_1_3(a, b, c, boost::bind(r, _1, _2));
+    return select_1_3(a, b, c, std::bind(r, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -48,7 +48,7 @@ inline const T& median(const T& a, const T& b, const T& c, R r) {
 */
 template <typename T, typename R>
 inline T& median(T& a, T& b, T& c, R r) {
-    return select_1_3(a, b, c, boost::bind(r, _1, _2));
+    return select_1_3(a, b, c, std::bind(r, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!

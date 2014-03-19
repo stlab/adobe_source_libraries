@@ -5,6 +5,8 @@
 */
 /*************************************************************************************************/
 
+#include <boost/bind.hpp>
+
 #include <adobe/adam_evaluate.hpp>
 
 #include <adobe/array.hpp>
