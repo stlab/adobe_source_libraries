@@ -13,6 +13,7 @@
 #include <array>
 #include <cassert>
 #include <cstring>
+#include <cstdint>
 
 /**************************************************************************************************/
 
@@ -77,11 +78,102 @@ inline T maj(T x, T y, T z) {
     return (x & y) ^ (x & z) ^ (y & z);
 }
 
+/*
+A source of bytes. The input is a range defined by two iterators. The length
+of the range does not need to be known up front. This will work with
+input iterators.
+*/
+template <typename I>
+class byte_source_iterators
+{
+public:
+    byte_source_iterators( I const& first, I const& last )
+    : first_( first )
+    , last_( last ) {
+    }
+
+    // Note that this returns the number of *bits* available. Even though this
+    // class can only returns complete bytes we need consistency with
+    // byte_source_iterator_n.
+    // The number available is not necessarily the total number, it is just
+    // the number we can get hold of right now.
+    std::size_t bits_available() const {
+        return ( first_ == last_ ) ? 0 : 8;
+    }
+
+    std::uint8_t operator *() const {
+        return *first_;
+    }
+
+    // Prefix
+    byte_source_iterators& operator ++() {
+        ++first_;
+        return *this;
+    }
+
+    // Postfix operator ++ does not work with input iterators so we
+    // do not provide it
+
+private:
+    // Making copies does not work if we are using input iterators so forbid
+    // copy construction and assigment
+    byte_source_iterators( byte_source_iterators const& );
+    byte_source_iterators& operator =( byte_source_iterators const& );
+
+    I first_;
+    I const last_;
+};
+
+/*
+A source of bytes. The input is an iterator and the number of *bits* the
+source can provide. Unlike byte_source_iterators we know the length
+up front
+*/
+template <typename I>
+class byte_source_iterator_n
+{
+public:
+    byte_source_iterator_n( I const& first, std::size_t num_bits )
+    : first_( first )
+    , num_bits_( num_bits ) {
+    }
+
+    // The last byte might not be complete
+    std::size_t bits_available() const {
+        return ( num_bits_ > 8 ) ? 8 : num_bits_;
+    }
+
+    std::uint8_t operator *() const {
+        return *first_;
+    }
+
+    // Prefix
+    byte_source_iterator_n& operator ++() {
+        ++first_;
+        num_bits_ -= bits_available();
+        return *this;
+    }
+
+    // Postfix operator ++ does not work with input iterators so we
+    // do not provide it
+
+private:
+    // Making copies does not work if we are using input iterators so forbid
+    // copy construction and assigment
+    byte_source_iterator_n( byte_source_iterator_n const& );
+    byte_source_iterator_n& operator =( byte_source_iterator_n const& );
+
+    I first_;
+    std::size_t num_bits_;
+};
+
 /**************************************************************************************************/
 
-template <typename HashTraits, typename I>
-void stuff_into_state(typename HashTraits::message_block_type& state,
-                      std::uint16_t& stuff_bit_offset, std::size_t num_bits, I& first) {
+template <typename HashTraits, typename ByteSource>
+std::uint64_t stuff_into_state(typename HashTraits::message_block_type& state,
+                               std::uint16_t& stuff_bit_offset, std::size_t num_bits,
+                               ByteSource& byte_source) {
+
     typedef HashTraits traits_type;
     typedef typename traits_type::message_block_type::value_type value_type;
 
@@ -109,8 +201,13 @@ void stuff_into_state(typename HashTraits::message_block_type& state,
     through the loop we'll be off a byte boundary and will have to shift the next byte appropriately
     (it should shift 0 when we've been through this loop, effectively a nop.)
     */
-    while (num_bits >= 8) {
-        *dst |= (value_type(*first++) & value_type(0xff)) << shift;
+
+    std::uint64_t n_stuffed_bits = 0;
+
+    while (num_bits >= 8 && byte_source.bits_available() >= 8) {
+        *dst |= (value_type(*byte_source) & value_type(0xff)) << shift;
+
+        ++byte_source;
 
         if (shift == 0) {
             ++dst;
@@ -120,13 +217,14 @@ void stuff_into_state(typename HashTraits::message_block_type& state,
             shift -= 8;
         }
 
-        num_bits -= 8;
-
         stuff_bit_offset += 8;
+        n_stuffed_bits += 8;
+        num_bits -= 8;
     }
 
     // sub-byte leftovers which need to be shifted into place.
-    if (num_bits) {
+    if (num_bits && byte_source.bits_available()) {
+        num_bits = std::min(num_bits, byte_source.bits_available());
         /*
         dst is a window of size value_bitsize_k. The message ends somewhere in the window
         [ value_bitsize_k .. 1 ], meaning our leftovers get their high order bit pushed to position
@@ -138,7 +236,9 @@ void stuff_into_state(typename HashTraits::message_block_type& state,
         implying the message ended on the value_type boundary.
         */
         std::size_t message_end(value_bitsize_k - (stuff_bit_offset % value_bitsize_k));
-        value_type v(*first++ & 0xff); // our value in the low 8 bits.
+        value_type v(*byte_source & 0xff); // our value in the low 8 bits.
+
+        ++byte_source;
 
         if (message_end < 8) // shift down
             v >>= 8 - message_end;
@@ -146,9 +246,10 @@ void stuff_into_state(typename HashTraits::message_block_type& state,
             v <<= message_end - 8;
 
         *dst |= v;
-
         stuff_bit_offset += num_bits;
+        n_stuffed_bits += num_bits;
     }
+    return n_stuffed_bits;
 }
 
 /**************************************************************************************************/
@@ -165,13 +266,11 @@ This routine expects whole-byte input until the end of the message, at which poi
 the message can be a subset of 8 bytes. If you're going to be busting up a messages into chunks to
 hash it, then you need to do so at the byte boundary until the last chunk.
 */
-template <typename HashTraits, typename I>
+template <typename HashTraits, typename ByteSource>
 void block_and_digest(typename HashTraits::message_block_type& state, std::uint16_t& stuffed_size,
                       std::uint64_t& message_size, typename HashTraits::state_digest_type& digest,
-                      I first, std::uint64_t num_bits) {
+                      ByteSource& byte_source ) {
     typedef HashTraits traits_type;
-    typedef typename traits_type::message_block_type message_block_type;
-    typedef typename message_block_type::value_type message_block_value_type;
 
     // The size of the message block in bits. Either 512 or 1024.
     constexpr std::size_t message_blocksize_k = traits_type::message_blocksize_k;
@@ -199,21 +298,17 @@ void block_and_digest(typename HashTraits::message_block_type& state, std::uint1
     */
     std::size_t bits_available(message_blocksize_k - stuffed_size);
 
-    while (num_bits >= bits_available) {
-        stuff_into_state<traits_type>(state, stuffed_size, bits_available, first);
+    while (byte_source.bits_available() > 0) {
+        std::uint64_t const bits_stuffed = stuff_into_state<traits_type>(state, stuffed_size, bits_available, byte_source);
 
-        traits_type::digest_message_block(digest, state, stuffed_size);
+        // If we have a full message block then digest it
+        if( bits_stuffed == bits_available ) {
+            traits_type::digest_message_block(digest, state, stuffed_size);
+        }
 
-        message_size += bits_available;
-
-        num_bits -= bits_available;
-
+        message_size += bits_stuffed;
         bits_available = message_blocksize_k;
     }
-
-    stuff_into_state<traits_type>(state, stuffed_size, num_bits, first);
-
-    message_size += num_bits;
 }
 
 /**************************************************************************************************/
@@ -253,7 +348,8 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
     std::uint8_t one_bit(0x80);
     std::uint8_t* one_bit_ptr(&one_bit);
 
-    stuff_into_state<traits_type>(state, stuffed_size, 1, one_bit_ptr);
+    byte_source_iterator_n< std::uint8_t* > bit_source( one_bit_ptr, 1 );
+    stuff_into_state<traits_type>(state, stuffed_size, 1, bit_source);
 
     /*
     If that one bit pushed us to the message block boundary, congratulations. Digest the message and
@@ -698,11 +794,12 @@ public:
     */
     template <typename I>
     inline void update(I first, I last) {
-        typedef typename std::iterator_traits<I>::value_type value_type;
+        // We can only update if the current state is byte aligned
+        assert(stuffed_size_m % 8 == 0);
 
-        constexpr std::size_t ibits_k = implementation::bitsizeof<value_type>();
-
-        update(first, std::distance(first, last) * ibits_k);
+        implementation::byte_source_iterators< I > byte_source(first, last);
+        implementation::block_and_digest<traits_type>(state_m, stuffed_size_m, message_size_m,
+                                                      state_digest_m, byte_source);
     }
 
     /**
@@ -719,11 +816,18 @@ public:
 
     \note While the SHA standard specifies the ability to process messages up to
           2^128 bits, this routine is limited to messages of 2^64 bits in length.
+
+    \note If update is called multiple times all but the last call must have
+          num_bits % 8 == 0
     */
     template <typename I>
     inline void update(I first, std::uint64_t num_bits) {
+        // We can only update if the current state is byte aligned
+        assert(stuffed_size_m % 8 == 0);
+
+        implementation::byte_source_iterator_n< I > byte_source(first, num_bits);
         implementation::block_and_digest<traits_type>(state_m, stuffed_size_m, message_size_m,
-                                                      state_digest_m, first, num_bits);
+                                                      state_digest_m, byte_source);
     }
 
     /**
@@ -758,11 +862,11 @@ public:
     */
     template <typename I>
     static inline digest_type digest(I first, I last) {
-        typedef typename std::iterator_traits<I>::value_type value_type;
+        sha instance;
 
-        constexpr std::size_t ibits_k = implementation::bitsizeof<value_type>();
+        instance.update(first, last);
 
-        return digest(first, std::distance(first, last) * ibits_k);
+        return instance.finalize();
     }
 
     /**
