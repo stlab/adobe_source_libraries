@@ -14,6 +14,7 @@
 #include <cassert>
 #include <cstring>
 #include <cstdint>
+#include <iterator>
 
 /**************************************************************************************************/
 
@@ -90,7 +91,7 @@ public:
     byte_source_iterators( I const& first, I const& last )
     : first_( first )
     , last_( last ) {
-        static_assert(sizeof(std::iterator_traits<I>::value_type) == sizeof(std::uint8_t), "Iterator must supply bytes.");
+        static_assert(sizeof(typename std::iterator_traits<I>::value_type) == sizeof(std::uint8_t), "Iterator must supply bytes.");
     }
 
     // Note that this returns the number of *bits* available. Even though this
@@ -138,7 +139,7 @@ public:
     byte_source_iterator_n( I const& first, std::size_t num_bits )
     : first_( first )
     , num_bits_( num_bits ) {
-        static_assert(sizeof(std::iterator_traits<I>::value_type) == sizeof(std::uint8_t), "Iterator must supply bytes.");
+        static_assert(sizeof(typename std::iterator_traits<I>::value_type) == sizeof(std::uint8_t), "Iterator must supply bytes.");
     }
 
     // The last byte might not be complete
