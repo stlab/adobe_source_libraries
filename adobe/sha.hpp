@@ -90,6 +90,7 @@ public:
     byte_source_iterators( I const& first, I const& last )
     : first_( first )
     , last_( last ) {
+        static_assert(sizeof(std::iterator_traits<I>::value_type) == sizeof(std::uint8_t), "Iterator must supply bytes.");
     }
 
     // Note that this returns the number of *bits* available. Even though this
@@ -114,11 +115,12 @@ public:
     // Postfix operator ++ does not work with input iterators so we
     // do not provide it
 
-private:
     // Making copies does not work if we are using input iterators so forbid
     // copy construction and assigment
-    byte_source_iterators( byte_source_iterators const& );
-    byte_source_iterators& operator =( byte_source_iterators const& );
+    byte_source_iterators( byte_source_iterators const& ) = delete;
+    byte_source_iterators& operator =( byte_source_iterators const& ) = delete;
+
+private:
 
     I first_;
     I const last_;
@@ -136,6 +138,7 @@ public:
     byte_source_iterator_n( I const& first, std::size_t num_bits )
     : first_( first )
     , num_bits_( num_bits ) {
+        static_assert(sizeof(std::iterator_traits<I>::value_type) == sizeof(std::uint8_t), "Iterator must supply bytes.");
     }
 
     // The last byte might not be complete
@@ -157,11 +160,12 @@ public:
     // Postfix operator ++ does not work with input iterators so we
     // do not provide it
 
-private:
     // Making copies does not work if we are using input iterators so forbid
     // copy construction and assigment
-    byte_source_iterator_n( byte_source_iterator_n const& );
-    byte_source_iterator_n& operator =( byte_source_iterator_n const& );
+    byte_source_iterator_n( byte_source_iterator_n const& ) = delete;
+    byte_source_iterator_n& operator =( byte_source_iterator_n const& ) = delete;
+
+private:
 
     I first_;
     std::size_t num_bits_;
