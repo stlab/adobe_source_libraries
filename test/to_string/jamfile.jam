@@ -1,5 +1,3 @@
 project adobe/to_string ;
 
-run [ glob *.cpp ]
-    [ glob ../../../double-conversion/src/*.cc ]
-    ;
+run [ glob *.cpp ] ;

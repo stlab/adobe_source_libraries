@@ -153,6 +153,7 @@ project
 lib asl
     : #sources
         [ glob source/*.cpp ]
+        [ glob $(double-conversion-path)/double-conversion/src/*.cc ]
         /boost/filesystem
         /boost/system
         /boost/thread//boost_thread
