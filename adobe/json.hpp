@@ -19,7 +19,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include <boost/any.hpp>
+#include <double-conversion/src/double-conversion.h>
 
 #include <adobe/string/to_string.hpp>
 
@@ -165,64 +165,33 @@ class json_parser_t {
     }
     
     bool is_number(value_type& t) {
-        double minus = is_char('-') ? -1.0 : 1.0;
-        double result;
-        if (!is_int(result)) return false;
-        result += frac();
-        result *= exp();
-        result *= minus;
-        t = result;
+        using namespace double_conversion;
+
+        // Allowing spaces after sign, because json.org states that whitespace
+        // can appear between any two tokens. We want both empty and error values
+        // to be infinity as it will be an invalid JSON value and is something
+        // we can check against to assert validity. We also allow 'junk' as it
+        // is the end of this token and on to the next one.
+        static const double kNaN(std::numeric_limits<double>::quiet_NaN());
+
+        StringToDoubleConverter c(StringToDoubleConverter::ALLOW_SPACES_AFTER_SIGN |
+                                      StringToDoubleConverter::ALLOW_TRAILING_JUNK,
+                                  kNaN,
+                                  kNaN,
+                                  nullptr,
+                                  nullptr);
+        int                     count(0);
+        double                  value(c.StringToDouble(p_, 128, &count));
+
+        if (std::isnan(value))
+            return false;
+
+        t = value;
+        p_ += count;
+
         return true;
     }
-    
-    double frac() {
-        if (!is_char('.')) return 0.0;
-        double digit;
-        require(is_digit(digit), "digit");
-        
-        double denominator = 0.1;
-        double result = digit * 0.1;
-        
-        while (is_digit(digit)) {
-            denominator *= 0.1;
-            result += digit * denominator;
-        }
-        return result;
-    }
-    
-    double exp() {
-        if (!is_char('e') && !is_char('E')) return 1.0;
-        double minus = is_char('-') ? -1.0 : (is_char('+'), 1.0);
-        double digit;
-        require(is_digit(digit), "exponent digit");
-        double result = digit;
-        while (is_digit(digit)) {
-            result *= 10.0;
-            result += digit;
-        }
-        // REVIST (sparent) : replace with pow_10() table for performance
-        return std::pow(10.0, minus * result);
-    }
-    
-    bool is_digit(double& x) {
-        if (!('0' <= *p_ && *p_ <= '9')) return false;
-        x = *p_++ - '0';
-        return true;
-    }
-    
-    bool is_int(double& x) {
-        if (is_char('0')) { x = 0.0; return true; }
-        double digit;
-        if (!is_digit(digit)) return false;
-        double result = digit;
-        while (is_digit(digit)) {
-            result *= 10.0;
-            result += digit;
-        }
-        x = result;
-        return true;
-    }
-    
+
     std::uint32_t get_four_digits() {
         std::uint32_t result;
         char digit = hex_digit()[static_cast<unsigned char>(*p_++)];
@@ -430,7 +399,6 @@ class json_generator {
     void require(bool x, const char* message) {
         if (!x) throw std::logic_error(message);
     }
-    
     
     void generate_(const value_type& value, std::size_t indent) {
         switch (T::type(value)) {

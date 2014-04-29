@@ -1,5 +1,3 @@
 project adobe/json ;
 
-run [ glob *.cpp ]
-    [ glob ../../../double-conversion/src/*.cc ]
-    ;
+run [ glob *.cpp ] ;
