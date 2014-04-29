@@ -19,8 +19,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include <boost/any.hpp>
-
 #include <adobe/string/to_string.hpp>
 
 /*************************************************************************************************/
@@ -430,7 +428,6 @@ class json_generator {
     void require(bool x, const char* message) {
         if (!x) throw std::logic_error(message);
     }
-    
     
     void generate_(const value_type& value, std::size_t indent) {
         switch (T::type(value)) {

@@ -13,6 +13,7 @@
 #define BOOST_TEST_MAIN
 
 // boost
+#include <boost/any.hpp>
 #include <boost/test/unit_test.hpp>
 
 // asl
