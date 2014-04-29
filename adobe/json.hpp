@@ -487,7 +487,7 @@ class json_generator {
     template <typename S>
     void generate_string(const S& x) {
         static const char hex_digits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-    
+
         *out_++ = '"';
         // REVISIT (sparent) : do escape handling here
         for (const auto& e : x) {

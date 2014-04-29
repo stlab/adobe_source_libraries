@@ -45,7 +45,7 @@ struct helper_t {
     }
     
     template <typename T>
-    static const T& as(const value_type& x) { return x.template cast<const T&>(); }
+    static const T& as(const value_type& x) { return x.cast<T>(); }
 
     static void move_append(object_type& obj, key_type& key, value_type& value) {
         // REVISIT (fbrereto) : dictionary needs move semantics
@@ -95,9 +95,9 @@ BOOST_AUTO_TEST_CASE(asl_json_helper_smoke) {
         ]
     )raw").parse();
     
-    // json_generator<helper_t, std::ostream_iterator<char>>(std::ostream_iterator<char>(std::cout)).generate(x);
+    json_generator<helper_t, std::ostream_iterator<char>>(std::ostream_iterator<char>(std::cout)).generate(x);
 
-    std::cout << adobe::begin_asl_cel << x << adobe::end_asl_cel << '\n';
+    // std::cout << adobe::begin_asl_cel << x << adobe::end_asl_cel << '\n';
 }
 
 /******************************************************************************/
