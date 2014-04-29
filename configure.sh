@@ -96,4 +96,16 @@ else
     echo "INFO : b2 found: skipping boostrap."
 fi
 
+#
+# double-conversion
+#
+
+if [ ! -e 'double-conversion' ]; then
+    echo "INFO : double-conversion not found: setting up."
+
+    echo_run git clone --depth=50 --branch=master git://github.com/stlab/double-conversion.git
+else
+    echo "INFO : double-conversion found: skipping setup."
+fi
+
 echo "INFO : You are ready to go!"
