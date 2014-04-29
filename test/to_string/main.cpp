@@ -7,8 +7,9 @@
 /******************************************************************************/
 
 // stdc++
-#include <vector>
+#include <cfloat>
 #include <iostream>
+#include <vector>
 
 #define BOOST_TEST_MAIN
 
