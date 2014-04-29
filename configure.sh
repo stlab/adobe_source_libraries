@@ -108,4 +108,6 @@ else
     echo "INFO : double-conversion found: skipping setup."
 fi
 
+ls -alF
+
 echo "INFO : You are ready to go!"
