@@ -1,0 +1,9 @@
+project adobe/json
+    : requirements
+        <include>../../../
+    ;
+
+exe json_test :
+    [ glob *.cpp ]
+    [ glob ../../../double-conversion/src/*.cc ]
+    ;
