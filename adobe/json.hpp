@@ -67,6 +67,7 @@ class json_parser_t {
             T::move_append(object, string, value);
             
             while (is_structural_char(',')) {
+                key_type string;
                 require(is_string(string), "string");
                 require(is_structural_char(':'), ":");
                 require(is_value(value), "value");

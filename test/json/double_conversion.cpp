@@ -15,6 +15,7 @@
 
 // asl
 #include <adobe/algorithm/for_each.hpp>
+#include <adobe/any_regular.hpp>
 #include <adobe/string/to_string.hpp>
 
 // double-conversion
@@ -82,6 +83,16 @@ BOOST_AUTO_TEST_CASE(double_conversion_smoke) {
     c.ToShortest(1.1, &builder);
     cout << "double-conversion(1.1) = " << builder.Finalize() << endl;
     }
+}
+
+/******************************************************************************/
+
+BOOST_AUTO_TEST_CASE(any_regular_double_conversion) {
+    cout << "adobe::any_regular_t(DBL_MAX) = "
+             << adobe::any_regular_t(DBL_MAX) << '\n'
+
+         << "adobe::any_regular_t(1.1) = "
+             << adobe::any_regular_t(1.1) << '\n';
 }
 
 /******************************************************************************/

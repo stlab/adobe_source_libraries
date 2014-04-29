@@ -89,12 +89,12 @@ void asl_cel_format::stack_event(stream_type& os, bool is_push) {
 
 void asl_cel_format::handle_atom(stream_type& os, bool is_push) {
     const format_element_t& top(stack_top());
-    name_t parent(stack_depth() >= 2 ? stack_n(1).tag() : name_t());
-    name_t grandparent(stack_depth() >= 3 ? stack_n(2).tag() : name_t());
-    const any_regular_t& value(top.value());
-    bool outputting_bag(parent == seq_name_g && grandparent == bag_name_g);
-    std::size_t& num_out(outputting_bag ? stack_n(2).num_out_m : stack_n(1).num_out_m);
-    bool named_argument(outputting_bag && (num_out & 0x1) == 0);
+    name_t                  parent(stack_depth() >= 2 ? stack_n(1).tag() : name_t());
+    name_t                  grandparent(stack_depth() >= 3 ? stack_n(2).tag() : name_t());
+    const any_regular_t&    value(top.value());
+    bool                    outputting_bag(parent == seq_name_g && grandparent == bag_name_g);
+    std::size_t&            num_out(outputting_bag ? stack_n(2).num_out_m : stack_n(1).num_out_m);
+    bool                    named_argument(outputting_bag && (num_out & 0x1) == 0);
 
     if (is_push) {
         // if this is not the first item in the element, add a comma and set up a newline
@@ -131,22 +131,7 @@ void asl_cel_format::handle_atom(stream_type& os, bool is_push) {
         } else if (value.type_info() == typeid(bool)) {
             os << (value.cast<bool>() ? "true" : "false");
         } else if (value.type_info() == typeid(double)) {
-            double dbl_val(value.cast<double>());
-            boost::int64_t int_val(static_cast<boost::int64_t>(dbl_val));
-
-            if (dbl_val == int_val) {
-                os << int_val;
-            } else {
-                // For asl_cel, we want to output floating-point values in decimal-based
-                // fixed-point notation (asl_cel doesn't support any other format) with
-                // a very high precision for accceptable roundtrip values.
-
-                os.setf(std::ios_base::dec, std::ios_base::basefield);
-                os.setf(std::ios_base::fixed, std::ios_base::floatfield);
-                os.precision(16);
-
-                os << dbl_val;
-            }
+            os << value;
         } else if (value.type_info() == typeid(empty_t)) {
             os << value.cast<empty_t>();
         } else if (value.type_info() == typeid(dictionary_t)) {
