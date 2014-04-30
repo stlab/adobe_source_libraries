@@ -100,7 +100,6 @@
 		9A4B6659176D47970053A5B7 /* unique.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = unique.hpp; sourceTree = "<group>"; };
 		9A4B665A176D47970053A5B7 /* upper_bound.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = upper_bound.hpp; sourceTree = "<group>"; };
 		9A4B665B176D47970053A5B7 /* algorithm.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = algorithm.hpp; path = ../adobe/algorithm.hpp; sourceTree = "<group>"; };
-		9A4B665C176D47970053A5B7 /* any_iterator.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = any_iterator.hpp; path = ../adobe/any_iterator.hpp; sourceTree = "<group>"; };
 		9A4B665D176D47970053A5B7 /* any_regular_fwd.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = any_regular_fwd.hpp; path = ../adobe/any_regular_fwd.hpp; sourceTree = "<group>"; };
 		9A4B665E176D47970053A5B7 /* any_regular.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = any_regular.hpp; path = ../adobe/any_regular.hpp; sourceTree = "<group>"; };
 		9A4B665F176D47970053A5B7 /* arg_stream.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = arg_stream.hpp; path = ../adobe/arg_stream.hpp; sourceTree = "<group>"; };
@@ -180,7 +179,6 @@
 		9A4B66AF176D47970053A5B7 /* memory_fwd.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = memory_fwd.hpp; path = ../adobe/memory_fwd.hpp; sourceTree = "<group>"; };
 		9A4B66B0176D47970053A5B7 /* memory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = memory.hpp; path = ../adobe/memory.hpp; sourceTree = "<group>"; };
 		9A4B66B1176D47970053A5B7 /* mismatch.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = mismatch.hpp; path = ../adobe/mismatch.hpp; sourceTree = "<group>"; };
-		9A4B66B2176D47970053A5B7 /* move.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = move.hpp; path = ../adobe/move.hpp; sourceTree = "<group>"; };
 		9A4B66B4176D47970053A5B7 /* name.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = name.hpp; path = ../adobe/name.hpp; sourceTree = "<group>"; };
 		9A4B66B5176D47970053A5B7 /* numeric.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = numeric.hpp; path = ../adobe/numeric.hpp; sourceTree = "<group>"; };
 		9A4B66B6176D47970053A5B7 /* once.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = once.hpp; path = ../adobe/once.hpp; sourceTree = "<group>"; };
@@ -268,7 +266,6 @@
 		08FB7794FE84155DC02AAC07 /* boost_signals */ = {
 			isa = PBXGroup;
 			children = (
-				E573A44B0F7C4DBF0060FF44 /* empty.cpp */,
 				CE5C1FF1094795E800EB4BB6 /* xcconfigs */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				C6A0FF2B0290797F04C91782 /* Documentation */,
@@ -281,13 +278,14 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				E5A49BC40ADD4511004B6741 /* any_regular.cpp */,
+				CE5C20D809479C0200EB4BB6 /* adam.cpp */,
 				CE5C20D609479C0200EB4BB6 /* adam_evaluate.cpp */,
 				CE5C20D709479C0200EB4BB6 /* adam_parser.cpp */,
-				CE5C20D809479C0200EB4BB6 /* adam.cpp */,
+				E5A49BC40ADD4511004B6741 /* any_regular.cpp */,
+				E573A44B0F7C4DBF0060FF44 /* empty.cpp */,
+				CE5C20DD09479C0200EB4BB6 /* eve.cpp */,
 				CE5C20DB09479C0200EB4BB6 /* eve_evaluate.cpp */,
 				CE5C20DC09479C0200EB4BB6 /* eve_parser.cpp */,
-				CE5C20DD09479C0200EB4BB6 /* eve.cpp */,
 				CE8878C40DF0C79100BECB23 /* expression_filter.cpp */,
 				CE5C20DE09479C0200EB4BB6 /* expression_parser.cpp */,
 				CE5C20DF09479C0200EB4BB6 /* extents.cpp */,
@@ -301,8 +299,8 @@
 				CE5C20E109479C0200EB4BB6 /* lex_shared.cpp */,
 				CE5C20E209479C0200EB4BB6 /* lex_stream.cpp */,
 				CE6078360A65A100008DB6B4 /* localization.cpp */,
-				E5BE791B0D8984E60043B19C /* memory.cpp */,
 				CE5C20E309479C0200EB4BB6 /* md5.cpp */,
+				E5BE791B0D8984E60043B19C /* memory.cpp */,
 				CE5C20E409479C0200EB4BB6 /* name.cpp */,
 				CE5C20E509479C0200EB4BB6 /* parser_shared.cpp */,
 				88D53C6E0BF7CE90004A77BB /* string.cpp */,
@@ -317,9 +315,9 @@
 				CE981C810A4C665E00AC53EF /* xml_parser.cpp */,
 				CE5C20F009479C0200EB4BB6 /* xml_token.cpp */,
 				CE5C20F109479C0200EB4BB6 /* xstring.cpp */,
+				CE5C20F409479C0200EB4BB6 /* zuid.cpp */,
 				CE5C20F209479C0200EB4BB6 /* zuid_sys_dep.cpp */,
 				CE5C20F309479C0200EB4BB6 /* zuid_uuid.cpp */,
-				CE5C20F409479C0200EB4BB6 /* zuid.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -521,7 +519,6 @@
 				9A4B662C176D47970053A5B7 /* adam.hpp */,
 				9A4B662D176D47970053A5B7 /* algorithm */,
 				9A4B665B176D47970053A5B7 /* algorithm.hpp */,
-				9A4B665C176D47970053A5B7 /* any_iterator.hpp */,
 				9A4B665D176D47970053A5B7 /* any_regular_fwd.hpp */,
 				9A4B665E176D47970053A5B7 /* any_regular.hpp */,
 				9A4B665F176D47970053A5B7 /* arg_stream.hpp */,
@@ -575,7 +572,6 @@
 				9A4B66AF176D47970053A5B7 /* memory_fwd.hpp */,
 				9A4B66B0176D47970053A5B7 /* memory.hpp */,
 				9A4B66B1176D47970053A5B7 /* mismatch.hpp */,
-				9A4B66B2176D47970053A5B7 /* move.hpp */,
 				9A4B66B4176D47970053A5B7 /* name.hpp */,
 				9A4B66B5176D47970053A5B7 /* numeric.hpp */,
 				9A4B66B6176D47970053A5B7 /* once.hpp */,
@@ -637,7 +633,7 @@
 		08FB7793FE84155DC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0510;
 			};
 			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "adobe_source" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -735,11 +731,17 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = asl_dev;
 			};
 			name = Debug;
@@ -748,10 +750,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				PRODUCT_NAME = asl_dev;
 			};
@@ -794,7 +801,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
 			buildSettings = {
-				ARCHS = ppc;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				PRODUCT_NAME = adobe_source;
@@ -806,7 +812,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C2037094797C700EB4BB6 /* adobe_release.xcconfig */;
 			buildSettings = {
-				ARCHS = i386;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				PRODUCT_NAME = adobe_source;
@@ -829,11 +834,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
-				ARCHS = ppc;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				PRODUCT_NAME = asl_dev;
 			};
@@ -843,11 +852,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
-				ARCHS = i386;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				PRODUCT_NAME = asl_dev;
 			};
@@ -857,14 +870,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				PRODUCT_NAME = asl_dev;
 			};
@@ -874,11 +888,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
-				ARCHS = ppc;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				PRODUCT_NAME = asl_dev;
 			};
@@ -888,11 +906,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
-				ARCHS = i386;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				PRODUCT_NAME = asl_dev;
 			};
@@ -902,14 +924,15 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				PRODUCT_NAME = asl_dev;
 			};

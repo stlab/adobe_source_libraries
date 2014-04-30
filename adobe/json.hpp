@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_JSON_HPP
 #define ADOBE_JSON_HPP
@@ -23,7 +23,7 @@
 
 #include <adobe/string/to_string.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
     Requirements on T:
     
@@ -173,20 +173,51 @@ class json_parser_t {
         if (result) t = move(string);
         return result;
     }
-    
+
     bool is_number(value_type& t) {
-        if (is_char('+'))
+        const char* p = p_;
+        bool neg = is_char('-');
+        if (!is_int()) {
+            require(!neg, "digit");
             return false;
+        }
+        frac();
+        exp();
 
-        int count(0);
-        double value(s2d_.StringToDouble(p_, 128, &count));
+        int count = 0;
+        double value = s2d_.StringToDouble(p, static_cast<int>(p_ - p), &count);
 
-        if (std::isnan(value))
-            return false;
+        require(std::isfinite(value), "finite number");
+        ASSERT(count == p_ - p && "StringToDouble() failure");
 
         t = value;
-        p_ += count;
+        return true;
+    }
+    
+    void frac() {
+        if (!is_char('.')) return;
+        require(is_digit(), "digit");
+        
+        while (is_digit()) ;
+    }
+    
+    void exp() {
+        if (!is_char('e') && !is_char('E')) return;
+        is_char('-') || is_char('+');
+        require(is_digit(), "exponent digit");
+        while (is_digit()) ;
+    }
+    
+    bool is_digit() {
+        if (!('0' <= *p_ && *p_ <= '9')) return false;
+        ++p_;
+        return true;
+    }
 
+    bool is_int() {
+        if (is_char('0')) return true;
+        if (!is_digit()) return false;
+        while (is_digit()) ;
         return true;
     }
 
@@ -215,7 +246,9 @@ class json_parser_t {
         phrasing.
     */
     void require(bool x, const char* failure) {
-        if (!x) throw std::logic_error(failure);
+        using namespace std;
+
+        if (!x) throw logic_error(failure + string(" is required"));
     }
     
     // REVISIT (sparent) : table is overkill, replace with switch and agnostic line ending counter.
@@ -338,13 +371,13 @@ class json_parser_t {
     
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 enum class json_type {
     object, array, string, number, boolean, null
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*
     REVISIT (sparent): Add the following options, (pretty, precise, ascii, ordered), default are
     (compact, ?decimal, readible?, utf8, unordered)
@@ -504,8 +537,8 @@ class json_generator {
     O out_;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 // ADOBE_JSON_HPP
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
