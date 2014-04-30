@@ -4,7 +4,7 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/******************************************************************************/
+/**************************************************************************************************/
 
 // stdc++
 #include <vector>
@@ -22,14 +22,15 @@
 #include <adobe/algorithm/lower_bound.hpp>
 #include <adobe/json.hpp>
 
-/******************************************************************************/
+/**************************************************************************************************/
 
 using namespace std;
 using namespace boost;
+using namespace adobe;
 
-/******************************************************************************/
+/**************************************************************************************************/
 
-struct json_helper_t {
+struct any_json_helper_t {
     typedef any                                 value_type;
     typedef string                              key_type;
     typedef string                              string_type;
@@ -79,11 +80,11 @@ struct json_helper_t {
     }
 };
 
-/******************************************************************************/
+/**************************************************************************************************/
 
 BOOST_AUTO_TEST_CASE(any_json_helper_smoke) {
     std::cout << "-=-=- any_json_helper_smoke -=-=-\n";
-    any x = json_parser_t<json_helper_t>(u8R"raw(
+    any x = json_parser<any_json_helper_t>(u8R"raw(
         [
             42,
             12.536,
@@ -114,7 +115,7 @@ BOOST_AUTO_TEST_CASE(any_json_helper_smoke) {
         ]
     )raw").parse();
     
-    json_generator<json_helper_t, ostream_iterator<char>>(ostream_iterator<char>(cout)).generate(x);
+    json_generator<any_json_helper_t, ostream_iterator<char>>(ostream_iterator<char>(cout)).generate(x);
 
     cout << endl;
 }
