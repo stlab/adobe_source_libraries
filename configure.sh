@@ -21,10 +21,26 @@ BOOST_DIR=boost_${BOOST_US_VER}
 BOOST_TAR=$BOOST_DIR.tar.gz
 
 #
-# If need be, download Boost and unzip it, moving it to the appropriate location.
+# Make sure we're at the top-level directory when we set up all our siblings.
 #
 
 cd ..
+
+#
+# fetch the double-conversion library.
+#
+
+if [ ! -e 'double-conversion' ]; then
+    echo "INFO : double-conversion not found: setting up."
+
+    echo_run git clone --depth=50 --branch=master git://github.com/stlab/double-conversion.git
+else
+    echo "INFO : double-conversion found: skipping setup."
+fi
+
+#
+# If need be, download Boost and unzip it, moving it to the appropriate location.
+#
 
 if [ ! -e 'boost_libraries' ]; then
     echo "INFO : boost_libraries not found: setting up."
@@ -89,11 +105,19 @@ fi
 if [ ! -e './boost_libraries/b2' ]; then
     echo "INFO : b2 not found: boostrapping."
 
-    cd boost_libraries;
+    echo_run cd boost_libraries;
 
     echo_run ./bootstrap.sh --with-toolset=clang
+
+    echo_run cd ..
 else
     echo "INFO : b2 found: skipping boostrap."
 fi
+
+#
+# A blurb of diagnostics to make sure everything is set up properly.
+#
+
+ls -alF
 
 echo "INFO : You are ready to go!"

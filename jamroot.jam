@@ -41,6 +41,22 @@ else
 
 use-project /boost : $(boost-path)  ;
 
+#
+# Permits overriding the double-conversion directory by specifying DBL_CONV_PATH
+# in the OS environment table.
+#
+
+local double-conversion-path = [ os.environ DBL_CONV_PATH ] ;
+
+if $(double-conversion-path)
+{
+    double-conversion-path = $(double-conversion-path) ;
+}
+else
+{
+    double-conversion-path = ../ ;
+}
+
 # Set up c++11 support as a feature so it will propagate into the
 # boost dependencies
 
@@ -70,6 +86,7 @@ asl_requirements =
 
     # Include directories
     <include>$(boost-path)
+    <include>$(double-conversion-path)
     <include>.
 
     # Linker specializations
@@ -136,6 +153,7 @@ project
 lib asl
     : #sources
         [ glob source/*.cpp ]
+        [ glob $(double-conversion-path)/double-conversion/src/*.cc ]
         /boost/filesystem
         /boost/system
         /boost/thread//boost_thread

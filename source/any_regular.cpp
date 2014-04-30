@@ -12,6 +12,8 @@
 #include <cassert>
 #include <string>
 
+#include <double-conversion/src/double-conversion.h>
+
 #include <adobe/algorithm/sorted.hpp>
 #include <adobe/algorithm/lower_bound.hpp>
 #include <adobe/array.hpp>
@@ -56,6 +58,22 @@ template <typename T>
 struct serializable : serializable_t {
     serializable() {}
     void operator()(std::ostream& out, const any_regular_t& x) const { out << format(x.cast<T>()); }
+};
+
+/**************************************************************************************************/
+
+template <>
+struct serializable<double> : serializable_t {
+    serializable() {}
+    void operator()(std::ostream& out, const any_regular_t& x) const {
+        using namespace double_conversion;
+
+        const DoubleToStringConverter& c(DoubleToStringConverter::EcmaScriptConverter());
+        char                           buf[32] = { 0 };
+        StringBuilder                  builder(buf, sizeof(buf));
+        c.ToShortest(x.cast<double>(), &builder);
+        out << builder.Finalize();
+    }
 };
 
 /**************************************************************************************************/

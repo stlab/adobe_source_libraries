@@ -252,6 +252,9 @@ struct name_t : boost::totally_ordered<name_t, name_t> {
 
     const char* c_str() const { return ptr_m; }
 
+    const char* begin() const { return ptr_m; }
+    const char* end() const { return begin() + std::strlen(begin()); }
+
     /**
         for use with sorting, e.g.:
 
