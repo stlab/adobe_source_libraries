@@ -8,7 +8,6 @@
 #ifndef ADOBE_JSON_HPP
 #define ADOBE_JSON_HPP
 
-#include <cassert>
 #include <cfloat>
 #include <cmath>
 #include <cstddef>
@@ -21,6 +20,7 @@
 
 #include <double-conversion/src/double-conversion.h>
 
+#include <adobe/cassert.hpp>
 #include <adobe/any_regular.hpp>
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
@@ -194,7 +194,7 @@ class json_parser {
         double value = s2d_.StringToDouble(p, static_cast<int>(p_ - p), &count);
 
         require(std::isfinite(value), "finite number");
-        ASSERT(count == p_ - p && "StringToDouble() failure");
+        ADOBE_ASSERT(count == p_ - p && "StringToDouble() failure");
 
         t = value;
         return true;
@@ -571,7 +571,7 @@ struct asl_json_helper_t {
         else if (type == typeid(bool)) return json_type::boolean;
         else if (type == typeid(adobe::empty_t)) return json_type::null;
 
-        assert(false && "invalid type for serialization");
+        ADOBE_ASSERT(false && "invalid type for serialization");
     }
     
     template <typename T>
