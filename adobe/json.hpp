@@ -41,6 +41,7 @@
 */
 template <typename T>
 class json_parser_t {
+    constexpr static double kNaN = std::numeric_limits<double>::quiet_NaN();
   public:
     typedef typename T::object_type object_type;
     typedef typename T::array_type array_type;
@@ -48,7 +49,16 @@ class json_parser_t {
     typedef typename T::string_type string_type;
     typedef typename T::key_type key_type;
     
-    explicit json_parser_t(const char* p) : p_(p) { }
+    /*
+    We want both empty and error values to be infinity as it will be an invalid
+    JSON value and is something we can check against to assert validity. We also
+    allow 'junk' as it is the end of this token and on to the next one.
+    */
+    explicit json_parser_t(const char* p) :
+        p_(p),
+        s2d_(double_conversion::StringToDoubleConverter::ALLOW_TRAILING_JUNK,
+             kNaN, kNaN, nullptr, nullptr)
+        { }
 
     value_type parse() {
         value_type result;
@@ -165,23 +175,11 @@ class json_parser_t {
     }
     
     bool is_number(value_type& t) {
-        using namespace double_conversion;
+        if (is_char('+'))
+            return false;
 
-        // Allowing spaces after sign, because json.org states that whitespace
-        // can appear between any two tokens. We want both empty and error values
-        // to be infinity as it will be an invalid JSON value and is something
-        // we can check against to assert validity. We also allow 'junk' as it
-        // is the end of this token and on to the next one.
-        static const double kNaN(std::numeric_limits<double>::quiet_NaN());
-
-        StringToDoubleConverter c(StringToDoubleConverter::ALLOW_SPACES_AFTER_SIGN |
-                                      StringToDoubleConverter::ALLOW_TRAILING_JUNK,
-                                  kNaN,
-                                  kNaN,
-                                  nullptr,
-                                  nullptr);
-        int                     count(0);
-        double                  value(c.StringToDouble(p_, 128, &count));
+        int count(0);
+        double value(s2d_.StringToDouble(p_, 128, &count));
 
         if (std::isnan(value))
             return false;
@@ -264,29 +262,8 @@ class json_parser_t {
         return f + bytes_to_write;
     }
     
-    const char* p_;
-
-#if 0
-        static const char blank_[256] {
-        /*        0       1       2       3       4       5       6       7       8       9       A       B       C       D       E       F */
-        /* 0 */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', 
-        /* 1 */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-        /* 2 */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-        /* 3 */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-        /* 4 */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-        /* 5 */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-        /* 6 */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-        /* 7 */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-        /* 8 */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-        /* 9 */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-        /* A */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-        /* B */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-        /* C */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-        /* D */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-        /* E */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00',
-        /* F */ '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00', '\x00'
-        };
-#endif
+    const char*                                p_;
+    double_conversion::StringToDoubleConverter s2d_;
 
     typedef char table_t_[256];
     
