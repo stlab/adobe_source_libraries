@@ -90,20 +90,19 @@ Functions</h2></td></tr>
 <tr class="memitem:ga81fb5f2c69c9146c9f98b04c69398e00"><td class="memTemplParams" colspan="2">template&lt;typename I &gt; </td></tr>
 <tr class="memitem:ga81fb5f2c69c9146c9f98b04c69398e00"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__sha.html#ga81fb5f2c69c9146c9f98b04c69398e00">update</a> (I first, I last)</td></tr>
 <tr class="separator:ga81fb5f2c69c9146c9f98b04c69398e00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaff89dc73e2f97c7b3301d2d26a76f756"><td class="memTemplParams" colspan="2">template&lt;typename I &gt; </td></tr>
-<tr class="memitem:gaff89dc73e2f97c7b3301d2d26a76f756"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__sha.html#gaff89dc73e2f97c7b3301d2d26a76f756">update</a> (I first, boost::uint64_t num_bits)</td></tr>
-<tr class="separator:gaff89dc73e2f97c7b3301d2d26a76f756"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga05359c1cbc1f6cc7e91795f90086d78f"><td class="memItemLeft" align="right" valign="top">digest_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sha.html#ga05359c1cbc1f6cc7e91795f90086d78f">finalize</a> () const </td></tr>
-<tr class="separator:ga05359c1cbc1f6cc7e91795f90086d78f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0ff5f87acca27351ce9f652e294feb8b"><td class="memTemplParams" colspan="2">template&lt;typename I &gt; </td></tr>
+<tr class="memitem:ga0ff5f87acca27351ce9f652e294feb8b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__sha.html#ga0ff5f87acca27351ce9f652e294feb8b">update</a> (I first, std::uint64_t num_bits)</td></tr>
+<tr class="separator:ga0ff5f87acca27351ce9f652e294feb8b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1508c298605d8eea44f8592b48848cd3"><td class="memItemLeft" align="right" valign="top">digest_type&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__sha.html#ga1508c298605d8eea44f8592b48848cd3">finalize</a> ()</td></tr>
+<tr class="separator:ga1508c298605d8eea44f8592b48848cd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6154efaa296777d2cb1fac6334c7d486"><td class="memTemplParams" colspan="2">template&lt;typename I &gt; </td></tr>
 <tr class="memitem:ga6154efaa296777d2cb1fac6334c7d486"><td class="memTemplItemLeft" align="right" valign="top">static digest_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__sha.html#ga6154efaa296777d2cb1fac6334c7d486">digest</a> (I first, I last)</td></tr>
 <tr class="separator:ga6154efaa296777d2cb1fac6334c7d486"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gacf249dcfb8c97fac6abb5710ee5fa3dd"><td class="memTemplParams" colspan="2">template&lt;typename I &gt; </td></tr>
-<tr class="memitem:gacf249dcfb8c97fac6abb5710ee5fa3dd"><td class="memTemplItemLeft" align="right" valign="top">static digest_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__sha.html#gacf249dcfb8c97fac6abb5710ee5fa3dd">digest</a> (I first, boost::uint64_t num_bits)</td></tr>
-<tr class="separator:gacf249dcfb8c97fac6abb5710ee5fa3dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f453bc1b5beb2b87bf8baa41441afe4"><td class="memTemplParams" colspan="2">template&lt;typename I &gt; </td></tr>
+<tr class="memitem:ga2f453bc1b5beb2b87bf8baa41441afe4"><td class="memTemplItemLeft" align="right" valign="top">static digest_type&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__sha.html#ga2f453bc1b5beb2b87bf8baa41441afe4">digest</a> (I first, std::uint64_t num_bits)</td></tr>
+<tr class="separator:ga2f453bc1b5beb2b87bf8baa41441afe4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>Add sentinel versions of the SHA algorithms, making long_distance obsolete. </dd></dl>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a class="anchor" id="ga539b588128d690183ff55f1a0d06ff7c"></a>
 <div class="memitem">
@@ -117,7 +116,7 @@ Functions</h2></td></tr>
 <p>A statically-sized, contiguous array for the resulting SHA-* digest.</p>
 <dl class="section note"><dt>Note</dt><dd>the size of this digest will change depending on the SHA routine in use. </dd></dl>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00737">737</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00771">771</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -133,7 +132,7 @@ Functions</h2></td></tr>
 
 <p>A bit-oriented implementation of the SHA-1 Secure Hash Algorithm. </p>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00863">863</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00959">959</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -149,7 +148,7 @@ Functions</h2></td></tr>
 
 <p>A bit-oriented implementation of the SHA-224 Secure Hash Algorithm. </p>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00871">871</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00967">967</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -165,7 +164,7 @@ Functions</h2></td></tr>
 
 <p>A bit-oriented implementation of the SHA-256 Secure Hash Algorithm. </p>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00879">879</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00975">975</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -181,7 +180,7 @@ Functions</h2></td></tr>
 
 <p>A bit-oriented implementation of the SHA-384 Secure Hash Algorithm. </p>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00887">887</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00983">983</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -197,7 +196,7 @@ Functions</h2></td></tr>
 
 <p>A bit-oriented implementation of the SHA-512 Secure Hash Algorithm. </p>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00895">895</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00991">991</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -216,7 +215,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Sets the state of the digest machine to its default. </p>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00744">744</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00778">778</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -252,13 +251,13 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to 2^64 bits. A workaround to the limitation is to call this routine multiple times. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to <code>sizeof(std::iterator_traits&lt;I&gt;::difference_type) * 8</code> bits. A workaround to the limitation is to call this routine multiple times. Even then, the total message length is limited to 2^64 bits. </dd></dl>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00766">766</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00801">801</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="gaff89dc73e2f97c7b3301d2d26a76f756"></a>
+<a class="anchor" id="ga0ff5f87acca27351ce9f652e294feb8b"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -271,7 +270,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">boost::uint64_t&#160;</td>
+          <td class="paramtype">std::uint64_t&#160;</td>
           <td class="paramname"><em>num_bits</em>&#160;</td>
         </tr>
         <tr>
@@ -290,13 +289,15 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to 2^64 bits. A workaround to the limitation is to call this routine multiple times. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to messages of 2^64 bits in length.</dd>
+<dd>
+If update is called multiple times all but the last call must have num_bits % 8 == 0 </dd></dl>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00790">790</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00829">829</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="ga05359c1cbc1f6cc7e91795f90086d78f"></a>
+<a class="anchor" id="ga1508c298605d8eea44f8592b48848cd3"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -304,13 +305,13 @@ Functions</h2></td></tr>
           <td class="memname">digest_type finalize </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 <dl class="section return"><dt>Returns</dt><dd>The SHA-* digest of the message </dd></dl>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00800">800</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00843">843</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
@@ -353,14 +354,14 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to 2^64 bits.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to <code>sizeof(std::iterator_traits&lt;I&gt;::difference_type) * 8</code> bits.</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>The SHA-* digest of the message </dd></dl>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00819">819</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00869">869</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="gacf249dcfb8c97fac6abb5710ee5fa3dd"></a>
+<a class="anchor" id="ga2f453bc1b5beb2b87bf8baa41441afe4"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -376,7 +377,7 @@ Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">boost::uint64_t&#160;</td>
+          <td class="paramtype">std::uint64_t&#160;</td>
           <td class="paramname"><em>num_bits</em>&#160;</td>
         </tr>
         <tr>
@@ -399,10 +400,10 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section note"><dt>Note</dt><dd>While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to 2^64 bits.</dd></dl>
+<dl class="section note"><dt>Note</dt><dd>While the SHA standard specifies the ability to process messages up to 2^128 bits, this routine is limited to messages of 2^64 bits in length.</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>The SHA-* digest of the message </dd></dl>
 
-<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00840">840</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
+<p>Definition at line <a class="el" href="sha_8hpp_source.html#l00892">892</a> of file <a class="el" href="sha_8hpp_source.html">sha.hpp</a>.</p>
 
 </div>
 </div>

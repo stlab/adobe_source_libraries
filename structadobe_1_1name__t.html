@@ -76,6 +76,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa385aa18f5e42db5a415c25a90f4193d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a89da6be964480b4c86334e4e337d3cf2"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structadobe_1_1name__t.html#a89da6be964480b4c86334e4e337d3cf2">c_str</a> () const </td></tr>
 <tr class="separator:a89da6be964480b4c86334e4e337d3cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99e7594a4558ebe2691989f87419dc31"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structadobe_1_1name__t.html#a99e7594a4558ebe2691989f87419dc31">begin</a> () const </td></tr>
+<tr class="separator:a99e7594a4558ebe2691989f87419dc31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe996ca799ba4d8409f77f724d027f73"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structadobe_1_1name__t.html#afe996ca799ba4d8409f77f724d027f73">end</a> () const </td></tr>
+<tr class="separator:afe996ca799ba4d8409f77f724d027f73"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -94,7 +98,7 @@ Friends</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A name is an immutable string literal used for indexing associative containers (e.g., dictionary_t.) It has several performance guarantees that make it a preferred alternative to other string-based key types. </p>
 
-<p>Definition at line <a class="el" href="name_8hpp_source.html#l00231">231</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
+<p>Definition at line <a class="el" href="name_8hpp_source.html#l00216">216</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a1a5291ff28c458c79cd721c3263eb609"></a>
 <div class="memitem">
@@ -118,7 +122,7 @@ Friends</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="name_8hpp_source.html#l00233">233</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
+<p>Definition at line <a class="el" href="name_8hpp_source.html#l00217">217</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
 
 </div>
 </div>
@@ -137,7 +141,7 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 <p>Implicit conversion constructor from a <a class="el" href="structadobe_1_1static__name__t.html">static_name_t</a>. </p>
 
-<p>Definition at line <a class="el" href="name_8hpp_source.html#l00240">240</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
+<p>Definition at line <a class="el" href="name_8hpp_source.html#l00222">222</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
 
 </div>
 </div>
@@ -180,7 +184,41 @@ Friends</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Definition at line <a class="el" href="name_8hpp_source.html#l00272">272</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
+<p>Definition at line <a class="el" href="name_8hpp_source.html#l00253">253</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a99e7594a4558ebe2691989f87419dc31"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* begin </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="name_8hpp_source.html#l00255">255</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="afe996ca799ba4d8409f77f724d027f73"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* end </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Definition at line <a class="el" href="name_8hpp_source.html#l00256">256</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
 
 </div>
 </div>
@@ -220,7 +258,7 @@ Friends</h2></td></tr>
 </pre><p>The implicit sort (<code>operator&lt;</code>) is lexicographical ("slow"), whereas fast sort leverages the runtime hash of the <a class="el" href="structadobe_1_1name__t.html">name_t</a> to speed things up. The sort order is <em>not</em> guaranteed between processes or DLLs, nor is it guaranteed to be lexicographical. It is only guaranteed to be stable for the lifetime of the process.</p>
 <dl class="section user"><dt>Complexity Guarantee(s)</dt><dd>O(1) </dd></dl>
 
-<p>Definition at line <a class="el" href="name_8hpp_source.html#l00289">289</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
+<p>Definition at line <a class="el" href="name_8hpp_source.html#l00272">272</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
 
 </div>
 </div>
@@ -292,7 +330,7 @@ Friends</h2></td></tr>
 </div><div class="memdoc">
 <dl class="section user"><dt>Complexity Guarantee(s)</dt><dd>O(1) </dd></dl>
 
-<p>Definition at line <a class="el" href="name_8hpp_source.html#l00259">259</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
+<p>Definition at line <a class="el" href="name_8hpp_source.html#l00240">240</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
 
 </div>
 </div>
@@ -330,7 +368,7 @@ Friends</h2></td></tr>
 <p>Lexicographical comparison of two names. For a faster comparsion use <a class="el" href="structadobe_1_1name__t.html#a9006cbeb86c82b7c6ab21429c931746b">name_t::fast_sort</a>.</p>
 <dl class="section user"><dt>Complexity Guarantee(s)</dt><dd>O(N) </dd></dl>
 
-<p>Definition at line <a class="el" href="name_8hpp_source.html#l00269">269</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
+<p>Definition at line <a class="el" href="name_8hpp_source.html#l00249">249</a> of file <a class="el" href="name_8hpp_source.html">name.hpp</a>.</p>
 
 </div>
 </div>

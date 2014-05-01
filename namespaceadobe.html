@@ -54,6 +54,7 @@
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">adobe Namespace Reference</div>  </div>
@@ -67,6 +68,15 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classadobe_1_1json__parser.html">json_parser</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A utility class that parses raw JSON data and uses a helper class to construct the desired representations of what is parsed.  <a href="classadobe_1_1json__parser.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classadobe_1_1json__generator.html">json_generator</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A utility class that uses a helper class to access a provided data structure and output well-formed JSON.  <a href="classadobe_1_1json__generator.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structadobe_1_1asl__json__helper__t.html">asl_json_helper_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A utility class can be used with <a class="el" href="classadobe_1_1json__parser.html">json_parser</a> and <a class="el" href="classadobe_1_1json__generator.html">json_generator</a> to round trip JSON data through the common ASL data structures.  <a href="structadobe_1_1asl__json__helper__t.html#details">More...</a><br/></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structadobe_1_1static__name__t.html">static_name_t</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structadobe_1_1name__t.html">name_t</a></td></tr>
@@ -105,6 +115,20 @@ Typedefs</h2></td></tr>
 <tr class="memdesc:ga27532808a0e6d9fb9a2951da44448c94"><td class="mdescLeft">&#160;</td><td class="mdescRight">A bit-oriented implementation of the SHA-512 Secure Hash Algorithm.  <a href="group__sha.html#ga27532808a0e6d9fb9a2951da44448c94">More...</a><br/></td></tr>
 <tr class="separator:ga27532808a0e6d9fb9a2951da44448c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ac75c61993722a9b8aaa44704072ec06c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceadobe.html#ac75c61993722a9b8aaa44704072ec06c">json_type</a> { <br/>
+&#160;&#160;<a class="el" href="namespaceadobe.html#ac75c61993722a9b8aaa44704072ec06caa8cfde6331bd59eb2ac96f8911c4b666">object</a>, 
+<a class="el" href="namespaceadobe.html#ac75c61993722a9b8aaa44704072ec06caf1f713c9e000f5d3f280adbd124df4f5">array</a>, 
+<a class="el" href="namespaceadobe.html#ac75c61993722a9b8aaa44704072ec06cab45cffe084dd3d20d928bee85e7b0f21">string</a>, 
+<a class="el" href="namespaceadobe.html#ac75c61993722a9b8aaa44704072ec06cab1bc248a7ff2b2e95569f56de68615df">number</a>, 
+<br/>
+&#160;&#160;<a class="el" href="namespaceadobe.html#ac75c61993722a9b8aaa44704072ec06ca84e2c64f38f78ba3ea5c905ab5a2da27">boolean</a>, 
+<a class="el" href="namespaceadobe.html#ac75c61993722a9b8aaa44704072ec06ca37a6259cc0c1dae299a7866489dff0bd">null</a>
+<br/>
+ }</td></tr>
+<tr class="separator:ac75c61993722a9b8aaa44704072ec06c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga51cabd7eeb3372ffe0c24e9cc857c020"><td class="memTemplParams" colspan="2">template&lt;std::size_t Bits, typename Iterator , typename Predicate &gt; </td></tr>
@@ -116,10 +140,54 @@ Functions</h2></td></tr>
 <tr class="memitem:gab3450ca1c138f8ccf161348bcbf78dba"><td class="memTemplParams" colspan="2">template&lt;std::size_t Bits, typename Container &gt; </td></tr>
 <tr class="memitem:gab3450ca1c138f8ccf161348bcbf78dba"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="group__fnv.html#ga52b4e150e50ed0bfb00ac7dd5c56859f">fnvtype</a>&lt; Bits &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__fnv.html#gab3450ca1c138f8ccf161348bcbf78dba">fnv1a</a> (Container c)</td></tr>
 <tr class="separator:gab3450ca1c138f8ccf161348bcbf78dba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2bf5079d6df0f2807a53d5cd8ed82ed1"><td class="memItemLeft" align="right" valign="top">adobe::any_regular_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__json.html#ga2bf5079d6df0f2807a53d5cd8ed82ed1">json_parse</a> (const char *data)</td></tr>
+<tr class="memdesc:ga2bf5079d6df0f2807a53d5cd8ed82ed1"><td class="mdescLeft">&#160;</td><td class="mdescRight">A utility routine that takes in raw JSON data and produces a representation of that data using the common ASL data structures.  <a href="group__json.html#ga2bf5079d6df0f2807a53d5cd8ed82ed1">More...</a><br/></td></tr>
+<tr class="separator:ga2bf5079d6df0f2807a53d5cd8ed82ed1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7193f3cc0ee89c884cbabcfd09bbddd3"><td class="memTemplParams" colspan="2">template&lt;typename O &gt; </td></tr>
+<tr class="memitem:ga7193f3cc0ee89c884cbabcfd09bbddd3"><td class="memTemplItemLeft" align="right" valign="top">O&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__json.html#ga7193f3cc0ee89c884cbabcfd09bbddd3">json_generate</a> (const adobe::any_regular_t &amp;x, O out)</td></tr>
+<tr class="memdesc:ga7193f3cc0ee89c884cbabcfd09bbddd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A utility routine that takes in an any_regular_t and produces from it a well-formed representation of the structure in JSON.  <a href="group__json.html#ga7193f3cc0ee89c884cbabcfd09bbddd3">More...</a><br/></td></tr>
+<tr class="separator:ga7193f3cc0ee89c884cbabcfd09bbddd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebab64ed4502641197143b40a714d5e5"><td class="memTemplParams" colspan="2">template&lt;typename T , typename I , typename O &gt; </td></tr>
 <tr class="memitem:aebab64ed4502641197143b40a714d5e5"><td class="memTemplItemLeft" align="right" valign="top">O&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceadobe.html#aebab64ed4502641197143b40a714d5e5">copy_utf</a> (I f, I l, O o)</td></tr>
 <tr class="separator:aebab64ed4502641197143b40a714d5e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a class="anchor" id="ac75c61993722a9b8aaa44704072ec06c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="namespaceadobe.html#ac75c61993722a9b8aaa44704072ec06c">json_type</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><em><a class="anchor" id="ac75c61993722a9b8aaa44704072ec06caa8cfde6331bd59eb2ac96f8911c4b666"></a>object</em>&nbsp;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ac75c61993722a9b8aaa44704072ec06caf1f713c9e000f5d3f280adbd124df4f5"></a>array</em>&nbsp;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ac75c61993722a9b8aaa44704072ec06cab45cffe084dd3d20d928bee85e7b0f21"></a>string</em>&nbsp;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ac75c61993722a9b8aaa44704072ec06cab1bc248a7ff2b2e95569f56de68615df"></a>number</em>&nbsp;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ac75c61993722a9b8aaa44704072ec06ca84e2c64f38f78ba3ea5c905ab5a2da27"></a>boolean</em>&nbsp;</td><td class="fielddoc">
+</td></tr>
+<tr><td class="fieldname"><em><a class="anchor" id="ac75c61993722a9b8aaa44704072ec06ca37a6259cc0c1dae299a7866489dff0bd"></a>null</em>&nbsp;</td><td class="fielddoc">
+</td></tr>
+</table>
+
+<p>Definition at line <a class="el" href="json_8hpp_source.html#l00385">385</a> of file <a class="el" href="json_8hpp_source.html">json.hpp</a>.</p>
+
+</div>
+</div>
 <h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="aebab64ed4502641197143b40a714d5e5"></a>
 <div class="memitem">
@@ -178,7 +246,7 @@ Functions</h2></td></tr>
 <dl class="section note"><dt>Note</dt><dd>If the source contains an invalid or partial encoding then the output is undefined (debug builds may assert). However, the code will not read beyond the specified source range or output more than the maximal number of elements.</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>An output iterator pointing to the end of the encoded text. </dd></dl>
 
-<p>Definition at line <a class="el" href="unicode_8hpp_source.html#l00502">502</a> of file <a class="el" href="unicode_8hpp_source.html">unicode.hpp</a>.</p>
+<p>Definition at line <a class="el" href="unicode_8hpp_source.html#l00488">488</a> of file <a class="el" href="unicode_8hpp_source.html">unicode.hpp</a>.</p>
 
 </div>
 </div>
