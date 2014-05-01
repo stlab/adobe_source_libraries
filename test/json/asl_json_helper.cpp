@@ -15,7 +15,7 @@
 #include <boost/test/unit_test.hpp>
 
 // asl
-#include <adobe/json.hpp>
+#include <adobe/json_helper.hpp>
 
 /**************************************************************************************************/
 
