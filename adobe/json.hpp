@@ -8,7 +8,6 @@
 #ifndef ADOBE_JSON_HPP
 #define ADOBE_JSON_HPP
 
-#include <cassert>
 #include <cfloat>
 #include <cmath>
 #include <cstddef>
@@ -21,7 +20,12 @@
 
 #include <double-conversion/src/double-conversion.h>
 
+#include <adobe/cassert.hpp>
 #include <adobe/string/to_string.hpp>
+
+/**************************************************************************************************/
+
+namespace adobe {
 
 /**************************************************************************************************/
 /*
@@ -40,7 +44,7 @@
         T::append(string_type, const char* f, const char* l);
 */
 template <typename T>
-class json_parser_t {
+class json_parser {
     constexpr static double kNaN = std::numeric_limits<double>::quiet_NaN();
   public:
     typedef typename T::object_type object_type;
@@ -54,7 +58,7 @@ class json_parser_t {
     JSON value and is something we can check against to assert validity. We also
     allow 'junk' as it is the end of this token and on to the next one.
     */
-    explicit json_parser_t(const char* p) :
+    explicit json_parser(const char* p) :
         p_(p),
         s2d_(double_conversion::StringToDoubleConverter::ALLOW_TRAILING_JUNK,
              kNaN, kNaN, nullptr, nullptr)
@@ -75,9 +79,8 @@ class json_parser_t {
             value_type value;
             require(is_value(value), "value");
             T::move_append(object, string, value);
-            
+
             while (is_structural_char(',')) {
-                key_type string;
                 require(is_string(string), "string");
                 require(is_structural_char(':'), ":");
                 require(is_value(value), "value");
@@ -188,7 +191,7 @@ class json_parser_t {
         double value = s2d_.StringToDouble(p, static_cast<int>(p_ - p), &count);
 
         require(std::isfinite(value), "finite number");
-        ASSERT(count == p_ - p && "StringToDouble() failure");
+        ADOBE_ASSERT(count == p_ - p && "StringToDouble() failure");
 
         t = value;
         return true;
@@ -395,7 +398,7 @@ class json_generator {
     
     json_generator(O out) : out_(out) { };
     
-    void generate(const value_type& value, std::size_t indent = 0) {
+    O generate(const value_type& value, std::size_t indent = 0) {
         switch (T::type(value)) {
         case json_type::object:
         case json_type::array:
@@ -404,6 +407,7 @@ class json_generator {
         default:
             require(false, "object or array");
         }
+        return out_;
     }
     
     void require(bool x, const char* message) {
@@ -536,6 +540,10 @@ class json_generator {
     
     O out_;
 };
+
+/**************************************************************************************************/
+
+} // namespace adobe
 
 /**************************************************************************************************/
 // ADOBE_JSON_HPP
