@@ -24,24 +24,30 @@
 #include <adobe/string/to_string.hpp>
 
 /**************************************************************************************************/
-
+/**
+    \defgroup json JSON Utilities
+*/
 namespace adobe {
 
 /**************************************************************************************************/
-/*
-    Requirements on T:
-    
-    value_type
-        descriminated union of string_type, double, object_type, array_type,
-        void (default constructed), and bool
-    object_type
-        T::move_append(object_type, key_type&, value_type&);
-    array_type
-        T::move_append(array_type, value_type&);
-    string_type
-        T::append(string_type, const char* f, const char* l);
-    key_type
-        T::append(string_type, const char* f, const char* l);
+/**
+    \ingroup json
+
+    \brief A utility class that parses raw JSON data and uses a helper class to
+           construct the desired representations of what is parsed.
+
+    The helper class, `T` has some requirements:
+
+     - typedef value_type
+       - A type able to hold a descriminated union of string_type, double,
+         object_type, array_type, void (default constructed), and bool.
+     - typedef object_type
+     - typedef array_type
+     - typedef string_type
+     - typedef key_type
+     - `T::move_append(object_type, key_type&, value_type&);`
+     - `T::move_append(array_type, value_type&);`
+     - `T::append(string_type, const char* f, const char* l);`
 */
 template <typename T>
 class json_parser {
@@ -381,9 +387,14 @@ enum class json_type {
 };
 
 /**************************************************************************************************/
-/*
-    REVISIT (sparent): Add the following options, (pretty, precise, ascii, ordered), default are
-    (compact, ?decimal, readible?, utf8, unordered)
+/**
+    \ingroup json
+
+    \brief A utility class that uses a helper class to access a provided data
+           structure and output well-formed JSON.
+
+    \todo (sparent): Add the following options: (pretty, precise, ascii, ordered).
+                     Default are (compact, ?decimal, readible?, utf8, unordered.)
 */
 template <typename T,
           typename O>

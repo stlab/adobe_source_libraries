@@ -18,7 +18,13 @@
 namespace adobe {
 
 /**************************************************************************************************/
+/**
+    \ingroup json
 
+    \brief A utility class can be used with \ref json_parser and
+           \ref json_generator to round trip JSON data through the common ASL
+            data structures.
+*/
 struct asl_json_helper_t {
     /*
     We use std::string as key type instead of adobe::name_t because of the
@@ -65,12 +71,43 @@ struct asl_json_helper_t {
 };
 
 /**************************************************************************************************/
+/**
+    \ingroup json
 
+    \brief A utility routine that takes in raw JSON data and produces a
+           representation of that data using the common ASL data
+           structures.
+
+    \param data raw JSON data.
+
+    \return Either a \ref `array_t` or a \ref `dictionary_t` representing the
+            raw data parsed, wrapped in an `any_regular_t`.
+*/
 inline adobe::any_regular_t json_parse(const char* data)
 {
     return json_parser<asl_json_helper_t>(data).parse();
 }
 
+/**
+    \ingroup json
+
+    \brief A utility routine that takes in an any_regular_t and produces from it
+           a well-formed representation of the structure in JSON.
+
+    \note The only types that will be accepted during JSON generation are:
+        - `array_t` (array)
+        - `dictionary_t` (object)
+        - `std::string` (string)
+        - `double` (double or int)
+        - `bool` (bool)
+        - `empty_t` (null)
+
+    \param x The encapsulated structure. This root structure must be either an
+             `array_t` or a `dictionary_t`.
+    \param out Output iterator to which the representative JSON will be copied.
+
+    \return The output iterator passed in.
+*/
 template <typename O>
 inline O json_generate(const adobe::any_regular_t& x, O out)
 {

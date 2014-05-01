@@ -774,6 +774,8 @@ WARN_LOGFILE           = ./gh-pages/doxygen_warn.log
 
 INPUT                  = ./documentation/structure/mainpage.dox \
                          ./adobe/fnv.hpp \
+                         ./adobe/json.hpp \
+                         ./adobe/json_helper.hpp \
                          ./adobe/name.hpp \
                          ./adobe/sha.hpp \
                          ./adobe/unicode.hpp
