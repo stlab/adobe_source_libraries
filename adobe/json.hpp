@@ -75,7 +75,8 @@ class json_parser {
         require(is_object(result) || is_array(result), "object or array");
         return result;
     }
-    
+
+  private:    
     bool is_object(value_type& t) {
         if (!is_structural_char('{')) return false;
         object_type object;
@@ -250,9 +251,9 @@ class json_parser {
         return 0;
     }
     
-    /*
-        REVISIT (sparent) : should report error with offset, line number and line offset, and better
-        phrasing.
+    /**
+        \todo (sparent) : should report error with offset, line number and
+                          line offset, and better phrasing.
     */
     void require(bool x, const char* failure) {
         using namespace std;
@@ -260,7 +261,7 @@ class json_parser {
         if (!x) throw logic_error(failure + string(" is required"));
     }
     
-    // REVISIT (sparent) : table is overkill, replace with switch and agnostic line ending counter.
+    /// \todo (sparent) : table is overkill, replace with switch and agnostic line ending counter.
     void skip_white_space() { while (ws()[static_cast<unsigned char>(*p_)]) { ++p_; } }
     
     bool is_char(char x) {
@@ -276,7 +277,7 @@ class json_parser {
         return true;
     }
     
-    // Precondition: f points to at least 4 characters.
+    /// \pre f points to at least 4 characters.
     char* utf8(std::uint32_t x, char* f) {
         // Should assert non-surrogate
         std::size_t bytes_to_write(0);
@@ -377,7 +378,6 @@ class json_parser {
         };
         return ws_;
     }
-    
 };
 
 /**************************************************************************************************/
@@ -420,7 +420,8 @@ class json_generator {
         }
         return out_;
     }
-    
+
+  private:
     void require(bool x, const char* message) {
         if (!x) throw std::logic_error(message);
     }
