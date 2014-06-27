@@ -89,10 +89,8 @@ public:
     // Precondition: length only need be non-zero if not copying
     // Precondition: if str is null then length must be zero
     const char* add(const char* str) {
-        static const char* empty_string_s = "";
-
         if (!str || !*str)
-            return empty_string_s;
+            return detail::empty_string_s();
 
         name_store_t::iterator iter = store_m.find(str);
 

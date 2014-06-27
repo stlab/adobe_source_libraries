@@ -23,7 +23,6 @@ namespace {
 
 /****************************************************************************************************/
 
-constexpr const char* empty_string_s = "";
 constexpr std::size_t empty_hash_s = adobe::detail::name_hash("");
 
 /****************************************************************************************************/
@@ -44,13 +43,13 @@ bool operator<(const static_name_t& x, const static_name_t& y) { return name_t(x
 
 /****************************************************************************************************/
 
-name_t::operator bool() const { return ptr_m != empty_string_s; }
+name_t::operator bool() const { return ptr_m != detail::empty_string_s(); }
 
 /****************************************************************************************************/
 
 const char* name_t::map_string(const char* str) {
     if (!str || !*str)
-        return map_string(empty_string_s, empty_hash_s);
+        return map_string(detail::empty_string_s(), empty_hash_s);
 
     // Once fnv1a is in master we can make the hash faster
     // with a call to the sentinel variant.

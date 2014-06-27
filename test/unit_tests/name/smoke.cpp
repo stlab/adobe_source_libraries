@@ -62,7 +62,9 @@ void dumpy(const char (&str)[N]) {
 BOOST_AUTO_TEST_CASE(name_smoke) {
     using namespace adobe::literals;
 
-    constexpr std::size_t hello_world_hash = 0x38d1334144987bf4;
+    constexpr auto addr_32 = (sizeof(std::size_t) == 4);
+
+    constexpr std::size_t hello_world_hash = addr_32 ? 0xed90f094 : 0x38d1334144987bf4;
     constexpr std::size_t myhash = adobe::detail::name_hash("Hello, world!");
 
     BOOST_CHECK_EQUAL(myhash, hello_world_hash);
@@ -81,8 +83,8 @@ BOOST_AUTO_TEST_CASE(name_smoke) {
     adobe::name_t nullname(""_name);
 
     BOOST_CHECK_EQUAL(static_hello_world.hash_m, hello_world_hash);
-    BOOST_CHECK_EQUAL(static_red_sox.hash_m, 0xc5746070bacfea32);
-    BOOST_CHECK_EQUAL(static_null.hash_m, 0xcbf29ce484222325);
+    BOOST_CHECK_EQUAL(static_red_sox.hash_m, addr_32 ? 0xedd547d2 : 0xc5746070bacfea32);
+    BOOST_CHECK_EQUAL(static_null.hash_m, addr_32 ? 0x811c9dc5: 0xcbf29ce484222325);
 
     BOOST_CHECK_EQUAL(std::hash<adobe::name_t>()(static_red_sox),
                       std::hash<adobe::name_t>()(red_sox));
