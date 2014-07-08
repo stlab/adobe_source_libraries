@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		88D53C6F0BF7CE90004A77BB /* string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88D53C6E0BF7CE90004A77BB /* string.cpp */; };
+		9A6113AD191DEFCC0092C45F /* future.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6113AC191DEFCC0092C45F /* future.cpp */; };
 		9ABD3B4812B88746000FE4EE /* iomanip_xml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ABD3B4712B88746000FE4EE /* iomanip_xml.cpp */; };
 		CE5C20F509479C0200EB4BB6 /* adam_evaluate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20D609479C0200EB4BB6 /* adam_evaluate.cpp */; };
 		CE5C20F609479C0200EB4BB6 /* adam_parser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20D709479C0200EB4BB6 /* adam_parser.cpp */; };
@@ -217,6 +218,7 @@
 		9A4B66DA176D47970053A5B7 /* xml_parser.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = xml_parser.hpp; path = ../adobe/xml_parser.hpp; sourceTree = "<group>"; };
 		9A4B66DB176D47970053A5B7 /* xstring.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = xstring.hpp; path = ../adobe/xstring.hpp; sourceTree = "<group>"; };
 		9A4B66DC176D47970053A5B7 /* zuid.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = zuid.hpp; path = ../adobe/zuid.hpp; sourceTree = "<group>"; };
+		9A6113AC191DEFCC0092C45F /* future.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = future.cpp; path = ../source/future.cpp; sourceTree = "<group>"; };
 		9ABD3B4712B88746000FE4EE /* iomanip_xml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = iomanip_xml.cpp; path = ../source/iomanip_xml.cpp; sourceTree = SOURCE_ROOT; };
 		CE56A55B0A2FA060001D4DA0 /* adobe_xconfig_staticlib.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = adobe_xconfig_staticlib.xcconfig; sourceTree = "<group>"; };
 		CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xcconfig; path = adobe_debug.xcconfig; sourceTree = "<group>"; };
@@ -290,6 +292,7 @@
 				CE5C20DE09479C0200EB4BB6 /* expression_parser.cpp */,
 				CE5C20DF09479C0200EB4BB6 /* extents.cpp */,
 				E56B6F5E0FCCB2A90060C5F0 /* external_model.cpp */,
+				9A6113AC191DEFCC0092C45F /* future.cpp */,
 				CEB874B30A1BC9A10014F4A8 /* iomanip.cpp */,
 				CEB874B10A1BC9A10014F4A8 /* iomanip_asl_cel.cpp */,
 				E55C741C0D5AD7780003B21E /* iomanip_javascript.cpp */,
@@ -660,6 +663,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE5C20F509479C0200EB4BB6 /* adam_evaluate.cpp in Sources */,
+				9A6113AD191DEFCC0092C45F /* future.cpp in Sources */,
 				CE5C20F609479C0200EB4BB6 /* adam_parser.cpp in Sources */,
 				CE5C20F709479C0200EB4BB6 /* adam.cpp in Sources */,
 				CE5C20FA09479C0200EB4BB6 /* eve_evaluate.cpp in Sources */,
@@ -709,6 +713,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CE5C2036094797C700EB4BB6 /* adobe_debug.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				PRODUCT_NAME = adobe_source;
