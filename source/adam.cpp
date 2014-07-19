@@ -1099,9 +1099,10 @@ void sheet_t::implementation_t::flow(cell_bits_t& priority_accessed) {
                 }
             }
 
-            // REVISIT (sparent) : This is a runtime error.
-
-            assert(at_least_one && "All terms of relation resolved but relation not applied.");
+            // REVISIT (sparent) : Better error reporting here.
+            if (!at_least_one) {
+                throw std::logic_error("all terms of relation resolve but relation not applied.");
+            }
 
             if (!term)
                 continue;
@@ -1115,6 +1116,9 @@ void sheet_t::implementation_t::flow(cell_bits_t& priority_accessed) {
                 assert(iter != output_index_m.end());
 
                 cell_t& cell = *iter;
+
+                // REVISIT (sparent) : Better error reporting here.
+                if (cell.term_m) throw logic_error("over constrained.");
 
                 if (count == 1) {
                     cell.term_m =
@@ -1486,7 +1490,7 @@ any_regular_t sheet_t::implementation_t::get(name_t variable_name) {
             iter = name_index_m.find(variable_name);
             if (iter == name_index_m.end() || iter->specifier_m != access_constant) {
                 throw std::logic_error(
-                    make_string("Variable ", variable_name.c_str(), " not found."));
+                    make_string("variable ", variable_name.c_str(), " not found."));
             }
         }
 
