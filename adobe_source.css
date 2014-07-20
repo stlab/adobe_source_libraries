@@ -1,3 +1,6 @@
+/* The standard CSS for doxygen 1.8.7 */
+
+/* STLab { */
 html
 {
     width: 1000px;
@@ -8,6 +11,7 @@ html
     margin-bottom: 0px;
     padding:0;
 }
+/* STLab } */
 
 body,table,div,p,dl
 {

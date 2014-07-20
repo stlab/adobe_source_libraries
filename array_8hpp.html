@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.7"/>
-<title>Adobe Source Libraries: json_helper.hpp File Reference</title>
+<title>Adobe Source Libraries: array.hpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -57,22 +57,15 @@
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#nested-classes">Classes</a> &#124;
 <a href="#namespaces">Namespaces</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
-<div class="title">json_helper.hpp File Reference</div>  </div>
+<div class="title">array.hpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p><a href="json__helper_8hpp_source.html">Go to the source code of this file.</a></p>
+<p><a href="array_8hpp_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
-Classes</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structadobe_1_1asl__json__helper__t.html">asl_json_helper_t</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A utility class can be used with <a class="el" href="classadobe_1_1json__parser.html">json_parser</a> and <a class="el" href="classadobe_1_1json__generator.html">json_generator</a> to round trip JSON data through the common ASL data structures.  <a href="structadobe_1_1asl__json__helper__t.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceadobe"><td class="memItemLeft" align="right" valign="top"> &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceadobe.html">adobe</a></td></tr>
@@ -80,13 +73,13 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga2bf5079d6df0f2807a53d5cd8ed82ed1"><td class="memItemLeft" align="right" valign="top">adobe::any_regular_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__json.html#ga2bf5079d6df0f2807a53d5cd8ed82ed1">json_parse</a> (const char *data)</td></tr>
-<tr class="memdesc:ga2bf5079d6df0f2807a53d5cd8ed82ed1"><td class="mdescLeft">&#160;</td><td class="mdescRight">A utility routine that takes in raw JSON data and produces a representation of that data using the common ASL data structures.  <a href="group__json.html#ga2bf5079d6df0f2807a53d5cd8ed82ed1">More...</a><br /></td></tr>
-<tr class="separator:ga2bf5079d6df0f2807a53d5cd8ed82ed1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7193f3cc0ee89c884cbabcfd09bbddd3"><td class="memTemplParams" colspan="2">template&lt;typename O &gt; </td></tr>
-<tr class="memitem:ga7193f3cc0ee89c884cbabcfd09bbddd3"><td class="memTemplItemLeft" align="right" valign="top">O&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__json.html#ga7193f3cc0ee89c884cbabcfd09bbddd3">json_generate</a> (const adobe::any_regular_t &amp;x, O out)</td></tr>
-<tr class="memdesc:ga7193f3cc0ee89c884cbabcfd09bbddd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A utility routine that takes in an any_regular_t and produces from it a well-formed representation of the structure in JSON.  <a href="group__json.html#ga7193f3cc0ee89c884cbabcfd09bbddd3">More...</a><br /></td></tr>
-<tr class="separator:ga7193f3cc0ee89c884cbabcfd09bbddd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0615a4d75e749c56de6153fe728bfeb"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:af0615a4d75e749c56de6153fe728bfeb"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespaceadobe.html#af0615a4d75e749c56de6153fe728bfeb">push_back</a> (array_t &amp;v, T x)</td></tr>
+<tr class="separator:af0615a4d75e749c56de6153fe728bfeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a9c29e01397d15a6071f640f0624964"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceadobe.html#a0a9c29e01397d15a6071f640f0624964">push_back</a> (array_t &amp;v, any_regular_t x)</td></tr>
+<tr class="separator:a0a9c29e01397d15a6071f640f0624964"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3b4387f91178e53c0c85bd84df10ac1d"><td class="memItemLeft" align="right" valign="top">std::ostream &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceadobe.html#a3b4387f91178e53c0c85bd84df10ac1d">operator&lt;&lt;</a> (std::ostream &amp;out, const array_t &amp;x)</td></tr>
+<tr class="separator:a3b4387f91178e53c0c85bd84df10ac1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.7-->
