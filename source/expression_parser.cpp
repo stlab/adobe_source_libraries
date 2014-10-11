@@ -59,6 +59,10 @@ public:
         token_stream_m.set_keyword_extension_lookup(proc);
     }
 
+    void set_comment_bypass(bool bypass) {
+        token_stream_m.set_comment_bypass(bypass);
+    }
+
     lex_stream_t token_stream_m;
 };
 
@@ -95,6 +99,12 @@ const line_position_t& expression_parser::next_position() {
 
 void expression_parser::set_keyword_extension_lookup(const keyword_extension_lookup_proc_t& proc) {
     object->set_keyword_extension_lookup(proc);
+}
+
+/*************************************************************************************************/
+
+void expression_parser::set_comment_bypass(bool bypass) {
+    object->set_comment_bypass(bypass);
 }
 
 /*************************************************************************************************/

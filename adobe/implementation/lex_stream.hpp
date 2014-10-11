@@ -47,6 +47,8 @@ public:
 
     void set_keyword_extension_lookup(const keyword_extension_lookup_proc_t& proc);
 
+    void set_comment_bypass(bool bypass);
+
 #if !defined(ADOBE_NO_DOCUMENTATION)
 private:
     friend void ::swap(adobe::lex_stream_t&, adobe::lex_stream_t&);
