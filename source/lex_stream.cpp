@@ -246,6 +246,8 @@ public:
 
     void set_keyword_extension_lookup(const keyword_extension_lookup_proc_t& proc);
 
+    void set_comment_bypass(bool bypass);
+
 private:
     void parse_token(char c);
 
@@ -262,6 +264,7 @@ private:
     bool skip_space(char& c);
 
     keyword_extension_lookup_proc_t keyword_proc_m;
+    bool                            comment_bypass_m;
 };
 
 /**************************************************************************************************/
@@ -297,6 +300,10 @@ void lex_stream_t::set_keyword_extension_lookup(const keyword_extension_lookup_p
     return object_m->set_keyword_extension_lookup(proc);
 }
 
+void lex_stream_t::set_comment_bypass(bool bypass) {
+    return object_m->set_comment_bypass(bypass);
+}
+
 /**************************************************************************************************/
 
 #if 0
@@ -306,7 +313,8 @@ void lex_stream_t::set_keyword_extension_lookup(const keyword_extension_lookup_p
 /**************************************************************************************************/
 
 lex_stream_t::implementation_t::implementation_t(std::istream& in, const line_position_t& position)
-    : _super(std::istream_iterator<char>(in), std::istream_iterator<char>(), position) {
+    : _super(std::istream_iterator<char>(in), std::istream_iterator<char>(), position),
+    comment_bypass_m(false) {
     in.unsetf(std::ios_base::skipws);
 
     _super::set_parse_token_proc(
@@ -318,6 +326,12 @@ lex_stream_t::implementation_t::implementation_t(std::istream& in, const line_po
 void lex_stream_t::implementation_t::set_keyword_extension_lookup(
     const keyword_extension_lookup_proc_t& proc) {
     keyword_proc_m = proc;
+}
+
+/**************************************************************************************************/
+
+void lex_stream_t::implementation_t::set_comment_bypass(bool bypass) {
+    comment_bypass_m = bypass;
 }
 
 /**************************************************************************************************/
@@ -600,12 +614,15 @@ bool lex_stream_t::implementation_t::skip_space(char& c) {
 void lex_stream_t::implementation_t::parse_token(char c) {
     stream_lex_token_t result;
 
-    if (!(is_number(c, result) || is_identifier_or_keyword(c, result) || is_comment(c, result) ||
+    bool found_comment = is_comment(c, result);
+
+    if (!(is_number(c, result) || is_identifier_or_keyword(c, result) || found_comment ||
           is_string(c, result) || is_compound(c, result) || is_simple(c, result))) {
         throw_parser_exception("Syntax Error");
     }
 
-    put_token(std::move(result));
+    if (!found_comment || !comment_bypass_m)
+        put_token(std::move(result));
 }
 
 /**************************************************************************************************/

@@ -81,6 +81,8 @@ public:
 
     void set_keyword_extension_lookup(const keyword_extension_lookup_proc_t& proc);
 
+    void set_comment_bypass(bool bypass);
+
     //  expression = or_expression ["?" expression ":" expression].
     bool is_expression(array_t&);
     void require_expression(array_t&);
