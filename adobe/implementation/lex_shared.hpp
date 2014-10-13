@@ -416,7 +416,7 @@ template <std::size_t S, typename I>
 const stream_lex_token_t& stream_lex_base_t<S, I>::get_token() {
     assert(parse_proc_m);
 
-    if (last_token_m.empty()) {
+    while (last_token_m.empty()) {
         char c;
 
         /*
