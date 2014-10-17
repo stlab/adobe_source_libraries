@@ -106,7 +106,7 @@ serializable_lookup_t serializable_table[] = {
 /**************************************************************************************************/
 
 namespace version_1 {
-
+#if 0
 std::ostream& operator<<(std::ostream& out, const any_regular_t& x) {
     using namespace implementation;
 
@@ -129,7 +129,7 @@ std::ostream& operator<<(std::ostream& out, const any_regular_t& x) {
 
     return out;
 }
-
+#endif
 std::ostream& operator<<(std::ostream& out, const dictionary_t& x) {
     typedef table_index<const name_t, const dictionary_t::value_type> index_type;
 
