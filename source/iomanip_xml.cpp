@@ -57,7 +57,7 @@ void xml_format::begin_sequence(stream_type& os) { push_stack(os, format_element
 
 /*************************************************************************************************/
 
-void xml_format::begin_atom(stream_type& os, const any_regular_t& value) {
+void xml_format::begin_atom(stream_type& os, const serializable_t& value) {
     push_stack(os, format_element_t(atom_name_g, value));
 }
 
@@ -110,7 +110,7 @@ void xml_format::handle_atom(stream_type& os, bool is_push) {
     name_t self(top.tag());
     name_t parent(stack_depth() >= 2 ? stack_n(1).tag() : name_t());
     name_t grandparent(stack_depth() >= 3 ? stack_n(2).tag() : name_t());
-    const any_regular_t& value(top.value());
+    const serializable_t& value(top.value());
 
     if (is_push) {
         if (self != seq_name_g)

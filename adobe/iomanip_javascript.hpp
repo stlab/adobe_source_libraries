@@ -37,7 +37,7 @@ public:
 
     virtual void begin_sequence(stream_type& os);
 
-    virtual void begin_atom(stream_type& os, const any_regular_t&);
+    virtual void begin_atom(stream_type& os, const serializable_t&);
 
 private:
     virtual void stack_event(stream_type& os, bool is_push);
