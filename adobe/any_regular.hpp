@@ -32,12 +32,13 @@
 #include <adobe/empty.hpp>
 #include <adobe/memory.hpp>
 #include <adobe/regular_concept.hpp>
+#include <adobe/serializable.hpp>
 #include <adobe/typeinfo.hpp>
 
 #include <adobe/implementation/swap.hpp>
 
 #if defined(ADOBE_STD_SERIALIZATION)
-#include <iosfwd>
+#include <adobe/iomanip.hpp>
 #endif
 
 /**************************************************************************************************/
@@ -156,8 +157,10 @@ const
 namespace implementation {
 
 enum {
-    vtable_version = 1
+    vtable_version = 2
 };
+
+/**************************************************************************************************/
 
 struct any_regular_interface_t;
 
@@ -172,11 +175,12 @@ struct vtable_t {
     void (*assign)(interface_type&, const interface_type&);
     bool (*equals)(const interface_type&, const interface_type&);
     void (*exchange)(interface_type&, interface_type&);
+    void (*serialize)(const interface_type&, std::ostream&);
 };
 
 // Ensure that the vtable_t has a fixed layout regardless of alignment or packing.
 
-BOOST_STATIC_ASSERT(sizeof(vtable_t) == 8 * sizeof(void*));
+BOOST_STATIC_ASSERT(sizeof(vtable_t) == 9 * sizeof(void*));
 
 /**************************************************************************************************/
 
@@ -203,6 +207,7 @@ struct any_regular_interface_t {
     void assign(const interface_type& x) { object_m.vtable_m->assign(*this, x); }
     bool equals(const interface_type& x) const { return object_m.vtable_m->equals(*this, x); }
     void exchange(interface_type& x) { object_m.vtable_m->exchange(*this, x); }
+    void serialize(std::ostream& s) const { object_m.vtable_m->serialize(*this, s); }
 };
 
 /**************************************************************************************************/
@@ -251,6 +256,10 @@ struct any_regular_model_local : any_regular_interface_t, boost::noncopyable {
         swap(self(x).object_m, self(y).object_m);
     }
 
+    static void serialize(const interface_type& x, std::ostream& s) {
+        s << format(self(x).get());
+    }
+
     const T& get() const { return object_m; }
     T& get() { return object_m; }
 };
@@ -262,7 +271,8 @@ const vtable_t any_regular_model_local<T>::vtable_s = {
     vtable_version,                       &any_regular_model_local::destruct,
     &any_regular_model_local::type_info,  &any_regular_model_local::clone,
     &any_regular_model_local::move_clone, &any_regular_model_local::assign,
-    &any_regular_model_local::equals,     &any_regular_model_local::exchange, };
+    &any_regular_model_local::equals,     &any_regular_model_local::exchange,
+    &any_regular_model_local::serialize, };
 
 template <typename T> // T models Regular
 struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable {
@@ -338,6 +348,10 @@ struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable {
         return swap(self(x).object_ptr_m, self(y).object_ptr_m);
     }
 
+    static void serialize(const interface_type& x, std::ostream& s) {
+        s << format(self(x).get());
+    }
+
     const T& get() const { return object_ptr_m->data_m; }
     T& get() { return object_ptr_m->data_m; }
 };
@@ -349,7 +363,8 @@ const vtable_t any_regular_model_remote<T>::vtable_s = {
     vtable_version,                        &any_regular_model_remote::destruct,
     &any_regular_model_remote::type_info,  &any_regular_model_remote::clone,
     &any_regular_model_remote::move_clone, &any_regular_model_remote::assign,
-    &any_regular_model_remote::equals,     &any_regular_model_remote::exchange, };
+    &any_regular_model_remote::equals,     &any_regular_model_remote::exchange,
+    &any_regular_model_remote::serialize, };
 
 /**************************************************************************************************/
 
@@ -483,7 +498,7 @@ public:
     */
 
     template <typename T>
-    any_regular_t(T x) {
+    explicit any_regular_t(T x) {
         ::new (storage()) typename traits<T>::model_type(std::move(x));
     }
 
@@ -583,7 +598,12 @@ public:
     };
 
 #if defined(ADOBE_STD_SERIALIZATION)
-    friend std::ostream& operator<<(std::ostream& out, const any_regular_t& value);
+    friend std::ostream& operator<<(std::ostream& out, const any_regular_t& value)
+    {
+        value.object().serialize(out);
+
+        return out;
+    }
 #endif
 
     friend bool operator==(const any_regular_t& x, const any_regular_t& y);
