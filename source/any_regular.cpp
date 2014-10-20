@@ -57,7 +57,7 @@ std::ostream& operator<<(std::ostream& out, const dictionary_t& x) {
          ++first) {
         out << begin_sequence;
         out << format(first->first);
-        out << first->second; // any_regular_t calls format itself
+        out << first->second; // format will be called by any_regular_t.
         out << end_sequence;
     }
 

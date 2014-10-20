@@ -32,6 +32,7 @@
 #include <adobe/empty.hpp>
 #include <adobe/memory.hpp>
 #include <adobe/regular_concept.hpp>
+#include <adobe/serializable.hpp>
 #include <adobe/typeinfo.hpp>
 
 #include <adobe/implementation/swap.hpp>
@@ -161,15 +162,6 @@ enum {
 
 /**************************************************************************************************/
 
-template <typename T>
-void serialize(const T& x, std::ostream& s) {
-#if defined(ADOBE_STD_SERIALIZATION)
-    s << format(x);
-#endif
-}
-
-/**************************************************************************************************/
-
 struct any_regular_interface_t;
 
 struct vtable_t {
@@ -265,7 +257,7 @@ struct any_regular_model_local : any_regular_interface_t, boost::noncopyable {
     }
 
     static void serialize(const interface_type& x, std::ostream& s) {
-        implementation::serialize(self(x).get(), s);
+        s << format(self(x).get());
     }
 
     const T& get() const { return object_m; }
@@ -357,7 +349,7 @@ struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable {
     }
 
     static void serialize(const interface_type& x, std::ostream& s) {
-        implementation::serialize(self(x).get(), s);
+        s << format(self(x).get());
     }
 
     const T& get() const { return object_ptr_m->data_m; }
@@ -506,7 +498,7 @@ public:
     */
 
     template <typename T>
-    any_regular_t(T x) {
+    explicit any_regular_t(T x) {
         ::new (storage()) typename traits<T>::model_type(std::move(x));
     }
 

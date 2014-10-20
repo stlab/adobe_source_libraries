@@ -11,6 +11,7 @@
 #include <adobe/config.hpp>
 
 #include <type_traits>
+#include <ostream>
 
 #include <double-conversion/src/double-conversion.h>
 
@@ -20,9 +21,11 @@
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace implementation {
+
+/**************************************************************************************************/
 
 template <class>
 struct sfinae_true : std::true_type {};

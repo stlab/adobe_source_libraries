@@ -41,7 +41,7 @@ void serializable_test() {
 
     array_t array;
 
-    array.push_back("value");
+    push_back(array, "value");
 
     std::cout << serializable_t(std::cref(array)) << '\n';
 }
