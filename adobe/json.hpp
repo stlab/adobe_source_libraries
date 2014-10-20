@@ -78,7 +78,6 @@ class json_parser {
 
   private:    
     bool is_object(value_type& t) {
-        using std::move;
         if (!is_structural_char('{')) return false;
         object_type object;
         key_type string;
@@ -96,12 +95,11 @@ class json_parser {
             }
         }
         require(is_structural_char('}'), "}");
-        t = move(object);
+        t = value_type(move(object));
         return true;
     }
     
     bool is_array(value_type& t) {
-        using std::move;
         if (!is_structural_char('[')) return false;
         array_type array;
         value_type value;
@@ -113,7 +111,7 @@ class json_parser {
             }
         }
         require(is_structural_char(']'), "]");
-        t = move(array);
+        t = value_type(move(array));
         return true;
     }
     
@@ -139,8 +137,8 @@ class json_parser {
     }
     
     bool is_bool(value_type& t) {
-        if (is_sequence("true")) { t = true; return true; }
-        if (is_sequence("false")) { t = false; return true; }
+        if (is_sequence("true")) { t = value_type(true); return true; }
+        if (is_sequence("false")) { t = value_type(false); return true; }
         return false;
     }
     
@@ -180,10 +178,10 @@ class json_parser {
     }
     
     bool is_string(value_type& t) {
-        using std::move;
         string_type string;
         bool result = is_string(string);
-        if (result) t = move(string);
+        if (result)
+            t = value_type(move(string));
         return result;
     }
 
@@ -203,7 +201,7 @@ class json_parser {
         require(std::isfinite(value), "finite number");
         ADOBE_ASSERT(count == p_ - p && "StringToDouble() failure");
 
-        t = value;
+        t = value_type(value);
         return true;
     }
     
