@@ -78,6 +78,7 @@ class json_parser {
 
   private:    
     bool is_object(value_type& t) {
+        using std::move;
         if (!is_structural_char('{')) return false;
         object_type object;
         key_type string;
@@ -100,6 +101,7 @@ class json_parser {
     }
     
     bool is_array(value_type& t) {
+        using std::move;
         if (!is_structural_char('[')) return false;
         array_type array;
         value_type value;
@@ -178,6 +180,7 @@ class json_parser {
     }
     
     bool is_string(value_type& t) {
+        using std::move;
         string_type string;
         bool result = is_string(string);
         if (result) t = move(string);
