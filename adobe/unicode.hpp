@@ -491,7 +491,7 @@ sequence from T to U determined by the following table:
 */
 
 template <typename T, typename U>
-struct exapand_utf : std::integral_constant<std::size_t,
+struct expand_utf : std::integral_constant<std::size_t,
     detail::expand_utf_t<sizeof(T), sizeof(U)>::value> { };
 
 /**************************************************************************************************/
