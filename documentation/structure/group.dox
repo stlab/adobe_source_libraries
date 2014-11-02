@@ -12,7 +12,7 @@ file we are able to reorganize the groups easily.
 */
 
 /*!
-\defgroup asl_unicode Unicode Utilities
+\defgroup unicode Unicode Utilities
 \ingroup parsing
 
 \brief Basic unicode conversion

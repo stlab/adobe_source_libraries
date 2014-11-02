@@ -15,6 +15,7 @@
 #include <cstring>
 #include <cstdint>
 #include <iterator>
+#include <string>
 
 /**************************************************************************************************/
 

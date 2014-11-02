@@ -4,3 +4,5 @@ project.xcworkspace/
 *.sublime-workspace
 xcuserdata
 gh-pages/
+
+documentation/doxyfile.bak
