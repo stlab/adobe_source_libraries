@@ -451,35 +451,70 @@ O to_utf_(I f, I l, O o, unicode_size_type_<4>) {
 
 /**************************************************************************************************/
 
+template <int A, int B>
+struct expand_utf_t;
+
+template <> struct expand_utf_t< 8,  8> { static const int value = 1; };
+template <> struct expand_utf_t< 8, 16> { static const int value = 1; };
+template <> struct expand_utf_t< 8, 32> { static const int value = 1; };
+
+template <> struct expand_utf_t<16,  8> { static const int value = 3; };
+template <> struct expand_utf_t<16, 16> { static const int value = 1; };
+template <> struct expand_utf_t<16, 32> { static const int value = 1; };
+
+template <> struct expand_utf_t<32,  8> { static const int value = 4; };
+template <> struct expand_utf_t<32, 16> { static const int value = 2; };
+template <> struct expand_utf_t<32, 32> { static const int value = 1; };
+
+/**************************************************************************************************/
+
 } // namespace detail
 
 /**************************************************************************************************/
 
 /*!
-\ingroup asl_unicode
+\ingroup unicode
 
-\tparam T must be 8, 16, or 32 bit integral type
-\tparam I models InputIterator; value_type(I) must be 8, 16, or 32 bit integral type
-\tparam O models OutputIterator; must accept T
+\tparam T is an 8, 16, or 32 bit integral type for a UTF code point
+\tparam U is an 8, 16, or 32 bit integral type for a UTF code point
 
-\c copy_utf32 copies the text from the range <code>[f, l)</code> from UTF-8, 16, or 32 to UTF-8, 16
-or 32 and assigns the result to \c *o.
-
-\pre
-    - `[f, l)` is a valid range of UTF-8, 16, or 32 encode text.
-    - `o` is not an iterator within the range `[f, l)`.
-    - There is enough space to hold the text being copied. The maximum
-      requirement on the output is that `[o, o + m(l - f))` is a valid range
-      where `m` is determined by the following table:
+\result <code>expand_utf<T, U>::value</code> is the maximum expansion when converting a UTF
+sequence from T to U determined by the following table:
         |source/result|UTF-8|UTF-16|UTF-32|
         |------------:|:---:|:----:|:----:|
         |UTF-8        |  1  |   1  |   1  |
         |UTF-16       |  3  |   1  |   1  |
         |UTF-32       |  4  |   2  |   1  |
 
+\see copy_utf
+
+*/
+
+template <typename T, typename U>
+struct expand_utf : std::integral_constant<std::size_t,
+    detail::expand_utf_t<sizeof(T), sizeof(U)>::value> { };
+
+/**************************************************************************************************/
+
+/*!
+\ingroup unicode
+
+`copy_utf` copies the text from the range `[f, l)` from UTF-8, 16, or 32 to UTF-8, 16
+or 32 and assigns the result to `*o`.
+
+\tparam T must be 8, 16, or 32 bit integral type
+\tparam I models InputIterator; value_type(I) must be 8, 16, or 32 bit integral type
+\tparam O models OutputIterator; must accept T
+
+\pre `[f, l)` is a valid range of UTF-8, 16, or 32 encode text
+\pre `o` is not an iterator within the range `[f, l)`
+\pre There is enough space to hold the text being copied. The maximum
+      requirement on the output is that `[o, o + m(l - f))` is a valid range
+      where `m` is <code>expand_utf<value_type(I), T>::value</code>
+
 \note If the source contains an invalid or partial encoding then the output is undefined (debug
 builds may assert). However, the code will not read beyond the specified source range or output
-more than the maximal number of elements.
+more than the maximum number of elements.
 
 \return An output iterator pointing to the end of the encoded text.
 */
@@ -487,6 +522,19 @@ more than the maximal number of elements.
 template <typename T, typename I, typename O>
 O copy_utf(I f, I l, O o) {
     return detail::to_utf_<T>(f, l, o, detail::unicode_size_type_<sizeof(T)>());
+}
+
+/*!
+\ingroup unicode
+
+\tparam R is `ConvertibleToRange`
+
+\see copy_utf
+*/
+
+template <typename T, typename R, typename O>
+O copy_utf(const R& r, O o) {
+    return copy_utf<T>(std::begin(r), std::end(r), o);
 }
 
 /**************************************************************************************************/

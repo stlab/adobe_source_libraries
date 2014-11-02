@@ -17,7 +17,6 @@
 /*************************************************************************************************/
 
 namespace adobe {
-namespace version_1 {
 
 /*************************************************************************************************/
 
@@ -25,19 +24,6 @@ namespace version_1 {
 typedef std::vector<any_regular_t> array_t;
 
 /*************************************************************************************************/
-
-} // namespace version_1
-
-using version_1::array_t;
-
-#if defined(ADOBE_NO_DOCUMENTATION)
-/* REVISIT (mmarcus) : doxygen doesn't seem to understand using
-declarartions.  This is a doxygen only hack to make the typedef appear
-in the documentation
-*/
-//!\ingroup abi_container
-typedef version_1::vector<any_regular_t> array_t;
-#endif
 
 } // namespace adobe
 
