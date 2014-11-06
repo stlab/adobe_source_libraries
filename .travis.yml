@@ -10,6 +10,7 @@ notifications:
   email:
     on_success: change
     on_failure: always
+  slack: stlab:P23OMUJ8T4Pa05OON0VDYwIf
 install:
     - ./configure.sh
 env:
