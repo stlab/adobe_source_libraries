@@ -223,8 +223,10 @@ public:
 private:
     static stream_type& fct(stream_type& os, const argument_type& i) {
         format_base* format(get_formatter(os));
+
         if (format)
             format->begin_bag(os, i);
+
         return os;
     }
 };

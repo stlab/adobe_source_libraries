@@ -29,3 +29,5 @@ build-project to_string ;
 build-project unicode ;
 build-project xml_parser ;
 build-project zuidgen ;
+
+build-project unit_tests ;

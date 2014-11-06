@@ -498,7 +498,7 @@ public:
     */
 
     template <typename T>
-    explicit any_regular_t(T x) {
+    any_regular_t(T x) {
         ::new (storage()) typename traits<T>::model_type(std::move(x));
     }
 
@@ -598,9 +598,21 @@ public:
     };
 
 #if defined(ADOBE_STD_SERIALIZATION)
-    friend std::ostream& operator<<(std::ostream& out, const any_regular_t& value)
-    {
-        value.object().serialize(out);
+    // Problem: We want 'any' to be serializable. But 'any' can be implicitly
+    // constructed from a type T making it difficult to determine if T is
+    // serializable or if T converted to an 'any' is serializable. We wrap the
+    // serialization in an explicit_const_any_regular_t to consume the one
+    // allowed implicit cast by the compiler, preventing an infinite recursion
+    // of T being converted to an any_regular_t and then attempting to re-
+    // serialize.
+    struct explicit_const_any_regular_t {
+        explicit_const_any_regular_t(const any_regular_t& x) : p_m(x) {}
+
+        const any_regular_t& p_m;
+    };
+
+    friend std::ostream& operator<<(std::ostream& out, const explicit_const_any_regular_t& value) {
+        value.p_m.object().serialize(out);
 
         return out;
     }
