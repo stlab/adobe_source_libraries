@@ -48,7 +48,7 @@ if [ ! -e 'boost_libraries' ]; then
     if [ ! -e $BOOST_TAR ]; then
         echo "INFO : $BOOST_TAR not found: downloading."
 
-        echo_run curl -L "http://sourceforge.net/projects/boost/files/boost/$BOOST_DT_VER/$BOOST_TAR/download?use_mirror=hivelocity" -o $BOOST_TAR;
+        echo_run curl -L "http://sourceforge.net/projects/boost/files/boost/$BOOST_DT_VER/$BOOST_TAR/download" -o $BOOST_TAR;
     else
         echo "INFO : $BOOST_TAR found: skipping download."
     fi
