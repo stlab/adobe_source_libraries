@@ -10,6 +10,7 @@
 #include <functional>
 #include <utility>
 
+#define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
 #include <adobe/conversion.hpp>
@@ -28,7 +29,7 @@ struct other_derived : base {};
 } // namespace
 
 
-void conversion_test() {
+BOOST_AUTO_TEST_CASE(conversion_test) {
     using adobe::runtime_cast;
 
     {
@@ -48,12 +49,4 @@ void conversion_test() {
         BOOST_CHECK(runtime_cast<const derived*>(x));
         derived y = runtime_cast<const derived&>(*x);
     }
-}
-
-using namespace boost::unit_test;
-
-test_suite* init_unit_test_suite(int, char * []) {
-    framework::master_test_suite().add(BOOST_TEST_CASE(&conversion_test));
-
-    return 0;
 }

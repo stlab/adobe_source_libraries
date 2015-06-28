@@ -137,12 +137,12 @@ BOOST_AUTO_TEST_CASE(closed_hash) {
 
     {
         int a[] = {0, 1, 2, 3, 4, 5};
-        adobe::test_movable(hash_set_t(boost::begin(a), boost::end(a)));
+        adobe::test_movable(hash_set_t(std::begin(a), std::end(a)));
     }
     {
         std::pair<int, double> a[] = {std::make_pair(0, 0.0), std::make_pair(1, 1.1),
                                       std::make_pair(2, 2.2)};
-        adobe::test_movable(hash_map_t(boost::begin(a), boost::end(a)));
+        adobe::test_movable(hash_map_t(std::begin(a), std::end(a)));
     }
 
     { // empty properties
@@ -163,10 +163,10 @@ BOOST_AUTO_TEST_CASE(closed_hash) {
 
     { // non-empty properties
         int a[] = {0, 1, 2};
-        hash_set_t x(boost::begin(a), boost::end(a));
+        hash_set_t x(std::begin(a), std::end(a));
         BOOST_CHECK(x.begin() != x.end());
         BOOST_CHECK(!x.empty());
-        BOOST_CHECK(boost::next(x.begin(), 3) == x.end());
+        BOOST_CHECK(std::next(x.begin(), 3) == x.end());
         BOOST_CHECK(x.capacity() != 0);
         BOOST_CHECK(x.size() == 3);
     }
@@ -174,31 +174,31 @@ BOOST_AUTO_TEST_CASE(closed_hash) {
     { // non-empty properties
         std::pair<int, double> a[] = {std::make_pair(0, 0.0), std::make_pair(1, 1.1),
                                       std::make_pair(2, 2.2)};
-        hash_map_t x(boost::begin(a), boost::end(a));
+        hash_map_t x(std::begin(a), std::end(a));
         BOOST_CHECK(x.begin() != x.end());
         BOOST_CHECK(!x.empty());
-        BOOST_CHECK(boost::next(x.begin(), 3) == x.end());
+        BOOST_CHECK(std::next(x.begin(), 3) == x.end());
         BOOST_CHECK(x.capacity() != 0);
         BOOST_CHECK(x.size() == 3);
     }
 
     { // iterators & indexing
         int a[] = {0, 1, 2};
-        const hash_set_t x(boost::begin(a), boost::end(a));
+        const hash_set_t x(std::begin(a), std::end(a));
         hash_set_t y = x;
-        BOOST_CHECK(boost::next(x.begin(), 3) == x.end());
-        BOOST_CHECK(boost::next(x.rbegin(), 3) == x.rend());
-        BOOST_CHECK(boost::next(y.rbegin(), 3) == y.rend());
+        BOOST_CHECK(std::next(x.begin(), 3) == x.end());
+        BOOST_CHECK(std::next(x.rbegin(), 3) == x.rend());
+        BOOST_CHECK(std::next(y.rbegin(), 3) == y.rend());
     }
 
     { // iterators & indexing
         std::pair<int, double> a[] = {std::make_pair(0, 0.0), std::make_pair(1, 1.1),
                                       std::make_pair(2, 2.2)};
-        const hash_map_t x(boost::begin(a), boost::end(a));
+        const hash_map_t x(std::begin(a), std::end(a));
         hash_map_t y = x;
-        BOOST_CHECK(boost::next(x.begin(), 3) == x.end());
-        BOOST_CHECK(boost::next(x.rbegin(), 3) == x.rend());
-        BOOST_CHECK(boost::next(y.rbegin(), 3) == y.rend());
+        BOOST_CHECK(std::next(x.begin(), 3) == x.end());
+        BOOST_CHECK(std::next(x.rbegin(), 3) == x.rend());
+        BOOST_CHECK(std::next(y.rbegin(), 3) == y.rend());
         BOOST_CHECK(y[1] == 1.1);
         y[1] = 5.5;
         BOOST_CHECK(y[1] == 5.5);
@@ -208,7 +208,7 @@ BOOST_AUTO_TEST_CASE(closed_hash) {
     {   // iterator based move ctor
         std::pair<int, vector_t> a[] = { std::make_pair(1, vector_t(1, 1)),
                 std::make_pair(2, vector_t(2, 2)), std::make_pair(3, vector_t(3, 3)) };
-        hash_map_vector_t x(boost::begin(a), boost::end(a));
+        hash_map_vector_t x(std::begin(a), std::end(a));
         const void* addr = remote_address(x.find(2)->second);
         hash_map_vector_t y(x.begin(), x.end(), move_ctor());
         BOOST_CHECK(x.begin()->second.empty());
@@ -220,7 +220,7 @@ BOOST_AUTO_TEST_CASE(closed_hash) {
         std::pair<int, vector_t> a[] = {std::make_pair(1, vector_t(1, 1)),
                                         std::make_pair(2, vector_t(2, 2)),
                                         std::make_pair(3, vector_t(3, 3))};
-        hash_map_vector_t x(boost::begin(a), boost::end(a));
+        hash_map_vector_t x(std::begin(a), std::end(a));
         const void* addr = remote_address(x.find(2)->second);
 
         std::size_t c = x.capacity();
@@ -257,17 +257,17 @@ BOOST_AUTO_TEST_CASE(closed_hash) {
     }
     {   // insert
         int a[] = { 0, 1, 2, 3, 4, 5 };
-        vector_t x(boost::begin(a), boost::end(a));
+        vector_t x(std::begin(a), std::end(a));
         int b[] = { 0, 1, 7, 2, 3, 4, 5 };
-        vector_t y(boost::begin(b), boost::end(b));
+        vector_t y(std::begin(b), std::end(b));
         x.insert(x.begin() + 2, 7);
         BOOST_CHECK(x == y);
     }
     {   // insert (move case)
         vector_t a[] = { vector_t(1, 1), vector_t(2, 2), vector_t(3, 3) };
-        vector_vector_t x(boost::begin(a), boost::end(a));
+        vector_vector_t x(std::begin(a), std::end(a));
         vector_t b[] = { vector_t(1, 1), vector_t(2, 2), vector_t(7, 7), vector_t(3, 3) };
-        vector_vector_t y(boost::begin(b), boost::end(b));
+        vector_vector_t y(std::begin(b), std::end(b));
         vector_t z(7, 7);
         const void* addr = remote_address(z);
         x.insert(x.begin() + 2, std::move(z));
@@ -276,73 +276,73 @@ BOOST_AUTO_TEST_CASE(closed_hash) {
     }
     {   // insert range
         int a[] = { 0, 1, 2, 3, 4, 5 };
-        vector_t x(boost::begin(a), boost::end(a));
+        vector_t x(std::begin(a), std::end(a));
         int b[] = { 7, 8, 9 };
         int c[] = { 0, 1, 7, 8, 9, 2, 3, 4, 5 };
-        vector_t y(boost::begin(c), boost::end(c));
-        
-        x.insert(x.begin() + 2, boost::begin(b), boost::end(b));
+        vector_t y(std::begin(c), std::end(c));
+
+        x.insert(x.begin() + 2, std::begin(b), std::end(b));
         BOOST_CHECK(x == y);
     }
     {   // insert fill
         int a[] = { 0, 1, 2, 3, 4, 5 };
-        vector_t x(boost::begin(a), boost::end(a));
+        vector_t x(std::begin(a), std::end(a));
         int b[] = { 0, 1, 7, 7, 7, 2, 3, 4, 5 };
-        vector_t y(boost::begin(b), boost::end(b));
+        vector_t y(std::begin(b), std::end(b));
         x.insert(x.begin() + 2, 3, 7);
         BOOST_CHECK(x == y);
     }
     {   // erase
         int a[] = { 0, 1, 2, 3, 4, 5 };
-        vector_t x(boost::begin(a), boost::end(a));
+        vector_t x(std::begin(a), std::end(a));
         int b[] = { 0, 1, 3, 4, 5 };
-        vector_t y(boost::begin(b), boost::end(b));
+        vector_t y(std::begin(b), std::end(b));
         x.erase(x.begin() + 2);
         BOOST_CHECK(x == y);
     }
     {   // erase range
         int a[] = { 0, 1, 2, 3, 4, 5 };
-        vector_t x(boost::begin(a), boost::end(a));
+        vector_t x(std::begin(a), std::end(a));
         int b[] = { 0, 1, 5 };
-        vector_t y(boost::begin(b), boost::end(b));
+        vector_t y(std::begin(b), std::end(b));
         x.erase(x.begin() + 2, x.begin() + 5);
         BOOST_CHECK(x == y);
     }
     {   // clear
         int a[] = { 0, 1, 2, 3, 4, 5 };
-        vector_t x(boost::begin(a), boost::end(a));
+        vector_t x(std::begin(a), std::end(a));
         x.clear();
         BOOST_CHECK(x.size() == 0);
     }
     {   // resize smaller
         int a[] = { 0, 1, 2, 3, 4, 5 };
-        vector_t x(boost::begin(a), boost::end(a));
+        vector_t x(std::begin(a), std::end(a));
         int b[] = { 0, 1, 2 };
-        vector_t y(boost::begin(b), boost::end(b));
+        vector_t y(std::begin(b), std::end(b));
         x.resize(3);
         BOOST_CHECK(x == y);
     }
     {   // resize larger
         int a[] = { 0, 1, 2, 3, 4, 5 };
-        vector_t x(boost::begin(a), boost::end(a));
+        vector_t x(std::begin(a), std::end(a));
         int b[] = { 0, 1, 2, 3, 4, 5, 0, 0, 0 };
-        vector_t y(boost::begin(b), boost::end(b));
+        vector_t y(std::begin(b), std::end(b));
         x.resize(x.size() + 3);
         BOOST_CHECK(x == y);
     }
     {   // resize fill
         int a[] = { 0, 1, 2, 3, 4, 5 };
-        vector_t x(boost::begin(a), boost::end(a));
+        vector_t x(std::begin(a), std::end(a));
         int b[] = { 0, 1, 2, 3, 4, 5, 7, 7, 7 };
-        vector_t y(boost::begin(b), boost::end(b));
+        vector_t y(std::begin(b), std::end(b));
         x.resize(x.size() + 3, 7);
         BOOST_CHECK(x == y);
     }
     {   // comparison operators
         int a[] = { 0, 1, 2, 3, 4, 5 };
-        vector_t x(boost::begin(a), boost::end(a));
+        vector_t x(std::begin(a), std::end(a));
         int b[] = { 0, 1, 2, 5, 6 };
-        vector_t y(boost::begin(b), boost::end(b));
+        vector_t y(std::begin(b), std::end(b));
         BOOST_CHECK(x != y);
         BOOST_CHECK(x < y);
         BOOST_CHECK(y > x);
