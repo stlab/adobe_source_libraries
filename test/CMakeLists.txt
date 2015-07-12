@@ -1,0 +1,44 @@
+function(asl_test)
+
+  set(options SKIPPED BOOST)
+  set(oneValueArgs NAME)
+  set(multiValueArgs SOURCES ARGS)
+  cmake_parse_arguments(asl_test "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+  add_executable (${asl_test_NAME} ${asl_test_SOURCES})
+  target_link_libraries(${asl_test_NAME} PRIVATE asl)
+
+  if (asl_test_BOOST)
+    target_compile_definitions(${asl_test_NAME} PRIVATE BOOST_TEST_DYN_LINK)
+    target_link_libraries(${asl_test_NAME} PRIVATE ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+  endif(asl_test_BOOST)
+
+  if (NOT asl_test_SKIPPED)
+    add_test (NAME ${asl_test_NAME} COMMAND ${asl_test_NAME} ${asl_test_ARGS})
+  endif(NOT asl_test_SKIPPED)
+
+endfunction(asl_test)
+
+
+add_subdirectory(unit_tests)
+
+add_subdirectory(adam_smoke)
+add_subdirectory(adam_tutorial)
+add_subdirectory(closed_hash)
+add_subdirectory(cmath)
+add_subdirectory(dictionary_benchmark)
+add_subdirectory(eve_smoke)
+add_subdirectory(fnv)
+add_subdirectory(forest_smoke)
+add_subdirectory(json)
+add_subdirectory(n_queens)
+add_subdirectory(md5)
+add_subdirectory(property_model_eval)
+add_subdirectory(reduction)
+add_subdirectory(serialization)
+add_subdirectory(sha)
+add_subdirectory(stable_partition_selection)
+add_subdirectory(to_string)
+add_subdirectory(unicode)
+add_subdirectory(xml_parser)
+add_subdirectory(zuidgen)

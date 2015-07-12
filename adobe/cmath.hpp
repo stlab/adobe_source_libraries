@@ -48,6 +48,9 @@ back to include math.h. This also needs to add any other C99 math.h extensions.
 
 #define ADOBE_HAS_C99_STD_MATH_H
 #endif
+#elif __GNUC__ == 5
+#define ADOBE_HAS_C99_STD_MATH_H
+#include <cmath>
 #endif
 
 #elif defined(_MSC_VER)

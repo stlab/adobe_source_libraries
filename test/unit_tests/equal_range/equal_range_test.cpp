@@ -10,6 +10,7 @@
 #include <functional>
 #include <utility>
 
+#define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
 #include <boost/range/begin.hpp>
@@ -20,7 +21,7 @@
 #include <adobe/utility/pair.hpp>
 
 
-void equal_range_test() {
+BOOST_AUTO_TEST_CASE(equal_range_test) {
     using std::pair;
     using adobe::less;
     using adobe::equal_range;
@@ -51,13 +52,4 @@ void equal_range_test() {
 
     BOOST_CHECK_EQUAL(equal_range(a, 1, less(), &aggregate_pair<int>::first).first, &a[2]);
     BOOST_CHECK_EQUAL(equal_range(c, 1, less(), &aggregate_pair<int>::first).first, &c[2]);
-}
-
-
-using namespace boost::unit_test;
-
-test_suite* init_unit_test_suite(int, char * []) {
-    framework::master_test_suite().add(BOOST_TEST_CASE(&equal_range_test));
-
-    return 0;
 }
