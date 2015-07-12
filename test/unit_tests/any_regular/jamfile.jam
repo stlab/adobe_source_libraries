@@ -1,1 +1,2 @@
 run any_regular_test.cpp ;
+run any_regular_serialization_test.cpp ;

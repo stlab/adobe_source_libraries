@@ -24,7 +24,7 @@
 #include <stdexcept>
 #include <functional>
 
-#include <adobe/any_regular.hpp>
+#include <adobe/serializable.hpp>
 #include <adobe/iomanip_fwd.hpp>
 #include <adobe/manip.hpp>
 #include <adobe/name.hpp>
@@ -61,12 +61,12 @@ public:
     explicit format_element_t(name_t tag = name_t(), const std::string& ident = std::string())
         : ident_m(ident), num_out_m(0), tag_m(tag), value_m(0) {}
 
-    format_element_t(name_t tag, const any_regular_t& value)
+    format_element_t(name_t tag, const serializable_t& value)
         : num_out_m(0), tag_m(tag), value_m(&value) {}
 
     name_t tag() const { return tag_m; }
 
-    const any_regular_t& value() const {
+    const serializable_t& value() const {
         if (!value_m)
             throw std::runtime_error("invalid value");
 
@@ -78,7 +78,7 @@ public:
 
 private:
     name_t tag_m;
-    const any_regular_t* value_m;
+    const serializable_t* value_m;
 };
 
 /*************************************************************************************************/
@@ -104,7 +104,7 @@ public:
     virtual void begin_alternate(stream_type& os) { push_stack(os); }
     virtual void end_alternate(stream_type& os) { pop_stack(os); }
 
-    virtual void begin_atom(stream_type& os, const any_regular_t&) { push_stack(os); }
+    virtual void begin_atom(stream_type& os, const serializable_t&) { push_stack(os); }
     virtual void end_atom(stream_type& os) { pop_stack(os); }
 
     format_base() : depth_m(0) {}
@@ -223,8 +223,10 @@ public:
 private:
     static stream_type& fct(stream_type& os, const argument_type& i) {
         format_base* format(get_formatter(os));
+
         if (format)
             format->begin_bag(os, i);
+
         return os;
     }
 };
@@ -233,14 +235,14 @@ private:
 
 //!\ingroup manipulator
 template <typename T>
-class begin_atom : public basic_omanipulator<const any_regular_t, char, std::char_traits<char>> {
-    typedef basic_omanipulator<const any_regular_t, char, std::char_traits<char>> inherited_t;
+class begin_atom : public basic_omanipulator<const serializable_t, char, std::char_traits<char>> {
+    typedef basic_omanipulator<const serializable_t, char, std::char_traits<char>> inherited_t;
 
 public:
     typedef inherited_t::stream_type stream_type;
     typedef inherited_t::argument_type argument_type;
 
-    explicit begin_atom(const T& x) : inherited_t(begin_atom::fct, any_regular_t(x)) {}
+    explicit begin_atom(const T& x) : inherited_t(begin_atom::fct, serializable_t(x)) {}
 
     inherited_t& operator()(argument_type /*i*/) { return *this; }
 
@@ -248,10 +250,10 @@ private:
     static stream_type& fct(stream_type& os, const argument_type& atom) {
         format_base* format(get_formatter(os));
 
-        if (format == 0)
-            return os << atom.cast<typename promote<T>::type>();
-
-        format->begin_atom(os, atom);
+        if (format)
+            format->begin_atom(os, atom);
+        else
+            os << atom;
 
         return os;
     }

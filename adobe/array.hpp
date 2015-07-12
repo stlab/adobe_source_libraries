@@ -39,7 +39,7 @@ inline std::ostream& operator<<(std::ostream& out, const array_t& x) {
     out << begin_sequence;
 
     for (const auto& e : x)
-        out << format(e);
+        out << e; // format will be called by any_regular_t.
 
     out << end_sequence;
 
