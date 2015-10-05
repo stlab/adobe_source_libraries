@@ -38,6 +38,8 @@ BOOST_AUTO_TEST_CASE(forest_int_iterator_test) {
     f.push_back(3);
     f.push_back(42);
     forest<int>::iterator begin = f.begin(), end = f.end();
+    (void)begin;
+    (void)end;
     boost::function_requires<boost::BidirectionalIteratorConcept<forest<int>::iterator>>();
     boost::function_requires<boost::BidirectionalIteratorConcept<forest<int>::const_iterator>>();
     boost::function_requires<boost::BidirectionalIteratorConcept<forest<int>::preorder_iterator>>();
