@@ -52,32 +52,6 @@ private:
 
 /*************************************************************************************************/
 
-//!\ingroup manipulator
-static std::ostream& begin_flat(std::ostream& os) {
-    replace_pword<format_base, flat_format>(os, format_base_idx(), true);
-    return os << begin_format;
-}
-
-/*************************************************************************************************/
-
-//!\ingroup manipulator
-static std::ostream& end_flat(std::ostream& os) { return os << end_format; }
-
-/*************************************************************************************************/
-
-//!\ingroup manipulator
-static std::ostream& begin_flat_unsafe(std::ostream& os) {
-    replace_pword<format_base, flat_format>(os, format_base_idx(), false);
-    return os << begin_format;
-}
-
-/*************************************************************************************************/
-
-//!\ingroup manipulator
-static std::ostream& end_flat_unsafe(std::ostream& os) { return os << end_format; }
-
-/*************************************************************************************************/
-
 } // namespace adobe
 
 /*************************************************************************************************/
