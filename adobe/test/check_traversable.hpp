@@ -30,7 +30,13 @@ void check_traversable(const T& c) {
         const T d1(c);
         T d2(c);
         typename T::const_iterator i1 = d1.begin(), i2 = d1.end(), i3 = d2.begin(), i4 = d2.end();
+        (void)i1;
+        (void)i2;
+        (void)i3;
+        (void)i4;
         typename T::iterator j1 = d2.begin(), j2 = d2.end();
+        (void)j1;
+        (void)j2;
     }
 
 
@@ -38,6 +44,8 @@ void check_traversable(const T& c) {
         T d(c);
         BOOST_CHECK_MESSAGE(c.size() == d.size(), "container copy-ctor size");
         typename T::const_iterator i = c.begin(), j = d.begin();
+        (void)i;
+        (void)j;
 
         BOOST_CHECK_MESSAGE(d == c, "container copy-ctor values");
     }
@@ -74,14 +82,13 @@ void check_traversable(const T& c) {
     }
 
     {
-
         typename T::iterator x;
         typename T::const_iterator y;
 
         y = x; // Make sure mutable iterator can be converted to const.
 
-        y == x; // Make sure const/mutable iterators can be compared.
-        x == y;
+        (void)(y == x); // Make sure const/mutable iterators can be compared.
+        (void)(x == y);
     }
 }
 

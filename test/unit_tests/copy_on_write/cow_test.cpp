@@ -394,3 +394,8 @@ BOOST_AUTO_TEST_CASE(copy_on_write) {
     // test movable type with noisy_allocator
     test_copy_on_write<adobe::copy_on_write<std::string, noisy_allocator<std::string>>>();
 }
+
+BOOST_AUTO_TEST_CASE(void_equality) {
+    BOOST_CHECK(noisy_allocator<void>() == noisy_allocator<void>());
+    BOOST_CHECK(!(noisy_allocator<void>() != noisy_allocator<void>()));
+}
