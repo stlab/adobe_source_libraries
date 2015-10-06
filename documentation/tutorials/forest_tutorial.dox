@@ -68,7 +68,7 @@ Observe that the last two relationships are similar to the first two. Consider t
 \par
 Note that for each of the four possibilities, the new node will be inserted along one of the dashed lines leading into or out of \c A. Don't forget that the dashed lines represent the position of any given iterator at any given time in the forest. In the case of a leaf node, the leading out and trailing in lines (iterator positions) are the same line (the loop), so the principle still applies. Insertion of nodes will always take place on top of one of these dashed lines, and never anywhere else.
 \par
-There is aninsert which takes a <code>[first, last)</code> sequence, allowing you to insert more than one node essentially at the same location. Doing so makes the inserted sequence all "siblinging" on the same arc. It is the same as if you inserted each item, \c first to <code>last - 1</code>, at the same location. So let's say I have a fullorder iterator to the leading edge of node \c A and I want to add a vector of items as children of \c A. One can write:
+There is an insert which takes a <code>[first, last)</code> sequence, allowing you to insert more than one node essentially at the same location. Doing so makes the inserted sequence all "siblinging" on the same arc. It is the same as if you inserted each item, \c first to <code>last - 1</code>, at the same location. So let's say I have a fullorder iterator to the leading edge of node \c A and I want to add a vector of items as children of \c A. One can write:
 \par
 \code
 // move my iterator to exit the leading edge
