@@ -99,7 +99,7 @@ class json_parser {
             }
         }
         require(is_structural_char('}'), "}");
-        t = value_type(move(object));
+        t = value_type(std::move(object));
         return true;
     }
     
@@ -115,7 +115,7 @@ class json_parser {
             }
         }
         require(is_structural_char(']'), "]");
-        t = value_type(move(array));
+        t = value_type(std::move(array));
         return true;
     }
     
