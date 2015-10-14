@@ -52,7 +52,7 @@ struct empty_ptr<T (*)[]> : std::unary_function<T*, bool> {
 
 /*
     REVISIT (sparent) : This is a hack - the new delete_ptr is not a template
-    auto_ptr/auto_resource are too complicated with the traits classes -
+    auto_resource is too complicated with the traits classes -
     provide a delete op as a tempalte argument?
 */
 
@@ -73,8 +73,6 @@ struct delete_ptr_trait<T (*)[]> : std::unary_function<T*, void> {
 
 /*************************************************************************************************/
 
-template <typename X, class Traits>
-class auto_ptr;
 template <typename X, class Traits>
 class auto_resource;
 
@@ -200,15 +198,14 @@ struct adobe_static_assert<true> {};
 
 /*************************************************************************************************/
 
+/* REVISIT (sparent) : auto_resource should become unique_resource. */
+
 /*! \addtogroup memory
   @{
 */
 /*! \brief The template class <code>auto_resource\< X, Traits \></code> provides similar
-    functionality to <code>auto_ptr</code> for resources for which the pointer is <i>opaque</i>
+    functionality to <code>unique_ptr</code> for resources for which the pointer is <i>opaque</i>
     refered to by a non-pointer type.
-
-    <code>auto_ptr\< Item \></code> is equivalent to <code>auto_resource\< Item* \></code> with
-    the addition of <code>operator *()</code> and <code>operator ->()</code>.
 
     <b>Example:</b>
     \dontinclude auto_resource_test.cpp
@@ -256,7 +253,7 @@ private:
 /*
     20.4.5.3 conversions:
 
-    NOTE (spraent) : As per the recommendations on standard issue 463 the conversion
+    NOTE (sparent) : As per the recommendations on standard issue 463 the conversion
     operators through auto_ptr_ref have been removed in favor of using this conditional
     enabled trick.
 
