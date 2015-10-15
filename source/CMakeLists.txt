@@ -16,5 +16,4 @@ target_compile_options(asl PUBLIC $<$<CXX_COMPILER_ID:Clang>:-ftemplate-depth=10
 
 target_link_doubleconversion(asl)
 
-target_link_libraries(asl PUBLIC ${Boost_SYSTEM_LIBRARY})
-
+target_link_boost(asl)
