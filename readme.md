@@ -26,7 +26,7 @@ This option is invoked from the `./cmake_build_all.sh` script. It includes the a
 
 ### Xcode
 
-This option is invoked from the `./cmake_xcode.sh` script. It assumes the presence of the double-conversion dependency.
+This option is invoked from the `./cmake_xcode.sh` script. It assumes the presence of the double-conversion dependency. Once the project file is generated you can open it and build directly from within Xcode.
 
 Documentation
 =====
