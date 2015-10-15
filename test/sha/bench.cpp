@@ -14,7 +14,7 @@
 #include <sstream>
 
 #ifndef USING_OPENSSL
-#define USING_OPENSSL 1
+#define USING_OPENSSL 0
 #endif
 
 #ifndef USING_BOOSTCRYPTO
