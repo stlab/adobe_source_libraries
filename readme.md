@@ -26,7 +26,7 @@ This option is invoked from the `./cmake_build_all.sh` script. It includes the a
 
 ### Xcode
 
-This option is invoked from the `./cmake_xcode.sh` script. It assumes the presence of the double-conversion dependency.
+This option is invoked from the `./cmake_xcode.sh` script. It assumes the presence of the double-conversion dependency. Once the project file is generated you can open it and build directly from within Xcode.
 
 Documentation
 =====
@@ -34,6 +34,6 @@ ASL's documentation is built with [Doxygen](http://www.doxygen.org) and [hosted 
 
 The legacy documentation is still online and can be found [here](http://stlab.adobe.com/).
 
-<!---Slack
+Slack
 =====
-A Slack team has been set up to discuss all things ASL. Feel free to join up [here](https://stlab.slack.com/signup).--->
+A Slack team has been set up to discuss all things ASL. If you would like an invitation please open an issue with your email address.
