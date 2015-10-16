@@ -1,5 +1,4 @@
 function(asl_test)
-
   set(options SKIPPED BOOST)
   set(oneValueArgs NAME)
   set(multiValueArgs SOURCES ARGS)
@@ -9,14 +8,12 @@ function(asl_test)
   target_link_libraries(${asl_test_NAME} PRIVATE asl)
 
   if (asl_test_BOOST)
-    target_compile_definitions(${asl_test_NAME} PRIVATE BOOST_TEST_DYN_LINK)
-    target_link_libraries(${asl_test_NAME} PRIVATE ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+    target_link_boost_test(${asl_test_NAME})
   endif(asl_test_BOOST)
 
   if (NOT asl_test_SKIPPED)
     add_test (NAME ${asl_test_NAME} COMMAND ${asl_test_NAME} ${asl_test_ARGS})
   endif(NOT asl_test_SKIPPED)
-
 endfunction(asl_test)
 
 
