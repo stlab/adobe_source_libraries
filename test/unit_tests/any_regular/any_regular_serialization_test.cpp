@@ -10,6 +10,7 @@
 #include <functional>
 #include <utility>
 
+#define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
 #include <adobe/any_regular.hpp>
@@ -32,17 +33,9 @@ struct bar_t { };
 bool operator==(const bar_t& x, const bar_t& y) { return true; };
 bool operator!=(const bar_t& x, const bar_t& y) { return !(x == y); }
 
-void any_regular_serialization_test() {
+BOOST_AUTO_TEST_CASE(any_regular_serialization_test) {
     using adobe::any_regular_t;
 
     std::cout << "foo_t: " << any_regular_t(foo_t{42}) << '\n';
     std::cout << "bar_t: " << any_regular_t(bar_t()) << '\n';
-}
-
-using namespace boost::unit_test;
-
-test_suite* init_unit_test_suite(int, char * []) {
-    framework::master_test_suite().add(BOOST_TEST_CASE(&any_regular_serialization_test));
-
-    return 0;
 }

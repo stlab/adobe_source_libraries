@@ -113,7 +113,7 @@ O to_string(double x, O out, bool precise = false) {
     int size = _snprintf_s(&buf[0], sizeof(buf), sizeof(buf), "%.*g", precise ? 17 : 15, x);
 #else
     int size = std::snprintf(&buf[0], sizeof(buf), "%.*g", precise ? 17 : 15, x);
-    ADOBE_ASSERT(size < sizeof(buf) && "WARNING (sparent) : snprintf truncated.");
+    ADOBE_ASSERT(size < static_cast<int>(sizeof(buf)) && "WARNING (sparent) : snprintf truncated.");
 #endif
     ADOBE_ASSERT(size < (precise ? 25 : 23) &&
                  "WARNING (sparent) : to_string() result larger than expected.");

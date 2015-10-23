@@ -319,6 +319,34 @@ void block_and_digest(typename HashTraits::message_block_type& state, std::uint1
 
 /**************************************************************************************************/
 
+template <bool overshift, typename message_block_type>
+struct shift_down
+{
+    void operator()(message_block_type& state,
+                    std::uint64_t message_size,
+                    typename message_block_type::value_type value_type_mask) const
+    {
+    }
+};
+
+template <typename message_block_type>
+struct shift_down<false, message_block_type>
+{
+    void operator()(message_block_type& state,
+                    std::uint64_t message_size,
+                    typename message_block_type::value_type value_type_mask) const
+    {
+        constexpr std::size_t value_bitsize_k = sizeof(typename message_block_type::value_type) * 8;
+
+        if (message_size > value_type_mask)
+        {
+            state[14] = (message_size >> value_bitsize_k) & value_type_mask;
+        }
+    }
+};
+
+/**************************************************************************************************/
+
 template <typename HashTraits>
 typename HashTraits::digest_type finalize(typename HashTraits::message_block_type& state,
                                           std::uint16_t stuffed_size, std::uint64_t message_size,
@@ -401,9 +429,7 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
     compile-time, eliminating the undefined behavior.
     */
     constexpr bool overshift = value_bitsize_k >= (sizeof(message_size) * 8);
-
-    if (!overshift && message_size > value_type_mask)
-        state[14] = (message_size >> value_bitsize_k) & value_type_mask;
+    shift_down<overshift, message_block_type>()(state, message_size, value_type_mask);
 
     state[15] = message_size & value_type_mask;
 
@@ -437,7 +463,6 @@ void sha_2_digest_message_block(typename HashTraits::state_digest_type& digest,
     */
 
     typedef HashTraits traits_type;
-    typedef typename traits_type::message_block_type message_block_type;
     typedef typename traits_type::schedule_type schedule_type;
     typedef typename traits_type::state_digest_type::value_type digest_value_type;
 
@@ -507,8 +532,6 @@ struct sha1_traits_t {
     static inline void digest_message_block(state_digest_type& digest,
                                             message_block_type& message_block,
                                             std::uint16_t& stuffed_size) {
-        typedef typename schedule_type::value_type schedule_word;
-
         schedule_type schedule;
         constexpr std::uint_fast8_t schedule_size = schedule.size();
 

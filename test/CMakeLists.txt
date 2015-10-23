@@ -1,10 +1,23 @@
 function(asl_test)
-  set(options SKIPPED BOOST)
+  set(options SKIPPED BOOST BENCHMARK)
   set(oneValueArgs NAME)
   set(multiValueArgs SOURCES ARGS)
   cmake_parse_arguments(asl_test "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
   add_executable (${asl_test_NAME} ${asl_test_SOURCES})
+
+  target_compile_options (${asl_test_NAME} PRIVATE "-Wno-deprecated")
+  target_compile_options (${asl_test_NAME} PRIVATE "-Wno-unused-variable")
+  target_compile_options (${asl_test_NAME} PRIVATE "-Wno-unknown-pragmas")
+  target_compile_options (${asl_test_NAME} PRIVATE "-Wno-uninitialized")
+  target_compile_options (${asl_test_NAME} PRIVATE "-Wno-return-type")
+  target_compile_options (${asl_test_NAME} PRIVATE "-Wno-unused-function")
+  target_compile_options (${asl_test_NAME} PRIVATE "-Wno-unused-local-typedefs")
+  target_compile_options (${asl_test_NAME} PRIVATE "-Wno-unused-parameter")
+  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    target_compile_options (${asl_test_NAME} PRIVATE "-Wno-unused-comparison")
+  endif()
+
   target_link_libraries(${asl_test_NAME} PRIVATE asl)
 
   if (asl_test_BOOST)
@@ -12,7 +25,11 @@ function(asl_test)
   endif(asl_test_BOOST)
 
   if (NOT asl_test_SKIPPED)
-    add_test (NAME ${asl_test_NAME} COMMAND ${asl_test_NAME} ${asl_test_ARGS})
+    if (asl_test_BENCHMARK)
+        add_test (NAME ${asl_test_NAME} COMMAND ${asl_test_NAME} ${asl_test_ARGS} CONFIGURATIONS Release)
+    else(asl_test_BENCHMARK)
+        add_test (NAME ${asl_test_NAME} COMMAND ${asl_test_NAME} ${asl_test_ARGS})
+    endif(asl_test_BENCHMARK)
   endif(NOT asl_test_SKIPPED)
 endfunction(asl_test)
 

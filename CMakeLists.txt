@@ -10,16 +10,21 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++0x")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
+add_definitions ("-Wall")
+add_definitions ("-Werror")
+
 # There are two big choices this file makes - how to include Boost, and how to
 # include double-conversion, respectively. Build environments vary and we're
 # trying to support all of them.
 #
-# If BOOST_ROOT is defined, that means the headers and libraries have been built
+# If USE_SYSTEM_BOOST is defined, that means the headers and libraries have been built
 # and are ready for use by CMake. Otherwise, we'll have to roll them ourselves.
 #
 # For double-conversion, the unix makefile setup is able to download the git
 # repo and build it. For Xcode, this isn't the case, and we'll have to roll
 # our own there, too.
+
+option(USE_SYSTEM_BOOST "use cmake found boost instead of ../boost_libraries" "OFF")
 
 if (${CMAKE_GENERATOR} STREQUAL "Xcode")
     set(ASL_DOUBLECONV_SUPPORT ON)
@@ -62,7 +67,7 @@ function(target_link_doubleconversion target)
 endfunction(target_link_doubleconversion)
 
 function(target_link_boost target)
-    if (${BOOST_ROOT})
+    if (${USE_SYSTEM_BOOST})
         target_link_libraries(${target} PUBLIC ${Boost_SYSTEM_LIBRARY})
     else()
         add_dependencies(${target} boost_glob)
@@ -72,9 +77,9 @@ function(target_link_boost target)
 endfunction(target_link_boost)
 
 function(target_link_boost_test target)
-    if (${BOOST_ROOT})
-        target_compile_definitions(${asl_test_NAME} PRIVATE BOOST_TEST_DYN_LINK)
-        target_link_libraries(${asl_test_NAME} PRIVATE ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+    if (${USE_SYSTEM_BOOST})
+        target_compile_definitions(${target} PRIVATE BOOST_TEST_DYN_LINK)
+        target_link_libraries(${target} PRIVATE ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
     else()
         add_dependencies(${target} boost_unit_test)
 
@@ -82,7 +87,7 @@ function(target_link_boost_test target)
     endif()
 endfunction(target_link_boost_test)
 
-if (${BOOST_ROOT})
+if (${USE_SYSTEM_BOOST})
     find_package(Boost COMPONENTS system thread unit_test_framework program_options REQUIRED)
 else()
     message("ASL_INFO: Building boost ourselves.")

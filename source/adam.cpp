@@ -287,8 +287,8 @@ private:
         cell_t* interface_input_m;
 
         priority_t priority() const {
-            assert(specifier_m == access_interface_input ||
-                   specifier_m == access_interface_output &&
+            assert((specifier_m == access_interface_input ||
+                   specifier_m == access_interface_output) &&
                        "should not read priority of this cell type");
             return interface_input_m ? interface_input_m->priority_m : priority_m;
         }
