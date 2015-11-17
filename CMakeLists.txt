@@ -23,7 +23,7 @@ add_definitions ("-Werror")
 # For double-conversion, the unix makefile setup is able to download the git
 # repo and build it
 
-option(USE_SYSTEM_boost "use cmake found boost instead of ../boost_libraries" "ON")
+option(USE_SYSTEM_BOOST "use cmake found boost instead of ../boost_libraries" "ON")
 option(USE_STLAB_DOUBLECONV "use stlab mirror of double-conversion repository" "OFF")
 
 set(root_path ${CMAKE_SOURCE_DIR}/../)
@@ -52,7 +52,7 @@ endif()
 
 function(target_link_boost target)
     if (${USE_SYSTEM_BOOST})
-        target_link_libraries(${target} PUBLIC ${Boost_SYSTEM_LIBRARY})
+        target_link_libraries(${target} PUBLIC ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY})
     else()
         add_dependencies(${target} boost_glob)
 
@@ -72,7 +72,7 @@ function(target_link_boost_test target)
 endfunction(target_link_boost_test)
 
 if (${USE_SYSTEM_BOOST})
-    find_package(Boost COMPONENTS system thread unit_test_framework program_options REQUIRED)
+    find_package(Boost COMPONENTS system filesystem thread unit_test_framework program_options REQUIRED)
 else()
     message("ASL_INFO: Building boost ourselves.")
 
