@@ -978,6 +978,20 @@ void forest<T>::reverse(child_iterator first, child_iterator last) {
 
 /**************************************************************************************************/
 
+template <typename I> // I models FullorderIterator
+child_iterator<I> child_begin(const I& x) {
+    return child_iterator<I>(boost::next(leading_of(x)));
+}
+
+/**************************************************************************************************/
+
+template <typename I> // I models FullorderIterator
+child_iterator<I> child_end(const I& x) {
+    return child_iterator<I>(trailing_of(x));
+}
+
+/**************************************************************************************************/
+
 template <typename Forest>
 class child_adaptor {
 public:
@@ -991,8 +1005,8 @@ public:
 
     child_adaptor(forest_type& f, iterator_type& i) : forest_m(f), iterator_m(i) {}
 
-    iterator& back() { return *(--child_end(iterator_m)); }
-    iterator& front() { return *(child_begin(iterator_m)); }
+    value_type& back() { return *(--child_end(iterator_m)); }
+    value_type& front() { return *(child_begin(iterator_m)); }
 
     void push_back(const value_type& x) { forest_m.insert(child_end(iterator_m).base(), x); }
     void push_front(const value_type& x) { forest_m.insert(child_begin(iterator_m).base(), x); }
@@ -1006,20 +1020,6 @@ private:
     forest_type& forest_m;
     iterator_type& iterator_m;
 };
-
-/**************************************************************************************************/
-
-template <typename I> // I models FullorderIterator
-child_iterator<I> child_begin(const I& x) {
-    return child_iterator<I>(boost::next(leading_of(x)));
-}
-
-/**************************************************************************************************/
-
-template <typename I> // I models FullorderIterator
-child_iterator<I> child_end(const I& x) {
-    return child_iterator<I>(trailing_of(x));
-}
 
 /**************************************************************************************************/
 
