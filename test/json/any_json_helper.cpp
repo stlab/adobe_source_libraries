@@ -37,11 +37,11 @@ struct any_json_helper_t {
     typedef unordered_map<key_type, value_type> object_type;
     typedef vector<value_type>                  array_type;
     typedef object_type::value_type             pair_type;
-    
+
     static json_type type(const value_type& x) {
         // REVISIT (make this thread safe) - nuke json_type and add functions to table directly.
         bool inited = false;
-    
+
         static struct type_table_t {
             const std::type_info* type_info_;
             json_type type_;
@@ -54,29 +54,29 @@ struct any_json_helper_t {
             { &typeid(void),         json_type::null }
         };
         static const auto projection = [](const type_table_t& x)->const std::type_info& { return *x.type_info_; };
-        
+
         if (!inited) {
             adobe::sort(table, adobe::less(), projection);
             inited = true;
         }
-        
+
         auto p = adobe::lower_bound(table, x.type(), adobe::less(), projection);
         assert(p != end(table) && "invalid type for serialization");
-        
+
         return p->type_;
     }
-    
+
     template <typename T>
     static const T& as(const value_type& x) { return any_cast<const T&>(x); }
-        
+
     static void move_append(object_type& obj, key_type& key, value_type& value) {
-        obj.emplace(move(key), move(value));
+        obj.emplace(std::move(key), std::move(value));
     }
     static void append(string_type& str, const char* f, const char* l) {
         str.append(f, l);
     }
     static void move_append(array_type& array, value_type& value) {
-        array.push_back(move(value));
+        array.push_back(std::move(value));
     }
 };
 
@@ -114,7 +114,7 @@ BOOST_AUTO_TEST_CASE(any_json_helper_smoke) {
             }
         ]
     )raw").parse();
-    
+
     json_generator<any_json_helper_t, ostream_iterator<char>>(ostream_iterator<char>(cout)).generate(x);
 
     cout << endl;

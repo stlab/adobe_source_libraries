@@ -37,12 +37,8 @@ struct view_proxy_t;
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 namespace boost {
-namespace detail {
 template <>
-struct is_pod_impl<adobe::implementation::view_proxy_t> {
-    BOOST_STATIC_CONSTANT(bool, value = true);
-};
-}
+struct is_pod<adobe::implementation::view_proxy_t> : boost::mpl::true_ {};
 }
 #endif
 

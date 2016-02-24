@@ -51,7 +51,7 @@ public:
     /// store_type for selection_t
     typedef std::vector<value_type> store_type;
     /// iterator for selection_t
-    typedef store_type::iterator iterator;
+    typedef store_type::const_iterator iterator;
     /// const_iterator for selection_t
     typedef store_type::const_iterator const_iterator;
     /// size_type for selection_t
