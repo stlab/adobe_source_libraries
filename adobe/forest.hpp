@@ -267,7 +267,7 @@ public:
     typedef typename inherited_t::reference reference;
 
     reverse_fullorder_iterator() : edge_m(forest_trailing_edge) {}
-    reverse_fullorder_iterator(I x) : base_m(--x), edge_m(forest_leading_edge - base_m.edge()) {}
+    explicit reverse_fullorder_iterator(I x) : base_m(--x), edge_m(forest_leading_edge - base_m.edge()) {}
     template <typename U>
     reverse_fullorder_iterator(const reverse_fullorder_iterator<U>& x)
         : base_m(x.base()), edge_m(x.edge_m) {}
@@ -620,8 +620,8 @@ public:
 
     reverse_iterator rbegin() { return reverse_iterator(end()); }
     reverse_iterator rend() { return reverse_iterator(begin()); }
-    reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
-    reverse_iterator rend() const { return const_reverse_iterator(begin()); }
+    const_reverse_iterator rbegin() const { return const_reverse_iterator(end()); }
+    const_reverse_iterator rend() const { return const_reverse_iterator(begin()); }
 
     reference front() {
         assert(!empty());
