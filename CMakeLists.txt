@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-include(ExternalProject)
+include(FindGit)
 include(CMakeParseArguments)
 enable_testing()
 
@@ -10,60 +10,49 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++0x")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
+add_definitions ("-Wall")
+add_definitions ("-Werror")
+
 # There are two big choices this file makes - how to include Boost, and how to
 # include double-conversion, respectively. Build environments vary and we're
 # trying to support all of them.
 #
-# If BOOST_ROOT is defined, that means the headers and libraries have been built
+# If USE_SYSTEM_BOOST is defined, that means the headers and libraries have been built
 # and are ready for use by CMake. Otherwise, we'll have to roll them ourselves.
 #
 # For double-conversion, the unix makefile setup is able to download the git
-# repo and build it. For Xcode, this isn't the case, and we'll have to roll
-# our own there, too.
+# repo and build it
 
-if (${CMAKE_GENERATOR} STREQUAL "Xcode")
-    set(ASL_DOUBLECONV_SUPPORT ON)
+option(USE_SYSTEM_BOOST "use cmake found boost instead of ../boost_libraries" "ON")
+option(USE_STLAB_DOUBLECONV "use stlab mirror of double-conversion repository" "OFF")
 
-    message("ASL_INFO: Building double-conversion ourselves.")
-else()
-    set(ASL_DOUBLECONV_SUPPORT OFF)
-endif()
+set(root_path ${CMAKE_SOURCE_DIR}/../)
 
-if (${ASL_DOUBLECONV_SUPPORT})
-    file(GLOB ASL_DOUBELCONV_SRC ../double-conversion/src/*.cc)
-
-    add_library(doubleconv_support STATIC ${ASL_DOUBELCONV_SRC})
-
-    get_filename_component(ASL_DOUBLECONV_PATH ../ ABSOLUTE)
-
-    target_include_directories(doubleconv_support PUBLIC ${ASL_DOUBLECONV_PATH})
-else()
-    ExternalProject_Add(double-conversion_prj
-        PREFIX ${CMAKE_BINARY_DIR}/thirdparty/double-conversion
-        GIT_REPOSITORY https://github.com/google/double-conversion.git
-        # GIT_REPOSITORY https://github.com/stlab/double-conversion.git
-        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX})
-
-    link_directories(${CMAKE_INSTALL_PREFIX}/lib)
-endif()
-
-function(target_link_doubleconversion target)
-    if (${ASL_DOUBLECONV_SUPPORT})
-        add_dependencies(${target} doubleconv_support)
-
-        target_link_libraries(${target} PUBLIC doubleconv_support)
-    else()
-        #tweak on include double-conversion path
-        target_compile_definitions(${target} PUBLIC -DADOBE_BUILT_WITH_CMAKE)
-        add_dependencies(${target} double-conversion_prj)
-        target_include_directories(${target} PUBLIC ${CMAKE_INSTALL_PREFIX}/include)
-        target_link_libraries(${target} PUBLIC double-conversion)
+function(setup_dep)
+    set(oneValueArgs URL BRANCH)
+    cmake_parse_arguments(setup_dep "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    get_filename_component(name ${setup_dep_URL} NAME_WE)
+    set(dep_path ${root_path}/${name})
+    if(NOT IS_DIRECTORY ${dep_path})
+        execute_process(COMMAND ${GIT_EXECUTABLE} clone ${setup_dep_URL} WORKING_DIRECTORY ${root_path})
+        execute_process(COMMAND ${GIT_EXECUTABLE} checkout ${setup_dep_BRANCH} WORKING_DIRECTORY ${dep_path})
     endif()
-endfunction(target_link_doubleconversion)
+    add_subdirectory(${dep_path} ${CMAKE_BINARY_DIR}/imported/${name})
+endfunction()
+
+if (${USE_STLAB_DOUBLECONV})
+  setup_dep(URL https://github.com/stlab/double-conversion.git BRANCH master)
+  target_include_directories(double-conversion PUBLIC $<BUILD_INTERFACE:${root_path}>)
+else()
+  setup_dep(URL https://github.com/google/double-conversion.git BRANCH master)
+  target_include_directories(double-conversion PUBLIC $<BUILD_INTERFACE:${root_path}/double-conversion>)
+  # poorly named flag to fix include path
+  target_compile_definitions(double-conversion PUBLIC ADOBE_BUILT_WITH_CMAKE)
+endif()
 
 function(target_link_boost target)
-    if (${BOOST_ROOT})
-        target_link_libraries(${target} PUBLIC ${Boost_SYSTEM_LIBRARY})
+    if (${USE_SYSTEM_BOOST})
+        target_link_libraries(${target} PUBLIC ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY})
     else()
         add_dependencies(${target} boost_glob)
 
@@ -72,9 +61,9 @@ function(target_link_boost target)
 endfunction(target_link_boost)
 
 function(target_link_boost_test target)
-    if (${BOOST_ROOT})
-        target_compile_definitions(${asl_test_NAME} PRIVATE BOOST_TEST_DYN_LINK)
-        target_link_libraries(${asl_test_NAME} PRIVATE ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+    if (${USE_SYSTEM_BOOST})
+        target_compile_definitions(${target} PRIVATE BOOST_TEST_DYN_LINK)
+        target_link_libraries(${target} PRIVATE ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
     else()
         add_dependencies(${target} boost_unit_test)
 
@@ -82,8 +71,8 @@ function(target_link_boost_test target)
     endif()
 endfunction(target_link_boost_test)
 
-if (${BOOST_ROOT})
-    find_package(Boost COMPONENTS system thread unit_test_framework program_options REQUIRED)
+if (${USE_SYSTEM_BOOST})
+    find_package(Boost COMPONENTS system filesystem thread unit_test_framework program_options REQUIRED)
 else()
     message("ASL_INFO: Building boost ourselves.")
 
