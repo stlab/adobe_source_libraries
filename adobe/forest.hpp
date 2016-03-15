@@ -612,10 +612,11 @@ public:
 
     // iterators
     iterator root() { return iterator(tail(), forest_leading_edge); }
+    const_iterator root() const { return const_iterator(tail(), forest_leading_edge); }
 
     iterator begin() { return ++root(); }
     iterator end() { return iterator(tail(), forest_trailing_edge); }
-    const_iterator begin() const { return ++const_iterator(tail(), forest_leading_edge); }
+    const_iterator begin() const { return ++root(); }
     const_iterator end() const { return const_iterator(tail(), forest_trailing_edge); }
 
     reverse_iterator rbegin() { return reverse_iterator(end()); }
