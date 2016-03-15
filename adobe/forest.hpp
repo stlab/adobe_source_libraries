@@ -351,8 +351,6 @@ template <typename Forest>
 class child_adaptor;
 template <typename T>
 class forest;
-template <typename T>
-void swap(forest<T>&, forest<T>&);
 
 /**************************************************************************************************/
 
@@ -592,8 +590,15 @@ public:
     ~forest() { clear(); }
 
     forest(const forest&);
-    forest& operator=(forest x) {
-        this->swap(x);
+    forest(forest&&) noexcept;
+    forest& operator=(const forest& x) {
+        auto tmp = x;
+        *this = std::move(tmp);
+        return *this;
+    }
+    forest& operator=(forest&& x) noexcept {
+        clear();
+        splice(end(), x);
         return *this;
     }
 
@@ -601,7 +606,6 @@ public:
 #endif
 
     size_type size() const;
-    size_type size();
     size_type max_size() const { return size_type(-1); }
     bool size_valid() const { return size_m != 0 || empty(); }
     bool empty() const { return begin() == end(); } // Don't test size which may be expensive
@@ -686,45 +690,7 @@ private:
     friend class implementation::forest_const_iterator<value_type>;
     friend struct unsafe::set_next_fn<iterator>;
 
-
-#if 0
-    struct node_base
-    {
-        enum next_prior_t
-        {
-            prior_s,
-            next_s
-        };
-    
-        typedef node*               node_ptr;
-        typedef node_ptr&           reference;
-
-        node_base()
-        {
-            // leading is 1, trailing is 0
-            nodes_m[forest_leading_edge][std::size_t(next_s)] = static_cast<node*>(this);
-            nodes_m[forest_trailing_edge][std::size_t(prior_s)] = static_cast<node*>(this);
-        }
-        
-        node_ptr& link(std::size_t edge, next_prior_t link)
-        { return nodes_m[edge][std::size_t(link)]; }
-        
-        node_ptr link(std::size_t edge, next_prior_t link) const
-        { return nodes_m[edge][std::size_t(link)]; }
-
-        node_ptr nodes_m[2][2];
-    };
-
-    struct node : public node_base
-    {
-        explicit node(const value_type& data) : data_m(data) { }
-        
-        value_type data_m;
-    };
-
-#endif
-
-    size_type size_m;
+    mutable size_type size_m;
     implementation::node_base<node_t> tail_m;
 
     node_t* tail() { return static_cast<node_t*>(&tail_m); }
@@ -787,16 +753,25 @@ forest<T>::forest(const forest& x)
     : size_m(0) {
     unsafe::set_next(end(), root());
 
-    insert(begin(), const_child_iterator(x.begin()), const_child_iterator(x.end()));
+    forest tmp;
+    tmp.insert(tmp.begin(), const_child_iterator(x.begin()), const_child_iterator(x.end()));
+    *this = std::move(tmp);
 }
 
 /**************************************************************************************************/
 
 template <typename T>
-void forest<T>::swap(forest& tree) {
-    size_type old_size(size_valid() ? 0 : size());
-    iterator last(splice(end(), tree));
-    tree.splice(tree.end(), *this, child_iterator(begin()), child_iterator(last), old_size);
+forest<T>::forest(forest&& x) noexcept
+    : size_m(0) {
+    unsafe::set_next(end(), root());
+    splice(end(), x);
+}
+
+/**************************************************************************************************/
+
+template <typename T>
+void forest<T>::swap(forest& x) {
+    std::swap(*this, x);
 }
 
 #endif
@@ -804,7 +779,7 @@ void forest<T>::swap(forest& tree) {
 /**************************************************************************************************/
 
 template <typename T>
-typename forest<T>::size_type forest<T>::size() {
+typename forest<T>::size_type forest<T>::size() const {
     if (!size_valid()) {
         const_preorder_iterator first(begin());
         const_preorder_iterator last(end());
@@ -813,19 +788,6 @@ typename forest<T>::size_type forest<T>::size() {
     }
 
     return size_m;
-}
-
-/**************************************************************************************************/
-
-template <typename T>
-typename forest<T>::size_type forest<T>::size() const {
-    if (size_valid())
-        return size_m;
-
-    const_preorder_iterator first(begin());
-    const_preorder_iterator last(end());
-
-    return size_type(std::distance(first, last));
 }
 
 /**************************************************************************************************/
@@ -848,13 +810,6 @@ typename forest<T>::iterator forest<T>::erase(const iterator& first, const itera
         }
     }
     return last;
-}
-
-/**************************************************************************************************/
-
-template <typename T>
-void swap(forest<T>& x, forest<T>& y) {
-    x.swap(y);
 }
 
 /**************************************************************************************************/
