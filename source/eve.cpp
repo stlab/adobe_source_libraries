@@ -259,11 +259,11 @@ private:
     typedef edge_iterator<cursor, adobe::forest_trailing_edge> postorder_iterator;
     typedef edge_iterator<cursor, adobe::forest_leading_edge> preorder_iterator;
 
-    std::pair<postorder_iterator, postorder_iterator> postorder_range() {
+    boost::iterator_range<postorder_iterator> postorder_range() {
         return adobe::postorder_range(filter_fullorder_range(proxies_m, filter_visible()));
     }
 
-    std::pair<preorder_iterator, preorder_iterator> preorder_range() {
+    boost::iterator_range<preorder_iterator> preorder_range() {
         return adobe::preorder_range(filter_fullorder_range(proxies_m, filter_visible()));
     }
 

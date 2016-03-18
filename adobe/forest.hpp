@@ -16,7 +16,6 @@
 #include <adobe/iterator/set_next.hpp>
 
 #include <boost/iterator/iterator_facade.hpp>
-#include <boost/next_prior.hpp>
 #include <boost/range.hpp>
 
 #include <cstddef>
@@ -82,7 +81,7 @@ I find_parent(I i) {
 
 template <typename I> // I models FullorderIterator
 bool has_children(const I& i) {
-    return !i.equal_node(boost::next(leading_of(i)));
+    return !i.equal_node(std::next(leading_of(i)));
 }
 
 /**************************************************************************************************/
@@ -139,10 +138,10 @@ public:
 private:
     friend class boost::iterator_core_access;
 
-    void increment() { this->base_reference() = find_edge(boost::next(this->base()), Edge); }
+    void increment() { this->base_reference() = find_edge(std::next(this->base()), Edge); }
 
     void decrement() {
-        this->base_reference() = find_edge_reverse(boost::prior(this->base()), Edge);
+        this->base_reference() = find_edge_reverse(std::prev(this->base()), Edge);
     }
 };
 
@@ -272,7 +271,7 @@ public:
     reverse_fullorder_iterator(const reverse_fullorder_iterator<U>& x)
         : base_m(x.base()), edge_m(x.edge_m) {}
 
-    iterator_type base() const { return boost::next(base_m); }
+    iterator_type base() const { return std::next(base_m); }
 
     std::size_t edge() const { return edge_m; }
     std::size_t& edge() { return edge_m; }
@@ -367,19 +366,16 @@ struct node_base {
     typedef D* node_ptr;
     typedef node_ptr& reference;
 
-    node_base() {
-        // leading is 1, trailing is 0
-        nodes_m[forest_leading_edge][std::size_t(next_s)] = static_cast<node_ptr>(this);
-        nodes_m[forest_trailing_edge][std::size_t(prior_s)] = static_cast<node_ptr>(this);
-    }
-
     node_ptr& link(std::size_t edge, next_prior_t link) { return nodes_m[edge][std::size_t(link)]; }
 
     node_ptr link(std::size_t edge, next_prior_t link) const {
         return nodes_m[edge][std::size_t(link)];
     }
 
-    node_ptr nodes_m[2][2];
+    node_ptr nodes_m[2][2] = {
+        { static_cast<node_ptr>(this), static_cast<node_ptr>(this) },
+        { static_cast<node_ptr>(this), static_cast<node_ptr>(this) }
+    };
 };
 
 template <typename T> // T models Regular
@@ -586,7 +582,7 @@ public:
     typedef edge_iterator<const_iterator, forest_trailing_edge> const_postorder_iterator;
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
-    forest();
+    forest() = default;
     ~forest() { clear(); }
 
     forest(const forest&);
@@ -656,8 +652,8 @@ public:
         if (size_valid())
             ++size_m;
 
-        unsafe::set_next(boost::prior(position), result);
-        unsafe::set_next(boost::next(result), position);
+        unsafe::set_next(std::prev(position), result);
+        unsafe::set_next(std::next(result), position);
 
         return result;
     }
@@ -741,30 +737,19 @@ struct set_next_fn<child_iterator<I>> {
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 
-template <typename T>
-forest<T>::forest()
-    : size_m(0) {
-    unsafe::set_next(end(), root());
-}
-
 /**************************************************************************************************/
 
 template <typename T>
 forest<T>::forest(const forest& x)
-    : size_m(0) {
-    unsafe::set_next(end(), root());
-
-    forest tmp;
-    tmp.insert(tmp.begin(), const_child_iterator(x.begin()), const_child_iterator(x.end()));
-    *this = std::move(tmp);
+    : forest() {
+    insert(end(), const_child_iterator(x.begin()), const_child_iterator(x.end()));
 }
 
 /**************************************************************************************************/
 
 template <typename T>
 forest<T>::forest(forest&& x) noexcept
-    : size_m(0) {
-    unsafe::set_next(end(), root());
+    : forest() {
     splice(end(), x);
 }
 
@@ -826,10 +811,10 @@ typename forest<T>::iterator forest<T>::erase(const iterator& position) {
     if (size_valid())
         --size_m;
 
-    iterator leading_prior(boost::prior(leading_of(position)));
-    iterator leading_next(boost::next(leading_of(position)));
-    iterator trailing_prior(boost::prior(trailing_of(position)));
-    iterator trailing_next(boost::next(trailing_of(position)));
+    iterator leading_prior(std::prev(leading_of(position)));
+    iterator leading_next(std::next(leading_of(position)));
+    iterator trailing_prior(std::prev(trailing_of(position)));
+    iterator trailing_next(std::next(trailing_of(position)));
 
     if (has_children(position)) {
         unsafe::set_next(leading_prior, leading_next);
@@ -840,7 +825,7 @@ typename forest<T>::iterator forest<T>::erase(const iterator& position) {
 
     delete position.node_m;
 
-    return position.edge() ? boost::next(leading_prior) : trailing_next;
+    return position.edge() ? std::next(leading_prior) : trailing_next;
 }
 
 /**************************************************************************************************/
@@ -892,11 +877,11 @@ typename forest<T>::iterator forest<T>::splice(iterator pos, forest<T>& x, child
         }
     }
 
-    iterator back(boost::prior(last.base()));
+    iterator back(std::prev(last.base()));
 
-    unsafe::set_next(boost::prior(first), last);
+    unsafe::set_next(std::prev(first), last);
 
-    unsafe::set_next(boost::prior(pos), first.base());
+    unsafe::set_next(std::prev(pos), first.base());
     unsafe::set_next(back, pos);
 
     return first.base();
@@ -936,7 +921,7 @@ void forest<T>::reverse(child_iterator first, child_iterator last) {
 
 template <typename I> // I models FullorderIterator
 child_iterator<I> child_begin(const I& x) {
-    return child_iterator<I>(boost::next(leading_of(x)));
+    return child_iterator<I>(std::next(leading_of(x)));
 }
 
 /**************************************************************************************************/
@@ -980,7 +965,7 @@ private:
 /**************************************************************************************************/
 
 template <typename I> // I models FullorderIterator
-auto child_range(const I& x) -> boost::iterator_range<child_iterator<I>>{
+auto child_range(const I& x) -> boost::iterator_range<child_iterator<I>> {
     return { child_begin(x), child_end(x) };
 }
 
@@ -1002,13 +987,12 @@ auto child_range(const I& x) -> boost::iterator_range<child_iterator<I>>{
 */
 
 template <typename R, typename P> // R models FullorderRange
-inline std::pair<filter_fullorder_iterator<typename boost::range_iterator<R>::type, P>,
-                 filter_fullorder_iterator<typename boost::range_iterator<R>::type, P>>
-filter_fullorder_range(R& x, P p) {
+auto filter_fullorder_range(R& x, P p)
+    -> boost::iterator_range<filter_fullorder_iterator<typename boost::range_iterator<R>::type, P>>
+{
     typedef filter_fullorder_iterator<typename boost::range_iterator<R>::type, P> iterator;
 
-    return std::make_pair(iterator(boost::begin(x), boost::end(x), p),
-                          iterator(boost::end(x), boost::end(x), p));
+    return { iterator(std::begin(x), std::end(x), p), iterator(std::end(x), std::end(x), p) };
 }
 
 /*!
@@ -1022,13 +1006,12 @@ filter_fullorder_range(R& x, P p) {
 */
 
 template <typename R, typename P> // R models FullorderRange
-inline std::pair<filter_fullorder_iterator<typename boost::range_const_iterator<R>::type, P>,
-                 filter_fullorder_iterator<typename boost::range_const_iterator<R>::type, P>>
-filter_fullorder_range(const R& x, P p) {
+auto filter_fullorder_range(const R& x, P p)
+    -> boost::iterator_range<filter_fullorder_iterator<typename boost::range_const_iterator<R>::type, P>>
+{
     typedef filter_fullorder_iterator<typename boost::range_const_iterator<R>::type, P> iterator;
 
-    return std::make_pair(iterator(p, boost::begin(x), boost::end(x)),
-                          iterator(p, boost::end(x), boost::end(x)));
+    return { iterator(std::begin(x), std::end(x), p), iterator(std::end(x), std::end(x), p) };
 }
 
 /**************************************************************************************************/
@@ -1054,12 +1037,12 @@ filter_fullorder_range(const R& x, P p) {
 */
 
 template <typename R> // R models FullorderRange
-inline std::pair<reverse_fullorder_iterator<typename boost::range_iterator<R>::type>,
-                 reverse_fullorder_iterator<typename boost::range_iterator<R>::type>>
-reverse_fullorder_range(R& x) {
+auto reverse_fullorder_range(R& x)
+    -> boost::iterator_range<reverse_fullorder_iterator<typename boost::range_iterator<R>::type>>
+{
     typedef reverse_fullorder_iterator<typename boost::range_iterator<R>::type> iterator;
 
-    return std::make_pair(iterator(boost::end(x)), iterator(boost::begin(x)));
+    return { iterator(std::end(x)), iterator(std::begin(x)) };
 }
 
 /*!
@@ -1072,12 +1055,11 @@ reverse_fullorder_range(R& x) {
 */
 
 template <typename R> // R models FullorderRange
-inline std::pair<reverse_fullorder_iterator<typename boost::range_const_iterator<R>::type>,
-                 reverse_fullorder_iterator<typename boost::range_const_iterator<R>::type>>
+inline boost::iterator_range<reverse_fullorder_iterator<typename boost::range_const_iterator<R>::type>>
 reverse_fullorder_range(const R& x) {
     typedef reverse_fullorder_iterator<typename boost::range_const_iterator<R>::type> iterator;
 
-    return std::make_pair(iterator(boost::end(x)), iterator(boost::begin(x)));
+    return { iterator(std::end(x)), iterator(std::begin(x)) };
 }
 
 
@@ -1093,12 +1075,11 @@ reverse_fullorder_range(const R& x) {
 */
 
 template <typename R> // R models FullorderRange
-inline std::pair<depth_fullorder_iterator<typename boost::range_iterator<R>::type>,
-                 depth_fullorder_iterator<typename boost::range_iterator<R>::type>>
+inline boost::iterator_range<depth_fullorder_iterator<typename boost::range_iterator<R>::type>>
 depth_range(R& x) {
     typedef depth_fullorder_iterator<typename boost::range_iterator<R>::type> iterator;
 
-    return std::make_pair(iterator(boost::begin(x)), iterator(boost::end(x)));
+    return { iterator(std::begin(x)), iterator(std::end(x)) };
 }
 
 /*!
@@ -1111,12 +1092,11 @@ depth_range(R& x) {
 */
 
 template <typename R> // R models FullorderRange
-inline std::pair<depth_fullorder_iterator<typename boost::range_const_iterator<R>::type>,
-                 depth_fullorder_iterator<typename boost::range_const_iterator<R>::type>>
+inline boost::iterator_range<depth_fullorder_iterator<typename boost::range_const_iterator<R>::type>>
 depth_range(const R& x) {
     typedef depth_fullorder_iterator<typename boost::range_const_iterator<R>::type> iterator;
 
-    return std::make_pair(iterator(boost::begin(x)), iterator(boost::end(x)));
+    return { iterator(std::begin(x)), iterator(std::end(x)) };
 }
 
 /**************************************************************************************************/
@@ -1131,12 +1111,11 @@ depth_range(const R& x) {
 */
 
 template <typename R> // R models FullorderRange
-inline std::pair<edge_iterator<typename boost::range_iterator<R>::type, forest_trailing_edge>,
-                 edge_iterator<typename boost::range_iterator<R>::type, forest_trailing_edge>>
+inline boost::iterator_range<edge_iterator<typename boost::range_iterator<R>::type, forest_trailing_edge>>
 postorder_range(R& x) {
     typedef edge_iterator<typename boost::range_iterator<R>::type, forest_trailing_edge> iterator;
 
-    return std::make_pair(iterator(boost::begin(x)), iterator(boost::end(x)));
+    return { iterator(std::begin(x)), iterator(std::end(x)) };
 }
 
 /*!
@@ -1149,13 +1128,12 @@ postorder_range(R& x) {
 */
 
 template <typename R> // R models FullorderRange
-inline std::pair<edge_iterator<typename boost::range_const_iterator<R>::type, forest_trailing_edge>,
-                 edge_iterator<typename boost::range_const_iterator<R>::type, forest_trailing_edge>>
+inline boost::iterator_range<edge_iterator<typename boost::range_const_iterator<R>::type, forest_trailing_edge>>
 postorder_range(const R& x) {
     typedef edge_iterator<typename boost::range_const_iterator<R>::type, forest_trailing_edge>
     iterator;
 
-    return std::make_pair(iterator(boost::begin(x)), iterator(boost::end(x)));
+    return { iterator(std::begin(x)), iterator(std::end(x)) };
 }
 
 /**************************************************************************************************/
@@ -1170,12 +1148,11 @@ postorder_range(const R& x) {
 */
 
 template <typename R> // R models FullorderRange
-inline std::pair<edge_iterator<typename boost::range_iterator<R>::type, forest_leading_edge>,
-                 edge_iterator<typename boost::range_iterator<R>::type, forest_leading_edge>>
+inline boost::iterator_range<edge_iterator<typename boost::range_iterator<R>::type, forest_leading_edge>>
 preorder_range(R& x) {
     typedef edge_iterator<typename boost::range_iterator<R>::type, forest_leading_edge> iterator;
 
-    return std::make_pair(iterator(boost::begin(x)), iterator(boost::end(x)));
+    return { iterator(std::begin(x)), iterator(std::end(x)) };
 }
 
 /*!
@@ -1188,13 +1165,12 @@ preorder_range(R& x) {
 */
 
 template <typename R> // R models FullorderRange
-inline std::pair<edge_iterator<typename boost::range_const_iterator<R>::type, forest_leading_edge>,
-                 edge_iterator<typename boost::range_const_iterator<R>::type, forest_leading_edge>>
+inline boost::iterator_range<edge_iterator<typename boost::range_const_iterator<R>::type, forest_leading_edge>>
 preorder_range(const R& x) {
     typedef edge_iterator<typename boost::range_const_iterator<R>::type, forest_leading_edge>
     iterator;
 
-    return std::make_pair(iterator(boost::begin(x)), iterator(boost::end(x)));
+    return { iterator(std::begin(x)), iterator(std::end(x)) };
 }
 
 /**************************************************************************************************/
