@@ -372,10 +372,19 @@ struct node_base {
         return nodes_m[edge][std::size_t(link)];
     }
 
+    #if 0
     node_ptr nodes_m[2][2] = {
         { static_cast<node_ptr>(this), static_cast<node_ptr>(this) },
         { static_cast<node_ptr>(this), static_cast<node_ptr>(this) }
     };
+    #else
+    node_ptr nodes_m[2][2];
+
+    node_base() : nodes_m {
+        { static_cast<node_ptr>(this), static_cast<node_ptr>(this) },
+        { static_cast<node_ptr>(this), static_cast<node_ptr>(this) }
+    } { }
+    #endif
 };
 
 template <typename T> // T models Regular
