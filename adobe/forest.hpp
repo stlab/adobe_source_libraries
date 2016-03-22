@@ -687,7 +687,7 @@ private:
     friend class implementation::forest_const_iterator<value_type>;
     friend struct unsafe::set_next_fn<iterator>;
 
-    mutable size_type size_m;
+    mutable size_type size_m = 0;
     implementation::node_base<node_t> tail_m;
 
     node_t* tail() { return static_cast<node_t*>(&tail_m); }
