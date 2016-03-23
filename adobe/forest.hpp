@@ -372,10 +372,19 @@ struct node_base {
         return nodes_m[edge][std::size_t(link)];
     }
 
+    #if 0
     node_ptr nodes_m[2][2] = {
         { static_cast<node_ptr>(this), static_cast<node_ptr>(this) },
         { static_cast<node_ptr>(this), static_cast<node_ptr>(this) }
     };
+    #else
+    node_ptr nodes_m[2][2];
+
+    node_base() : nodes_m {
+        { static_cast<node_ptr>(this), static_cast<node_ptr>(this) },
+        { static_cast<node_ptr>(this), static_cast<node_ptr>(this) }
+    } { }
+    #endif
 };
 
 template <typename T> // T models Regular
@@ -687,7 +696,7 @@ private:
     friend class implementation::forest_const_iterator<value_type>;
     friend struct unsafe::set_next_fn<iterator>;
 
-    mutable size_type size_m;
+    mutable size_type size_m = 0;
     implementation::node_base<node_t> tail_m;
 
     node_t* tail() { return static_cast<node_t*>(&tail_m); }
