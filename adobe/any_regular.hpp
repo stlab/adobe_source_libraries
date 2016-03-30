@@ -498,7 +498,7 @@ public:
     */
 
     template <typename T>
-    any_regular_t(T x) {
+    explicit any_regular_t(T x) {
         ::new (storage()) typename traits<T>::model_type(std::move(x));
     }
 

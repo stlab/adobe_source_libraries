@@ -12,10 +12,12 @@
 /**************************************************************************************************/
 
 // stdc++
+#include <cstring>
 #include <functional>
 #include <iosfwd>
 
 // boost
+#include <boost/mpl/bool.hpp>
 #include <boost/operators.hpp>
 #include <boost/type_traits/is_pod.hpp>
 

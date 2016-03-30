@@ -29,6 +29,8 @@
 #include <adobe/manip.hpp>
 #include <adobe/name.hpp>
 
+#include <boost/next_prior.hpp>
+
 /*************************************************************************************************/
 
 namespace adobe {
