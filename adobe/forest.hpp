@@ -335,7 +335,7 @@ private:
             depth_m += difference_type(old_edge << 1) - 1;
     }
     void decrement() {
-        bool old_edge(edge());
+        std::size_t old_edge(edge());
         --this->base_reference();
         if (old_edge == edge())
             depth_m -= difference_type(old_edge << 1) - 1;
