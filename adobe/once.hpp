@@ -8,12 +8,6 @@
 #ifndef ADOBE_ONCE_HPP
 #define ADOBE_ONCE_HPP
 
-#include <adobe/config.hpp>
-
-#if defined(BOOST_HAS_THREADS)
-#include <boost/thread.hpp>
-#endif
-
 /**************************************************************************************************/
 
 /*
@@ -29,105 +23,30 @@ to do something here.
 
 /**************************************************************************************************/
 
-#if 0
+#ifdef ADOBE_STD_THREAD_LOCAL
 
-/**************************************************************************************************/
+#define ADOBE_THREAD_LOCAL_STORAGE_1(type, signature, ctor_p1)                                     \
+    type& adobe_thread_local_storage_##signature##_access() {                                      \
+        thread_local type holder {ctor_p1};                                                        \
+        return holder;                                                                             \
+    }                                                                                              \
 
-namespace adobe {
+#define ADOBE_THREAD_LOCAL_STORAGE(type, signature)                                                \
+    type& adobe_thread_local_storage_##signature##_access() {                                      \
+        thread_local type holder;                                                                  \
+        return holder;                                                                             \
+    }                                                                                              \
 
-/**************************************************************************************************/
+#define ADOBE_THREAD_LOCAL_STORAGE_INITIALIZE(signature)                                           \
 
-#if defined(BOOST_HAS_THREADS)
-
-/**************************************************************************************************/
-
-typedef boost::once_flag    once_flag;
-#define ADOBE_ONCE_INIT BOOST_ONCE_INIT
-
-inline void call_once(void (*func)(), adobe::once_flag& flag)
-{
-    boost::call_once(func, flag);
-}
-
-/**************************************************************************************************/
 
 #else
 
-/**************************************************************************************************/
-
-typedef bool                once_flag;
-#define ADOBE_ONCE_INIT false
-
-inline void call_once(void (*func)(), adobe::once_flag& flag)
-{
-    if (!flag)
-    {
-        (*func)();
-        flag = true;
-    }
-}
-
-/**************************************************************************************************/
-
-#endif
-
-/**************************************************************************************************/
-
-} // namespace adobe
-
-/**************************************************************************************************/
-
-#define ADOBE_ONCE_DECLARATION(signature)                                                          \
-    struct adobe_initialize_constants_##signature##_t {                                            \
-        adobe_initialize_constants_##signature##_t();                                              \
-    };
-
-#define ADOBE_ONCE_DEFINITION(signature, func)                                                     \
-    namespace {                                                                                    \
-    adobe::once_flag adobe_once_flag_##signature##_s = ADOBE_ONCE_INIT;                            \
-    }                                                                                              \
-    adobe_initialize_constants_##signature##_t::adobe_initialize_constants_##signature##_t() {     \
-        adobe::call_once(&func, adobe_once_flag_##signature##_s);                                  \
-    }
-
-#define ADOBE_ONCE_INSTANCE(signature)                                                             \
-    adobe_initialize_constants_##signature##_t adobe_initialize_constants_##signature##_s
-
-#define ADOBE_ONCE_STATIC_INSTANCE(signature)                                                      \
-    namespace {                                                                                    \
-    ADOBE_ONCE_INSTANCE(signature);                                                                \
-    }
+#include <adobe/config.hpp>
 
 #if defined(BOOST_HAS_THREADS)
 
-#define ADOBE_GLOBAL_MUTEX_DEFINITION(signature)                                                   \
-    namespace {                                                                                    \
-    adobe::once_flag adobe_once_flag_##signature##_s = ADOBE_ONCE_INIT;                            \
-    boost::mutex* adobe_mutex_ptr_##signature##_s = 0;                                             \
-    void adobe_init_once_##signature() {                                                           \
-        static boost::mutex mutex_s;                                                               \
-        adobe_mutex_ptr_##signature##_s = &mutex_s;                                                \
-    }                                                                                              \
-    }
-
-#define ADOBE_GLOBAL_MUTEX_INSTANCE(signature)                                                     \
-    boost::call_once(&adobe_init_once_##signature, adobe_once_flag_##signature##_s);               \
-    boost::mutex::scoped_lock lock(*adobe_mutex_ptr_##signature##_s)
-
-#else
-
-#define ADOBE_GLOBAL_MUTEX_DEFINITION(signature)
-#define ADOBE_GLOBAL_MUTEX_INSTANCE(signature)
-
-#endif
-
-/**************************************************************************************************/
-
-#endif // #if 0
-
-/**************************************************************************************************/
-
-#if defined(BOOST_HAS_THREADS)
+#include <boost/thread.hpp>
 
 #define ADOBE_THREAD_LOCAL_STORAGE_1(type, signature, ctor_p1)                                     \
     namespace {                                                                                    \
@@ -180,6 +99,8 @@ inline void call_once(void (*func)(), adobe::once_flag& flag)
     }
 
 #define ADOBE_THREAD_LOCAL_STORAGE_INITIALIZE(signature)
+
+#endif
 
 #endif
 
