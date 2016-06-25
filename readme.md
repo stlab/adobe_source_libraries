@@ -14,19 +14,23 @@ From a UNIX terminal you should be able to execute `./configure.sh` and `./build
 
 ## CMake
 
-CMake support also exists for Unix Makefiles and XCode. CMake will generate separate debug and release projects in a `build` folder (which will be a sibling to the top-level `adobe_source_libraries` folder.)
+CMake support also exists for Unix Makefiles and XCode. CMake will generate separate debug and release projects in a `build_asl` folder (which will be a sibling to the top-level `adobe_source_libraries` folder.)
 
-(The `./configure` script is useful in this instance, too, as it will download and place the Boost and double-conversion libraries where they need to go.)
+CMake will download Boost and double-conversion from git repositories if not found, respectively in ../boost_libraries and ../double-conversion.
 
-If you have `BOOST_ROOT` defined, Boost headers and libraries will be included in the build automatically. Otherwise, CMake will generate what is necessary to build Boost dependencies as a static library.
+(The `./configure` script can also be used to download and place the Boost and double-conversion libraries where they need to go.)
+
+You can use an installed Boost using USE_SYSTEM_BOOST CMake option, in which case no attempt will be made to download it.
+If USE_SYSTEM_BOOST is ON, and `BOOST_ROOT` is defined, the latter can be used by CMake to find your Boost installation.
+If USE_SYSTEM_BOOST is OFF, CMake will generate what is necessary to build Boost dependencies as a static library.
 
 ### Makefiles
 
-This option is invoked from the `./cmake_build_all.sh` script. It includes the ability to auto-download the double-conversion library.
+This option is invoked from the `./cmake_build_all.sh` script.
 
 ### Xcode
 
-This option is invoked from the `./cmake_xcode.sh` script. It assumes the presence of the double-conversion dependency. Once the project file is generated you can open it and build directly from within Xcode.
+This option is invoked from the `./cmake_xcode.sh` script. Once the project file is generated you can open it and build directly from within Xcode.
 
 Documentation
 =====
