@@ -1,24 +1,33 @@
 #!/bin/bash
+set -e
 
-BUILDDIR=${BUILDDIR:-build}
-TOOLSET=${TOOLSET:-clang++}
-BUILDMODE=${BUILDMODE:-RELEASE}
+: "${BUILDDIR:?BUILDDIR path required}"
+: "${TOOLSET:?TOOLSET required (xcode or your c++ compiler)}"
+: "${USE_SYSTEM_BOOST:?USE_SYSTEM_BOOST required (ON/OFF)}"
+: "${USE_STD_THREAD_LOCAL:?USE_STD_THREAD_LOCAL required (ON/OFF)}"
+
+SRC_PATH=$(pwd)
+
+mkdir -p ${BUILDDIR}/${TOOLSET}/${BUILDMODE}/${USE_SYSTEM_BOOST}/${USE_STD_THREAD_LOCAL}
+pushd ${BUILDDIR}/${TOOLSET}/${BUILDMODE}/${USE_SYSTEM_BOOST}/${USE_STD_THREAD_LOCAL}
 
 if [ "$TOOLSET" == "xcode" ]; then
-    mkdir -p ../${BUILDDIR}/xcode/${BUILDMODE}
-    pushd ../${BUILDDIR}/xcode/${BUILDMODE}
-    cmake -DUSE_SYSTEM_BOOST=${SYSTEM_BOOST:-OFF} -DCMAKE_CXX_COMPILER=${TOOLSET} -DCMAKE_BUILD_TYPE=${BUILDMODE} -DCMAKE_INSTALL_PREFIX=stage -G "Xcode" ../../../adobe_source_libraries
+    cmake -DUSE_STD_THREAD_LOCAL=${USE_STD_THREAD_LOCAL} -DUSE_SYSTEM_BOOST=${USE_SYSTEM_BOOST} -DCMAKE_CXX_COMPILER=${TOOLSET} -DCMAKE_BUILD_TYPE=${BUILDMODE} -G "Xcode" ${SRC_PATH}
     #make -j4
-    popd
 else
-    mkdir -p ../${BUILDDIR}/${TOOLSET}/${BUILDMODE}
-    pushd ../${BUILDDIR}/${TOOLSET}/${BUILDMODE}
-    cmake -DUSE_SYSTEM_BOOST=${SYSTEM_BOOST:-ON} -DCMAKE_CXX_COMPILER=${TOOLSET} -DCMAKE_BUILD_TYPE=${BUILDMODE} -DCMAKE_INSTALL_PREFIX=stage -G "Unix Makefiles" ../../../adobe_source_libraries
-    make -j4
+
+    GENERATOR="Unix Makefiles"
+    BUILDCMD="make -j4"
+
+    #GENERATOR="Ninja"
+    #BUILDCMD="ninja-build"
+
+    cmake -DUSE_STD_THREAD_LOCAL=${USE_STD_THREAD_LOCAL} -DUSE_SYSTEM_BOOST=${USE_SYSTEM_BOOST} -DCMAKE_CXX_COMPILER=${TOOLSET} -DCMAKE_BUILD_TYPE=${BUILDMODE} -G "${GENERATOR}" ${SRC_PATH}
+    ${BUILDCMD}
     # "ctest -C ${BUILDMODE}" handles CONFIGURATIONS option of CMake's add_test
     # "make test" only run tests declared without any CONFIGURATIONS flag
-    ctest -C ${BUILDMODE}
-    popd
+    ctest --output-on-failure -C ${BUILDMODE}
 fi
 
+popd
 

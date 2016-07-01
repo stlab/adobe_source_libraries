@@ -5,75 +5,21 @@
 */
 /*************************************************************************************************/
 
-/*
-
-REVISIT (sparent) : Need to replicate the boost configuration tests to figure out when to fall
-back to include math.h. This also needs to add any other C99 math.h extensions.
-
-*/
-
 #ifndef ADOBE_CMATH_HPP
 #define ADOBE_CMATH_HPP
 
 #include <adobe/config.hpp>
 
+#include <cmath>
 #include <functional>
 
 /*************************************************************************************************/
 
-#if defined(__MWERKS__)
-/*
-    Any (previously) supported version of metrowerks had the C99/TR1 cmath extensions in the
-    standard namespace in <cmath>.
-*/
 #define ADOBE_HAS_C99_STD_MATH_H
-#include <cmath>
-#elif defined(__GNUC__)
-
-// Guessing at gcc 3 support
-#if (__GNUC__ == 3) && (__GNUC_MINOR__ > 2)
-
-#define ADOBE_HAS_CPP_CMATH
-
-#elif __GNUC__ == 4
-#if (__GNUC_MINOR__ < 6) || (!(defined(_GLIBCXX_USE_C99_MATH_TR1)))
-// at least Ubuntu 9.x, gcc 4.4.1, still falls into this case
-/*
-    The currently supported version of GNUC has C99 extensions in math.h. But no TR1 extensions.
-*/
-#define ADOBE_HAS_C99_MATH_H
-#include <cmath>
-#else
-#include <tr1/cmath>
-
-#define ADOBE_HAS_C99_STD_MATH_H
-#endif
-#elif __GNUC__ == 5
-#define ADOBE_HAS_C99_STD_MATH_H
-#include <cmath>
-#endif
-
-#elif defined(_MSC_VER)
-#include <cmath>
-/*
-    The currently supported version of VC++ has no C99 extensions.
-*/
-
-#if _MSC_VER > 1600
-#error "Unknown MSC compiler configureation for cmath (last knownversion is VC++ 10.0)."
-#endif
-
-#define ADOBE_HAS_CPP_CMATH
-
-#else
-#error "Unknown compiler configuration for cmath."
-#endif
-
-/*************************************************************************************************/
-
-#if defined(ADOBE_HAS_C99_STD_MATH_H)
 
 namespace adobe {
+
+/*************************************************************************************************/
 
 using std::float_t;
 using std::double_t;
@@ -82,92 +28,9 @@ using std::round;
 using std::lround;
 using std::trunc;
 
-} // namespace adobe
-
-/*************************************************************************************************/
-
-#elif defined(ADOBE_HAS_CPP_CMATH)
-
-namespace adobe {
-
-typedef float float_t;
-typedef double double_t;
-
-/*************************************************************************************************/
-
-inline float trunc(float x) { return x < 0.0f ? std::ceil(x) : std::floor(x); }
-
-inline double trunc(double x) { return x < 0.0 ? std::ceil(x) : std::floor(x); }
-
-/*************************************************************************************************/
-
-inline float round(float x) { return trunc(x + (x < 0.0f ? -0.5f : 0.5f)); }
-
-inline double round(double x) { return trunc(x + (x < 0.0 ? -0.5 : 0.5)); }
-
-/*************************************************************************************************/
-
-inline long lround(float x) { return static_cast<long>(x + (x < 0.0f ? -0.5f : 0.5f)); }
-
-inline long lround(double x) { return static_cast<long>(x + (x < 0.0 ? -0.5 : 0.5)); }
-
 /*************************************************************************************************/
 
 } // namespace adobe
-
-/*************************************************************************************************/
-
-#elif defined(ADOBE_HAS_C99_MATH_H)
-
-#include <math.h>
-
-namespace adobe {
-
-using ::float_t;
-using ::double_t;
-
-/*************************************************************************************************/
-
-using ::round;
-using ::lround;
-using ::trunc;
-
-inline float round(float x) { return ::roundf(x); }
-inline long lround(float x) { return ::lroundf(x); }
-inline float trunc(float x) { return ::truncf(x); }
-
-/*************************************************************************************************/
-
-} // namespace adobe
-
-#elif defined(ADOBE_NO_DOCUMENTATION)
-
-namespace adobe {
-
-/*!
-\name Compatibility
-Compatibility features for C99/TR1 <code>\<cmath\></code>.
-@{
-*/
-
-/*!
-\ingroup cmath
-*/
-
-typedef Float double_t;
-typedef Float float_t;
-
-double round(double x);
-float round(float x);
-long lround(double x);
-long lround(float x);
-double trunc(double x);
-float trunc(float x);
-/*! @} */
-
-} // namespace adobe
-
-#endif
 
 /*************************************************************************************************/
 
