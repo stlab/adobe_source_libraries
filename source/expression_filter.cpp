@@ -515,6 +515,12 @@ boost::uint32_t entity_map_find(const string& entity) {
 
 /**************************************************************************************************/
 
+inline bool needs_escape(unsigned char c) {
+    return !std::isprint(c) || (c & 0x80);
+}
+
+/**************************************************************************************************/
+
 bool needs_entity_escape(const string& value) {
     for (string::const_iterator iter(value.begin()); iter != value.end(); ++iter) {
         unsigned char c(*iter);
@@ -522,7 +528,7 @@ bool needs_entity_escape(const string& value) {
         code_point_index_type::const_iterator found(
             code_point_index_find(static_cast<boost::uint32_t>(c)));
 
-        if (found != code_point_index().end() || std::isprint(c) == false || (c & 0x80) == 1)
+        if (found != code_point_index().end() || needs_escape(c))
             return true;
     }
 
@@ -546,7 +552,7 @@ string entity_escape(const string& value) {
             result.push_back('&');
             result.append(found->first);
             result.push_back(';');
-        } else if (std::isprint(c) == false || (c & 0x80) == 1) {
+        } else if (needs_escape(c)) {
             char nybble1((c >> 4) & 0x0f);
             char nybble2(c & 0x0f);
 
