@@ -469,6 +469,12 @@ entity_name_index_type::const_iterator entity_name_index_find(const string& enti
 
 /**************************************************************************************************/
 
+inline bool needs_escape(unsigned char c) {
+    return !std::isprint(c) || (c & 0x80);
+}
+
+/**************************************************************************************************/
+
 } // namespace
 
 /**************************************************************************************************/
@@ -515,20 +521,17 @@ boost::uint32_t entity_map_find(const string& entity) {
 
 /**************************************************************************************************/
 
-inline bool needs_escape(unsigned char c) {
-    return !std::isprint(c) || (c & 0x80);
-}
-
-/**************************************************************************************************/
-
 bool needs_entity_escape(const string& value) {
     for (string::const_iterator iter(value.begin()); iter != value.end(); ++iter) {
         unsigned char c(*iter);
 
+        if (needs_escape(c))
+            return true;
+
         code_point_index_type::const_iterator found(
             code_point_index_find(static_cast<boost::uint32_t>(c)));
 
-        if (found != code_point_index().end() || needs_escape(c))
+        if (found != code_point_index().end())
             return true;
     }
 
