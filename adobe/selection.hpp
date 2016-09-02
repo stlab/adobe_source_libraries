@@ -104,7 +104,7 @@ public:
     /// pushes a toggle point onto the back of the selection.
     /// The index must be greater than the previous toggle point.
     void push_back(const value_type& x) {
-        assert(empty() || store_m.back() < x);
+        assert(store_m.empty() || store_m.back() < x);
 
         store_m.push_back(x);
     }
