@@ -64,7 +64,7 @@ inline O selection_operation_remainder(S first, S last, O output, bool this_insi
 
         bool cur_op_result(pred(this_inside, other_inside));
 
-        if (prev_op_result ^ cur_op_result)
+        if (prev_op_result != cur_op_result)
             *output++ = *first;
 
         prev_op_result = cur_op_result;
@@ -84,9 +84,9 @@ inline O selection_operation_remainder(S first, S last, O output, bool this_insi
 template <typename C1,      // C1 models ConvertibleToBool
           typename C2 = C1> // C2 models ConvertibleToBool
 struct logical_xor : std::binary_function<C1, C2, bool> {
-    /// \return <code>x ^ y</code>
+    /// \return <code>x != y</code>
     bool operator()(const C1& x, const C2& y) const {
-        return static_cast<bool>(x) ^ static_cast<bool>(y);
+        return static_cast<bool>(x) != static_cast<bool>(y);
     }
 };
 
@@ -129,7 +129,7 @@ O selection_operation(S1 s1_first, S1 s1_last, S2 s2_first, S2 s2_last, O output
 
         bool cur_op_result(pred(s1_inside, s2_inside));
 
-        if (prev_op_result ^ cur_op_result)
+        if (prev_op_result != cur_op_result)
             *output++ = next;
 
         prev_op_result = cur_op_result;
@@ -255,7 +255,7 @@ Selection1 selection_intersection(const Selection1& x, const Selection2& y) {
     if (&x == &y)
         return x;
 
-    Selection1 result;
+    Selection1 result(start_selected(x) && start_selected(y));
 
     adobe::selection_intersection(x.begin(), x.end(), y.begin(), y.end(),
                                   std::back_inserter(result),
@@ -276,7 +276,7 @@ Selection1 selection_union(const Selection1& x, const Selection2& y) {
     if (&x == &y)
         return x;
 
-    Selection1 result;
+    Selection1 result(start_selected(x) || start_selected(y));
 
     adobe::selection_union(x.begin(), x.end(), y.begin(), y.end(), std::back_inserter(result),
                            std::less<typename boost::range_value<Selection1>::type>(),
@@ -296,7 +296,7 @@ Selection1 selection_difference(const Selection1& x, const Selection2& y) {
     if (&x == &y)
         return Selection1();
 
-    Selection1 result;
+    Selection1 result(start_selected(x) != start_selected(y));
 
     adobe::selection_difference(x.begin(), x.end(), y.begin(), y.end(), std::back_inserter(result),
                                 std::less<typename boost::range_value<Selection1>::type>(),
@@ -316,7 +316,7 @@ Selection1 selection_symmetric_difference(const Selection1& x, const Selection2&
     if (&x == &y)
         return Selection1();
 
-    Selection1 result;
+    Selection1 result(start_selected(x) != start_selected(y));
 
     adobe::selection_symmetric_difference(
         x.begin(), x.end(), y.begin(), y.end(), std::back_inserter(result),
@@ -434,7 +434,7 @@ bool is_selected(const Selection& x, typename Selection::value_type index) {
         std::upper_bound(boost::begin(x), boost::end(x), index));
     typename boost::range_size<Selection>::type count(std::distance(boost::begin(x), found));
 
-    return (count % 2 == 1) ^ start_selected(x);
+    return (count % 2 == 1) != start_selected(x);
 }
 
 /****************************************************************************************************/
@@ -820,7 +820,7 @@ OutputIterator selection_to_index_set(const Selection& selection,
     typedef typename boost::range_const_iterator<Selection>::type selection_const_iterator;
 
     bool selected(start_selected(selection));
-    std::size_t index(0);
+    size_type index(0);
     selection_const_iterator iter(boost::begin(selection));
     selection_const_iterator last(boost::end(selection));
 
@@ -835,6 +835,10 @@ OutputIterator selection_to_index_set(const Selection& selection,
         selected = !selected;
         ++iter;
     }
+
+    if (selected)
+        while (index != max_index)
+            *output++ = index++;
 
     return output;
 }
