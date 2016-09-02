@@ -104,7 +104,7 @@ void test1() {
 /****************************************************************************************************/
 
 void test2() {
-    set_type       set{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    set_type       set{ 1, 2, 3, 4, 5 };
     selection_type all_set_1(true);
     selection_type all_set_2;
     selection_type one_set;
@@ -128,7 +128,7 @@ void test2() {
 /****************************************************************************************************/
 
 void test3() {
-    set_type       set{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    set_type       set{ 1, 2, 3, 4, 5 };
     selection_type all_set_1(true);
     selection_type all_set_2;
     selection_type one_set;
@@ -141,12 +141,58 @@ void test3() {
     print_selection(set, adobe::selection_intersection(all_set_1, one_set));
     print_selection(set, adobe::selection_intersection(all_set_2, one_set));
 
+    one_set.invert();
+
+    print_selection(set, adobe::selection_intersection(all_set_1, one_set));
+    print_selection(set, adobe::selection_intersection(all_set_2, one_set));
+}
+
+/****************************************************************************************************/
+
+void test4() {
+    set_type       set{ 1, 2, 3, 4, 5 };
+    selection_type all_set_1(true);
+    selection_type all_set_2;
+    selection_type one_set;
+
+    all_set_2.push_back(0);
+
+    one_set.push_back(1);
+    one_set.push_back(2);
+
+    print_selection(set, adobe::selection_union(all_set_1, one_set));
+    print_selection(set, adobe::selection_union(all_set_2, one_set));
+
     all_set_1.invert();
     all_set_2.invert();
     one_set.invert();
 
-    print_selection(set, adobe::selection_intersection(one_set, all_set_1));
-    print_selection(set, adobe::selection_intersection(one_set, all_set_2));
+    print_selection(set, adobe::selection_union(all_set_1, one_set));
+    print_selection(set, adobe::selection_union(all_set_2, one_set));
+}
+
+/****************************************************************************************************/
+
+void test5() {
+    set_type       set{ 1, 2, 3, 4, 5 };
+    selection_type all_set_1(true);
+    selection_type all_set_2;
+    selection_type one_set;
+
+    all_set_2.push_back(0);
+
+    one_set.push_back(1);
+    one_set.push_back(2);
+
+    print_selection(set, adobe::selection_symmetric_difference(all_set_1, one_set));
+    print_selection(set, adobe::selection_symmetric_difference(all_set_2, one_set));
+
+    all_set_1.invert();
+    all_set_2.invert();
+    one_set.invert();
+
+    print_selection(set, adobe::selection_symmetric_difference(all_set_1, one_set));
+    print_selection(set, adobe::selection_symmetric_difference(all_set_2, one_set));
 }
 
 /****************************************************************************************************/
@@ -168,9 +214,14 @@ int main() {
     test3();
     std::cout << "\n";
 
-    //std::cout << "test4:" << std::endl;
-    //test4();
-    //std::cout << "\n";
+    std::cout << "test4:" << std::endl;
+    test4();
+    std::cout << "\n";
+
+
+    std::cout << "test5:" << std::endl;
+    test4();
+    std::cout << "\n";
 
     return 0;
 }

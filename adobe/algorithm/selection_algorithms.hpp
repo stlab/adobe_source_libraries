@@ -255,7 +255,7 @@ Selection1 selection_intersection(const Selection1& x, const Selection2& y) {
     if (&x == &y)
         return x;
 
-    Selection1 result;
+    Selection1 result(start_selected(x) && start_selected(y));
 
     adobe::selection_intersection(x.begin(), x.end(), y.begin(), y.end(),
                                   std::back_inserter(result),
@@ -276,7 +276,7 @@ Selection1 selection_union(const Selection1& x, const Selection2& y) {
     if (&x == &y)
         return x;
 
-    Selection1 result;
+    Selection1 result(start_selected(x) || start_selected(y));
 
     adobe::selection_union(x.begin(), x.end(), y.begin(), y.end(), std::back_inserter(result),
                            std::less<typename boost::range_value<Selection1>::type>(),
@@ -316,7 +316,7 @@ Selection1 selection_symmetric_difference(const Selection1& x, const Selection2&
     if (&x == &y)
         return Selection1();
 
-    Selection1 result;
+    Selection1 result(start_selected(x) != start_selected(y));
 
     adobe::selection_symmetric_difference(
         x.begin(), x.end(), y.begin(), y.end(), std::back_inserter(result),
