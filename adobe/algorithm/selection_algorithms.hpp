@@ -776,6 +776,208 @@ selection_stable_partition_about(const Selection& selection, ForwardRange& range
     return std::pair<range_iterator, range_iterator>(i, j);
 }
 
+  
+  /****************************************************************************************************/
+  /*!
+   \ingroup selection_algorithms
+   
+   Utility function to split the range into iChunkCount parts
+   
+   Assumes iChunkCount > 0
+   Assumes iterator range distance is > 0
+   
+   
+   Extra check if index set is continuous, we do not perform the union then.
+   */
+  template <typename Iterator>
+  std::vector<std::pair<Iterator, Iterator>>
+  split_range_into_chunks( Iterator iBegin, Iterator iEnd, std::size_t iChunkCount )
+  {
+    assert( iChunkCount > 0);
+    std::vector<std::pair<Iterator, Iterator>> ranges;
+    ranges.reserve(iChunkCount);
+    
+    auto dist = std::distance(iBegin, iEnd);
+    assert(dist > 0);
+    
+    auto chunkSize = std::min<std::size_t>(iChunkCount, dist);
+    auto chunk = dist / chunkSize;
+    auto remainder = dist % chunkSize;
+    
+    auto begin = iBegin;
+    for (std::size_t i = 0; i < chunkSize-1; ++i) {
+      auto next_end = std::next(begin, chunk + (remainder ? 1 : 0));
+      ranges.emplace_back(begin, next_end);
+      
+      begin = next_end;
+      if (remainder) {
+        remainder -= 1;
+      }
+    }
+    
+    ranges.emplace_back(begin, iEnd);
+    return ranges;
+  }
+  /****************************************************************************************************/
+  /*!
+   \ingroup selection_algorithms
+   
+   Unoptimized straighforward version of the index_set_to_selection<Selection>:
+   
+   Extra check if index set is continuous, we do not perform the union then.
+   */
+  template <typename Selection, typename Iter>
+  Selection index_set_to_selection_raw(const Iter &iStartIter,
+                                       const Iter &iEndIter)
+  {
+    Selection newSelection;
+    
+    std::size_t current_boundary_left = 0;
+    bool  current_boundary_left_set = false;
+    
+    for (auto iter = iStartIter; iter!=iEndIter; iter++) {
+      
+      auto index = *iter;
+      
+      if (!current_boundary_left_set){
+        current_boundary_left = index;
+        current_boundary_left_set = true;
+      }
+      
+      if ((iter+1) != iEndIter && *(iter+1) == index+1) {
+        //If the selection set continues uninterrupted, we skip the adobe::selection_union call and continue on
+        continue;
+      }
+      
+      {
+        Selection tmp;
+        
+        tmp.push_back(current_boundary_left);
+        tmp.push_back(index + 1);
+        newSelection = selection_union<Selection, Selection>(newSelection, tmp);
+        current_boundary_left_set = false;
+      }
+    }
+    return newSelection;
+  }
+  /****************************************************************************************************/
+  /*!
+   \ingroup selection_algorithms
+   
+   Optimized version of the index_set_to_selection<Selection>, falls back to 
+   index_set_to_selection_raw<Selection, Iter>(iStartIter, iEndIter) if a range is less than kSplitLimit
+   
+   Assumes iterator range distance is > 0
+
+   */
+  template <typename Selection, typename Iter>
+  Selection optimized_index_set_to_selection(const Iter &iStartIter,
+                                             const Iter &iEndIter) {
+    
+    static const std::size_t kSplitLimit = 1024;
+    static const std::size_t kSplitChunkCount = 16;
+    
+    Selection newSelection;
+    
+    auto totalSize = std::distance(iStartIter, iEndIter);
+    
+    assert(totalSize > 0);
+    
+    if (static_cast<std::size_t>(totalSize) <= kSplitLimit) {
+      
+      newSelection = index_set_to_selection_raw<Selection, Iter>(iStartIter, iEndIter);
+      
+    }
+    else {
+      
+      auto ranges = split_range_into_chunks(iStartIter, iEndIter, kSplitChunkCount);
+      
+      for (const auto range : ranges) {
+        Selection selection_range = optimized_index_set_to_selection<Selection, Iter>(range.first, range.second);
+        newSelection = selection_union<Selection, Selection>(newSelection, selection_range);
+      }
+      
+    }
+    
+    return newSelection;
+  }
+  
+  template <typename Selection, typename Iterable >
+  Selection optimized_index_set_to_selection(const Iterable &indexSet) {
+    if (indexSet.empty()) {
+      return Selection(false);
+    }
+    return optimized_index_set_to_selection<Selection, typename Iterable::const_iterator>(indexSet.begin(), indexSet.end());
+  }
+  
+#ifndef USE_TBB_FOR_SELECTION_FROM_INDEX_SET
+#define USE_TBB_FOR_SELECTION_FROM_INDEX_SET 0
+#endif
+  
+#if USE_TBB_FOR_SELECTION_FROM_INDEX_SET
+  //Experimental: For this to work, you have to have TBB libraries in your project.
+  //These will have to be included beforehand:
+  //#include "tbb/blocked_range.h"
+  //#include "tbb/parallel_reduce.h"
+  //See tbb::parallel_reduce doc: https://software.intel.com/en-us/node/506063
+  template <typename Selection, typename Iterable, typename Iter>
+  class ParallelReduceSelectionCalculator
+  {
+  protected:
+    const Iterable &_source_index_set;
+    
+    Selection _result_selection;
+    
+  public:
+    
+    ParallelReduceSelectionCalculator(const Iterable &iIndexSet) : _source_index_set(iIndexSet) {
+    }
+    
+    ParallelReduceSelectionCalculator(ParallelReduceSelectionCalculator& iOther, tbb::split): _source_index_set(iOther._source_index_set) {
+    }
+    
+    virtual ~ParallelReduceSelectionCalculator() {
+    }
+    
+    void update_selection_with_range(const Iter &iStart, const Iter & iEnd) {
+      auto added_selection = optimized_index_set_to_selection<Selection, Iter>(iStart, iEnd);
+      _result_selection = selection_union<Selection, Selection>(_result_selection, added_selection);
+    }
+    
+    void operator()(tbb::blocked_range<Iter>& iRange) {
+      update_selection_with_range(iRange.begin(), iRange.end());
+    }
+    
+    void join(const ParallelReduceSelectionCalculator& rhs) {
+      _result_selection = selection_union<Selection, Selection>(_result_selection, rhs._result_selection);
+    }
+    
+    const Selection & result() const {
+      return _result_selection;
+    }
+  };
+  
+/****************************************************************************************************/
+  /*!
+   \ingroup selection_algorithms
+   
+   Parallelized version of the optimized_index_set_to_selection<Selection>
+  */
+  
+  template <typename Selection, typename Iterable>
+  Selection optimized_parallel_index_set_to_selection(const Iterable &indexSet) {
+    
+    ParallelReduceSelectionCalculator<Selection, Iterable, typename Iterable::const_iterator> calculator(indexSet);
+    
+    tbb::parallel_reduce(tbb::blocked_range<typename Iterable::const_iterator>(indexSet.begin(), indexSet.end()), calculator);
+    
+    Selection result = calculator.result();
+    
+    return result;
+  }
+  
+#endif
+  
 /****************************************************************************************************/
 /*!
     \ingroup selection_algorithms
@@ -784,26 +986,11 @@ selection_stable_partition_about(const Selection& selection, ForwardRange& range
 */
 template <typename Selection, typename ForwardRange>
 Selection index_set_to_selection(const ForwardRange& index_set) {
-    Selection result;
 
-    // REVISIT (fbrereto) : This would go much faster using divide-and-conquer
-    //                      and eventually balanced reduction.
-
-    typedef typename boost::range_const_iterator<ForwardRange>::type range_const_iterator;
-
-    range_const_iterator iter(boost::begin(index_set));
-    range_const_iterator last(boost::end(index_set));
-
-    for (; iter != last; ++iter) {
-        Selection tmp;
-
-        tmp.push_back(*iter);
-        tmp.push_back(*iter + 1);
-
-        result = selection_union(result, tmp);
-    }
-
-    return result;
+  Selection result = optimized_index_set_to_selection<Selection, ForwardRange>(index_set);
+  
+  return result;
+  
 }
 
 /****************************************************************************************************/
