@@ -778,33 +778,101 @@ selection_stable_partition_about(const Selection& selection, ForwardRange& range
 
 /****************************************************************************************************/
 /*!
-    \ingroup selection_algorithms
-
-    Takes a set of indices and converts them to a boundary-based Selection
-*/
+ \ingroup selection_algorithms
+ 
+ OLD VERSION (before September 2016) Takes a set of indices and converts them to a boundary-based Selection
+ */
 template <typename Selection, typename ForwardRange>
-Selection index_set_to_selection(const ForwardRange& index_set) {
+Selection index_set_to_selection_old(const ForwardRange& index_set) {
     Selection result;
-
+    
     // REVISIT (fbrereto) : This would go much faster using divide-and-conquer
     //                      and eventually balanced reduction.
-
+    
     typedef typename boost::range_const_iterator<ForwardRange>::type range_const_iterator;
-
+    
     range_const_iterator iter(boost::begin(index_set));
     range_const_iterator last(boost::end(index_set));
-
+    
     for (; iter != last; ++iter) {
         Selection tmp;
-
+      
         tmp.push_back(*iter);
         tmp.push_back(*iter + 1);
-
+      
         result = selection_union(result, tmp);
     }
-
+    
     return result;
 }
+  
+template <typename I, typename N> // I models ForwardIterator
+std::pair<I, N> find_sequence_end(I f, I l, N n) {
+    while (f != l && n == *f) {
+        ++n;
+        ++f;
+    }
+    return { f, n };
+}
+  
+/*
+ \pre [f, l) is a sorted (strictly increasing) set of of indices
+ */
+
+template <typename Selection, typename I> // I models ForwardIterator
+Selection strictly_increasing_index_set_to_selection(I f, I l) {
+  Selection result;
+  while (f != l) {
+      auto n = *f;
+      result.push_back(n);
+      ++f; ++n;
+      std::tie(f, n) = find_sequence_end(f, l, n);
+      result.push_back(n);
+  }
+  return result;
+}
+  
+/****************************************************************************************************/
+/*!
+ \ingroup selection_algorithms
+ 
+ Takes an strictly increasing set of indices and converts them to a boundary-based Selection
+ */
+
+template <typename Selection, typename ForwardRange >
+Selection strictly_increasing_index_set_to_selection(const ForwardRange &index_set) {
+    if (index_set.empty()) {
+        return Selection(false);
+    }
+    return strictly_increasing_index_set_to_selection<Selection, typename ForwardRange::const_iterator>(index_set.begin(), index_set.end());
+}
+  
+  
+  
+/****************************************************************************************************/
+/*!
+ \ingroup selection_algorithms
+ 
+ Takes an arbitrary set of indices and converts them to a boundary-based Selection
+ */
+template <typename Selection, typename ForwardRange>
+Selection index_set_to_selection(const ForwardRange& index_set) {
+  
+    auto sorted_selected_set = index_set;
+    
+    std::sort(sorted_selected_set.begin(), sorted_selected_set.end());
+    
+    auto last = std::unique(sorted_selected_set.begin(), sorted_selected_set.end());
+    
+    sorted_selected_set.erase(last, sorted_selected_set.end());
+    
+    Selection result = strictly_increasing_index_set_to_selection<Selection, ForwardRange>(sorted_selected_set);
+    
+    return result;
+  
+}
+
+  
 
 /****************************************************************************************************/
 /*!
