@@ -805,7 +805,24 @@ Selection index_set_to_selection_old(const ForwardRange& index_set) {
     
     return result;
 }
-  
+
+/****************************************************************************************************/
+/*!
+ \ingroup selection_algorithms
+ 
+ Finds end of the non-interrupted sequence in a strictly increasing set of indices, starting with number n
+ 
+ \pre [f, l) is a sorted (strictly increasing) set of indices
+ 
+ \return
+ A pair of values. The first is a iterator for the next element of a non-interupted sequence
+ The second is the last number of a non-interrupted sequence .
+ 
+ E.g. in an array of [0, 1, 2, 3, 7, 9, 10, 12]
+  : when called with value of ((iter 1), (iter 12), 1) : returns {(iter 7), 3};
+  : when called with value of ((iter 9), (iter 12), 8) : returns {(iter 9), 8};
+ 
+ */
 template <typename I, typename N> // I models ForwardIterator
 std::pair<I, N> find_sequence_end(I f, I l, N n) {
     while (f != l && n == *f) {
@@ -814,10 +831,19 @@ std::pair<I, N> find_sequence_end(I f, I l, N n) {
     }
     return { f, n };
 }
+ 
   
-/*
- \pre [f, l) is a sorted (strictly increasing) set of of indices
- */
+/****************************************************************************************************/
+/*!
+  \ingroup selection_algorithms
+
+  Takes an subset of strictly increasing set of indices and converts them to a boundary-based Selection
+
+  \pre [f, l) is a sorted (strictly increasing) set of indices
+
+  \return
+  A Selection.
+*/
 
 template <typename Selection, typename I> // I models ForwardIterator
 Selection strictly_increasing_index_set_to_selection(I f, I l) {
@@ -834,45 +860,42 @@ Selection strictly_increasing_index_set_to_selection(I f, I l) {
   
 /****************************************************************************************************/
 /*!
- \ingroup selection_algorithms
+  \ingroup selection_algorithms
+
+  Takes an strictly increasing set of indices and converts them to a boundary-based Selection
+
+  \pre index_set is a sorted (strictly increasing) set of indices
+
+  If you have an arbitrary set of selected indices (unsorted, and/or possible duplicate entries), 
+  sort and remove duplicates first, following PSEUDOCODE here:
  
- Takes an strictly increasing set of indices and converts them to a boundary-based Selection
+     auto sorted_selected_set = DEEP_COPY(index_set);
+     
+     (DEEP COPY depends on the nature of index_set ForwardRange type:
+      - If you are using std::vector<>, a simple assignment would suffice
+      - However, generally ForwardRange doesn't necessarily own elements, so extra effort may be needed to ensure 
+        proper duplication that results in a sortable container.)
+   
+   
+     std::sort(sorted_selected_set.begin(), sorted_selected_set.end());
+     
+     auto last = std::unique(sorted_selected_set.begin(), sorted_selected_set.end());
+     
+     sorted_selected_set.erase(last, sorted_selected_set.end());
+     
+     Selection result = index_set_to_selection<Selection>(sorted_selected_set);
+     
+     return result;
+ 
+  \return
+  A Selection.
  */
 
 template <typename Selection, typename ForwardRange >
-Selection strictly_increasing_index_set_to_selection(const ForwardRange &index_set) {
-    if (index_set.empty()) {
-        return Selection(false);
-    }
-    return strictly_increasing_index_set_to_selection<Selection, typename ForwardRange::const_iterator>(index_set.begin(), index_set.end());
+Selection index_set_to_selection(const ForwardRange &index_set) {
+  
+  return strictly_increasing_index_set_to_selection<Selection>(std::begin(index_set), std::end(index_set));
 }
-  
-  
-  
-/****************************************************************************************************/
-/*!
- \ingroup selection_algorithms
- 
- Takes an arbitrary set of indices and converts them to a boundary-based Selection
- */
-template <typename Selection, typename ForwardRange>
-Selection index_set_to_selection(const ForwardRange& index_set) {
-  
-    auto sorted_selected_set = index_set;
-    
-    std::sort(sorted_selected_set.begin(), sorted_selected_set.end());
-    
-    auto last = std::unique(sorted_selected_set.begin(), sorted_selected_set.end());
-    
-    sorted_selected_set.erase(last, sorted_selected_set.end());
-    
-    Selection result = strictly_increasing_index_set_to_selection<Selection, ForwardRange>(sorted_selected_set);
-    
-    return result;
-  
-}
-
-  
 
 /****************************************************************************************************/
 /*!
