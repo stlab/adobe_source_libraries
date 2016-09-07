@@ -776,6 +776,37 @@ namespace adobe {
     return std::pair<range_iterator, range_iterator>(i, j);
   }
   
+  /****************************************************************************************************/
+  /*!
+   \ingroup selection_algorithms
+   
+   Takes a set of indices and converts them to a boundary-based Selection
+   OLD VERSION (before September 2016) Takes a set of indices and converts them to a boundary-based Selection
+
+   */
+  template <typename Selection, typename ForwardRange>
+  Selection index_set_to_selection_old(const ForwardRange& index_set) {
+    Selection result;
+    
+    // REVISIT (fbrereto) : This would go much faster using divide-and-conquer
+    //                      and eventually balanced reduction.
+    
+    typedef typename boost::range_const_iterator<ForwardRange>::type range_const_iterator;
+    
+    range_const_iterator iter(boost::begin(index_set));
+    range_const_iterator last(boost::end(index_set));
+    
+    for (; iter != last; ++iter) {
+      Selection tmp;
+      
+      tmp.push_back(*iter);
+      tmp.push_back(*iter + 1);
+      
+      result = selection_union(result, tmp);
+    }
+    
+    return result;
+  }
   
   template <typename I, typename N> // I models ForwardIterator
   std::pair<I, N> find_sequence_end(I f, I l, N n) {
@@ -822,36 +853,6 @@ namespace adobe {
   /*!
    \ingroup selection_algorithms
    
-   OLD VERSION (before September 2016) Takes a set of indices and converts them to a boundary-based Selection
-   */
-  template <typename Selection, typename ForwardRange>
-  Selection index_set_to_selection_old(const ForwardRange& index_set) {
-    Selection result;
-    
-    // REVISIT (fbrereto) : This would go much faster using divide-and-conquer
-    //                      and eventually balanced reduction.
-    
-    typedef typename boost::range_const_iterator<ForwardRange>::type range_const_iterator;
-    
-    range_const_iterator iter(boost::begin(index_set));
-    range_const_iterator last(boost::end(index_set));
-    
-    for (; iter != last; ++iter) {
-      Selection tmp;
-      
-      tmp.push_back(*iter);
-      tmp.push_back(*iter + 1);
-      
-      result = selection_union(result, tmp);
-    }
-    
-    return result;
-  }
-  
-  /****************************************************************************************************/
-  /*!
-   \ingroup selection_algorithms
-   
    Takes an arbitrary set of indices and converts them to a boundary-based Selection
    */
   template <typename Selection, typename ForwardRange>
@@ -870,6 +871,7 @@ namespace adobe {
     return result;
     
   }
+
   
   /****************************************************************************************************/
   /*!
