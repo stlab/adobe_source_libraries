@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		88D53C6F0BF7CE90004A77BB /* string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 88D53C6E0BF7CE90004A77BB /* string.cpp */; };
+		969069711D7F9D240004BF65 /* temp1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9690696F1D7F9D240004BF65 /* temp1.cpp */; };
 		9A6113AD191DEFCC0092C45F /* future.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9A6113AC191DEFCC0092C45F /* future.cpp */; };
 		9ABD3B4812B88746000FE4EE /* iomanip_xml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9ABD3B4712B88746000FE4EE /* iomanip_xml.cpp */; };
 		CE5C20F509479C0200EB4BB6 /* adam_evaluate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE5C20D609479C0200EB4BB6 /* adam_evaluate.cpp */; };
@@ -52,6 +53,8 @@
 
 /* Begin PBXFileReference section */
 		88D53C6E0BF7CE90004A77BB /* string.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; name = string.cpp; path = ../../adobe_source_libraries/source/string.cpp; sourceTree = SOURCE_ROOT; };
+		9690696F1D7F9D240004BF65 /* temp1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = temp1.cpp; path = ../../../../temp1.cpp; sourceTree = "<group>"; };
+		969069701D7F9D240004BF65 /* temp1.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = temp1.hpp; path = ../../../../temp1.hpp; sourceTree = "<group>"; };
 		9A4B662A176D47970053A5B7 /* adam_evaluate.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = adam_evaluate.hpp; path = ../adobe/adam_evaluate.hpp; sourceTree = "<group>"; };
 		9A4B662B176D47970053A5B7 /* adam_parser.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = adam_parser.hpp; path = ../adobe/adam_parser.hpp; sourceTree = "<group>"; };
 		9A4B662C176D47970053A5B7 /* adam.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = adam.hpp; path = ../adobe/adam.hpp; sourceTree = "<group>"; };
@@ -269,6 +272,8 @@
 		08FB7794FE84155DC02AAC07 /* boost_signals */ = {
 			isa = PBXGroup;
 			children = (
+				9690696F1D7F9D240004BF65 /* temp1.cpp */,
+				969069701D7F9D240004BF65 /* temp1.hpp */,
 				CE5C1FF1094795E800EB4BB6 /* xcconfigs */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				C6A0FF2B0290797F04C91782 /* Documentation */,
@@ -681,6 +686,7 @@
 				CE5C210409479C0200EB4BB6 /* parser_shared.cpp in Sources */,
 				CE5C210509479C0200EB4BB6 /* string_pool.cpp in Sources */,
 				CE5C210609479C0200EB4BB6 /* test_configuration.cpp in Sources */,
+				969069711D7F9D240004BF65 /* temp1.cpp in Sources */,
 				CE5C210709479C0200EB4BB6 /* thread_id.cpp in Sources */,
 				CE5C210809479C0200EB4BB6 /* token.cpp in Sources */,
 				CE5C210909479C0200EB4BB6 /* typeinfo.cpp in Sources */,
