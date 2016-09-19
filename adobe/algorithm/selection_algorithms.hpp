@@ -778,39 +778,111 @@ selection_stable_partition_about(const Selection& selection, ForwardRange& range
 
 /****************************************************************************************************/
 /*!
-    \ingroup selection_algorithms
-
-    Takes a set of indices and converts them to a boundary-based Selection
-*/
-template <typename Selection, typename ForwardRange>
-Selection index_set_to_selection(const ForwardRange& index_set) {
-    Selection result;
-
-    // REVISIT (fbrereto) : This would go much faster using divide-and-conquer
-    //                      and eventually balanced reduction.
-
-    typedef typename boost::range_const_iterator<ForwardRange>::type range_const_iterator;
-
-    range_const_iterator iter(boost::begin(index_set));
-    range_const_iterator last(boost::end(index_set));
-
-    for (; iter != last; ++iter) {
-        Selection tmp;
-
-        tmp.push_back(*iter);
-        tmp.push_back(*iter + 1);
-
-        result = selection_union(result, tmp);
+ \ingroup selection_algorithms
+ 
+ Finds end of the non-interrupted sequence in a strictly increasing set of indices, starting with number n
+ 
+ \pre [f, l) is a sorted (strictly increasing) set of indices
+ 
+ \return
+ A pair of values. The first is a iterator for the next element of a non-interupted sequence
+ The second is the last number of a non-interrupted sequence .
+ 
+ E.g. in an array of [0, 1, 2, 3, 7, 9, 10, 12]
+  : when called with value of ((iter 1), (iter 12), 1) : returns {(iter 7), 3};
+  : when called with value of ((iter 9), (iter 12), 8) : returns {(iter 9), 8};
+ 
+ */
+template <typename I, typename N> // I models ForwardIterator
+std::pair<I, N> find_sequence_end(I f, I l, N n) {
+    while (f != l && n == *f) {
+        ++n;
+        ++f;
     }
+    return { f, n };
+}
+ 
+  
+/****************************************************************************************************/
+/*!
+  \ingroup selection_algorithms
 
-    return result;
+  Takes an subset of strictly increasing set of indices and converts them to a boundary-based Selection
+  via its output iterator
+ 
+  \pre [f, l) is a sorted (strictly increasing) set of indices
+
+*/
+
+template <typename I, // I models ForwardIterator
+          typename O> // O models OutputIterator>
+void index_set_to_selection(I f, I l, O output) {
+  while (f != l) {
+      auto n = *f;
+      *output++ = n;
+      ++f; ++n;
+      std::tie(f, n) = find_sequence_end(f, l, n);
+      *output++ = n;
+  }
+}
+  
+/****************************************************************************************************/
+/*!
+  \ingroup selection_algorithms
+
+  Takes an strictly increasing set of indices and converts them to a boundary-based Selection
+
+  \pre index_set is a sorted (strictly increasing) set of indices
+
+  If you have an arbitrary set of selected indices (unsorted, and/or possible duplicate entries), 
+  sort and remove duplicates first, following PSEUDOCODE here:
+ 
+     auto sorted_selected_set = DEEP_COPY(index_set);
+     
+     (DEEP COPY depends on the nature of index_set ForwardRange type:
+      - If you are using std::vector<>, a simple assignment would suffice
+      - However, generally ForwardRange doesn't necessarily own elements, so extra effort may be needed to ensure 
+        proper duplication that results in a sortable container.)
+   
+   
+     std::sort(sorted_selected_set.begin(), sorted_selected_set.end());
+     
+     auto last = std::unique(sorted_selected_set.begin(), sorted_selected_set.end());
+     
+     sorted_selected_set.erase(last, sorted_selected_set.end());
+     
+     Selection result = index_set_to_selection<Selection>(sorted_selected_set);
+     
+     return result;
+ 
+  \return
+  A Selection.
+ */
+
+template <typename Selection, typename ForwardRange >
+Selection index_set_to_selection(const ForwardRange &index_set) {
+
+  Selection result;
+  
+  index_set_to_selection(std::begin(index_set), std::end(index_set), std::back_inserter(result));
+  
+  return result;
 }
 
 /****************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
-    Takes a set of indices and converts them to a boundary-based Selection
+    Takes a boundary-based Selection and converts them to a set of indices 
+ 
+    Example usage: 
+    
+    (std::size_t total_size is the known total number of elements in our set, 
+     since that information is not known to by a Selection object)
+ 
+    std::vector<std::size_t> indexSet;
+    selection_to_index_set(selection, total_size, std::back_inserter(indexSet));
+ 
 */
 template <typename Selection, typename OutputIterator>
 OutputIterator selection_to_index_set(const Selection& selection,
