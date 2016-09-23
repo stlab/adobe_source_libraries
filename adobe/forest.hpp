@@ -655,8 +655,8 @@ public:
     iterator erase(const iterator& position);
     iterator erase(const iterator& first, const iterator& last);
 
-    iterator insert(const iterator& position, const T& x) {
-        iterator result(new node_t(x), true);
+    iterator insert(const iterator& position, T x) {
+        iterator result(new node_t(std::move(x)), true);
 
         if (size_valid())
             ++size_m;
