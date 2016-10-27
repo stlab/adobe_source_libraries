@@ -6,18 +6,12 @@ enable_testing()
 project(adobe_source_libraries CXX)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++0x")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
 add_definitions ("-Wall")
-add_definitions ("-Werror")
-
-if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" AND
-    ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-    set(CMAKE_EXE_LINKER_FLAGS "-lc++abi")
-endif()
+#add_definitions ("-Werror")
 
 # There are two big choices this file makes - how to include Boost, and how to
 # include double-conversion, respectively. Build environments vary and we're
@@ -35,6 +29,7 @@ option(USE_STLAB_DOUBLECONV "use stlab mirror of double-conversion repository" O
 # with boost 1.60 boost.thread uses boost.move unique_ptr
 # which is broken with BOOST_MOVE_USE_STANDARD_LIBRARY_MOVE flag...
 # fix is to conditionally remove this last boost thread dependency
+# NB: Seems fixed for boost 1.65.1
 # NB: AppleClang lacks thread_local
 option(USE_STD_THREAD_LOCAL "use C++11 thread_local instead of Boost" OFF)
 if (USE_STD_THREAD_LOCAL AND ${CMAKE_CXX_COMPILER_ID} STREQUAL "AppleClang")
@@ -47,6 +42,7 @@ set(root_path ${CMAKE_SOURCE_DIR}/..)
 function(setup_dep)
     set(options IS_CMAKE)
     set(oneValueArgs URL BRANCH TAG NAME)
+    set(multiValueArgs SUBMODULES)
     cmake_parse_arguments(setup_dep "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if ("${setup_dep_NAME}" STREQUAL "")
@@ -59,13 +55,18 @@ function(setup_dep)
 
     if(NOT IS_DIRECTORY ${dep_path})
         message("ASL_INFO: Setting up dep " ${name} " into " ${dep_path})
-        execute_process(COMMAND ${GIT_EXECUTABLE} clone --recursive ${setup_dep_URL} ${name} WORKING_DIRECTORY ${root_path})
+        execute_process(COMMAND ${GIT_EXECUTABLE} clone  ${setup_dep_URL} ${name} WORKING_DIRECTORY ${root_path})
 
         if("${setup_dep_BRANCH}" STREQUAL "")
             message(FATAL_ERROR "ASL_INFO: No branch given for dep " ${name})
         endif()
 
         execute_process(COMMAND ${GIT_EXECUTABLE} checkout ${setup_dep_BRANCH} WORKING_DIRECTORY ${dep_path})
+
+        foreach(submodule ${setup_dep_SUBMODULES})
+            message("ASL_INFO: Setting up submodule " ${submodule} " for " ${name})
+            execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init ${submodule} WORKING_DIRECTORY ${dep_path})
+        endforeach(submodule)
     else()
         message("ASL_INFO: Found dep " ${name} " into " ${dep_path})
     endif()
@@ -116,7 +117,72 @@ if (USE_SYSTEM_BOOST)
 else()
     message("ASL_INFO: Building boost ourselves.")
 
-    setup_dep(NAME boost_libraries URL https://github.com/boostorg/boost.git BRANCH boost-1.60.0)
+    set(BOOST_SUBMODULES
+        # required by asl
+        libs/system
+        libs/filesystem
+        libs/thread
+        libs/program_options
+        libs/signals2
+        libs/variant
+        libs/gil
+        # required by adobe::fnv unless ADOBE_FNV_NO_BIGINTS is defined
+        libs/multiprecision
+        # required by boost test or by the one above
+        libs/test
+        libs/detail
+        libs/config
+        libs/type_traits
+        libs/preprocessor
+        libs/utility
+        libs/core
+        libs/smart_ptr
+        libs/assert
+        libs/predef
+        libs/throw_exception
+        libs/function
+        libs/integer
+        libs/static_assert
+        libs/mpl
+        libs/bind
+        libs/move
+        libs/exception
+        libs/timer
+        libs/io
+        libs/iterator
+        libs/numeric
+        libs/numeric/conversion
+        libs/functional
+        libs/algorithm
+        libs/range
+        # required by program_options
+        libs/optional
+        libs/any
+        libs/type_index
+        libs/lexical_cast
+        libs/tokenizer
+        # required by range
+        libs/concept_check
+        # required by lexical_cast
+        libs/array
+        libs/container
+        libs/math
+        # required by thread
+        libs/atomic
+        libs/date_time
+        libs/chrono
+        libs/tuple
+        libs/align
+        # required by chrono
+        libs/ratio
+        # required by multiprecision
+        libs/format
+        libs/rational
+        # required by signals2
+        libs/multi_index
+        )
+
+    setup_dep(NAME boost_libraries URL https://github.com/boostorg/boost.git BRANCH boost-1.65.1 SUBMODULES ${BOOST_SUBMODULES})
 
     # There really isn't a need to separate out these sources, so we build them
     # in one large static library.
@@ -131,6 +197,7 @@ else()
           ${ASL_BOOST_SYSTEM_SRC})
 
     if(NOT USE_STD_THREAD_LOCAL)
+        message("ASL_INFO: adding boost thread to local boost build")
         file(GLOB ASL_BOOST_THREAD_SRC ../boost_libraries/libs/thread/src/*.cpp)
 
         if (${UNIX})
@@ -148,7 +215,9 @@ else()
 
     add_library(boost_glob STATIC ${BOOST_GLOB_SOURCES})
 
-    target_include_directories(boost_glob PUBLIC ../boost_libraries)
+    foreach (submodule ${BOOST_SUBMODULES})
+        target_include_directories(boost_glob PUBLIC ../boost_libraries/${submodule}/include)
+    endforeach(submodule)
 
     # We separate out the unit test framework from the rest of the boost
     # add_library support because it has its own main routine which we only need
@@ -160,7 +229,9 @@ else()
     add_library(boost_unit_test STATIC ${ASL_BOOST_TEST_SRC})
 
     target_include_directories(boost_unit_test PRIVATE -DBOOST_TEST_MAIN)
-    target_include_directories(boost_unit_test PUBLIC ../boost_libraries)
+    foreach (submodule ${BOOST_SUBMODULES})
+        target_include_directories(boost_unit_test PUBLIC ../boost_libraries/${submodule}/include)
+    endforeach(submodule)
 endif()
 
 add_subdirectory(source)
