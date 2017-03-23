@@ -26,6 +26,26 @@ enum Number {
     num_7 = 7
 };
 
+enum class Views : int {
+    None = 0,
+    Text = 1 << 0,
+    Icon = 1 << 1,
+    Preview = 1 << 2
+};
+
+enum class Num : int {
+    num_0 = 0,
+    num_1 = 1,
+    num_2 = 2,
+    num_3 = 3,
+    num_4 = 4,
+    num_5 = 5,
+    num_6 = 6,
+    num_7 = 7
+};
+
+auto stlab_enable_bitmask_enum(Views) -> std::true_type;
+
 ADOBE_DEFINE_BITSET_OPS(Number)
 
 BOOST_AUTO_TEST_CASE(enum_bitset_ops) {
@@ -63,8 +83,20 @@ BOOST_AUTO_TEST_CASE(enum_bitset_ops) {
     BOOST_CHECK(x == 1);
 }
 
+BOOST_AUTO_TEST_CASE(enumclass_bitset_ops) {
+    //the above proves our general cases
+    //this just sanity checks enum classes
+    Views x;
+    x = Views::Text | Views::Icon;
+    BOOST_CHECK((x & Views::Text) == Views::Text);
+    BOOST_CHECK((x & Views::Preview) != Views::Preview);
+}
+
+
 
 ADOBE_DEFINE_ARITHMETIC_OPS(Number)
+auto stlab_enable_arithmetic_enum(Num) -> std::true_type; 
+
 BOOST_AUTO_TEST_CASE(enum_arith_ops) {
     Number x;
 
@@ -117,3 +149,12 @@ BOOST_AUTO_TEST_CASE(enum_arith_ops) {
     x %= num_2;
     BOOST_CHECK(x == 1);
 }
+
+BOOST_AUTO_TEST_CASE(enumclass_arith_ops) {
+    //the above proves our general cases
+    //this just sanity checks enum classes
+    Num x;
+    x = Num::num_1;
+    BOOST_CHECK((x + Num::num_3) == Num::num_4);
+}
+
