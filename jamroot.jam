@@ -75,7 +75,7 @@ feature.feature libc++ :
     ;
 
 feature.compose <libc++>on :
-        <cxxflags>"-stdlib=libc++"
+        <cxxflags>"-stdlib=libc++ -std=c++14"
         <define>BOOST_NO_CXX11_NUMERIC_LIMITS=1
         <linkflags>"-lc++"
     ;

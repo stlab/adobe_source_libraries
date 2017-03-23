@@ -9,6 +9,7 @@
 #define ADOBE_ENUM_OPS_HPP
 
 /*************************************************************************************************/
+#include <type_traits>
 
 #include <adobe/config.hpp>
 
@@ -84,26 +85,70 @@ inline unsigned long long promote_enum(unsigned long long e) { return e; }
 } // namespace adobe
 
 /*************************************************************************************************/
+constexpr auto enable_bitmask_enum(...) -> std::false_type;
 
-#define ADOBE_DEFINE_BITSET_OPS(EnumType)                                                          \
-    inline EnumType operator~(EnumType a) {                                                        \
-        return EnumType(~adobe::implementation::promote_enum(a));                                  \
-    }                                                                                              \
-    inline EnumType operator|(EnumType lhs, EnumType rhs) {                                        \
-        return EnumType(adobe::implementation::promote_enum(lhs) |                                 \
-                        adobe::implementation::promote_enum(rhs));                                 \
-    }                                                                                              \
-    inline EnumType operator&(EnumType lhs, EnumType rhs) {                                        \
-        return EnumType(adobe::implementation::promote_enum(lhs) &                                 \
-                        adobe::implementation::promote_enum(rhs));                                 \
-    }                                                                                              \
-    inline EnumType operator^(EnumType lhs, EnumType rhs) {                                        \
-        return EnumType(adobe::implementation::promote_enum(lhs) ^                                 \
-                        adobe::implementation::promote_enum(rhs));                                 \
-    }                                                                                              \
-    inline EnumType& operator&=(EnumType& lhs, EnumType rhs) { return lhs = lhs & rhs; }           \
-    inline EnumType& operator|=(EnumType& lhs, EnumType rhs) { return lhs = lhs | rhs; }           \
-    inline EnumType& operator^=(EnumType& lhs, EnumType rhs) { return lhs = lhs ^ rhs; }
+template<typename T> struct is_enabled_bitmask
+{
+ 	static constexpr bool enable = decltype(enable_bitmask_enum(std::declval<T>()))::value;
+};
+
+template <typename T>
+
+constexpr auto operator&(const T lhs,const T rhs) ->
+    std::enable_if_t<is_enabled_bitmask<T>::enable, T>
+{
+    using underlying =  std::underlying_type_t<T>;
+    return static_cast<T>(static_cast<underlying>(lhs) & static_cast<underlying>(rhs));
+}
+
+template <typename T>
+constexpr auto operator~(const T lhs) ->
+    std::enable_if_t<is_enabled_bitmask<T>::enable, T>
+{
+	using underlying = std::underlying_type_t<T>;
+    return static_cast<T>(
+        ~static_cast<underlying>(lhs));
+}
+
+template <typename T>
+constexpr auto operator|(const T lhs, const T rhs) ->
+    std::enable_if_t<is_enabled_bitmask<T>::enable, T>
+{
+    using underlying =  std::underlying_type_t<T>;
+    return static_cast<T>(static_cast<underlying>(lhs) | static_cast<underlying>(rhs));
+}
+
+template <typename T>
+constexpr auto operator^(const T lhs, const T rhs) ->
+    std::enable_if_t<is_enabled_bitmask<T>::enable, T>
+{
+    using underlying =  std::underlying_type_t<T>;
+    return static_cast<T>(static_cast<underlying>(lhs) ^ static_cast<underlying>(rhs));
+}
+
+template <typename T>
+constexpr auto operator^=(T& lhs, const T rhs) ->
+    std::enable_if_t<is_enabled_bitmask<T>::enable, T>
+{
+	return lhs = lhs ^ rhs;
+}
+
+template <typename T>
+constexpr auto operator&=(T& lhs, const T rhs) ->
+    std::enable_if_t<is_enabled_bitmask<T>::enable, T>
+{
+	return lhs = lhs & rhs;
+}
+
+template <typename T>
+constexpr auto operator|=(T& lhs, const T rhs) ->
+    std::enable_if_t<is_enabled_bitmask<T>::enable, T>
+{
+	return lhs = lhs | rhs;
+}
+//this exist to mantain backwards compatability with the old ops
+#define ADOBE_DEFINE_BITSET_OPS(EnumType)                                                     \
+constexpr auto enable_bitmask_enum(EnumType) -> std::true_type;
 
 /*************************************************************************************************/
 
