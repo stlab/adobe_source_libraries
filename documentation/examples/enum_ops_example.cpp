@@ -30,6 +30,15 @@ enum Foo {
     foo_8 = 1 << 3
 };
 
+enum class Views : int {
+    None = 0,
+    Text = 1 << 0,
+    Icon = 1 << 1,
+    Preview = 1 << 2
+};
+
+auto stlab_enable_bitmask_enum(E) -> std::true_type;
+
 ADOBE_DEFINE_BITSET_OPS(Foo)
 
 int main() {
@@ -40,6 +49,11 @@ int main() {
     BOOST_TEST(a == 4L);
     BOOST_TEST(b == 8L);
     BOOST_TEST(c == 12L);
+
+    Views x;
+    x = Views::Text | Views::Icon;
+    BOOST_TEST((x & Views::Text) == Views::Text);
+    BOOST_TEST((x & Views::Preview) != Views::Preview);
 
     return boost::report_errors();
 }
