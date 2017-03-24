@@ -110,9 +110,11 @@ public:
     }
 
     /// gets an iterator to the beginning of the toggle point sequence
+    iterator begin() { return store_m.begin(); }
     const_iterator begin() const { return store_m.begin(); }
 
     /// gets an iterator to the end of the toggle point sequence
+    iterator end() { return store_m.end(); }
     const_iterator end() const { return store_m.end(); }
 
     /// fetches a toggle point at index i of the toggle point sequence
