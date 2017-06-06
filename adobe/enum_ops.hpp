@@ -58,15 +58,22 @@ namespace adobe {
 
 /*************************************************************************************************/
 
+auto stlab_enable_bitmask_enum(...) -> std::false_type;
+auto stlab_enable_arithmetic_enum(...) -> std::false_type;
+
+/*************************************************************************************************/
+
 namespace implementation {
 
 /*************************************************************************************************/
+
 #if !defined(ADOBE_NO_DOCUMENTATION)
 template <typename T>
 constexpr bool has_enabled_bitmask = decltype(stlab_enable_bitmask_enum(std::declval<T>()))::value;
 template <typename T>
 constexpr bool has_enabled_arithmetic = decltype(stlab_enable_arithmetic_enum(std::declval<T>()))::value;
 #endif
+
 /*************************************************************************************************/
 
 } // namespace implementation
@@ -76,9 +83,6 @@ constexpr bool has_enabled_arithmetic = decltype(stlab_enable_arithmetic_enum(st
 } // namespace adobe
 
 /*************************************************************************************************/
-
-constexpr auto stlab_enable_bitmask_enum(...) -> std::false_type;
-constexpr auto stlab_enable_arithmetic_enum(...) -> std::false_type;
 
 //this exist to mantain backwards compatability with the old ops
 #define ADOBE_DEFINE_BITSET_OPS(EnumType)                                                     \
@@ -233,6 +237,38 @@ constexpr auto operator%=(T& lhs, const T rhs) ->
     std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
 {
 	return lhs = lhs % rhs;
+}
+
+template <typename T>
+constexpr auto operator++(T& lhs) ->
+    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
+{
+	return lhs += static_cast<T>(1);
+}
+
+template <typename T>
+constexpr auto operator++(T& lhs, int) ->
+    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
+{
+    T result = lhs;
+	lhs += static_cast<T>(1);
+    return result;
+}
+
+template <typename T>
+constexpr auto operator--(T& lhs) ->
+    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
+{
+	return lhs -= static_cast<T>(1);
+}
+
+template <typename T>
+constexpr auto operator--(T& lhs, int) ->
+    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
+{
+    T result = lhs;
+	lhs -= static_cast<T>(1);
+    return result;
 }
 
 /*************************************************************************************************/
