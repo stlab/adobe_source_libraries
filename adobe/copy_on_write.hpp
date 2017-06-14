@@ -123,13 +123,10 @@ public:
     auto operator=(const copy_on_write& x) noexcept -> copy_on_write& {
         return *this = copy_on_write(x);
     }
+    
     auto operator=(copy_on_write&& x) noexcept -> copy_on_write& {
-        assert(x._self && "WARNING (sparent) : using a moved copy_on_write object");
-        assert((&x != this) && "FATAL (sparent) : invalid self-move.");
-
-        destroy();
-        _self = x._self;
-        x._self = nullptr;
+        auto tmp = std::move(x);
+        swap(*this, tmp);
         return *this;
     }
 
