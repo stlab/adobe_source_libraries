@@ -49,7 +49,7 @@ fi
 if [ ! -e 'stlab' ]; then
     echo "INFO : stlab not found: setting up."
 
-    echo_run git clone --branch=$TRAVIS_BRANCH git://github.com/stlab/stlab.git
+    echo_run git clone --branch=$TRAVIS_BRANCH https://github.com/stlab/libraries.git stlab
 else
     echo "INFO : stlab found: pulling $TRAVIS_BRANCH..."
 
