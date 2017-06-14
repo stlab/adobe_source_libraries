@@ -8,6 +8,12 @@ import feature : feature ;
 import set ;
 
 #
+# Future me: It's been a while. Welcome back.
+#    To run a unit test, cd into the directory and run:
+#        `b2 toolset=clang -q -j12`
+#
+
+#
 # Necessary overrides, I believe, to support building out the widget set in the
 # specified OS. Not sure if this is still relevant on Windows anymore.
 #
@@ -57,6 +63,22 @@ else
     double-conversion-path = ../ ;
 }
 
+#
+# Permits overriding the double-conversion directory by specifying STLAB_PATH
+# in the OS environment table.
+#
+
+local stlab-path = [ os.environ STLAB_PATH ] ;
+
+if $(stlab-path)
+{
+    stlab-path = $(stlab-path) ;
+}
+else
+{
+    stlab-path = ../stlab ;
+}
+
 # Set up c++11 support as a feature so it will propagate into the
 # boost dependencies
 
@@ -96,6 +118,7 @@ asl_requirements =
     # Include directories
     <include>$(boost-path)
     <include>$(double-conversion-path)
+    <include>$(stlab-path)
     <include>.
 
     # Linker specializations

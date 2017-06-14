@@ -4,6 +4,7 @@ compiler:
 branches:
     only:
         - master
+        - develop
 notifications:
   recipients:
     - adobe-source-build@lists.sourceforge.net

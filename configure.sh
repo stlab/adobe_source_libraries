@@ -20,6 +20,10 @@ BOOST_US_VER=${BOOST_MAJOR}_${BOOST_MINOR}_${BOOST_DOT}
 BOOST_DIR=boost_${BOOST_US_VER}
 BOOST_TAR=$BOOST_DIR.tar.gz
 
+if [ -z "$TRAVIS_BRANCH" ]; then
+    export TRAVIS_BRANCH=`git rev-parse --abbrev-ref HEAD`
+fi
+
 #
 # Make sure we're at the top-level directory when we set up all our siblings.
 #
@@ -36,6 +40,24 @@ if [ ! -e 'double-conversion' ]; then
     echo_run git clone --depth=50 --branch=master git://github.com/stlab/double-conversion.git
 else
     echo "INFO : double-conversion found: skipping setup."
+fi
+
+#
+# fetch stlab library.
+#
+
+if [ ! -e 'stlab' ]; then
+    echo "INFO : stlab not found: setting up."
+
+    echo_run git clone --branch=$TRAVIS_BRANCH git://github.com/stlab/stlab.git
+else
+    echo "INFO : stlab found: pulling $TRAVIS_BRANCH..."
+
+    echo_run cd stlab
+    echo_run git branch -u origin/$TRAVIS_BRANCH
+    echo_run git co $TRAVIS_BRANCH
+    echo_run git pull origin $TRAVIS_BRANCH
+    echo_run cd ..
 fi
 
 #
