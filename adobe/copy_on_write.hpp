@@ -48,8 +48,8 @@ class copy_on_write {
 
         model() = default;
 
-        template <class V>
-        explicit model(V&& x) : _value(std::forward<V>(x)) {}
+        template <class... Args>
+        explicit model(Args&&... args) : _value(std::forward<Args>(args)...) {}
 
         T _value;
     };
@@ -87,19 +87,31 @@ public:
     }
 
     /*!
-    \brief Constructs a new copy_on_write object with a value \c x.
-
-    \param x A default value to assign to this object
+    \brief Constructs a new copy_on_write object with a single argument.
     */
     template <class U>
     copy_on_write(U&& x, disable_copy<U> = nullptr) : _self(new model(std::forward<U>(x))) {}
 
     /*!
+    \brief Constructs a new copy_on_write object with two or more arguments.
+    */
+    template <class U, class V, class... Args>
+    copy_on_write(U&& x, V&& y, Args&&... args)
+        : _self(new model(std::forward<U>(x), std::forward<V>(y), std::forward<Args>(args)...)) {}
+
+    /*!
     Copy construction is a non-throwing operation and simply increments the
     reference count on the stored object.
     */
-    copy_on_write(const copy_on_write& x) noexcept : _self(x._self) { ++_self->_count; }
-    copy_on_write(copy_on_write&& x) noexcept : _self(x._self) { x._self = nullptr; }
+    copy_on_write(const copy_on_write& x) noexcept : _self(x._self) {
+        assert(_self && "FATAL (sparent) : using a moved copy_on_write object");
+
+        ++_self->_count;
+    }
+    copy_on_write(copy_on_write&& x) noexcept : _self(x._self) {
+        assert(_self && "WARNING (sparent) : using a moved copy_on_write object");
+        x._self = nullptr;
+    }
 
     ~copy_on_write() { destroy(); }
 
@@ -112,8 +124,9 @@ public:
         return *this = copy_on_write(x);
     }
     auto operator=(copy_on_write&& x) noexcept -> copy_on_write& {
-        assert(!identity(x) && "FATAL (sparent) : invalid self-move.");
-        
+        assert(x._self && "WARNING (sparent) : using a moved copy_on_write object");
+        assert((&x != this) && "FATAL (sparent) : invalid self-move.");
+
         destroy();
         _self = x._self;
         x._self = nullptr;
@@ -217,17 +230,37 @@ public:
     \return Boolean; <code>true</code> if the underlying object instance is
     shared by both objects.
     */
-    bool identity(const copy_on_write& x) const noexcept { return _self == x._self; }
+    bool identity(const copy_on_write& x) const noexcept {
+        assert((_self && x._self) && "FATAL (sparent) : using a moved copy_on_write object");
+
+        return _self == x._self;
+    }
 
     friend inline void swap(copy_on_write& x, copy_on_write& y) noexcept {
         std::swap(x._self, y._self);
     }
 
     friend inline bool operator<(const copy_on_write& x, const copy_on_write& y) noexcept {
-        return !x.identity(y) && (*x < *y);
+        return *x < *y;
+    }
+
+    friend inline bool operator<(const copy_on_write& x, const element_type& y) noexcept {
+        return *x < y;
+    }
+
+    friend inline bool operator<(const element_type& x, const copy_on_write& y) noexcept {
+        return x < *y;
     }
 
     friend inline bool operator>(const copy_on_write& x, const copy_on_write& y) noexcept {
+        return y < x;
+    }
+
+    friend inline bool operator>(const copy_on_write& x, const element_type& y) noexcept {
+        return y < x;
+    }
+
+    friend inline bool operator>(const element_type& x, const copy_on_write& y) noexcept {
         return y < x;
     }
 
@@ -235,15 +268,47 @@ public:
         return !(y < x);
     }
 
+    friend inline bool operator<=(const copy_on_write& x, const element_type& y) noexcept {
+        return !(y < x);
+    }
+
+    friend inline bool operator<=(const element_type& x, const copy_on_write& y) noexcept {
+        return !(y < x);
+    }
+
     friend inline bool operator>=(const copy_on_write& x, const copy_on_write& y) noexcept {
         return !(x < y);
     }
 
+    friend inline bool operator>=(const copy_on_write& x, const element_type& y) noexcept {
+        return !(x < y);
+    }
+
+    friend inline bool operator>=(const element_type& x, const copy_on_write& y) noexcept {
+        return !(x < y);
+    }
+
     friend inline bool operator==(const copy_on_write& x, const copy_on_write& y) noexcept {
-        return x.identity(y) || (*x == *y);
+        return *x == *y;
+    }
+
+    friend inline bool operator==(const copy_on_write& x, const element_type& y) noexcept {
+        return *x == y;
+    }
+
+    friend inline bool operator==(const element_type& x, const copy_on_write& y) noexcept {
+        return x == *y;
     }
 
     friend inline bool operator!=(const copy_on_write& x, const copy_on_write& y) noexcept {
+        return !(x == y);
+    }
+
+    friend inline bool operator!=(const copy_on_write& x, const element_type& y) noexcept {
+        return !(x == y);
+    }
+
+    friend inline bool operator!=(const element_type& x, const copy_on_write& y) noexcept {
         return !(x == y);
     }
 };
