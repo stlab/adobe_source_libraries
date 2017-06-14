@@ -54,10 +54,6 @@ class copy_on_write {
         T _value;
     };
 
-    void destroy() {
-        if (_self && (--_self->_count == 0)) delete _self;
-    }
-
     model* _self;
 
     template <class U>
@@ -113,7 +109,7 @@ public:
         x._self = nullptr;
     }
 
-    ~copy_on_write() { destroy(); }
+    ~copy_on_write() { if (_self && (--_self->_count == 0)) delete _self; }
 
     /*!
         As with copy construction, assignment is a non-throwing operation which
@@ -123,7 +119,7 @@ public:
     auto operator=(const copy_on_write& x) noexcept -> copy_on_write& {
         return *this = copy_on_write(x);
     }
-    
+
     auto operator=(copy_on_write&& x) noexcept -> copy_on_write& {
         auto tmp = std::move(x);
         swap(*this, tmp);
@@ -153,13 +149,7 @@ public:
     \return A reference to the underlying object
     */
     auto write() -> element_type& {
-        assert(_self && "FATAL (sparent) : using a moved copy_on_write object");
-
-        if (!unique()) {
-            auto tmp = new model(_self->_value);
-            destroy();
-            _self = tmp;
-        }
+        if (!unique()) *this = copy_on_write(read());
 
         return _self->_value;
     }
