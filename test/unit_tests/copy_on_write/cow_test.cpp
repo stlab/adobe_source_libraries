@@ -23,102 +23,7 @@
 
 namespace {
 
-template <typename T>
-class noisy_allocator;
 
-template <>
-class noisy_allocator<void> {
-public:
-    void* pointer;
-    typedef const void* const_pointer;
-    typedef void value_type;
-    template <class U>
-    struct rebind {
-        typedef noisy_allocator<U> other;
-    };
-
-    friend inline bool operator==(const noisy_allocator&, const noisy_allocator&) { return true; }
-
-    friend inline bool operator!=(const noisy_allocator&, const noisy_allocator&) { return false; }
-};
-
-std::size_t noisy_check_allocation(bool count = false) {
-    static std::size_t alloc_count_s(0);
-
-    std::size_t prev_allocation(alloc_count_s);
-
-    if (count)
-        ++alloc_count_s;
-    else
-        alloc_count_s = 0;
-
-    return prev_allocation;
-}
-
-std::size_t noisy_check_deallocation(bool count = false) {
-    static std::size_t dealloc_count_s(0);
-
-    std::size_t prev_deallocation(dealloc_count_s);
-
-    if (count)
-        ++dealloc_count_s;
-    else
-        dealloc_count_s = 0;
-
-    return prev_deallocation;
-}
-
-template <typename T>
-class noisy_allocator {
-public:
-    typedef std::size_t size_type;
-    typedef std::ptrdiff_t difference_type;
-    typedef T* pointer;
-    typedef const T* const_pointer;
-    typedef T& reference;
-    typedef const T& const_reference;
-    typedef T value_type;
-    template <typename U>
-    struct rebind {
-        typedef noisy_allocator<U> other;
-    };
-
-    noisy_allocator() {}
-    template <typename U>
-    noisy_allocator(const noisy_allocator<U>&) {}
-    pointer address(reference x) const { return &x; }
-    const_pointer address(const_reference x) const { return &x; }
-    pointer allocate(size_type n, noisy_allocator<void>::const_pointer = 0) {
-        if (n > max_size())
-            throw std::bad_alloc();
-        pointer result = static_cast<pointer>(::operator new(n * sizeof(T), std::nothrow));
-        if (!result)
-            throw std::bad_alloc();
-        std::cout << "  alloc @ " << static_cast<void*>(result) << "; sizeof(T): " << sizeof(T);
-        if (n != 1)
-            std::cout << "; n: " << n;
-        std::cout << std::endl;
-        noisy_check_allocation(true);
-        return result;
-    }
-    void deallocate(pointer p, size_type) {
-        ::operator delete(p, std::nothrow);
-        std::cout << "dealloc @ " << static_cast<void*>(p) << "; sizeof(T): " << sizeof(T)
-                  << std::endl;
-        noisy_check_deallocation(true);
-    }
-    size_type max_size() const { return size_type(-1) / sizeof(T); }
-    void construct(pointer p, const T& x) { adobe::construct(p, x); }
-    void destroy(pointer p) { adobe::destroy(p); }
-
-    friend inline bool operator==(const noisy_allocator& x, const noisy_allocator& y) {
-        return true;
-    }
-
-    friend inline bool operator!=(const noisy_allocator& x, const noisy_allocator& y) {
-        return false;
-    }
-};
 
 template <typename R, typename T>
 R make_value(const T& x) {
@@ -134,29 +39,11 @@ std::string make_value(const long& x) {
 
 template <typename CowType>
 void test_copy_on_write() {
-    enum {
-        is_noisy = boost::is_same<typename CowType::allocator_type,
-                                  noisy_allocator<typename CowType::value_type>>::value
-    };
-
     typename CowType::value_type (*mv)(const long&) =
         &make_value<typename CowType::value_type, long>;
 
-    if (is_noisy) {
-        // reset counters
-        noisy_check_allocation();
-        noisy_check_deallocation();
-
-        std::cout << "Testing " << typeid(CowType).name() << "...\n";
-    }
-
     // Test default constructor
     { CowType value_0; }
-    // Check
-    if (is_noisy) {
-        BOOST_CHECK_MESSAGE(noisy_check_allocation() == 1, "allocation count mismatch");
-        BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 0, "deallocation count mismatch");
-    }
 
     // Test basic concept requirements
     {
@@ -178,17 +65,12 @@ void test_copy_on_write() {
         BOOST_CHECK_MESSAGE(value_1 == value_test, "equality of non-identical values");
         BOOST_CHECK_MESSAGE(value_2 != value_test, "equality of non-identical values");
 
-        BOOST_CHECK(value_test.unique_instance());
+        BOOST_CHECK(value_test.unique());
 
         value_test = value_2; // deallocation
 
-        BOOST_CHECK(!value_test.unique_instance());
+        BOOST_CHECK(!value_test.unique());
         BOOST_CHECK(value_test.identity(value_2));
-    }
-    // Check
-    if (is_noisy) {
-        BOOST_CHECK_MESSAGE(noisy_check_allocation() == 4, "allocation count mismatch");
-        BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 4, "deallocation count mismatch");
     }
 
     // Test basic move semantics
@@ -197,30 +79,12 @@ void test_copy_on_write() {
         CowType value_2(mv(21)); // allocation
         CowType value_move(std::move(value_1));
 
-        BOOST_CHECK_MESSAGE(value_move != value_1, "move failure");
+        // BOOST_CHECK_MESSAGE(value_move != value_1, "move failure");
 
         value_move = std::move(value_2); // deallocation
 
-        BOOST_CHECK_MESSAGE(value_move != value_2, "move failure");
-        BOOST_CHECK_MESSAGE(value_1 == value_2, "move failure"); // both should be object_m == 0
-    }
-    // Check
-    if (is_noisy) {
-        BOOST_CHECK_MESSAGE(noisy_check_allocation() == 2, "allocation count mismatch");
-        BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 2, "deallocation count mismatch");
-    }
-
-    // Test custom allocator constructor and set
-    {
-        typename CowType::allocator_type my_allocator;
-        CowType value_4(my_allocator); // allocation
-
-        value_4.write() = mv(4);
-    }
-    // Check
-    if (is_noisy) {
-        BOOST_CHECK_MESSAGE(noisy_check_allocation() == 1, "allocation count mismatch");
-        BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 1, "deallocation count mismatch");
+        // BOOST_CHECK_MESSAGE(value_move != value_2, "move failure");
+        // BOOST_CHECK_MESSAGE(value_1 == value_2, "move failure"); // both should be object_m == 0
     }
 
     // Test copy-assignment using null object_m
@@ -229,11 +93,6 @@ void test_copy_on_write() {
         CowType bar(std::move(foo));
 
         foo = mv(2); // allocation
-    }
-    // Check
-    if (is_noisy) {
-        BOOST_CHECK_MESSAGE(noisy_check_allocation() == 2, "allocation count mismatch");
-        BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 2, "deallocation count mismatch");
     }
 
     // Test copy-assignment using non-null object_m
@@ -245,12 +104,7 @@ void test_copy_on_write() {
 
         bar = mv(6); // allocation
 
-        BOOST_CHECK(bar.unique_instance() && foo.unique_instance());
-    }
-    // Check
-    if (is_noisy) {
-        BOOST_CHECK_MESSAGE(noisy_check_allocation() == 2, "allocation count mismatch");
-        BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 2, "deallocation count mismatch");
+        BOOST_CHECK(bar.unique() && foo.unique());
     }
 
     // Test move-assignment using null object_m
@@ -261,11 +115,6 @@ void test_copy_on_write() {
 
         foo = std::move(value); // allocation
     }
-    // Check
-    if (is_noisy) {
-        BOOST_CHECK_MESSAGE(noisy_check_allocation() == 2, "allocation count mismatch");
-        BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 2, "deallocation count mismatch");
-    }
 
     // Test move-assignment using unique instance
     {
@@ -273,11 +122,6 @@ void test_copy_on_write() {
         typename CowType::value_type value(mv(2));
 
         foo = std::move(value);
-    }
-    // Check
-    if (is_noisy) {
-        BOOST_CHECK_MESSAGE(noisy_check_allocation() == 1, "allocation count mismatch");
-        BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 1, "deallocation count mismatch");
     }
 
     // Test move-assignment using new allocation
@@ -288,22 +132,12 @@ void test_copy_on_write() {
 
         foo = std::move(value); // allocation
     }
-    // Check
-    if (is_noisy) {
-        BOOST_CHECK_MESSAGE(noisy_check_allocation() == 2, "allocation count mismatch");
-        BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 2, "deallocation count mismatch");
-    }
 
     // Test write() using unique instance
     {
         CowType foo(mv(1)); // allocation
 
         foo.write() = typename CowType::value_type(mv(2));
-    }
-    // Check
-    if (is_noisy) {
-        BOOST_CHECK_MESSAGE(noisy_check_allocation() == 1, "allocation count mismatch");
-        BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 1, "deallocation count mismatch");
     }
 
     // Test write() using new allocation
@@ -312,11 +146,6 @@ void test_copy_on_write() {
         CowType bar(foo);
 
         foo.write() = typename CowType::value_type(mv(2)); // allocation
-    }
-    // Check
-    if (is_noisy) {
-        BOOST_CHECK_MESSAGE(noisy_check_allocation() == 2, "allocation count mismatch");
-        BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 2, "deallocation count mismatch");
     }
 
     // Test read()
@@ -331,11 +160,6 @@ void test_copy_on_write() {
         BOOST_CHECK_MESSAGE(*(foo.operator->()) == typename CowType::value_type(mv(1)),
                             "read error");
     }
-    // Check
-    if (is_noisy) {
-        BOOST_CHECK_MESSAGE(noisy_check_allocation() == 1, "allocation count mismatch");
-        BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 1, "deallocation count mismatch");
-    }
 
     // Test swap
     {
@@ -347,31 +171,154 @@ void test_copy_on_write() {
         BOOST_CHECK_MESSAGE(foo.read() == typename CowType::value_type(mv(2)), "swap error");
         BOOST_CHECK_MESSAGE(bar.read() == typename CowType::value_type(mv(1)), "swap error");
     }
-    // Check
-    if (is_noisy) {
-        BOOST_CHECK_MESSAGE(noisy_check_allocation() == 2, "allocation count mismatch");
-        BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 2, "deallocation count mismatch");
-    }
 }
 } // namespace
 
-BOOST_AUTO_TEST_CASE(CowType_allocator_rtti) {
+BOOST_AUTO_TEST_CASE(copy_on_write_interface) {
     using namespace adobe;
 
     {
-        typedef copy_on_write<int> cow_t;
+    // default construction
+    copy_on_write<int> a;
+    copy_on_write<int> b;
 
-        std::cout << typeid(cow_t).name() << '\n';
-
-        // BOOST_CHECK(!t.requires_std_rtti());
+    BOOST_CHECK_MESSAGE(a.identity(b), "default construction error");
+    BOOST_CHECK_MESSAGE(a == 0, "default construction error");
     }
 
     {
-        typedef copy_on_write<int, std::allocator<int>> cow_t;
+    // emplace construction
+    copy_on_write<int> a(10);
+    copy_on_write<std::pair<int, int>> b(10, 20);
+    copy_on_write<std::tuple<int, int, int>> c(10, 20, 30);
 
-        std::cout << typeid(cow_t).name() << '\n';
+    BOOST_CHECK_MESSAGE(a == 10, "value construction error");
+    BOOST_CHECK_MESSAGE((b == std::make_pair(10, 20)), "value construction error");
+    BOOST_CHECK_MESSAGE((c == std::make_tuple(10, 20, 30)), "value construction error");
+    }
 
-        // BOOST_CHECK(t.requires_std_rtti());
+    {
+    // copy construction
+    copy_on_write<int> a = 3;
+    copy_on_write<int> b = a;
+    BOOST_CHECK_MESSAGE(a.identity(b), "copy construction error");
+    BOOST_CHECK_MESSAGE(b == 3, "copy construction error");
+    }
+
+    {
+    // move construction
+    copy_on_write<int> a = 3;
+    copy_on_write<int> b = std::move(a);
+    a = 0;
+    BOOST_CHECK_MESSAGE(!a.identity(b), "move construction error");
+    BOOST_CHECK_MESSAGE(b == 3, "move construction error");
+    BOOST_CHECK_MESSAGE(a == 0, "move construction error");
+    }
+
+    {
+    // copy assignment
+    copy_on_write<int> a = 3;
+    copy_on_write<int> b;
+    b = a;
+    BOOST_CHECK_MESSAGE(a.identity(b), "copy assignment error");
+    BOOST_CHECK_MESSAGE(b == 3, "copy assignment error");
+    }
+
+    {
+    // move assignment
+    copy_on_write<int> a = 3;
+    copy_on_write<int> b;
+    b = std::move(a);
+    a = 0;
+    BOOST_CHECK_MESSAGE(!a.identity(b), "move assignment error");
+    BOOST_CHECK_MESSAGE(b == 3, "move assignment error");
+    BOOST_CHECK_MESSAGE(a == 0, "move assignment error");
+    }
+
+    {
+    // value assignment
+    copy_on_write<int> a;
+    a = 3;
+    BOOST_CHECK_MESSAGE(a == 3, "value assignment error");
+    }
+
+    {
+    // write
+    copy_on_write<std::pair<int, int>> a(1, 2);
+    copy_on_write<std::pair<int, int>> b = a;
+    BOOST_CHECK(a.identity(b));
+    a.write().first = 3;
+    BOOST_CHECK(!a.identity(b));
+    BOOST_CHECK(a == std::make_pair(3, 2));
+    BOOST_CHECK(b == std::make_pair(1, 2));
+    }
+
+    {
+    // read
+    copy_on_write<std::pair<int, int>> a(1, 2);
+    BOOST_CHECK(a.read().first == 1 && a.read().second == 2);
+    }
+
+    {
+    // implicit conversion
+    copy_on_write<std::pair<int, int>> a(1, 2);
+    std::pair<int, int> b = a;
+    BOOST_CHECK(b == std::make_pair(1, 2));
+    }
+
+    {
+    // operator * and ->
+    copy_on_write<std::pair<int, int>> a(1, 2);
+    BOOST_CHECK(a->first == 1 && a->second == 2);
+    BOOST_CHECK((*a).first == 1 && (*a).second == 2);
+    }
+
+    {
+    // unique
+    copy_on_write<std::pair<int, int>> a(1, 2);
+    BOOST_CHECK(a.unique());
+    {
+    auto b = a;
+    BOOST_CHECK(!a.unique());
+    }
+    BOOST_CHECK(a.unique());
+    }
+
+    // identity (tested above)
+
+    // swap
+    {
+    copy_on_write<int> a(1);
+    copy_on_write<int> b(2);
+    swap(a, b);
+    BOOST_CHECK((a == 2) && (b == 1));
+    }
+
+    // comparisons
+    {
+    copy_on_write<int> a(1);
+    copy_on_write<int> b(1);
+    copy_on_write<int> c(2);
+    
+    BOOST_CHECK((a == b) && (a != c) && !(a == c) && !(a != b));
+    BOOST_CHECK((a == 1) && (a != 2) && !(a == 2) && !(a != 1));
+    BOOST_CHECK((1 == b) && (1 != c) && !(1 == c) && !(1 != b));
+    
+    BOOST_CHECK(!(a < b) && (a < c));
+    BOOST_CHECK(!(a < 1) && (a < 2));
+    BOOST_CHECK(!(1 < 1) && (1 < 2));
+
+    BOOST_CHECK(!(a > b) && (c > a));
+    BOOST_CHECK(!(a > 1) && (c > 1));
+    BOOST_CHECK(!(1 > b) && (2 > a));
+
+    BOOST_CHECK((a <= b) && !(c <= a));
+    BOOST_CHECK((a <= 1) && !(c <= 1));
+    BOOST_CHECK((1 <= b) && !(2 <= a));
+
+    BOOST_CHECK((a >= b) && !(a >= c));
+    BOOST_CHECK((a >= 1) && !(a >= 2));
+    BOOST_CHECK((1 >= b) && !(1 >= c));
     }
 }
 
@@ -379,23 +326,7 @@ BOOST_AUTO_TEST_CASE(copy_on_write) {
     // test nonmovable type with capture_allocator
     test_copy_on_write<adobe::copy_on_write<int>>();
 
-    // test nonmovable type with std::allocator
-    test_copy_on_write<adobe::copy_on_write<int, std::allocator<int>>>();
-
-    // test nonmovable type with noisy_allocator
-    test_copy_on_write<adobe::copy_on_write<int, noisy_allocator<int>>>();
-
     // test movable type with capture_allocator
     test_copy_on_write<adobe::copy_on_write<std::string>>();
-
-    // test movable type with std::allocator
-    test_copy_on_write<adobe::copy_on_write<std::string, std::allocator<std::string>>>();
-
-    // test movable type with noisy_allocator
-    test_copy_on_write<adobe::copy_on_write<std::string, noisy_allocator<std::string>>>();
 }
 
-BOOST_AUTO_TEST_CASE(void_equality) {
-    BOOST_CHECK(noisy_allocator<void>() == noisy_allocator<void>());
-    BOOST_CHECK(!(noisy_allocator<void>() != noisy_allocator<void>()));
-}
