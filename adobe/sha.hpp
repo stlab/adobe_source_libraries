@@ -252,7 +252,9 @@ std::uint64_t stuff_into_state(typename HashTraits::message_block_type& state,
             v <<= message_end - 8;
 
         *dst |= v;
-        stuff_bit_offset += num_bits;
+		// static_cast to silence Visual Studio 2017:
+		// warning C4267: '+=': conversion from 'size_t' to 'uint16_t', possible loss of data
+        stuff_bit_offset += static_cast<std::uint16_t>(num_bits);
         n_stuffed_bits += num_bits;
     }
     return n_stuffed_bits;
@@ -533,7 +535,9 @@ struct sha1_traits_t {
                                             message_block_type& message_block,
                                             std::uint16_t& stuffed_size) {
         schedule_type schedule;
-        constexpr std::uint_fast8_t schedule_size = schedule.size();
+		// static_cast schedule.size() to silence Visual Studio 2017:
+		// warning C4267: 'initializing': conversion from 'size_t' to 'const uint_fast8_t', possible loss of data
+        constexpr std::uint_fast8_t schedule_size = static_cast<std::uint_fast8_t>(schedule.size());
 
         std::memcpy(&schedule[0], &message_block[0], sizeof(message_block_type));
 

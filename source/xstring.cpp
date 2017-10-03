@@ -29,6 +29,8 @@
 #include <iostream>
 #endif
 
+#include <mutex>
+
 /**************************************************************************************************/
 
 using namespace std;
@@ -120,8 +122,10 @@ void init_xstr_once() {
 
 
 void xstr_once() {
-    static once_flag flag;
-    call_once(flag, &init_xstr_once);
+	// Change to std::once_flag and std::call_once to silence Visual Studio 2017:
+	// error C3861: 'call_once': identifier not found
+    static std::once_flag flag;
+    std::call_once(flag, &init_xstr_once);
 }
 
 /**************************************************************************************************/

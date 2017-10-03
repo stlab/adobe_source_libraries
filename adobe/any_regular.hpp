@@ -256,9 +256,11 @@ struct any_regular_model_local : any_regular_interface_t, boost::noncopyable {
         swap(self(x).object_m, self(y).object_m);
     }
 
+#if defined(ADOBE_STD_SERIALIZATION)
     static void serialize(const interface_type& x, std::ostream& s) {
         s << format(self(x).get());
     }
+#endif
 
     const T& get() const { return object_m; }
     T& get() { return object_m; }
@@ -272,7 +274,10 @@ const vtable_t any_regular_model_local<T>::vtable_s = {
     &any_regular_model_local::type_info,  &any_regular_model_local::clone,
     &any_regular_model_local::move_clone, &any_regular_model_local::assign,
     &any_regular_model_local::equals,     &any_regular_model_local::exchange,
-    &any_regular_model_local::serialize, };
+#if defined(ADOBE_STD_SERIALIZATION)
+	&any_regular_model_local::serialize,
+#endif
+	};
 
 template <typename T> // T models Regular
 struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable {

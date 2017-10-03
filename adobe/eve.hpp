@@ -196,6 +196,13 @@ public:
 
     void set_visible(iterator, bool);
 
+    /*!
+    \brief set_layout_attributes
+    */
+
+    void set_layout_attributes(iterator, const layout_attributes_t&);
+
+
 
     /*!
     \brief This call performs the layout, it will call each element to get its dimentions, solve the

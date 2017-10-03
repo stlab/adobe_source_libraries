@@ -18,6 +18,7 @@
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/range.hpp>
 
+#include <cassert>
 #include <cstddef>
 #include <iterator>
 #include <functional>

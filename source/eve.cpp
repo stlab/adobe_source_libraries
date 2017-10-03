@@ -250,6 +250,7 @@ public:
     iterator add_placeable(iterator parent, const layout_attributes_t& initial,
                            bool is_container_type, poly_placeable_t& placeable, bool reverse);
     void set_visible(iterator, bool);
+    void set_layout_attributes(iterator, const layout_attributes_t&);
 
 private:
     void solve(slice_select_t select);
@@ -295,6 +296,10 @@ eve_t::iterator eve_t::add_placeable(iterator parent, const layout_attributes_t&
 
 void eve_t::set_visible(iterator c, bool visible) { return object_m->set_visible(c, visible); }
 
+void eve_t::set_layout_attributes(iterator c, const layout_attributes_t& geometry) {
+	return object_m->set_layout_attributes(c, geometry);
+}
+
 /*************************************************************************************************/
 
 #if 0
@@ -336,6 +341,10 @@ eve_t::iterator eve_t::implementation_t::add_placeable(iterator parent,
 /*************************************************************************************************/
 
 void eve_t::implementation_t::set_visible(iterator c, bool visible) { c->visible_m = visible; }
+
+void eve_t::implementation_t::set_layout_attributes(iterator c, const layout_attributes_t& geometry) {
+	c->geometry_m = geometry;
+}
 
 /*************************************************************************************************/
 
