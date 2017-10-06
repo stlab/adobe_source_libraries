@@ -22,6 +22,7 @@
 #include <boost/type_traits/is_pod.hpp>
 
 // asl
+#include <adobe/cmath.hpp>
 #include <adobe/conversion.hpp>
 #include <adobe/cstring.hpp>
 #include <adobe/fnv.hpp>
@@ -63,67 +64,16 @@ constexpr std::size_t name_fnv_basis_k = sizesz_k == 8
                                              ? static_cast<std::size_t>(0xcbf29ce484222325ULL)
                                              : static_cast<std::size_t>(0x811c9dc5);
 
-// The following few items are helpers to multiply_size_t, which will multiply two size_t
-// values in a way that is guaranteed not to overflow. Otherwise, in Visual Studio 2017 we get
-// Warning C4307: '*': integral constant overflow
-
-constexpr std::size_t number_of_one_bits(std::size_t x)
-	{
-	return x == 0 ? 0 : 1 + number_of_one_bits(x & (x - 1));
-	}
-
-constexpr std::size_t size_t_bits_k = number_of_one_bits(~std::size_t(0));
-
-constexpr std::size_t size_t_lower(std::size_t x)
-	{
-	return x & (~(~std::size_t(0) << size_t_bits_k / 2));
-	}
-
-constexpr std::size_t size_t_upper(std::size_t x)
-	{
-	return size_t_lower(x >> size_t_bits_k / 2);
-	}
-
-// This multiplies two size_t and throws away the overflow in a way
-// that avoids overflow complaints from Visual Studio 2017:
-// Warning C4307: '*': integral constant overflow
-//
-constexpr std::size_t multiply_size_t(std::size_t x, std::size_t y)
-	{
-	// P = 2**(size_t_bits_k/2) = 1 << size_t_bits_k/2
-	// Choose x0, x1, y0, y1 such that
-	// x = x1*P + x0
-	// y = y1*P + y0
-	// This makes it safe to multiply any x{0,1} * y{0,1} without overflow, and
-	// x*y = (x1*y1)*P*P + (x1*y0 + x0*y1)*P + (x0*y0). Ignoring overflow, we have
-	//     = size_t_lower(x1*y0 + x0*y1)*P + (x0*y0)
-	//     = (high_digit << size_t_bits_k/2) | low_digit, where
-	// low_digit = size_t_lower(x0*y0) with a carry_over of size_t_upper(x0*y0), and
-	// high_digit = size_t_lower(carry_over + size_t_lower(x1*y0) + size_t_lower(x0*y1))
-	//     
-	std::size_t x1 = size_t_upper(x);
-	std::size_t x0 = size_t_lower(x);
-	std::size_t y1 = size_t_upper(y);
-	std::size_t y0 = size_t_lower(y);
-	std::size_t c = x0 * y0;
-	std::size_t low_digit = size_t_lower(c);
-	std::size_t carry_over = size_t_upper(c);
-	std::size_t b1 = size_t_lower(x1 * y0);
-	std::size_t b2 = size_t_lower(x0 * y1);
-	std::size_t high_digit = size_t_lower(carry_over + b1 + b2);
-	return (high_digit << size_t_bits_k / 2) | low_digit;
-	}
-
 constexpr std::size_t name_hash(const char* str, std::size_t len, std::size_t n,
                                 std::size_t state) {
     static_assert(sizeok_k, "Unknown sizeof std::size_t (must be 4 or 8).");
 
-	// Using xor instead of ^ make Visual Studio 2017 bark:
-	// error C2146: syntax error: missing ')' before identifier 'xor'
-	//
-    return n < len ? name_hash(str, len, n + 1,
-                               multiply_size_t(state ^ static_cast<std::size_t>(str[n]), name_fnv_prime_k))
-                   : state;
+	if (n >= len)
+		return state;
+
+	state ^= static_cast<std::size_t>(str[n]);
+	state = multiply_unsigned(state, name_fnv_prime_k);
+    return name_hash(str, len, n + 1, state);
 }
 
 constexpr std::size_t name_hash(const char* str, std::size_t len) {
