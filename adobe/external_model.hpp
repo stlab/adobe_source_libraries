@@ -13,7 +13,7 @@
 #include <deque>
 #include <map>
 
-#include <boost/signals2.hpp>
+#include <boost/signals2/signal.hpp>
 #include <boost/function.hpp>
 
 #include <adobe/any_regular_fwd.hpp>

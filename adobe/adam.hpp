@@ -20,7 +20,7 @@
 #pragma warn_unusedvar off
 #endif
 
-#include <boost/signals2.hpp>
+#include <boost/signals2/signal.hpp>
 
 #ifdef __MWERKS__
 #pragma warn_unusedarg reset
