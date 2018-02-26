@@ -19,7 +19,7 @@ to do something here.
 */
 
 
-#define ADOBE_THREAD_SAFE
+#define ADOBE_STD_THREAD_LOCAL
 
 /**************************************************************************************************/
 
