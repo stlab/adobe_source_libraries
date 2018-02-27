@@ -70,9 +70,9 @@ namespace implementation {
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 
-template <typename T>
+template <class T>
 constexpr bool has_enabled_bitmask = decltype(stlab_enable_bitmask_enum(std::declval<T>()))::value;
-template <typename T>
+template <class T>
 constexpr bool has_enabled_arithmetic =
     decltype(stlab_enable_arithmetic_enum(std::declval<T>()))::value;
 
@@ -111,7 +111,7 @@ using is_convertible_to_underlying =
 // this exist to mantain backwards compatability with the old ops
 #define ADOBE_DEFINE_BITSET_OPS(EnumType) auto stlab_enable_bitmask_enum(EnumType)->std::true_type;
 
-template <typename T>
+template <class T>
 constexpr auto operator&(const T lhs,const T rhs) ->
     std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T>
 {
@@ -119,7 +119,7 @@ constexpr auto operator&(const T lhs,const T rhs) ->
     return static_cast<T>(static_cast<underlying>(lhs) & static_cast<underlying>(rhs));
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator~(const T a) ->
     std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T>
 {
@@ -128,7 +128,7 @@ constexpr auto operator~(const T a) ->
         ~static_cast<underlying>(a));
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator|(const T lhs, const T rhs) ->
     std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T>
 {
@@ -136,7 +136,7 @@ constexpr auto operator|(const T lhs, const T rhs) ->
     return static_cast<T>(static_cast<underlying>(lhs) | static_cast<underlying>(rhs));
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator^(const T lhs, const T rhs) ->
     std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T>
 {
@@ -144,21 +144,21 @@ constexpr auto operator^(const T lhs, const T rhs) ->
     return static_cast<T>(static_cast<underlying>(lhs) ^ static_cast<underlying>(rhs));
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator^=(T& lhs, const T rhs) ->
     std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T&>
 {
 	return lhs = lhs ^ rhs;
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator&=(T& lhs, const T rhs) ->
     std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T&>
 {
 	return lhs = lhs & rhs;
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator|=(T& lhs, const T rhs) ->
     std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T&>
 {
@@ -169,6 +169,7 @@ constexpr auto operator|=(T& lhs, const T rhs) ->
 #define ADOBE_DEFINE_ARITHMETIC_OPS(EnumType) \
     auto stlab_enable_arithmetic_enum(EnumType)->std::true_type;
 
+template <class T>
 constexpr auto operator+(const T a) ->
     std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
 {
@@ -177,7 +178,7 @@ constexpr auto operator+(const T a) ->
         +static_cast<underlying>(a));
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator-(const T a) ->
     std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
 {
@@ -186,7 +187,7 @@ constexpr auto operator-(const T a) ->
         -static_cast<underlying>(a));
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator+(const T lhs,const T rhs) ->
     std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
 {
@@ -194,7 +195,7 @@ constexpr auto operator+(const T lhs,const T rhs) ->
     return static_cast<T>(static_cast<underlying>(lhs) + static_cast<underlying>(rhs));
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator-(const T lhs,const T rhs) ->
     std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
 {
@@ -202,7 +203,7 @@ constexpr auto operator-(const T lhs,const T rhs) ->
     return static_cast<T>(static_cast<underlying>(lhs) - static_cast<underlying>(rhs));
 }
 
-template <typename T, typename U>
+template <class T, class U>
 constexpr auto operator*(const T lhs, const U rhs) -> std::enable_if_t<
     adobe::implementation::has_enabled_arithmetic<T> &&
         adobe::implementation::is_convertible_to_underlying<U, T>::value,
@@ -211,7 +212,7 @@ constexpr auto operator*(const T lhs, const U rhs) -> std::enable_if_t<
     return static_cast<T>(static_cast<underlying>(lhs) * rhs);
 }
 
-template <typename U, typename T>
+template <class U, class T>
 constexpr auto operator*(const U lhs, const T rhs) -> std::enable_if_t<
     adobe::implementation::has_enabled_arithmetic<T> &&
         adobe::implementation::is_convertible_to_underlying<U, T>::value,
@@ -220,7 +221,7 @@ constexpr auto operator*(const U lhs, const T rhs) -> std::enable_if_t<
     return static_cast<T>(lhs * static_cast<underlying>(rhs));
 }
 
-template <typename T, typename U>
+template <class T, class U>
 constexpr auto operator/(const T lhs, const U rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T> &&
                             adobe::implementation::is_convertible_to_underlying<U, T>::value,
@@ -229,7 +230,7 @@ constexpr auto operator/(const T lhs, const U rhs)
     return static_cast<T>(static_cast<underlying>(lhs) / rhs);
 }
 
-template <typename T, typename U>
+template <class T, class U>
 constexpr auto operator%(const T lhs, const U rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T> &&
                             adobe::implementation::is_convertible_to_underlying<U, T>::value,
@@ -238,21 +239,21 @@ constexpr auto operator%(const T lhs, const U rhs)
     return static_cast<T>(static_cast<underlying>(lhs) % rhs);
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator+=(T& lhs, const T rhs) ->
     std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T&>
 {
 	return lhs = lhs + rhs;
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator-=(T& lhs, const T rhs) ->
     std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T&>
 {
 	return lhs = lhs - rhs;
 }
 
-template <typename T, typename U>
+template <class T, class U>
 constexpr auto operator*=(T& lhs, const U rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T> &&
                             adobe::implementation::is_convertible_to_underlying<U, T>::value,
@@ -260,7 +261,7 @@ constexpr auto operator*=(T& lhs, const U rhs)
     return lhs = lhs * rhs;
 }
 
-template <typename T, typename U>
+template <class T, class U>
 constexpr auto operator/=(T& lhs, const U rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T> &&
                             adobe::implementation::is_convertible_to_underlying<U, T>::value,
@@ -268,7 +269,7 @@ constexpr auto operator/=(T& lhs, const U rhs)
     return lhs = lhs / rhs;
 }
 
-template <typename T, typename U>
+template <class T, class U>
 constexpr auto operator%=(T& lhs, const U rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T> &&
                             adobe::implementation::is_convertible_to_underlying<U, T>::value,
@@ -276,14 +277,14 @@ constexpr auto operator%=(T& lhs, const U rhs)
     return lhs = lhs % rhs;
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator++(T& lhs) ->
     std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T&>
 {
 	return lhs += static_cast<T>(1);
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator++(T& lhs, int) ->
     std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
 {
@@ -292,14 +293,14 @@ constexpr auto operator++(T& lhs, int) ->
     return result;
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator--(T& lhs) ->
     std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T&>
 {
 	return lhs -= static_cast<T>(1);
 }
 
-template <typename T>
+template <class T>
 constexpr auto operator--(T& lhs, int) ->
     std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
 {

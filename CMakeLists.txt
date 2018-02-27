@@ -6,8 +6,8 @@ enable_testing()
 project(adobe_source_libraries CXX)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++0x")
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++14")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
 add_definitions ("-Wall")
@@ -124,8 +124,8 @@ else()
     file(GLOB ASL_BOOST_FILESYSTEM_SRC ../boost_libraries/libs/filesystem/src/*.cpp)
     file(GLOB ASL_BOOST_PROGRAM_OPTIONS_SRC ../boost_libraries/libs/program_options/src/*.cpp)
     file(GLOB ASL_BOOST_SYSTEM_SRC ../boost_libraries/libs/system/src/*.cpp)
-    
-    set(BOOST_GLOB_SOURCES 
+
+    set(BOOST_GLOB_SOURCES
           ${ASL_BOOST_FILESYSTEM_SRC}
           ${ASL_BOOST_PROGRAM_OPTIONS_SRC}
           ${ASL_BOOST_SYSTEM_SRC})
@@ -141,7 +141,7 @@ else()
                 ../boost_libraries/libs/thread/src/win32/tss_pe.cpp # no idea if this is right...
             )
         endif()
-        list(APPEND BOOST_GLOB_SOURCES  
+        list(APPEND BOOST_GLOB_SOURCES
             ${ASL_BOOST_THREAD_SRC}
             ${ASL_BOOST_THREAD_TSS})
     endif()
@@ -162,6 +162,8 @@ else()
     target_include_directories(boost_unit_test PRIVATE -DBOOST_TEST_MAIN)
     target_include_directories(boost_unit_test PUBLIC ../boost_libraries)
 endif()
+
+include_directories(../stlab)
 
 add_subdirectory(source)
 add_subdirectory(test)
