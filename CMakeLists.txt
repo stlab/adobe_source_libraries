@@ -228,7 +228,6 @@ else()
 
     add_library(boost_unit_test STATIC ${ASL_BOOST_TEST_SRC})
 
-    target_include_directories(boost_unit_test PRIVATE -DBOOST_TEST_MAIN)
     foreach (submodule ${BOOST_SUBMODULES})
         target_include_directories(boost_unit_test PUBLIC ../boost_libraries/${submodule}/include)
     endforeach(submodule)
