@@ -19,6 +19,13 @@ namespace adobe {
 
 /*************************************************************************************************/
 
+const static_name_t bag_name_g = "bag"_name;
+const static_name_t seq_name_g = "seq"_name;
+const static_name_t alt_name_g = "alt"_name;
+const static_name_t atom_name_g = "atom"_name;
+
+/*************************************************************************************************/
+
 int format_base_idx() {
     static const int idx(std::ios_base::xalloc());
     return idx;
