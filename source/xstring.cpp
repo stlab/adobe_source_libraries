@@ -472,7 +472,7 @@ struct replacement_engine_t {
             adobe::line_position_t("replacement_engine_t"),
             adobe::implementation::xstring_preorder_predicate,
             boost::bind(&replacement_engine_t::xstr_id_harvest, boost::ref(*this), _1, _2, _3, _4),
-            adobe::implementation::null_output_t()).parse_content();
+            adobe::null_output_t()).parse_content();
     }
 
     void add_marker(const std::string& marker) {
@@ -481,7 +481,7 @@ struct replacement_engine_t {
             reinterpret_cast<uchar_ptr_t>(&marker[0]) + marker.size(),
             adobe::line_position_t("add_marker"), adobe::implementation::xstring_preorder_predicate,
             boost::bind(&replacement_engine_t::marker_parse, boost::ref(*this), _1, _2, _3, _4),
-            adobe::implementation::null_output_t()).parse_content();
+            adobe::null_output_t()).parse_content();
     }
 
     std::string run() {

@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ITERATOR_HPP
 #define ADOBE_ITERATOR_HPP
@@ -32,7 +32,7 @@
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     Just counts the number of outputs; doesn't copy anything. More efficient than a
@@ -40,7 +40,7 @@ namespace adobe {
     the result.
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \addtogroup adobe_iterator
@@ -82,7 +82,24 @@ private:
     std::size_t count_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
+
+struct null_output_t {
+    using iterator_category = std::output_iterator_tag;
+
+    using value_type = void;
+    using difference_type = void;
+    using pointer = void;
+    using reference = void;
+
+    constexpr null_output_t& operator++(int) { return *this; }
+    constexpr null_output_t& operator++() { return *this; }
+    constexpr null_output_t& operator*() { return *this; }
+    template <class T>
+    constexpr null_output_t& operator=(const T&) { return *this; }
+};
+
+/**************************************************************************************************/
 
 /*
     top iterator            bottom iterator
@@ -222,7 +239,7 @@ inline segmented_iterator<typename boost::range_iterator<R>::type> make_segmente
     return iterator(boost::begin(r), boost::end(r));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     NOTE (sparent) : The asserts are comment only because we don't require that our function
@@ -390,7 +407,7 @@ inline bool operator!=(const step_iterator_adaptor<D, IT, S_FN>& p1,
     return p1.base() != p2.base();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
     \brief A stub iterator that models OutputIterator and outputs nothing.
@@ -414,12 +431,12 @@ struct null_output_iterator_t {
 
 //! @}
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

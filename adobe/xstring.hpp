@@ -51,25 +51,6 @@ inline bool xstring_preorder_predicate(const token_range_t& range) {
 
 /**************************************************************************************************/
 
-struct null_output_t {
-    typedef std::output_iterator_tag iterator_category;
-    typedef null_output_t value_type;
-    typedef std::ptrdiff_t difference_type;
-    typedef value_type* pointer;
-    typedef value_type& reference;
-
-    null_output_t& operator++(int) { return *this; }
-    null_output_t& operator++() { return *this; }
-    reference operator*() { return *this; }
-
-    template <typename T>
-    null_output_t& operator=(const T&) {
-        return *this;
-    }
-};
-
-/**************************************************************************************************/
-
 token_range_t xml_xstr_store(const token_range_t& entire_element_range, const token_range_t& name,
                              const attribute_set_t& attribute_set, const token_range_t& value);
 
@@ -315,7 +296,7 @@ private:
 
         make_xml_parser(context.slurp_m.first, context.slurp_m.second, context.parse_info_m,
                         implementation::xstring_preorder_predicate, &implementation::xml_xstr_store,
-                        implementation::null_output_t())
+                        null_output_t())
             .parse_element_sequence(); // REVISIT (fbrereto) : More or less legible than having it
         // after the above declaration?
 
@@ -333,8 +314,8 @@ private:
 #ifdef __ADOBE_COMPILER_CONCEPTS__
 namespace std {
 // It would be nice to be able to instantiate this for all T. Not sure why it doesn't work.
-concept_map OutputIterator<adobe::implementation::null_output_t, char>{};
-concept_map OutputIterator<adobe::implementation::null_output_t, unsigned char>{};
+concept_map OutputIterator<adobe::null_output_t, char>{};
+concept_map OutputIterator<adobe::null_output_t, unsigned char>{};
 }
 #endif
 
