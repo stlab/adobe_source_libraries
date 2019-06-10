@@ -19,8 +19,6 @@
 #include <boost/cstdint.hpp>
 #include <boost/bind.hpp>
 
-#include <boost/iterator/transform_iterator.hpp>
-
 #if !defined(NDEBUG) && defined(ADOBE_SERIALIZATION)
 #define ADOBE_DOING_SERIALIZATION 1
 #endif
@@ -278,49 +276,17 @@ struct store_count_same_t : std::binary_function<const context_frame_t::store_va
 
 /**************************************************************************************************/
 
-template <typename UnaryFunction, typename Range>
-struct transform_range {
-    typedef typename boost::range_iterator<Range>::type base_iterator;
-    typedef typename boost::range_const_iterator<Range>::type base_const_iterator;
-    typedef typename boost::transform_iterator<UnaryFunction, base_iterator> iterator;
-    typedef typename boost::transform_iterator<UnaryFunction, base_const_iterator> const_iterator;
-    typedef typename std::iterator_traits<base_iterator>::value_type value_type;
-    typedef typename std::iterator_traits<base_iterator>::reference reference;
-    typedef typename std::iterator_traits<base_iterator>::pointer pointer;
-    typedef typename std::iterator_traits<base_iterator>::difference_type difference_type;
-
-    transform_range(Range& range, UnaryFunction f) : range_m(range), f_m(f) {}
-
-    iterator begin() { return iterator(boost::begin(range_m), f_m); }
-
-    iterator end() { return iterator(boost::end(range_m), f_m); }
-#if 0
-    const_iterator begin() const
-        { return const_iterator(boost::begin(range_m), f_m); }
-
-    const_iterator end() const
-        { return const_iterator(boost::end(range_m), f_m); }
-#endif
-private:
-    Range& range_m;
-    UnaryFunction f_m;
-};
-
-/**************************************************************************************************/
-
-template <typename Range, typename UnaryFunction>
+template <class Range, class UnaryFunction>
 boost::tuple<std::size_t, std::size_t, typename boost::range_iterator<Range>::type>
-count_max_element_tuple(Range& x, UnaryFunction f) {
-    typedef transform_range<UnaryFunction, Range> transform_range_t;
+count_max_element_tuple(Range& r, UnaryFunction f) {
+    auto p = max_element(r, less(), f);
+    if (p == boost::end(r))
+        return boost::make_tuple(1, 0, p);
 
-    transform_range_t container(x, f);
+    auto m = f(*p);
 
-    typename transform_range_t::iterator max_item = max_element(container);
-    if (max_item == container.end())
-        return boost::make_tuple(1, 0, max_item.base());
-
-    return boost::make_tuple(std::count(max_item, container.end(), *max_item), *max_item,
-                             max_item.base());
+    return boost::make_tuple(
+        std::count_if(p, boost::end(r), [&](const auto& a) { return f(a) == m; }), m, p);
 }
 
 /**************************************************************************************************/
