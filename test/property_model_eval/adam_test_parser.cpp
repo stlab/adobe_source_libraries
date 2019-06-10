@@ -22,7 +22,6 @@
 #include <adobe/iomanip_asl_cel.hpp>
 #include <adobe/implementation/token.hpp>
 #include <adobe/algorithm/find.hpp>
-#include <boost/fusion/iterator/deref.hpp>
 
 
 /*************************************************************************************************/

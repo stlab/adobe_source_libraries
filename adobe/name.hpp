@@ -216,6 +216,9 @@ inline constexpr static_name_t operator"" _name(const char* str, std::size_t n) 
     that make it a preferred alternative to other string-based key types.
 */
 struct name_t : boost::totally_ordered<name_t, name_t> {
+    using const_iterator = const char*;
+    using iterator = const char*;
+
     explicit name_t(const char* s = "") : ptr_m(map_string(s)) {}
 
     /**
