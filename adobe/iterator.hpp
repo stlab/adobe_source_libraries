@@ -25,6 +25,8 @@
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 
+#include <adobe/iterator/null_output.hpp>
+
 #include <adobe/typeinfo.hpp>
 #include <adobe/empty.hpp>
 
@@ -80,23 +82,6 @@ public:
 
 private:
     std::size_t count_m;
-};
-
-/**************************************************************************************************/
-
-struct null_output_t {
-    using iterator_category = std::output_iterator_tag;
-
-    using value_type = void;
-    using difference_type = void;
-    using pointer = void;
-    using reference = void;
-
-    constexpr null_output_t& operator++(int) { return *this; }
-    constexpr null_output_t& operator++() { return *this; }
-    constexpr null_output_t& operator*() { return *this; }
-    template <class T>
-    constexpr null_output_t& operator=(const T&) { return *this; }
 };
 
 /**************************************************************************************************/

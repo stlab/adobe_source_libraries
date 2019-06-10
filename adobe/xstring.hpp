@@ -13,12 +13,14 @@
 #include <adobe/config.hpp>
 
 #include <adobe/functional.hpp>
-#include <adobe/implementation/string_pool.hpp>
 #include <adobe/istream.hpp>
+#include <adobe/iterator/null_output.hpp>
 #include <adobe/name.hpp>
 #include <adobe/string.hpp>
 #include <adobe/unicode.hpp>
 #include <adobe/xml_parser.hpp>
+
+#include <adobe/implementation/string_pool.hpp>
 
 #include <boost/bind.hpp>
 #include <boost/core/ref.hpp>

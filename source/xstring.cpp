@@ -11,10 +11,12 @@
 #include <adobe/algorithm/find_match.hpp>
 #include <adobe/algorithm/minmax.hpp>
 #include <adobe/dictionary.hpp>
-#include <adobe/implementation/string_pool.hpp>
 #include <adobe/istream.hpp>
+#include <adobe/iterator/null_output.hpp>
 #include <adobe/name.hpp>
 #include <adobe/once.hpp>
+
+#include <adobe/implementation/string_pool.hpp>
 
 #include <boost/cstdint.hpp>
 #include <boost/bind.hpp>
