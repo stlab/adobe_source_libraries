@@ -65,9 +65,9 @@ assert(a == 10);
     \brief minmax implementation
 */
 
-template <class T, class R>
-inline const T&(min)(const T& a, const T& b, R r) {
-    return select_0_2(a, b, std::bind(r, std::placeholders::_1, std::placeholders::_2));
+template <class T, class C>
+inline const T&(min)(const T& a, const T& b, C c) {
+    return select_0_2(a, b, std::bind(c, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -76,9 +76,33 @@ inline const T&(min)(const T& a, const T& b, R r) {
     \brief minmax implementation
 */
 
-template <class T, class R>
-inline T&(min)(T& a, T& b, R r) {
-    return select_0_2(a, b, std::bind(r, std::placeholders::_1, std::placeholders::_2));
+template <class T, class C, class P>
+inline const T&(min)(const T& a, const T& b, C c, P p) {
+    return select_0_2(a, b, std::bind(c, std::bind(p, std::placeholders::_1),
+                                     std::bind(p, std::placeholders::_2)));
+}
+
+/*!
+    \ingroup minmax
+
+    \brief minmax implementation
+*/
+
+template <class T, class C>
+inline T&(min)(T& a, T& b, C c) {
+    return select_0_2(a, b, std::bind(c, std::placeholders::_1, std::placeholders::_2));
+}
+
+/*!
+    \ingroup minmax
+
+    \brief minmax implementation
+*/
+
+template <class T, class C, class P>
+inline T&(min)(T& a, T& b, C c, P p) {
+    return select_0_2(a, b, std::bind(c, std::bind(p, std::placeholders::_1),
+                                     std::bind(p, std::placeholders::_2)));
 }
 
 /*!
@@ -109,9 +133,9 @@ inline T&(min)(T& a, T& b) {
     \brief minmax implementation
 */
 
-template <class T, class R>
-inline const T&(max)(const T& a, const T& b, R r) {
-    return select_1_2(a, b, std::bind(r, std::placeholders::_1, std::placeholders::_2));
+template <class T, class C>
+inline const T&(max)(const T& a, const T& b, C c) {
+    return select_1_2(a, b, std::bind(c, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -120,9 +144,34 @@ inline const T&(max)(const T& a, const T& b, R r) {
     \brief minmax implementation
 */
 
-template <class T, class R>
-inline T&(max)(T& a, T& b, R r) {
-    return select_1_2(a, b, std::bind(r, std::placeholders::_1, std::placeholders::_2));
+
+template <class T, class C, class P>
+inline const T&(max)(const T& a, const T& b, C c, P p) {
+    return select_1_2(a, b, std::bind(c, std::bind(p, std::placeholders::_1),
+                                     std::bind(p, std::placeholders::_2)));
+}
+
+/*!
+    \ingroup minmax
+
+    \brief minmax implementation
+*/
+
+template <class T, class C>
+inline T&(max)(T& a, T& b, C c) {
+    return select_1_2(a, b, std::bind(c, std::placeholders::_1, std::placeholders::_2));
+}
+
+/*!
+    \ingroup minmax
+
+    \brief minmax implementation
+*/
+
+template <class T, class C, class P>
+inline T&(max)(T& a, T& b, C c, P p) {
+    return select_1_2(a, b, std::bind(c, std::bind(p, std::placeholders::_1),
+                                     std::bind(p, std::placeholders::_2)));
 }
 
 /*!
@@ -174,9 +223,9 @@ min_element(const ForwardRange& range) {
 
     \brief minmax implementation
 */
-template <class ForwardIterator, class R>
-inline ForwardIterator min_element(ForwardIterator first, ForwardIterator last, R r) {
-    return std::min_element(first, last, std::bind(r, std::placeholders::_1, std::placeholders::_2));
+template <class ForwardIterator, class C>
+inline ForwardIterator min_element(ForwardIterator first, ForwardIterator last, C c) {
+    return std::min_element(first, last, std::bind(c, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -184,9 +233,10 @@ inline ForwardIterator min_element(ForwardIterator first, ForwardIterator last, 
 
     \brief minmax implementation
 */
-template <class ForwardRange, class R>
-inline typename boost::range_iterator<ForwardRange>::type min_element(ForwardRange& range, R r) {
-    return adobe::min_element(boost::begin(range), boost::end(range), r);
+template <class ForwardIterator, class C, class P>
+inline ForwardIterator min_element(ForwardIterator first, ForwardIterator last, C c, P p) {
+    return std::min_element(first, last, std::bind(c, std::bind(p, std::placeholders::_1),
+                                     std::bind(p, std::placeholders::_2)));
 }
 
 /*!
@@ -194,10 +244,41 @@ inline typename boost::range_iterator<ForwardRange>::type min_element(ForwardRan
 
     \brief minmax implementation
 */
-template <class ForwardRange, class R>
+template <class ForwardRange, class C>
+inline typename boost::range_iterator<ForwardRange>::type min_element(ForwardRange& range, C c) {
+    return adobe::min_element(boost::begin(range), boost::end(range), c);
+}
+
+/*!
+    \ingroup minmax
+
+    \brief minmax implementation
+*/
+template <class ForwardRange, class C, class P>
+inline typename boost::range_iterator<ForwardRange>::type min_element(ForwardRange& range, C c, P p) {
+    return adobe::min_element(boost::begin(range), boost::end(range), c, p);
+}
+
+/*!
+    \ingroup minmax
+
+    \brief minmax implementation
+*/
+template <class ForwardRange, class C>
 inline typename boost::range_const_iterator<ForwardRange>::type
-min_element(const ForwardRange& range, R r) {
-    return adobe::min_element(boost::begin(range), boost::end(range), r);
+min_element(const ForwardRange& range, C c) {
+    return adobe::min_element(boost::begin(range), boost::end(range), c);
+}
+
+/*!
+    \ingroup minmax
+
+    \brief minmax implementation
+*/
+template <class ForwardRange, class C, class P>
+inline typename boost::range_const_iterator<ForwardRange>::type
+min_element(const ForwardRange& range, C c, P p) {
+    return adobe::min_element(boost::begin(range), boost::end(range), c, p);
 }
 
 /*!
@@ -226,9 +307,9 @@ max_element(const ForwardRange& range) {
 
     \brief minmax implementation
 */
-template <class ForwardIterator, class R>
-inline ForwardIterator max_element(ForwardIterator first, ForwardIterator last, R r) {
-    return std::max_element(first, last, std::bind(r, std::placeholders::_1, std::placeholders::_2));
+template <class ForwardIterator, class C>
+inline ForwardIterator max_element(ForwardIterator first, ForwardIterator last, C c) {
+    return std::max_element(first, last, std::bind(c, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -236,9 +317,10 @@ inline ForwardIterator max_element(ForwardIterator first, ForwardIterator last, 
 
     \brief minmax implementation
 */
-template <class ForwardRange, class R>
-inline typename boost::range_iterator<ForwardRange>::type max_element(ForwardRange& range, R r) {
-    return adobe::max_element(boost::begin(range), boost::end(range), r);
+template <class ForwardIterator, class C, class P>
+inline ForwardIterator max_element(ForwardIterator first, ForwardIterator last, C c, P p) {
+    return std::max_element(first, last, std::bind(c, std::bind(p, std::placeholders::_1),
+                                     std::bind(p, std::placeholders::_2)));
 }
 
 /*!
@@ -246,10 +328,41 @@ inline typename boost::range_iterator<ForwardRange>::type max_element(ForwardRan
 
     \brief minmax implementation
 */
-template <class ForwardRange, class R>
+template <class ForwardRange, class C>
+inline typename boost::range_iterator<ForwardRange>::type max_element(ForwardRange& range, C c) {
+    return adobe::max_element(boost::begin(range), boost::end(range), c);
+}
+
+/*!
+    \ingroup minmax
+
+    \brief minmax implementation
+*/
+template <class ForwardRange, class C, class P>
+inline typename boost::range_iterator<ForwardRange>::type max_element(ForwardRange& range, C c, P p) {
+    return adobe::max_element(boost::begin(range), boost::end(range), c, p);
+}
+
+/*!
+    \ingroup minmax
+
+    \brief minmax implementation
+*/
+template <class ForwardRange, class C>
 inline typename boost::range_const_iterator<ForwardRange>::type
-max_element(const ForwardRange& range, R r) {
-    return adobe::max_element(boost::begin(range), boost::end(range), r);
+max_element(const ForwardRange& range, C c) {
+    return adobe::max_element(boost::begin(range), boost::end(range), c);
+}
+
+/*!
+    \ingroup minmax
+
+    \brief minmax implementation
+*/
+template <class ForwardRange, class C, class P>
+inline typename boost::range_const_iterator<ForwardRange>::type
+max_element(const ForwardRange& range, C c, P p) {
+    return adobe::max_element(boost::begin(range), boost::end(range), c, p);
 }
 
 /*************************************************************************************************/
