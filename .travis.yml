@@ -17,3 +17,4 @@ env:
     - BUILDTOOL=bjam BUILDMODE=debug
     - BUILDTOOL=bjam BUILDMODE=release
 script: ./build.sh
+x
