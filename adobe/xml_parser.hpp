@@ -12,17 +12,19 @@
 
 #include <adobe/config.hpp>
 
-#include <adobe/any_regular.hpp>
 #include <adobe/algorithm/set.hpp>
-#include <adobe/istream.hpp>
+#include <adobe/any_regular.hpp>
 #include <adobe/array.hpp>
 #include <adobe/copy_on_write.hpp>
-#include <adobe/name.hpp>
 #include <adobe/dictionary.hpp>
+#include <adobe/istream.hpp>
+#include <adobe/iterator/null_output.hpp>
+#include <adobe/name.hpp>
 #include <adobe/string.hpp>
+
+#include <adobe/implementation/parser_shared.hpp>
 #include <adobe/implementation/xml_lex.hpp>
 #include <adobe/implementation/xml_token.hpp>
-#include <adobe/implementation/parser_shared.hpp>
 
 #include <boost/function.hpp>
 #include <boost/noncopyable.hpp>

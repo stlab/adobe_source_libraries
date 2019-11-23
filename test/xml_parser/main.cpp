@@ -8,8 +8,8 @@
 
 #include <adobe/config.hpp>
 
+#include <adobe/iterator/null_output.hpp>
 #include <adobe/xml_parser.hpp>
-#include <adobe/xstring.hpp>
 
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
@@ -147,7 +147,7 @@ long calculate_expression(const adobe::token_range_t& content) {
     adobe::make_xml_parser(content.first, content.second, adobe::line_position_t("expression"),
                            adobe::always_true<adobe::token_range_t>(),
                            boost::bind(expression_content, _1, _2, _3, _4, boost::ref(value_stack)),
-                           adobe::implementation::null_output_t()).parse_content();
+                           adobe::null_output_t()).parse_content();
 
     return value_stack.back();
 }
@@ -166,7 +166,7 @@ adobe::token_range_t document_content(const adobe::token_range_t& /*entire_eleme
         adobe::make_xml_parser(value.first, value.second, adobe::line_position_t("math-test"),
                                adobe::always_true<adobe::token_range_t>(),
                                boost::bind(test_content, _1, _2, _3, _4, boost::ref(test)),
-                               adobe::implementation::null_output_t()).parse_content();
+                               adobe::null_output_t()).parse_content();
 
         if (test.observed_m == test.expected_m)
             passed = true;
@@ -248,7 +248,7 @@ bool run_test(const adobe::token_range_t& document, const adobe::line_position_t
     adobe::make_xml_parser(document.first, document.second, line_position,
                            adobe::always_true<adobe::token_range_t>(),
                            boost::bind(document_content, _1, _2, _3, _4, boost::ref(passed)),
-                           adobe::implementation::null_output_t()).parse_document();
+                           adobe::null_output_t()).parse_document();
 
     return passed;
 }

@@ -3,26 +3,29 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_XSTRING_HPP
 #define ADOBE_XSTRING_HPP
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
 #include <adobe/functional.hpp>
-#include <adobe/implementation/string_pool.hpp>
 #include <adobe/istream.hpp>
+#include <adobe/iterator/null_output.hpp>
 #include <adobe/name.hpp>
 #include <adobe/string.hpp>
 #include <adobe/unicode.hpp>
 #include <adobe/xml_parser.hpp>
 
-#include <boost/function.hpp>
-#include <boost/noncopyable.hpp>
+#include <adobe/implementation/string_pool.hpp>
+
 #include <boost/bind.hpp>
+#include <boost/core/ref.hpp>
+#include <boost/noncopyable.hpp>
+#include <boost/range/size.hpp>
 
 #include <sstream>
 #include <vector>
@@ -30,15 +33,15 @@
 #include <cassert>
 #include <cctype>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace implementation {
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 inline bool xstring_preorder_predicate(const token_range_t& range) {
     // we want to check for both xstr and marker tags because both are
@@ -48,26 +51,7 @@ inline bool xstring_preorder_predicate(const token_range_t& range) {
            token_range_equal(range, static_token_range("marker"));
 }
 
-/****************************************************************************************************/
-
-struct null_output_t {
-    typedef std::output_iterator_tag iterator_category;
-    typedef null_output_t value_type;
-    typedef std::ptrdiff_t difference_type;
-    typedef value_type* pointer;
-    typedef value_type& reference;
-
-    null_output_t& operator++(int) { return *this; }
-    null_output_t& operator++() { return *this; }
-    reference operator*() { return *this; }
-
-    template <typename T>
-    null_output_t& operator=(const T&) {
-        return *this;
-    }
-};
-
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 token_range_t xml_xstr_store(const token_range_t& entire_element_range, const token_range_t& name,
                              const attribute_set_t& attribute_set, const token_range_t& value);
@@ -79,7 +63,7 @@ token_range_t xml_element_finalize(const token_range_t& entire_element_range,
                                    const token_range_t& name, const attribute_set_t& attribute_set,
                                    const token_range_t& value);
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 struct context_frame_t {
     struct comp_t {
@@ -161,27 +145,27 @@ struct context_frame_t {
     unique_string_pool_t pool_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 inline bool operator==(const context_frame_t::element_t& x, const context_frame_t::element_t& y) {
     return x.first == y.first && token_range_equal(x.second, y.second);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 implementation::context_frame_t& top_frame();
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace implementation
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 #ifndef NDEBUG
 
 void xstring_clear_glossary();
 
 #endif
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 // XML fragment parsing
 
@@ -209,7 +193,7 @@ inline void parse_xml_fragment(const char* fragment, O output) {
                               output);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 // xstring lookup with OutputIterator; all of these functions return a valid XML fragment
 
@@ -223,7 +207,7 @@ inline void xstring(const char* xstr, O output) {
     xstring(xstr, std::strlen(xstr), output);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 // xstring lookup; all of these functions return a valid XML fragment
 
@@ -237,7 +221,7 @@ inline std::string xstring(const char* xstr, std::size_t n) {
 
 inline std::string xstring(const std::string& xstr) { return xstring(xstr.c_str(), xstr.size()); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 // Context-sensitive marker replacement
 
@@ -251,7 +235,7 @@ std::string xstring_replace(const name_t& xstr_id, const std::string& marker);
 std::string xstring_replace(const name_t& xstr_id, const std::string* first,
                             const std::string* last);
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 struct xstring_context_t : boost::noncopyable {
     typedef implementation::context_frame_t::callback_proc_t callback_proc_t;
@@ -314,7 +298,7 @@ private:
 
         make_xml_parser(context.slurp_m.first, context.slurp_m.second, context.parse_info_m,
                         implementation::xstring_preorder_predicate, &implementation::xml_xstr_store,
-                        implementation::null_output_t())
+                        null_output_t())
             .parse_element_sequence(); // REVISIT (fbrereto) : More or less legible than having it
         // after the above declaration?
 
@@ -324,21 +308,21 @@ private:
     implementation::context_frame_t back_frame_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 #ifdef __ADOBE_COMPILER_CONCEPTS__
 namespace std {
 // It would be nice to be able to instantiate this for all T. Not sure why it doesn't work.
-concept_map OutputIterator<adobe::implementation::null_output_t, char>{};
-concept_map OutputIterator<adobe::implementation::null_output_t, unsigned char>{};
+concept_map OutputIterator<adobe::null_output_t, char>{};
+concept_map OutputIterator<adobe::null_output_t, unsigned char>{};
 }
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
