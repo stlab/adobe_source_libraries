@@ -18,6 +18,7 @@
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/range.hpp>
 
+#include <cassert>
 #include <cstddef>
 #include <iterator>
 #include <functional>
@@ -269,7 +270,7 @@ public:
     explicit reverse_fullorder_iterator(I x) : base_m(--x), edge_m(forest_leading_edge - base_m.edge()) {}
     template <typename U>
     reverse_fullorder_iterator(const reverse_fullorder_iterator<U>& x)
-        : base_m(x.base()), edge_m(x.edge_m) {}
+        : base_m(--x.base()), edge_m(forest_leading_edge - base_m.edge()) {}
 
     iterator_type base() const { return std::next(base_m); }
 
