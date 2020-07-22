@@ -21,6 +21,8 @@
 #include <boost/cstdint.hpp>
 #include <boost/bind.hpp>
 
+#include <mutex>
+
 #if !defined(NDEBUG) && defined(ADOBE_SERIALIZATION)
 #define ADOBE_DOING_SERIALIZATION 1
 #endif
