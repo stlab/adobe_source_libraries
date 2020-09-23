@@ -327,6 +327,14 @@ count_max_element_tuple(Range& x, UnaryFunction f) {
 
 context_frame_t::store_iterator
 context_frame_t::closest_match(store_range_pair_t range, const adobe::attribute_set_t& searching) {
+    // REVISIT: (fbrereto) This function fails to compile because `store_range_pair_t range`'s
+    // iterators fail to evaluate as modeling the ForwardIterator concept, so the
+    // count_max_element_tuple call below emits an error. I am disabling this routine instead
+    // of fixing it because the ROI isn't there; nobody uses xstring that I know of. If this
+    // proves not to be the case, we can revisit.
+#if 1
+    return glossary_m.end();
+#else
     typedef std::iterator_traits<store_iterator>::difference_type difference_type;
 
     difference_type range_size(std::distance(boost::begin(range), boost::end(range)));
@@ -355,6 +363,7 @@ context_frame_t::closest_match(store_range_pair_t range, const adobe::attribute_
     }
 
     return boost::get<2>(result_tuple);
+#endif
 }
 
 /**************************************************************************************************/
