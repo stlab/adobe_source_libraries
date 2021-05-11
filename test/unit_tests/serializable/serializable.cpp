@@ -50,7 +50,7 @@ void serializable_test() {
 
 using namespace boost::unit_test;
 
-test_suite* init_unit_test_suite(int, char * []) {
+test_suite* init_unit_test_suite(int, char*[]) {
     framework::master_test_suite().add(BOOST_TEST_CASE(&serializable_test));
 
     return 0;

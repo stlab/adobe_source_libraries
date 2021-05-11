@@ -18,8 +18,8 @@
 #include <double-conversion/src/double-conversion.h>
 #endif
 
-#include <adobe/algorithm/sorted.hpp>
 #include <adobe/algorithm/lower_bound.hpp>
+#include <adobe/algorithm/sorted.hpp>
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
 #include <adobe/iomanip.hpp>

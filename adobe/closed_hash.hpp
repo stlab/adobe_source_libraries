@@ -3,12 +3,12 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_CLOSED_HASH_HPP
 #define ADOBE_CLOSED_HASH_HPP
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
@@ -23,11 +23,11 @@
 #include <boost/functional/hash.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/iterator/iterator_facade.hpp>
+#include <boost/next_prior.hpp>
+#include <boost/operators.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/has_nothrow_constructor.hpp>
 #include <boost/type_traits/remove_reference.hpp>
-#include <boost/operators.hpp>
-#include <boost/next_prior.hpp>
 
 #include <adobe/algorithm/lower_bound.hpp>
 #include <adobe/conversion.hpp>
@@ -36,25 +36,26 @@
 #include <adobe/functional.hpp>
 #include <adobe/iterator/set_next.hpp>
 #include <adobe/memory.hpp>
+#include <adobe/type_traits.hpp>
 #include <adobe/utility.hpp>
 
 #include <adobe/implementation/swap.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace implementation {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T, typename V> // V is value_type(T) const qualified
 class closed_hash_iterator : public boost::iterator_facade<closed_hash_iterator<T, V>, V,
                                                            std::bidirectional_iterator_tag> {
     typedef boost::iterator_facade<closed_hash_iterator<T, V>, V, std::bidirectional_iterator_tag>
-    inherited_t;
+        inherited_t;
 
     typedef typename T::node_t node_t;
 
@@ -66,8 +67,7 @@ public:
     closed_hash_iterator() : node_m(0) {}
 
     template <typename O>
-    closed_hash_iterator(const closed_hash_iterator<T, O>& x)
-        : node_m(x.node_m) {}
+    closed_hash_iterator(const closed_hash_iterator<T, O>& x) : node_m(x.node_m) {}
 
 public:
     /*
@@ -99,11 +99,11 @@ private:
     friend struct unsafe::set_next_fn<closed_hash_iterator>;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace implementation
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace unsafe {
 
@@ -116,7 +116,7 @@ struct set_next_fn<implementation::closed_hash_iterator<T, V>> {
 
 } // namespace unsafe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_NO_DOCUMENTATION
 
@@ -124,7 +124,7 @@ namespace version_1 {
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \defgroup abi_container ABI-Safe Containers: hash containers, vector, ...
@@ -158,7 +158,7 @@ class closed_hash_set
 public:
     typedef KeyTransform key_transform;
 
-    typedef typename boost::remove_reference<typename key_transform::result_type>::type key_type;
+    using key_type = std::remove_reference_t<adobe::invoke_result_t<KeyTransform, T>>;
 
     typedef T value_type;
     typedef Hash hasher;
@@ -181,11 +181,7 @@ public:
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 private:
-    enum {
-        state_free = 0,
-        state_home = 1,
-        state_misplaced = 2
-    };
+    enum { state_free = 0, state_home = 1, state_misplaced = 2 };
 
     template <typename U> // U is derived node
     struct list_node_base {
@@ -246,10 +242,10 @@ private:
         either equal to the sizeof a pointer or a lower power of two so this packs tightly.
         */
 
-        BOOST_STATIC_ASSERT(
-            !(sizeof(A) == sizeof(void*) || sizeof(A) == 0) ||
-            (sizeof(compact_header_t) ==
-             (sizeof(allocator_type) + 2 * sizeof(node_base_t) + 2 * sizeof(std::size_t))));
+        BOOST_STATIC_ASSERT(!(sizeof(A) == sizeof(void*) || sizeof(A) == 0) ||
+                            (sizeof(compact_header_t) ==
+                             (sizeof(allocator_type) + 2 * sizeof(node_base_t) +
+                              2 * sizeof(std::size_t))));
 
         aligned_storage<compact_header_t> header_m;
         node_t storage_m[1];
@@ -270,7 +266,7 @@ private:
 
     typedef boost::compressed_pair<
         hasher, boost::compressed_pair<key_equal, boost::compressed_pair<key_transform, header_t*>>>
-    data_t;
+        data_t;
 
     data_t data_m;
 
@@ -332,11 +328,6 @@ public:
     }
 
     closed_hash_set(closed_hash_set&& x) noexcept : data_m(x.data_m) { x.header() = 0; }
-
-#if 0
-    template <typename I> // I models ForwardIterator
-    closed_hash_set(I f, I l, move_ctor) { header() = 0; move_insert(f, l); }
-#endif
 
     // size and capacity
 
@@ -552,9 +543,9 @@ private:
             alloc.allocate(sizeof(header_t) - sizeof(node_t) + sizeof(node_t) * n));
         header()->capacity() = n;
         header()->size() = 0;
-        construct(&header()->free_tail());
-        construct(&header()->used_tail());
-        construct(&header()->allocator(), a);
+        construct_at(&header()->free_tail());
+        construct_at(&header()->used_tail());
+        construct_at(&header()->allocator(), a);
 
         node_t* prior = header()->free_tail().address();
         for (node_ptr first(&header()->storage_m[0]), last(&header()->storage_m[0] + n);
@@ -591,7 +582,7 @@ private:
 
     // location points to a free node
     static void insert_raw(iterator location, value_type x, std::size_t state) {
-        construct<value_type>(&*location, std::move(x));
+        construct_at<value_type>(&*location, std::move(x));
         location.set_state(state);
         unsafe::skip_node(location);
     }
@@ -607,7 +598,7 @@ private:
     iterator end_free() { return iterator(header() ? header()->free_tail().address() : 0); }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 
@@ -631,7 +622,7 @@ template <typename Key, typename T, typename Hash, typename Pred, typename A>
 class closed_hash_map
     : public closed_hash_set<std::pair<Key, T>, get_element<0, std::pair<Key, T>>, Hash, Pred, A> {
     typedef closed_hash_set<std::pair<Key, T>, get_element<0, std::pair<Key, T>>, Hash, Pred, A>
-    set_type;
+        set_type;
 
 public:
     typedef T mapped_type;
@@ -639,13 +630,7 @@ public:
     closed_hash_map() {}
 
     template <typename I> // I models InputIterator
-    closed_hash_map(I f, I l)
-        : set_type(f, l) {}
-
-#if 0
-    template <typename I> // I models ForwardIterator
-    closed_hash_map(I f, I l, move_ctor) : set_type(f, l, move_ctor()) { }
-#endif
+    closed_hash_map(I f, I l) : set_type(f, l) {}
 
     closed_hash_map(const closed_hash_map& x) : set_type(x) {}
     closed_hash_map(closed_hash_map&& x) noexcept : set_type(std::move(x)) {}
@@ -688,7 +673,7 @@ public:
 #endif
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 BOOST_STATIC_ASSERT(sizeof(closed_hash_set<int>) == sizeof(void*));
 
@@ -699,26 +684,26 @@ BOOST_STATIC_ASSERT(sizeof(closed_hash_set<int>) == sizeof(void*));
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace boost {
 
 template <typename T, typename KeyTransform, typename Hash, typename Pred, typename A>
-struct has_nothrow_constructor<
-    adobe::version_1::closed_hash_set<T, KeyTransform, Hash, Pred, A>> : boost::mpl::true_ {};
+struct has_nothrow_constructor<adobe::version_1::closed_hash_set<T, KeyTransform, Hash, Pred, A>>
+    : boost::mpl::true_ {};
 
 template <typename Key, typename T, typename Hash, typename Pred, typename A>
-struct has_nothrow_constructor<
-    adobe::version_1::closed_hash_map<Key, T, Hash, Pred, A>> : boost::mpl::true_ {};
+struct has_nothrow_constructor<adobe::version_1::closed_hash_map<Key, T, Hash, Pred, A>>
+    : boost::mpl::true_ {};
 
 } // namespace boost
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

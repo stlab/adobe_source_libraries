@@ -7,8 +7,8 @@
 /**************************************************************************************************/
 
 // stdc++
-#include <vector>
 #include <iostream>
+#include <vector>
 
 #define BOOST_TEST_MAIN
 
@@ -18,8 +18,8 @@
 
 // asl
 #include <adobe/algorithm/for_each.hpp>
-#include <adobe/algorithm/sort.hpp>
 #include <adobe/algorithm/lower_bound.hpp>
+#include <adobe/algorithm/sort.hpp>
 #include <adobe/json.hpp>
 
 /**************************************************************************************************/
@@ -31,12 +31,12 @@ using namespace adobe;
 /**************************************************************************************************/
 
 struct any_json_helper_t {
-    typedef any                                 value_type;
-    typedef string                              key_type;
-    typedef string                              string_type;
+    typedef any value_type;
+    typedef string key_type;
+    typedef string string_type;
     typedef unordered_map<key_type, value_type> object_type;
-    typedef vector<value_type>                  array_type;
-    typedef object_type::value_type             pair_type;
+    typedef vector<value_type> array_type;
+    typedef object_type::value_type pair_type;
 
     static json_type type(const value_type& x) {
         // REVISIT (make this thread safe) - nuke json_type and add functions to table directly.
@@ -46,14 +46,12 @@ struct any_json_helper_t {
             const std::type_info* type_info_;
             json_type type_;
         } table[] = {
-            { &typeid(object_type),  json_type::object },
-            { &typeid(array_type),   json_type::array },
-            { &typeid(string_type),  json_type::string },
-            { &typeid(double),       json_type::number },
-            { &typeid(bool),         json_type::boolean },
-            { &typeid(void),         json_type::null }
+            {&typeid(object_type), json_type::object}, {&typeid(array_type), json_type::array},
+            {&typeid(string_type), json_type::string}, {&typeid(double), json_type::number},
+            {&typeid(bool), json_type::boolean},       {&typeid(void), json_type::null}};
+        static const auto projection = [](const type_table_t& x) -> const std::type_info& {
+            return *x.type_info_;
         };
-        static const auto projection = [](const type_table_t& x)->const std::type_info& { return *x.type_info_; };
 
         if (!inited) {
             adobe::sort(table, adobe::less(), projection);
@@ -67,14 +65,14 @@ struct any_json_helper_t {
     }
 
     template <typename T>
-    static const T& as(const value_type& x) { return any_cast<const T&>(x); }
+    static const T& as(const value_type& x) {
+        return any_cast<const T&>(x);
+    }
 
     static void move_append(object_type& obj, key_type& key, value_type& value) {
         obj.emplace(std::move(key), std::move(value));
     }
-    static void append(string_type& str, const char* f, const char* l) {
-        str.append(f, l);
-    }
+    static void append(string_type& str, const char* f, const char* l) { str.append(f, l); }
     static void move_append(array_type& array, value_type& value) {
         array.push_back(std::move(value));
     }
@@ -113,9 +111,11 @@ BOOST_AUTO_TEST_CASE(any_json_helper_smoke) {
                 "Country": "US"
             }
         ]
-    )raw").parse();
+    )raw")
+                .parse();
 
-    json_generator<any_json_helper_t, ostream_iterator<char>>(ostream_iterator<char>(cout)).generate(x);
+    json_generator<any_json_helper_t, ostream_iterator<char>>(ostream_iterator<char>(cout))
+        .generate(x);
 
     cout << endl;
 }

@@ -5,8 +5,8 @@
 */
 /**************************************************************************************************/
 
-#include <stdexcept>
 #include <adobe/algorithm/clamp.hpp>
+#include <stdexcept>
 
 #define BOOST_TEST_MAIN
 

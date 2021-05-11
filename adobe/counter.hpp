@@ -79,7 +79,7 @@ class counter_t
 #if !defined(ADOBE_NO_DOCUMENTATION)
     : boost::noncopyable
 #endif
-      {
+{
 public:
     counter_t() { count_m = implementation::atomic_t::value_type(1); }
 

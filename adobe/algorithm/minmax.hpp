@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ALGORITHM_MINMAX_HPP
 #define ADOBE_ALGORITHM_MINMAX_HPP
@@ -20,11 +20,11 @@
 
 #include <adobe/functional/operator.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
 \defgroup minmax min / max
 \ingroup sorting
@@ -57,7 +57,7 @@ assert(a == 10);
     - STL documentation for \ref stldoc_min_element
     - STL documentation for \ref stldoc_max_element
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
     \ingroup minmax
@@ -176,7 +176,8 @@ min_element(const ForwardRange& range) {
 */
 template <class ForwardIterator, class R>
 inline ForwardIterator min_element(ForwardIterator first, ForwardIterator last, R r) {
-    return std::min_element(first, last, std::bind(r, std::placeholders::_1, std::placeholders::_2));
+    return std::min_element(first, last,
+                            std::bind(r, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -228,7 +229,8 @@ max_element(const ForwardRange& range) {
 */
 template <class ForwardIterator, class R>
 inline ForwardIterator max_element(ForwardIterator first, ForwardIterator last, R r) {
-    return std::max_element(first, last, std::bind(r, std::placeholders::_1, std::placeholders::_2));
+    return std::max_element(first, last,
+                            std::bind(r, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -252,12 +254,12 @@ max_element(const ForwardRange& range, R r) {
     return adobe::max_element(boost::begin(range), boost::end(range), r);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

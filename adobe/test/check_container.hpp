@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
@@ -11,8 +11,8 @@
 
 #include <boost/concept_check.hpp>
 
-#include <adobe/test/check_regular.hpp>
 #include <adobe/implementation/swap.hpp>
+#include <adobe/test/check_regular.hpp>
 #include <iostream>
 
 namespace adobe {
@@ -40,4 +40,4 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION(check_containers, T)
 #endif
 
 //!@}
-}
+} // namespace adobe

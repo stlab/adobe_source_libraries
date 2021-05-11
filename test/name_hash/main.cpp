@@ -4,27 +4,27 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-#include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/filesystem/path.hpp>
 
 #include <adobe/name.hpp>
+#include <adobe/sha.hpp>
 #include <adobe/timer.hpp>
 #include <adobe/zuid.hpp>
-#include <adobe/sha.hpp>
 
 #include <iostream>
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 namespace {
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 typedef std::size_t (*hash_proc_t)(adobe::name_t name);
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 std::size_t hash_value(adobe::name_t name) {
     std::size_t seed(0);
@@ -35,19 +35,19 @@ std::size_t hash_value(adobe::name_t name) {
     return seed;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 std::size_t fnv1a64(adobe::name_t name) {
     return adobe::fnv1a<64>(name.c_str(), adobe::logical_not());
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 std::size_t fnv1a32(adobe::name_t name) {
     return adobe::fnv1a<32>(name.c_str(), adobe::logical_not());
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 std::vector<adobe::name_t> lexed_number_corpus_init() {
     std::vector<adobe::name_t> result;
@@ -58,7 +58,7 @@ std::vector<adobe::name_t> lexed_number_corpus_init() {
     return result;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 const std::vector<adobe::name_t>& lexed_number_corpus() {
     static std::vector<adobe::name_t> result_s(lexed_number_corpus_init());
@@ -66,7 +66,7 @@ const std::vector<adobe::name_t>& lexed_number_corpus() {
     return result_s;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 std::vector<adobe::name_t> zuid_corpus_init() {
     adobe::zuid_t zuid("0a90862c-fb82-1fff-8749-bd8434b0eeb7");
@@ -81,7 +81,7 @@ std::vector<adobe::name_t> zuid_corpus_init() {
     return result;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 const std::vector<adobe::name_t>& zuid_corpus() {
     static std::vector<adobe::name_t> result_s(zuid_corpus_init());
@@ -89,7 +89,7 @@ const std::vector<adobe::name_t>& zuid_corpus() {
     return result_s;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 std::vector<adobe::name_t> word_corpus_init(boost::filesystem::ifstream& stream) {
     std::vector<adobe::name_t> result;
@@ -105,7 +105,7 @@ std::vector<adobe::name_t> word_corpus_init(boost::filesystem::ifstream& stream)
     return result;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 const std::vector<adobe::name_t>& word_corpus(boost::filesystem::ifstream& stream) {
     static std::vector<adobe::name_t> result_s(word_corpus_init(stream));
@@ -113,7 +113,7 @@ const std::vector<adobe::name_t>& word_corpus(boost::filesystem::ifstream& strea
     return result_s;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 struct collision_t {
     adobe::name_t name1_m;
@@ -121,7 +121,7 @@ struct collision_t {
     std::size_t hash_m;
 };
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void hash_test_specific(const std::vector<adobe::name_t>& corpus, const char* corpus_name,
                         hash_proc_t hash_proc, const char* hash_name) {
@@ -152,7 +152,8 @@ void hash_test_specific(const std::vector<adobe::name_t>& corpus, const char* co
     }
 
     std::cout << "----\n"
-              << "Corpus: " << corpus_name << '\n' << "Hash: " << hash_name << '\n'
+              << "Corpus: " << corpus_name << '\n'
+              << "Hash: " << hash_name << '\n'
               << "Time: " << time << "ms (" << (time / 1e3) << " s)\n"
               << "Collisions: " << collision_vector.size() << '\n';
 
@@ -166,7 +167,7 @@ void hash_test_specific(const std::vector<adobe::name_t>& corpus, const char* co
     }
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void hash_test_corpus(const std::vector<adobe::name_t>& corpus, const char* corpus_name) {
     hash_test_specific(corpus, corpus_name, &hash_value, "hash_value");
@@ -176,7 +177,7 @@ void hash_test_corpus(const std::vector<adobe::name_t>& corpus, const char* corp
     hash_test_specific(corpus, corpus_name, &fnv1a32, "fnv1a32");
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void hash_test(boost::filesystem::ifstream&& corpus_file) {
     hash_test_corpus(lexed_number_corpus(), "lexed numbers");
@@ -188,11 +189,11 @@ void hash_test(boost::filesystem::ifstream&& corpus_file) {
         std::cout << "INFO : Pass a corpus file to test further.\n";
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 int main(int argc, char** argv) try {
     boost::filesystem::path corpus_file;
@@ -203,16 +204,14 @@ int main(int argc, char** argv) try {
     hash_test(boost::filesystem::ifstream(corpus_file));
 
     return 0;
-}
-catch (std::exception& error) {
+} catch (std::exception& error) {
     std::cout << "Error: " << error.what() << '\n';
 
     return 1;
-}
-catch (...) {
+} catch (...) {
     std::cout << "Error: unknown\n";
 
     return 1;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/

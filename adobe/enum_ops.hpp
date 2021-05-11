@@ -3,15 +3,15 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ENUM_OPS_HPP
 #define ADOBE_ENUM_OPS_HPP
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 #include <type_traits>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
     \defgroup enum_ops Typesafe Integers and Bit Fields (enums)
@@ -52,227 +52,202 @@
     \until end_of_example
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 auto stlab_enable_bitmask_enum(...) -> std::false_type;
 auto stlab_enable_arithmetic_enum(...) -> std::false_type;
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace implementation {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 template <typename T>
 constexpr bool has_enabled_bitmask = decltype(stlab_enable_bitmask_enum(std::declval<T>()))::value;
 template <typename T>
-constexpr bool has_enabled_arithmetic = decltype(stlab_enable_arithmetic_enum(std::declval<T>()))::value;
+constexpr bool has_enabled_arithmetic =
+    decltype(stlab_enable_arithmetic_enum(std::declval<T>()))::value;
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace implementation
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-//this exist to mantain backwards compatability with the old ops
-#define ADOBE_DEFINE_BITSET_OPS(EnumType)                                                     \
-constexpr auto stlab_enable_bitmask_enum(EnumType) -> std::true_type;
+// this exist to mantain backwards compatability with the old ops
+#define ADOBE_DEFINE_BITSET_OPS(EnumType)                                                          \
+    constexpr auto stlab_enable_bitmask_enum(EnumType)->std::true_type;
 
 
 template <typename T>
-constexpr auto operator&(const T lhs,const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T>
-{
-    using underlying =  std::underlying_type_t<T>;
+constexpr auto operator&(const T lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
+    using underlying = std::underlying_type_t<T>;
     return static_cast<T>(static_cast<underlying>(lhs) & static_cast<underlying>(rhs));
 }
 
 template <typename T>
-constexpr auto operator~(const T a) ->
-    std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T>
-{
-	using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(
-        ~static_cast<underlying>(a));
+constexpr auto operator~(const T a)
+    -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
+    using underlying = std::underlying_type_t<T>;
+    return static_cast<T>(~static_cast<underlying>(a));
 }
 
 template <typename T>
-constexpr auto operator|(const T lhs, const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T>
-{
-    using underlying =  std::underlying_type_t<T>;
+constexpr auto operator|(const T lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
+    using underlying = std::underlying_type_t<T>;
     return static_cast<T>(static_cast<underlying>(lhs) | static_cast<underlying>(rhs));
 }
 
 template <typename T>
-constexpr auto operator^(const T lhs, const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T>
-{
-    using underlying =  std::underlying_type_t<T>;
+constexpr auto operator^(const T lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
+    using underlying = std::underlying_type_t<T>;
     return static_cast<T>(static_cast<underlying>(lhs) ^ static_cast<underlying>(rhs));
 }
 
 template <typename T>
-constexpr auto operator^=(T& lhs, const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T>
-{
-	return lhs = lhs ^ rhs;
+constexpr auto operator^=(T& lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
+    return lhs = lhs ^ rhs;
 }
 
 template <typename T>
-constexpr auto operator&=(T& lhs, const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T>
-{
-	return lhs = lhs & rhs;
+constexpr auto operator&=(T& lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
+    return lhs = lhs & rhs;
 }
 
 template <typename T>
-constexpr auto operator|=(T& lhs, const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T>
-{
-	return lhs = lhs | rhs;
+constexpr auto operator|=(T& lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
+    return lhs = lhs | rhs;
 }
 
-//this exist to mantain backwards compatability with the old ops
-#define ADOBE_DEFINE_ARITHMETIC_OPS(EnumType)                                                 \
-constexpr auto stlab_enable_arithmetic_enum(EnumType) -> std::true_type;
+// this exist to mantain backwards compatability with the old ops
+#define ADOBE_DEFINE_ARITHMETIC_OPS(EnumType)                                                      \
+    constexpr auto stlab_enable_arithmetic_enum(EnumType)->std::true_type;
 template <typename T>
-constexpr auto operator+(const T a) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
-	using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(
-        +static_cast<underlying>(a));
+constexpr auto operator+(const T a)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
+    using underlying = std::underlying_type_t<T>;
+    return static_cast<T>(+static_cast<underlying>(a));
 }
 
 template <typename T>
-constexpr auto operator-(const T a) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
-	using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(
-        -static_cast<underlying>(a));
+constexpr auto operator-(const T a)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
+    using underlying = std::underlying_type_t<T>;
+    return static_cast<T>(-static_cast<underlying>(a));
 }
 
 template <typename T>
-constexpr auto operator+(const T lhs,const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
+constexpr auto operator+(const T lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
     return static_cast<T>(static_cast<underlying>(lhs) + static_cast<underlying>(rhs));
 }
 
 template <typename T>
-constexpr auto operator-(const T lhs,const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
+constexpr auto operator-(const T lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
     return static_cast<T>(static_cast<underlying>(lhs) - static_cast<underlying>(rhs));
 }
 
 template <typename T>
-constexpr auto operator*(const T lhs,const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
+constexpr auto operator*(const T lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
     return static_cast<T>(static_cast<underlying>(lhs) * static_cast<underlying>(rhs));
 }
 
 template <typename T>
-constexpr auto operator/(const T lhs,const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
+constexpr auto operator/(const T lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
     return static_cast<T>(static_cast<underlying>(lhs) / static_cast<underlying>(rhs));
 }
 
 template <typename T>
-constexpr auto operator%(const T lhs,const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
+constexpr auto operator%(const T lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
     return static_cast<T>(static_cast<underlying>(lhs) % static_cast<underlying>(rhs));
 }
 
 template <typename T>
-constexpr auto operator+=(T& lhs, const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
-	return lhs = lhs + rhs;
+constexpr auto operator+=(T& lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
+    return lhs = lhs + rhs;
 }
 
 template <typename T>
-constexpr auto operator-=(T& lhs, const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
-	return lhs = lhs - rhs;
+constexpr auto operator-=(T& lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
+    return lhs = lhs - rhs;
 }
 
 template <typename T>
-constexpr auto operator*=(T& lhs, const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
-	return lhs = lhs * rhs;
+constexpr auto operator*=(T& lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
+    return lhs = lhs * rhs;
 }
 
 template <typename T>
-constexpr auto operator/=(T& lhs, const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
-	return lhs = lhs / rhs;
+constexpr auto operator/=(T& lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
+    return lhs = lhs / rhs;
 }
 
 template <typename T>
-constexpr auto operator%=(T& lhs, const T rhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
-	return lhs = lhs % rhs;
+constexpr auto operator%=(T& lhs, const T rhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
+    return lhs = lhs % rhs;
 }
 
 template <typename T>
-constexpr auto operator++(T& lhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
-	return lhs += static_cast<T>(1);
+constexpr auto operator++(T& lhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
+    return lhs += static_cast<T>(1);
 }
 
 template <typename T>
-constexpr auto operator++(T& lhs, int) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
+constexpr auto operator++(T& lhs, int)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     T result = lhs;
-	lhs += static_cast<T>(1);
+    lhs += static_cast<T>(1);
     return result;
 }
 
 template <typename T>
-constexpr auto operator--(T& lhs) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
-	return lhs -= static_cast<T>(1);
+constexpr auto operator--(T& lhs)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
+    return lhs -= static_cast<T>(1);
 }
 
 template <typename T>
-constexpr auto operator--(T& lhs, int) ->
-    std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T>
-{
+constexpr auto operator--(T& lhs, int)
+    -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     T result = lhs;
-	lhs -= static_cast<T>(1);
+    lhs -= static_cast<T>(1);
     return result;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

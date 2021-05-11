@@ -3,44 +3,48 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
-#include <boost/filesystem/operations.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <boost/bind.hpp>
+#include <boost/filesystem/operations.hpp>
 
 #include <adobe/adam.hpp>
 #include <adobe/adam_evaluate.hpp>
 #include <adobe/adam_parser.hpp>
 #include <adobe/any_regular.hpp>
-#include <adobe/implementation/expression_parser.hpp>
-#include <adobe/name.hpp>
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
+#include <adobe/implementation/expression_parser.hpp>
+#include <adobe/name.hpp>
 #include <adobe/virtual_machine.hpp>
 
 #include <adobe/iomanip_asl_cel.hpp>
 
 #include <iostream>
 
-/****************************************************************************************************/
+/**************************************************************************************************/
+
+using namespace boost::placeholders;
+
+/**************************************************************************************************/
 
 namespace bfs = boost::filesystem;
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 namespace {
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 struct option_result_t {
     std::string directory_m;
     std::string sheet_m;
 };
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void usage(const std::string& app_name) {
     std::cout << "\nAdam smoke test app v" << ADOBE_VERSION_MAJOR << "." << ADOBE_VERSION_MINOR
@@ -58,7 +62,7 @@ void usage(const std::string& app_name) {
     std::cout << "\n";
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 adobe::dictionary_t read_dictionary(const bfs::path& filepath) {
     std::ifstream input_file(filepath.native().c_str());
@@ -80,7 +84,7 @@ adobe::dictionary_t read_dictionary(const bfs::path& filepath) {
     return machine.back().cast<adobe::dictionary_t>();
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void read_sheet(const bfs::path& filepath, adobe::sheet_t& sheet) {
     std::ifstream input_file(filepath.native().c_str());
@@ -95,8 +99,7 @@ void read_sheet(const bfs::path& filepath, adobe::sheet_t& sheet) {
         // set up adam sheet
         adobe::parse(input_file, adobe::line_position_t(filepath.native().c_str()),
                      adobe::bind_to_sheet(sheet));
-    }
-    catch (const adobe::stream_error_t& error) {
+    } catch (const adobe::stream_error_t& error) {
         std::cerr << "adobe:: "
                   << ": " << format_stream_error(input_file, error) << "\n";
 
@@ -104,7 +107,7 @@ void read_sheet(const bfs::path& filepath, adobe::sheet_t& sheet) {
     }
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 bool compare_arrays(const adobe::array_t& a, const adobe::array_t& b) {
 /*
@@ -129,7 +132,7 @@ bool compare_arrays(const adobe::array_t& a, const adobe::array_t& b) {
     return a == b;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 bool test_sheet(const bfs::path& root) {
     using namespace adobe::literals;
@@ -191,11 +194,11 @@ bool test_sheet(const bfs::path& root) {
     return success;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 int main(int argc, char* argv[]) {
     int result(0);
@@ -208,11 +211,9 @@ int main(int argc, char* argv[]) {
                 result = !test_sheet(bfs::path(argv[1]));
             }
         }
-    }
-    catch (const std::exception& error) {
+    } catch (const std::exception& error) {
         std::cerr << "std::exception: " << typeid(error).name() << ": " << error.what() << "\n";
-    }
-    catch (...) {
+    } catch (...) {
         std::cerr << "Unknown Exception\n";
     }
 

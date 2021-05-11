@@ -8,13 +8,13 @@
 
 #include <adobe/arg_stream.hpp>
 
-#include <adobe/is_range.hpp>
 #include <adobe/dictionary.hpp>
+#include <adobe/is_range.hpp>
 
+#include <boost/array.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/value_type.hpp>
-#include <boost/array.hpp>
 #include <boost/utility/value_init.hpp>
 
 #include <new> // std::nothrow_t
@@ -94,11 +94,11 @@ struct dictionary_arg_stream : dictionary_arg_stream_base<Dictionary, InputRange
     // class
     // (becaue the base is a template, so if specialized, it might not be there!
     typedef dictionary_arg_stream_base<Dictionary, InputRange> _inherited;
+    using _inherited::curr;
+    using _inherited::dict;
     using _inherited::dictionary_type;
     using _inherited::range_type;
     using _inherited::throw_if_eof;
-    using _inherited::dict;
-    using _inherited::curr;
 
     /*!
         d - dictionary from with to retrieve arguments
@@ -117,8 +117,8 @@ struct dictionary_arg_stream : dictionary_arg_stream_base<Dictionary, InputRange
     }
 };
 template <typename Dictionary, typename InputRange /*to get the keys*/>
-struct dictionary_arg_stream<Dictionary, InputRange,
-                             std::nothrow_t> : dictionary_arg_stream_base<Dictionary, InputRange> {
+struct dictionary_arg_stream<Dictionary, InputRange, std::nothrow_t>
+    : dictionary_arg_stream_base<Dictionary, InputRange> {
     dictionary_arg_stream(Dictionary& d, InputRange const& key_range)
         : dictionary_arg_stream_base<Dictionary, InputRange>(d, key_range) {}
 
@@ -176,8 +176,9 @@ struct has_get_dictionary_entry_function {
 
 template <typename Dictionary, typename Range>
 struct is_range_for_dictionary {
-    static const bool value = has_get_dictionary_entry_template<
-        Dictionary, typename boost::range_value<Range>::type>::value;
+    static const bool value =
+        has_get_dictionary_entry_template<Dictionary,
+                                          typename boost::range_value<Range>::type>::value;
 };
 
 static const int test =
@@ -244,7 +245,7 @@ struct if_range_base<void, false> {
 
 template <typename NoThrow, typename Dictionary, typename T>
 struct if_range_else_key : if_range_base<NoThrow, is_range_for_dictionary<Dictionary, T>::value> {};
-}
+} // namespace dictionary_arg_stream_detail
 
 /*!
 \ingroup arg_stream
@@ -265,8 +266,9 @@ template <typename F, typename Dictionary, typename SingleArg>
 typename arg_stream::result_type<F>::type call_with_dictionary(F f, std::nothrow_t,
                                                                Dictionary const& dict,
                                                                SingleArg const& key_or_key_range) {
-    return dictionary_arg_stream_detail::if_range_else_key<
-        std::nothrow_t, Dictionary, SingleArg>::call(f, dict, key_or_key_range);
+    return dictionary_arg_stream_detail::if_range_else_key<std::nothrow_t, Dictionary,
+                                                           SingleArg>::call(f, dict,
+                                                                            key_or_key_range);
 }
 
 // member function cases
@@ -282,8 +284,9 @@ template <class T, typename F, typename Dictionary, typename SingleArg>
 typename arg_stream::result_type<F>::type
 call_member_with_dictionary(T* that, F f, std::nothrow_t, Dictionary const& dict,
                             SingleArg const& key_or_key_range) {
-    return dictionary_arg_stream_detail::if_range_else_key<
-        std::nothrow_t, Dictionary, SingleArg>::call(that, f, dict, key_or_key_range);
+    return dictionary_arg_stream_detail::if_range_else_key<std::nothrow_t, Dictionary,
+                                                           SingleArg>::call(that, f, dict,
+                                                                            key_or_key_range);
 }
 
 
@@ -363,8 +366,8 @@ typename arg_stream::result_type<F>::type call_with_dictionary(F f, Dictionary c
                                                                T1 const& key1, T2 const& key2,
                                                                T3 const& key3, T4 const& key4) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 4> arr = {key_type(key1), key_type(key2),
-                                     key_type(key3), key_type(key4)};
+    boost::array<key_type, 4> arr = {key_type(key1), key_type(key2), key_type(key3),
+                                     key_type(key4)};
     return call_with_dictionary(f, dict, arr);
 }
 
@@ -374,8 +377,8 @@ typename arg_stream::result_type<F>::type
 call_member_with_dictionary(X& x, F f, Dictionary const& dict, T1 const& key1, T2 const& key2,
                             T3 const& key3, T4 const& key4) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 4> arr = {key_type(key1), key_type(key2),
-                                     key_type(key3), key_type(key4)};
+    boost::array<key_type, 4> arr = {key_type(key1), key_type(key2), key_type(key3),
+                                     key_type(key4)};
     return call_member_with_dictionary(x, f, dict, arr);
 }
 
@@ -384,8 +387,8 @@ typename arg_stream::result_type<F>::type
 call_with_dictionary(F f, std::nothrow_t, Dictionary const& dict, T1 const& key1, T2 const& key2,
                      T3 const& key3, T4 const& key4) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 4> arr = {key_type(key1), key_type(key2),
-                                     key_type(key3), key_type(key4)};
+    boost::array<key_type, 4> arr = {key_type(key1), key_type(key2), key_type(key3),
+                                     key_type(key4)};
     return call_with_dictionary(f, std::nothrow, dict, arr);
 }
 
@@ -395,8 +398,8 @@ typename arg_stream::result_type<F>::type
 call_member_with_dictionary(X x, F f, std::nothrow_t, Dictionary const& dict, T1 const& key1,
                             T2 const& key2, T3 const& key3, T4 const& key4) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 4> arr = {key_type(key1), key_type(key2),
-                                     key_type(key3), key_type(key4)};
+    boost::array<key_type, 4> arr = {key_type(key1), key_type(key2), key_type(key3),
+                                     key_type(key4)};
     return call_member_with_dictionary(x, f, std::nothrow, dict, arr);
 }
 

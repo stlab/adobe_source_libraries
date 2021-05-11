@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ITERATOR_HPP
 #define ADOBE_ITERATOR_HPP
@@ -25,14 +25,14 @@
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 
-#include <adobe/typeinfo.hpp>
 #include <adobe/empty.hpp>
+#include <adobe/typeinfo.hpp>
 
 #include <adobe/implementation/swap.hpp>
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     Just counts the number of outputs; doesn't copy anything. More efficient than a
@@ -40,7 +40,7 @@ namespace adobe {
     the result.
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \addtogroup adobe_iterator
@@ -82,7 +82,7 @@ private:
     std::size_t count_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     top iterator            bottom iterator
@@ -158,11 +158,12 @@ public:
     }
 
 private:
-    typedef typename boost::iterator_reference<typename boost::range_iterator<
-        typename boost::iterator_value<I>::type>::type>::type reference_t;
+    typedef typename boost::iterator_reference<
+        typename boost::range_iterator<typename boost::iterator_value<I>::type>::type>::type
+        reference_t;
     typedef I top_iterator_t;
     typedef typename boost::range_iterator<typename boost::iterator_value<I>::type>::type
-    bottom_iterator_t;
+        bottom_iterator_t;
 
     top_iterator_t bucket_m;
     top_iterator_t end_m;
@@ -222,7 +223,7 @@ inline segmented_iterator<typename boost::range_iterator<R>::type> make_segmente
     return iterator(boost::begin(r), boost::end(r));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     NOTE (sparent) : The asserts are comment only because we don't require that our function
@@ -319,7 +320,8 @@ class step_iterator_adaptor
                                      boost::use_default, typename S_FN::difference_type> {
 public:
     typedef boost::iterator_adaptor<DERIVED, IT, boost::use_default, boost::use_default,
-                                    boost::use_default, typename S_FN::difference_type> parent_type;
+                                    boost::use_default, typename S_FN::difference_type>
+        parent_type;
     typedef typename std::iterator_traits<IT>::difference_type base_difference_type;
     typedef typename S_FN::difference_type difference_type;
     typedef typename std::iterator_traits<IT>::reference reference;
@@ -390,7 +392,7 @@ inline bool operator!=(const step_iterator_adaptor<D, IT, S_FN>& p1,
     return p1.base() != p2.base();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
     \brief A stub iterator that models OutputIterator and outputs nothing.
@@ -414,12 +416,12 @@ struct null_output_iterator_t {
 
 //! @}
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

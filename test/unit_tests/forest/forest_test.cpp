@@ -4,14 +4,14 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <algorithm>
 
 #define BOOST_TEST_MAIN
 
-#include <boost/test/unit_test.hpp>
 #include <boost/mpl/list.hpp>
+#include <boost/test/unit_test.hpp>
 
 #include <adobe/forest.hpp>
 #include <adobe/test/check_traversable.hpp>
@@ -58,4 +58,4 @@ BOOST_AUTO_TEST_CASE(forest_int_iterator_test) {
     boost::function_requires<
         boost::BidirectionalIteratorConcept<forest<int>::const_reverse_iterator>>();
 }
-}
+} // namespace adobe

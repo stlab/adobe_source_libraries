@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/extents.hpp>
 
@@ -16,11 +16,11 @@
 #include <iostream>
 #endif
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 bool operator==(const adobe::extents_t& x, const adobe::extents_t& y) {
     return x.slice_m[adobe::extents_slices_t::vertical] ==
@@ -29,7 +29,7 @@ bool operator==(const adobe::extents_t& x, const adobe::extents_t& y) {
                y.slice_m[adobe::extents_slices_t::horizontal];
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 #if !defined(NDEBUG) && defined(ADOBE_STD_SERIALIZATION)
 std::ostream& operator<<(std::ostream& s, const adobe::extents_t& x) {
@@ -51,7 +51,7 @@ std::ostream& operator<<(std::ostream& s, const adobe::extents_t& x) {
 }
 #endif
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 bool operator==(const adobe::extents_t::slice_t& x, const adobe::extents_t::slice_t& y) {
     return x.length_m == y.length_m && x.outset_m == y.outset_m && x.frame_m == y.frame_m &&
@@ -59,7 +59,7 @@ bool operator==(const adobe::extents_t::slice_t& x, const adobe::extents_t::slic
            adobe::equal(x.guide_set_m, y.guide_set_m.begin());
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 #if !defined(NDEBUG) && defined(ADOBE_STD_SERIALIZATION)
 std::ostream& operator<<(std::ostream& s, const adobe::extents_t::slice_t& x) {
@@ -84,8 +84,8 @@ std::ostream& operator<<(std::ostream& s, const adobe::extents_t::slice_t& x) {
 }
 #endif
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/****************************************************************************************************/
+/**************************************************************************************************/

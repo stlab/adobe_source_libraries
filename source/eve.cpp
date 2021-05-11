@@ -3,18 +3,18 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/eve.hpp>
 
 #include <iterator>
 #include <utility>
 
+#include <boost/bind/bind.hpp>
 #include <boost/iterator/filter_iterator.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/variant/static_visitor.hpp>
-#include <boost/bind.hpp>
 
 #include <adobe/algorithm/for_each.hpp>
 #include <adobe/algorithm/for_each_position.hpp>
@@ -29,19 +29,22 @@
 #include <iostream>
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
+using namespace boost::placeholders;
+
+/**************************************************************************************************/
 
 namespace {
 
 using adobe::eve_t;
 
-struct filter_visible : std::unary_function<adobe::implementation::view_proxy_t, bool> {
+struct filter_visible {
     bool operator()(const adobe::implementation::view_proxy_t& x);
 };
 
 typedef adobe::filter_fullorder_iterator<adobe::eve_t::proxy_tree_t::iterator, filter_visible>
-cursor;
+    cursor;
 typedef boost::filter_iterator<filter_visible, adobe::child_iterator<cursor>> child_iterator;
 typedef std::reverse_iterator<child_iterator> reverse_child_iterator;
 
@@ -54,18 +57,18 @@ inline child_iterator child_end(cursor c) {
 }
 
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 
 #ifdef ADOBE_HAS_CPLUS0X_CONCEPTS
 #include <concepts>
 namespace std {
 concept_map
-RandomAccessIterator<boost::filter_iterator<filter_visible, adobe::child_iterator<cursor>>>{};
+    RandomAccessIterator<boost::filter_iterator<filter_visible, adobe::child_iterator<cursor>>>{};
 }
 #endif
 
@@ -77,7 +80,7 @@ RandomAccessIterator<boost::filter_iterator<filter_visible, adobe::child_iterato
 namespace adobe {
 namespace implementation {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 struct view_proxy_t : adobe::extents_slices_t {
     view_proxy_t(const layout_attributes_t&, poly_placeable_t&);
@@ -122,12 +125,12 @@ struct view_proxy_t : adobe::extents_slices_t {
     void layout_cross(::child_iterator first, ::child_iterator last, slice_select_t slice);
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace implementation
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 #if !defined(ADOBE_NO_DOCUMENTATION)
 namespace {
 
@@ -135,7 +138,7 @@ inline bool filter_visible::operator()(const adobe::implementation::view_proxy_t
     return x.visible_m;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 typedef adobe::implementation::view_proxy_t::slice_select_t slice_select_t;
 typedef void (adobe::implementation::view_proxy_t::*apply_member_t)(::child_iterator,
@@ -201,28 +204,28 @@ private:
     slice_select_t select_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool is_with(adobe::eve_t::placement_t placement, adobe::eve_t::slice_select_t select) {
     return ((placement == adobe::eve_t::place_column) && (select == adobe::eve_t::vertical)) ||
            ((placement == adobe::eve_t::place_row) && (select == adobe::eve_t::horizontal));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace
 #endif
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void set_margin(layout_attributes_t& container, int x) {
     container.slice_m[eve_t::horizontal].margin_m.first = x;
@@ -231,13 +234,13 @@ void set_margin(layout_attributes_t& container, int x) {
     container.slice_m[eve_t::vertical].margin_m.second = x;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 class eve_t::implementation_t : private extents_slices_t {
 public:
@@ -270,7 +273,7 @@ private:
     proxy_tree_t proxies_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 eve_t::eve_t() : object_m(new implementation_t()) {}
@@ -295,21 +298,21 @@ eve_t::iterator eve_t::add_placeable(iterator parent, const layout_attributes_t&
 
 void eve_t::set_visible(iterator c, bool visible) { return object_m->set_visible(c, visible); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 eve_t::implementation_t::implementation_t() {}
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 eve_t::implementation_t::~implementation_t() {}
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     REVISIT (sparent) : This logic would be simplified with a root() function wich could be passed
@@ -333,11 +336,11 @@ eve_t::iterator eve_t::implementation_t::add_placeable(iterator parent,
     return parent;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void eve_t::implementation_t::set_visible(iterator c, bool visible) { c->visible_m = visible; }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void eve_t::implementation_t::solve(slice_select_t select) {
     adobe::for_each_position(
@@ -380,7 +383,7 @@ void eve_t::implementation_t::solve(slice_select_t select) {
     assert(limiter); // Failing to make forward progress - aborting.
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void eve_t::implementation_t::layout(slice_select_t select, int optional_length) {
     // FILTER VISIBLE - this assumes a visible root
@@ -401,7 +404,7 @@ void eve_t::implementation_t::layout(slice_select_t select, int optional_length)
                                                    &implementation::view_proxy_t::layout, select));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 std::pair<int, int> eve_t::implementation_t::evaluate(evaluate_options_t options, int width,
                                                       int height) {
@@ -414,7 +417,7 @@ std::pair<int, int> eve_t::implementation_t::evaluate(evaluate_options_t options
     return adjust(options, width, height);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 std::pair<int, int> eve_t::implementation_t::adjust(evaluate_options_t options, int width,
                                                     int height) {
@@ -472,17 +475,17 @@ std::pair<int, int> eve_t::implementation_t::adjust(evaluate_options_t options, 
                           proxies_m.front().place_m.vertical().length_m);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace implementation {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 struct calculate : public boost::static_visitor<> {
     template <typename T>
@@ -491,12 +494,12 @@ struct calculate : public boost::static_visitor<> {
     }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 view_proxy_t::view_proxy_t(const adobe::layout_attributes_t& d, poly_placeable_t& p)
     : placeable_m(p), visible_m(true), geometry_m(d) {}
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::calculate() {
     /*
@@ -541,7 +544,7 @@ void view_proxy_t::calculate() {
     container_length_m[horizontal] = eslice.length_m;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::calculate_vertical() {
     extents_t::slice_t& eslice = geometry_m.extents_m.vertical();
@@ -562,11 +565,11 @@ void view_proxy_t::calculate_vertical() {
     container_length_m[vertical] = eslice.length_m;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::place() { placeable_m.place(place_m); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::adjust(::child_iterator first, ::child_iterator last, slice_select_t select) {
     if (geometry_m.placement_m == eve_t::place_leaf)
@@ -619,7 +622,7 @@ void view_proxy_t::adjust(::child_iterator first, ::child_iterator last, slice_s
         adjust_cross(first, last, select);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::solve_up(::child_iterator first, ::child_iterator last, slice_select_t select) {
     if (geometry_m.placement_m == adobe::eve_t::place_leaf)
@@ -638,7 +641,7 @@ void view_proxy_t::solve_up(::child_iterator first, ::child_iterator last, slice
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool view_proxy_t::solve_down(::child_iterator first, ::child_iterator last,
                               slice_select_t select) {
@@ -662,7 +665,7 @@ bool view_proxy_t::solve_down(::child_iterator first, ::child_iterator last,
     return result;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::layout(::child_iterator first, ::child_iterator last, slice_select_t select) {
     if (geometry_m.placement_m == adobe::eve_t::place_leaf)
@@ -681,7 +684,7 @@ void view_proxy_t::layout(::child_iterator first, ::child_iterator last, slice_s
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::flatten(::child_iterator first, ::child_iterator last, slice_select_t select,
                            adobe::eve_t::evaluate_options_t options) {
@@ -717,7 +720,7 @@ void view_proxy_t::flatten(::child_iterator first, ::child_iterator last, slice_
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::adjust_outsets(::child_iterator first, ::child_iterator last,
                                   slice_select_t select) {
@@ -734,7 +737,7 @@ void view_proxy_t::adjust_outsets(::child_iterator first, ::child_iterator last,
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::adjust_outsets_with(::child_iterator first, ::child_iterator last,
                                        slice_select_t select) {
@@ -776,7 +779,7 @@ void view_proxy_t::adjust_outsets_with(::child_iterator first, ::child_iterator 
     pslice.outset_m.second = std::max(pslice.outset_m.second, -trailing_outset_position);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::adjust_outsets_cross(::child_iterator first, ::child_iterator last,
                                         slice_select_t select) {
@@ -823,7 +826,7 @@ void view_proxy_t::adjust_outsets_cross(::child_iterator first, ::child_iterator
     pslice.outset_m.second = std::max(pslice.outset_m.second, -trailing_outset_position);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::layout_with(::child_iterator first, ::child_iterator last,
                                slice_select_t select) {
@@ -1007,7 +1010,7 @@ void view_proxy_t::layout_with(::child_iterator first, ::child_iterator last,
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::layout_cross(::child_iterator first, ::child_iterator last,
                                 slice_select_t select) {
@@ -1092,7 +1095,7 @@ void view_proxy_t::layout_cross(::child_iterator first, ::child_iterator last,
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::adjust_with(::child_iterator first, ::child_iterator last,
                                slice_select_t select) {
@@ -1186,7 +1189,7 @@ void view_proxy_t::adjust_with(::child_iterator first, ::child_iterator last,
     container_guide_set_m[select][layout_attributes_t::align_reverse].resize(reverse_guide_count);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::adjust_cross(::child_iterator first, ::child_iterator last,
                                 slice_select_t select) {
@@ -1246,7 +1249,7 @@ void view_proxy_t::adjust_cross(::child_iterator first, ::child_iterator last,
     container_guide_set_m[select][layout_attributes_t::align_reverse].resize(reverse_guide_count);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::solve_up_with(::child_iterator first, ::child_iterator last,
                                  slice_select_t select) {
@@ -1361,7 +1364,7 @@ void view_proxy_t::solve_up_with(::child_iterator first, ::child_iterator last,
     container_length_m[select] = std::max(length, container_length_m[select]);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool view_proxy_t::solve_down_with(::child_iterator first, ::child_iterator last,
                                    slice_select_t select) {
@@ -1477,7 +1480,7 @@ bool view_proxy_t::solve_down_with(::child_iterator first, ::child_iterator last
     return result;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void view_proxy_t::solve_up_cross(::child_iterator first, ::child_iterator last,
                                   slice_select_t select) {
@@ -1619,7 +1622,7 @@ void view_proxy_t::solve_up_cross(::child_iterator first, ::child_iterator last,
     container_length_m[select] = std::max(length, container_length_m[select]);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool view_proxy_t::solve_down_cross(::child_iterator first, ::child_iterator last,
                                     slice_select_t select) {
@@ -1718,17 +1721,17 @@ bool view_proxy_t::solve_down_cross(::child_iterator first, ::child_iterator las
     return result;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-} // namespace
+} // namespace implementation
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 
@@ -1736,8 +1739,8 @@ place_data_t::slice_t::slice_t() : length_m(0), position_m(0) {}
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/

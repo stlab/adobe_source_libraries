@@ -8,33 +8,34 @@
 #include <adobe/implementation/lex_stream.hpp>
 
 #include <iostream>
-#include <sstream>
 #include <mutex>
+#include <sstream>
 
 #include <boost/array.hpp>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 
-#include <adobe/once.hpp>
-#include <adobe/string.hpp>
-#include <adobe/name.hpp>
-#include <adobe/implementation/token.hpp>
 #include <adobe/circular_queue.hpp>
 #include <adobe/implementation/lex_shared.hpp>
+#include <adobe/implementation/token.hpp>
 #include <adobe/istream.hpp>
+#include <adobe/name.hpp>
+#include <adobe/once.hpp>
+#include <adobe/string.hpp>
 
 /**************************************************************************************************/
 
 using namespace std;
+using namespace boost::placeholders;
 
 /**************************************************************************************************/
 
 #ifdef BOOST_MSVC
 namespace std {
-using ::isspace;
-using ::isdigit;
 using ::isalnum;
 using ::isalpha;
-}
+using ::isdigit;
+using ::isspace;
+} // namespace std
 #endif
 
 /**************************************************************************************************/
@@ -67,60 +68,75 @@ void init_once() {
     */
     static const char compound_match_s[] = {
         /*           0    1    2    3    4    5    6    7    8    9    A    B    C    D    E    F
-           */
-        /* 00 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-        /* 10 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-        /* 20 */ '0', '=', '0', '0', '0', '0', '&', '0', '0', '0', '0', '0', '0', '>', '0', '0',
-        /* 30 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '#', '=', '#', '0',
-        /* 40 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-        /* 50 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-        /* 60 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-        /* 70 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '|', '0', '0', '0',
-        /* 80 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-        /* 90 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-        /* A0 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-        /* B0 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-        /* C0 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-        /* D0 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-        /* E0 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-        /* F0 */ '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'};
+         */
+        /* 00 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '0', '0', '0', '0',
+        /* 10 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '0', '0', '0', '0',
+        /* 20 */ '0', '=', '0', '0', '0', '0', '&', '0',
+        '0',          '0', '0', '0', '0', '>', '0', '0',
+        /* 30 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '#', '=', '#', '0',
+        /* 40 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '0', '0', '0', '0',
+        /* 50 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '0', '0', '0', '0',
+        /* 60 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '0', '0', '0', '0',
+        /* 70 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '|', '0', '0', '0',
+        /* 80 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '0', '0', '0', '0',
+        /* 90 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '0', '0', '0', '0',
+        /* A0 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '0', '0', '0', '0',
+        /* B0 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '0', '0', '0', '0',
+        /* C0 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '0', '0', '0', '0',
+        /* D0 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '0', '0', '0', '0',
+        /* E0 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '0', '0', '0', '0',
+        /* F0 */ '0', '0', '0', '0', '0', '0', '0', '0',
+        '0',          '0', '0', '0', '0', '0', '0', '0'};
 
-    static const adobe::name_t name_table_s[] = {
-        /* 00 */ adobe::empty_k,
-        /* 01 */ adobe::equal_k,
-        /* 02 */ adobe::and_k,
-        /* 03 */ adobe::or_k,
-        /* 04 */ adobe::less_equal_k,
-        /* 05 */ adobe::greater_equal_k,
-        /* 06 */ adobe::not_equal_k,
-        /* 07 */ adobe::add_k,
-        /* 08 */ adobe::subtract_k,
-        /* 09 */ adobe::multiply_k,
-        /* 0A */ adobe::divide_k,
-        /* 0B */ adobe::modulus_k,
-        /* 0C */ adobe::question_k,
-        /* 0D */ adobe::colon_k,
-        /* 0E */ adobe::semicolon_k,
-        /* 0F */ adobe::assign_k,
-        /* 10 */ adobe::not_k,
-        /* 11 */ adobe::open_brace_k,
-        /* 12 */ adobe::close_brace_k,
-        /* 13 */ adobe::less_k,
-        /* 14 */ adobe::greater_k,
-        /* 15 */ adobe::open_parenthesis_k,
-        /* 16 */ adobe::close_parenthesis_k,
-        /* 17 */ adobe::at_k,
-        /* 18 */ adobe::open_bracket_k,
-        /* 19 */ adobe::close_bracket_k,
-        /* 1A */ adobe::comma_k,
-        /* 1B */ adobe::dot_k,
-        /* 1C */ adobe::to_k,
-        /* 1D */ adobe::bitwise_and_k,
-        /* 1E */ adobe::bitwise_xor_k,
-        /* 1F */ adobe::bitwise_or_k,
-        /* 20 */ adobe::bitwise_rshift_k,
-        /* 21 */ adobe::bitwise_lshift_k,
-        /* 22 */ adobe::bitwise_negate_k};
+    static const adobe::name_t name_table_s[] = {/* 00 */ adobe::empty_k,
+                                                 /* 01 */ adobe::equal_k,
+                                                 /* 02 */ adobe::and_k,
+                                                 /* 03 */ adobe::or_k,
+                                                 /* 04 */ adobe::less_equal_k,
+                                                 /* 05 */ adobe::greater_equal_k,
+                                                 /* 06 */ adobe::not_equal_k,
+                                                 /* 07 */ adobe::add_k,
+                                                 /* 08 */ adobe::subtract_k,
+                                                 /* 09 */ adobe::multiply_k,
+                                                 /* 0A */ adobe::divide_k,
+                                                 /* 0B */ adobe::modulus_k,
+                                                 /* 0C */ adobe::question_k,
+                                                 /* 0D */ adobe::colon_k,
+                                                 /* 0E */ adobe::semicolon_k,
+                                                 /* 0F */ adobe::assign_k,
+                                                 /* 10 */ adobe::not_k,
+                                                 /* 11 */ adobe::open_brace_k,
+                                                 /* 12 */ adobe::close_brace_k,
+                                                 /* 13 */ adobe::less_k,
+                                                 /* 14 */ adobe::greater_k,
+                                                 /* 15 */ adobe::open_parenthesis_k,
+                                                 /* 16 */ adobe::close_parenthesis_k,
+                                                 /* 17 */ adobe::at_k,
+                                                 /* 18 */ adobe::open_bracket_k,
+                                                 /* 19 */ adobe::close_bracket_k,
+                                                 /* 1A */ adobe::comma_k,
+                                                 /* 1B */ adobe::dot_k,
+                                                 /* 1C */ adobe::to_k,
+                                                 /* 1D */ adobe::bitwise_and_k,
+                                                 /* 1E */ adobe::bitwise_xor_k,
+                                                 /* 1F */ adobe::bitwise_or_k,
+                                                 /* 20 */ adobe::bitwise_rshift_k,
+                                                 /* 21 */ adobe::bitwise_lshift_k,
+                                                 /* 22 */ adobe::bitwise_negate_k};
 
     /*
         Multi-character tokens. Col + Row = ASCII value of first character in the token. Value at
@@ -264,7 +280,7 @@ private:
     bool skip_space(char& c);
 
     keyword_extension_lookup_proc_t keyword_proc_m;
-    bool                            comment_bypass_m;
+    bool comment_bypass_m;
 };
 
 /**************************************************************************************************/
@@ -300,9 +316,7 @@ void lex_stream_t::set_keyword_extension_lookup(const keyword_extension_lookup_p
     return object_m->set_keyword_extension_lookup(proc);
 }
 
-void lex_stream_t::set_comment_bypass(bool bypass) {
-    return object_m->set_comment_bypass(bypass);
-}
+void lex_stream_t::set_comment_bypass(bool bypass) { return object_m->set_comment_bypass(bypass); }
 
 /**************************************************************************************************/
 
@@ -314,7 +328,7 @@ void lex_stream_t::set_comment_bypass(bool bypass) {
 
 lex_stream_t::implementation_t::implementation_t(std::istream& in, const line_position_t& position)
     : _super(std::istream_iterator<char>(in), std::istream_iterator<char>(), position),
-    comment_bypass_m(false) {
+      comment_bypass_m(false) {
     in.unsetf(std::ios_base::skipws);
 
     _super::set_parse_token_proc(
@@ -330,9 +344,7 @@ void lex_stream_t::implementation_t::set_keyword_extension_lookup(
 
 /**************************************************************************************************/
 
-void lex_stream_t::implementation_t::set_comment_bypass(bool bypass) {
-    comment_bypass_m = bypass;
-}
+void lex_stream_t::implementation_t::set_comment_bypass(bool bypass) { comment_bypass_m = bypass; }
 
 /**************************************************************************************************/
 

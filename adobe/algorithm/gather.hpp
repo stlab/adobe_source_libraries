@@ -78,8 +78,11 @@ template <typename Iter, // Iter models BidirectionalIterator
 std::pair<Iter, Iter> gather(Iter first, Iter last, Iter pivot, Pred pred) {
     //	The first call partitions everything up to (but not including) the pivot element,
     //	while the second call partitions the rest of the sequence.
-    return std::make_pair(std::stable_partition(first, pivot, std::bind( std::logical_not<bool>(), std::bind(pred, std::placeholders::_1))),
-                          std::stable_partition(pivot, last, std::bind(pred, std::placeholders::_1)));
+    return std::make_pair(
+        std::stable_partition(
+            first, pivot,
+            std::bind(std::logical_not<bool>(), std::bind(pred, std::placeholders::_1))),
+        std::stable_partition(pivot, last, std::bind(pred, std::placeholders::_1)));
 }
 
 /**************************************************************************************************/

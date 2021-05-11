@@ -8,20 +8,20 @@
 // $Change: $
 // $Author: $
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <iomanip>
-#include <sstream>
 #include <ostream>
+#include <sstream>
 
-#include <adobe/name.hpp>
 #include <adobe/istream.hpp>
+#include <adobe/name.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 std::ostream& operator<<(std::ostream& result, const line_position_t& position) {
     typedef std::streampos pos_t;
@@ -80,7 +80,7 @@ std::ostream& operator<<(std::ostream& result, const line_position_t& position) 
     return result;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 line_position_t::line_position_t(adobe::name_t file_path, getline_proc_t getline_proc,
                                  int line_number, std::streampos line_start,
@@ -96,7 +96,7 @@ line_position_t::line_position_t(const char* stream_name, int line_index)
 line_position_t::line_position_t() : line_number_m(1), line_start_m(0), position_m(-1) {}
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 std::string format_stream_error(const stream_error_t& error) {
     std::ostringstream result;
@@ -112,7 +112,7 @@ std::string format_stream_error(const stream_error_t& error) {
     return result.str();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 std::string format_stream_error(std::istream&, const stream_error_t& error) {
     // Format the error
@@ -130,7 +130,7 @@ std::string format_stream_error(std::istream&, const stream_error_t& error) {
     return result.str();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 // REVISIT (sparent) : Why doesn't this return the string?
@@ -175,11 +175,11 @@ std::istream& getline(std::istream& is, std::string& str)
 }
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     REVISIT (t_schwinger) : This is needed to disable automatic CR-LF conversion, which seems
@@ -192,4 +192,4 @@ unsigned int _CRT_fmode = _O_BINARY;
 }
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

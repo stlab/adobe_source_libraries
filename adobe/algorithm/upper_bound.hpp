@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ALGORITHM_UPPER_BOUND_HPP
 #define ADOBE_ALGORITHM_UPPER_BOUND_HPP
@@ -12,8 +12,8 @@
 
 #include <algorithm>
 #include <cassert>
-#include <iterator>
 #include <functional>
+#include <iterator>
 
 #include <boost/next_prior.hpp>
 #include <boost/range/begin.hpp>
@@ -23,12 +23,12 @@
 
 #include <adobe/functional.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 namespace implementation {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models ForwardIterator
           typename N, // N models IntegralType
@@ -54,11 +54,11 @@ I upper_bound_n(I f, N n, const T& x, C c, P p) {
     return f;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-} // implementation
+} // namespace implementation
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \defgroup upper_bound upper_bound
@@ -68,7 +68,7 @@ I upper_bound_n(I f, N n, const T& x, C c, P p) {
     - STL documentation for \ref stldoc_upper_bound
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models ForwardIterator
           typename N, // N models IntegralType
@@ -78,7 +78,7 @@ inline I upper_bound_n(I f, N n, const T& x) {
     return implementation::upper_bound_n(f, n, x, less(), identity<T>());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models FowardIterator
           typename N, // N models IntegralType
@@ -86,10 +86,11 @@ template <typename I, // I models FowardIterator
           typename C>
 // C models StrictWeakOrdering(T, T)
 inline I upper_bound_n(I f, N n, const T& x, C c) {
-    return implementation::upper_bound_n(f, n, x, std::bind(c, std::placeholders::_1, std::placeholders::_2), identity<T>());
+    return implementation::upper_bound_n(
+        f, n, x, std::bind(c, std::placeholders::_1, std::placeholders::_2), identity<T>());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models ForwardIterator
           typename N, // N models IntegralType
@@ -98,10 +99,12 @@ template <typename I, // I models ForwardIterator
           typename P>
 // P models UnaryFunction(value_type(I)) -> T
 inline I upper_bound_n(I f, N n, const T& x, C c, P p) {
-    return implementation::upper_bound_n(f, n, x, std::bind(c, std::placeholders::_1, std::placeholders::_2), std::bind(p, std::placeholders::_1));
+    return implementation::upper_bound_n(f, n, x,
+                                         std::bind(c, std::placeholders::_1, std::placeholders::_2),
+                                         std::bind(p, std::placeholders::_1));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     NOTE (sparent) : These functions collide with the std functions when called unqualified as
@@ -113,7 +116,7 @@ namespace fn {}
 using namespace fn;
 namespace fn {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models ForwardIterator
           typename T>
@@ -122,7 +125,7 @@ inline I upper_bound(I f, I l, const T& x) {
     return std::upper_bound(f, l, x);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models FowardIterator
           typename T, // T == value_type(I)
@@ -132,7 +135,7 @@ inline I upper_bound(I f, I l, const T& x, C c) {
     return std::upper_bound(f, l, x, std::bind(c, std::placeholders::_1, std::placeholders::_2));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models ForwardIterator
           typename T, // T == result_type(P)
@@ -143,7 +146,7 @@ inline I upper_bound(I f, I l, const T& x, C c, P p) {
     return upper_bound_n(f, std::distance(f, l), x, c, p);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models ForwardRange
           typename T, // T == result_type(P)
@@ -154,7 +157,7 @@ upper_bound(I& r, const T& x, C c, P p) {
     return adobe::upper_bound(boost::begin(r), boost::end(r), x, c, p);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models ForwardRange
           typename T, // T == result_type(P)
@@ -165,7 +168,7 @@ upper_bound(const I& r, const T& x, C c, P p) {
     return adobe::upper_bound(boost::begin(r), boost::end(r), x, c, p);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup upper_bound
 
@@ -215,13 +218,13 @@ upper_bound(const I& range, const T& value, Compare comp) {
     return adobe::upper_bound(boost::begin(range), boost::end(range), value, comp);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace fn
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

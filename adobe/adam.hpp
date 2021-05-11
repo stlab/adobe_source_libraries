@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ADAM_HPP
 #define ADOBE_ADAM_HPP
@@ -44,7 +44,7 @@
 
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
@@ -56,7 +56,7 @@ namespace adobe {
 \ingroup property_model
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
     \ingroup adam_engine
@@ -527,7 +527,7 @@ private:
     implementation_t* object_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \ingroup adam_engine
@@ -535,7 +535,7 @@ private:
 \brief Adam support class.
 */
 
-struct set_monitor_t : std::unary_function<any_regular_t, void> {
+struct set_monitor_t {
     set_monitor_t(sheet_t& sheet, name_t cell_name) : cell_name_m(cell_name), sheet_m(sheet) {}
 
     void operator()(const any_regular_t& x) { sheet_m.get().set(cell_name_m, x); }
@@ -545,7 +545,7 @@ private:
     boost::reference_wrapper<sheet_t> sheet_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     REVISIT (sparent) : line_position_t and array_t need to go in favor of a function object.
@@ -567,9 +567,9 @@ struct sheet_t::relation_t {
         swap(x.expression_m, y.expression_m);
     }
 
-    relation_t(relation_t&& x) noexcept : name_set_m(x.name_set_m),
-                                          position_m(x.position_m),
-                                          expression_m(std::move(x.expression_m)) {}
+    relation_t(relation_t&& x) noexcept
+        : name_set_m(x.name_set_m), position_m(x.position_m),
+          expression_m(std::move(x.expression_m)) {}
 
     relation_t(const relation_t&) = default;
 
@@ -584,12 +584,12 @@ struct sheet_t::relation_t {
     array_t expression_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

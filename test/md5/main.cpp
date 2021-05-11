@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 #include <adobe/md5.hpp>
@@ -11,10 +11,10 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/version.hpp>
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 int main(int argc, char* argv[]) {
     if (argc <= 1) {
@@ -62,11 +62,9 @@ int main(int argc, char* argv[]) {
         std::cout << std::endl;
 
         success = true;
-    }
-    catch (const std::exception& error) {
+    } catch (const std::exception& error) {
         std::cerr << "Exception: " << error.what() << std::endl;
-    }
-    catch (...) {
+    } catch (...) {
         std::cerr << "Unknown exception" << std::endl;
     }
 

@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
@@ -13,23 +13,23 @@
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
+#include <adobe/algorithm/equal_range.hpp>
+#include <adobe/functional.hpp>
+#include <adobe/utility/pair.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/size.hpp>
-#include <adobe/functional.hpp>
-#include <adobe/algorithm/equal_range.hpp>
-#include <adobe/utility/pair.hpp>
 
 
 BOOST_AUTO_TEST_CASE(equal_range_test) {
-    using std::pair;
-    using adobe::less;
+    using adobe::aggregate_pair;
     using adobe::equal_range;
     using adobe::equal_range_n;
-    using adobe::aggregate_pair;
+    using adobe::less;
     using boost::begin;
     using boost::end;
     using boost::size;
+    using std::pair;
 
     aggregate_pair<int> a[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};
     const aggregate_pair<int> c[] = {{0, 0}, {0, 1}, {1, 2}, {1, 3}, {3, 4}, {3, 5}};

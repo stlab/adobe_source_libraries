@@ -59,9 +59,7 @@ namespace {
 
 template <typename DigestType>
 std::string digest_binary(const DigestType& digest) {
-    enum {
-        num_bytes = sizeof(typename DigestType::value_type)
-    };
+    enum { num_bytes = sizeof(typename DigestType::value_type) };
 
     std::string digest_str;
 
@@ -494,13 +492,11 @@ int main() try {
 #endif // USING_BOOSTCRYPTO
 
     return 0;
-}
-catch (const std::exception& error) {
+} catch (const std::exception& error) {
     std::cerr << "Error: " << error.what() << '\n';
 
     return 1;
-}
-catch (...) {
+} catch (...) {
     std::cerr << "Error: unknown\n";
 
     return 1;

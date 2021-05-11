@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ALGORITHM_SELECTION_HPP
 #define ADOBE_ALGORITHM_SELECTION_HPP
@@ -16,19 +16,19 @@
 
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/range/value_type.hpp>
-#include <boost/range/size_type.hpp>
 #include <boost/range/size.hpp>
+#include <boost/range/size_type.hpp>
+#include <boost/range/value_type.hpp>
 
 #include <adobe/algorithm/other_of.hpp>
 #include <adobe/algorithm/rotate.hpp>
 #include <adobe/iterator/type_functions.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \defgroup selection_algorithms selection
     \ingroup algorithm
@@ -44,7 +44,7 @@ namespace adobe {
     predicate. It is as if the "floor" of the algorithm's processing tree were removed, as the leaf
     nodes are merely for discerning the state of an element by means of the predicate.
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -75,7 +75,7 @@ inline O selection_operation_remainder(S first, S last, O output, bool this_insi
     return output;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -83,14 +83,14 @@ inline O selection_operation_remainder(S first, S last, O output, bool this_insi
 */
 template <typename C1,      // C1 models ConvertibleToBool
           typename C2 = C1> // C2 models ConvertibleToBool
-struct logical_xor : std::binary_function<C1, C2, bool> {
+struct logical_xor {
     /// \return <code>x != y</code>
     bool operator()(const C1& x, const C2& y) const {
         return static_cast<bool>(x) != static_cast<bool>(y);
     }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -145,7 +145,7 @@ O selection_operation(S1 s1_first, S1 s1_last, S2 s2_first, S2 s2_last, O output
     return output;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -162,7 +162,7 @@ inline O selection_union(S1 s1_first, S1 s1_last, S2 s2_first, S2 s2_last, O out
                                std::logical_or<bool>(), comp);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -179,7 +179,7 @@ inline O selection_intersection(S1 s1_first, S1 s1_last, S2 s2_first, S2 s2_last
                                std::logical_and<bool>(), comp);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -196,7 +196,7 @@ inline O selection_difference(S1 s1_first, S1 s1_last, S2 s2_first, S2 s2_last, 
                                   !s2_inside);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -213,7 +213,7 @@ inline O selection_symmetric_difference(S1 s1_first, S1 s1_last, S2 s2_first, S2
                                logical_xor<bool>(), comp);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -244,7 +244,7 @@ inline bool selection_includes(S1 s1_first, S1 s1_last, S2 s2_first, S2 s2_last,
                               !s2_inside);
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -265,7 +265,7 @@ Selection1 selection_intersection(const Selection1& x, const Selection2& y) {
     return result;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -285,7 +285,7 @@ Selection1 selection_union(const Selection1& x, const Selection2& y) {
     return result;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -305,7 +305,7 @@ Selection1 selection_difference(const Selection1& x, const Selection2& y) {
     return result;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -326,7 +326,7 @@ Selection1 selection_symmetric_difference(const Selection1& x, const Selection2&
     return result;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -342,7 +342,7 @@ bool selection_includes(const Selection1& x, const Selection2& y) {
                                      start_selected(x), start_selected(y));
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -353,7 +353,7 @@ inline void invert(Selection& x) {
     x.invert();
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -364,7 +364,7 @@ inline bool start_selected(const Selection& x) {
     return x.start_selected();
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -375,7 +375,7 @@ inline typename boost::range_size<Selection>::type size(const Selection& x) {
     return x.size();
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -422,7 +422,7 @@ typename boost::range_size<Selection>::type size(const Selection& x, const Forwa
     return result;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -437,7 +437,7 @@ bool is_selected(const Selection& x, typename Selection::value_type index) {
     return (count % 2 == 1) != start_selected(x);
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -477,7 +477,7 @@ OutputIterator selection_copy(const Selection& x, const ForwardRange& range,
     return output;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -527,7 +527,7 @@ std::pair<O1, O2> selection_partition_copy(const Selection& selection, ForwardRa
     return std::make_pair(false_output, true_output);
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -562,7 +562,7 @@ UnaryFunction selection_foreach(const Selection& x, const ForwardRange& range, U
     return proc;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -583,7 +583,7 @@ selection_find_boundary(const Selection& selection, typename Selection::size_typ
                        static_cast<size_type>(std::distance(boost::begin(selection), bound)));
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -610,7 +610,7 @@ selection_find_boundary(const Selection& selection, typename Selection::size_typ
     return result_type(iter, boundary_count);
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -644,7 +644,7 @@ selection_find_boundary(const Selection& selection, typename Selection::size_typ
     return selection_find_boundary(selection, p, iterator_category());
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -700,7 +700,7 @@ RangeIterator selection_stable_partition(SelectionIterator selection_first,
     return other_of(adobe::rotate(i, range_middle, j), range_middle);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -714,7 +714,7 @@ selection_stable_partition(const Selection& selection, ForwardRange& range) {
                                       start_selected(selection));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
@@ -753,9 +753,9 @@ selection_stable_partition(const Selection& selection, ForwardRange& range) {
 template <typename Selection, typename ForwardRange>
 std::pair<typename boost::range_iterator<ForwardRange>::type,
           typename boost::range_iterator<ForwardRange>::type>
-selection_stable_partition_about(const Selection& selection, ForwardRange& range, std::size_t p,
-                                 typename boost::range_size<Selection>::type prior_boundary_count =
-                                     0) {
+selection_stable_partition_about(
+    const Selection& selection, ForwardRange& range, std::size_t p,
+    typename boost::range_size<Selection>::type prior_boundary_count = 0) {
     typedef typename boost::range_size<Selection>::type size_type;
     typedef typename boost::range_const_iterator<Selection>::type selection_const_iterator;
     typedef typename boost::range_iterator<ForwardRange>::type range_iterator;
@@ -776,22 +776,23 @@ selection_stable_partition_about(const Selection& selection, ForwardRange& range
     return std::pair<range_iterator, range_iterator>(i, j);
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
  \ingroup selection_algorithms
- 
- Finds end of the non-interrupted sequence in a strictly increasing set of indices, starting with number n
- 
+
+ Finds end of the non-interrupted sequence in a strictly increasing set of indices, starting with
+ number n
+
  \pre [f, l) is a sorted (strictly increasing) set of indices
- 
+
  \return
  A pair of values. The first is a iterator for the next element of a non-interupted sequence
  The second is the last number of a non-interrupted sequence .
- 
+
  E.g. in an array of [0, 1, 2, 3, 7, 9, 10, 12]
   : when called with value of ((iter 1), (iter 12), 1) : returns {(iter 7), 3};
   : when called with value of ((iter 9), (iter 12), 8) : returns {(iter 9), 8};
- 
+
  */
 template <typename I, typename N> // I models ForwardIterator
 std::pair<I, N> find_sequence_end(I f, I l, N n) {
@@ -799,17 +800,17 @@ std::pair<I, N> find_sequence_end(I f, I l, N n) {
         ++n;
         ++f;
     }
-    return { f, n };
+    return {f, n};
 }
- 
-  
-/****************************************************************************************************/
+
+
+/**************************************************************************************************/
 /*!
   \ingroup selection_algorithms
 
-  Takes an subset of strictly increasing set of indices and converts them to a boundary-based Selection
-  via its output iterator
- 
+  Takes an subset of strictly increasing set of indices and converts them to a boundary-based
+  Selection via its output iterator
+
   \pre [f, l) is a sorted (strictly increasing) set of indices
 
 */
@@ -817,16 +818,17 @@ std::pair<I, N> find_sequence_end(I f, I l, N n) {
 template <typename I, // I models ForwardIterator
           typename O> // O models OutputIterator>
 void index_set_to_selection(I f, I l, O output) {
-  while (f != l) {
-      auto n = *f;
-      *output++ = n;
-      ++f; ++n;
-      std::tie(f, n) = find_sequence_end(f, l, n);
-      *output++ = n;
-  }
+    while (f != l) {
+        auto n = *f;
+        *output++ = n;
+        ++f;
+        ++n;
+        std::tie(f, n) = find_sequence_end(f, l, n);
+        *output++ = n;
+    }
 }
-  
-/****************************************************************************************************/
+
+/**************************************************************************************************/
 /*!
   \ingroup selection_algorithms
 
@@ -834,55 +836,55 @@ void index_set_to_selection(I f, I l, O output) {
 
   \pre index_set is a sorted (strictly increasing) set of indices
 
-  If you have an arbitrary set of selected indices (unsorted, and/or possible duplicate entries), 
+  If you have an arbitrary set of selected indices (unsorted, and/or possible duplicate entries),
   sort and remove duplicates first, following PSEUDOCODE here:
- 
+
      auto sorted_selected_set = DEEP_COPY(index_set);
-     
+
      (DEEP COPY depends on the nature of index_set ForwardRange type:
       - If you are using std::vector<>, a simple assignment would suffice
-      - However, generally ForwardRange doesn't necessarily own elements, so extra effort may be needed to ensure 
-        proper duplication that results in a sortable container.)
-   
-   
+      - However, generally ForwardRange doesn't necessarily own elements, so extra effort may be
+  needed to ensure proper duplication that results in a sortable container.)
+
+
      std::sort(sorted_selected_set.begin(), sorted_selected_set.end());
-     
+
      auto last = std::unique(sorted_selected_set.begin(), sorted_selected_set.end());
-     
+
      sorted_selected_set.erase(last, sorted_selected_set.end());
-     
+
      Selection result = index_set_to_selection<Selection>(sorted_selected_set);
-     
+
      return result;
- 
+
   \return
   A Selection.
  */
 
-template <typename Selection, typename ForwardRange >
-Selection index_set_to_selection(const ForwardRange &index_set) {
+template <typename Selection, typename ForwardRange>
+Selection index_set_to_selection(const ForwardRange& index_set) {
 
-  Selection result;
-  
-  index_set_to_selection(std::begin(index_set), std::end(index_set), std::back_inserter(result));
-  
-  return result;
+    Selection result;
+
+    index_set_to_selection(std::begin(index_set), std::end(index_set), std::back_inserter(result));
+
+    return result;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup selection_algorithms
 
-    Takes a boundary-based Selection and converts them to a set of indices 
- 
-    Example usage: 
-    
-    (std::size_t total_size is the known total number of elements in our set, 
+    Takes a boundary-based Selection and converts them to a set of indices
+
+    Example usage:
+
+    (std::size_t total_size is the known total number of elements in our set,
      since that information is not known to by a Selection object)
- 
+
     std::vector<std::size_t> indexSet;
     selection_to_index_set(selection, total_size, std::back_inserter(indexSet));
- 
+
 */
 template <typename Selection, typename OutputIterator>
 OutputIterator selection_to_index_set(const Selection& selection,
@@ -915,12 +917,12 @@ OutputIterator selection_to_index_set(const Selection& selection,
     return output;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

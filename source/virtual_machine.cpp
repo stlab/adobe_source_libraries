@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <boost/config.hpp>
 
@@ -14,8 +14,8 @@
 #include <typeinfo>
 #include <vector>
 
+#include <boost/bind/bind.hpp>
 #include <boost/iterator/transform_iterator.hpp>
-#include <boost/bind.hpp>
 
 #include <adobe/algorithm/minmax.hpp>
 #include <adobe/any_regular.hpp>
@@ -37,13 +37,16 @@
 #include <iostream>
 #endif
 
-using namespace std;
+/**************************************************************************************************/
 
-/*************************************************************************************************/
+using namespace std;
+using namespace boost::placeholders;
+
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename ValueType>
 struct static_table_traits<const std::type_info*, ValueType> {
@@ -69,15 +72,15 @@ struct static_table_traits<const std::type_info*, ValueType> {
     result_type equal(const key_type& x, const key_type& y) const { return *x == *y; }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 using namespace adobe::literals;
 
@@ -95,7 +98,7 @@ typedef adobe::static_table<adobe::name_t, dictionary_function_t, 1> dictionary_
 typedef adobe::static_table<const std::type_info*, adobe::name_t, 7> type_table_t;
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename Result>
 struct make {
@@ -107,11 +110,11 @@ struct make {
     }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 static type_table_t* type_table_g;
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void get_type_name_init_() {
     static type_table_t type_table_s = {
@@ -128,12 +131,12 @@ void get_type_name_init_() {
     type_table_g = &type_table_s;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 once_flag get_type_name_flag;
 void get_type_name_init() { call_once(get_type_name_flag, &get_type_name_init_); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 adobe::name_t get_type_name(const adobe::any_regular_t& val) {
     get_type_name_init();
@@ -148,13 +151,13 @@ adobe::name_t get_type_name(const adobe::any_regular_t& val) {
     return result;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 adobe::any_regular_t xml_escape_function(const adobe::array_t& parameters) {
     if (parameters.size() != 1 || parameters[0].type_info() != typeid(string))
@@ -163,7 +166,7 @@ adobe::any_regular_t xml_escape_function(const adobe::array_t& parameters) {
     return adobe::any_regular_t(adobe::entity_escape(parameters[0].cast<string>()));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 adobe::any_regular_t xml_unescape_function(const adobe::array_t& parameters) {
     if (parameters.size() != 1 || parameters[0].type_info() != typeid(string))
@@ -172,7 +175,7 @@ adobe::any_regular_t xml_unescape_function(const adobe::array_t& parameters) {
     return adobe::any_regular_t(adobe::entity_unescape(parameters[0].cast<string>()));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 adobe::any_regular_t localize_function(const adobe::array_t& parameters) {
     if (parameters.size() != 1)
@@ -184,7 +187,7 @@ adobe::any_regular_t localize_function(const adobe::array_t& parameters) {
             : parameters.front().cast<std::string>());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 adobe::any_regular_t round_function(const adobe::array_t& parameters) {
     if (parameters.size() == 0)
@@ -193,33 +196,31 @@ adobe::any_regular_t round_function(const adobe::array_t& parameters) {
     return adobe::any_regular_t(adobe::round(parameters.front().cast<double>()));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 adobe::any_regular_t min_function(const adobe::array_t& parameters) {
     if (parameters.size() == 0)
         throw std::runtime_error("min: parameter error");
 
     return *adobe::min_element(
-                parameters,
-                boost::bind(std::less<double>(),
-                            boost::bind(adobe::any_regular_t::transform<double>(), _1),
-                            boost::bind(adobe::any_regular_t::transform<double>(), _2)));
+        parameters,
+        boost::bind(std::less<double>(), boost::bind(adobe::any_regular_t::transform<double>(), _1),
+                    boost::bind(adobe::any_regular_t::transform<double>(), _2)));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 adobe::any_regular_t max_function(const adobe::array_t& parameters) {
     if (parameters.size() == 0)
         throw std::runtime_error("max: parameter error");
 
     return *adobe::max_element(
-                parameters,
-                boost::bind(std::less<double>(),
-                            boost::bind(adobe::any_regular_t::transform<double>(), _1),
-                            boost::bind(adobe::any_regular_t::transform<double>(), _2)));
+        parameters,
+        boost::bind(std::less<double>(), boost::bind(adobe::any_regular_t::transform<double>(), _1),
+                    boost::bind(adobe::any_regular_t::transform<double>(), _2)));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 adobe::any_regular_t typeof_function(const adobe::array_t& parameters) {
     if (parameters.size() == 0)
@@ -228,13 +229,13 @@ adobe::any_regular_t typeof_function(const adobe::array_t& parameters) {
     return adobe::any_regular_t(get_type_name(parameters.front()));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 adobe::any_regular_t scale_function(const adobe::dictionary_t& parameters) {
     double m(1.0);
@@ -248,75 +249,70 @@ adobe::any_regular_t scale_function(const adobe::dictionary_t& parameters) {
     return adobe::any_regular_t(m * x + b);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void throw_function_not_defined(adobe::name_t function_name) {
     throw std::logic_error(
         adobe::make_string("Function \'", function_name.c_str(), "\' not defined."));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-struct bitwise_and_t
-    : public std::binary_function<boost::uint32_t, boost::uint32_t, boost::uint32_t> {
+struct bitwise_and_t {
     inline boost::uint32_t operator()(boost::uint32_t x, boost::uint32_t y) const { return x & y; }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-struct bitwise_xor_t
-    : public std::binary_function<boost::uint32_t, boost::uint32_t, boost::uint32_t> {
+struct bitwise_xor_t {
     inline boost::uint32_t operator()(boost::uint32_t x, boost::uint32_t y) const { return x ^ y; }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-struct bitwise_or_t
-    : public std::binary_function<boost::uint32_t, boost::uint32_t, boost::uint32_t> {
+struct bitwise_or_t {
     inline boost::uint32_t operator()(boost::uint32_t x, boost::uint32_t y) const { return x | y; }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-struct bitwise_rshift_t
-    : public std::binary_function<boost::uint32_t, boost::uint32_t, boost::uint32_t> {
+struct bitwise_rshift_t {
     inline boost::uint32_t operator()(boost::uint32_t x, boost::uint32_t y) const { return x >> y; }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-struct bitwise_lshift_t
-    : public std::binary_function<boost::uint32_t, boost::uint32_t, boost::uint32_t> {
+struct bitwise_lshift_t {
     inline boost::uint32_t operator()(boost::uint32_t x, boost::uint32_t y) const { return x << y; }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-struct bitwise_negate_t : public std::unary_function<boost::uint32_t, boost::uint32_t> {
+struct bitwise_negate_t {
     inline boost::uint32_t operator()(boost::uint32_t x) const { return ~x; }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 class virtual_machine_t::implementation_t {
     typedef std::map<adobe::name_t, binary_op_override_t> binary_op_override_map_t;
@@ -376,27 +372,27 @@ public:
     static dictionary_function_table_t* dictionary_function_table_g;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 operator_table_t* virtual_machine_t::implementation_t::operator_table_g;
 array_function_table_t* virtual_machine_t::implementation_t::array_function_table_g;
 dictionary_function_table_t* virtual_machine_t::implementation_t::dictionary_function_table_g;
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_init_() {
     typedef operator_table_t::entry_type op_entry_type;
@@ -465,30 +461,30 @@ void virtual_machine_init_() {
         &dictionary_function_table_s;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 once_flag virtual_machine_init_flag;
 void virtual_machine_init() { call_once(virtual_machine_init_flag, &virtual_machine_init_); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 virtual_machine_t::implementation_t::implementation_t() { virtual_machine_init(); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::evaluate(const array_t& expression) {
     for (expression_t::const_iterator iter(expression.begin()); iter != expression.end(); ++iter) {
@@ -505,21 +501,21 @@ void virtual_machine_t::implementation_t::evaluate(const array_t& expression) {
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 const any_regular_t& virtual_machine_t::implementation_t::back() const {
     return value_stack_m.back();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 any_regular_t& virtual_machine_t::implementation_t::back() { return value_stack_m.back(); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::pop_back() { value_stack_m.pop_back(); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 operator_t virtual_machine_t::implementation_t::find_operator(adobe::name_t oper) {
     virtual_machine_init();
@@ -527,13 +523,13 @@ operator_t virtual_machine_t::implementation_t::find_operator(adobe::name_t oper
     return (*operator_table_g)(oper);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <template <class T> class Operator, class OperandType>
 void virtual_machine_t::implementation_t::binary_operator() {
@@ -552,7 +548,7 @@ void virtual_machine_t::implementation_t::binary_operator() {
     pop_back();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool virtual_machine_t::implementation_t::operator_override(adobe::name_t name) {
     binary_op_override_map_t::iterator binary_op_found(binary_op_override_map_m.find(name));
@@ -575,7 +571,7 @@ bool virtual_machine_t::implementation_t::operator_override(adobe::name_t name) 
     return overridden;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <template <class T> class Operator, class OperandType>
 void virtual_machine_t::implementation_t::unary_operator() {
@@ -589,7 +585,7 @@ void virtual_machine_t::implementation_t::unary_operator() {
     operand1.assign(operator_class()(operand1.template cast<operand_t>()));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::logical_operator(bool do_and) {
     adobe::array_t operand_exp(back().cast<adobe::array_t>());
@@ -608,15 +604,15 @@ void virtual_machine_t::implementation_t::logical_operator(bool do_and) {
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::logical_and_operator() { logical_operator(true); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::logical_or_operator() { logical_operator(false); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::index_operator() {
     stack_type::iterator iter(value_stack_m.end());
@@ -654,7 +650,7 @@ void virtual_machine_t::implementation_t::index_operator() {
     pop_back();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::ifelse_operator() {
     adobe::array_t else_exp(back().cast<adobe::array_t>());
@@ -668,7 +664,7 @@ void virtual_machine_t::implementation_t::ifelse_operator() {
     evaluate(predicate ? then_exp : else_exp);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::variable_operator() {
     adobe::name_t variable(back().cast<adobe::name_t>());
@@ -681,7 +677,7 @@ void virtual_machine_t::implementation_t::variable_operator() {
     value_stack_m.push_back(variable_lookup_m(variable));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 
@@ -705,7 +701,7 @@ T accumulate(const InputRange& range, T init, BinaryOperation binary_op)
 }
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::array_operator() {
     stack_type::difference_type count =
@@ -724,7 +720,7 @@ void virtual_machine_t::implementation_t::array_operator() {
     value_stack_m.push_back(any_regular_t(std::move(result)));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::dictionary_operator() {
     stack_type::difference_type count =
@@ -747,7 +743,7 @@ void virtual_machine_t::implementation_t::dictionary_operator() {
     value_stack_m.push_back(any_regular_t(std::move(result)));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename BitwiseOp>
 void virtual_machine_t::implementation_t::bitwise_binary_operator() {
@@ -780,7 +776,7 @@ void virtual_machine_t::implementation_t::bitwise_binary_operator() {
     operand1.assign(static_cast<double>(result)); // assign operand1 in-place
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename BitwiseOp>
 void virtual_machine_t::implementation_t::bitwise_unary_operator() {
@@ -791,7 +787,7 @@ void virtual_machine_t::implementation_t::bitwise_unary_operator() {
     operand1.assign(static_cast<double>(result)); // assign operand1 in-place
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::function_operator() {
     virtual_machine_init();
@@ -827,13 +823,13 @@ void virtual_machine_t::implementation_t::function_operator() {
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 #if !defined(ADOBE_NO_DOCUMENTATION)
 
 virtual_machine_t::virtual_machine_t() : object_m(new implementation_t) {}
@@ -850,62 +846,62 @@ virtual_machine_t& virtual_machine_t::operator=(const virtual_machine_t& rhs) {
 virtual_machine_t::~virtual_machine_t() { delete object_m; }
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::set_variable_lookup(const variable_lookup_t& lookup) {
     object_m->variable_lookup_m = lookup;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::set_array_function_lookup(const array_function_lookup_t& function) {
     object_m->array_function_lookup_m = function;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-void
-virtual_machine_t::set_dictionary_function_lookup(const dictionary_function_lookup_t& function) {
+void virtual_machine_t::set_dictionary_function_lookup(
+    const dictionary_function_lookup_t& function) {
     object_m->dictionary_function_lookup_m = function;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::set_named_index_lookup(const named_index_lookup_t& function) {
     object_m->named_index_lookup_m = function;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::set_numeric_index_lookup(const numeric_index_lookup_t& function) {
     object_m->numeric_index_lookup_m = function;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::override_operator(name_t operator_name,
                                           const binary_op_override_t& override) {
     object_m->binary_op_override_map_m[operator_name] = override;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::evaluate(const expression_t& expression) { object_m->evaluate(expression); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 const any_regular_t& virtual_machine_t::back() const { return object_m->back(); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 any_regular_t& virtual_machine_t::back() { return object_m->back(); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void virtual_machine_t::pop_back() { object_m->pop_back(); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/

@@ -6,8 +6,8 @@
 /**************************************************************************************************/
 
 #include <adobe/config.hpp>
-#include <boost/test/unit_test.hpp>
 #include <adobe/utility/ignore_unused.hpp>
+#include <boost/test/unit_test.hpp>
 
 
 namespace adobe {
@@ -43,4 +43,4 @@ void check_less_than_comparable(const T& x, const T& y, const T& z, Op op) {
 }
 
 //!@}
-}
+} // namespace adobe

@@ -3,12 +3,12 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_TABLE_INDEX_HPP
 #define ADOBE_TABLE_INDEX_HPP
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
@@ -16,12 +16,12 @@
 #include <stdexcept>
 #include <vector>
 
-#include <boost/operators.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/iterator/indirect_iterator.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/next_prior.hpp>
+#include <boost/operators.hpp>
 #include <boost/type_traits/remove_reference.hpp>
-#include <boost/bind.hpp>
 
 #include <adobe/algorithm/count.hpp>
 #include <adobe/algorithm/equal_range.hpp>
@@ -33,11 +33,11 @@
 #include <adobe/closed_hash.hpp>
 #include <adobe/functional.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \class adobe::table_index
@@ -561,8 +561,7 @@ public:
     typedef T value_type;
     typedef P key_function_type;
 
-    typedef typename boost::remove_reference<typename key_function_type::result_type>::type
-    key_type;
+    using key_type = std::remove_reference_t<adobe::invoke_result_t<P, T>>;
 
     typedef H hasher;
     typedef C key_equal;
@@ -675,7 +674,7 @@ private:
     index_type index_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename Key,                                  // models Regular
           typename T,                                    // models Regular
@@ -791,7 +790,7 @@ public:
 
 private:
 #ifndef ADOBE_NO_DOCUMENTATION
-    struct indirect_compare_t : std::binary_function<pointer, pointer, bool> {
+    struct indirect_compare_t {
         typedef bool result_type;
 
         indirect_compare_t(transform_type& transform, const key_compare& compare)
@@ -813,14 +812,14 @@ private:
     index_type index_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 table_index<Key, T, Compare, Transform>::table_index(const transform_type& transform,
                                                      const key_compare& compare)
     : transform_m(transform), compare_m(compare) {}
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::iterator
@@ -828,7 +827,7 @@ table_index<Key, T, Compare, Transform>::begin() {
     return iterator(index_m.begin());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::const_iterator
@@ -836,7 +835,7 @@ table_index<Key, T, Compare, Transform>::begin() const {
     return const_iterator(index_m.begin());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::iterator
@@ -844,7 +843,7 @@ table_index<Key, T, Compare, Transform>::end() {
     return iterator(index_m.end());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::const_iterator
@@ -852,7 +851,7 @@ table_index<Key, T, Compare, Transform>::end() const {
     return const_iterator(index_m.end());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::reverse_iterator
@@ -860,7 +859,7 @@ table_index<Key, T, Compare, Transform>::rbegin() {
     return reverse_iterator(index_m.rbegin());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::const_reverse_iterator
@@ -868,7 +867,7 @@ table_index<Key, T, Compare, Transform>::rbegin() const {
     return const_reverse_iterator(index_m.rbegin());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::reverse_iterator
@@ -876,7 +875,7 @@ table_index<Key, T, Compare, Transform>::rend() {
     return reverse_iterator(index_m.rend());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::const_reverse_iterator
@@ -884,7 +883,7 @@ table_index<Key, T, Compare, Transform>::rend() const {
     return reverse_iterator(index_m.rend());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::size_type
@@ -892,7 +891,7 @@ table_index<Key, T, Compare, Transform>::max_size() const {
     return index_m.max_size();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::size_type
@@ -900,28 +899,28 @@ table_index<Key, T, Compare, Transform>::size() const {
     return index_m.size();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline bool table_index<Key, T, Compare, Transform>::empty() const {
     return index_m.empty();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline void table_index<Key, T, Compare, Transform>::push_back(value_type& x) {
     index_m.push_back(&x);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline void table_index<Key, T, Compare, Transform>::pop_back() {
     index_m.pop_back();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::iterator
@@ -929,7 +928,7 @@ table_index<Key, T, Compare, Transform>::insert(iterator position, value_type& x
     return index_m.insert(position, &x);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     REVISIT (sparent) : We should be able to greatly improve the table_index class - this function
@@ -949,7 +948,7 @@ inline void table_index<Key, T, Compare, Transform>::insert(iterator position, I
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::iterator
@@ -957,7 +956,7 @@ table_index<Key, T, Compare, Transform>::erase(iterator position) {
     return index_m.erase(position.base());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::iterator
@@ -965,21 +964,21 @@ table_index<Key, T, Compare, Transform>::erase(iterator first, iterator last) {
     return index_m.erase(first.base(), last.base());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline void table_index<Key, T, Compare, Transform>::clear() {
     index_m.clear();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 void table_index<Key, T, Compare, Transform>::sort() {
     adobe::sort(index_m, indirect_compare_t(transform_m, compare_m));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 void table_index<Key, T, Compare, Transform>::unique() {
@@ -988,7 +987,7 @@ void table_index<Key, T, Compare, Transform>::unique() {
     index_m.erase(i, index_m.end());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::reference
@@ -996,7 +995,7 @@ table_index<Key, T, Compare, Transform>::at(const size_type n) {
     return *index_m.at(n);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::const_reference
@@ -1004,12 +1003,11 @@ table_index<Key, T, Compare, Transform>::at(const size_type n) const {
     return *index_m.at(n);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::reference
-table_index<Key, T, Compare, Transform>::
-operator[](const key_type& key) {
+table_index<Key, T, Compare, Transform>::operator[](const key_type& key) {
     iterator iter(find(key));
 
     if (iter == end())
@@ -1018,12 +1016,11 @@ operator[](const key_type& key) {
     return *iter;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::const_reference
-table_index<Key, T, Compare, Transform>::
-operator[](const key_type& key) const {
+table_index<Key, T, Compare, Transform>::operator[](const key_type& key) const {
     const_iterator iter(find(key));
 
     if (iter == end())
@@ -1032,7 +1029,7 @@ operator[](const key_type& key) const {
     return *iter;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::iterator
@@ -1045,7 +1042,7 @@ table_index<Key, T, Compare, Transform>::find(const key_type& key) {
     return iter;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::const_iterator
@@ -1058,7 +1055,7 @@ table_index<Key, T, Compare, Transform>::find(const key_type& key) const {
     return iter;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::size_type
@@ -1066,63 +1063,69 @@ table_index<Key, T, Compare, Transform>::count(const key_type& key) const {
     return adobe::count_if(index_m, bound_predicate_t(key, transform_m, compare_m));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::iterator
 table_index<Key, T, Compare, Transform>::lower_bound(const key_type& key) {
-    return adobe::lower_bound(index_m, key, compare_m,
-                              boost::bind(transform_m, bind(indirect<value_type>(), _1)));
+    return adobe::lower_bound(
+        index_m, key, compare_m,
+        boost::bind(transform_m, bind(indirect<value_type>(), boost::placeholders::_1)));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::const_iterator
 table_index<Key, T, Compare, Transform>::lower_bound(const key_type& key) const {
-    return adobe::lower_bound(index_m, key, compare_m,
-                              boost::bind(transform_m, bind(indirect<value_type>(), _1)));
+    return adobe::lower_bound(
+        index_m, key, compare_m,
+        boost::bind(transform_m, bind(indirect<value_type>(), boost::placeholders::_1)));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::iterator
 table_index<Key, T, Compare, Transform>::upper_bound(const key_type& key) {
-    return adobe::upper_bound(index_m, key, compare_m,
-                              boost::bind(transform_m, bind(indirect<value_type>(), _1)));
+    return adobe::upper_bound(
+        index_m, key, compare_m,
+        boost::bind(transform_m, bind(indirect<value_type>(), boost::placeholders::_1)));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::const_iterator
 table_index<Key, T, Compare, Transform>::upper_bound(const key_type& key) const {
-    return adobe::upper_bound(index_m, key, compare_m,
-                              boost::bind(transform_m, bind(indirect<value_type>(), _1)));
+    return adobe::upper_bound(
+        index_m, key, compare_m,
+        boost::bind(transform_m, bind(indirect<value_type>(), boost::placeholders::_1)));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline std::pair<typename table_index<Key, T, Compare, Transform>::iterator,
                  typename table_index<Key, T, Compare, Transform>::iterator>
 table_index<Key, T, Compare, Transform>::equal_range(const key_type& key) {
-    return adobe::equal_range(index_m, key, compare_m,
-                              boost::bind(transform_m, bind(indirect<value_type>(), _1)));
+    return adobe::equal_range(
+        index_m, key, compare_m,
+        boost::bind(transform_m, bind(indirect<value_type>(), boost::placeholders::_1)));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline std::pair<typename table_index<Key, T, Compare, Transform>::const_iterator,
                  typename table_index<Key, T, Compare, Transform>::const_iterator>
 table_index<Key, T, Compare, Transform>::equal_range(const key_type& key) const {
-    return adobe::equal_range(index_m, key, compare_m,
-                              boost::bind(transform_m, bind(indirect<value_type>(), _1)));
+    return adobe::equal_range(
+        index_m, key, compare_m,
+        boost::bind(transform_m, bind(indirect<value_type>(), boost::placeholders::_1)));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline typename table_index<Key, T, Compare, Transform>::index_type&
@@ -1130,7 +1133,7 @@ table_index<Key, T, Compare, Transform>::index() {
     return index_m;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Key, class T, class Compare, class Transform>
 inline const typename table_index<Key, T, Compare, Transform>::index_type&
@@ -1138,12 +1141,12 @@ table_index<Key, T, Compare, Transform>::index() const {
     return index_m;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

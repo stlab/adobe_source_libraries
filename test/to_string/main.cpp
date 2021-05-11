@@ -41,47 +41,45 @@ BOOST_AUTO_TEST_CASE(to_string_smoke) {
     static_assert(DBL_MAX == 1.7976931348623157e+308, "Unexpected DBL_MAX");
 
     {
-    char buf[32] = { 0 };
-    adobe::to_string(atof("0.1"), &buf[0], false);
-    assert(strcmp(&buf[0], "0.1") == 0);
+        char buf[32] = {0};
+        adobe::to_string(atof("0.1"), &buf[0], false);
+        assert(strcmp(&buf[0], "0.1") == 0);
     }
 
     {
-    char buf[32] = { 0 };
-    adobe::to_string(DBL_MAX, &buf[0], false);
-    assert(atof(&buf[0]) != DBL_MAX);
+        char buf[32] = {0};
+        adobe::to_string(DBL_MAX, &buf[0], false);
+        assert(atof(&buf[0]) != DBL_MAX);
     }
 
     {
-    char buf[32] = { 0 };
-    adobe::to_string(atof("0.1"), &buf[0], true);
-    assert(strcmp(&buf[0], "0.1") != 0);
+        char buf[32] = {0};
+        adobe::to_string(atof("0.1"), &buf[0], true);
+        assert(strcmp(&buf[0], "0.1") != 0);
     }
 
     {
-    char buf[32] = { 0 };
-    adobe::to_string(DBL_MAX, &buf[0], true);
-    assert(atof(&buf[0]) == DBL_MAX);
+        char buf[32] = {0};
+        adobe::to_string(DBL_MAX, &buf[0], true);
+        assert(atof(&buf[0]) == DBL_MAX);
     }
 }
 
 /******************************************************************************/
 
 struct test_t {
-    double      value_m;
+    double value_m;
     const char* tag_m;
 };
 
 /******************************************************************************/
 
-test_t suite_g[] = {
-    { std::atof("0.000001e-308"), "atof(0.000001e-308)" },
-    { std::atof("0.1"), "atof(0.1)" },
-    { 1.1, "1.1" },
-    { DBL_MIN, "DBL_MIN" },
-    { DBL_MAX, "DBL_MAX" },
-    { __DBL_DENORM_MIN__, "__DBL_DENORM_MIN__" }
-};
+test_t suite_g[] = {{std::atof("0.000001e-308"), "atof(0.000001e-308)"},
+                    {std::atof("0.1"), "atof(0.1)"},
+                    {1.1, "1.1"},
+                    {DBL_MIN, "DBL_MIN"},
+                    {DBL_MAX, "DBL_MAX"},
+                    {__DBL_DENORM_MIN__, "__DBL_DENORM_MIN__"}};
 
 /******************************************************************************/
 
@@ -93,7 +91,7 @@ inline void asl_to_string(const test_t& test) {
 inline void double_conversion_serialization(const test_t& test) {
     using namespace double_conversion;
     const DoubleToStringConverter& c = DoubleToStringConverter::EcmaScriptConverter();
-    char buf[32] = { 0 };
+    char buf[32] = {0};
     StringBuilder builder(buf, sizeof(buf));
     c.ToShortest(test.value_m, &builder);
     std::cout << builder.Finalize();

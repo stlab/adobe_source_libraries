@@ -6,23 +6,23 @@
     Author(s): Mat Marcus
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 #ifndef ADOBE_POLY_PLACEABLE_HPP
 #define ADOBE_POLY_PLACEABLE_HPP
 
 #include <boost/ref.hpp>
 
 #include <adobe/config.hpp>
-#include <adobe/poly.hpp>
-#include <adobe/placeable_concept.hpp>
 #include <adobe/layout_attributes.hpp>
+#include <adobe/placeable_concept.hpp>
+#include <adobe/poly.hpp>
 
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
 \defgroup poly_placeable poly_placeable
 \ingroup layout_library
@@ -39,7 +39,7 @@ struct poly_placeable_interface : poly_copyable_interface {
     virtual void place(const place_data_t& place_data) = 0;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 
@@ -65,7 +65,7 @@ struct poly_placeable_instance : optimized_storage_type<T, poly_placeable_interf
 };
 
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 
@@ -78,8 +78,7 @@ struct placeable : public poly_base<poly_placeable_interface, poly_placeable_ins
     typedef poly_base<poly_placeable_interface, poly_placeable_instance> base_t;
 
     template <typename T>
-    explicit placeable(const T& x)
-        : base_t(x) {}
+    explicit placeable(const T& x) : base_t(x) {}
 
     placeable(placeable&& x) : base_t(std::move(x)) {}
 
@@ -88,7 +87,7 @@ struct placeable : public poly_base<poly_placeable_interface, poly_placeable_ins
     void place(const place_data_t& place_data) { interface_ref().place(place_data); }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 
@@ -100,7 +99,7 @@ struct placeable : public poly_base<poly_placeable_interface, poly_placeable_ins
 */
 typedef poly<placeable> poly_placeable_t;
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 
@@ -113,7 +112,7 @@ struct poly_placeable_twopass_interface : public poly_placeable_interface {
                                   const place_data_t& placed_horizontal) = 0;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \brief Implementation of virtual interface for the poly<placeable_twopass> modeling
@@ -142,7 +141,7 @@ struct poly_placeable_twopass_instance
     }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \ingroup poly_placeable
@@ -152,8 +151,7 @@ struct placeable_twopass
     typedef poly_base<poly_placeable_twopass_interface, poly_placeable_twopass_instance> base_t;
 
     template <typename T>
-    explicit placeable_twopass(const T& x)
-        : base_t(x) {}
+    explicit placeable_twopass(const T& x) : base_t(x) {}
 
     placeable_twopass(placeable_twopass&& x) : base_t(std::move(x)) {}
 
@@ -166,7 +164,7 @@ struct placeable_twopass
     void place(const place_data_t& place_data) { interface_ref().place(place_data); }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 
@@ -179,10 +177,10 @@ struct placeable_twopass
 
 typedef poly<placeable_twopass> poly_placeable_twopass_t;
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif

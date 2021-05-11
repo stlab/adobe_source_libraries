@@ -7,7 +7,7 @@ project(adobe_source_libraries CXX)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++0x")
+set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++14")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
 add_definitions ("-Wall")
@@ -182,7 +182,7 @@ else()
         libs/multi_index
         )
 
-    setup_dep(NAME boost_libraries URL https://github.com/boostorg/boost.git BRANCH boost-1.65.1 SUBMODULES ${BOOST_SUBMODULES})
+    setup_dep(NAME boost_libraries URL https://github.com/boostorg/boost.git BRANCH boost-1.76.0 SUBMODULES ${BOOST_SUBMODULES})
 
     # There really isn't a need to separate out these sources, so we build them
     # in one large static library.
@@ -214,6 +214,8 @@ else()
     endif()
 
     add_library(boost_glob STATIC ${BOOST_GLOB_SOURCES})
+    
+    target_include_directories(boost_glob PUBLIC ../boost_libraries)
 
     foreach (submodule ${BOOST_SUBMODULES})
         target_include_directories(boost_glob PUBLIC ../boost_libraries/${submodule}/include)
@@ -229,6 +231,9 @@ else()
     add_library(boost_unit_test STATIC ${ASL_BOOST_TEST_SRC})
 
     target_include_directories(boost_unit_test PRIVATE -DBOOST_TEST_MAIN)
+
+    target_include_directories(boost_unit_test PUBLIC ../boost_libraries)
+
     foreach (submodule ${BOOST_SUBMODULES})
         target_include_directories(boost_unit_test PUBLIC ../boost_libraries/${submodule}/include)
     endforeach(submodule)
@@ -236,4 +241,3 @@ endif()
 
 add_subdirectory(source)
 add_subdirectory(test)
-

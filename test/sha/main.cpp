@@ -91,9 +91,7 @@ std::string digest_string(const DigestType& digest, bool spaces = true) {
 
 template <typename DigestType>
 std::string digest_binary(const DigestType& digest) {
-    enum {
-        num_bytes = sizeof(typename DigestType::value_type)
-    };
+    enum { num_bytes = sizeof(typename DigestType::value_type) };
 
     std::string digest_str;
 
@@ -348,20 +346,20 @@ BOOST_AUTO_TEST_CASE(sha) {
     /************************** SHA-384 Unit Tests **************************/
 
     std::vector<unit_test_t> sha384_test_set {
-        {
-            "abc", "cb00753f45a35e8b b5a03d699ac65007 272c32ab0eded163 1a8b605a43ff5bed "
-                   "8086072ba1e7cc23 58baeca134c825a7"
-        }
-        , {"abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopq"
-           "rlmnopqrsmnopqrstnopqrstu",
-           "09330c33f71147e8 3d192fc782cd1b47 53111b173b3b05d2 2fa08086e3b0f712 fcc7c71a557e2db9 "
-           "66c3e9fa91746039"},
+        {"abc", "cb00753f45a35e8b b5a03d699ac65007 272c32ab0eded163 1a8b605a43ff5bed "
+                "8086072ba1e7cc23 58baeca134c825a7"},
+            {"abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmno"
+             "pq"
+             "rlmnopqrsmnopqrstnopqrstu",
+             "09330c33f71147e8 3d192fc782cd1b47 53111b173b3b05d2 2fa08086e3b0f712 fcc7c71a557e2db9 "
+             "66c3e9fa91746039"},
 #if ADOBE_TEST_SHA_MILLION_A_STRING
             {million_a_k, "9d0e1809716474cb 086e834e310a4a1c ed149e9c00f24852 7972cec5704c2a5b "
                           "07b8b3dc38ecc4eb ae97ddd87f3d8985"},
 #endif
-            {"\x10", 5, "8d17be79e32b6718 e07d8a603eb84ba0 478f7fcfd1bb9399 5f7d1149e09143ac "
-                        "1ffcfc56820e469f 3878d957a15a3fe4"},
+            {"\x10", 5,
+             "8d17be79e32b6718 e07d8a603eb84ba0 478f7fcfd1bb9399 5f7d1149e09143ac "
+             "1ffcfc56820e469f 3878d957a15a3fe4"},
             {"\x8b\xc5\x00\xc7\x7c\xee\xd9\x87\x9d\xa9\x89\x10\x7c\xe0\xaa\xa0", 123,
              "d8c43b38e12e7c42 a7c9b810299fd6a7 70bef30920f17532 a898de62c7a07e42 93449c0b5fa70109 "
              "f0783211cfc4bce3"},
@@ -373,8 +371,9 @@ BOOST_AUTO_TEST_CASE(sha) {
             "\x97\xde\x26\xa4\x19\x1c\x5f\x62\xe5\xe9\xa2\xd8\x08\x2f\x05\x51\xf4\xa5\x30\x68\x26"
             "\xe9\x1c\xc0\x06\xce\x1b\xf6\x0f\xf7\x19\xd4\x2f\xa5\x21\xc8\x71\xcd\x23\x94\xd9\x6e"
             "\xf4\x46\x8f\x21\x96\x6b\x41\xf2\xba\x80\xc2\x6e\x83\xa9\xe0",
-                1123, "5860e8de91c21578 bb4174d227898a98 e0b45c4c760f0095 49495614daedc077 "
-                      "5d92d11d9f8ce9b0 64eeac8dafc3a297"
+                1123,
+                "5860e8de91c21578 bb4174d227898a98 e0b45c4c760f0095 49495614daedc077 "
+                "5d92d11d9f8ce9b0 64eeac8dafc3a297"
         }
     };
 
@@ -393,8 +392,9 @@ BOOST_AUTO_TEST_CASE(sha) {
         {million_a_k, "e718483d0ce76964 4e2e42c7bc15b463 8e1f98b13b204428 5632a803afa973eb "
                       "de0ff244877ea60a 4cb0432ce577c31b eb009c5c2c49aa2e 4eadb217ad8cc09b"},
 #endif
-        {"\xb0", 5, "d4ee29a9e9098544 6b913cf1d1376c83 6f4be2c1cf3cada0 720a6bf4857d886a "
-                    "7ecb3c4e4c0fa8c7 f95214e41dc1b0d2 1b22a84cc03bf8ce 4845f34dd5bdbad4"},
+        {"\xb0", 5,
+         "d4ee29a9e9098544 6b913cf1d1376c83 6f4be2c1cf3cada0 720a6bf4857d886a "
+         "7ecb3c4e4c0fa8c7 f95214e41dc1b0d2 1b22a84cc03bf8ce 4845f34dd5bdbad4"},
         {"\x08\xec\xb5\x2e\xba\xe1\xf7\x42\x2d\xb6\x2b\xcd\x54\x26\x70\x80", 123,
          "ed8dc78e8b01b697 50053dbb7a0a9eda 0fb9e9d292b1ed71 5e80a7fe290a4e16 664fd913e8585440 "
          "0c5af05e6dad316b 7359b43e64f8bec3 c1f237119986bbb6"},
@@ -405,8 +405,9 @@ BOOST_AUTO_TEST_CASE(sha) {
          "\xca\xc2\x04\x6c\x99\x16\x06\xab\x4e\xe4\x14\x5b\xee\x2f\xf4\xbb\x12\x3a\xab\x49\x8d\x9d"
          "\x44\x79\x4f\x99\xcc\xad\x89\xa9\xa1\x62\x12\x59\xed\xa7\x0a\x5b\x6d\xd4\xbd\xd8\x77\x78"
          "\xc9\x04\x3b\x93\x84\xf5\x49\x06\x80",
-         1123, "32ba76fc30eaa020 8aeb50ffb5af1864 fdbf17902a4dc0a6 82c61fcea6d92b78 "
-               "3267b21080301837 f59de79c6b337db2 526f8a0a510e5e53 cafed4355fe7c2f1"}
+         1123,
+         "32ba76fc30eaa020 8aeb50ffb5af1864 fdbf17902a4dc0a6 82c61fcea6d92b78 "
+         "3267b21080301837 f59de79c6b337db2 526f8a0a510e5e53 cafed4355fe7c2f1"}
     };
 
     test_hash<adobe::sha512_t>(sha512_test_set);

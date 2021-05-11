@@ -4,7 +4,7 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ANY_MEASURABLE_HPP
 #define ANY_MEASURABLE_HPP
@@ -27,7 +27,7 @@ struct poly_measurable_interface : adobe::poly_copyable_interface {
     virtual ~poly_measurable_interface() {}
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 // This class template implements the abstract measurable interface in terms of a type T that
 // Models the MeasurableConcept
 
@@ -46,7 +46,7 @@ struct poly_measurable_instance
     double size() const { return MeasurableConcept<T>::size(this->get()); }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 // Another boilerplate class, measurable serves as a template parameter to the poly<> machinery
 // tying together the interface and implementation above.
 
@@ -55,8 +55,7 @@ struct measurable : adobe::poly_base<poly_measurable_interface, poly_measurable_
 
     // No delegating constructors (yet), so we call base constructor manually
     template <typename T>
-    explicit measurable(const T& s)
-        : base_t(s) {}
+    explicit measurable(const T& s) : base_t(s) {}
 
     measurable(adobe::move_from<measurable> x) : base_t(adobe::move_from<base_t>(x.source)) {}
 

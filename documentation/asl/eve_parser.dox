@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \defgroup eveparser Layout Library Parser
@@ -16,7 +16,7 @@ The eve_callback_suit_t specifies the client interface to the layout parser. Two
 
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \typedef adobe::eve_callback_suite_t::position_t
@@ -25,7 +25,7 @@ The position_t can hold only copyable type. It is passed as a parameter and retu
 
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \typedef adobe::eve_callback_suite_t::add_view_proc_t
@@ -44,7 +44,7 @@ Client-defined callback function used by the layout library parser to communicat
 
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 

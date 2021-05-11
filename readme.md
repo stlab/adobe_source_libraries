@@ -40,4 +40,4 @@ The legacy documentation is still online and can be found [here](http://stlab.ad
 
 Slack
 =====
-A Slack team has been set up to discuss all things ASL. If you would like an invitation please open an issue with your email address.
+A Slack team has been set up to discuss all things ASL. If you would like an invitation, please open an issue with your email address.

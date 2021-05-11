@@ -3,44 +3,44 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_LEX_SHARED_HPP
 #define ADOBE_LEX_SHARED_HPP
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
-#include <adobe/implementation/lex_shared_fwd.hpp>
-#include <adobe/string.hpp>
-#include <adobe/name.hpp>
-#include <adobe/istream.hpp>
 #include <adobe/circular_queue.hpp>
+#include <adobe/implementation/lex_shared_fwd.hpp>
 #include <adobe/implementation/parser_shared.hpp>
+#include <adobe/istream.hpp>
+#include <adobe/name.hpp>
+#include <adobe/string.hpp>
 
-#include <iostream>
 #include <cstdio>
+#include <iostream>
 
-#include <boost/function.hpp>
 #include <boost/array.hpp>
+#include <boost/function.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifdef BOOST_MSVC
 namespace std {
-using ::isspace;
-using ::isdigit;
 using ::isalnum;
 using ::isalpha;
-}
+using ::isdigit;
+using ::isspace;
+} // namespace std
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename E> // E models Enumeration
 struct lex_base_t {
@@ -118,19 +118,19 @@ private:
 #endif                                           // !defined(ADOBE_NO_DOCUMENTATION)
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename E>
 lex_base_t<S, E>::lex_base_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t& position)
     : first_m(first), last_m(last), streampos_m(0), line_position_m(position), skip_white_m(true),
       index_m(0), last_token_m(S) {}
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename E>
 lex_base_t<S, E>::~lex_base_t() {}
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename E>
 const typename lex_base_t<S, E>::token_type& lex_base_t<S, E>::get_token() {
@@ -153,21 +153,21 @@ const typename lex_base_t<S, E>::token_type& lex_base_t<S, E>::get_token() {
     return result;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename E>
 void lex_base_t<S, E>::put_token(const token_type& token) {
     last_token_m.push_back(lex_fragment_t(token, line_position_m));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename E>
 void lex_base_t<S, E>::putback_token() {
     last_token_m.putback(); // REVISIT (sparent) : Check for overflow
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename E>
 const line_position_t& lex_base_t<S, E>::next_position() {
@@ -181,7 +181,7 @@ const line_position_t& lex_base_t<S, E>::next_position() {
     return last_token_m.front().line_position_m;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename E>
 bool lex_base_t<S, E>::is_line_end() {
@@ -202,7 +202,7 @@ bool lex_base_t<S, E>::is_line_end() {
     return result;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename E>
 bool lex_base_t<S, E>::is_eof() {
@@ -214,7 +214,7 @@ bool lex_base_t<S, E>::is_eof() {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename E>
 void lex_base_t<S, E>::throw_parser_exception(const char* error_string) {
@@ -223,21 +223,21 @@ void lex_base_t<S, E>::throw_parser_exception(const char* error_string) {
     throw_parser_exception(error_string, line_position_m);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename E>
 void lex_base_t<S, E>::set_parse_token_proc(parse_token_proc_t proc) {
     parse_proc_m = proc;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename E>
 void lex_base_t<S, E>::set_skip_white_space(bool skip) {
     skip_white_m = skip;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename E>
 void lex_base_t<S, E>::skip_white_space() {
@@ -256,13 +256,13 @@ void lex_base_t<S, E>::skip_white_space() {
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 0
 #pragma mark -
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 namespace implementation {
 
 struct lex_fragment_t {
@@ -337,19 +337,19 @@ private:
 #endif                                                           // !defined(ADOBE_NO_DOCUMENTATION)
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 stream_lex_base_t<S, I>::stream_lex_base_t(I first, I last, const line_position_t& position)
     : identifier_buffer_m(128), first_m(first), last_m(last), streampos_m(1),
       line_position_m(position), skip_white_m(true), index_m(0), last_token_m(S) {}
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 stream_lex_base_t<S, I>::~stream_lex_base_t() {}
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 bool stream_lex_base_t<S, I>::get_char(char& c) {
@@ -375,7 +375,7 @@ bool stream_lex_base_t<S, I>::get_char(char& c) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 void stream_lex_base_t<S, I>::putback_char(char c) {
@@ -384,7 +384,7 @@ void stream_lex_base_t<S, I>::putback_char(char c) {
     streampos_m -= 1;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 int stream_lex_base_t<S, I>::peek_char() {
@@ -396,7 +396,7 @@ int stream_lex_base_t<S, I>::peek_char() {
         return *first_m;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 void stream_lex_base_t<S, I>::ignore_char() {
@@ -410,7 +410,7 @@ void stream_lex_base_t<S, I>::ignore_char() {
     streampos_m += 1;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 const stream_lex_token_t& stream_lex_base_t<S, I>::get_token() {
@@ -449,21 +449,21 @@ const stream_lex_token_t& stream_lex_base_t<S, I>::get_token() {
     return result;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 void stream_lex_base_t<S, I>::put_token(stream_lex_token_t token) {
     last_token_m.push_back(implementation::lex_fragment_t(std::move(token), line_position_m));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 void stream_lex_base_t<S, I>::putback_token() {
     last_token_m.putback(); // REVISIT (sparent) : Check for overflow
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 const line_position_t& stream_lex_base_t<S, I>::next_position() {
@@ -477,7 +477,7 @@ const line_position_t& stream_lex_base_t<S, I>::next_position() {
     return last_token_m.front().line_position_m;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 bool stream_lex_base_t<S, I>::is_line_end(char c) {
@@ -497,7 +497,7 @@ bool stream_lex_base_t<S, I>::is_line_end(char c) {
     return num_chars_eaten != 0;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 void stream_lex_base_t<S, I>::throw_parser_exception(const char* error_string) {
@@ -506,21 +506,21 @@ void stream_lex_base_t<S, I>::throw_parser_exception(const char* error_string) {
     throw_parser_exception(error_string, line_position_m);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 void stream_lex_base_t<S, I>::set_parse_token_proc(parse_token_proc_t proc) {
     parse_proc_m = proc;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 void stream_lex_base_t<S, I>::set_skip_white_space(bool skip) {
     skip_white_m = skip;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <std::size_t S, typename I>
 void stream_lex_base_t<S, I>::skip_white_space() {
@@ -536,12 +536,12 @@ void stream_lex_base_t<S, I>::skip_white_space() {
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

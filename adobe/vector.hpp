@@ -3,13 +3,13 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #error Deprecated
 #ifndef ADOBE_VECTOR_HPP
 #define ADOBE_VECTOR_HPP
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
@@ -27,19 +27,19 @@
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <adobe/empty.hpp>
-#include <adobe/typeinfo.hpp>
-#include <adobe/memory.hpp>
 #include <adobe/algorithm/minmax.hpp>
+#include <adobe/empty.hpp>
+#include <adobe/memory.hpp>
+#include <adobe/typeinfo.hpp>
 
-#include <adobe/move.hpp>
 #include <adobe/implementation/swap.hpp>
+#include <adobe/move.hpp>
 
 #ifdef ADOBE_STD_SERIALIZATION
 #include <adobe/iomanip.hpp>
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 namespace version_1 {
@@ -50,7 +50,7 @@ namespace version_1 {
  */
 
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //!\ingroup abi_container
 template <typename T, // T models Regular
@@ -163,8 +163,7 @@ public:
     }
 
     template <typename I> // I models InputIterator
-    vector(I f, I l, typename boost::disable_if<boost::is_integral<I>>::type* = 0)
-        : header_m(0) {
+    vector(I f, I l, typename boost::disable_if<boost::is_integral<I>>::type* = 0) : header_m(0) {
         append(f, l);
     }
 
@@ -502,7 +501,7 @@ void vector<T, A>::resize(size_type n, const value_type& x) {
         insert(end(), n - size(), x);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifdef ADOBE_STD_SERIALIZATION
 
@@ -522,22 +521,22 @@ std::ostream& operator<<(std::ostream& out, const vector<T, A>& x) {
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 BOOST_STATIC_ASSERT(sizeof(vector<int>) == sizeof(void*));
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace version_1
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 ADOBE_NAME_TYPE_1("vector:version_1:adobe",
                   adobe::version_1::vector<T0, adobe::capture_allocator<T0>>)
 ADOBE_NAME_TYPE_2("vector:version_1:adobe", adobe::version_1::vector<T0, T1>)
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace boost {
 
@@ -549,6 +548,6 @@ struct has_nothrow_constructor<adobe::version_1::vector<T, A>> : boost::mpl::tru
 /*!
 @}
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif

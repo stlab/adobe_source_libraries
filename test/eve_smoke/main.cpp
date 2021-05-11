@@ -3,15 +3,15 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <iostream>
 #include <sstream>
 #include <string>
 
-#include <boost/filesystem/path.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <boost/bind.hpp>
+#include <boost/filesystem/path.hpp>
 
 #include <adobe/any_regular.hpp>
 #include <adobe/array.hpp>
@@ -22,11 +22,15 @@
 #include <adobe/iomanip_asl_cel.hpp>
 #include <adobe/name.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
+
+using namespace boost::placeholders;
+
+/**************************************************************************************************/
 
 namespace {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 //
 // position_t assemble( ... )
 //
@@ -48,7 +52,7 @@ adobe::eve_callback_suite_t::position_t assemble(adobe::name_t name,
     return adobe::eve_callback_suite_t::position_t();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //
 // void testParse( std::string fileName )
@@ -83,11 +87,11 @@ void testParse(boost::filesystem::path& fileName) {
         adobe::bind_layout(boost::bind(&assemble, _2, _3), layout_sheet, layout_sheet.machine_m));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //
 // int main()
@@ -117,15 +121,13 @@ int main(int argc, char* argv[]) {
         //
 
         testParse(file_path);
-    }
-    catch (const std::exception& error) {
+    } catch (const std::exception& error) {
         //
         // Oops, something didn't work out.
         //
         std::cerr << "Exception: " << error.what() << std::endl;
         success = false;
-    }
-    catch (...) {
+    } catch (...) {
         std::cerr << "Unknown exception" << std::endl;
         success = false;
     }

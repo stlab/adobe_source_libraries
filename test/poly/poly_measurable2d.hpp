@@ -4,7 +4,7 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ANY_MEASURABLE_2D_HPP
 #define ANY_MEASURABLE_2D_HPP
@@ -25,7 +25,7 @@ struct poly_measurable_2d_interface : poly_measurable_interface {
     virtual double height() const = 0;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 // This class template implements the abstract measurable_2d interface in terms of a type T that
 // Models the Measurable_2dConcept
 
@@ -46,7 +46,7 @@ struct poly_measurable_2d_instance
     double height() const { return Measurable_2DConcept<T>::height(this->get()); }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 // Another boilerplate class, measurable_2d serves as a template parameter to the poly<> machinery
 // tying together the interface and implementation above.
 
@@ -55,8 +55,7 @@ struct measurable_2d : adobe::poly_base<poly_measurable_2d_interface, poly_measu
 
     // No delegating constructors (yet), so we call base constructor manually
     template <typename T>
-    explicit measurable_2d(const T& s)
-        : base_t(s) {}
+    explicit measurable_2d(const T& s) : base_t(s) {}
 
     measurable_2d(adobe::move_from<measurable_2d> x) : base_t(adobe::move_from<base_t>(x.source)) {}
 

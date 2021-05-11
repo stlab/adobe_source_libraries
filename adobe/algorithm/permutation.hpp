@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ALGORITHM_PERMUTATION_HPP
 #define ADOBE_ALGORITHM_PERMUTATION_HPP
@@ -16,11 +16,11 @@
 #include <algorithm>
 #include <functional>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
 \defgroup permutation permutation
 \ingroup sorting
@@ -29,7 +29,7 @@ namespace adobe {
     - STL documentation for \ref stldoc_next_permutation
     - STL documentation for \ref stldoc_prev_permutation
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup permutation
 
@@ -48,7 +48,8 @@ inline bool next_permutation(BidirectionalRange& range) {
 template <class BidirectionalIterator, class Compare>
 inline bool next_permutation(BidirectionalIterator first, BidirectionalIterator last,
                              Compare comp) {
-    return std::next_permutation(first, last, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
+    return std::next_permutation(first, last,
+                                 std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -79,7 +80,8 @@ inline bool prev_permutation(BidirectionalRange& range) {
 template <class BidirectionalIterator, class Compare>
 inline bool prev_permutation(BidirectionalIterator first, BidirectionalIterator last,
                              Compare comp) {
-    return std::prev_permutation(first, last, std::bind(comp, std::placeholders::_1,std::placeholders:: _2));
+    return std::prev_permutation(first, last,
+                                 std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -92,12 +94,12 @@ inline bool prev_permutation(BidirectionalRange& range, Compare comp) {
     return adobe::prev_permutation(boost::begin(range), boost::end(range), comp);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

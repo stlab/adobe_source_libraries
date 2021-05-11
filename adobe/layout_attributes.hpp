@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_LAYOUT_ATTRIBUTES_HPP
 #define ADOBE_LAYOUT_ATTRIBUTES_HPP
@@ -19,7 +19,7 @@
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \ingroup layout_attributes
@@ -49,12 +49,7 @@ struct layout_attributes_alignment_t {
 \ingroup layout_attributes
 */
 struct layout_attributes_placement_t {
-    enum placement_t {
-        place_leaf,
-        place_column,
-        place_row,
-        place_overlay
-    };
+    enum placement_t { place_leaf, place_column, place_row, place_overlay };
 };
 
 /*!
@@ -66,7 +61,7 @@ struct layout_attributes_t
       public layout_attributes_alignment_t,
       public layout_attributes_placement_t
 #endif
-      {
+{
     layout_attributes_t() : indent_m(0), create_m(true), spacing_m(2, 0), placement_m(place_leaf) {
         spacing_m[1] = 10; /* REVISIT FIXED VALUE container_spacing */
     }
@@ -110,7 +105,7 @@ struct layout_attributes_t
     const int& width() const { return extents_m.width(); }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \ingroup layout_attributes
@@ -119,7 +114,7 @@ struct place_data_t
 #if !defined(ADOBE_NO_DOCUMENTATION)
     : extents_slices_t
 #endif
-      {
+{
     struct slice_t {
 #if !defined(ADOBE_NO_DOCUMENTATION)
         slice_t();
@@ -191,8 +186,8 @@ inline int bottom(const place_data_t& place_data) { return top(place_data) + hei
 */
 inline int right(const place_data_t& place_data) { return left(place_data) + width(place_data); }
 
-/*************************************************************************************************/
-}
+/**************************************************************************************************/
+} // namespace adobe
 
 
 #endif

@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
@@ -26,12 +26,7 @@ enum Number {
     num_7 = 7
 };
 
-enum class Views : int {
-    None = 0,
-    Text = 1 << 0,
-    Icon = 1 << 1,
-    Preview = 1 << 2
-};
+enum class Views : int { None = 0, Text = 1 << 0, Icon = 1 << 1, Preview = 1 << 2 };
 
 enum class Num : int {
     num_0 = 0,
@@ -84,8 +79,8 @@ BOOST_AUTO_TEST_CASE(enum_bitset_ops) {
 }
 
 BOOST_AUTO_TEST_CASE(enumclass_bitset_ops) {
-    //the above proves our general cases
-    //this just sanity checks enum classes
+    // the above proves our general cases
+    // this just sanity checks enum classes
     Views x;
     x = Views::Text | Views::Icon;
     BOOST_CHECK((x & Views::Text) == Views::Text);
@@ -93,9 +88,8 @@ BOOST_AUTO_TEST_CASE(enumclass_bitset_ops) {
 }
 
 
-
 ADOBE_DEFINE_ARITHMETIC_OPS(Number)
-auto stlab_enable_arithmetic_enum(Num) -> std::true_type; 
+auto stlab_enable_arithmetic_enum(Num) -> std::true_type;
 
 BOOST_AUTO_TEST_CASE(enum_arith_ops) {
     Number x;
@@ -151,10 +145,9 @@ BOOST_AUTO_TEST_CASE(enum_arith_ops) {
 }
 
 BOOST_AUTO_TEST_CASE(enumclass_arith_ops) {
-    //the above proves our general cases
-    //this just sanity checks enum classes
+    // the above proves our general cases
+    // this just sanity checks enum classes
     Num x;
     x = Num::num_1;
     BOOST_CHECK((x + Num::num_3) == Num::num_4);
 }
-

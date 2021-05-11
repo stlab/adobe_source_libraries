@@ -17,8 +17,8 @@
 #include <iostream>
 #endif
 
-#include <boost/static_assert.hpp>
 #include <adobe/typeinfo.hpp>
+#include <boost/static_assert.hpp>
 
 /******************************************************************************/
 

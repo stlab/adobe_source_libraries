@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ALGORITHM_SET_HPP
 #define ADOBE_ALGORITHM_SET_HPP
@@ -16,11 +16,11 @@
 #include <algorithm>
 #include <functional>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
 \defgroup set set operations on sorted ranges
 \ingroup sorting
@@ -32,7 +32,7 @@ namespace adobe {
     - STL documentation for \ref stldoc_set_difference
     - STL documentation for \ref stldoc_set_symmetric_difference
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup set
 
@@ -52,7 +52,8 @@ inline bool includes(const InputRange1& range1, const InputRange2& range2) {
 template <class InputIterator1, class InputIterator2, class Compare>
 inline bool includes(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2,
                      InputIterator2 last2, Compare comp) {
-    return std::includes(first1, last1, first2, last2, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
+    return std::includes(first1, last1, first2, last2,
+                         std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -86,7 +87,8 @@ inline OutputIterator set_union(const InputRange1& range1, const InputRange2& ra
 template <class InputIterator1, class InputIterator2, class OutputIterator, class Compare>
 inline OutputIterator set_union(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2,
                                 InputIterator2 last2, OutputIterator result, Compare comp) {
-    return std::set_union(first1, last1, first2, last2, result, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
+    return std::set_union(first1, last1, first2, last2, result,
+                          std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -122,7 +124,8 @@ template <class InputIterator1, class InputIterator2, class OutputIterator, clas
 inline OutputIterator set_intersection(InputIterator1 first1, InputIterator1 last1,
                                        InputIterator2 first2, InputIterator2 last2,
                                        OutputIterator result, Compare comp) {
-    return std::set_intersection(first1, last1, first2, last2, result, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
+    return std::set_intersection(first1, last1, first2, last2, result,
+                                 std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -158,7 +161,8 @@ template <class InputIterator1, class InputIterator2, class OutputIterator, clas
 inline OutputIterator set_difference(InputIterator1 first1, InputIterator1 last1,
                                      InputIterator2 first2, InputIterator2 last2,
                                      OutputIterator result, Compare comp) {
-    return std::set_difference(first1, last1, first2, last2, result, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
+    return std::set_difference(first1, last1, first2, last2, result,
+                               std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -194,8 +198,9 @@ template <class InputIterator1, class InputIterator2, class OutputIterator, clas
 inline OutputIterator set_symmetric_difference(InputIterator1 first1, InputIterator1 last1,
                                                InputIterator2 first2, InputIterator2 last2,
                                                OutputIterator result, Compare comp) {
-    return std::set_symmetric_difference(first1, last1, first2, last2, result,
-                                         std::bind(comp, std::placeholders::_1, std::placeholders::_2));
+    return std::set_symmetric_difference(
+        first1, last1, first2, last2, result,
+        std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -210,12 +215,12 @@ inline OutputIterator set_symmetric_difference(const InputRange1& range1, const 
                                            boost::begin(range2), boost::end(range2), result, comp);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
