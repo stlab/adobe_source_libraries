@@ -45,10 +45,10 @@ namespace implementation {
 
 /*************************************************************************************************/
 
-static const static_name_t bag_name_g = "bag"_name;
-static const static_name_t seq_name_g = "seq"_name;
-static const static_name_t alt_name_g = "alt"_name;
-static const static_name_t atom_name_g = "atom"_name;
+extern const static_name_t bag_name_g;
+extern const static_name_t seq_name_g;
+extern const static_name_t alt_name_g;
+extern const static_name_t atom_name_g;
 
 /*************************************************************************************************/
 
