@@ -45,9 +45,9 @@ The postcondition for the first version of <code>partial_sort</code> is as
 follows. If <code>i</code> and <code>j</code> are
 any two valid iterators in the range <code>[first, middle)</code> such that <code>i</code>
 precedes <code>j</code>, and if <code>k</code> is a valid iterator in the range <code>[middle,
-last)</code>, then <code>*j &lt; *i</code> and <code>*k &lt; *i</code> will both be <code>false</code>.  
+last)</code>, then <code>*j &lt; *i</code> and <code>*k &lt; *j</code> will both be <code>false</code>.  
 The corresponding postcondition for the second version of <code>partial_sort</code>
-is that <code>comp(*j, *i)</code> and <code>comp(*k, *i)</code>
+is that <code>comp(*j, *i)</code> and <code>comp(*k, *j)</code>
 are both false.  Informally, this postcondition means that the first <code>middle - first</code>
 elements are in ascending order and that none of the elements in
 <code>[middle, last)</code> is less than any of the elements in <code>[first, middle)</code>.
