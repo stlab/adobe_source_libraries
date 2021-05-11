@@ -22,6 +22,7 @@
 #include <cstddef>
 #include <functional>
 #include <iterator>
+#include <stack>
 
 /**************************************************************************************************/
 
@@ -1174,6 +1175,107 @@ preorder_range(const R& x) {
         iterator;
 
     return {iterator(std::begin(x)), iterator(std::end(x))};
+}
+
+/**************************************************************************************************/
+
+/*!
+\relates adobe::forest
+
+Transforms the elements in <code>[first, last)</code> with <code>transformFunc</code> and insert
+into <code>destForest</code> at <code>destIter</code>.
+
+\param first iterator to the beginning of the range to be transformed
+\param last iterator to one-past the last element of the range to be transformed
+\param destForest forest that the transformed elements should be inserted into
+\param destIter iterator to the location in destForest where the transformed elements should be inserted
+\param transformFunc function for transforming elements in the range
+
+*/
+
+template <typename SourceForestIterType, typename DestForestType, typename UnaryFunction>
+void transform_forest(SourceForestIterType first, SourceForestIterType last,
+                      DestForestType& destForest, typename DestForestType::iterator destIter,
+                      UnaryFunction transformFunc) {
+	
+	std::stack<typename DestForestType::iterator> insertionIterStack;
+	insertionIterStack.push(destIter);
+	
+	while (first != last) {
+		if (first.edge() == forest_leading_edge) {
+			auto insertedIter = destForest.insert(!insertionIterStack.empty() ? insertionIterStack.top() : destIter,
+												  transformFunc(*first));
+			insertionIterStack.push(trailing_of(insertedIter));
+		} else {
+			if (!insertionIterStack.empty())
+				insertionIterStack.pop();
+		}
+		++first;
+	}
+}
+
+/*!
+\relates adobe::forest
+
+Transforms the elements in <code>[first, last)</code> with <code>transformFunc</code> and insert
+at the end of <code>destForest</code>.
+
+\param first iterator to the beginning of the range to be transformed
+\param last iterator to one-past the last element of the range to be transformed
+\param destForest forest that the transformed elements should be inserted into
+\param destIter iterator to the location in destForest where the transformed elements should be inserted
+\param transformFunc function for transforming elements in the range
+
+*/
+
+template <typename SourceForestIterType, typename DestForestType, typename UnaryFunction>
+void transform_forest(SourceForestIterType first, SourceForestIterType last,
+                      DestForestType& destForest,
+                      UnaryFunction transformFunc) {
+	transform_forest(first, last, destForest, destForest.end(), transformFunc);
+}
+
+/*!
+\relates adobe::forest
+
+Transforms the elements in <code>sourceForest</code> with <code>transformFunc</code> and insert
+into <code>destForest</code> at <code>destIter</code>.
+
+\param first iterator to the beginning of the range to be transformed
+\param last iterator to one-past the last element of the range to be transformed
+\param destForest forest that the transformed elements should be inserted into
+\param destIter iterator to the location in destForest where the transformed elements should be inserted
+\param transformFunc function for transforming elements in the range
+
+*/
+
+template <typename SourceForestType, typename DestForestType, typename UnaryFunction>
+void transform_forest(SourceForestType sourceForest,
+                      DestForestType& destForest, typename DestForestType::iterator destIter,
+                      UnaryFunction transformFunc) {
+	transform_forest(sourceForest.begin(), sourceForest.end(), destForest, destIter, transformFunc);
+}
+
+
+/*!
+\relates adobe::forest
+
+Transforms the elements in <code>sourceForest</code> with <code>transformFunc</code> and insert
+at the end of <code>destForest</code>.
+
+\param first iterator to the beginning of the range to be transformed
+\param last iterator to one-past the last element of the range to be transformed
+\param destForest forest that the transformed elements should be inserted into
+\param destIter iterator to the location in destForest where the transformed elements should be inserted
+\param transformFunc function for transforming elements in the range
+
+*/
+
+template <typename SourceForestType, typename DestForestType, typename UnaryFunction>
+void transform_forest(SourceForestType sourceForest,
+                      DestForestType& destForest,
+                      UnaryFunction transformFunc) {
+	transform_forest(sourceForest.begin(), sourceForest.end(), destForest, destForest.end(), transformFunc);
 }
 
 /**************************************************************************************************/
