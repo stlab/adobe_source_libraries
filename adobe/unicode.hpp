@@ -82,7 +82,7 @@ inline char add_mask(BinaryInteger code) {
 
 template <std::size_t NumBytes, bool Header, typename BinaryInteger>
 inline char utf8_add_mask(BinaryInteger code) {
-    return add_mask < utf8_header_t < Header ? NumBytes : 0 > ::value > (code);
+    return add_mask<utf8_header_t<Header ? NumBytes : 0>::value>(code);
 }
 
 
@@ -98,7 +98,7 @@ inline char strip_mask(BinaryInteger code) {
 
 template <std::size_t NumBytes, bool Header, typename BinaryInteger>
 inline char utf8_strip_mask(BinaryInteger code) {
-    return strip_mask < utf8_header_t < Header ? NumBytes : 0 > ::value > (code);
+    return strip_mask<utf8_header_t<Header ? NumBytes : 0>::value>(code);
 }
 
 /**************************************************************************************************/
@@ -454,17 +454,44 @@ O to_utf_(I f, I l, O o, unicode_size_type_<4>) {
 template <int A, int B>
 struct expand_utf_t;
 
-template <> struct expand_utf_t< 8,  8> { static const int value = 1; };
-template <> struct expand_utf_t< 8, 16> { static const int value = 1; };
-template <> struct expand_utf_t< 8, 32> { static const int value = 1; };
+template <>
+struct expand_utf_t<8, 8> {
+    static const int value = 1;
+};
+template <>
+struct expand_utf_t<8, 16> {
+    static const int value = 1;
+};
+template <>
+struct expand_utf_t<8, 32> {
+    static const int value = 1;
+};
 
-template <> struct expand_utf_t<16,  8> { static const int value = 3; };
-template <> struct expand_utf_t<16, 16> { static const int value = 1; };
-template <> struct expand_utf_t<16, 32> { static const int value = 1; };
+template <>
+struct expand_utf_t<16, 8> {
+    static const int value = 3;
+};
+template <>
+struct expand_utf_t<16, 16> {
+    static const int value = 1;
+};
+template <>
+struct expand_utf_t<16, 32> {
+    static const int value = 1;
+};
 
-template <> struct expand_utf_t<32,  8> { static const int value = 4; };
-template <> struct expand_utf_t<32, 16> { static const int value = 2; };
-template <> struct expand_utf_t<32, 32> { static const int value = 1; };
+template <>
+struct expand_utf_t<32, 8> {
+    static const int value = 4;
+};
+template <>
+struct expand_utf_t<32, 16> {
+    static const int value = 2;
+};
+template <>
+struct expand_utf_t<32, 32> {
+    static const int value = 1;
+};
 
 /**************************************************************************************************/
 
@@ -491,8 +518,8 @@ sequence from T to U determined by the following table:
 */
 
 template <typename T, typename U>
-struct expand_utf : std::integral_constant<std::size_t,
-    detail::expand_utf_t<sizeof(T), sizeof(U)>::value> { };
+struct expand_utf
+    : std::integral_constant<std::size_t, detail::expand_utf_t<sizeof(T), sizeof(U)>::value> {};
 
 /**************************************************************************************************/
 

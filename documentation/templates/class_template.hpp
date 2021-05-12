@@ -16,4 +16,4 @@ public:
 
     my_associated_type_t my_variable_m;
 };
-}
+} // namespace adobe

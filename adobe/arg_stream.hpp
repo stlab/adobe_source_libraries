@@ -6,27 +6,27 @@
 #ifndef ADOBE_ARG_STREAM_H
 #define ADOBE_ARG_STREAM_H
 
-#include <boost/function_types/result_type.hpp>
-#include <boost/function_types/function_type.hpp>
 #include <boost/function_types/function_arity.hpp>
+#include <boost/function_types/function_type.hpp>
+#include <boost/function_types/result_type.hpp>
 
 #include <boost/mpl/begin.hpp>
+#include <boost/mpl/deref.hpp>
 #include <boost/mpl/end.hpp>
 #include <boost/mpl/next.hpp>
-#include <boost/mpl/deref.hpp>
 
 // Apple sucks
 #ifdef nil
 #undef nil
 #endif
 
-#include <boost/fusion/include/push_back.hpp>
 #include <boost/fusion/include/cons.hpp>
 #include <boost/fusion/include/invoke.hpp>
+#include <boost/fusion/include/push_back.hpp>
 
+#include <boost/type_traits/add_pointer.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/type_traits/remove_reference.hpp>
-#include <boost/type_traits/add_pointer.hpp>
 
 #include <boost/utility/enable_if.hpp>
 
@@ -99,7 +99,7 @@ template <typename T>
 struct has_eof_member {
     static const bool value = ADOBE_HAS_TYPE(T, eof);
 };
-}
+} // namespace detail
 
 /*!
 \ingroup arg_stream
@@ -127,10 +127,9 @@ eof_check(ArgStream& as,
 }
 
 template <class ArgStream>
-static bool
-eof_check(ArgStream& as,
-          typename boost::disable_if_c<traits<ArgStream>::has_eof_memberfunction>::type* dummy =
-              0) {
+static bool eof_check(
+    ArgStream& as,
+    typename boost::disable_if_c<traits<ArgStream>::has_eof_memberfunction>::type* dummy = 0) {
     return false;
 }
 
@@ -138,7 +137,7 @@ template <class ArgStream>
 static bool eof_check(ArgStream* as) {
     return as ? eof_check(*as) : true;
 }
-}
+} // namespace detail
 
 /*!
 \ingroup arg_stream
@@ -269,7 +268,7 @@ struct invoker<F, To, To> {
     }
 };
 
-} // detail
+} // namespace detail
 
 
 /*!
@@ -337,8 +336,7 @@ struct chain {
         if (!eof(first)) {
             try {
                 return first->get_next_arg<T>();
-            }
-            catch (arg_stream::no_more_args&) {
+            } catch (arg_stream::no_more_args&) {
                 first = 0;
             }
         }
@@ -402,17 +400,15 @@ struct single {
     bool eof() { return repeat == 0; }
 
     template <typename R>
-    R
-    convert_or_throw(value_type& value,
-                     typename boost::enable_if<boost::is_convertible<value_type, R>>::type* dummy =
-                         0) {
+    R convert_or_throw(
+        value_type& value,
+        typename boost::enable_if<boost::is_convertible<value_type, R>>::type* dummy = 0) {
         return R(value);
     }
     template <typename R>
-    R
-    convert_or_throw(value_type& value,
-                     typename boost::disable_if<boost::is_convertible<value_type, R>>::type* dummy =
-                         0) {
+    R convert_or_throw(
+        value_type& value,
+        typename boost::disable_if<boost::is_convertible<value_type, R>>::type* dummy = 0) {
         throw adobe::bad_cast();
         return *(R*)value;
     }

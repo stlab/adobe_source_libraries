@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_EVE_HPP
 #define ADOBE_EVE_HPP
@@ -14,39 +14,39 @@
 
 #include <boost/noncopyable.hpp>
 
-#include <adobe/forest.hpp>
 #include <adobe/extents.hpp>
-#include <adobe/poly_placeable.hpp>
+#include <adobe/forest.hpp>
 #include <adobe/layout_attributes.hpp>
+#include <adobe/poly_placeable.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 namespace implementation {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 struct view_proxy_t;
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace implementation
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 namespace boost {
 template <>
 struct is_pod<adobe::implementation::view_proxy_t> : boost::mpl::true_ {};
-}
+} // namespace boost
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 
 /*!
@@ -62,7 +62,7 @@ class eve_t
       public extents_slices_t,
       public layout_attributes_placement_t
 #endif
-      {
+{
 public:
 #if !defined(ADOBE_NO_DOCUMENTATION)
     typedef forest<implementation::view_proxy_t> proxy_tree_t;
@@ -77,21 +77,21 @@ public:
 
     enum evaluate_options_t {
         evaluate_nested, /*!< Specifies the origin of the
-     * coordinate system to be the top left point of the parent
-     * view*/
-        evaluate_flat /*!< Specifies the origin of the
-  * coordinate system to be the top left point of the topmost
-  * view in the hierarchy.*/
+                          * coordinate system to be the top left point of the parent
+                          * view*/
+        evaluate_flat    /*!< Specifies the origin of the
+                          * coordinate system to be the top left point of the topmost
+                          * view in the hierarchy.*/
     };
 
-/*
-    REVISIT (sparent) : I'm just starting a long cleanup of the Eve API - the steps should include
-    the following:
+    /*
+        REVISIT (sparent) : I'm just starting a long cleanup of the Eve API - the steps should
+       include the following:
 
-    * eliminate the container default proc in favor of an inital extents setting.
-    * rename calculate to calculate_horizontal - all calculation passes are optional (initial should
-        often suffice).
-*/
+        * eliminate the container default proc in favor of an inital extents setting.
+        * rename calculate to calculate_horizontal - all calculation passes are optional (initial
+       should often suffice).
+    */
 
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
@@ -242,16 +242,16 @@ private:
 };
 
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void set_margin(layout_attributes_t& container, int x);
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

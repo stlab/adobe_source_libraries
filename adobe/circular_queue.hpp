@@ -3,12 +3,12 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_CIRCULAR_QUEUE_HPP
 #define ADOBE_CIRCULAR_QUEUE_HPP
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
@@ -20,7 +20,7 @@
 #include <cassert>
 #include <vector>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 /*!
@@ -208,7 +208,7 @@ without throwing. See the requirements for \ref stldoc_Assignable.
 */
 
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if 1 // REVISIT (fbrereto) : Possible compiler optimization?
 #define ADOBE_NOTHROW throw()
@@ -216,7 +216,7 @@ without throwing. See the requirements for \ref stldoc_Assignable.
 #define ADOBE_NOTHROW
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 class circular_queue;
@@ -227,7 +227,7 @@ bool operator==(const circular_queue<T>& x, const circular_queue<T>& y);
 template <typename T>
 void swap(circular_queue<T>&, circular_queue<T>&);
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \ingroup other_container
@@ -324,7 +324,7 @@ private:
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 circular_queue<T>::circular_queue(std::size_t capacity)
@@ -333,7 +333,7 @@ circular_queue<T>::circular_queue(std::size_t capacity)
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 circular_queue<T>::circular_queue(const circular_queue& rhs)
@@ -346,7 +346,7 @@ circular_queue<T>::circular_queue(const circular_queue& rhs)
     end_m = copy(rhs.second_range(), end_m);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 inline circular_queue<T>& circular_queue<T>::operator=(circular_queue rhs) {
@@ -355,7 +355,7 @@ inline circular_queue<T>& circular_queue<T>::operator=(circular_queue rhs) {
 }
 
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 typename circular_queue<T>::reference circular_queue<T>::front() ADOBE_NOTHROW {
@@ -363,7 +363,7 @@ typename circular_queue<T>::reference circular_queue<T>::front() ADOBE_NOTHROW {
     return *begin_m;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 typename circular_queue<T>::const_reference circular_queue<T>::front() const ADOBE_NOTHROW {
@@ -371,7 +371,7 @@ typename circular_queue<T>::const_reference circular_queue<T>::front() const ADO
     return *begin_m;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 void circular_queue<T>::push_back(T x) {
@@ -387,7 +387,7 @@ void circular_queue<T>::push_back(T x) {
     is_empty_m = false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 void circular_queue<T>::pop_front() ADOBE_NOTHROW {
@@ -397,7 +397,7 @@ void circular_queue<T>::pop_front() ADOBE_NOTHROW {
     is_empty_m = begin_m == end_m;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 void circular_queue<T>::putback() ADOBE_NOTHROW {
@@ -408,7 +408,7 @@ void circular_queue<T>::putback() ADOBE_NOTHROW {
     is_empty_m = false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 typename circular_queue<T>::size_type circular_queue<T>::size() const ADOBE_NOTHROW {
@@ -418,7 +418,7 @@ typename circular_queue<T>::size_type circular_queue<T>::size() const ADOBE_NOTH
     return is_empty_m ? 0 : capacity() - std::distance(end_m, begin_m);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
 bool operator==(const circular_queue<T>& x, const circular_queue<T>& y) {
@@ -438,16 +438,16 @@ bool operator==(const circular_queue<T>& x, const circular_queue<T>& y) {
     return equal(make_segmented_range(sequence1), make_segmented_iterator(sequence2));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #undef ADOBE_NOTHROW
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif // ADOBE_CIRCULAR_QUEUE_HPP
 
-/*************************************************************************************************/
+/**************************************************************************************************/

@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     This file is borrowed from the boost repository with Dave Abrahams permission. Namespaces have
@@ -16,8 +16,8 @@
 #ifndef ADOBE_IMPLEMENTATION_HAS_SWAP_HPP
 #define ADOBE_IMPLEMENTATION_HAS_SWAP_HPP
 
-#include <boost/mpl/bool.hpp>
 #include <boost/detail/workaround.hpp>
+#include <boost/mpl/bool.hpp>
 
 namespace adobe {
 
@@ -31,7 +31,7 @@ struct anything {
     anything(T const&);
 };
 struct no_swap {
-    char (&operator, (char))[2];
+    char (&operator,(char))[2];
 };
 no_swap swap(anything, anything);
 
@@ -51,7 +51,7 @@ struct has_swap_impl {
     typedef boost::mpl::bool_<value> type;
 #endif
 };
-}
+} // namespace has_swap_
 template <class T>
 struct has_swap : has_swap_::has_swap_impl<T>::type {};
 #if defined(BOOST_MSVC)

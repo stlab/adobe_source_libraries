@@ -6,16 +6,16 @@
 /**************************************************************************************************/
 
 #include <adobe/algorithm.hpp>
-#include <adobe/algorithm/rotate.hpp>
-#include <adobe/algorithm/reduce.hpp>
 #include <adobe/algorithm/other_of.hpp>
+#include <adobe/algorithm/reduce.hpp>
+#include <adobe/algorithm/rotate.hpp>
 #include <adobe/iterator/value_iterator.hpp>
 
 #include <boost/next_prior.hpp>
 
+#include <iostream>
 #include <utility>
 #include <vector>
-#include <iostream>
 
 /**************************************************************************************************/
 
@@ -24,7 +24,7 @@ namespace {
 /**************************************************************************************************/
 
 template <typename I> // I models ForwardIterator
-struct combine_ranges : std::binary_function<std::pair<I, I>, std::pair<I, I>, std::pair<I, I>> {
+struct combine_ranges {
     typedef std::pair<I, I> second_argument_type;
     typedef std::pair<I, I> first_argument_type;
     typedef std::pair<I, I> result_type;
@@ -50,7 +50,7 @@ struct combine_ranges : std::binary_function<std::pair<I, I>, std::pair<I, I>, s
 /**************************************************************************************************/
 
 template <typename T>
-struct myplus : std::binary_function<T, T, T> {
+struct myplus {
     typedef T second_argument_type;
     typedef T first_argument_type;
     typedef T result_type;
@@ -93,7 +93,7 @@ namespace {
 
 template <typename I, // I models ForwardIterator
           typename P> // P models UnaryPredicate
-struct partition_trivial : std::unary_function<I, std::pair<I, I>> {
+struct partition_trivial {
     P p;
 
     partition_trivial(const P& x) : p(x) {}
@@ -133,7 +133,7 @@ I stable_partition_inplace_iterative(I f, I l, P p) {
 /**************************************************************************************************/
 
 template <typename T>
-struct is_odd : std::unary_function<T, bool> {
+struct is_odd {
     typedef bool result_type;
 
     bool operator()(const T& x) const { return x & 1; }

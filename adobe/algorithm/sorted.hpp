@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ALGORITHM_SORTED_HPP
 #define ADOBE_ALGORITHM_SORTED_HPP
@@ -17,11 +17,11 @@
 
 #include <adobe/functional/operator.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
 \defgroup sorted sorted
 \ingroup sorting
@@ -35,13 +35,15 @@ template <typename I, // I models InputIterator
 // O models StrictWeakOrdering on value_type(I)
 I sorted(I f, I l, O o) {
 
-    f = std::adjacent_find(f, l, std::bind(std::logical_not<bool>(), std::bind(o, std::placeholders::_1, std::placeholders::_2)));
+    f = std::adjacent_find(f, l,
+                           std::bind(std::logical_not<bool>(),
+                                     std::bind(o, std::placeholders::_1, std::placeholders::_2)));
     if (f != l)
         ++f;
     return f;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \ingroup sorted
@@ -51,7 +53,7 @@ I sorted(I f, I l) {
     return sorted(f, l, less());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \ingroup sorted
@@ -60,10 +62,13 @@ template <typename I, // I models InputIterator
           typename O>
 // O models StrictWeakOrdering on value_type(I)
 inline bool is_sorted(I f, I l, O o) {
-    return std::adjacent_find(f, l, std::bind(std::logical_not<bool>(), std::bind(o, std::placeholders::_1, std::placeholders::_2))) == l;
+    return std::adjacent_find(
+               f, l,
+               std::bind(std::logical_not<bool>(),
+                         std::bind(o, std::placeholders::_1, std::placeholders::_2))) == l;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \ingroup sorted
@@ -73,7 +78,7 @@ inline bool is_sorted(I f, I l) {
     return is_sorted(f, l, less());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \ingroup sorted
@@ -83,10 +88,13 @@ template <typename I, // I models ForwardIterator
           typename P>
 // P models UnaryFunction(value_type(I)) -> T
 inline bool is_sorted(I f, I l, C c, P p) {
-    return std::adjacent_find(f, l, std::bind(std::logical_not<bool>(), std::bind(c, std::bind(p, std::placeholders::_1), std::bind(p, std::placeholders::_2)))) == l;
+    return std::adjacent_find(f, l,
+                              std::bind(std::logical_not<bool>(),
+                                        std::bind(c, std::bind(p, std::placeholders::_1),
+                                                  std::bind(p, std::placeholders::_2)))) == l;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \ingroup sorted
@@ -99,7 +107,7 @@ inline bool is_sorted(const I& r, C c, P p) {
     return is_sorted(boost::begin(r), boost::end(r), c, p);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \ingroup sorted
@@ -112,7 +120,7 @@ inline bool is_sorted(const I& r, C c) {
                      identity<typename std::iterator_traits<I>::value_type>());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \ingroup sorted
@@ -122,12 +130,12 @@ inline bool is_sorted(const I& r) {
     return is_sorted(boost::begin(r), boost::end(r), less());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

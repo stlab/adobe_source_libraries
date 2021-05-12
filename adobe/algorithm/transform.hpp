@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ALGORITHM_TRANSFORM_HPP
 #define ADOBE_ALGORITHM_TRANSFORM_HPP
@@ -16,11 +16,11 @@
 #include <algorithm>
 #include <functional>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
 \defgroup transform transform
 \ingroup mutating_algorithm
@@ -28,7 +28,7 @@ namespace adobe {
 \see
     - STL documentation for \ref stldoc_transform
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup transform
 
@@ -70,7 +70,8 @@ inline OutputIterator transform(const InputRange& range, OutputIterator result, 
 template <class InputIterator1, class InputIterator2, class OutputIterator, class BinaryOperation>
 inline OutputIterator transform(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2,
                                 OutputIterator result, BinaryOperation binary_op) {
-    return std::transform(first1, last1, first2, result, std::bind(binary_op, std::placeholders::_1, std::placeholders::_2));
+    return std::transform(first1, last1, first2, result,
+                          std::bind(binary_op, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -95,12 +96,12 @@ inline OutputIterator transform(const InputRange1& range1, InputIterator2 first2
     return adobe::transform(boost::begin(range1), boost::end(range1), first2, result, binary_op);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

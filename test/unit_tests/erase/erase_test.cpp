@@ -4,41 +4,41 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #define BOOST_TEST_MAIN
 
 
+#include <deque>
+#include <iostream>
 #include <list>
+#include <map>
 #include <set>
 #include <vector>
-#include <deque>
-#include <map>
-#include <iostream>
 
-#include <boost/test/unit_test.hpp>
-#include <boost/test/test_case_template.hpp>
-#include <boost/test/results_collector.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/mpl/list.hpp>
-#include <boost/bind.hpp>
-
-
-#include <boost/bind.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/size.hpp>
+#include <boost/test/results_collector.hpp>
+#include <boost/test/unit_test.hpp>
 #include <boost/test/utils/nullstream.hpp>
-
 
 #include <adobe/algorithm/erase_if.hpp>
 #include <adobe/algorithm/find.hpp>
 #include <adobe/functional.hpp>
 #include <adobe/utility/pair.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
+
+using namespace boost::placeholders;
+
+/**************************************************************************************************/
 
 typedef boost::mpl::list<std::vector<int>, std::list<int>, std::set<int>, std::deque<int>,
-	std::multiset<int>> test_types;
+                         std::multiset<int>>
+    test_types;
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_erase_if, Container, test_types) {
     using namespace adobe;

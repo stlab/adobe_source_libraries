@@ -5,14 +5,14 @@
 */
 /**************************************************************************************************/
 
-#include <iostream>
-#include <fstream>
-#include <map>
 #include <ext/hash_map>
+#include <fstream>
+#include <iostream>
+#include <map>
 
 #include <adobe/dictionary.hpp>
-#include <adobe/zuid.hpp>
 #include <adobe/timer.hpp>
+#include <adobe/zuid.hpp>
 
 /**************************************************************************************************/
 
@@ -22,7 +22,7 @@ namespace {
 
 template <std::size_t N = 4>
 struct large // : boost::totally_ordered< large<N> >
-    {
+{
     large() {}
 
     double a[N];
@@ -175,7 +175,7 @@ std::pair<double, double> test_std_map(std::size_t n, int type, const std::strin
 
             // sanity check!  (if this is optimized out, then the search may be optimized out)
             if (found->first != *j)
-                throw - 1;
+                throw -1;
         }
     }
 
@@ -198,7 +198,8 @@ struct equal_str {
 };
 
 typedef __gnu_cxx::hash_map<const char*, adobe::any_regular_t, __gnu_cxx::hash<const char*>,
-                            equal_str> hash_map_dictionary_t;
+                            equal_str>
+    hash_map_dictionary_t;
 
 std::pair<double, double> test_hash_map(std::size_t n, int type, const std::string label,
                                         std::size_t Repeat) {
@@ -249,7 +250,7 @@ std::pair<double, double> test_hash_map(std::size_t n, int type, const std::stri
 
             // sanity check!  (if this is optimized out, then the search may be optimized out)
             if (found->first != *j)
-                throw - 1;
+                throw -1;
         }
     }
 
@@ -315,7 +316,7 @@ std::pair<double, double> test_adobe_dictionary(std::size_t n, int type, const s
 
             // sanity check!  (if this is optimized out, then the search may be optimized out)
             if (found->first != *j)
-                throw - 1;
+                throw -1;
         }
     }
 

@@ -12,8 +12,8 @@
 
 #include <array>
 #include <cassert>
-#include <cstring>
 #include <cstdint>
+#include <cstring>
 #include <iterator>
 #include <string>
 
@@ -86,13 +86,11 @@ of the range does not need to be known up front. This will work with
 input iterators.
 */
 template <typename I>
-class byte_source_iterators
-{
+class byte_source_iterators {
 public:
-    byte_source_iterators( I const& first, I const& last )
-    : first_( first )
-    , last_( last ) {
-        static_assert(sizeof(typename std::iterator_traits<I>::value_type) == sizeof(std::uint8_t), "Iterator must supply bytes.");
+    byte_source_iterators(I const& first, I const& last) : first_(first), last_(last) {
+        static_assert(sizeof(typename std::iterator_traits<I>::value_type) == sizeof(std::uint8_t),
+                      "Iterator must supply bytes.");
     }
 
     // Note that this returns the number of *bits* available. Even though this
@@ -100,16 +98,12 @@ public:
     // byte_source_iterator_n.
     // The number available is not necessarily the total number, it is just
     // the number we can get hold of right now.
-    std::size_t bits_available() const {
-        return ( first_ == last_ ) ? 0 : 8;
-    }
+    std::size_t bits_available() const { return (first_ == last_) ? 0 : 8; }
 
-    std::uint8_t operator *() const {
-        return *first_;
-    }
+    std::uint8_t operator*() const { return *first_; }
 
     // Prefix
-    byte_source_iterators& operator ++() {
+    byte_source_iterators& operator++() {
         ++first_;
         return *this;
     }
@@ -119,11 +113,10 @@ public:
 
     // Making copies does not work if we are using input iterators so forbid
     // copy construction and assigment
-    byte_source_iterators( byte_source_iterators const& ) = delete;
-    byte_source_iterators& operator =( byte_source_iterators const& ) = delete;
+    byte_source_iterators(byte_source_iterators const&) = delete;
+    byte_source_iterators& operator=(byte_source_iterators const&) = delete;
 
 private:
-
     I first_;
     I const last_;
 };
@@ -134,26 +127,21 @@ source can provide. Unlike byte_source_iterators we know the length
 up front
 */
 template <typename I>
-class byte_source_iterator_n
-{
+class byte_source_iterator_n {
 public:
-    byte_source_iterator_n( I const& first, std::size_t num_bits )
-    : first_( first )
-    , num_bits_( num_bits ) {
-        static_assert(sizeof(typename std::iterator_traits<I>::value_type) == sizeof(std::uint8_t), "Iterator must supply bytes.");
+    byte_source_iterator_n(I const& first, std::size_t num_bits)
+        : first_(first), num_bits_(num_bits) {
+        static_assert(sizeof(typename std::iterator_traits<I>::value_type) == sizeof(std::uint8_t),
+                      "Iterator must supply bytes.");
     }
 
     // The last byte might not be complete
-    std::size_t bits_available() const {
-        return ( num_bits_ > 8 ) ? 8 : num_bits_;
-    }
+    std::size_t bits_available() const { return (num_bits_ > 8) ? 8 : num_bits_; }
 
-    std::uint8_t operator *() const {
-        return *first_;
-    }
+    std::uint8_t operator*() const { return *first_; }
 
     // Prefix
-    byte_source_iterator_n& operator ++() {
+    byte_source_iterator_n& operator++() {
         ++first_;
         num_bits_ -= bits_available();
         return *this;
@@ -164,11 +152,10 @@ public:
 
     // Making copies does not work if we are using input iterators so forbid
     // copy construction and assigment
-    byte_source_iterator_n( byte_source_iterator_n const& ) = delete;
-    byte_source_iterator_n& operator =( byte_source_iterator_n const& ) = delete;
+    byte_source_iterator_n(byte_source_iterator_n const&) = delete;
+    byte_source_iterator_n& operator=(byte_source_iterator_n const&) = delete;
 
 private:
-
     I first_;
     std::size_t num_bits_;
 };
@@ -275,7 +262,7 @@ hash it, then you need to do so at the byte boundary until the last chunk.
 template <typename HashTraits, typename ByteSource>
 void block_and_digest(typename HashTraits::message_block_type& state, std::uint16_t& stuffed_size,
                       std::uint64_t& message_size, typename HashTraits::state_digest_type& digest,
-                      ByteSource& byte_source ) {
+                      ByteSource& byte_source) {
     typedef HashTraits traits_type;
 
     // The size of the message block in bits. Either 512 or 1024.
@@ -305,10 +292,11 @@ void block_and_digest(typename HashTraits::message_block_type& state, std::uint1
     std::size_t bits_available(message_blocksize_k - stuffed_size);
 
     while (byte_source.bits_available() > 0) {
-        std::uint64_t const bits_stuffed = stuff_into_state<traits_type>(state, stuffed_size, bits_available, byte_source);
+        std::uint64_t const bits_stuffed =
+            stuff_into_state<traits_type>(state, stuffed_size, bits_available, byte_source);
 
         // If we have a full message block then digest it
-        if( bits_stuffed == bits_available ) {
+        if (bits_stuffed == bits_available) {
             traits_type::digest_message_block(digest, state, stuffed_size);
         }
 
@@ -320,26 +308,18 @@ void block_and_digest(typename HashTraits::message_block_type& state, std::uint1
 /**************************************************************************************************/
 
 template <bool overshift, typename message_block_type>
-struct shift_down
-{
-    void operator()(message_block_type& state,
-                    std::uint64_t message_size,
-                    typename message_block_type::value_type value_type_mask) const
-    {
-    }
+struct shift_down {
+    void operator()(message_block_type& state, std::uint64_t message_size,
+                    typename message_block_type::value_type value_type_mask) const {}
 };
 
 template <typename message_block_type>
-struct shift_down<false, message_block_type>
-{
-    void operator()(message_block_type& state,
-                    std::uint64_t message_size,
-                    typename message_block_type::value_type value_type_mask) const
-    {
+struct shift_down<false, message_block_type> {
+    void operator()(message_block_type& state, std::uint64_t message_size,
+                    typename message_block_type::value_type value_type_mask) const {
         constexpr std::size_t value_bitsize_k = sizeof(typename message_block_type::value_type) * 8;
 
-        if (message_size > value_type_mask)
-        {
+        if (message_size > value_type_mask) {
             state[14] = (message_size >> value_bitsize_k) & value_type_mask;
         }
     }
@@ -382,7 +362,7 @@ typename HashTraits::digest_type finalize(typename HashTraits::message_block_typ
     std::uint8_t one_bit(0x80);
     std::uint8_t* one_bit_ptr(&one_bit);
 
-    byte_source_iterator_n< std::uint8_t* > bit_source( one_bit_ptr, 1 );
+    byte_source_iterator_n<std::uint8_t*> bit_source(one_bit_ptr, 1);
     stuff_into_state<traits_type>(state, stuffed_size, 1, bit_source);
 
     /*
@@ -548,8 +528,8 @@ struct sha1_traits_t {
         std::uint32_t e(digest[4]);
         std::uint32_t T(0);
 
-// Manually unrolling the loop in this fasion
-// improves the digest speed by about 20%.
+        // Manually unrolling the loop in this fasion
+        // improves the digest speed by about 20%.
 
 #define A_ROUND(t, F, k)                                                                           \
     T = implementation::rotl<5>(a) + F(b, c, d) + e + std::uint32_t(k) + schedule[t];              \
@@ -604,8 +584,8 @@ struct sha256_traits_t {
     static constexpr std::size_t message_blocksize_k = 512;
 
     static constexpr state_digest_type initial_state() {
-        return {{0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
-                 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19}};
+        return {{0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab,
+                 0x5be0cd19}};
     }
 
     static inline void digest_message_block(state_digest_type& digest,
@@ -658,8 +638,8 @@ struct sha224_traits_t : public sha256_traits_t {
     typedef std::array<std::uint32_t, 7> digest_type;
 
     static constexpr state_digest_type initial_state() {
-        return {{0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939,
-                 0xffc00b31, 0x68581511, 0x64f98fa7, 0xbefa4fa4}};
+        return {{0xc1059ed8, 0x367cd507, 0x3070dd17, 0xf70e5939, 0xffc00b31, 0x68581511, 0x64f98fa7,
+                 0xbefa4fa4}};
     }
 };
 
@@ -826,7 +806,7 @@ public:
         // We can only update if the current state is byte aligned
         assert(stuffed_size_m % 8 == 0);
 
-        implementation::byte_source_iterators< I > byte_source(first, last);
+        implementation::byte_source_iterators<I> byte_source(first, last);
         implementation::block_and_digest<traits_type>(state_m, stuffed_size_m, message_size_m,
                                                       state_digest_m, byte_source);
     }
@@ -854,7 +834,7 @@ public:
         // We can only update if the current state is byte aligned
         assert(stuffed_size_m % 8 == 0);
 
-        implementation::byte_source_iterator_n< I > byte_source(first, num_bits);
+        implementation::byte_source_iterator_n<I> byte_source(first, num_bits);
         implementation::block_and_digest<traits_type>(state_m, stuffed_size_m, message_size_m,
                                                       state_digest_m, byte_source);
     }

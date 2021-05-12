@@ -3,35 +3,35 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 #include <adobe/timer.hpp>
 
 #include <boost/array.hpp>
-#include <boost/function.hpp>
-#include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/function.hpp>
 
 #include "sudoku.hpp"
 #include "sudoku_utilities.hpp"
 
 #include <iostream>
-#include <sstream>
-#include <vector>
-#include <string>
-#include <stdexcept>
 #include <numeric>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 namespace bfs = boost::filesystem;
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace {
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 class application_t {
     typedef std::vector<sudoku::sudoku_t> sudoku_set_t;
@@ -76,7 +76,7 @@ private:
     boost::array<bool, setting_set_size> solver_usage_m;
 };
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void application_t::import_preferences() {
     char buffer[1024];
@@ -128,7 +128,7 @@ void application_t::import_preferences() {
     }
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 const char* solver_enum_to_string(int solver_enum) {
     switch (solver_enum) {
@@ -149,7 +149,7 @@ const char* solver_enum_to_string(int solver_enum) {
     };
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void application_t::modify_settings() {
     while (true) {
@@ -174,7 +174,7 @@ void application_t::modify_settings() {
     }
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void application_t::pick_new_puzzle() {
     std::cout << "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=" << std::endl;
@@ -199,7 +199,7 @@ void application_t::pick_new_puzzle() {
         puzzle_m = sudoku_set_m[choice - 1];
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 std::size_t application_t::deductive_step(solver_proc_t proc) {
     std::size_t usages(proc(puzzle_m));
@@ -214,7 +214,7 @@ std::size_t application_t::deductive_step(solver_proc_t proc) {
     return usages;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void application_t::solve_puzzle() {
     // do a pinned reduction first before we start on the puzzle
@@ -239,13 +239,11 @@ void application_t::solve_puzzle() {
 
             if (solver_usage_m[setting_use_intersection_k])
                 usages += deductive_step(sudoku::intersection_reduction);
-        }
-        catch (const std::exception& error) {
+        } catch (const std::exception& error) {
             std::cerr << "Exception: " << error.what() << std::endl;
 
             break;
-        }
-        catch (...) {
+        } catch (...) {
             std::cerr << "Exception: Unknown" << std::endl;
 
             break;
@@ -261,7 +259,7 @@ void application_t::solve_puzzle() {
     std::cout << puzzle_m;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void application_t::menu() {
     while (true) {
@@ -363,7 +361,7 @@ void application_t::menu() {
     }
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void application_t::run() {
     import_preferences();
@@ -374,11 +372,11 @@ void application_t::run() {
     menu();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 int main(int argc, char** argv) {
     std::srand(std::time(0));

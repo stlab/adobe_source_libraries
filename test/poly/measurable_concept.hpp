@@ -4,7 +4,7 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef MEASURABLE_HPP
 #define MEASURABLE_HPP
@@ -28,9 +28,7 @@ struct MeasurableConcept {
     }
 
     // constraints
-    void constraints() {
-        d = size(t);
-    };
+    void constraints() { d = size(t); };
 
     const T t;
     double d;

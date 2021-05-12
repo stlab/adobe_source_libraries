@@ -4,15 +4,15 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
 #define BOOST_TEST_MAIN
 
-#include <string>
 #include <cstdlib>
 #include <iostream>
+#include <string>
 
 #include <boost/test/unit_test.hpp>
 
@@ -25,7 +25,7 @@ inline double size(int x) { return static_cast<double>(std::abs(x)); }
 #include "poly_measurable2d.hpp"
 
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 // size for some basic types
 
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(compile_time_poly) {
 }
 
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 // *runtime* generic function
 // (not a template)
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE(run_time_poly) {
 }
 
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 struct concrete_measurable2d {
     concrete_measurable2d(double size, double height) : size_m(size), height_m(height) {}

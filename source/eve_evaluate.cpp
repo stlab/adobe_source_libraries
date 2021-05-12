@@ -9,20 +9,21 @@
 
 #include <mutex>
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 
 #include <adobe/algorithm/sort.hpp>
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
 #include <adobe/name.hpp>
+#include <adobe/once.hpp>
 #include <adobe/static_table.hpp>
 #include <adobe/string.hpp>
 #include <adobe/virtual_machine.hpp>
-#include <adobe/once.hpp>
 
 /**************************************************************************************************/
 
 using namespace std;
+using namespace boost::placeholders;
 
 /**************************************************************************************************/
 
@@ -32,9 +33,9 @@ namespace {
 
 typedef std::pair<adobe::name_t*, adobe::name_t*> reflected_table_range_t;
 typedef adobe::static_table<adobe::name_t, adobe::layout_attributes_t::alignment_t, 7>
-alignment_table_t;
+    alignment_table_t;
 typedef adobe::static_table<adobe::name_t, adobe::layout_attributes_placement_t::placement_t, 3>
-placement_table_t;
+    placement_table_t;
 
 /**************************************************************************************************/
 

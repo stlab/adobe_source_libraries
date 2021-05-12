@@ -4,14 +4,14 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
 #include <boost/concept_check.hpp>
 
-#include <adobe/test/check_regular.hpp>
 #include <adobe/implementation/swap.hpp>
+#include <adobe/test/check_regular.hpp>
 #include <iostream>
 
 namespace adobe {
@@ -99,4 +99,4 @@ BOOST_TEST_CASE_TEMPLATE_FUNCTION(check_traversables, T)
     check_traversable(arbitrary_traversable<T>());
 }
 #endif
-}
+} // namespace adobe

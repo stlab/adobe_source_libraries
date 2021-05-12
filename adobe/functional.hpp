@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_FUNCTIONAL_HPP
 #define ADOBE_FUNCTIONAL_HPP
@@ -16,15 +16,15 @@
 #include <boost/compressed_pair.hpp>
 #include <boost/tuple/tuple.hpp>
 
-#include <adobe/functional/operator.hpp>
 #include <adobe/functional/is_member.hpp>
+#include <adobe/functional/operator.hpp>
 #include <adobe/utility/pair.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \defgroup adobe_functional Functional
@@ -168,18 +168,16 @@ language.
 template <typename F, // models UnaryFunction
           typename G> // models UnaryFunction -> argument_type(F)
 struct unary_compose {
-    typedef typename F::result_type result_type;
-
     unary_compose() {}
     unary_compose(F f, G g) : data_m(f, g) {}
 
     template <typename U> // U models Regular
-    result_type operator()(const U& x) const {
+    auto operator()(const U& x) const {
         return data_m.first()(data_m.second()(x));
     }
 
     template <typename U> // U models Regular
-    result_type operator()(U& x) const {
+    auto operator()(U& x) const {
         return data_m.first()(data_m.second()(x));
     }
 
@@ -187,7 +185,7 @@ private:
     boost::compressed_pair<F, G> data_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename F, // models UnaryFunction
           typename G>
@@ -196,7 +194,7 @@ unary_compose<F, G> compose(F f, G g) {
     return unary_compose<F, G>(f, g);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename F,     // models BinaryFunction
           typename G,     // models UnaryFunction -> argument_type(F, 0);
@@ -219,7 +217,7 @@ struct binary_compose {
     H h;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <int N, typename T> // T is boost::tuple<>
 struct element {
@@ -236,35 +234,19 @@ struct element<1, std::pair<T1, T2>> {
     typedef typename std::pair<T1, T2>::second_type type;
 };
 
-#if 0
-template <typename T1, typename T2>
-struct element<0, pair<T1, T2> >
-{
-    typedef typename pair<T1, T2>::first_type type;
-};
-
-template <typename T1, typename T2>
-struct element<1, pair<T1, T2> >
-{
-    typedef typename pair<T1, T2>::second_type type;
-};
-#endif
-
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <int N, typename T> // T is pair or tuple
-struct get_element : std::unary_function<T, typename element<N, T>::type> {
+struct get_element {
     typename element<N, T>::type& operator()(T& x) const { return boost::get<N>(x); }
 
     const typename element<N, T>::type& operator()(const T& x) const { return boost::get<N>(x); }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T1, typename T2> // T is pair or tuple
-struct get_element<0, std::pair<T1, T2>> : std::unary_function<
-                                               std::pair<T1, T2>,
-                                               typename std::pair<T1, T2>::first_type> {
+struct get_element<0, std::pair<T1, T2>> {
     typedef std::pair<T1, T2> argument_type;
     typedef typename argument_type::first_type result_type;
 
@@ -273,30 +255,10 @@ struct get_element<0, std::pair<T1, T2>> : std::unary_function<
     const result_type& operator()(const argument_type& x) const { return x.first; }
 };
 
-/*************************************************************************************************/
-
-#if 0
-template <typename T1, typename T2> // T is pair or tuple
-struct get_element<0, pair<T1, T2> > :
-        std::unary_function<pair<T1, T2>, typename pair<T1, T2>::first_type>
-{
-    typedef pair<T1, T2>                        argument_type;
-    typedef typename argument_type::first_type  result_type;
-
-    result_type& operator()(argument_type& x) const
-    { return x.first; }
-    
-    const result_type& operator()(const argument_type& x) const
-    { return x.first; }
-};
-#endif
-
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T1, typename T2> // T is pair or tuple
-struct get_element<1, std::pair<T1, T2>> : std::unary_function<
-                                               std::pair<T1, T2>,
-                                               typename std::pair<T1, T2>::second_type> {
+struct get_element<1, std::pair<T1, T2>> {
     typedef std::pair<T1, T2> argument_type;
     typedef typename argument_type::second_type result_type;
 
@@ -305,39 +267,21 @@ struct get_element<1, std::pair<T1, T2>> : std::unary_function<
     const result_type& operator()(const argument_type& x) const { return x.second; }
 };
 
-/*************************************************************************************************/
-
-#if 0
-template <typename T1, typename T2> // T is pair or tuple
-struct get_element<1, pair<T1, T2> > :
-        std::unary_function<pair<T1, T2>, typename pair<T1, T2>::second_type>
-{
-    typedef pair<T1, T2>                        argument_type;
-    typedef typename argument_type::second_type result_type;
-    
-    result_type& operator()(argument_type& x) const
-    { return x.second; }
-    
-    const result_type& operator()(const argument_type& x) const
-    { return x.second; }
-};
-#endif
-
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T>
-struct always_true : std::unary_function<T, bool> {
+struct always_true {
     bool operator()(const T&) const { return true; }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class Result>
 struct generator_t {
     typedef Result result_type;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 
 template <typename T>
@@ -345,7 +289,7 @@ struct sequence_t
 #if !defined(ADOBE_NO_DOCUMENTATION)
     : generator_t<T>
 #endif
-      {
+{
     explicit sequence_t(const T& x) : data_m(x) {}
     T operator()() { return data_m++; }
 
@@ -353,10 +297,10 @@ private:
     T data_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class T, typename R, class Compare>
-struct compare_members_t : std::binary_function<T, T, bool> {
+struct compare_members_t {
     compare_members_t(R T::*member, Compare compare) : compare_m(compare), member_m(member) {}
 
     bool operator()(const T& x, const T& y) const { return compare_m(x.*member_m, y.*member_m); }
@@ -384,10 +328,10 @@ compare_members_t<T, R, Compare> compare_members(R T::*member, Compare compare) 
     return compare_members_t<T, R, Compare>(member, compare);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class T, typename R>
-struct mem_data_t : std::unary_function<T, R&> {
+struct mem_data_t {
     mem_data_t() {}
 
     explicit mem_data_t(R T::*member) : member_m(member) {}
@@ -401,7 +345,7 @@ private:
 };
 
 template <class T, typename R>
-struct mem_data_t<const T, R> : std::unary_function<T, const R&> {
+struct mem_data_t<const T, R> {
     explicit mem_data_t(R T::*member) : member_m(member) {}
 
     const R& operator()(const T& x) const { return x.*member_m; }
@@ -415,11 +359,10 @@ mem_data_t<T, R> mem_data(R T::*member) {
     return mem_data_t<T, R>(member);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models StrictWeakOrdering
-struct equivalent : std::binary_function<typename O::first_argument_type,
-                                         typename O::second_argument_type, bool> {
+struct equivalent {
 public:
     explicit equivalent(const O& x) : o_m(x) {}
 
@@ -432,11 +375,10 @@ private:
     O o_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class F> // F models a BinaryFunction
-struct transposer : std::binary_function<typename F::second_argument_type,
-                                         typename F::first_argument_type, typename F::result_type> {
+struct transposer {
     typedef typename F::second_argument_type first_argument_type;
     typedef typename F::first_argument_type second_argument_type;
     typedef typename F::result_type result_type;
@@ -457,12 +399,12 @@ inline transposer<F> f_transpose(F f) {
 
 //!@}
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

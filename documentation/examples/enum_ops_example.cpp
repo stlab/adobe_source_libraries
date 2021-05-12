@@ -1,4 +1,4 @@
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
 
@@ -18,24 +18,16 @@
 
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 // start_of_example
 
-#include <boost/detail/lightweight_test.hpp>
 #include <adobe/enum_ops.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
-enum Foo {
-    foo_4 = 1 << 2,
-    foo_8 = 1 << 3
-};
+enum Foo { foo_4 = 1 << 2, foo_8 = 1 << 3 };
 
-enum class Views : int {
-    None = 0,
-    Text = 1 << 0,
-    Icon = 1 << 1,
-    Preview = 1 << 2
-};
+enum class Views : int { None = 0, Text = 1 << 0, Icon = 1 << 1, Preview = 1 << 2 };
 
 auto stlab_enable_bitmask_enum(E) -> std::true_type;
 

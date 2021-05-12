@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ALGORITHM_LOWER_BOUND_HPP
 #define ADOBE_ALGORITHM_LOWER_BOUND_HPP
@@ -11,23 +11,23 @@
 #include <adobe/config.hpp>
 
 #include <algorithm>
-#include <iterator>
 #include <functional>
+#include <iterator>
 
+#include <boost/next_prior.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/next_prior.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <adobe/functional/operator.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 namespace implementation {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models ForwardIterator
           typename N, // N models IntegralType
@@ -50,11 +50,11 @@ I lower_bound_n_(I f, N n, const T& x, C c, P p) {
     return f;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-} // implementation
+} // namespace implementation
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \defgroup lower_bound lower_bound
@@ -64,7 +64,7 @@ I lower_bound_n_(I f, N n, const T& x, C c, P p) {
     - STL documentation for \ref stldoc_lower_bound
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models ForwardIterator
           typename N, // N models IntegralType
@@ -74,7 +74,7 @@ inline I lower_bound_n(I f, N n, const T& x) {
     return implementation::lower_bound_n_(f, n, x, less(), identity<T>());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models FowardIterator
           typename N, // N models IntegralType
@@ -86,7 +86,7 @@ inline I lower_bound_n(I f, N n, const T& x, C c) {
         f, n, x, std::bind(c, std::placeholders::_1, std::placeholders::_2), identity<T>());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models ForwardIterator
           typename N, // N models IntegralType
@@ -100,7 +100,7 @@ inline I lower_bound_n(I f, N n, const T& x, C c, P p) {
         std::bind(p, std::placeholders::_1));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     NOTE (sparent) : These functions collide with the std functions when called unqualified as
@@ -112,7 +112,7 @@ namespace fn {}
 using namespace fn;
 namespace fn {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models ForwardIterator
           typename T>
@@ -121,7 +121,7 @@ inline I lower_bound(I f, I l, const T& x) {
     return std::lower_bound(f, l, x);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models FowardIterator
           typename T, // T == value_type(I)
@@ -131,7 +131,7 @@ inline I lower_bound(I f, I l, const T& x, C c) {
     return std::lower_bound(f, l, x, std::bind(c, std::placeholders::_1, std::placeholders::_2));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models ForwardIterator
           typename T, // T == result_type(P)
@@ -142,7 +142,7 @@ inline I lower_bound(I f, I l, const T& x, C c, P p) {
     return lower_bound_n(f, std::distance(f, l), x, c, p);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models ForwardRange
           typename T, // T == result_type(P)
@@ -153,7 +153,7 @@ lower_bound(I& r, const T& x, C c, P p) {
     return adobe::lower_bound(boost::begin(r), boost::end(r), x, c, p);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename I, // I models ForwardRange
           typename T, // T == result_type(P)
@@ -164,7 +164,7 @@ lower_bound(const I& r, const T& x, C c, P p) {
     return adobe::lower_bound(boost::begin(r), boost::end(r), x, c, p);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup lower_bound
 
@@ -214,13 +214,13 @@ lower_bound(const I& range, const T& value, Compare comp) {
     return adobe::lower_bound(boost::begin(range), boost::end(range), value, comp);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace fn
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

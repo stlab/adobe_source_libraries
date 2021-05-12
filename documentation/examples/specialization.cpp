@@ -4,13 +4,13 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /// start_recommended_specialization
 
-#include <algorithm>
 #include <adobe/algorithm.hpp>
 #include <adobe/memory.hpp>
+#include <algorithm>
 
 namespace my_namespace {
 
@@ -22,7 +22,7 @@ class my_class {
     // ...
 };
 
-} // my_namespace
+} // namespace my_namespace
 
 // specialize find for my_iterator - specialize in the std namespace
 
@@ -41,9 +41,7 @@ struct adobe::ptr_traits<my_namespace::my_class> {
     struct rebind {
         typedef adobe::ptr_traits<U> other;
     };
-    enum {
-        is_array = false
-    };
+    enum { is_array = false };
 
     static void delete_ptr(pointer_type x) throw() { delete x; }
 };

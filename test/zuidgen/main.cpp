@@ -3,22 +3,22 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-#include <adobe/zuid.hpp>
 #include <adobe/algorithm.hpp>
 #include <adobe/config.hpp>
+#include <adobe/zuid.hpp>
 
-#include <vector>
 #include <iostream>
+#include <vector>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if defined(BOOST_MSVC) && defined(BOOST_THREAD_USE_LIB)
 extern "C" void tss_cleanup_implemented() {}
 #endif
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 int main(int argc, char** argv) {
     if (argc > 1) {
@@ -91,7 +91,8 @@ int main(int argc, char** argv) {
         } else {
             std::cout << "Adobe Source Libraries ZUID generator; version " << ADOBE_VERSION_MAJOR
                       << '.' << ADOBE_VERSION_MINOR << '.' << ADOBE_VERSION_SUBMINOR << std::endl
-                      << "http://stlab.adobe.com" << std::endl << std::endl;
+                      << "http://stlab.adobe.com" << std::endl
+                      << std::endl;
             std::cout << "Usage:" << std::endl;
             std::cout << "  " << argv[0] << std::endl;
             std::cout << "    > generate a ZUID" << std::endl;

@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ALGORITHM_SORT_HPP
 #define ADOBE_ALGORITHM_SORT_HPP
@@ -16,11 +16,11 @@
 #include <algorithm>
 #include <functional>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
 \defgroup sort sort
 \ingroup sorting
@@ -30,7 +30,7 @@ namespace adobe {
     - STL documentation for \ref stldoc_stable_sort
     - STL documentation for \ref stldoc_partial_sort_copy
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup sort
 
@@ -61,8 +61,9 @@ template <typename I, // I models RandomAccessIterator
           typename P>
 // P models UnaryFunction(value_type(I)) -> T
 inline void sort(I f, I l, C c, P p) {
-    return std::sort(f, l, std::bind(c, std::bind(p, std::placeholders::_1),
-                                     std::bind(p, std::placeholders::_2)));
+    return std::sort(
+        f, l,
+        std::bind(c, std::bind(p, std::placeholders::_1), std::bind(p, std::placeholders::_2)));
 }
 
 /*!
@@ -179,12 +180,12 @@ inline void partial_sort_copy(const InputRange& range, RandomAccessRange& result
                                     boost::begin(result_range), boost::end(result_range), comp);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

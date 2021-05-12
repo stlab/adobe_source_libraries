@@ -77,7 +77,7 @@ public:
 private:
     struct implementation_t;
     typedef typename allocator_type::template rebind<implementation_t>::other
-    implementation_allocator_type;
+        implementation_allocator_type;
 
 public:
 #endif
@@ -268,8 +268,7 @@ private:
 
         try {
             ::new (static_cast<void*>(tmp)) implementation_t(x);
-        }
-        catch (...) {
+        } catch (...) {
             tmp->get_allocator().deallocate(tmp, 1);
             throw;
         }
@@ -284,8 +283,7 @@ private:
 
         try {
             ::new (static_cast<void*>(tmp)) implementation_t(std::move(x));
-        }
-        catch (...) {
+        } catch (...) {
             tmp->get_allocator().deallocate(tmp, 1);
             throw;
         }
@@ -385,12 +383,6 @@ void copy_on_write<T, A>::release_default() {
 /**************************************************************************************************/
 
 using version_1::copy_on_write;
-
-/**************************************************************************************************/
-
-#if 0
-template <typename T, typename A> struct is_movable<copy_on_write<T, A> > : boost::mpl::true_ { };
-#endif
 
 /**************************************************************************************************/
 

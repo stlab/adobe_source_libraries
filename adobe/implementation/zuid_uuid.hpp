@@ -4,7 +4,7 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ZUID_UUID_HPP
 #define ADOBE_ZUID_UUID_HPP
@@ -15,13 +15,13 @@
 
 #include <boost/cstdint.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     Relevant copyright information is provided below and may not be removed from this file.
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     Copyright (c) 1990 - 1993, 1996 Open Software Foundation, Inc.
@@ -41,11 +41,11 @@
     any representations about the suitability of this software for any purpose.
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 
 // REVISIT(mmarcus) Boost 1.35.0 seems to pull in an MS system header
@@ -59,10 +59,10 @@ namespace adobe {
 boost::int16_t uuid_create(uuid_t* uuid);
 
 /* uuid_create_from_name -- create a UUID using a "name" from a "name space" */
-void uuid_create_from_name(uuid_t* uuid, /*  resulting UUID */
-                           uuid_t nsid,  /*  UUID to serve as context, so identical
-                                        names from different name spaces generate
-                                        different UUIDs */
+void uuid_create_from_name(uuid_t* uuid,             /*  resulting UUID */
+                           uuid_t nsid,              /*  UUID to serve as context, so identical
+                                                    names from different name spaces generate
+                                                    different UUIDs */
                            boost::uint8_t* name,     /*  the name from which to generate a UUID */
                            boost::uint16_t namelen); /*  the length of the name */
 
@@ -76,12 +76,12 @@ Note: lexical ordering is not temporal ordering!
 */
 boost::int16_t uuid_compare(const uuid_t* u1, const uuid_t* u2);
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

@@ -3,24 +3,25 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ITERATOR_VALUE_ITERATOR_HPP
 #define ADOBE_ITERATOR_VALUE_ITERATOR_HPP
 
 #include <adobe/config.hpp>
 
-#include <adobe/functional.hpp>
-
+#include <cassert>
 #include <functional>
 #include <iterator>
-#include <cassert>
 
-/*************************************************************************************************/
+#include <adobe/functional.hpp>
+#include <adobe/type_traits.hpp>
+
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //! \addtogroup adobe_iterator
 //! @{
@@ -30,7 +31,7 @@ template <typename I,               // I models Incrementable
           typename F = identity<I>> // F models UnaryFunction
 class value_iterator {
 public:
-    typedef typename F::result_type value_type;
+    using value_type = adobe::invoke_result_t<F, I>;
     typedef value_type* pointer;
     typedef value_type& reference;
     typedef ptrdiff_t difference_type;
@@ -73,11 +74,11 @@ public:
 
 //! @}
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 // ADOBE_ITERATOR_DISTANCE_HPP

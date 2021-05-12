@@ -3,14 +3,14 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
 REVISIT (sparent) : [Old comment - what does this mean?] I need to handle the pos_type correctly
 with regards to state.
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <cassert>
 #include <iomanip>
@@ -18,14 +18,14 @@ with regards to state.
 #include <sstream>
 #include <utility>
 
-#include <boost/bind.hpp>
 #include <boost/array.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/config.hpp>
 
-#include <adobe/array.hpp>
-#include <adobe/name.hpp>
 #include <adobe/any_regular.hpp>
+#include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
+#include <adobe/name.hpp>
 #include <adobe/string.hpp>
 
 #include <adobe/implementation/expression_parser.hpp>
@@ -35,20 +35,20 @@ with regards to state.
 
 #ifdef BOOST_MSVC
 namespace std {
-using ::isspace;
 using ::isalnum;
 using ::isalpha;
 using ::isdigit;
-}
+using ::isspace;
+} // namespace std
 #endif
 
 using namespace std;
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 class expression_parser::implementation {
 public:
@@ -59,21 +59,19 @@ public:
         token_stream_m.set_keyword_extension_lookup(proc);
     }
 
-    void set_comment_bypass(bool bypass) {
-        token_stream_m.set_comment_bypass(bypass);
-    }
+    void set_comment_bypass(bool bypass) { token_stream_m.set_comment_bypass(bypass); }
 
     lex_stream_t token_stream_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 expression_parser::expression_parser(std::istream& in, const line_position_t& position)
     : object(new implementation(in, position)) {}
 
 expression_parser::~expression_parser() { delete object; }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /* REVISIT (sparent) : Should this be const? And is there a way to specify the class to throw? */
 
@@ -81,7 +79,7 @@ void expression_parser::throw_exception(const char* errorString) {
     throw_parser_exception(errorString, next_position());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /* REVISIT (sparent) : Should this be const? And is there a way to specify the class to throw? */
 
@@ -89,25 +87,23 @@ void expression_parser::throw_exception(const name_t& found, const name_t& expec
     throw_parser_exception(found, expected, next_position());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 const line_position_t& expression_parser::next_position() {
     return object->token_stream_m.next_position();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void expression_parser::set_keyword_extension_lookup(const keyword_extension_lookup_proc_t& proc) {
     object->set_keyword_extension_lookup(proc);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-void expression_parser::set_comment_bypass(bool bypass) {
-    object->set_comment_bypass(bypass);
-}
+void expression_parser::set_comment_bypass(bool bypass) { object->set_comment_bypass(bypass); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  expression = or_expression ["?" expression ":" expression].
 bool expression_parser::is_expression(array_t& expression_stack) {
@@ -131,7 +127,7 @@ bool expression_parser::is_expression(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void expression_parser::require_expression(array_t& expression_stack) {
     if (!is_expression(expression_stack)) {
@@ -139,7 +135,7 @@ void expression_parser::require_expression(array_t& expression_stack) {
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  or_expression = and_expression { "||" and_expression }.
 bool expression_parser::is_or_expression(array_t& expression_stack) {
@@ -159,7 +155,7 @@ bool expression_parser::is_or_expression(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  and_expression = bitwise_or_expression { "&&" bitwise_or_expression }.
 bool expression_parser::is_and_expression(array_t& expression_stack) {
@@ -179,7 +175,7 @@ bool expression_parser::is_and_expression(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  bitwise_or_expression = bitwise_xor_expression { "|" bitwise_xor_expression }.
 bool expression_parser::is_bitwise_or_expression(array_t& expression_stack) {
@@ -199,7 +195,7 @@ bool expression_parser::is_bitwise_or_expression(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  bitwise_xor_expression = bitwise_and_expression { "^" bitwise_and_expression }.
 bool expression_parser::is_bitwise_xor_expression(array_t& expression_stack) {
@@ -219,7 +215,7 @@ bool expression_parser::is_bitwise_xor_expression(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  bitwise_and_expression = equality_expression { "&" equality_expression }.
 bool expression_parser::is_bitwise_and_expression(array_t& expression_stack) {
@@ -239,7 +235,7 @@ bool expression_parser::is_bitwise_and_expression(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  equality_expression = relational_expression { ("==" | "!=") relational_expression }.
 bool expression_parser::is_equality_expression(array_t& expression_stack) {
@@ -258,7 +254,7 @@ bool expression_parser::is_equality_expression(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  relational_expression = bitshift_expression { ("<" | ">" | "<=" | ">=") bitshift_expression }.
 bool expression_parser::is_relational_expression(array_t& expression_stack) {
@@ -277,7 +273,7 @@ bool expression_parser::is_relational_expression(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  bitshift_expression = additive_expression { ("<<" | ">>") additive_expression }.
 bool expression_parser::is_bitshift_expression(array_t& expression_stack) {
@@ -296,7 +292,7 @@ bool expression_parser::is_bitshift_expression(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  additive_expression = multiplicative_expression { additive_operator multiplicative_expression }.
 bool expression_parser::is_additive_expression(array_t& expression_stack) {
@@ -315,7 +311,7 @@ bool expression_parser::is_additive_expression(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  multiplicative_expression = unary_expression { ("*" | "/" | "%") unary_expression }.
 bool expression_parser::is_multiplicative_expression(array_t& expression_stack) {
@@ -334,7 +330,7 @@ bool expression_parser::is_multiplicative_expression(array_t& expression_stack) 
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  unary_expression = postfix_expression | (unary_operator unary_expression).
 
@@ -357,7 +353,7 @@ bool expression_parser::is_unary_expression(array_t& expression_stack) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  postfix_expression = primary_expression { ("[" expression "]") | ("." identifier) }.
 
@@ -382,7 +378,7 @@ bool expression_parser::is_postfix_expression(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  argument_expression_list = named_argument_list | argument_list.
 bool expression_parser::is_argument_expression_list(array_t& expression_stack) {
@@ -392,7 +388,7 @@ bool expression_parser::is_argument_expression_list(array_t& expression_stack) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  argument_list = expression { "," expression }.
 bool expression_parser::is_argument_list(array_t& expression_stack) {
@@ -412,7 +408,7 @@ bool expression_parser::is_argument_list(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  named_argument_list = named_argument { "," named_argument }.
 bool expression_parser::is_named_argument_list(array_t& expression_stack) {
@@ -434,7 +430,7 @@ bool expression_parser::is_named_argument_list(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  named_argument = identifier ":" expression.
 bool expression_parser::is_named_argument(array_t& expression_stack) {
@@ -457,7 +453,7 @@ bool expression_parser::is_named_argument(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  primary_expression = name | number | boolean | string | "empty" | array | dictionary
 //      | variable_or_fuction | ( "(" expression ")" ).
@@ -484,7 +480,7 @@ bool expression_parser::is_primary_expression(array_t& expression_stack) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  variable_or_function = identifier ["(" [argument_expression_list] ")"].
 bool expression_parser::is_variable_or_function(array_t& expression_stack) {
@@ -509,7 +505,7 @@ bool expression_parser::is_variable_or_function(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool expression_parser::is_dictionary(array_t& expression_stack) {
     if (!is_token(open_brace_k))
@@ -523,7 +519,7 @@ bool expression_parser::is_dictionary(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool expression_parser::is_array(array_t& expression_stack) {
     if (!is_token(open_bracket_k))
@@ -537,7 +533,7 @@ bool expression_parser::is_array(array_t& expression_stack) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool expression_parser::is_name(any_regular_t& result) {
     if (!is_token(at_k))
@@ -549,7 +545,7 @@ bool expression_parser::is_name(any_regular_t& result) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool expression_parser::is_boolean(any_regular_t& result) {
     if (is_keyword(true_k)) {
@@ -563,7 +559,7 @@ bool expression_parser::is_boolean(any_regular_t& result) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  relational_operator = "<" | ">" | "<=" | ">=".
 bool expression_parser::is_relational_operator(name_t& name_result) {
@@ -578,7 +574,7 @@ bool expression_parser::is_relational_operator(name_t& name_result) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  bitshift_operator = "<<" | ">>"
 bool expression_parser::is_bitshift_operator(name_t& name_result) {
@@ -593,7 +589,7 @@ bool expression_parser::is_bitshift_operator(name_t& name_result) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  additive_operator = "+" | "-".
 bool expression_parser::is_additive_operator(name_t& name_result) {
@@ -608,7 +604,7 @@ bool expression_parser::is_additive_operator(name_t& name_result) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  multiplicative_operator = "*" | "/" | "%".
 bool expression_parser::is_multiplicative_operator(name_t& name_result) {
@@ -623,7 +619,7 @@ bool expression_parser::is_multiplicative_operator(name_t& name_result) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 //  unary_operator = "+" | "-" | "!" | "~".
 bool expression_parser::is_unary_operator(name_t& name_result) {
@@ -641,7 +637,7 @@ bool expression_parser::is_unary_operator(name_t& name_result) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     REVISIT (sparent) : There should be a turn the simple lexical calls into templates
@@ -683,7 +679,7 @@ bool expression_parser::is_trail_comment(string& string_result) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool expression_parser::is_token(name_t tokenName, any_regular_t& tokenValue) {
     const stream_lex_token_t& result(get_token());
@@ -695,7 +691,7 @@ bool expression_parser::is_token(name_t tokenName, any_regular_t& tokenValue) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool expression_parser::is_token(name_t tokenName) {
     const stream_lex_token_t& result(get_token());
@@ -706,7 +702,7 @@ bool expression_parser::is_token(name_t tokenName) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 bool expression_parser::is_keyword(name_t keyword_name) {
     const stream_lex_token_t& result(get_token());
@@ -716,15 +712,15 @@ bool expression_parser::is_keyword(name_t keyword_name) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 const stream_lex_token_t& expression_parser::get_token() { return object->token_stream_m.get(); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void expression_parser::putback() { object->token_stream_m.putback(); }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void expression_parser::require_token(name_t tokenName, any_regular_t& tokenValue) {
     const stream_lex_token_t& result(get_token());
@@ -735,7 +731,7 @@ void expression_parser::require_token(name_t tokenName, any_regular_t& tokenValu
     tokenValue = result.second;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void expression_parser::require_keyword(name_t keyword_name) {
     const stream_lex_token_t& result(get_token());
@@ -745,7 +741,7 @@ void expression_parser::require_keyword(name_t keyword_name) {
     throw_exception(keyword_name, result.second.cast<name_t>());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 void expression_parser::require_token(name_t tokenName) {
     const stream_lex_token_t& result(get_token());
@@ -755,8 +751,8 @@ void expression_parser::require_token(name_t tokenName) {
     throw_exception(tokenName, result.first);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/

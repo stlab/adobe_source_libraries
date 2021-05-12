@@ -11,7 +11,7 @@
 #include <iterator>
 #include <vector>
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 
 #include <adobe/algorithm/copy.hpp>
 #include <adobe/algorithm/find.hpp>
@@ -23,6 +23,7 @@
 /**************************************************************************************************/
 
 using namespace std;
+using namespace boost::placeholders;
 
 /**************************************************************************************************/
 
@@ -91,9 +92,9 @@ InputIterator datoi(InputIterator first, InputIterator last, Result& result) {
 /**************************************************************************************************/
 
 template <typename I, typename O, typename P>
-std::pair<I, O> copy_until(I first, I last, O output,
-                           P pred =
-                               adobe::always_true<typename std::iterator_traits<I>::value_type>()) {
+std::pair<I, O>
+copy_until(I first, I last, O output,
+           P pred = adobe::always_true<typename std::iterator_traits<I>::value_type>()) {
     for (; first != last && pred(*first); ++first)
         *output++ = *first;
 
@@ -403,7 +404,7 @@ const code_point_set_t& code_point_set() {
 /**************************************************************************************************/
 
 typedef adobe::table_index<const boost::uint32_t, const code_point_set_t::value_type>
-code_point_index_type;
+    code_point_index_type;
 
 /**************************************************************************************************/
 
@@ -469,9 +470,7 @@ entity_name_index_type::const_iterator entity_name_index_find(const string& enti
 
 /**************************************************************************************************/
 
-inline bool needs_escape(unsigned char c) {
-    return !std::isprint(c) || (c & 0x80);
-}
+inline bool needs_escape(unsigned char c) { return !std::isprint(c) || (c & 0x80); }
 
 /**************************************************************************************************/
 
@@ -596,9 +595,9 @@ string entity_unescape(const string& value) {
     result.reserve(value.size());
 
     while (iter != value.end()) {
-        string::const_iterator next(
-            copy_until(iter, value.end(), std::back_inserter(result),
-                       boost::bind(std::not_equal_to<char>(), _1, '&')).first);
+        string::const_iterator next(copy_until(iter, value.end(), std::back_inserter(result),
+                                               boost::bind(std::not_equal_to<char>(), _1, '&'))
+                                        .first);
 
         if (next == value.end())
             return result;

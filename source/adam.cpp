@@ -12,19 +12,19 @@
 #include <utility>
 #include <vector>
 
-#include <boost/bind.hpp>
-#include <boost/tuple/tuple.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/function.hpp>
+#include <boost/tuple/tuple.hpp>
 
 #include <adobe/algorithm/find.hpp>
 #include <adobe/algorithm/for_each.hpp>
+#include <adobe/algorithm/sort.hpp>
 #include <adobe/algorithm/transform.hpp>
 #include <adobe/algorithm/unique.hpp>
-#include <adobe/algorithm/sort.hpp>
+#include <adobe/any_regular.hpp>
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
 #include <adobe/name.hpp>
-#include <adobe/any_regular.hpp>
 
 #include <adobe/functional.hpp>
 #include <adobe/istream.hpp>
@@ -40,6 +40,7 @@
 /**************************************************************************************************/
 
 using namespace std;
+using namespace boost::placeholders;
 
 /**************************************************************************************************/
 
@@ -113,8 +114,7 @@ void evaluate(adobe::virtual_machine_t& machine, const adobe::line_position_t& p
 #endif
     try {
         machine.evaluate(expression);
-    }
-    catch (const std::exception& error) {
+    } catch (const std::exception& error) {
         throw adobe::stream_error_t(error, position);
     }
 #ifdef BOOST_MSVC
@@ -237,9 +237,9 @@ private:
 
         typedef empty_copy<boost::signals2::signal<void(bool)>> monitor_invariant_list_t;
         typedef empty_copy<boost::signals2::signal<void(const any_regular_t&)>>
-        monitor_value_list_t;
+            monitor_value_list_t;
         typedef empty_copy<boost::signals2::signal<void(const cell_bits_t&)>>
-        monitor_contributing_list_t;
+            monitor_contributing_list_t;
 
         cell_t(access_specifier_t specifier, name_t, const calculator_t& calculator,
                std::size_t cell_set_pos, cell_t*); // output
@@ -287,9 +287,9 @@ private:
         cell_t* interface_input_m;
 
         priority_t priority() const {
-            assert((specifier_m == access_interface_input ||
-                   specifier_m == access_interface_output) &&
-                       "should not read priority of this cell type");
+            assert(
+                (specifier_m == access_interface_input || specifier_m == access_interface_output) &&
+                "should not read priority of this cell type");
             return interface_input_m ? interface_input_m->priority_m : priority_m;
         }
 
@@ -363,7 +363,7 @@ private:
     typedef std::vector<cell_t*> index_vector_t;
 
     typedef hash_index<cell_t, std::hash<name_t>, equal_to, mem_data_t<cell_t, const name_t>>
-    index_t;
+        index_t;
 
     index_t name_index_m;
     index_t setable_index_m; // input of interface or input;
@@ -387,7 +387,7 @@ private:
     cell_bits_t active_m;
 
     typedef boost::signals2::signal<void(const cell_bits_t&, const cell_bits_t&)>
-    monitor_enabled_list_t;
+        monitor_enabled_list_t;
     monitor_enabled_list_t monitor_enabled_m;
 
     cell_bits_t accumulate_contributing_m;
@@ -747,8 +747,9 @@ void sheet_t::implementation_t::add_interface(name_t name, bool linked,
 
     if (initializer_expression.size()) {
         cell_set_m.push_back(
-            cell_t(name, linked, boost::bind(&implementation_t::calculate_expression,
-                                             boost::ref(*this), position1, initializer_expression),
+            cell_t(name, linked,
+                   boost::bind(&implementation_t::calculate_expression, boost::ref(*this),
+                               position1, initializer_expression),
                    cell_set_m.size()));
     } else {
         cell_set_m.push_back(cell_t(name, linked, cell_t::calculator_t(), cell_set_m.size()));
@@ -1118,7 +1119,8 @@ void sheet_t::implementation_t::flow(cell_bits_t& priority_accessed) {
                 cell_t& cell = *iter;
 
                 // REVISIT (sparent) : Better error reporting here.
-                if (cell.term_m) throw logic_error("over constrained.");
+                if (cell.term_m)
+                    throw logic_error("over constrained.");
 
                 if (count == 1) {
                     cell.term_m =
@@ -1558,8 +1560,7 @@ any_regular_t sheet_t::implementation_t::get(name_t variable_name) {
 
         if (cell.specifier_m != access_input && cell.specifier_m != access_constant)
             cell.contributing_m |= conditional_indirect_contributing_m;
-    }
-    catch (...) {
+    } catch (...) {
         if (cell.specifier_m == access_interface_output)
             get_stack_m.pop_back();
         throw;

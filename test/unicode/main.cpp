@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/algorithm/copy.hpp>
 #include <adobe/unicode.hpp>
@@ -16,17 +16,17 @@
 #include <string>
 #include <vector>
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 namespace {
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 typedef std::vector<boost::uint32_t> utf32_buffer_t;
 typedef std::vector<boost::uint16_t> utf16_buffer_t;
 typedef std::vector<boost::uint8_t> utf8_buffer_t;
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void roundtrip_test(boost::uint32_t code_point, bool print = true) {
     /*
@@ -91,13 +91,13 @@ void roundtrip_test(boost::uint32_t code_point, bool print = true) {
     }
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 bool valid_code_point(boost::uint32_t cp) {
     return !(cp >= 0xd800 && cp <= 0xdbff) && !(cp >= 0xdc00 && cp <= 0xdfff);
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void basic_roundtrip_test() {
     std::cout << "Singleton Roundtrip Tests" << std::endl;
@@ -109,7 +109,7 @@ void basic_roundtrip_test() {
     roundtrip_test(0xF0000); // Hypothetical private-use glyph
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void full_roundtrip_test() {
     std::cout << "Performing complete range roundtrip test..." << std::endl;
@@ -121,17 +121,17 @@ void full_roundtrip_test() {
         for (; first != last; ++first)
             if (valid_code_point(first))
                 roundtrip_test(first, false);
-    }
-    catch (...) {
-        std::cerr << std::endl << "While processing value " << std::hex << first << std::dec
-                  << "..." << std::endl;
+    } catch (...) {
+        std::cerr << std::endl
+                  << "While processing value " << std::hex << first << std::dec << "..."
+                  << std::endl;
         throw;
     }
 
     std::cout << "passed!" << std::endl;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void bug_test_from_07_27_2008() {
     utf8_buffer_t result;
@@ -147,17 +147,17 @@ void bug_test_from_07_27_2008() {
     std::cout << std::dec;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #if defined(BOOST_MSVC) && defined(BOOST_THREAD_USE_LIB)
 extern "C" void tss_cleanup_implemented() {}
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 int main(int argc, char* argv[]) try {
     basic_roundtrip_test();
@@ -172,13 +172,11 @@ int main(int argc, char* argv[]) try {
     bug_test_from_07_27_2008();
 
     return 0;
-}
-catch (const std::exception& error) {
+} catch (const std::exception& error) {
     std::cerr << "Exception: " << error.what() << "\n";
 
     return 1;
-}
-catch (...) {
+} catch (...) {
     std::cerr << "Unknown Exception\n";
 
     return 1;

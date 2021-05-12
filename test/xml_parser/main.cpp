@@ -4,25 +4,29 @@
  or a copy at http://stlab.adobe.com/licenses.html)
  */
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
 #include <adobe/xml_parser.hpp>
 #include <adobe/xstring.hpp>
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <exception>
 #include <iostream>
 #include <vector>
 
-/****************************************************************************************************/
+/**************************************************************************************************/
+
+using namespace boost::placeholders;
+
+/**************************************************************************************************/
 
 namespace {
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 struct math_test_t {
     math_test_t() : observed_m(0), expected_m(0) {}
@@ -31,7 +35,7 @@ struct math_test_t {
     long expected_m;
 };
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 const char* const test_document_1 = "<math-test>\n"
                                     "	<expression>\n"
@@ -67,7 +71,7 @@ const char* const test_document_3 = "<?xml version=\"1.0\" encoding=\"utf8\" ?>\
                                     "	<result value=\"46\"/>\n"
                                     "</math-test>\n";
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 long to_long(const adobe::token_range_t& value);
 
@@ -91,7 +95,7 @@ adobe::token_range_t expression_content(const adobe::token_range_t& entire_eleme
 
 bool run_test(const adobe::token_range_t& document, const adobe::line_position_t& line_position);
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 } // anonymous namespace
 
@@ -122,8 +126,7 @@ int main() {
         test_passed = run_test(document, line_position);
         std::cout << "XML Test 3 " << (test_passed ? "passed" : "failed") << std::endl;
         success = success && test_passed;
-    }
-    catch (const std::exception& e) {
+    } catch (const std::exception& e) {
         std::cout << "Caught exception: '" << e.what() << "'" << std::endl;
         success = false;
     }
@@ -133,7 +136,7 @@ int main() {
 
 namespace {
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 long to_long(const adobe::token_range_t& value) {
     const std::string value_string(value.first, value.second);
@@ -147,7 +150,8 @@ long calculate_expression(const adobe::token_range_t& content) {
     adobe::make_xml_parser(content.first, content.second, adobe::line_position_t("expression"),
                            adobe::always_true<adobe::token_range_t>(),
                            boost::bind(expression_content, _1, _2, _3, _4, boost::ref(value_stack)),
-                           adobe::implementation::null_output_t()).parse_content();
+                           adobe::implementation::null_output_t())
+        .parse_content();
 
     return value_stack.back();
 }
@@ -166,7 +170,8 @@ adobe::token_range_t document_content(const adobe::token_range_t& /*entire_eleme
         adobe::make_xml_parser(value.first, value.second, adobe::line_position_t("math-test"),
                                adobe::always_true<adobe::token_range_t>(),
                                boost::bind(test_content, _1, _2, _3, _4, boost::ref(test)),
-                               adobe::implementation::null_output_t()).parse_content();
+                               adobe::implementation::null_output_t())
+            .parse_content();
 
         if (test.observed_m == test.expected_m)
             passed = true;
@@ -248,11 +253,12 @@ bool run_test(const adobe::token_range_t& document, const adobe::line_position_t
     adobe::make_xml_parser(document.first, document.second, line_position,
                            adobe::always_true<adobe::token_range_t>(),
                            boost::bind(document_content, _1, _2, _3, _4, boost::ref(passed)),
-                           adobe::implementation::null_output_t()).parse_document();
+                           adobe::implementation::null_output_t())
+        .parse_document();
 
     return passed;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 } // anonymous namespace

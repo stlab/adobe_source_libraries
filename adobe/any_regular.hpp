@@ -13,6 +13,7 @@
 
 #include <adobe/any_regular_fwd.hpp>
 
+#include <boost/concept_check.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/noncopyable.hpp>
@@ -25,7 +26,6 @@
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/remove_reference.hpp>
-#include <boost/concept_check.hpp>
 
 #include <adobe/conversion.hpp>
 #include <adobe/cstdint.hpp>
@@ -156,9 +156,7 @@ const
 
 namespace implementation {
 
-enum {
-    vtable_version = 2
-};
+enum { vtable_version = 2 };
 
 /**************************************************************************************************/
 
@@ -256,9 +254,7 @@ struct any_regular_model_local : any_regular_interface_t, boost::noncopyable {
         swap(self(x).object_m, self(y).object_m);
     }
 
-    static void serialize(const interface_type& x, std::ostream& s) {
-        s << format(self(x).get());
-    }
+    static void serialize(const interface_type& x, std::ostream& s) { s << format(self(x).get()); }
 
     const T& get() const { return object_m; }
     T& get() { return object_m; }
@@ -268,11 +264,16 @@ BOOST_STATIC_ASSERT(sizeof(any_regular_model_local<double>) == 16);
 
 template <typename T>
 const vtable_t any_regular_model_local<T>::vtable_s = {
-    vtable_version,                       &any_regular_model_local::destruct,
-    &any_regular_model_local::type_info,  &any_regular_model_local::clone,
-    &any_regular_model_local::move_clone, &any_regular_model_local::assign,
-    &any_regular_model_local::equals,     &any_regular_model_local::exchange,
-    &any_regular_model_local::serialize, };
+    vtable_version,
+    &any_regular_model_local::destruct,
+    &any_regular_model_local::type_info,
+    &any_regular_model_local::clone,
+    &any_regular_model_local::move_clone,
+    &any_regular_model_local::assign,
+    &any_regular_model_local::equals,
+    &any_regular_model_local::exchange,
+    &any_regular_model_local::serialize,
+};
 
 template <typename T> // T models Regular
 struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable {
@@ -291,8 +292,8 @@ struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable {
     static object_t* new_move(T& x) {
         allocator_type a;
         object_t* result = a.allocate(1);
-        construct(&result->alloc_m, aligned_storage<allocator_type>(a));
-        construct(&result->data_m, std::move(x));
+        construct_at(&result->alloc_m, aligned_storage<allocator_type>(a));
+        construct_at(&result->data_m, std::move(x));
         return result;
     }
 
@@ -302,8 +303,8 @@ struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable {
 
     explicit any_regular_model_remote(T x) : interface_type(vtable_s), object_ptr_m(new_move(x)) {}
 
-    any_regular_model_remote(any_regular_model_remote&& x) noexcept : interface_type(vtable_s),
-                                                                      object_ptr_m(x.object_ptr_m) {
+    any_regular_model_remote(any_regular_model_remote&& x) noexcept
+        : interface_type(vtable_s), object_ptr_m(x.object_ptr_m) {
         x.object_ptr_m = 0;
     }
 
@@ -348,9 +349,7 @@ struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable {
         return swap(self(x).object_ptr_m, self(y).object_ptr_m);
     }
 
-    static void serialize(const interface_type& x, std::ostream& s) {
-        s << format(self(x).get());
-    }
+    static void serialize(const interface_type& x, std::ostream& s) { s << format(self(x).get()); }
 
     const T& get() const { return object_ptr_m->data_m; }
     T& get() { return object_ptr_m->data_m; }
@@ -360,11 +359,16 @@ BOOST_STATIC_ASSERT(sizeof(any_regular_model_remote<double>) <= 16);
 
 template <typename T>
 const vtable_t any_regular_model_remote<T>::vtable_s = {
-    vtable_version,                        &any_regular_model_remote::destruct,
-    &any_regular_model_remote::type_info,  &any_regular_model_remote::clone,
-    &any_regular_model_remote::move_clone, &any_regular_model_remote::assign,
-    &any_regular_model_remote::equals,     &any_regular_model_remote::exchange,
-    &any_regular_model_remote::serialize, };
+    vtable_version,
+    &any_regular_model_remote::destruct,
+    &any_regular_model_remote::type_info,
+    &any_regular_model_remote::clone,
+    &any_regular_model_remote::move_clone,
+    &any_regular_model_remote::assign,
+    &any_regular_model_remote::equals,
+    &any_regular_model_remote::exchange,
+    &any_regular_model_remote::serialize,
+};
 
 /**************************************************************************************************/
 
@@ -448,9 +452,10 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t> {
         typedef implementation::any_regular_model_local<promote_type> regular_model_local_type;
         typedef implementation::any_regular_model_remote<promote_type> regular_model_remote_type;
 
-        typedef boost::mpl::bool_ < (sizeof(regular_model_local_type) <= sizeof(storage_t)) &&
-            (boost::has_nothrow_copy<promote_type>::value ||
-             std::is_nothrow_move_constructible<promote_type>::value) > use_local_type;
+        typedef boost::mpl::bool_<(sizeof(regular_model_local_type) <= sizeof(storage_t)) &&
+                                  (boost::has_nothrow_copy<promote_type>::value ||
+                                   std::is_nothrow_move_constructible<promote_type>::value)>
+            use_local_type;
 
         typedef typename boost::mpl::if_<use_local_type, regular_model_local_type,
                                          regular_model_remote_type>::type model_type;
@@ -762,7 +767,7 @@ template <typename R>
 struct runtime_cast_t<R, const any_regular_t> {
     R operator()(const any_regular_t& x) const {
         typedef typename boost::remove_const<typename boost::remove_reference<R>::type>::type
-        result_type;
+            result_type;
 
         BOOST_STATIC_ASSERT((boost::is_reference<R>::value));
 
@@ -813,8 +818,8 @@ struct runtime_cast_t<R, any_regular_t*> {
 template <typename R>
 struct runtime_cast_t<R, const any_regular_t*> {
     R operator()(const any_regular_t* x) const {
-        typedef typename boost::remove_const<typename boost::remove_pointer<R>::type>::type
-        result_type;
+        typedef
+            typename boost::remove_const<typename boost::remove_pointer<R>::type>::type result_type;
 
         BOOST_STATIC_ASSERT((boost::is_pointer<R>::value));
 

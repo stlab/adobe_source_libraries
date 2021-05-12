@@ -8,10 +8,10 @@
 #ifndef ADOBE_JSON_HELPER_HPP
 #define ADOBE_JSON_HELPER_HPP
 
-#include <adobe/json.hpp>
 #include <adobe/any_regular.hpp>
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
+#include <adobe/json.hpp>
 
 /**************************************************************************************************/
 
@@ -33,38 +33,42 @@ struct asl_json_helper_t {
     first. This is a better route to take than building out name_t to behave
     more like a string type, which it is not intended to be.
     */
-    typedef adobe::any_regular_t    value_type;
-    typedef std::string             string_type;
-    typedef string_type             key_type;
-    typedef adobe::dictionary_t     object_type;
-    typedef adobe::array_t          array_type;
+    typedef adobe::any_regular_t value_type;
+    typedef std::string string_type;
+    typedef string_type key_type;
+    typedef adobe::dictionary_t object_type;
+    typedef adobe::array_t array_type;
     typedef object_type::value_type pair_type;
 
     static json_type type(const value_type& x) {
         const std::type_info& type(x.type_info());
 
-        if (type == typeid(object_type)) return json_type::object;
-        else if (type == typeid(array_type)) return json_type::array;
-        else if (type == typeid(string_type)) return json_type::string;
-        else if (type == typeid(double)) return json_type::number;
-        else if (type == typeid(bool)) return json_type::boolean;
-        else if (type == typeid(adobe::empty_t)) return json_type::null;
+        if (type == typeid(object_type))
+            return json_type::object;
+        else if (type == typeid(array_type))
+            return json_type::array;
+        else if (type == typeid(string_type))
+            return json_type::string;
+        else if (type == typeid(double))
+            return json_type::number;
+        else if (type == typeid(bool))
+            return json_type::boolean;
+        else if (type == typeid(adobe::empty_t))
+            return json_type::null;
 
         ADOBE_ASSERT(false && "invalid type for serialization");
     }
-    
+
     template <typename T>
     static const T& as(const value_type& x) {
         return x.cast<T>();
     }
 
-    static void move_append(object_type& obj, key_type& key, value_type& value) {        
+    static void move_append(object_type& obj, key_type& key, value_type& value) {
         obj[adobe::name_t(key.c_str())] = std::move(value);
         key.clear();
     }
-    static void append(string_type& str, const char* f, const char* l) {
-        str.append(f, l);
-    }
+    static void append(string_type& str, const char* f, const char* l) { str.append(f, l); }
     static void move_append(array_type& array, value_type& value) {
         array.emplace_back(std::move(value));
     }
@@ -83,8 +87,7 @@ struct asl_json_helper_t {
     \return Either a \ref array_t or a \ref `dictionary_t` representing the
             raw data parsed, wrapped in an `any_regular_t`.
 */
-inline adobe::any_regular_t json_parse(const char* data)
-{
+inline adobe::any_regular_t json_parse(const char* data) {
     return json_parser<asl_json_helper_t>(data).parse();
 }
 
@@ -109,8 +112,7 @@ inline adobe::any_regular_t json_parse(const char* data)
     \return The output iterator passed in.
 */
 template <typename O>
-inline O json_generate(const adobe::any_regular_t& x, O out)
-{
+inline O json_generate(const adobe::any_regular_t& x, O out) {
     return json_generator<asl_json_helper_t, O>(out).generate(x);
 }
 

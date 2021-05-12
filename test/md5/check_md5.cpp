@@ -4,13 +4,13 @@
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
-#include <iostream>
 #include <iomanip>
+#include <iostream>
 #include <sstream>
 
-#include <boost/version.hpp>
-#include <boost/filesystem/path.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/version.hpp>
 
 #include <adobe/config.hpp>
 #include <adobe/md5.hpp>
@@ -66,8 +66,7 @@ int main(int argc, char* argv[]) {
 
     catch (const std::exception& error) {
         std::cerr << "Exception: " << error.what() << std::endl;
-    }
-    catch (...) {
+    } catch (...) {
         std::cerr << "Unknown exception" << std::endl;
     }
     return success ? 0 : 1;

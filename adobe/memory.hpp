@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_MEMORY_HPP
 #define ADOBE_MEMORY_HPP
@@ -13,19 +13,18 @@
 #include <cassert>
 #include <functional>
 #include <memory>
-
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_const.hpp>
+#include <type_traits>
+#include <utility>
 
 #include <adobe/conversion.hpp>
 #include <adobe/functional.hpp>
 #include <adobe/memory_fwd.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \defgroup memory Memory
@@ -40,13 +39,13 @@ template <typename T>
 struct empty_ptr;
 
 template <typename T>
-struct empty_ptr<T*> : std::unary_function<T*, bool> {
+struct empty_ptr<T*> {
     bool operator()(const T* x) const throw() { return x == NULL; }
 };
 
 
 template <typename T>
-struct empty_ptr<T (*)[]> : std::unary_function<T*, bool> {
+struct empty_ptr<T (*)[]> {
     bool operator()(const T* x) const throw() { return x == NULL; }
 };
 
@@ -60,18 +59,18 @@ template <typename T>
 struct delete_ptr_trait;
 
 template <typename T>
-struct delete_ptr_trait<T*> : std::unary_function<T*, void> {
+struct delete_ptr_trait<T*> {
     void operator()(const T* x) const { delete x; }
 };
 
 template <typename T>
-struct delete_ptr_trait<T (*)[]> : std::unary_function<T*, void> {
+struct delete_ptr_trait<T (*)[]> {
     void operator()(const T* x) const { delete[] x; }
 };
 
 //@}
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename X, class Traits>
 class auto_resource;
@@ -90,9 +89,7 @@ struct ptr_traits<T (*)[]> {
     struct rebind {
         typedef adobe::ptr_traits<U> other;
     };
-    enum {
-        is_array = true
-    };
+    enum { is_array = true };
 
     static void delete_ptr(pointer_type x) throw() { delete_ptr_trait<T(*)[]>()(x); }
     static bool empty_ptr(const_pointer_type x) throw() { return adobe::empty_ptr<T(*)[]>()(x); }
@@ -170,15 +167,13 @@ struct ptr_traits<T*> {
     struct rebind {
         typedef adobe::ptr_traits<U> other;
     };
-    enum {
-        is_array = false
-    };
+    enum { is_array = false };
 
     static void delete_ptr(pointer_type x) throw() { adobe::delete_ptr_trait<T*>()(x); }
     static bool empty_ptr(const_pointer_type x) throw() { return adobe::empty_ptr<T*>()(x); }
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef NO_DOCUMENTATION
 
@@ -192,11 +187,11 @@ template <bool x>
 struct adobe_static_assert;
 template <>
 struct adobe_static_assert<true> {};
-}
+} // namespace implementation
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /* REVISIT (sparent) : auto_resource should become unique_resource. */
 
@@ -232,8 +227,8 @@ public:
 
     auto_resource& operator=(auto_resource&) throw();
     template <typename Y>
-    auto_resource& operator=(
-        auto_resource<Y, typename traits_type::template rebind<Y>::other>) throw();
+    auto_resource&
+    operator=(auto_resource<Y, typename traits_type::template rebind<Y>::other>) throw();
 
     ~auto_resource() throw();
 
@@ -275,15 +270,13 @@ private:
     pointer_type pointer_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename X, class Traits>
-inline auto_resource<X, Traits>::auto_resource(pointer_type p) throw()
-    : pointer_m(p) {}
+inline auto_resource<X, Traits>::auto_resource(pointer_type p) throw() : pointer_m(p) {}
 
 template <typename X, class Traits>
-inline auto_resource<X, Traits>::auto_resource(auto_resource& x) throw()
-    : pointer_m(x.release()) {}
+inline auto_resource<X, Traits>::auto_resource(auto_resource& x) throw() : pointer_m(x.release()) {}
 
 template <typename X, class Traits>
 template <typename Y>
@@ -300,8 +293,8 @@ inline auto_resource<X, Traits>& auto_resource<X, Traits>::operator=(auto_resour
 
 template <typename X, class Traits>
 template <typename Y>
-inline auto_resource<X, Traits>& auto_resource<X, Traits>::
-operator=(auto_resource<Y, typename traits_type::template rebind<Y>::other> x) throw() {
+inline auto_resource<X, Traits>& auto_resource<X, Traits>::operator=(
+    auto_resource<Y, typename traits_type::template rebind<Y>::other> x) throw() {
     reset(x.release());
     return *this;
 }
@@ -311,7 +304,7 @@ inline auto_resource<X, Traits>::~auto_resource() throw() {
     traits_type::delete_ptr(pointer_m);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename X, class Traits>
 inline auto_resource<X, Traits>& auto_resource<X, Traits>::operator=(const clear_type*) throw() {
@@ -319,7 +312,7 @@ inline auto_resource<X, Traits>& auto_resource<X, Traits>::operator=(const clear
     return *this;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename X, class Traits>
 inline typename auto_resource<X, Traits>::pointer_type auto_resource<X, Traits>::get() const
@@ -342,40 +335,48 @@ inline void auto_resource<X, Traits>::reset(pointer_type p) throw() {
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename X, class Traits>
 inline bool auto_resource<X, Traits>::operator!() const throw() {
     return !pointer_m;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T> // T models Regular
 inline void destroy(T* p) {
     p->~T();
 }
 
-template <typename T> // T models Regular
-inline void construct(T* p) {
-    ::new (static_cast<void*>(p)) T();
+/*
+    https://en.cppreference.com/w/cpp/memory/construct_at
+*/
+
+#if __cplusplus < 202002L
+
+template <class T, class... Args>
+constexpr T* construct_at(T* p, Args&&... args) {
+    return ::new (const_cast<void*>(static_cast<const volatile void*>(p)))
+        T(std::forward<Args>(args)...);
+}
+
+#else
+
+template <class T, class... Args>
+constexpr T* construct_at(T* p, Args&&... args) {
+    return std::construct_at(T * p, Args && ... args) {}
+
+#endif
+
+template <typename T, typename U> // T models Regular
+[[deprecated("Use adobe::construct_at(p, x)")]] constexpr auto construct(T* p, U&& x) {
+    return construct_at(p, std::forward<U>(x));
 }
 
 template <typename T> // T models Regular
-inline void construct(T* p, T x) {
-    using std::swap;
-
-    construct(p);
-    swap(*p, x);
-
-/*
- REVISIT (sparent): RVO is failing with Xcode 4.3.3 with a direct call to placement new.
- using default construct and swap to speed up. May break if using non-default constructible types.
-*/
-
-#if 0
-    ::new(static_cast<void*>(p)) T(adobe::move(x));
-#endif
+[[deprecated("Use adobe::construct_at(p)")]] constexpr auto construct(T* p) {
+    return construct_at(p);
 }
 
 template <typename F> // F models ForwardIterator
@@ -386,7 +387,7 @@ inline void destroy(F f, F l) {
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \brief Similar to std::uninitialized_copy but with move semantics.
@@ -403,7 +404,7 @@ F uninitialized_move(I f, I l, F r) {
     return r;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace version_1 {
 
@@ -454,8 +455,7 @@ public:
 
     capture_allocator() : new_delete_m(&local_new_delete_g) {}
     template <typename U>
-    capture_allocator(const capture_allocator<U>& x)
-        : new_delete_m(x.new_delete()) {}
+    capture_allocator(const capture_allocator<U>& x) : new_delete_m(x.new_delete()) {}
 
     pointer address(reference x) const { return &x; }
     const_pointer address(const_reference x) const { return &x; }
@@ -487,11 +487,11 @@ private:
 };
 
 //! @} //end addtogroup memory
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace version_1
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*
     Note (sparent) : The aligned storage class is intended to pad out an item of size_t such that
@@ -505,14 +505,14 @@ private:
 //! @{
 template <typename T>
 struct aligned_storage {
-    aligned_storage() { construct(&get()); }
+    aligned_storage() { construct_at(&get()); }
 
-    explicit aligned_storage(T x) { construct(&get(), std::move(x)); }
+    explicit aligned_storage(T x) { construct_at(&get(), std::move(x)); }
 
     ~aligned_storage() { destroy(&get()); }
 
-    aligned_storage(const aligned_storage& x) { construct(&get(), x.get()); }
-    aligned_storage(aligned_storage&& x) { construct(&get(), std::move(x.get())); }
+    aligned_storage(const aligned_storage& x) { construct_at(&get(), x.get()); }
+    aligned_storage(aligned_storage&& x) { construct_at(&get(), std::move(x.get())); }
 
     aligned_storage& operator=(aligned_storage x) {
         swap(*this, x);
@@ -525,12 +525,10 @@ struct aligned_storage {
     friend inline void swap(aligned_storage& x, aligned_storage& y) { swap(x.get(), y.get()); }
 
 private:
-    enum {
-        word_size = 16
-    }; // quad word alignment
+    enum { word_size = 16 }; // quad word alignment
 
-    typedef double storage_t
-        [((sizeof(T) + (word_size - 1)) / word_size) * (word_size / sizeof(double))];
+    typedef double
+        storage_t[((sizeof(T) + (word_size - 1)) / word_size) * (word_size / sizeof(double))];
 
     void* storage() { return &data_m; }
     const void* storage() const { return &data_m; }
@@ -541,12 +539,12 @@ private:
 
 //! @} //end addtogroup memory
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

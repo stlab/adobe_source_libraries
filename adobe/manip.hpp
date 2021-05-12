@@ -3,27 +3,27 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifdef ADOBE_STD_SERIALIZATION
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_MANIP_HPP
 #define ADOBE_MANIP_HPP
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
 #include <iostream>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \addtogroup manipulator
@@ -54,13 +54,11 @@ protected:
             else if (exception_mask & std::ios_base::badbit) {
                 try {
                     strm.setstate(err);
-                }
-                catch (std::ios_base::failure&) {
+                } catch (std::ios_base::failure&) {
                 }
                 throw;
             }
-        }
-        catch (...) {
+        } catch (...) {
             set_fail();
 
             std::ios_base::iostate exception_mask(strm.exceptions());
@@ -70,8 +68,7 @@ protected:
             else if (exception_mask & std::ios_base::failbit) {
                 try {
                     strm.setstate(err);
-                }
-                catch (std::ios_base::failure&) {
+                } catch (std::ios_base::failure&) {
                 }
                 throw;
             }
@@ -86,7 +83,7 @@ protected:
     mutable std::ios_base::iostate error_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename ArgumentType, class charT, class traits>
 class basic_omanipulator : public manipulator_base {
@@ -104,8 +101,7 @@ public:
             std::ios_base::iostate err(error_m);
             try {
                 (*pf_m)(strm, arg_m);
-            }
-            catch (...) {
+            } catch (...) {
                 err = handle_error(strm);
             }
 
@@ -121,7 +117,7 @@ protected:
     argument_type arg_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename ArgumentType1, typename ArgumentType2, class charT, class traits>
 class basic_omanipulator2 : public manipulator_base {
@@ -141,8 +137,7 @@ public:
             std::ios_base::iostate err(error_m);
             try {
                 (*pf_m)(strm, arg1_m, arg2_m);
-            }
-            catch (...) {
+            } catch (...) {
                 err = handle_error(strm);
             }
 
@@ -159,31 +154,31 @@ protected:
     argument_type_2 arg2_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class ArgumentType, class charT, class traits>
-std::basic_ostream<charT, traits>& operator<<(
-    std::basic_ostream<charT, traits>& os,
-    const adobe::basic_omanipulator<ArgumentType, charT, traits>& manip) {
+std::basic_ostream<charT, traits>&
+operator<<(std::basic_ostream<charT, traits>& os,
+           const adobe::basic_omanipulator<ArgumentType, charT, traits>& manip) {
     if (os.good())
         manip.do_manip(os);
 
     return os;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class ArgumentType1, class ArgumentType2, class charT, class traits>
-std::basic_ostream<charT, traits>& operator<<(
-    std::basic_ostream<charT, traits>& os,
-    const adobe::basic_omanipulator2<ArgumentType1, ArgumentType2, charT, traits>& manip) {
+std::basic_ostream<charT, traits>&
+operator<<(std::basic_ostream<charT, traits>& os,
+           const adobe::basic_omanipulator2<ArgumentType1, ArgumentType2, charT, traits>& manip) {
     if (os.good())
         manip.do_manip(os);
 
     return os;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <class charT, class traits>
 class basic_bounded_width : public basic_omanipulator<unsigned int, charT, traits> {
@@ -217,16 +212,16 @@ typedef basic_bounded_width<wchar_t, std::char_traits<wchar_t>> wbounded_width;
 
 //! @}
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

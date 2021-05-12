@@ -16,8 +16,8 @@ struct test_t {
 };
 
 BOOST_AUTO_TEST_CASE(clamp_test) {
-    using adobe::min;
     using adobe::max;
+    using adobe::min;
 
     {
         int a = 1, b = 2;

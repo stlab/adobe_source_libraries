@@ -9,8 +9,8 @@
 #include <boost/function.hpp>
 
 #include <adobe/implementation/expression_filter.hpp>
-#include <adobe/implementation/expression_parser.hpp>
 #include <adobe/implementation/expression_formatter.hpp>
+#include <adobe/implementation/expression_parser.hpp>
 #include <adobe/iomanip_asl_cel.hpp>
 #include <adobe/virtual_machine.hpp>
 
@@ -44,15 +44,13 @@ void test_expression(const char* expression_string,
     vm.evaluate(expression);
 
     std::cout << "VM Round-trip expression:" << std::endl;
-    std::cout << adobe::begin_asl_cel_unsafe << vm.back() << adobe::end_asl_cel_unsafe
-              << std::endl;
+    std::cout << adobe::begin_asl_cel_unsafe << vm.back() << adobe::end_asl_cel_unsafe << std::endl;
 
     vm.pop_back();
     vm.evaluate(processed);
 
     std::cout << "VM processed expression:" << std::endl;
-    std::cout << adobe::begin_asl_cel_unsafe << vm.back() << adobe::end_asl_cel_unsafe
-              << std::endl;
+    std::cout << adobe::begin_asl_cel_unsafe << vm.back() << adobe::end_asl_cel_unsafe << std::endl;
 
     vm.pop_back();
 }

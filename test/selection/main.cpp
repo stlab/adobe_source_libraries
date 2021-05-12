@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
@@ -16,11 +16,11 @@
 #include <utility>
 #include <vector>
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 namespace {
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename ForwardRange>
 void print_selection(const ForwardRange& range, const adobe::selection_t& selection) {
@@ -65,14 +65,14 @@ void print_selection(const ForwardRange& range, const adobe::selection_t& select
     std::cout << ']' << std::endl;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 typedef std::vector<int> set_type;
 typedef set_type::iterator iterator;
 typedef adobe::selection_t selection_type;
 typedef selection_type::const_iterator selection_iterator;
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 #if 0
 template <typename IteratorCategory>
 void do_split_selection(const adobe::selection_t& selection, std::size_t p,
@@ -90,21 +90,21 @@ void do_split_selection(const adobe::selection_t& selection, std::size_t p,
     std::cout << std::endl;
 }
 #endif
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void test1() {
     selection_type selection(true);
-    set_type       set;
+    set_type set;
 
     selection_to_index_set(selection, 10, std::back_inserter<set_type>(set));
 
-    print_selection(set, selection);    
+    print_selection(set, selection);
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void test2() {
-    set_type       set{ 1, 2, 3, 4, 5 };
+    set_type set{1, 2, 3, 4, 5};
     selection_type all_set_1(true);
     selection_type all_set_2;
     selection_type one_set;
@@ -125,10 +125,10 @@ void test2() {
     print_selection(set, adobe::selection_difference(one_set, all_set_2));
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void test3() {
-    set_type       set{ 1, 2, 3, 4, 5 };
+    set_type set{1, 2, 3, 4, 5};
     selection_type all_set_1(true);
     selection_type all_set_2;
     selection_type one_set;
@@ -147,10 +147,10 @@ void test3() {
     print_selection(set, adobe::selection_intersection(all_set_2, one_set));
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void test4() {
-    set_type       set{ 1, 2, 3, 4, 5 };
+    set_type set{1, 2, 3, 4, 5};
     selection_type all_set_1(true);
     selection_type all_set_2;
     selection_type one_set;
@@ -171,10 +171,10 @@ void test4() {
     print_selection(set, adobe::selection_union(all_set_2, one_set));
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void test5() {
-    set_type       set{ 1, 2, 3, 4, 5 };
+    set_type set{1, 2, 3, 4, 5};
     selection_type all_set_1(true);
     selection_type all_set_2;
     selection_type one_set;
@@ -195,11 +195,11 @@ void test5() {
     print_selection(set, adobe::selection_symmetric_difference(all_set_2, one_set));
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 int main() {
     std::cout << "test1:" << std::endl;
@@ -218,12 +218,11 @@ int main() {
     test4();
     std::cout << "\n";
 
-
     std::cout << "test5:" << std::endl;
-    test4();
+    test5();
     std::cout << "\n";
 
     return 0;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/

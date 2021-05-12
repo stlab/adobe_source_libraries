@@ -3,21 +3,21 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
 #include <iostream>
 #include <map>
 
-#include <boost/version.hpp>
-#include <boost/filesystem/operations.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <boost/bind.hpp>
+#include <boost/filesystem/operations.hpp>
+#include <boost/version.hpp>
 
+#include <adobe/adam.hpp>
 #include <adobe/adam_evaluate.hpp>
 #include <adobe/adam_parser.hpp>
-#include <adobe/adam.hpp>
 #include <adobe/algorithm/for_each.hpp>
 #include <adobe/any_regular.hpp>
 #include <adobe/array.hpp>
@@ -27,15 +27,16 @@
 #include <adobe/name.hpp>
 #include <adobe/virtual_machine.hpp>
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 namespace bfs = boost::filesystem;
+using namespace boost::placeholders;
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 typedef std::map<adobe::name_t, adobe::any_regular_t> cell_set_t;
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void simple_display(cell_set_t::value_type& cell_m, const adobe::any_regular_t& new_value) {
     cell_m.second = new_value;
@@ -45,14 +46,14 @@ void simple_display(cell_set_t::value_type& cell_m, const adobe::any_regular_t& 
 }
 
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void stream_cell_state(const cell_set_t::value_type& cell) {
     std::cout << "   '" << cell.first.c_str() << "': " << adobe::begin_asl_cel << cell.second
               << adobe::end_asl_cel << std::endl;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 adobe::dictionary_t parse_input_dictionary(const bfs::path& input_path) {
     std::string path_str(input_path.native());
@@ -72,12 +73,13 @@ adobe::dictionary_t parse_input_dictionary(const bfs::path& input_path) {
 
     std::cout << "--" << std::endl
               << "Initializing sheet with the following input dictionary: " << adobe::begin_asl_cel
-              << result << adobe::end_asl_cel << std::endl << "--" << std::endl;
+              << result << adobe::end_asl_cel << std::endl
+              << "--" << std::endl;
 
     return result;
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 struct sheet_tracker {
     sheet_tracker(const bfs::path& sheet_path, const bfs::path& input_path)
@@ -128,7 +130,7 @@ private:
     std::map<adobe::name_t, adobe::any_regular_t> cell_set_m;
 };
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 adobe::name_t cell_type_to_name(adobe::adam_callback_suite_t::cell_type_t type) {
     using namespace adobe::literals;
@@ -155,7 +157,7 @@ adobe::name_t cell_type_to_name(adobe::adam_callback_suite_t::cell_type_t type) 
     }
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void sheet_tracker::add_cell_trap(adobe::adam_callback_suite_t::add_cell_proc_t original,
                                   adobe::adam_callback_suite_t::cell_type_t type,
@@ -172,7 +174,7 @@ void sheet_tracker::add_cell_trap(adobe::adam_callback_suite_t::add_cell_proc_t 
         cell_set_m[cell_name] = adobe::any_regular_t();
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void sheet_tracker::add_interface_trap(adobe::adam_callback_suite_t::add_interface_proc_t original,
                                        adobe::name_t cell_name, bool linked,
@@ -188,7 +190,7 @@ void sheet_tracker::add_interface_trap(adobe::adam_callback_suite_t::add_interfa
     cell_set_m[cell_name] = adobe::any_regular_t();
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 void sheet_tracker::loop() {
     std::string cell_name_buffer;
@@ -235,7 +237,7 @@ void sheet_tracker::loop() {
     }
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 int main(int argc, char* argv[]) {
     try {
@@ -253,11 +255,9 @@ int main(int argc, char* argv[]) {
         bfs::path input_filepath(input_pathname.c_str());
 
         sheet_tracker(sheet_filepath, input_filepath).loop();
-    }
-    catch (const std::exception& error) {
+    } catch (const std::exception& error) {
         std::cerr << "Exception: " << error.what() << "\n";
-    }
-    catch (...) {
+    } catch (...) {
         std::cerr << "Unknown Exception\n";
     }
 

@@ -14,7 +14,7 @@
 #include <tr1/functional>
 #include <tr1/type_traits>
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 
 #include <adobe/cstdint.hpp>
 #include <adobe/string.hpp>
@@ -40,12 +40,10 @@ const char* current_exception_what() {
 
     try {
         throw;
-    }
-    catch (const std::exception& error) {
+    } catch (const std::exception& error) {
         if (error.what())
             result = error.what();
-    }
-    catch (...) {
+    } catch (...) {
     }
 
     return result;
@@ -113,8 +111,7 @@ struct concept_base_t {
 template <typename Model, typename Concept>
 struct model_base : Concept {
     template <typename T>
-    explicit model_base(T x)
-        : Concept(x) {}
+    explicit model_base(T x) : Concept(x) {}
 
     static Model* self(Concept* x) { return static_cast<Model*>(x); }
     static const Model* self(const Concept* x) { return static_cast<const Model*>(x); }
@@ -126,8 +123,7 @@ struct model_base : Concept {
 
         try {
             result = new Model(*self(x));
-        }
-        catch (...) {
+        } catch (...) {
             message = current_exception_what();
         }
 
@@ -203,8 +199,7 @@ public:
     function(null_ptr_t) : object_m(0) {}
     function(const function& x) : object_m(x.object_m ? x.object_m->copy() : 0) {}
     template <typename T>
-    function(T x)
-        : object_m(implementation::create_model<function>(x)) {}
+    function(T x) : object_m(implementation::create_model<function>(x)) {}
 
     function& operator=(function x) {
         swap(*this, x);
@@ -282,8 +277,7 @@ public:
         static void apply(concept_t* x, string_t& message, std::tr1::true_type) {
             try {
                 static_cast<model*>(x)->function_m();
-            }
-            catch (...) {
+            } catch (...) {
                 message = current_exception_what();
             }
         }
@@ -292,8 +286,7 @@ public:
             R result;
             try {
                 result = static_cast<model*>(x)->function_m();
-            }
-            catch (...) {
+            } catch (...) {
                 message = current_exception_what();
             }
             return result;

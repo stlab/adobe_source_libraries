@@ -218,21 +218,21 @@ struct indirect {
 /**************************************************************************************************/
 
 template <class T>
-struct bitwise_or : std::binary_function<T, T, T> {
+struct bitwise_or {
     T operator()(const T& x, const T& y) const { return x | y; }
 };
 
 /**************************************************************************************************/
 
 template <class T>
-struct bitwise_and : std::binary_function<T, T, T> {
+struct bitwise_and {
     T operator()(const T& x, const T& y) const { return x & y; }
 };
 
 /**************************************************************************************************/
 
 template <class T>
-struct bitwise_xor : std::binary_function<T, T, T> {
+struct bitwise_xor {
     T operator()(const T& x, const T& y) const { return x ^ y; }
 };
 
@@ -240,7 +240,7 @@ struct bitwise_xor : std::binary_function<T, T, T> {
 
 /// \brief plus function object whose arguments may be of different type.
 template <typename T1, typename T2>
-struct plus_asymmetric : public std::binary_function<T1, T2, T1> {
+struct plus_asymmetric {
     T1 operator()(T1 f1, T2 f2) const { return f1 + f2; }
 };
 
@@ -248,7 +248,7 @@ struct plus_asymmetric : public std::binary_function<T1, T2, T1> {
 
 /// \brief operator++ wrapped in a function object
 template <typename T>
-struct inc : public std::unary_function<T, T> {
+struct inc {
     T operator()(T x) const { return ++x; }
 };
 
@@ -256,7 +256,7 @@ struct inc : public std::unary_function<T, T> {
 
 /// \brief operator-- wrapped in a function object
 template <typename T>
-struct dec : public std::unary_function<T, T> {
+struct dec {
     T operator()(T x) const { return --x; }
 };
 

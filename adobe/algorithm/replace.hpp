@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ALGORITHM_REPLACE_HPP
 #define ADOBE_ALGORITHM_REPLACE_HPP
@@ -16,11 +16,11 @@
 #include <algorithm>
 #include <functional>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
 \defgroup replace replace
 \ingroup mutating_algorithm
@@ -31,7 +31,7 @@ namespace adobe {
     - STL documentation for \ref stldoc_replace_copy
     - STL documentation for \ref stldoc_replace_copy_if
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup replace
 
@@ -93,7 +93,8 @@ inline OutputIterator replace_copy(const ForwardRange& range, OutputIterator res
 template <class ForwardIterator, class OutputIterator, class Predicate, class T>
 inline OutputIterator replace_copy_if(ForwardIterator first, ForwardIterator last,
                                       OutputIterator result, Predicate pred, const T& new_value) {
-    return std::replace_copy_if(first, last, result, std::bind(pred, std::placeholders::_1), new_value);
+    return std::replace_copy_if(first, last, result, std::bind(pred, std::placeholders::_1),
+                                new_value);
 }
 
 /*!
@@ -118,12 +119,12 @@ inline OutputIterator replace_copy_if(const ForwardRange& range, OutputIterator 
     return adobe::replace_copy_if(boost::begin(range), boost::end(range), result, pred, new_value);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

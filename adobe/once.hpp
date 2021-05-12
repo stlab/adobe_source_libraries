@@ -27,17 +27,17 @@ to do something here.
 
 #define ADOBE_THREAD_LOCAL_STORAGE_1(type, signature, ctor_p1)                                     \
     type& adobe_thread_local_storage_##signature##_access() {                                      \
-        thread_local type holder {ctor_p1};                                                        \
+        thread_local type holder{ctor_p1};                                                         \
         return holder;                                                                             \
-    }                                                                                              \
+    }
 
 #define ADOBE_THREAD_LOCAL_STORAGE(type, signature)                                                \
     type& adobe_thread_local_storage_##signature##_access() {                                      \
         thread_local type holder;                                                                  \
         return holder;                                                                             \
-    }                                                                                              \
+    }
 
-#define ADOBE_THREAD_LOCAL_STORAGE_INITIALIZE(signature)                                           \
+#define ADOBE_THREAD_LOCAL_STORAGE_INITIALIZE(signature)
 
 
 #else

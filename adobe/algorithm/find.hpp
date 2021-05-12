@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ALGORITHM_FIND_HPP
 #define ADOBE_ALGORITHM_FIND_HPP
@@ -14,15 +14,15 @@
 #include <functional>
 #include <utility>
 
+#include <boost/next_prior.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/next_prior.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
 \defgroup find find
 \ingroup non_mutating_algorithm
@@ -35,7 +35,7 @@ namespace adobe {
     - STL documentation for \ref stldoc_adjacent_find
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \defgroup find_not find_not
@@ -52,9 +52,9 @@ last if no such iterator exists.
     - Same as for find_if
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
 \defgroup find_if_not find_if_not
 \ingroup find
@@ -69,7 +69,7 @@ Returns \c last if no such iterator exists.
 \complexity
     - Same as for find_if
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup find_if_not
 
@@ -102,14 +102,15 @@ inline typename boost::range_const_iterator<InputRange>::type find_if_not(const 
     return adobe::find_if_not(boost::begin(range), boost::end(range), pred);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
     \ingroup find_not
 */
 template <class InputIterator, class T>
 inline InputIterator find_not(InputIterator first, InputIterator last, const T& value) {
-    return std::find_if_not(first, last, std::bind(std::equal_to<T>(), value, std::placeholders::_1));
+    return std::find_if_not(first, last,
+                            std::bind(std::equal_to<T>(), value, std::placeholders::_1));
 }
 
 /*!
@@ -247,7 +248,8 @@ template <class ForwardIterator1, class ForwardIterator2, class BinaryPredicate>
 inline ForwardIterator1 find_end(ForwardIterator1 first1, ForwardIterator1 last1,
                                  ForwardIterator2 first2, ForwardIterator2 last2,
                                  BinaryPredicate comp) {
-    return std::find_end(first1, last1, first2, last2, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
+    return std::find_end(first1, last1, first2, last2,
+                         std::bind(comp, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -377,7 +379,8 @@ adjacent_find(const ForwardRange& range) {
 template <class ForwardIterator, class BinaryPredicate>
 inline ForwardIterator adjacent_find(ForwardIterator first, ForwardIterator last,
                                      BinaryPredicate pred) {
-    return std::adjacent_find(first, last, std::bind(pred, std::placeholders::_1, std::placeholders::_2));
+    return std::adjacent_find(first, last,
+                              std::bind(pred, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -402,12 +405,12 @@ adjacent_find(const ForwardRange& range, BinaryPredicate pred) {
     return adobe::adjacent_find(boost::begin(range), boost::end(range), pred);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

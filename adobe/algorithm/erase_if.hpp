@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ALGORITHM_ERASE_IF_HPP
 #define ADOBE_ALGORITHM_ERASE_IF_HPP
@@ -12,19 +12,19 @@
 
 #include <cassert>
 
+#include <boost/next_prior.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/next_prior.hpp>
 
-#include <adobe/algorithm/remove.hpp>
 #include <adobe/algorithm/find.hpp>
+#include <adobe/algorithm/remove.hpp>
 #include <adobe/container/storage.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
 \defgroup erase erase [review]
 \ingroup container_algorithm
@@ -38,7 +38,7 @@ which satisfies the predicate. The erase is handled efficiently for any containe
 \complexity
     Linear. Exactly <code>last - first</code> applications of \c pred.
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace implementation {
 
@@ -54,9 +54,9 @@ typename T::iterator erase(T& x, typename T::iterator f, typename T::iterator l,
     return l;
 }
 
-} // implementation
+} // namespace implementation
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
     \ingroup erase
@@ -66,7 +66,7 @@ typename T::iterator erase(T& x, typename T::iterator f, typename T::iterator l)
     return implementation::erase(x, f, l, typename storage_category<T>::type());
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
     \ingroup erase
@@ -88,7 +88,7 @@ typename T::iterator erase(T& x, typename T::iterator f) {
     return erase(x, f, boost::next(f));
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace implementation {
 
@@ -108,9 +108,9 @@ void erase_if(T& x, typename T::iterator f, typename T::iterator l, P p, node_ta
     }
 }
 
-} // implementation
+} // namespace implementation
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
     \ingroup erase
@@ -134,12 +134,12 @@ void erase_if(T& x, P p) {
     erase_if(x, boost::begin(x), boost::end(x), p);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

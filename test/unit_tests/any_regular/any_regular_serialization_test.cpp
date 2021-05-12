@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
@@ -15,21 +15,21 @@
 
 #include <adobe/any_regular.hpp>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
-struct foo_t { int x; };
+struct foo_t {
+    int x;
+};
 bool operator==(const foo_t& x, const foo_t& y) { return x.x == y.x; };
 bool operator!=(const foo_t& x, const foo_t& y) { return !(x == y); }
 
 // foo_t has operator<< defined. As such the following routine will be called
 // when foo_t is wrapped in an any_regular_t.
-void operator<<(std::ostream& s, const foo_t& x) {
-    s << x.x;
-}
+void operator<<(std::ostream& s, const foo_t& x) { s << x.x; }
 
 // bar_t has no operator<< defined. As such it will not be serialized when bar_t
 // is wrapped in an any_regular_t.
-struct bar_t { };
+struct bar_t {};
 bool operator==(const bar_t& x, const bar_t& y) { return true; };
 bool operator!=(const bar_t& x, const bar_t& y) { return !(x == y); }
 

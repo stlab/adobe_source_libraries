@@ -1,21 +1,8 @@
-/*************************************************************************
-*
-* ADOBE CONFIDENTIAL
-* ___________________
-*
-*  Copyright 2008 Adobe Systems Incorporated
-*  All Rights Reserved.
-*
-* NOTICE:  All information contained herein is, and remains
-* the property of Adobe Systems Incorporated and its suppliers,
-* if any.  The intellectual and technical concepts contained
-* herein are proprietary to Adobe Systems Incorporated and its
-* suppliers and may be covered by U.S. and Foreign Patents,
-* patents in process, and are protected by trade secret or copyright law.
-* Dissemination of this information or reproduction of this material
-* is strictly forbidden unless prior written permission is obtained
-* from Adobe Systems Incorporated.
-**************************************************************************/
+/*
+    Copyright 2013 Adobe
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+*/
 
 #ifndef ADOBE_IS_RANGE_HPP
 #define ADOBE_IS_RANGE_HPP
@@ -33,6 +20,6 @@ template <typename T>
 struct is_range {
     static const bool value = has_type_type<boost::range_iterator<T>>::value;
 };
-}
+} // namespace adobe
 
 #endif // include guard

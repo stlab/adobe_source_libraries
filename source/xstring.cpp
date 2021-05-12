@@ -16,8 +16,8 @@
 #include <adobe/name.hpp>
 #include <adobe/once.hpp>
 
+#include <boost/bind/bind.hpp>
 #include <boost/cstdint.hpp>
-#include <boost/bind.hpp>
 
 #include <boost/iterator/transform_iterator.hpp>
 
@@ -264,8 +264,7 @@ context_frame_t::store(const store_t::key_type& key, const adobe::attribute_set_
 
 /**************************************************************************************************/
 
-struct store_count_same_t : std::binary_function<const context_frame_t::store_value_type,
-                                                 const adobe::attribute_set_t, std::size_t> {
+struct store_count_same_t {
     typedef std::size_t result_type;
 
     result_type operator()(const context_frame_t::store_value_type& x,
@@ -509,30 +508,37 @@ struct replacement_engine_t {
         : score_m(-1), xstring_id_m(adobe::static_token_range(id.c_str())) {}
 
     replacement_engine_t(const std::string& xstr) : score_m(-1) {
+        using namespace boost::placeholders;
+
         adobe::make_xml_parser(
             reinterpret_cast<uchar_ptr_t>(&xstr[0]),
             reinterpret_cast<uchar_ptr_t>(&xstr[0]) + xstr.size(),
             adobe::line_position_t("replacement_engine_t"),
             adobe::implementation::xstring_preorder_predicate,
             boost::bind(&replacement_engine_t::xstr_id_harvest, boost::ref(*this), _1, _2, _3, _4),
-            adobe::implementation::null_output_t()).parse_content();
+            adobe::implementation::null_output_t())
+            .parse_content();
     }
 
     void add_marker(const std::string& marker) {
+        using namespace boost::placeholders;
         adobe::make_xml_parser(
             reinterpret_cast<uchar_ptr_t>(&marker[0]),
             reinterpret_cast<uchar_ptr_t>(&marker[0]) + marker.size(),
             adobe::line_position_t("add_marker"), adobe::implementation::xstring_preorder_predicate,
             boost::bind(&replacement_engine_t::marker_parse, boost::ref(*this), _1, _2, _3, _4),
-            adobe::implementation::null_output_t()).parse_content();
+            adobe::implementation::null_output_t())
+            .parse_content();
     }
 
     std::string run() {
+        using namespace boost::placeholders;
+
         implementation::context_frame_t::store_range_pair_t range(
             implementation::top_frame().range_for_key(xstring_id_m));
 #ifndef NDEBUG
         std::iterator_traits<implementation::context_frame_t::store_iterator>::difference_type
-        range_size(std::distance(range.first, range.second));
+            range_size(std::distance(range.first, range.second));
 #endif
 
         for (; range.first != range.second; ++range.first) {
@@ -547,7 +553,8 @@ struct replacement_engine_t {
                                    boost::bind(&replacement_engine_t::candidate_parse,
                                                boost::ref(*this), _1, _2, _3, _4,
                                                boost::ref(score)),
-                                   std::back_inserter(temp_result)).parse_content();
+                                   std::back_inserter(temp_result))
+                .parse_content();
 
             if (score > score_m) {
                 result_m = temp_result;

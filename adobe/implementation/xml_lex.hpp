@@ -12,9 +12,9 @@
 
 #include <adobe/config.hpp>
 
+#include <adobe/implementation/lex_shared.hpp>
 #include <adobe/implementation/xml_lex_fwd.hpp>
 #include <adobe/implementation/xml_token.hpp>
-#include <adobe/implementation/lex_shared.hpp>
 
 /**************************************************************************************************/
 

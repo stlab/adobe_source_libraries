@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_ALGORITHM_UNIQUE_HPP
 #define ADOBE_ALGORITHM_UNIQUE_HPP
@@ -16,11 +16,11 @@
 #include <algorithm>
 #include <functional>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
 \defgroup unique unique
 \ingroup mutating_algorithm
@@ -29,7 +29,7 @@ namespace adobe {
     - STL documentation for \ref stldoc_unique
     - STL documentation for \ref stldoc_unique_copy
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     \ingroup unique
 
@@ -89,7 +89,8 @@ inline OutputIterator unique_copy(const InputRange& range, OutputIterator result
 template <class InputIterator, class OutputIterator, class BinaryPredicate>
 inline OutputIterator unique_copy(InputIterator first, InputIterator last, OutputIterator result,
                                   BinaryPredicate pred) {
-    return std::unique_copy(first, last, result, std::bind(pred, std::placeholders::_1, std::placeholders::_2));
+    return std::unique_copy(first, last, result,
+                            std::bind(pred, std::placeholders::_1, std::placeholders::_2));
 }
 
 /*!
@@ -113,12 +114,12 @@ inline OutputIterator unique_copy(const InputRange& range, OutputIterator result
     return adobe::unique_copy(boost::begin(range), boost::end(range), result, pred);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

@@ -4,7 +4,7 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 
 #ifndef ADOBE_TYPE_INSPECTION_HPP
@@ -21,7 +21,7 @@ struct yes_struct {
 struct no_struct {
     yes_struct a[2];
 };
-}
+} // namespace detail
 
 /*!
 \ingroup inspection
@@ -127,7 +127,7 @@ See ADOBE_HAS_MEMBER
 namespace detail {
 template <size_t>
 struct member_test_helper {};
-}
+} // namespace detail
 
 #define ADOBE_HAS_MEMBER_IMPL(MemberInQuestion)                                                    \
     template <class Class>                                                                         \
@@ -251,6 +251,6 @@ Also, make sure the 2 macros are in the same namespace!
 #define ADOBE_HAS_TEMPLATE3(C, TemplateInQuestion) has_template3##TemplateInQuestion<C>::value
 
 
-} // namespace
+} // namespace adobe
 
 #endif // include guard

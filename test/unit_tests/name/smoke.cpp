@@ -4,15 +4,15 @@
     or a copy at http://stlab.adobe.com/licenses.html)
 */
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 // config
 #include <adobe/config.hpp>
 
 // stdc++
+#include <algorithm>
 #include <iostream>
 #include <unordered_map>
-#include <algorithm>
 #include <vector>
 
 #define BOOST_TEST_MAIN
@@ -34,30 +34,33 @@
 // asl
 #include <adobe/name.hpp>
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 namespace {
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 inline std::ostream& operator"" _dump(const char* str, std::size_t n) {
     return std::cout << "dump: {\n"
                      << "   str: '" << str << "'\n"
-                     << "     n: " << n << '\n' << "  hash: 0x" << std::hex
-                     << adobe::detail::name_hash(str, n) << std::dec << '\n' << "};\n";
+                     << "     n: " << n << '\n'
+                     << "  hash: 0x" << std::hex << adobe::detail::name_hash(str, n) << std::dec
+                     << '\n'
+                     << "};\n";
 }
 
 template <std::size_t N>
 void dumpy(const char (&str)[N]) {
-    std::cout << &str << '\n' << N << '\n' << std::hex << adobe::detail::name_hash(str, N - 1)
-              << std::dec << '\n';
+    std::cout << &str << '\n'
+              << N << '\n'
+              << std::hex << adobe::detail::name_hash(str, N - 1) << std::dec << '\n';
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 BOOST_AUTO_TEST_CASE(name_smoke) {
     using namespace adobe::literals;
@@ -84,7 +87,7 @@ BOOST_AUTO_TEST_CASE(name_smoke) {
 
     BOOST_CHECK_EQUAL(static_hello_world.hash_m, hello_world_hash);
     BOOST_CHECK_EQUAL(static_red_sox.hash_m, addr_32 ? 0xedd547d2 : 0xc5746070bacfea32);
-    BOOST_CHECK_EQUAL(static_null.hash_m, addr_32 ? 0x811c9dc5: 0xcbf29ce484222325);
+    BOOST_CHECK_EQUAL(static_null.hash_m, addr_32 ? 0x811c9dc5 : 0xcbf29ce484222325);
 
     BOOST_CHECK_EQUAL(std::hash<adobe::name_t>()(static_red_sox),
                       std::hash<adobe::name_t>()(red_sox));
@@ -127,4 +130,4 @@ BOOST_AUTO_TEST_CASE(name_smoke) {
     dumpy("Hello, world!");
 }
 
-/****************************************************************************************************/
+/**************************************************************************************************/

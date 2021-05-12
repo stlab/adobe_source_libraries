@@ -3,7 +3,7 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_EXTENTS_HPP
 #define ADOBE_EXTENTS_HPP
@@ -15,11 +15,11 @@
 
 #include <vector>
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename T = int>
 struct point_2d : boost::equality_comparable<point_2d<T>> {
@@ -58,22 +58,19 @@ typedef std::vector<guide_set_t> point_of_interest_set_t;
 // REVISIT (sparent) : Open issue - are there "alignment" attributes on POIs?
 
 struct extents_slices_t {
-    enum slice_select_t {
-        horizontal,
-        vertical
-    };
+    enum slice_select_t { horizontal, vertical };
 };
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 struct extents_t :
 #if !defined(ADOBE_NO_DOCUMENTATION)
     private extents_slices_t,
     boost::equality_comparable<extents_t>
 #endif
-    {
+{
     struct slice_t : boost::equality_comparable<slice_t> {
-        slice_t() : length_m(0) {};
+        slice_t() : length_m(0){};
 
         int length_m;
         pair_long_t outset_m;
@@ -101,7 +98,7 @@ struct extents_t :
     friend bool operator==(const extents_t& x, const extents_t& y);
 };
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef NDEBUG
 std::ostream& operator<<(std::ostream& s, const extents_t& x);
@@ -111,11 +108,11 @@ std::ostream& operator<<(std::ostream& s, const extents_t& x);
 std::ostream& operator<<(std::ostream& s, const extents_t::slice_t& x);
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 namespace std {
 
@@ -135,8 +132,8 @@ inline void swap(adobe::extents_t& x, adobe::extents_t& y) BOOST_NOEXCEPT {
 
 } // namespace std
 
-/****************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/****************************************************************************************************/
+/**************************************************************************************************/

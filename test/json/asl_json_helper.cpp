@@ -7,9 +7,9 @@
 /**************************************************************************************************/
 
 // stdc++
-#include <vector>
-#include <iterator>
 #include <iostream>
+#include <iterator>
+#include <vector>
 
 // boost
 #include <boost/test/unit_test.hpp>
@@ -51,7 +51,7 @@ BOOST_AUTO_TEST_CASE(asl_json_helper_smoke) {
             }
         ]
     )raw");
-    
+
     adobe::json_generate(x, std::ostream_iterator<char>(std::cout));
 }
 

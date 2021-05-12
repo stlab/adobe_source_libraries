@@ -3,46 +3,46 @@
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #ifndef ADOBE_XML_PARSER_HPP
 #define ADOBE_XML_PARSER_HPP
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #include <adobe/config.hpp>
 
-#include <adobe/any_regular.hpp>
 #include <adobe/algorithm/set.hpp>
-#include <adobe/istream.hpp>
+#include <adobe/any_regular.hpp>
 #include <adobe/array.hpp>
 #include <adobe/copy_on_write.hpp>
-#include <adobe/name.hpp>
 #include <adobe/dictionary.hpp>
-#include <adobe/string.hpp>
+#include <adobe/implementation/parser_shared.hpp>
 #include <adobe/implementation/xml_lex.hpp>
 #include <adobe/implementation/xml_token.hpp>
-#include <adobe/implementation/parser_shared.hpp>
+#include <adobe/istream.hpp>
+#include <adobe/name.hpp>
+#include <adobe/string.hpp>
 
+#include <boost/array.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/function.hpp>
+#include <boost/iterator/iterator_facade.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/operators.hpp>
-#include <boost/bind.hpp>
-#include <boost/array.hpp>
-#include <boost/iterator/iterator_facade.hpp>
 
-#include <utility>
-#include <istream>
-#include <sstream>
-#include <iomanip>
 #include <cassert>
+#include <iomanip>
+#include <istream>
 #include <list>
+#include <sstream>
+#include <utility>
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace adobe {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 // NOTE (fbrereto) : Class declaration for the documentation is in xml_parser.dox
 struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
@@ -60,7 +60,7 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
     comparing both the key and the value of a single
     attribute_set_t::value_type.
     */
-    struct less_t : std::binary_function<value_type, value_type, bool> {
+    struct less_t {
         bool operator()(const value_type& x, const value_type& y) const {
             return token_range_less(x.first, y.first) ||
                    (!token_range_less(y.first, x.first) && token_range_less(x.second, y.second));
@@ -72,7 +72,7 @@ struct attribute_set_t : public boost::equality_comparable<attribute_set_t> {
     weak ordering functionality for the elements of a attribute_set_t,
     comparing ONLY the key of a single attribute_set_t::value_type.
     */
-    struct less_key_only_t : std::binary_function<value_type, value_type, bool> {
+    struct less_key_only_t {
         bool operator()(const value_type& x, const value_type& y) const {
             return token_range_less(x.first, y.first);
         }
@@ -292,7 +292,7 @@ private:
     copy_on_write<set_type> set_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
     \relates attribute_set_t
@@ -310,7 +310,7 @@ inline bool operator==(const attribute_set_t& x, const attribute_set_t& y) {
     return x.set_m->size() == y.set_m->size() && x.count_same(y) == x.set_m->size();
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
     \relates attribute_set_t
@@ -346,18 +346,20 @@ inline std::ostream& operator<<(std::ostream& s, const attribute_set_t& attribut
     return s;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 inline std::size_t attribute_set_t::count_same(const attribute_set_t& other_set,
                                                bool mapped_matters) const {
     std::size_t result(0);
 
     if (mapped_matters)
-        result = adobe::set_intersection(*set_m, *other_set.set_m, counting_output_iterator(),
-                                         less_t()).count();
+        result =
+            adobe::set_intersection(*set_m, *other_set.set_m, counting_output_iterator(), less_t())
+                .count();
     else
         result = adobe::set_intersection(*set_m, *other_set.set_m, counting_output_iterator(),
-                                         less_key_only_t()).count();
+                                         less_key_only_t())
+                     .count();
 
 #if 0
         std::cerr   << "    count_same:\n"
@@ -369,7 +371,7 @@ inline std::size_t attribute_set_t::count_same(const attribute_set_t& other_set,
     return result;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 inline bool attribute_set_t::has_collisions(const attribute_set_t& other_set) const {
     attribute_set_t::set_type::const_iterator first(set_m->begin());
@@ -386,7 +388,7 @@ inline bool attribute_set_t::has_collisions(const attribute_set_t& other_set) co
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 inline std::size_t attribute_set_t::count_collisions(const attribute_set_t& other_set) const {
     attribute_set_t::set_type::const_iterator first(set_m->begin());
@@ -403,7 +405,7 @@ inline std::size_t attribute_set_t::count_collisions(const attribute_set_t& othe
     return collision_count;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 // REVISIT (sparent) : Extra typedef just for the doxygen tool.
 
@@ -414,7 +416,7 @@ typedef token_range_t(implementation_xml_element_proc_t)(const token_range_t& en
 
 typedef boost::function<implementation_xml_element_proc_t> xml_element_proc_t;
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 // NOTE (fbrereto) : Class declaration for the documentation is in xml_parser.dox
 template <typename O> // O models OutputIterator
@@ -579,7 +581,7 @@ private:
     bool preorder_mode_m;
 };
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 inline token_range_t xml_element_echo(const token_range_t& entire_element_range,
                                       const token_range_t& /*name*/,
@@ -588,7 +590,7 @@ inline token_range_t xml_element_echo(const token_range_t& entire_element_range,
     return entire_element_range;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 inline token_range_t xml_element_strip(const token_range_t& /*entire_element_range*/,
                                        const token_range_t& /*name*/,
@@ -597,7 +599,7 @@ inline token_range_t xml_element_strip(const token_range_t& /*entire_element_ran
     return value;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 inline token_range_t xml_element_linefeed(const token_range_t& /*entire_element_range*/,
                                           const token_range_t& name,
@@ -622,19 +624,19 @@ inline token_range_t xml_element_linefeed(const token_range_t& /*entire_element_
     return value;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 namespace implementation {
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 token_range_t transform_reference(const token_range_t& reference);
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace implementation
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 bool xml_parser_t<O>::is_token(xml_lex_token_set_t token_name, token_range_t& token_range) {
@@ -651,7 +653,7 @@ bool xml_parser_t<O>::is_token(xml_lex_token_set_t token_name, token_range_t& to
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 bool xml_parser_t<O>::is_token(xml_lex_token_set_t token_name) {
@@ -665,7 +667,7 @@ bool xml_parser_t<O>::is_token(xml_lex_token_set_t token_name) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 void xml_parser_t<O>::require_token(xml_lex_token_set_t token_name, token_range_t& token_range) {
@@ -677,7 +679,7 @@ void xml_parser_t<O>::require_token(xml_lex_token_set_t token_name, token_range_
     token_range = result.range_m;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 void xml_parser_t<O>::require_token(xml_lex_token_set_t token_name) {
@@ -687,7 +689,7 @@ void xml_parser_t<O>::require_token(xml_lex_token_set_t token_name) {
         throw_exception(result.enum_m, token_name);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 void xml_parser_t<O>::content_callback(token_range_t& result_element,
@@ -714,7 +716,8 @@ void xml_parser_t<O>::content_callback(token_range_t& result_element,
             // output iterator as this one
 
             xml_parser_t<O>(new_content.first, new_content.second, next_position(), pred_m,
-                            callback_m, output_m).parse_content();
+                            callback_m, output_m)
+                .parse_content();
         }
 
         // once the token_range from the client has been parsed, we can turn off
@@ -732,7 +735,7 @@ void xml_parser_t<O>::content_callback(token_range_t& result_element,
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 bool xml_parser_t<O>::is_element(token_range_t& element) {
@@ -834,7 +837,7 @@ bool xml_parser_t<O>::is_element(token_range_t& element) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 bool xml_parser_t<O>::is_content(token_range_t& content) {
@@ -932,7 +935,7 @@ bool xml_parser_t<O>::is_content(token_range_t& content) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 bool xml_parser_t<O>::is_e_tag(token_range_t& name, token_range_t& close_tag) {
@@ -946,7 +949,7 @@ bool xml_parser_t<O>::is_e_tag(token_range_t& name, token_range_t& close_tag) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 bool xml_parser_t<O>::is_attribute_set(attribute_set_t& attribute_set) {
@@ -959,7 +962,7 @@ bool xml_parser_t<O>::is_attribute_set(attribute_set_t& attribute_set) {
     return true;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 bool xml_parser_t<O>::is_prolog() {
@@ -980,7 +983,7 @@ bool xml_parser_t<O>::is_prolog() {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 bool xml_parser_t<O>::is_bom(token_range_t& bom) {
@@ -1015,7 +1018,7 @@ bool xml_parser_t<O>::is_bom(token_range_t& bom) {
     return result;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 bool xml_parser_t<O>::is_xml_decl(token_range_t& xml_decl) {
@@ -1029,7 +1032,7 @@ bool xml_parser_t<O>::is_xml_decl(token_range_t& xml_decl) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 bool xml_parser_t<O>::is_attribute(token_range_t& name, token_range_t& value) {
@@ -1044,7 +1047,7 @@ bool xml_parser_t<O>::is_attribute(token_range_t& name, token_range_t& value) {
     return false;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 void xml_parser_t<O>::parse_element_sequence() {
@@ -1058,7 +1061,7 @@ void xml_parser_t<O>::parse_element_sequence() {
         is_token(xml_token_char_data_k);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 void xml_parser_t<O>::parse_content() {
@@ -1080,7 +1083,7 @@ void xml_parser_t<O>::parse_content() {
     }
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 template <typename O> // O models OutputIterator
 void xml_parser_t<O>::parse_document() {
@@ -1092,7 +1095,7 @@ void xml_parser_t<O>::parse_document() {
     is_element(dummy);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 /*!
 \relates xml_parser_t
@@ -1121,7 +1124,7 @@ make_xml_parser(uchar_ptr_t first, uchar_ptr_t last, const line_position_t& posi
     return xml_parser_t<O>(first, last, position, predicate, callback, output);
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     hexadecimal atoi
 
@@ -1150,7 +1153,7 @@ InputIterator xatoi(InputIterator first, InputIterator last, Result& result) {
     return first;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 /*!
     decimal atoi
 
@@ -1171,12 +1174,12 @@ InputIterator datoi(InputIterator first, InputIterator last, Result& result) {
     return first;
 }
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 } // namespace adobe
 
-/*************************************************************************************************/
+/**************************************************************************************************/
 
 #endif
 
-/*************************************************************************************************/
+/**************************************************************************************************/

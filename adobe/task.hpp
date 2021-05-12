@@ -60,13 +60,13 @@ namespace adobe {
 
 #if defined(_MSC_VER)
 
-using concurrency::cancellation_token_source;
+using concurrency::cancel_current_task;
 using concurrency::cancellation_token;
 using concurrency::cancellation_token_registration;
-using concurrency::task_canceled;
+using concurrency::cancellation_token_source;
 using concurrency::is_task_cancellation_requested;
-using concurrency::cancel_current_task;
 using concurrency::run_with_cancellation_token;
+using concurrency::task_canceled;
 
 #else
 
@@ -409,11 +409,12 @@ public:
     void operator()(Arg&&... arg) const {
         bool executed = false;
 
-        run_with_cancellation_token([&] {
-                                        executed = true;
-                                        function_(std::forward<Arg>(arg)...);
-                                    },
-                                    token_);
+        run_with_cancellation_token(
+            [&] {
+                executed = true;
+                function_(std::forward<Arg>(arg)...);
+            },
+            token_);
 
         if (!executed)
             cancel_current_task();
