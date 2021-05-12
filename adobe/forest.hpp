@@ -266,7 +266,7 @@ public:
         : base_m(--x), edge_m(forest_leading_edge - base_m.edge()) {}
     template <typename U>
     reverse_fullorder_iterator(const reverse_fullorder_iterator<U>& x)
-        : base_m(--x.base()), edge_m(forest_leading_edge - base_m.edge()) {}
+        : base_m(x.base()), edge_m(x.edge()) {}
 
     iterator_type base() const { return std::next(base_m); }
 
