@@ -4,9 +4,9 @@
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
+#include <array>
 #include <iomanip>
 #include <iostream>
-#include <sstream>
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/path.hpp>
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
         boost::filesystem::ifstream stream(file_path, std::ios::binary | std::ios::in);
 
         while (stream.good()) {
-            boost::array<std::ifstream::char_type, 256 * 1024> buffer;
+            std::array<std::ifstream::char_type, 256 * 1024> buffer;
 
             stream.read(&buffer[0], static_cast<std::streamsize>(buffer.size()));
 

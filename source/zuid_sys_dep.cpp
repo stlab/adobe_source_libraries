@@ -27,14 +27,8 @@
 #pragma warning(disable : 4996) // c runtime library deprecated function warning
 #endif
 
-#include <boost/date_time/posix_time/posix_time_types.hpp>
-
 #if defined(BOOST_MSVC)
 #pragma warning(pop)
-#endif
-
-#if defined(BOOST_HAS_THREADS)
-#include <boost/thread/xtime.hpp>
 #endif
 
 #if defined(BOOST_HAS_GETTIMEOFDAY)
@@ -122,15 +116,13 @@ namespace {
 adobe::md5_t::digest_t get_generic_random_info() {
     struct randomness {
         randomness()
-            : thread_id_m(std::hash<std::thread::id>()(std::this_thread::get_id()))
+            : thread_id_m(std::hash<std::thread::id>()(std::this_thread::get_id())),
+              time_m{std::chrono::system_clock::now()}
 #if defined(BOOST_HAS_UNISTD_H)
               ,
               pid_m(getpid()), uid_m(getuid()), gid_m(getgid())
 #endif
         {
-#if defined(BOOST_HAS_THREADS)
-            boost::xtime_get(&time_m, boost::TIME_UTC_);
-#endif
 #if defined(BOOST_HAS_UNISTD_H)
             gethostname(hostname_m, 256);
 #endif
@@ -140,9 +132,7 @@ adobe::md5_t::digest_t get_generic_random_info() {
         }
 
         std::size_t thread_id_m;
-#if defined(BOOST_HAS_THREADS)
-        boost::xtime time_m;
-#endif
+        std::chrono::system_clock::time_point time_m;
 #if defined(BOOST_HAS_UNISTD_H)
         pid_t pid_m;
         uid_t uid_m;
@@ -221,21 +211,8 @@ void random_address(uuid_node_t* node) {
 
 /**************************************************************************************************/
 
-void get_system_time(uuid_time_t* uuid_time) {
-    // REVISIT (fbrereto) : universal_time() is only available on the second_clock.
-    //                      It would be nice if it was one on the microsec_clock.
-
-    boost::posix_time::ptime then(boost::gregorian::date(1585, boost::date_time::Oct, 15));
-#if BOOST_VERSION < 103300
-    boost::posix_time::ptime now(
-        boost::date_time::second_clock<boost::gregorian::date,
-                                       boost::posix_time::ptime>::universal_time());
-#else
-    boost::posix_time::ptime now(
-        boost::date_time::second_clock<boost::posix_time::ptime>::universal_time());
-#endif
-    *uuid_time = static_cast<uuid_time_t>((now - then).total_nanoseconds() /
-                                          boost::posix_time::time_duration::ticks_per_second());
+std::chrono::system_clock::time_point get_system_time() {
+    return std::chrono::system_clock::now();
 }
 
 /**************************************************************************************************/

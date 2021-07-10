@@ -131,7 +131,7 @@ void format_uuid(zuid_char_buffer_t& buffer, const adobe::uuid_t& uuid) {
 /**************************************************************************************************/
 
 const adobe::uuid_t& empty_uuid() {
-    static adobe::uuid_t uuid_s = {0};
+    static adobe::uuid_t uuid_s = {};
 
     return uuid_s;
 }
@@ -179,7 +179,7 @@ zuid_t::zuid_t(const std::string& zuid) : uuid_m(empty_uuid()) {
 
 zuid_t::zuid_t(const char* zuid_t) : uuid_m(empty_uuid()) {
     unsigned long temp_data1;
-    int temp_data[8];
+    unsigned int temp_data[8];
 
     std::sscanf(zuid_t, "%8lx-%4hx-%4hx-%2x%2x-%2x%2x%2x%2x%2x%2x", &temp_data1, &uuid_m.data2_m,
                 &uuid_m.data3_m, &temp_data[0], &temp_data[1], &temp_data[2], &temp_data[3],

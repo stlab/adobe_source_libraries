@@ -99,7 +99,7 @@ namespace literals {
 
 /**************************************************************************************************/
 
-inline constexpr static_name_t operator"" _name(const char* str, std::size_t n);
+inline constexpr static_name_t operator"" _name(const char* str, std::size_t n) noexcept;
 
 /**************************************************************************************************/
 
@@ -158,7 +158,7 @@ private:
 
     friend struct name_t;
 
-    friend constexpr static_name_t literals::operator"" _name(const char* str, std::size_t n);
+    friend constexpr static_name_t literals::operator"" _name(const char* str, std::size_t n) noexcept;
 
     friend std::ostream& operator<<(std::ostream& s, const static_name_t& name);
 
@@ -199,7 +199,7 @@ namespace literals {
         static_name_t foo("foo"_name); // OK
         name_t        bar("bar"_name); // OK
 */
-inline constexpr static_name_t operator"" _name(const char* str, std::size_t n) {
+inline constexpr static_name_t operator"" _name(const char* str, std::size_t n) noexcept {
     return static_name_t{str, detail::name_hash(str, n)};
 }
 

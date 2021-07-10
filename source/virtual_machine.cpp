@@ -15,7 +15,6 @@
 #include <vector>
 
 #include <boost/bind/bind.hpp>
-#include <boost/iterator/transform_iterator.hpp>
 
 #include <adobe/algorithm/minmax.hpp>
 #include <adobe/any_regular.hpp>

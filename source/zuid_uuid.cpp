@@ -87,46 +87,13 @@ void format_uuid_v3(uuid_t* uuid, boost::uint8_t hash[16]) {
 
 /**************************************************************************************************/
 
-/*
-    get-current_time -- get time as 60 bit 100ns ticks since whenever.
-    Compensate for the fact that real clock resolution is
-    less than 100ns.
+uuid_time_t get_current_time() {
 
-    NOTE (SRP) : This code has been modified for ZUIDs. The code used
-    to throttle on the clock and be limited to UUIDS_PER_TICK. The new
-    code will increment first and reset on the clock every UUIDS_PER_TICK.
-*/
+    static_assert(
+        std::is_same<std::chrono::system_clock::duration, std::chrono::nanoseconds>::value,
+        "this code is meant for nanoseconds clock resolution");
 
-void get_current_time(uuid_time_t* timestamp) {
-    static uuid_time_t time_last;
-    static boost::uint16_t uuids_this_tick(0);
-    static bool inited(false);
-
-    if (!inited) {
-        get_system_time(&time_last);
-        inited = true;
-    };
-
-    if (uuids_this_tick < UUIDS_PER_TICK) {
-        ++uuids_this_tick;
-    } else {
-        uuid_time_t time_now;
-
-        get_system_time(&time_now);
-
-        // if the clock is outrunning the counter
-
-        if (time_now > uuid_time_t(time_last + uuids_this_tick)) {
-            // reset count of uuids gen'd with this clock reading
-            uuids_this_tick = 0;
-            time_last = time_now;
-        } else {
-            ++uuids_this_tick;
-        }
-    }
-
-    /* add the count of uuids to low order bits of the clock reading */
-    *timestamp = time_last + uuids_this_tick;
+    return get_system_time().time_since_epoch().count();
 }
 
 /**************************************************************************************************/
@@ -137,7 +104,6 @@ void get_current_time(uuid_time_t* timestamp) {
 
 /* uuid_create -- generator a UUID */
 boost::int16_t uuid_create(uuid_t* uuid) {
-    uuid_time_t timestamp;
     uuid_time_t last_time;
     boost::uint16_t clockseq;
     uuid_node_t node;
@@ -145,7 +111,7 @@ boost::int16_t uuid_create(uuid_t* uuid) {
     boost::int16_t f;
 
     /* get current time */
-    get_current_time(&timestamp);
+    auto const timestamp = get_current_time();
 
     /* get node ID */
     get_ieee_node_identifier(&node);
