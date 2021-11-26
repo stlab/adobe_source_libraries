@@ -12,9 +12,9 @@
 
 #include <functional>
 #include <utility>
+#include <tuple>
 
 #include <boost/compressed_pair.hpp>
-#include <boost/tuple/tuple.hpp>
 
 #include <adobe/functional/is_member.hpp>
 #include <adobe/functional/operator.hpp>
@@ -221,7 +221,7 @@ struct binary_compose {
 
 template <int N, typename T> // T is boost::tuple<>
 struct element {
-    typedef typename boost::tuples::element<N, T>::type type;
+    typedef typename std::tuple_element_t<N, T> type;
 };
 
 template <typename T1, typename T2>
@@ -238,9 +238,9 @@ struct element<1, std::pair<T1, T2>> {
 
 template <int N, typename T> // T is pair or tuple
 struct get_element {
-    typename element<N, T>::type& operator()(T& x) const { return boost::get<N>(x); }
+    typename element<N, T>::type& operator()(T& x) const { return std::get<N>(x); }
 
-    const typename element<N, T>::type& operator()(const T& x) const { return boost::get<N>(x); }
+    const typename element<N, T>::type& operator()(const T& x) const { return std::get<N>(x); }
 };
 
 /**************************************************************************************************/

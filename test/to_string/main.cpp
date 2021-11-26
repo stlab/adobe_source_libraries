@@ -24,12 +24,7 @@
 #include <adobe/any_regular.hpp>
 #include <adobe/string/to_string.hpp>
 
-// double-conversion
-#ifdef ADOBE_BUILT_WITH_CMAKE
 #include <double-conversion/double-conversion.h>
-#else
-#include <double-conversion/src/double-conversion.h>
-#endif
 
 /******************************************************************************/
 

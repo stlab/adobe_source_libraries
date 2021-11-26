@@ -41,25 +41,8 @@
 
 #include <adobe/md5.hpp>
 
-#include <boost/cstdint.hpp>
-
-#include <ctime>
-
-/*
-    set the following to the number of 100ns ticks of
-    the actual resolution of your system's clock
-*/
-#define UUIDS_PER_TICK 10
-
-/*
-    Set the following to a call to acquire a system wide global lock
-*/
-#define STD_LOCK
-#define STD_UNLOCK
-
-#ifdef BOOST_NO_INT64_T
-#error "Your platform has no 64-bit integral type."
-#endif
+#include <array>
+#include <chrono>
 
 /**************************************************************************************************/
 
@@ -67,13 +50,13 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-typedef boost::uint64_t uuid_time_t;
-typedef boost::array<char, 6> uuid_node_t;
+typedef std::chrono::system_clock::duration::rep uuid_time_t;
+typedef std::array<char, 6> uuid_node_t;
 
 /**************************************************************************************************/
 
 void get_ieee_node_identifier(uuid_node_t* node);
-void get_system_time(uuid_time_t* uuid_time);
+std::chrono::system_clock::time_point get_system_time();
 
 boost::uint64_t true_random();
 

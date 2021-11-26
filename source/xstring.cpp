@@ -308,7 +308,7 @@ private:
 /**************************************************************************************************/
 
 template <typename Range, typename UnaryFunction>
-boost::tuple<std::size_t, std::size_t, typename boost::range_iterator<Range>::type>
+std::tuple<std::size_t, std::size_t, typename boost::range_iterator<Range>::type>
 count_max_element_tuple(Range& x, UnaryFunction f) {
     typedef transform_range<UnaryFunction, Range> transform_range_t;
 
@@ -316,16 +316,16 @@ count_max_element_tuple(Range& x, UnaryFunction f) {
 
     typename transform_range_t::iterator max_item = max_element(container);
     if (max_item == container.end())
-        return boost::make_tuple(1, 0, max_item.base());
+        return std::make_tuple(1, 0, max_item.base());
 
-    return boost::make_tuple(std::count(max_item, container.end(), *max_item), *max_item,
+    return std::make_tuple(std::count(max_item, container.end(), *max_item), *max_item,
                              max_item.base());
 }
 
 /**************************************************************************************************/
 
 context_frame_t::store_iterator
-context_frame_t::closest_match(store_range_pair_t range, const adobe::attribute_set_t& searching) {
+context_frame_t::closest_match(store_range_pair_t /*range*/, const adobe::attribute_set_t& /*searching*/) {
     // REVISIT: (fbrereto) This function fails to compile because `store_range_pair_t range`'s
     // iterators fail to evaluate as modeling the ForwardIterator concept, so the
     // count_max_element_tuple call below emits an error. I am disabling this routine instead
@@ -341,18 +341,18 @@ context_frame_t::closest_match(store_range_pair_t range, const adobe::attribute_
     if (!range_size)
         return glossary_m.end();
 
-    boost::tuple<std::size_t, std::size_t, store_iterator> result_tuple = count_max_element_tuple(
+    std::tuple<std::size_t, std::size_t, store_iterator> result_tuple = count_max_element_tuple(
         range, boost::bind(store_count_same_t(), _1, boost::cref(searching)));
 
-    if (boost::get<1>(result_tuple) == 0)
+    if (std::get<1>(result_tuple) == 0)
         return glossary_m.end();
-    else if (boost::get<0>(result_tuple) > 1) {
+    else if (std::get<0>(result_tuple) > 1) {
         std::stringstream errstr;
 
         errstr << "xstr: ambiguous closest match; found "
-               << static_cast<unsigned int>(boost::get<0>(result_tuple))
+               << static_cast<unsigned int>(std::get<0>(result_tuple))
                << " glossary entries that matched "
-               << static_cast<unsigned int>(boost::get<1>(result_tuple)) << " attribute(s)";
+               << static_cast<unsigned int>(std::get<1>(result_tuple)) << " attribute(s)";
 
 #if ADOBE_SERIALIZATION
         errstr << " while looking for a match to { " << searching << " }";
@@ -361,7 +361,7 @@ context_frame_t::closest_match(store_range_pair_t range, const adobe::attribute_
         throw std::runtime_error(errstr.str());
     }
 
-    return boost::get<2>(result_tuple);
+    return std::get<2>(result_tuple);
 #endif
 }
 
@@ -508,37 +508,35 @@ struct replacement_engine_t {
         : score_m(-1), xstring_id_m(adobe::static_token_range(id.c_str())) {}
 
     replacement_engine_t(const std::string& xstr) : score_m(-1) {
-        using namespace boost::placeholders;
+        using namespace std::placeholders;
 
         adobe::make_xml_parser(
             reinterpret_cast<uchar_ptr_t>(&xstr[0]),
             reinterpret_cast<uchar_ptr_t>(&xstr[0]) + xstr.size(),
             adobe::line_position_t("replacement_engine_t"),
             adobe::implementation::xstring_preorder_predicate,
-            boost::bind(&replacement_engine_t::xstr_id_harvest, boost::ref(*this), _1, _2, _3, _4),
-            adobe::implementation::null_output_t())
-            .parse_content();
+            std::bind(&replacement_engine_t::xstr_id_harvest, std::ref(*this), _1, _2, _3, _4),
+            adobe::implementation::null_output_t()).parse_content();
     }
 
     void add_marker(const std::string& marker) {
-        using namespace boost::placeholders;
+        using namespace std::placeholders;
         adobe::make_xml_parser(
             reinterpret_cast<uchar_ptr_t>(&marker[0]),
             reinterpret_cast<uchar_ptr_t>(&marker[0]) + marker.size(),
             adobe::line_position_t("add_marker"), adobe::implementation::xstring_preorder_predicate,
-            boost::bind(&replacement_engine_t::marker_parse, boost::ref(*this), _1, _2, _3, _4),
-            adobe::implementation::null_output_t())
-            .parse_content();
+            std::bind(&replacement_engine_t::marker_parse, std::ref(*this), _1, _2, _3, _4),
+            adobe::implementation::null_output_t()).parse_content();
     }
 
     std::string run() {
-        using namespace boost::placeholders;
+        using namespace std::placeholders;
 
         implementation::context_frame_t::store_range_pair_t range(
             implementation::top_frame().range_for_key(xstring_id_m));
 #ifndef NDEBUG
         std::iterator_traits<implementation::context_frame_t::store_iterator>::difference_type
-            range_size(std::distance(range.first, range.second));
+        range_size(std::distance(range.first, range.second));
 #endif
 
         for (; range.first != range.second; ++range.first) {
@@ -550,11 +548,10 @@ struct replacement_engine_t {
 
             adobe::make_xml_parser(first, last, adobe::line_position_t("replacement_engine_t::run"),
                                    adobe::implementation::xstring_preorder_predicate,
-                                   boost::bind(&replacement_engine_t::candidate_parse,
-                                               boost::ref(*this), _1, _2, _3, _4,
-                                               boost::ref(score)),
-                                   std::back_inserter(temp_result))
-                .parse_content();
+                                   std::bind(&replacement_engine_t::candidate_parse,
+                                               std::ref(*this), _1, _2, _3, _4,
+                                               std::ref(score)),
+                                   std::back_inserter(temp_result)).parse_content();
 
             if (score > score_m) {
                 result_m = temp_result;

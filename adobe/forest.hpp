@@ -409,6 +409,12 @@ public:
 
     forest_iterator(const forest_iterator& x) : node_m(x.node_m), edge_m(x.edge_m) {}
 
+    forest_iterator& operator=(const forest_iterator& x) {
+        node_m = x.node_m;
+        edge_m = x.edge_m;
+        return *this;
+    }
+
     std::size_t edge() const { return edge_m; }
     std::size_t& edge() { return edge_m; }
     bool equal_node(forest_iterator const& y) const { return node_m == y.node_m; }
@@ -476,6 +482,12 @@ public:
     forest_const_iterator() : node_m(0), edge_m(forest_leading_edge) {}
 
     forest_const_iterator(const forest_const_iterator& x) : node_m(x.node_m), edge_m(x.edge_m) {}
+
+    forest_const_iterator& operator=(const forest_const_iterator& x) {
+        node_m = x.node_m;
+        edge_m = x.edge_m;
+        return *this;
+    }
 
     forest_const_iterator(const forest_iterator<T>& x) : node_m(x.node_m), edge_m(x.edge_m) {}
 

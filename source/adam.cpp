@@ -14,7 +14,6 @@
 
 #include <boost/bind/bind.hpp>
 #include <boost/function.hpp>
-#include <boost/tuple/tuple.hpp>
 
 #include <adobe/algorithm/find.hpp>
 #include <adobe/algorithm/for_each.hpp>
