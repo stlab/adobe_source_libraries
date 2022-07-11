@@ -1,0 +1,112 @@
+name: Build and Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+    - main
+
+jobs:
+  generate-matrix:
+    name: Generate job matrix
+    runs-on: ubuntu-22.04
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Generate job matrix
+        id: set-matrix
+        # Note: The json in this variable must be a single line for parsing to succeed.
+        run: echo "::set-output name=matrix::$(cat .github/matrix.json | scripts/flatten_json.py)"
+          
+  builds:
+    needs: generate-matrix
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)}}
+    name: ${{ matrix.config.name }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies (macos)
+        if: ${{ startsWith(matrix.config.os, 'macos') }}
+        run: |
+          brew install ninja
+        shell: bash
+
+      - name: Install dependencies (ubuntu)
+        if: ${{ startsWith(matrix.config.os, 'ubuntu') }}
+        run: |
+          sudo apt-get install -y ninja-build
+        shell: bash
+
+      - name: Install dependencies (Windows)
+        if: ${{ startsWith(matrix.config.os, 'windows') }}
+        run: |
+          choco install --yes ninja
+        shell: cmd
+
+      - name: Set enviroment variables (Linux+GCC)
+        if: ${{ matrix.config.compiler == 'gcc' }}
+        shell: bash
+        run: |
+          echo "CC=gcc-${{matrix.config.version}}" >> $GITHUB_ENV
+          echo "CXX=g++-${{matrix.config.version}}" >> $GITHUB_ENV
+
+      - name: Set enviroment variables (Linux+Clang)
+        if: ${{ matrix.config.compiler == 'clang' }}
+        shell: bash
+        run: |
+          echo "CC=clang-${{matrix.config.version}}" >> $GITHUB_ENV
+          echo "CXX=clang++-${{matrix.config.version}}" >> $GITHUB_ENV
+
+      - name: Set enviroment variables (MacOS)
+        if: ${{ matrix.config.compiler == 'apple-clang' }}
+        shell: bash
+        run: |
+          echo "CC=$(brew --prefix llvm@13)/bin/clang" >> $GITHUB_ENV
+          echo "CXX=$(brew --prefix llvm@13)/bin/clang++" >> $GITHUB_ENV
+
+      - name: Configure (Ubuntu)
+        if: ${{ startsWith(matrix.config.os, 'ubuntu') }}
+        shell: bash
+        run: |
+          mkdir ../build
+          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=23
+
+      - name: Configure (MacOS)
+        if: ${{ startsWith(matrix.config.os, 'macos') }}
+        shell: bash
+        run: |
+          mkdir ../build
+          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=23
+
+      - name: Configure (Windows)
+        if: ${{ startsWith(matrix.config.os, 'windows') }}
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
+          mkdir ..\build
+          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=23
+
+      - name: Build (Unix)
+        if: ${{ startsWith(matrix.config.os, 'ubuntu') || startsWith(matrix.config.os, 'macos') }}
+        shell: bash
+        run: |
+          cmake --build ../build/
+
+      - name: Build (windows)
+        if: ${{ startsWith(matrix.config.os, 'windows') }}
+        shell: cmd
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
+          cmake --build ../build/
+
+      - name: Test
+        shell: bash
+        run: |
+          cd ../build/
+          ctest
