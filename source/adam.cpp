@@ -400,7 +400,7 @@ private:
     cell_set_t cell_set_m;
     relation_cell_set_t relation_cell_set_m;
 
-#ifndef NEBUG
+#ifndef NDEBUG
     bool updated_m;
     bool check_update_reentrancy_m;
 #endif
