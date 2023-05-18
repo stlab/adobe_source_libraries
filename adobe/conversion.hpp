@@ -19,55 +19,43 @@ namespace adobe {
 
 template <typename T>
 struct promote {
-    typedef T type;
+    using type = T;
 };
 
 template <>
-struct promote<short> {
-    typedef double type;
+struct promote<std::int8_t> {
+    using type = double;
 };
 template <>
-struct promote<int> {
-    typedef double type;
+struct promote<std::int16_t> {
+    using type = double;
 };
 template <>
-struct promote<long> {
-    typedef double type;
+struct promote<std::int32_t> {
+    using type = double;
 };
 
 template <>
-struct promote<unsigned short> {
-    typedef double type;
+struct promote<std::uint8_t> {
+    using type = double;
 };
 template <>
-struct promote<unsigned int> {
-    typedef double type;
+struct promote<std::uint16_t> {
+    using type = double;
 };
 template <>
-struct promote<unsigned long> {
-    typedef double type;
+struct promote<std::uint32_t> {
+    using type = double;
 };
 
 template <>
 struct promote<float> {
-    typedef double type;
+    using type = double;
 };
-
-// Under 64-bit Windows size_t and ptrdiff_t do not fall into the categories above,
-// and can cause bad cast failures in any_regular_t when one presumes it would, as
-// is the case in a 32-bit environment. By default, then, we emit an error when an
-// attempt is made to promote these types. You can turn off the error by defining
-// ADOBE_NO_MSVC64_PROMOTION_ERROR in your project.
-#if defined(BOOST_MSVC) && defined(_M_X64) && !defined(ADOBE_NO_MSVC64_PROMOTION_ERROR)
-template <>
-struct promote<std::size_t> {};
-template <>
-struct promote<std::ptrdiff_t> {};
-#endif
 
 template <>
 struct promote<const char*> {
-    typedef std::string type;
+    using type = std::string;
 };
 
 /**************************************************************************************************/
