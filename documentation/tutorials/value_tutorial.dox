@@ -114,18 +114,18 @@ As mentioned above, the last adobe::any_regular_t in this code snippet inherits 
 
 \subsection usage_query Data Type Querying
 \par
-It is possible to check the type of data stored within an adobe::any_regular_t with <code>type()</code>:
+It is possible to check the type of data stored within an adobe::any_regular_t with <code>type_info()</code>:
 \par
 \code
 adobe::any_regular_t my_value(std::string("hello, world!"));
 
 // ...
 
-if (my_value.type() == typeid(std::string))
+if (my_value.type_info() == typeid(std::string))
 {
     // ... 
 }
-else if (my_value.type() == typeid(double))
+else if (my_value.type_info() == typeid(double))
 {
     // ...
 }
@@ -136,11 +136,11 @@ Note that when checking for the type contained within the adobe::any_regular_t, 
 \code
 adobe::any_regular_t my_int_value(5);
 
-if (my_int_value.type() == typeid(int))
+if (my_int_value.type_info() == typeid(int))
 {
     // not here!
 }
-else if (my_int_value.type() == typeid(double))
+else if (my_int_value.type_info() == typeid(double))
 {
     // you'll end up in here
 }
