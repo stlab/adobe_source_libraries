@@ -178,11 +178,12 @@ else()
         # required by multiprecision
         libs/format
         libs/rational
+        libs/container_hash
         # required by signals2
         libs/multi_index
         )
 
-    setup_dep(NAME boost_libraries URL https://github.com/boostorg/boost.git BRANCH boost-1.76.0 SUBMODULES ${BOOST_SUBMODULES})
+    setup_dep(NAME boost_libraries URL https://github.com/boostorg/boost.git BRANCH boost-1.79.1 SUBMODULES ${BOOST_SUBMODULES})
 
     # There really isn't a need to separate out these sources, so we build them
     # in one large static library.

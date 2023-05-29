@@ -12,8 +12,7 @@
 /**************************************************************************************************/
 
 #include <iterator>
-
-#include <boost/cstdint.hpp>
+#include <cstdint>
 
 #include <adobe/cassert.hpp>
 
@@ -43,10 +42,10 @@ const unsigned char to_utf32_pivot_3_k(224);
 const unsigned char to_utf32_pivot_4_k(240);
 const unsigned char to_utf32_pivot_5_k(248);
 
-const boost::uint32_t to_utf8_pivot_1_k(1UL << 7);
-const boost::uint32_t to_utf8_pivot_2_k(1UL << 11);
-const boost::uint32_t to_utf8_pivot_3_k(1UL << 16);
-const boost::uint32_t to_utf8_pivot_4_k(1UL << 21);
+const std::uint32_t to_utf8_pivot_1_k(1UL << 7);
+const std::uint32_t to_utf8_pivot_2_k(1UL << 11);
+const std::uint32_t to_utf8_pivot_3_k(1UL << 16);
+const std::uint32_t to_utf8_pivot_4_k(1UL << 21);
 
 /**************************************************************************************************/
 
@@ -104,35 +103,35 @@ inline char utf8_strip_mask(BinaryInteger code) {
 /**************************************************************************************************/
 
 template <std::size_t Position>
-inline boost::uint32_t promote_fragment(char fragment) {
-    return boost::uint32_t(fragment << ((Position - 1) * 6));
+inline std::uint32_t promote_fragment(char fragment) {
+    return std::uint32_t(fragment << ((Position - 1) * 6));
 }
 
 template <>
-inline boost::uint32_t promote_fragment<1>(char fragment) {
-    return boost::uint32_t(fragment);
+inline std::uint32_t promote_fragment<1>(char fragment) {
+    return std::uint32_t(fragment);
 }
 
 template <>
-inline boost::uint32_t promote_fragment<0>(char); // unimplemented
+inline std::uint32_t promote_fragment<0>(char); // unimplemented
 
 /**************************************************************************************************/
 
 template <std::size_t Position>
-inline char demote_fragment(boost::uint32_t fragment) {
+inline char demote_fragment(std::uint32_t fragment) {
     return char((fragment >> ((Position - 1) * 6)) & 0x0000003F);
 }
 
 template <>
-inline char demote_fragment<1>(boost::uint32_t fragment) {
+inline char demote_fragment<1>(std::uint32_t fragment) {
     return char(fragment & 0x0000003F);
 }
 
 template <>
-inline char demote_fragment<0>(boost::uint32_t); // unimplemented
+inline char demote_fragment<0>(std::uint32_t); // unimplemented
 
 // MM concept gcc-4.1.1 workaround
-inline char demote_fragment_1(boost::uint32_t fragment) { return demote_fragment<1>(fragment); }
+inline char demote_fragment_1(std::uint32_t fragment) { return demote_fragment<1>(fragment); }
 
 
 /**************************************************************************************************/
@@ -140,7 +139,7 @@ inline char demote_fragment_1(boost::uint32_t fragment) { return demote_fragment
 template <typename T, std::size_t ByteCount, bool Header = true>
 struct demotion_engine_t {
     template <typename OutputIterator>
-    inline OutputIterator operator()(boost::uint32_t code, OutputIterator out) {
+    inline OutputIterator operator()(std::uint32_t code, OutputIterator out) {
         *out = static_cast<T>(utf8_add_mask<ByteCount, Header>(demote_fragment<ByteCount>(code)));
 
         ++out;
@@ -153,7 +152,7 @@ struct demotion_engine_t {
 template <typename T>
 struct demotion_engine_t<T, 1, false> {
     template <typename OutputIterator>
-    inline OutputIterator operator()(boost::uint32_t code, OutputIterator out) {
+    inline OutputIterator operator()(std::uint32_t code, OutputIterator out) {
         *out = static_cast<T>(utf8_add_mask_0_false(demote_fragment_1(code)));
 
         return ++out;
@@ -165,7 +164,7 @@ struct demotion_engine_t<T, 1, false> {
 template <std::size_t ByteCount, bool Header = true>
 struct promotion_engine_t {
     template <typename InputIterator>
-    inline boost::uint32_t operator()(InputIterator& first, InputIterator last) {
+    inline std::uint32_t operator()(InputIterator& first, InputIterator last) {
         /*
             CodeWarrior 9.4 doesn't like this code composited into one line;
             GCC doesn't seem to have a problem.
@@ -173,7 +172,7 @@ struct promotion_engine_t {
 
         char n = static_cast<char>(*first);
         char stripped(utf8_strip_mask<ByteCount, Header>(n));
-        boost::uint32_t shifted(promote_fragment<ByteCount>(stripped));
+        std::uint32_t shifted(promote_fragment<ByteCount>(stripped));
 
         ++first;
 
@@ -189,8 +188,8 @@ struct promotion_engine_t {
 template <>
 struct promotion_engine_t<1, false> {
     template <typename InputIterator>
-    inline boost::uint32_t operator()(InputIterator& first, InputIterator) {
-        boost::uint32_t result(promote_fragment<1>(utf8_strip_mask<0, false>(*first)));
+    inline std::uint32_t operator()(InputIterator& first, InputIterator) {
+        std::uint32_t result(promote_fragment<1>(utf8_strip_mask<0, false>(*first)));
 
         ++first;
 
@@ -202,7 +201,7 @@ struct promotion_engine_t<1, false> {
 
 template <typename InputIterator, typename T>
 InputIterator to_utf32(InputIterator first, InputIterator last, T& result, unicode_size_type_<2>) {
-    boost::uint16_t code = static_cast<boost::uint16_t>(*first);
+    std::uint16_t code = static_cast<std::uint16_t>(*first);
     ++first;
 
     if (code < 0xD800) {
@@ -213,7 +212,7 @@ InputIterator to_utf32(InputIterator first, InputIterator last, T& result, unico
             return first;
         }
 
-        boost::uint16_t trail = static_cast<boost::uint16_t>(*first);
+        std::uint16_t trail = static_cast<std::uint16_t>(*first);
         ++first;
 
         ADOBE_ASSERT((0xDC00 <= trail && trail <= 0xDFFF) &&
@@ -275,7 +274,7 @@ InputIterator to_utf32(InputIterator first, InputIterator, T& result, unicode_si
 */
 
 template <typename T, typename O> // O models OutputIterator
-O utf32_to_utf8(boost::uint32_t code, O output) {
+O utf32_to_utf8(std::uint32_t code, O output) {
     if (code < to_utf8_pivot_1_k) // UTF-8 is 1 byte long
     {
         *output = static_cast<T>(code);
@@ -343,7 +342,7 @@ template <typename T, typename I, // I models InputIterator
 // O models OutputIterator
 O to_utf8(I first, I last, O output, unicode_size_type_<2>) {
     while (first != last) {
-        boost::uint32_t tmp;
+        std::uint32_t tmp;
 
         first = to_utf32(first, last, tmp, unicode_size_type_<2>());
 
@@ -365,7 +364,7 @@ template <typename T, typename I, // I models InputIterator
 // O models OutputIterator
 O to_utf8(I first, I last, O output, unicode_size_type_<4>) {
     while (first != last) {
-        output = utf32_to_utf8<T>(static_cast<boost::uint32_t>(*first), output);
+        output = utf32_to_utf8<T>(static_cast<std::uint32_t>(*first), output);
         ++first;
     }
 
@@ -383,7 +382,7 @@ template <typename T, typename I, // I models InputIterator
 // O models OutputIterator
 O to_utf16(I first, I last, O output, unicode_size_type_<1>) {
     while (first != last) {
-        boost::uint32_t result;
+        std::uint32_t result;
 
         first = to_utf32(first, last, result, unicode_size_type_<1>());
 
@@ -455,41 +454,41 @@ template <int A, int B>
 struct expand_utf_t;
 
 template <>
-struct expand_utf_t<8, 8> {
+struct expand_utf_t<1, 1> {
     static const int value = 1;
 };
 template <>
-struct expand_utf_t<8, 16> {
+struct expand_utf_t<1, 2> {
     static const int value = 1;
 };
 template <>
-struct expand_utf_t<8, 32> {
+struct expand_utf_t<1, 4> {
     static const int value = 1;
 };
 
 template <>
-struct expand_utf_t<16, 8> {
+struct expand_utf_t<2, 1> {
     static const int value = 3;
 };
 template <>
-struct expand_utf_t<16, 16> {
+struct expand_utf_t<2, 2> {
     static const int value = 1;
 };
 template <>
-struct expand_utf_t<16, 32> {
+struct expand_utf_t<2, 4> {
     static const int value = 1;
 };
 
 template <>
-struct expand_utf_t<32, 8> {
+struct expand_utf_t<4, 1> {
     static const int value = 4;
 };
 template <>
-struct expand_utf_t<32, 16> {
+struct expand_utf_t<4, 2> {
     static const int value = 2;
 };
 template <>
-struct expand_utf_t<32, 32> {
+struct expand_utf_t<4, 4> {
     static const int value = 1;
 };
 
@@ -502,16 +501,16 @@ struct expand_utf_t<32, 32> {
 /*!
 \ingroup unicode
 
-\tparam T is an 8, 16, or 32 bit integral type for a UTF code point
-\tparam U is an 8, 16, or 32 bit integral type for a UTF code point
-
-\result <code>expand_utf<T, U>::value</code> is the maximum expansion when converting a UTF
+<code>expand_utf<T, U>::value</code> is the maximum expansion when converting a UTF
 sequence from T to U determined by the following table:
         |source/result|UTF-8|UTF-16|UTF-32|
         |------------:|:---:|:----:|:----:|
         |UTF-8        |  1  |   1  |   1  |
         |UTF-16       |  3  |   1  |   1  |
         |UTF-32       |  4  |   2  |   1  |
+
+\tparam T is an 8, 16, or 32 bit integral type for a UTF code point
+\tparam U is an 8, 16, or 32 bit integral type for a UTF code point
 
 \see copy_utf
 
