@@ -20,7 +20,6 @@
 #include <utility>
 
 #include <boost/compressed_pair.hpp>
-#include <boost/functional/hash.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/next_prior.hpp>

@@ -6,8 +6,8 @@ enable_testing()
 project(adobe_source_libraries CXX)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++14")
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++17")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
 add_definitions ("-Wall")
@@ -32,10 +32,6 @@ option(USE_STLAB_DOUBLECONV "use stlab mirror of double-conversion repository" O
 # NB: Seems fixed for boost 1.65.1
 # NB: AppleClang lacks thread_local
 option(USE_STD_THREAD_LOCAL "use C++11 thread_local instead of Boost" OFF)
-if (USE_STD_THREAD_LOCAL AND ${CMAKE_CXX_COMPILER_ID} STREQUAL "AppleClang")
-    message (WARNING "C++11 thread_local is not supported by AppleClang")
-endif()
-
 
 set(root_path ${CMAKE_SOURCE_DIR}/..)
 
@@ -180,9 +176,12 @@ else()
         libs/rational
         # required by signals2
         libs/multi_index
+        # required by type_ndex
+        libs/container_hash
+        #required by hash
         )
 
-    setup_dep(NAME boost_libraries URL https://github.com/boostorg/boost.git BRANCH boost-1.76.0 SUBMODULES ${BOOST_SUBMODULES})
+    setup_dep(NAME boost_libraries URL https://github.com/boostorg/boost.git BRANCH boost-1.82.0 SUBMODULES ${BOOST_SUBMODULES})
 
     # There really isn't a need to separate out these sources, so we build them
     # in one large static library.
@@ -190,8 +189,8 @@ else()
     file(GLOB ASL_BOOST_FILESYSTEM_SRC ../boost_libraries/libs/filesystem/src/*.cpp)
     file(GLOB ASL_BOOST_PROGRAM_OPTIONS_SRC ../boost_libraries/libs/program_options/src/*.cpp)
     file(GLOB ASL_BOOST_SYSTEM_SRC ../boost_libraries/libs/system/src/*.cpp)
-    
-    set(BOOST_GLOB_SOURCES 
+
+    set(BOOST_GLOB_SOURCES
           ${ASL_BOOST_FILESYSTEM_SRC}
           ${ASL_BOOST_PROGRAM_OPTIONS_SRC}
           ${ASL_BOOST_SYSTEM_SRC})
@@ -208,13 +207,13 @@ else()
                 ../boost_libraries/libs/thread/src/win32/tss_pe.cpp # no idea if this is right...
             )
         endif()
-        list(APPEND BOOST_GLOB_SOURCES  
+        list(APPEND BOOST_GLOB_SOURCES
             ${ASL_BOOST_THREAD_SRC}
             ${ASL_BOOST_THREAD_TSS})
     endif()
 
     add_library(boost_glob STATIC ${BOOST_GLOB_SOURCES})
-    
+
     target_include_directories(boost_glob PUBLIC ../boost_libraries)
 
     foreach (submodule ${BOOST_SUBMODULES})
