@@ -13,10 +13,10 @@
             "os": "ubuntu-22.04"
         },
         {
-            "name": "macOS apple-clang 13.0.1",
+            "name": "macOS apple-clang 14.3.1",
             "compiler": "apple-clang",
-            "version": "13.0.1",
-            "os": "macos-11"
+            "version": "14.3.1",
+            "os": "macos-13"
         },
         {
             "name": "Windows VS2019",
