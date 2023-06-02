@@ -35,6 +35,8 @@ jobs:
       - name: Install dependencies (macos)
         if: ${{ startsWith(matrix.config.os, 'macos') }}
         run: |
+          brew update
+          brew install boost
           brew install ninja
         shell: bash
 
@@ -42,12 +44,14 @@ jobs:
         if: ${{ startsWith(matrix.config.os, 'ubuntu') }}
         run: |
           sudo apt-get install -y ninja-build
+          sudo apt-get install -y libboost-all-dev
         shell: bash
 
       - name: Install dependencies (Windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
         run: |
           choco install --yes ninja
+          vcpkg install boost:x64-windows
         shell: cmd
 
       - name: Set enviroment variables (Linux+GCC)
