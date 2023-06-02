@@ -13,6 +13,8 @@
 
 #include <adobe/any_regular_fwd.hpp>
 
+#include <cstdint>
+
 #include <boost/concept_check.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
@@ -28,7 +30,6 @@
 #include <boost/type_traits/remove_reference.hpp>
 
 #include <adobe/conversion.hpp>
-#include <adobe/cstdint.hpp>
 #include <adobe/empty.hpp>
 #include <adobe/memory.hpp>
 #include <adobe/regular_concept.hpp>
@@ -165,7 +166,7 @@ struct any_regular_interface_t;
 struct vtable_t {
     typedef any_regular_interface_t interface_type;
 
-    adobe::uintptr_t version;
+    std::uintptr_t version;
     void (*destruct)(const interface_type&);
     const std::type_info& (*type_info)(const interface_type&);
     interface_type* (*clone)(const interface_type&, void*);

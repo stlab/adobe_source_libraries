@@ -10,12 +10,7 @@
 
 #include <adobe/config.hpp>
 
-#include <boost/cstdint.hpp>
-#include <boost/static_assert.hpp>
-
-#if BOOST_MSVC
-#include <cstddef>
-#endif
+#include <cstdint>
 
 /**************************************************************************************************/
 
@@ -29,20 +24,8 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-#if defined(BOOST_HAS_STDINT_H) || defined(BOOST_MSVC)
-
-using ::intptr_t;
-using ::uintptr_t;
-
-#else
-
-typedef long intptr_t;
-typedef unsigned long uintptr_t;
-
-#endif
-
-BOOST_STATIC_ASSERT(!(sizeof(intptr_t) < sizeof(void*)));
-BOOST_STATIC_ASSERT(!(sizeof(uintptr_t) < sizeof(void*)));
+[[deprecated]] using std::intptr_t;
+[[deprecated]] using std::uintptr_t;
 
 //! @}
 /**************************************************************************************************/

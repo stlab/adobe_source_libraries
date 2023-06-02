@@ -16,7 +16,6 @@
 
 #include <boost/bind/bind.hpp>
 
-#include <adobe/cstdint.hpp>
 #include <adobe/string.hpp>
 
 /**************************************************************************************************/
