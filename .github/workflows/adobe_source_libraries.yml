@@ -50,7 +50,8 @@ jobs:
         if: ${{ startsWith(matrix.config.os, 'windows') }}
         run: |
           choco install --yes ninja
-          vcpkg install boost:x64-windows
+          vcpkg install boost
+          vcpkg integrate install
         shell: cmd
 
       - name: Set enviroment variables (Linux+GCC)
