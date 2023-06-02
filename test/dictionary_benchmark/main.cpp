@@ -9,6 +9,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <random>
 
 #include <adobe/dictionary.hpp>
 #include <adobe/timer.hpp>
@@ -163,7 +164,8 @@ std::pair<double, double> test_std_map(std::size_t n, int type, const std::strin
     }
 
     // randomize the key list
-    std::random_shuffle(randomKeyList.begin(), randomKeyList.end());
+
+    std::shuffle(randomKeyList.begin(), randomKeyList.end(), std::mt19937{std::random_device{}()});
 
 
     // time the dictionary lookup (vector iterator should have VERY little overhead)
@@ -238,7 +240,7 @@ std::pair<double, double> test_hash_map(std::size_t n, int type, const std::stri
     }
 
     // randomize the key list
-    std::random_shuffle(randomKeyList.begin(), randomKeyList.end());
+    std::shuffle(randomKeyList.begin(), randomKeyList.end(), std::mt19937{std::random_device{}()});
 
 
     // time the dictionary lookup (vector iterator should have VERY little overhead)
@@ -304,7 +306,7 @@ std::pair<double, double> test_adobe_dictionary(std::size_t n, int type, const s
     }
 
     // randomize the key list
-    std::random_shuffle(randomKeyList.begin(), randomKeyList.end());
+    std::shuffle(randomKeyList.begin(), randomKeyList.end(), std::mt19937{std::random_device{}()});
 
 
     // time the dictionary lookup (vector iterator should have VERY little overhead)
@@ -333,7 +335,7 @@ std::pair<double, double> test_adobe_dictionary(std::size_t n, int type, const s
 
 /**************************************************************************************************/
 
-void do_test(std::size_t n, std::ofstream& results, int Repeat) {
+void do_test(std::size_t n, std::ofstream& results, std::size_t Repeat) {
     std::pair<double, double> small(test_adobe_dictionary(n, 0, "small", Repeat));
     std::pair<double, double> large(test_adobe_dictionary(n, 1, "large", Repeat));
     std::pair<double, double> hashed_small(test_hash_map(n, 0, "hash_small", Repeat));

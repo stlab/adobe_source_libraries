@@ -8,13 +8,7 @@ target_compile_definitions(asl PUBLIC ADOBE_STD_SERIALIZATION)
 # otherwise boost concept checking fails on adobe::selection_t because it lacks non const begin/end
 target_compile_definitions(asl PUBLIC -DBOOST_RANGE_ENABLE_CONCEPT_ASSERT=0)
 
-# otherwise boost::move and std::move are ambiguous
-# commented out here because ADOBE_STD_ flags below make it irrelevant
-#target_compile_definitions(asl PUBLIC BOOST_MOVE_USE_STANDARD_LIBRARY_MOVE)
-
-if (USE_STD_THREAD_LOCAL)
-    target_compile_definitions(asl PUBLIC ADOBE_STD_THREAD_LOCAL)
-endif()
+target_compile_definitions(asl PUBLIC ADOBE_STD_THREAD_LOCAL)
 
 # GCC6 warning on boost 1.60
 # right operand of shift expression '(1u << 63u)' is >= than the precision of the left operand [-fpermissive]

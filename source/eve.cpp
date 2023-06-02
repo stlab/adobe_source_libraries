@@ -999,7 +999,8 @@ void view_proxy_t::layout_with(::child_iterator first, ::child_iterator last,
             int block_length(iter->container_length_m[select] + additional_length);
             double proportion(double(length - zero_length) /
                               double(available_length - block_length));
-            iter_pslice.position_m = length + adobe::lround_half_up(proportion * additional_length);
+            iter_pslice.position_m =
+                length + static_cast<int>(adobe::lround_half_up(proportion * additional_length));
             length += additional_length;
         } break;
         case adobe::layout_attributes_t::align_reverse:

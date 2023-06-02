@@ -12,9 +12,8 @@
 #include <adobe/once.hpp>
 #include <adobe/zuid.hpp>
 
-#include <boost/array.hpp>
-#include <boost/cstdint.hpp>
-
+#include <array>
+#include <cstdint>
 #include <cstdio>
 #include <memory>
 #include <mutex>
@@ -77,14 +76,6 @@
 
 /**************************************************************************************************/
 
-#if defined(BOOST_MSVC) && BOOST_MSVC >= 1400
-// Silence warnings about deprecated cstdio functions (sprintf,sscanf).
-
-#pragma warning(disable : 4996)
-#endif
-
-/**************************************************************************************************/
-
 using namespace std;
 
 /**************************************************************************************************/
@@ -93,7 +84,7 @@ namespace {
 
 /**************************************************************************************************/
 
-typedef boost::array<char, adobe::zuid_t::string_size_k + 1> zuid_char_buffer_t;
+using zuid_char_buffer_t = std::array<char, adobe::zuid_t::string_size_k + 1>;
 
 ADOBE_THREAD_LOCAL_STORAGE(zuid_char_buffer_t, zuid_char_buffer)
 
@@ -114,18 +105,12 @@ void init_zuid_once() { call_once(init_zuid_flag, &init_zuid_once_); }
 /**************************************************************************************************/
 
 void format_uuid(zuid_char_buffer_t& buffer, const adobe::uuid_t& uuid) {
-#if ADOBE_PLATFORM_CYGWIN
-    typedef unsigned int tmp_t;
-#else
-    typedef boost::uint32_t tmp_t;
-#endif
+    std::uint32_t temp_data1{uuid.data1_m};
 
-    tmp_t temp_data1(uuid.data1_m);
-
-    std::sprintf(&buffer[0], "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x", temp_data1,
-                 uuid.data2_m, uuid.data3_m, uuid.data4_m[0], uuid.data4_m[1], uuid.data4_m[2],
-                 uuid.data4_m[3], uuid.data4_m[4], uuid.data4_m[5], uuid.data4_m[6],
-                 uuid.data4_m[7]);
+    std::snprintf(&buffer[0], std::size(buffer), "%08x-%04x-%04x-%02x%02x-%02x%02x%02x%02x%02x%02x",
+                  temp_data1, uuid.data2_m, uuid.data3_m, uuid.data4_m[0], uuid.data4_m[1],
+                  uuid.data4_m[2], uuid.data4_m[3], uuid.data4_m[4], uuid.data4_m[5],
+                  uuid.data4_m[6], uuid.data4_m[7]);
 }
 
 /**************************************************************************************************/
@@ -185,10 +170,10 @@ zuid_t::zuid_t(const char* zuid_t) : uuid_m(empty_uuid()) {
                 &uuid_m.data3_m, &temp_data[0], &temp_data[1], &temp_data[2], &temp_data[3],
                 &temp_data[4], &temp_data[5], &temp_data[6], &temp_data[7]);
 
-    uuid_m.data1_m = temp_data1;
+    uuid_m.data1_m = static_cast<std::int32_t>(temp_data1);
 
     for (int i = 0; i < 8; ++i)
-        uuid_m.data4_m[i] = static_cast<boost::uint8_t>(temp_data[i]);
+        uuid_m.data4_m[i] = static_cast<std::uint8_t>(temp_data[i]);
 }
 
 /**************************************************************************************************/
@@ -196,8 +181,8 @@ zuid_t::zuid_t(const char* zuid_t) : uuid_m(empty_uuid()) {
 zuid_t::zuid_t(const zuid_t& name_space, const std::string& name) : uuid_m(empty_uuid()) {
     uuid_create_from_name(
         &uuid_m, name_space.uuid_m,
-        const_cast<boost::uint8_t*>(reinterpret_cast<const boost::uint8_t*>(name.data())),
-        static_cast<boost::uint16_t>(name.length()));
+        const_cast<std::uint8_t*>(reinterpret_cast<const std::uint8_t*>(name.data())),
+        static_cast<std::uint16_t>(name.length()));
 }
 
 /**************************************************************************************************/

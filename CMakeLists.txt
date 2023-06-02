@@ -23,15 +23,8 @@ add_definitions ("-Wall")
 # For double-conversion, the unix makefile setup is able to download the git
 # repo and build it
 
-option(USE_SYSTEM_BOOST "use cmake found boost instead of ../boost_libraries" OFF)
+option(USE_SYSTEM_BOOST "use cmake found boost instead of ../boost_libraries" ON)
 option(USE_STLAB_DOUBLECONV "use stlab mirror of double-conversion repository" OFF)
-
-# with boost 1.60 boost.thread uses boost.move unique_ptr
-# which is broken with BOOST_MOVE_USE_STANDARD_LIBRARY_MOVE flag...
-# fix is to conditionally remove this last boost thread dependency
-# NB: Seems fixed for boost 1.65.1
-# NB: AppleClang lacks thread_local
-option(USE_STD_THREAD_LOCAL "use C++11 thread_local instead of Boost" OFF)
 
 set(root_path ${CMAKE_SOURCE_DIR}/..)
 
@@ -86,9 +79,6 @@ endif()
 function(target_link_boost target)
     if (USE_SYSTEM_BOOST)
         target_link_libraries(${target} PUBLIC Boost::system Boost::filesystem)
-        if(NOT USE_STD_THREAD_LOCAL)
-            target_link_libraries(${target} PUBLIC Boost::thread)
-        endif()
     else()
         target_link_libraries(${target} PUBLIC boost_glob)
     endif()
@@ -106,9 +96,6 @@ endfunction(target_link_boost_test)
 if (USE_SYSTEM_BOOST)
     message("ASL_INFO: Using system boost.")
     set(ASL_BOOST_COMPONENTS system filesystem unit_test_framework program_options)
-    if(NOT USE_STD_THREAD_LOCAL)
-        list(APPEND ASL_BOOST_COMPONENTS thread)
-    endif()
     find_package(Boost COMPONENTS ${ASL_BOOST_COMPONENTS} REQUIRED)
 else()
     message("ASL_INFO: Building boost ourselves.")
@@ -194,23 +181,6 @@ else()
           ${ASL_BOOST_FILESYSTEM_SRC}
           ${ASL_BOOST_PROGRAM_OPTIONS_SRC}
           ${ASL_BOOST_SYSTEM_SRC})
-
-    if(NOT USE_STD_THREAD_LOCAL)
-        message("ASL_INFO: adding boost thread to local boost build")
-        file(GLOB ASL_BOOST_THREAD_SRC ../boost_libraries/libs/thread/src/*.cpp)
-
-        if (${UNIX})
-            file(GLOB ASL_BOOST_THREAD_TSS ../boost_libraries/libs/thread/src/pthread/*.cpp)
-        elseif (${WIN32})
-            set(ASL_BOOST_THREAD_TSS
-                ../boost_libraries/libs/thread/src/win32/thread.cpp
-                ../boost_libraries/libs/thread/src/win32/tss_pe.cpp # no idea if this is right...
-            )
-        endif()
-        list(APPEND BOOST_GLOB_SOURCES
-            ${ASL_BOOST_THREAD_SRC}
-            ${ASL_BOOST_THREAD_TSS})
-    endif()
 
     add_library(boost_glob STATIC ${BOOST_GLOB_SOURCES})
 

@@ -323,13 +323,13 @@ void apply_layout_parameters(layout_attributes_t& data, const dictionary_t& para
 
                 for (array_t::const_iterator iter(spacing_array.begin());
                      iter != spacing_array.end(); ++iter) {
-                    *dest_iter = iter->cast<long>();
+                    *dest_iter = iter->cast<int>();
                     ++dest_iter;
                 }
             } else {
                 double tmp(data.spacing_m[1]);
                 iter->second.cast(tmp); // Try getting as number
-                data.spacing_m[1] = long(tmp);
+                data.spacing_m[1] = static_cast<int>(tmp);
             }
         }
     }
@@ -341,12 +341,12 @@ void apply_layout_parameters(layout_attributes_t& data, const dictionary_t& para
             if (iter->second.type_info() == typeid(array_t)) {
                 const array_t& margin_array = iter->second.cast<array_t>();
 
-                data.vertical().margin_m.first = margin_array[0].cast<long>();
-                data.horizontal().margin_m.first = margin_array[1].cast<long>();
-                data.vertical().margin_m.second = margin_array[2].cast<long>();
-                data.horizontal().margin_m.second = margin_array[3].cast<long>();
+                data.vertical().margin_m.first = margin_array[0].cast<int>();
+                data.horizontal().margin_m.first = margin_array[1].cast<int>();
+                data.vertical().margin_m.second = margin_array[2].cast<int>();
+                data.horizontal().margin_m.second = margin_array[3].cast<int>();
             } else {
-                long margin = iter->second.cast<long>();
+                int margin = iter->second.cast<int>();
 
                 data.vertical().margin_m.first = margin;
                 data.horizontal().margin_m.first = margin;

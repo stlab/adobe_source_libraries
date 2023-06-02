@@ -193,7 +193,7 @@ private:
         string_type string;
         bool result = is_string(string);
         if (result)
-            t = value_type(move(string));
+            t = value_type(std::move(string));
         return result;
     }
 
