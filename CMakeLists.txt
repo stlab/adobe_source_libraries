@@ -95,7 +95,7 @@ endfunction(target_link_boost_test)
 
 if (USE_SYSTEM_BOOST)
     message("ASL_INFO: Using system boost.")
-    set(ASL_BOOST_COMPONENTS system filesystem unit_test_framework program_options)
+    set(ASL_BOOST_COMPONENTS system filesystem unit_test_framework program_options signals2 multiprecision)
     find_package(Boost COMPONENTS ${ASL_BOOST_COMPONENTS} REQUIRED)
 else()
     message("ASL_INFO: Building boost ourselves.")
