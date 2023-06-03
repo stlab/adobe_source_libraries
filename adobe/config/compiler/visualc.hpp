@@ -22,6 +22,7 @@
 #endif
 
 /**************************************************************************************************/
+#if 0
 
 #ifndef ADOBE_TEST_MICROSOFT_NO_DEPRECATE
 #define ADOBE_TEST_MICROSOFT_NO_DEPRECATE 1
@@ -32,7 +33,7 @@
 /*
     The explanation for this check is explained at
 
-     http://stlab.adobe.com/wiki/index.php/Troubleshooting
+    https://stlab.cc/legacy/troubleshooting.html
 */
 
 #ifndef _CRT_SECURE_NO_DEPRECATE
@@ -45,6 +46,8 @@
     "Microsoft 'Safe Standard C++ Library' is not supported. See <http://stlab.adobe.com/wiki/index.php/Troubleshooting>"
 #endif
 #endif
+#endif
+
 #endif
 
 
