@@ -5,11 +5,11 @@
 */
 /**************************************************************************************************/
 
-#include <ext/hash_map>
 #include <fstream>
 #include <iostream>
 #include <map>
 #include <random>
+#include <unordered_map>
 
 #include <adobe/dictionary.hpp>
 #include <adobe/timer.hpp>
@@ -199,7 +199,7 @@ struct equal_str {
     bool operator()(const char* x, const char* y) const { return std::strcmp(x, y) == 0; }
 };
 
-typedef __gnu_cxx::hash_map<const char*, adobe::any_regular_t, __gnu_cxx::hash<const char*>,
+typedef std::unordered_map<const char*, adobe::any_regular_t, std::hash<const char*>,
                             equal_str>
     hash_map_dictionary_t;
 
