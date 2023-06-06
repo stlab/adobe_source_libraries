@@ -39,11 +39,11 @@
 
 #include <adobe/config.hpp>
 
-#include <adobe/md5.hpp>
-
-#include <boost/cstdint.hpp>
-
+#include <array>
+#include <cstdint>
 #include <ctime>
+
+#include <adobe/md5.hpp>
 
 /*
     set the following to the number of 100ns ticks of
@@ -67,15 +67,15 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-typedef boost::uint64_t uuid_time_t;
-typedef boost::array<char, 6> uuid_node_t;
+typedef std::uint64_t uuid_time_t;
+typedef std::array<char, 6> uuid_node_t;
 
 /**************************************************************************************************/
 
 void get_ieee_node_identifier(uuid_node_t* node);
 void get_system_time(uuid_time_t* uuid_time);
 
-boost::uint64_t true_random();
+std::uint64_t true_random();
 
 /**************************************************************************************************/
 
@@ -87,14 +87,14 @@ template <typename I> // where I models a BinaryInteger
 inline I swab(I x);
 
 template <> // where I models a BinaryInteger
-inline boost::uint32_t swab<boost::uint32_t>(boost::uint32_t x) {
+inline std::uint32_t swab<std::uint32_t>(std::uint32_t x) {
     return (x << 24) |                                                    // (x & 0x000000FF) << 24
            ((x & 0x0000FF00) << 8) | ((x & 0x00FF0000) >> 8) | (x >> 24); // (x & 0xFF000000) >> 24
 }
 
 template <> // where I models a BinaryInteger
-inline boost::uint16_t swab<boost::uint16_t>(boost::uint16_t x) {
-    return static_cast<boost::uint16_t>((x << 8) | // (x & 0x00FF) << 8
+inline std::uint16_t swab<std::uint16_t>(std::uint16_t x) {
+    return static_cast<std::uint16_t>((x << 8) | // (x & 0x00FF) << 8
                                         (x >> 8)); // (x & 0xFF00) >> 8
 }
 
@@ -130,8 +130,8 @@ inline I net_to_host(I net) {
 
 /**************************************************************************************************/
 
-boost::int16_t read_state(boost::uint16_t* clockseq, uuid_time_t* timestamp, uuid_node_t* node);
-void write_state(boost::uint16_t clockseq, uuid_time_t timestamp, uuid_node_t node);
+std::int16_t read_state(std::uint16_t* clockseq, uuid_time_t* timestamp, uuid_node_t* node);
+void write_state(std::uint16_t clockseq, uuid_time_t timestamp, uuid_node_t node);
 
 /**************************************************************************************************/
 

@@ -56,8 +56,8 @@ void stream_cell_state(const cell_set_t::value_type& cell) {
 /**************************************************************************************************/
 
 adobe::dictionary_t parse_input_dictionary(const bfs::path& input_path) {
-    std::string path_str(input_path.native());
-    std::ifstream input_stream(path_str.c_str());
+    auto path_str{input_path.native()};
+    std::ifstream input_stream{path_str.c_str()};
     adobe::array_t token_stream;
     adobe::virtual_machine_t vm;
 
@@ -87,8 +87,8 @@ struct sheet_tracker {
         //  attach the VM to the sheet.
         sheet_m.machine_m.set_variable_lookup(boost::bind(&adobe::sheet_t::get, &sheet_m, _1));
 
-        std::string sheet_path_str(sheet_path.native());
-        std::ifstream sheet_stream(sheet_path_str.c_str());
+        auto sheet_path_str{sheet_path.native()};
+        std::ifstream sheet_stream{sheet_path_str.c_str()};
 
         callbacks_m.add_cell_proc_m = boost::bind(&sheet_tracker::add_cell_trap, boost::ref(*this),
                                                   callbacks_m.add_cell_proc_m, _1, _2, _3, _4);

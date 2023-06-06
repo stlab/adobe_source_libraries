@@ -6,6 +6,7 @@ function(asl_test)
 
   add_executable (${asl_test_NAME} ${asl_test_SOURCES})
 
+  target_compile_options (${asl_test_NAME} PRIVATE "-Wno-deprecated")
   target_compile_options (${asl_test_NAME} PRIVATE "-Wno-unused-variable")
   target_compile_options (${asl_test_NAME} PRIVATE "-Wno-unknown-pragmas")
   target_compile_options (${asl_test_NAME} PRIVATE "-Wno-uninitialized")
