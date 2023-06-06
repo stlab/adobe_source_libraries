@@ -60,22 +60,22 @@ adobe::name_t random_key() {
     // random low ASCII string -- faster than a zuid, more randomness to the characters (less aliasing by the hash function)
     // isalnum(c) | ispunct(c) | isspace(c)
     // unfortunately, I can't guarantee that this will not cycle and give 2 identical keys (which it may have done)
-    
+
     const int keyLength = 36;
     char keyBuffer[ keyLength+1 ];
     const char allowedChars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/? ";
     const int maxIndex = sizeof(allowedChars) / sizeof(char);
-    
+
     // last few chars are an incremented number to guarantee uniqueness
     static unsigned long counter = 1;
     const int counterLength = 6;
-    
+
     for (std::size_t i(0); i <= (keyLength - counterLength); ++i)
     {
         int c = ((unsigned long)(rand() >> 2) & 0x7FFF) % maxIndex;
         keyBuffer[i] = allowedChars[c];
     }
-    
+
     // convert counter to a string 6 bits at a time
     keyBuffer[keyLength - 6] = allowedChars[ (counter>>26) & 63 ];
     keyBuffer[keyLength - 5] = allowedChars[ (counter>>24) & 63 ];
@@ -83,12 +83,12 @@ adobe::name_t random_key() {
     keyBuffer[keyLength - 3] = allowedChars[ (counter>>12) & 63 ];
     keyBuffer[keyLength - 2] = allowedChars[ (counter>>6) & 63 ];
     keyBuffer[keyLength - 1] = allowedChars[ (counter>>0) & 63 ];
-    
+
     ++counter;
-    
+
     keyBuffer[keyLength] = 0;   // make sure the key is NULL terminated
-    
-    
+
+
     return adobe::name_t( keyBuffer );
 
 #else

@@ -258,11 +258,11 @@ private:
 // undetected under MSVC until fixed.
 // REVISIT: Failes with incomplete types with Apple's LLVM 3.0 compiler.
 #if 0
-#ifndef BOOST_MSVC 
+#ifndef BOOST_MSVC
   template <typename Y> struct error_on_const_auto_type;
     template <typename Y> struct error_on_const_auto_type<auto_resource<Y, typename traits_type::template rebind<Y>::other> const>
     { typedef typename auto_resource<Y, typename traits_type::template rebind<Y>::other>::const_auto_type_is_not_allowed type; };
-    
+
     template <class Y>
     auto_resource(Y& rhs, typename error_on_const_auto_type<Y>::type = 0);
 #endif
@@ -426,7 +426,7 @@ public:
     typedef void value_type;
     template <class U>
     struct rebind {
-        typedef capture_allocator<U> other;
+        using other = capture_allocator<U>;
     };
 
     friend inline bool operator==(const capture_allocator&, const capture_allocator&) {
@@ -456,6 +456,11 @@ public:
     capture_allocator() : new_delete_m(&local_new_delete_g) {}
     template <typename U>
     capture_allocator(const capture_allocator<U>& x) : new_delete_m(x.new_delete()) {}
+
+    capture_allocator(const capture_allocator&) = default;
+    capture_allocator& operator=(const capture_allocator&) = default;
+    capture_allocator(capture_allocator&&) noexcept = default;
+    capture_allocator& operator=(capture_allocator&&) noexcept = default;
 
     pointer address(reference x) const { return &x; }
     const_pointer address(const_reference x) const { return &x; }

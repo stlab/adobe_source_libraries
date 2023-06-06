@@ -25,6 +25,7 @@
 #include <adobe/implementation/expression_parser.hpp>
 #include <adobe/iomanip_asl_cel.hpp>
 #include <adobe/name.hpp>
+#include <adobe/unicode.hpp>
 #include <adobe/virtual_machine.hpp>
 
 /**************************************************************************************************/
@@ -56,7 +57,7 @@ void stream_cell_state(const cell_set_t::value_type& cell) {
 /**************************************************************************************************/
 
 adobe::dictionary_t parse_input_dictionary(const bfs::path& input_path) {
-    auto path_str{input_path.native()};
+    const auto& path_str{input_path.native()};
     std::ifstream input_stream{path_str.c_str()};
     adobe::array_t token_stream;
     adobe::virtual_machine_t vm;
@@ -87,7 +88,7 @@ struct sheet_tracker {
         //  attach the VM to the sheet.
         sheet_m.machine_m.set_variable_lookup(boost::bind(&adobe::sheet_t::get, &sheet_m, _1));
 
-        auto sheet_path_str{sheet_path.native()};
+        const auto& sheet_path_str{sheet_path.native()};
         std::ifstream sheet_stream{sheet_path_str.c_str()};
 
         callbacks_m.add_cell_proc_m = boost::bind(&sheet_tracker::add_cell_trap, boost::ref(*this),
@@ -96,8 +97,14 @@ struct sheet_tracker {
             boost::bind(&sheet_tracker::add_interface_trap, boost::ref(*this),
                         callbacks_m.add_interface_proc_m, _1, _2, _3, _4, _5, _6);
 
-        if (!sheet_stream.is_open())
-            std::cerr << "Could not open \"" << sheet_path_str << "\"!\n";
+        if (!sheet_stream.is_open()) {
+            std::cerr << "Could not open \"";
+
+            adobe::copy_utf<char>(sheet_path_str.begin(), sheet_path_str.end(),
+                                  std::ostreambuf_iterator<char>(std::cerr));
+
+            std::cerr << "\"!\n";
+        }
 
         // set up adam sheet
         adobe::parse(sheet_stream, adobe::line_position_t("property model sheet"), callbacks_m);
