@@ -336,7 +336,8 @@ std::pair<double, double> test_adobe_dictionary(std::size_t n, int type, const s
 /**************************************************************************************************/
 
 void do_test(std::size_t n, std::ofstream& results, std::size_t Repeat) {
-    std::pair<double, double> small(test_adobe_dictionary(n, 0, "small", Repeat));
+    // There is a typedef for _small_ as char on Windows?
+    std::pair<double, double> small_v(test_adobe_dictionary(n, 0, "small", Repeat));
     std::pair<double, double> large(test_adobe_dictionary(n, 1, "large", Repeat));
     std::pair<double, double> hashed_small(test_hash_map(n, 0, "hash_small", Repeat));
     std::pair<double, double> hashed_large(test_hash_map(n, 0, "hash_large", Repeat));
@@ -344,7 +345,7 @@ void do_test(std::size_t n, std::ofstream& results, std::size_t Repeat) {
     std::pair<double, double> std_large(test_std_map(n, 0, "std_large", Repeat));
 
     // report the results in a comma separated file
-    results << n << "," << small.first << "," << large.first << "," << small.second << ","
+    results << n << "," << small_v.first << "," << large.first << "," << small_v.second << ","
             << large.second << "," << hashed_small.first << "," << hashed_large.first << ","
             << hashed_small.second << "," << hashed_large.second << "," << std_small.first << ","
             << std_large.first << "," << std_small.second << "," << std_large.second << ","
