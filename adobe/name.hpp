@@ -151,6 +151,10 @@ struct static_name_t {
 
     friend bool operator<(const static_name_t& x, const static_name_t& y);
 
+    /// @brief Return the hash value of the name_t
+    /// @return hash value of the name_t
+    std::size_t hash() const { return hash_m; }
+
 private:
     static_name_t() = delete;
 

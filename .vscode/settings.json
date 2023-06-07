@@ -76,6 +76,10 @@
         "numeric": "cpp",
         "random": "cpp",
         "algorithm": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "cfenv": "cpp",
+        "csignal": "cpp",
+        "strstream": "cpp",
+        "typeindex": "cpp"
     }
 }
