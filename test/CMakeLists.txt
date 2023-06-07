@@ -6,7 +6,9 @@ function(asl_test)
 
   add_executable (${asl_test_NAME} ${asl_test_SOURCES})
 
-  if (NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+  if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    target_compile_options (${asl_test_NAME} PRIVATE "/DNOMINMAX")
+  else()
     target_compile_options (${asl_test_NAME} PRIVATE "-Wno-unused-variable")
     target_compile_options (${asl_test_NAME} PRIVATE "-Wno-unknown-pragmas")
     target_compile_options (${asl_test_NAME} PRIVATE "-Wno-uninitialized")
