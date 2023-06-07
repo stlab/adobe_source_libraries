@@ -80,6 +80,7 @@
         "cfenv": "cpp",
         "csignal": "cpp",
         "strstream": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "hash_map": "cpp"
     }
 }

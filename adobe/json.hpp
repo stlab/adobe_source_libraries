@@ -663,7 +663,7 @@ private:
 
     void generate_(const object_type& value, std::size_t n) {
         *out_++ = '{';
-        if (list(begin(value), end(value), n))
+        if (list(std::begin(value), std::end(value), n))
             indent(n);
         else
             space();
@@ -672,7 +672,7 @@ private:
 
     void generate_(const array_type& value, std::size_t n) {
         *out_++ = '[';
-        if (list(begin(value), end(value), n))
+        if (list(std::begin(value), std::end(value), n))
             indent(n);
         else
             space();
