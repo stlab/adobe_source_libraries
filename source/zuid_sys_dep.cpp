@@ -41,6 +41,10 @@
 #include <sys/time.h>
 #endif
 
+#if defined(BOOST_HAS_UNISTD_H)
+#include <unistd.h>
+#endif
+
 /**************************************************************************************************/
 
 /*
