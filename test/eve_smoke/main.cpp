@@ -72,7 +72,9 @@ void testParse(boost::filesystem::path& fileName) {
     if (!stream.is_open()) {
         std::stringstream err;
 
-        err << "Could not open file: " << fileName.native();
+        err << "Could not open file: ";
+        adobe::copy_utf<char>(fileName.native().begin(), fileName.native().end(),
+                              std::ostream_iterator<char>(err));
 
         throw std::runtime_error(err.str());
     }
