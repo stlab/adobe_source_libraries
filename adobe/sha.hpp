@@ -513,7 +513,7 @@ struct sha1_traits_t {
                                             message_block_type& message_block,
                                             std::uint16_t& stuffed_size) {
         schedule_type schedule;
-        constexpr std::uint_fast8_t schedule_size = schedule.size();
+        constexpr std::uint_fast8_t schedule_size = static_cast<std::uint_fast8_t>(schedule.size());
 
         std::memcpy(&schedule[0], &message_block[0], sizeof(message_block_type));
 
