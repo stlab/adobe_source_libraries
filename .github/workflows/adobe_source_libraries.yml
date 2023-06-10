@@ -48,9 +48,10 @@ jobs:
 
       - name: Install dependencies (Windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
+        # vcpkg install boost-system:x64-windows boost-filesystem:x64-windows boost-test:x64-windows boost-program-options:x64-windows boost-multiprecision:x64-windows boost-signals2:x64-windows boost-date-time:x64-windows boost-thread:x64-windows
         run: |
           choco install --yes ninja
-          vcpkg install boost-system:x64-windows boost-filesystem:x64-windows boost-test:x64-windows boost-program-options:x64-windows boost-multiprecision:x64-windows boost-signals2:x64-windows boost-date-time:x64-windows boost-thread:x64-windows boost-test:x64-windows-static
+          vcpkg install boost:x64-windows
         shell: cmd
 
       - name: Set enviroment variables (Linux+GCC)
