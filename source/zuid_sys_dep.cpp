@@ -41,7 +41,11 @@
 #include <sys/time.h>
 #endif
 
-#if defined(BOOST_HAS_UNISTD_H)
+// BOOST_HAS_UNISTD_H is defined in our CI on Windows. The include file exists but the needed types
+// and functions do not. As a workaround we define ADOBE_HAS_UNISTD_H() to be false on Windows.
+#define ADOBE_HAS_UNISTD_H() defined(BOOST_HAS_UNISTD_H) && !ADOBE_PLATFORM_WIN
+
+#if ADOBE_HAS_UNISTD_H()
 #include <unistd.h>
 #endif
 
@@ -127,7 +131,7 @@ adobe::md5_t::digest_t get_generic_random_info() {
     struct randomness {
         randomness()
             : thread_id_m(std::hash<std::thread::id>()(std::this_thread::get_id()))
-#if defined(BOOST_HAS_UNISTD_H)
+#if ADOBE_HAS_UNISTD_H()
               ,
               pid_m(getpid()), uid_m(getuid()), gid_m(getgid())
 #endif
@@ -135,7 +139,7 @@ adobe::md5_t::digest_t get_generic_random_info() {
 #if defined(BOOST_HAS_THREADS)
             boost::xtime_get(&time_m, boost::TIME_UTC_);
 #endif
-#if defined(BOOST_HAS_UNISTD_H)
+#if ADOBE_HAS_UNISTD_H()
             gethostname(hostname_m, 256);
 #endif
 #if defined(BOOST_HAS_GETTIMEOFDAY)
@@ -147,7 +151,7 @@ adobe::md5_t::digest_t get_generic_random_info() {
 #if defined(BOOST_HAS_THREADS)
         boost::xtime time_m;
 #endif
-#if defined(BOOST_HAS_UNISTD_H)
+#if ADOBE_HAS_UNISTD_H()
         pid_t pid_m;
         uid_t uid_m;
         gid_t gid_m;
@@ -199,7 +203,7 @@ adobe::md5_t::digest_t get_random_info() {
 
 /**************************************************************************************************/
 
-#elif defined(BOOST_HAS_THREADS) || defined(BOOST_HAS_UNISTD_H) || defined(BOOST_HAS_GETTIMEOFDAY)
+#elif defined(BOOST_HAS_THREADS) || ADOBE_HAS_UNISTD_H() || defined(BOOST_HAS_GETTIMEOFDAY)
 
 /**************************************************************************************************/
 
