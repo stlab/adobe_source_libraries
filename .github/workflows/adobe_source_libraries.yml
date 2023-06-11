@@ -92,7 +92,7 @@ jobs:
         if: ${{ startsWith(matrix.config.os, 'windows') }}
         shell: bash
         run: |
-          source "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
+          source "/mnt/c/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvarsall.bat" x64
           mkdir ..\build
           cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=23 -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DBOOST_TEST_DYN_LINK
 
@@ -106,7 +106,7 @@ jobs:
         if: ${{ startsWith(matrix.config.os, 'windows') }}
         shell: bash
         run: |
-          source "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
+          source "/mnt/c/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Auxiliary/Build/vcvarsall.bat" x64
           cmake --build ../build/
 
       - name: Test
