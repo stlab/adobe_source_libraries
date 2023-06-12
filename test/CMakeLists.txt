@@ -24,9 +24,9 @@ function(asl_test)
 
   target_link_libraries(${asl_test_NAME} PRIVATE asl)
 
-  if (asl_test_BOOST)
+  # if (asl_test_BOOST)
     target_link_boost_test(${asl_test_NAME})
-  endif(asl_test_BOOST)
+  # endif(asl_test_BOOST)
 
   if (NOT asl_test_SKIPPED)
     if (asl_test_BENCHMARK)
