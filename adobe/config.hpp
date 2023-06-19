@@ -17,7 +17,7 @@
 
 /*
     Caution:
-        This is the only ASL header that is guarenteed to change with every release. Including
+        This is the only ASL header that is guaranteed to change with every release. Including
         this header will cause a recompile every time a new ASL version is released.
 
         ADOBE_VERSION % 100 is the sub-minor version
@@ -27,7 +27,7 @@
 
 #define ADOBE_VERSION_MAJOR 1
 #define ADOBE_VERSION_MINOR 0
-#define ADOBE_VERSION_SUBMINOR 44
+#define ADOBE_VERSION_SUBMINOR 45
 
 #define ADOBE_VERSION                                                                              \
     (ADOBE_VERSION_MAJOR * 100000 + ADOBE_VERSION_MINOR * 100 + ADOBE_VERSION_SUBMINOR)
