@@ -11,9 +11,9 @@
 
 #include <adobe/config.hpp>
 
-#include <boost/cstdint.hpp>
 #include <boost/operators.hpp>
 
+#include <cstdint>
 #include <string>
 
 /**************************************************************************************************/
@@ -78,10 +78,10 @@ namespace adobe {
 
 struct uuid_t {
 #if !defined(ADOBE_NO_DOCUMENTATION)
-    boost::uint32_t data1_m;
-    boost::uint16_t data2_m;
-    boost::uint16_t data3_m;
-    boost::uint8_t data4_m[8];
+    std::uint32_t data1_m;
+    std::uint16_t data2_m;
+    std::uint16_t data3_m;
+    std::uint8_t data4_m[8];
 #endif
 };
 

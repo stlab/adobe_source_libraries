@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdlib>
+#include <memory>
 #include <mutex>
 
 #include <boost/noncopyable.hpp>
@@ -76,8 +77,8 @@ public:
 #if !defined(ADOBE_NO_DOCUMENTATION)
 private:
     struct implementation_t;
-    typedef typename allocator_type::template rebind<implementation_t>::other
-        implementation_allocator_type;
+
+    using implementation_allocator_type = typename std::allocator_traits<allocator_type>::template rebind_alloc<implementation_t>;
 
 public:
 #endif

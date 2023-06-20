@@ -20,17 +20,6 @@
 // boost
 #include <boost/test/unit_test.hpp>
 
-// *clears throat* Excuse me:
-//
-//     AAAAAAAHHHHHHH!!!!
-//
-// I swore to myself I would never do this, however this is the quickest and
-// DIRTIEST way of gaining access to th internals of both static_name_t and
-// name_t so we can verify they are behaving as we expect. This should NEVER
-// be in ANY other code than the unit testing.
-//
-#define private public
-
 // asl
 #include <adobe/name.hpp>
 
@@ -85,9 +74,9 @@ BOOST_AUTO_TEST_CASE(name_smoke) {
     adobe::name_t cardinals("Cardinals");
     adobe::name_t nullname(""_name);
 
-    BOOST_CHECK_EQUAL(static_hello_world.hash_m, hello_world_hash);
-    BOOST_CHECK_EQUAL(static_red_sox.hash_m, addr_32 ? 0xedd547d2 : 0xc5746070bacfea32);
-    BOOST_CHECK_EQUAL(static_null.hash_m, addr_32 ? 0x811c9dc5 : 0xcbf29ce484222325);
+    BOOST_CHECK_EQUAL(static_hello_world.hash(), hello_world_hash);
+    BOOST_CHECK_EQUAL(static_red_sox.hash(), addr_32 ? 0xedd547d2 : 0xc5746070bacfea32);
+    BOOST_CHECK_EQUAL(static_null.hash(), addr_32 ? 0x811c9dc5 : 0xcbf29ce484222325);
 
     BOOST_CHECK_EQUAL(std::hash<adobe::name_t>()(static_red_sox),
                       std::hash<adobe::name_t>()(red_sox));

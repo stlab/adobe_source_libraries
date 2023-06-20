@@ -16,11 +16,11 @@
 
 #include <climits>
 #include <cstddef>
+#include <cstdint>
 #include <limits>
 #include <utility>
 
 #include <boost/compressed_pair.hpp>
-#include <boost/functional/hash.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/next_prior.hpp>
@@ -31,7 +31,6 @@
 
 #include <adobe/algorithm/lower_bound.hpp>
 #include <adobe/conversion.hpp>
-#include <adobe/cstdint.hpp>
 #include <adobe/empty.hpp>
 #include <adobe/functional.hpp>
 #include <adobe/iterator/set_next.hpp>
@@ -197,7 +196,7 @@ private:
         operator const U&() const { return *static_cast<const U*>(this); }
 
         friend inline void set_next(U& x, U& y) {
-            x.next_m = reinterpret_cast<U*>(uintptr_t(&y) | uintptr_t(x.state()));
+            x.next_m = reinterpret_cast<U*>(std::uintptr_t(&y) | std::uintptr_t(x.state()));
             y.prior_m = &x;
         }
 
@@ -206,14 +205,17 @@ private:
             y.prior_m = &x;
         }
 
-        std::size_t state() const { return std::size_t(uintptr_t(next_m) & uintptr_t(0x03UL)); }
+        std::size_t state() const {
+            return std::size_t(std::uintptr_t(next_m) & std::uintptr_t(0x03UL));
+        }
         void set_state(std::size_t x) {
             assert(x < 0x04UL);
-            next_m = reinterpret_cast<U*>(uintptr_t(next()) | uintptr_t(x));
+            next_m = reinterpret_cast<U*>(std::uintptr_t(next()) | std::uintptr_t(x));
         }
 
         U* next() const {
-            return reinterpret_cast<U*>(reinterpret_cast<uintptr_t>(next_m) & ~uintptr_t(0x03UL));
+            return reinterpret_cast<U*>(reinterpret_cast<std::uintptr_t>(next_m) &
+                                        ~std::uintptr_t(0x03UL));
         }
         U* prior() const { return prior_m; }
 

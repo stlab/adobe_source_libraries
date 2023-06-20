@@ -20,12 +20,6 @@
 #include <iosfwd>
 #endif
 
-#include <boost/cstdint.hpp>
-#include <boost/operators.hpp>
-#include <boost/static_assert.hpp>
-#include <boost/type_traits.hpp>
-#include <boost/utility.hpp>
-
 #include <adobe/cstring.hpp>
 
 #include <adobe/string/to_string.hpp>

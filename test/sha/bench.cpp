@@ -303,7 +303,8 @@ std::vector<std::string> commoncrypto_bench_1(const std::vector<std::string>& co
     std::vector<std::uint8_t> digest(CC_SHA1_DIGEST_LENGTH, 0);
 
     return bench(corpus, "    apple", [&](const std::string& element) {
-        CC_SHA1(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
+        CC_SHA1(reinterpret_cast<const std::uint8_t*>(&element[0]),
+                static_cast<CC_LONG>(element.size()), &digest[0]);
 
         return digest_binary(digest);
     });
@@ -315,7 +316,8 @@ std::vector<std::string> commoncrypto_bench_224(const std::vector<std::string>& 
     std::vector<std::uint8_t> digest(CC_SHA224_DIGEST_LENGTH, 0);
 
     return bench(corpus, "    apple", [&](const std::string& element) {
-        CC_SHA224(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
+        CC_SHA224(reinterpret_cast<const std::uint8_t*>(&element[0]),
+                  static_cast<CC_LONG>(element.size()), &digest[0]);
 
         return digest_binary(digest);
     });
@@ -327,7 +329,8 @@ std::vector<std::string> commoncrypto_bench_256(const std::vector<std::string>& 
     std::vector<std::uint8_t> digest(CC_SHA256_DIGEST_LENGTH, 0);
 
     return bench(corpus, "    apple", [&](const std::string& element) {
-        CC_SHA256(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
+        CC_SHA256(reinterpret_cast<const std::uint8_t*>(&element[0]),
+                  static_cast<CC_LONG>(element.size()), &digest[0]);
 
         return digest_binary(digest);
     });
@@ -339,7 +342,8 @@ std::vector<std::string> commoncrypto_bench_384(const std::vector<std::string>& 
     std::vector<std::uint8_t> digest(CC_SHA384_DIGEST_LENGTH, 0);
 
     return bench(corpus, "    apple", [&](const std::string& element) {
-        CC_SHA384(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
+        CC_SHA384(reinterpret_cast<const std::uint8_t*>(&element[0]),
+                  static_cast<CC_LONG>(element.size()), &digest[0]);
 
         return digest_binary(digest);
     });
@@ -351,7 +355,8 @@ std::vector<std::string> commoncrypto_bench_512(const std::vector<std::string>& 
     std::vector<std::uint8_t> digest(CC_SHA512_DIGEST_LENGTH, 0);
 
     return bench(corpus, "    apple", [&](const std::string& element) {
-        CC_SHA512(reinterpret_cast<const std::uint8_t*>(&element[0]), element.size(), &digest[0]);
+        CC_SHA512(reinterpret_cast<const std::uint8_t*>(&element[0]),
+                  static_cast<CC_LONG>(element.size()), &digest[0]);
 
         return digest_binary(digest);
     });

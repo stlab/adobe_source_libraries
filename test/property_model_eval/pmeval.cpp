@@ -7,12 +7,14 @@
 
 /**************************************************************************************************/
 
+#include <iterator>
+
 #include <boost/filesystem/fstream.hpp>
 #include <boost/program_options.hpp>
 
 #include <adobe/adam.hpp>
 #include <adobe/dictionary.hpp>
-
+#include <adobe/unicode.hpp>
 
 #include "adam_test_parser.hpp"
 
@@ -87,10 +89,15 @@ int main(int argc, char* argv[]) {
                                                       end = input_files.end();
              i != end; ++i) {
             boost::filesystem::path in_path(*i);
-            std::ifstream in_stream(in_path.native().c_str());
+            const auto& native_path{in_path.native()};
+            std::ifstream in_stream(native_path.c_str());
+
+            std::string path;
+            adobe::copy_utf<char>(native_path.begin(), native_path.end(), std::back_inserter(path));
+
             if (!in_stream.is_open())
-                std::cerr << "Could not open \"" << in_path << "\"!\n";
-            if (!adobe::parse(in_stream, adobe::line_position_t(in_path.native().c_str()),
+                std::cerr << "Could not open \"" << path << "\"!\n";
+            if (!adobe::parse(in_stream, adobe::line_position_t(path.c_str()),
                               std::cout))
                 success = false;
         }

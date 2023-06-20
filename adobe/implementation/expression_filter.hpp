@@ -10,7 +10,7 @@
 
 #include <adobe/config.hpp>
 
-#include <boost/cstdint.hpp>
+#include <cstdint>
 
 #include <adobe/array.hpp>
 #include <adobe/string.hpp>
@@ -29,7 +29,7 @@ namespace adobe {
     Note: The entity name does not contain the standard
           entity prefix ('&') or suffix (';')
 */
-const std::string& entity_map_find(boost::uint32_t code_point);
+const std::string& entity_map_find(std::uint32_t code_point);
 
 /*!
     Takes an XML entity name and returns the equivalent unicode code point.
@@ -39,7 +39,7 @@ const std::string& entity_map_find(boost::uint32_t code_point);
     Note: The entity name must not contain the standard
           entity prefix ('&') or suffix (';')
 */
-boost::uint32_t entity_map_find(const std::string& entity);
+std::uint32_t entity_map_find(const std::string& entity);
 
 /*!
     Returns whether or not a string has at least one character in it

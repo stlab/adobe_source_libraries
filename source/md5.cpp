@@ -8,6 +8,7 @@
 
 #include <adobe/md5.hpp>
 
+#include <cstdint>
 #include <cstring>
 
 /**************************************************************************************************/
@@ -75,9 +76,9 @@ namespace {
 
 /**************************************************************************************************/
 
-void MD5Transform(boost::uint32_t[4], boost::uint8_t[64]);
-void Encode(boost::uint8_t*, boost::uint32_t*, boost::uint16_t);
-void Decode(boost::uint32_t*, boost::uint8_t*, boost::uint16_t);
+void MD5Transform(std::uint32_t[4], std::uint8_t[64]);
+void Encode(std::uint8_t*, std::uint32_t*, std::uint16_t);
+void Decode(std::uint32_t*, std::uint8_t*, std::uint16_t);
 
 /**************************************************************************************************/
 
@@ -101,25 +102,25 @@ Rotation is separate from addition to prevent recomputation. */
 
 #define FF(a, b, c, d, x, s, ac)                                                                   \
     {                                                                                              \
-        (a) += F((b), (c), (d)) + (x) + (boost::uint32_t)(ac);                                     \
+        (a) += F((b), (c), (d)) + (x) + (std::uint32_t)(ac);                                     \
         (a) = ROTATE_LEFT((a), (s));                                                               \
         (a) += (b);                                                                                \
     }
 #define GG(a, b, c, d, x, s, ac)                                                                   \
     {                                                                                              \
-        (a) += G((b), (c), (d)) + (x) + (boost::uint32_t)(ac);                                     \
+        (a) += G((b), (c), (d)) + (x) + (std::uint32_t)(ac);                                     \
         (a) = ROTATE_LEFT((a), (s));                                                               \
         (a) += (b);                                                                                \
     }
 #define HH(a, b, c, d, x, s, ac)                                                                   \
     {                                                                                              \
-        (a) += H((b), (c), (d)) + (x) + (boost::uint32_t)(ac);                                     \
+        (a) += H((b), (c), (d)) + (x) + (std::uint32_t)(ac);                                     \
         (a) = ROTATE_LEFT((a), (s));                                                               \
         (a) += (b);                                                                                \
     }
 #define II(a, b, c, d, x, s, ac)                                                                   \
     {                                                                                              \
-        (a) += I((b), (c), (d)) + (x) + (boost::uint32_t)(ac);                                     \
+        (a) += I((b), (c), (d)) + (x) + (std::uint32_t)(ac);                                     \
         (a) = ROTATE_LEFT((a), (s));                                                               \
         (a) += (b);                                                                                \
     }
@@ -128,8 +129,8 @@ Rotation is separate from addition to prevent recomputation. */
 
 /* MD5 basic transformation. Transforms state based on block. */
 
-void MD5Transform(boost::uint32_t state[4], boost::uint8_t block[64]) {
-    boost::uint32_t a = state[0], b = state[1], c = state[2], d = state[3], x[16];
+void MD5Transform(std::uint32_t state[4], std::uint8_t block[64]) {
+    std::uint32_t a = state[0], b = state[1], c = state[2], d = state[3], x[16];
 
     Decode(x, block, 64);
 
@@ -216,32 +217,32 @@ void MD5Transform(boost::uint32_t state[4], boost::uint8_t block[64]) {
 
 /**************************************************************************************************/
 
-/* Encodes input (boost::uint32_t) into output (boost::uint8_t). Assumes len is a multiple of 4.
+/* Encodes input (std::uint32_t) into output (std::uint8_t). Assumes len is a multiple of 4.
  */
 
-void Encode(boost::uint8_t* output, boost::uint32_t* input, boost::uint16_t len) {
-    boost::uint16_t i, j;
+void Encode(std::uint8_t* output, std::uint32_t* input, std::uint16_t len) {
+    std::uint16_t i, j;
 
     for (i = 0, j = 0; j < len; i++, j += 4) {
-        output[j] = (boost::uint8_t)(input[i] & 0xff);
-        output[j + 1] = (boost::uint8_t)((input[i] >> 8) & 0xff);
-        output[j + 2] = (boost::uint8_t)((input[i] >> 16) & 0xff);
-        output[j + 3] = (boost::uint8_t)((input[i] >> 24) & 0xff);
+        output[j] = (std::uint8_t)(input[i] & 0xff);
+        output[j + 1] = (std::uint8_t)((input[i] >> 8) & 0xff);
+        output[j + 2] = (std::uint8_t)((input[i] >> 16) & 0xff);
+        output[j + 3] = (std::uint8_t)((input[i] >> 24) & 0xff);
     }
 }
 
 /**************************************************************************************************/
 
-/* Decodes input (boost::uint8_t) into output (boost::uint32_t). Assumes len is a multiple of 4.
+/* Decodes input (std::uint8_t) into output (std::uint32_t). Assumes len is a multiple of 4.
  */
 
-void Decode(boost::uint32_t* output, boost::uint8_t* input, boost::uint16_t len) {
-    boost::uint16_t i, j;
+void Decode(std::uint32_t* output, std::uint8_t* input, std::uint16_t len) {
+    std::uint16_t i, j;
 
     for (i = 0, j = 0; j < len; i++, j += 4)
-        output[i] = ((boost::uint32_t)input[j]) | (((boost::uint32_t)input[j + 1]) << 8) |
-                    (((boost::uint32_t)input[j + 2]) << 16) |
-                    (((boost::uint32_t)input[j + 3]) << 24);
+        output[i] = ((std::uint32_t)input[j]) | (((std::uint32_t)input[j + 1]) << 8) |
+                    (((std::uint32_t)input[j + 2]) << 16) |
+                    (((std::uint32_t)input[j + 3]) << 24);
 }
 
 /**************************************************************************************************/
@@ -281,11 +282,11 @@ void md5_t::update(void* input_block, std::size_t input_length) {
     std::size_t index((count_m[0] >> 3) & 0x3f);
 
     /* Update number of bits */
-    boost::uint32_t lsb_length(
-        static_cast<boost::uint32_t>(input_length << 3)); // low order length in bits
+    std::uint32_t lsb_length(
+        static_cast<std::uint32_t>(input_length << 3)); // low order length in bits
     count_m[0] += lsb_length;
     count_m[1] += count_m[0] < lsb_length;                          // add cary bit
-    count_m[1] += static_cast<boost::uint32_t>(input_length >> 29); // high order bits.
+    count_m[1] += static_cast<std::uint32_t>(input_length >> 29); // high order bits.
 
     std::size_t partLen(64 - index);
 
@@ -297,13 +298,13 @@ void md5_t::update(void* input_block, std::size_t input_length) {
         MD5Transform(state_m, buffer_m);
 
         for (i = partLen; i + 63 < input_length; i += 64)
-            MD5Transform(state_m, &static_cast<boost::uint8_t*>(input_block)[i]);
+            MD5Transform(state_m, &static_cast<std::uint8_t*>(input_block)[i]);
 
         index = 0;
     }
 
     /* Buffer remaining input */
-    std::memcpy(&buffer_m[index], &static_cast<boost::uint8_t*>(input_block)[i], input_length - i);
+    std::memcpy(&buffer_m[index], &static_cast<std::uint8_t*>(input_block)[i], input_length - i);
 }
 
 /**************************************************************************************************/
@@ -314,14 +315,14 @@ void md5_t::update(void* input_block, std::size_t input_length) {
 */
 
 md5_t::digest_t md5_t::final() {
-    static boost::uint8_t padding_s[64] = {0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    static std::uint8_t padding_s[64] = {0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                            0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                            0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                                            0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     digest_t digest;
 
-    boost::uint8_t bits[8];
+    std::uint8_t bits[8];
 
     /* Save number of bits */
     Encode(bits, count_m, 8);

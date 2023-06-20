@@ -6,6 +6,7 @@
 /**************************************************************************************************/
 
 #include <iostream>
+#include <iterator>
 #include <sstream>
 #include <string>
 
@@ -21,6 +22,7 @@
 #include <adobe/eve_parser.hpp>
 #include <adobe/iomanip_asl_cel.hpp>
 #include <adobe/name.hpp>
+#include <adobe/unicode.hpp>
 
 /**************************************************************************************************/
 
@@ -70,7 +72,9 @@ void testParse(boost::filesystem::path& fileName) {
     if (!stream.is_open()) {
         std::stringstream err;
 
-        err << "Could not open file: " << fileName.native();
+        err << "Could not open file: ";
+        adobe::copy_utf<char>(fileName.native().begin(), fileName.native().end(),
+                              std::ostream_iterator<char>(err));
 
         throw std::runtime_error(err.str());
     }
@@ -81,8 +85,12 @@ void testParse(boost::filesystem::path& fileName) {
 
     adobe::sheet_t layout_sheet;
 
+    const auto& native_path{fileName.native()};
+    std::string path;
+    adobe::copy_utf<char>(native_path.begin(), native_path.end(), std::back_inserter(path));
+
     adobe::parse(
-        stream, adobe::line_position_t(fileName.native().c_str()),
+        stream, adobe::line_position_t(path.c_str()),
         adobe::eve_callback_suite_t::position_t(),
         adobe::bind_layout(boost::bind(&assemble, _2, _3), layout_sheet, layout_sheet.machine_m));
 }

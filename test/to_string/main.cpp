@@ -9,6 +9,7 @@
 // stdc++
 #include <cfloat>
 #include <iostream>
+#include <limits>
 #include <vector>
 
 #define BOOST_TEST_MAIN
@@ -77,9 +78,9 @@ struct test_t {
 test_t suite_g[] = {{std::atof("0.000001e-308"), "atof(0.000001e-308)"},
                     {std::atof("0.1"), "atof(0.1)"},
                     {1.1, "1.1"},
-                    {DBL_MIN, "DBL_MIN"},
-                    {DBL_MAX, "DBL_MAX"},
-                    {__DBL_DENORM_MIN__, "__DBL_DENORM_MIN__"}};
+                    {std::numeric_limits<double>::min(), "DBL_MIN"},
+                    {std::numeric_limits<double>::max(), "DBL_MAX"},
+                    {std::numeric_limits<double>::denorm_min(), "__DBL_DENORM_MIN__"}};
 
 /******************************************************************************/
 

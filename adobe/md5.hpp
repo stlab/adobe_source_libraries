@@ -11,10 +11,9 @@
 
 #include <adobe/config.hpp>
 
-#include <boost/array.hpp>
-#include <boost/cstdint.hpp>
-
+#include <array>
 #include <cstddef>
+#include <cstdint>
 
 /**************************************************************************************************/
 
@@ -94,7 +93,7 @@ Finalizes the input hash and clears the MD5 hash state information
 
 class md5_t {
 public:
-    typedef boost::array<boost::uint8_t, 16> digest_t;
+    typedef std::array<std::uint8_t, 16> digest_t;
 
     md5_t();
 
@@ -105,9 +104,9 @@ public:
 private:
     void reset();
 
-    boost::uint32_t state_m[4];  /* state (ABCD) */
-    boost::uint32_t count_m[2];  /* number of bits, modulo 2^64 (lsb first) */
-    boost::uint8_t buffer_m[64]; /* input buffer */
+    std::uint32_t state_m[4];  /* state (ABCD) */
+    std::uint32_t count_m[2];  /* number of bits, modulo 2^64 (lsb first) */
+    std::uint8_t buffer_m[64]; /* input buffer */
 };
 
 /**************************************************************************************************/

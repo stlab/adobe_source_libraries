@@ -67,7 +67,7 @@ void print_selection(const ForwardRange& range, const adobe::selection_t& select
 
 /**************************************************************************************************/
 
-typedef std::vector<int> set_type;
+typedef std::vector<std::size_t> set_type;
 typedef set_type::iterator iterator;
 typedef adobe::selection_t selection_type;
 typedef selection_type::const_iterator selection_iterator;

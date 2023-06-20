@@ -5,16 +5,16 @@
 */
 /**************************************************************************************************/
 
-#include <adobe/algorithm/copy.hpp>
-#include <adobe/unicode.hpp>
-
-#include <boost/cstdint.hpp>
-#include <boost/next_prior.hpp>
-
+#include <cstdint>
 #include <iostream>
+#include <iterator>
 #include <stdexcept>
 #include <string>
 #include <vector>
+
+#include <adobe/algorithm/copy.hpp>
+#include <adobe/unicode.hpp>
+
 
 /**************************************************************************************************/
 
@@ -22,13 +22,13 @@ namespace {
 
 /**************************************************************************************************/
 
-typedef std::vector<boost::uint32_t> utf32_buffer_t;
-typedef std::vector<boost::uint16_t> utf16_buffer_t;
-typedef std::vector<boost::uint8_t> utf8_buffer_t;
+typedef std::vector<std::uint32_t> utf32_buffer_t;
+typedef std::vector<std::uint16_t> utf16_buffer_t;
+typedef std::vector<std::uint8_t> utf8_buffer_t;
 
 /**************************************************************************************************/
 
-void roundtrip_test(boost::uint32_t code_point, bool print = true) {
+void roundtrip_test(std::uint32_t code_point, bool print = true) {
     /*
         We need to flex all parts of the unicode API given the code point that is passed in.
         This includes:
@@ -40,8 +40,8 @@ void roundtrip_test(boost::uint32_t code_point, bool print = true) {
     utf16_buffer_t utf16;
     utf8_buffer_t utf8;
 
-    adobe::copy_utf<boost::uint16_t>(&code_point, &code_point + 1, std::back_inserter(utf16));
-    adobe::copy_utf<boost::uint8_t>(&code_point, &code_point + 1, std::back_inserter(utf8));
+    adobe::copy_utf<std::uint16_t>(&code_point, &code_point + 1, std::back_inserter(utf16));
+    adobe::copy_utf<std::uint8_t>(&code_point, &code_point + 1, std::back_inserter(utf8));
 
     utf32_buffer_t utf16_roundtrip;
     utf32_buffer_t utf8_roundtrip;
@@ -52,18 +52,18 @@ void roundtrip_test(boost::uint32_t code_point, bool print = true) {
         std::cout << "   utf16 encoding is";
         for (utf16_buffer_t::iterator first(utf16.begin()), last(utf16.end()); first != last;
              ++first)
-            std::cout << " 0x" << static_cast<boost::uint32_t>(*first);
+            std::cout << " 0x" << static_cast<std::uint32_t>(*first);
         std::cout << std::endl;
         std::cout << "    utf8 encoding is";
         for (utf8_buffer_t::iterator first(utf8.begin()), last(utf8.end()); first != last; ++first)
-            std::cout << " 0x" << static_cast<boost::uint32_t>(*first);
+            std::cout << " 0x" << static_cast<std::uint32_t>(*first);
         std::cout << std::endl;
         std::cout << std::dec;
     }
 
-    adobe::copy_utf<boost::uint32_t>(utf16.begin(), utf16.end(),
+    adobe::copy_utf<std::uint32_t>(utf16.begin(), utf16.end(),
                                      std::back_inserter(utf16_roundtrip));
-    adobe::copy_utf<boost::uint32_t>(utf8.begin(), utf8.end(), std::back_inserter(utf8_roundtrip));
+    adobe::copy_utf<std::uint32_t>(utf8.begin(), utf8.end(), std::back_inserter(utf8_roundtrip));
 
     if (utf16_roundtrip[0] != code_point)
         throw std::runtime_error("In utf32 -> utf16 -> utf32: code point mismatch");
@@ -73,12 +73,12 @@ void roundtrip_test(boost::uint32_t code_point, bool print = true) {
     utf8_buffer_t utf8_2;
     utf16_buffer_t utf16_2;
 
-    adobe::copy_utf<boost::uint8_t>(utf16.begin(), utf16.end(), std::back_inserter(utf8_2));
-    adobe::copy_utf<boost::uint16_t>(utf8.begin(), utf8.end(), std::back_inserter(utf16_2));
+    adobe::copy_utf<std::uint8_t>(utf16.begin(), utf16.end(), std::back_inserter(utf8_2));
+    adobe::copy_utf<std::uint16_t>(utf8.begin(), utf8.end(), std::back_inserter(utf16_2));
 
     utf32_buffer_t utf16_roundtrip_2;
 
-    adobe::copy_utf<boost::uint32_t>(utf16_2.begin(), utf16_2.end(),
+    adobe::copy_utf<std::uint32_t>(utf16_2.begin(), utf16_2.end(),
                                      std::back_inserter(utf16_roundtrip_2));
 
     if (utf16_roundtrip_2[0] != code_point)
@@ -93,7 +93,7 @@ void roundtrip_test(boost::uint32_t code_point, bool print = true) {
 
 /**************************************************************************************************/
 
-bool valid_code_point(boost::uint32_t cp) {
+bool valid_code_point(std::uint32_t cp) {
     return !(cp >= 0xd800 && cp <= 0xdbff) && !(cp >= 0xdc00 && cp <= 0xdfff);
 }
 
@@ -114,8 +114,8 @@ void basic_roundtrip_test() {
 void full_roundtrip_test() {
     std::cout << "Performing complete range roundtrip test..." << std::endl;
 
-    boost::uint32_t first(0x0);
-    boost::uint32_t last(0x10ffff);
+    std::uint32_t first(0x0);
+    std::uint32_t last(0x10ffff);
 
     try {
         for (; first != last; ++first)
@@ -135,14 +135,14 @@ void full_roundtrip_test() {
 
 void bug_test_from_07_27_2008() {
     utf8_buffer_t result;
-    boost::uint32_t v(0x10abcd);
+    std::uint32_t v(0x10abcd);
 
-    adobe::copy_utf<boost::uint8_t>(&v, boost::next(&v), back_inserter(result));
+    adobe::copy_utf<std::uint8_t>(&v, std::next(&v), back_inserter(result));
 
     std::cout << std::hex;
 
     for (utf8_buffer_t::iterator first(result.begin()), last(result.end()); first != last; ++first)
-        std::cout << " 0x" << static_cast<boost::uint32_t>(*first);
+        std::cout << " 0x" << static_cast<std::uint32_t>(*first);
 
     std::cout << std::dec;
 }

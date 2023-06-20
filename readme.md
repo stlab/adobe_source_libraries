@@ -20,10 +20,6 @@ CMake will download Boost and double-conversion from git repositories if not fou
 
 (The `./configure` script can also be used to download and place the Boost and double-conversion libraries where they need to go.)
 
-You can use an installed Boost using USE_SYSTEM_BOOST CMake option, in which case no attempt will be made to download it.
-If USE_SYSTEM_BOOST is ON, and `BOOST_ROOT` is defined, the latter can be used by CMake to find your Boost installation.
-If USE_SYSTEM_BOOST is OFF, CMake will generate what is necessary to build Boost dependencies as a static library.
-
 ### Makefiles
 
 This option is invoked from the `./cmake_build_all.sh` script.

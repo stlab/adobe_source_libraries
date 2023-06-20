@@ -7,6 +7,9 @@
 
 #include <adobe/config.hpp>
 
+#include <iostream>
+#include <iterator>
+
 #include <boost/bind/bind.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/operations.hpp>
@@ -19,11 +22,10 @@
 #include <adobe/dictionary.hpp>
 #include <adobe/implementation/expression_parser.hpp>
 #include <adobe/name.hpp>
+#include <adobe/unicode.hpp>
 #include <adobe/virtual_machine.hpp>
 
 #include <adobe/iomanip_asl_cel.hpp>
-
-#include <iostream>
 
 /**************************************************************************************************/
 
@@ -70,7 +72,12 @@ adobe::dictionary_t read_dictionary(const bfs::path& filepath) {
     adobe::array_t expression;
 
     if (!input_file.is_open()) {
-        std::cout << "Could not open \"" << filepath.native() << "\"!\n";
+        std::cout << "Could not open \"";
+
+        auto path{filepath.native()};
+        adobe::copy_utf<char>(begin(path), end(path), std::ostream_iterator<char>(std::cout, ""));
+
+        std::cout << "\"!\n";
 
         throw std::runtime_error("file error");
     }
@@ -90,14 +97,22 @@ void read_sheet(const bfs::path& filepath, adobe::sheet_t& sheet) {
     std::ifstream input_file(filepath.native().c_str());
 
     if (!input_file.is_open()) {
-        std::cout << "Could not open \"" << filepath.native() << "\"!\n";
+        std::cout << "Could not open \"";
+
+        auto path{filepath.native()};
+        adobe::copy_utf<char>(begin(path), end(path), std::ostream_iterator<char>(std::cout, ""));
+
+        std::cout << "\"!\n";
 
         throw std::runtime_error("file error");
     }
 
     try {
         // set up adam sheet
-        adobe::parse(input_file, adobe::line_position_t(filepath.native().c_str()),
+        auto native_path{filepath.native()};
+        std::string path;
+        adobe::copy_utf<char>(begin(native_path), end(native_path), std::back_inserter(path));
+        adobe::parse(input_file, adobe::line_position_t(path.c_str()),
                      adobe::bind_to_sheet(sheet));
     } catch (const adobe::stream_error_t& error) {
         std::cerr << "adobe:: "

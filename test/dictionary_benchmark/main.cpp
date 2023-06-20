@@ -5,10 +5,11 @@
 */
 /**************************************************************************************************/
 
-#include <ext/hash_map>
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <random>
+#include <unordered_map>
 
 #include <adobe/dictionary.hpp>
 #include <adobe/timer.hpp>
@@ -59,22 +60,22 @@ adobe::name_t random_key() {
     // random low ASCII string -- faster than a zuid, more randomness to the characters (less aliasing by the hash function)
     // isalnum(c) | ispunct(c) | isspace(c)
     // unfortunately, I can't guarantee that this will not cycle and give 2 identical keys (which it may have done)
-    
+
     const int keyLength = 36;
     char keyBuffer[ keyLength+1 ];
     const char allowedChars[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890`~!@#$%^&*()-_=+[{]}\\|;:'\",<.>/? ";
     const int maxIndex = sizeof(allowedChars) / sizeof(char);
-    
+
     // last few chars are an incremented number to guarantee uniqueness
     static unsigned long counter = 1;
     const int counterLength = 6;
-    
+
     for (std::size_t i(0); i <= (keyLength - counterLength); ++i)
     {
         int c = ((unsigned long)(rand() >> 2) & 0x7FFF) % maxIndex;
         keyBuffer[i] = allowedChars[c];
     }
-    
+
     // convert counter to a string 6 bits at a time
     keyBuffer[keyLength - 6] = allowedChars[ (counter>>26) & 63 ];
     keyBuffer[keyLength - 5] = allowedChars[ (counter>>24) & 63 ];
@@ -82,12 +83,12 @@ adobe::name_t random_key() {
     keyBuffer[keyLength - 3] = allowedChars[ (counter>>12) & 63 ];
     keyBuffer[keyLength - 2] = allowedChars[ (counter>>6) & 63 ];
     keyBuffer[keyLength - 1] = allowedChars[ (counter>>0) & 63 ];
-    
+
     ++counter;
-    
+
     keyBuffer[keyLength] = 0;   // make sure the key is NULL terminated
-    
-    
+
+
     return adobe::name_t( keyBuffer );
 
 #else
@@ -163,7 +164,8 @@ std::pair<double, double> test_std_map(std::size_t n, int type, const std::strin
     }
 
     // randomize the key list
-    std::random_shuffle(randomKeyList.begin(), randomKeyList.end());
+
+    std::shuffle(randomKeyList.begin(), randomKeyList.end(), std::mt19937{std::random_device{}()});
 
 
     // time the dictionary lookup (vector iterator should have VERY little overhead)
@@ -197,7 +199,7 @@ struct equal_str {
     bool operator()(const char* x, const char* y) const { return std::strcmp(x, y) == 0; }
 };
 
-typedef __gnu_cxx::hash_map<const char*, adobe::any_regular_t, __gnu_cxx::hash<const char*>,
+typedef std::unordered_map<const char*, adobe::any_regular_t, std::hash<const char*>,
                             equal_str>
     hash_map_dictionary_t;
 
@@ -238,7 +240,7 @@ std::pair<double, double> test_hash_map(std::size_t n, int type, const std::stri
     }
 
     // randomize the key list
-    std::random_shuffle(randomKeyList.begin(), randomKeyList.end());
+    std::shuffle(randomKeyList.begin(), randomKeyList.end(), std::mt19937{std::random_device{}()});
 
 
     // time the dictionary lookup (vector iterator should have VERY little overhead)
@@ -304,7 +306,7 @@ std::pair<double, double> test_adobe_dictionary(std::size_t n, int type, const s
     }
 
     // randomize the key list
-    std::random_shuffle(randomKeyList.begin(), randomKeyList.end());
+    std::shuffle(randomKeyList.begin(), randomKeyList.end(), std::mt19937{std::random_device{}()});
 
 
     // time the dictionary lookup (vector iterator should have VERY little overhead)
@@ -333,8 +335,9 @@ std::pair<double, double> test_adobe_dictionary(std::size_t n, int type, const s
 
 /**************************************************************************************************/
 
-void do_test(std::size_t n, std::ofstream& results, int Repeat) {
-    std::pair<double, double> small(test_adobe_dictionary(n, 0, "small", Repeat));
+void do_test(std::size_t n, std::ofstream& results, std::size_t Repeat) {
+    // There is a typedef for _small_ as char on Windows?
+    std::pair<double, double> small_v(test_adobe_dictionary(n, 0, "small", Repeat));
     std::pair<double, double> large(test_adobe_dictionary(n, 1, "large", Repeat));
     std::pair<double, double> hashed_small(test_hash_map(n, 0, "hash_small", Repeat));
     std::pair<double, double> hashed_large(test_hash_map(n, 0, "hash_large", Repeat));
@@ -342,7 +345,7 @@ void do_test(std::size_t n, std::ofstream& results, int Repeat) {
     std::pair<double, double> std_large(test_std_map(n, 0, "std_large", Repeat));
 
     // report the results in a comma separated file
-    results << n << "," << small.first << "," << large.first << "," << small.second << ","
+    results << n << "," << small_v.first << "," << large.first << "," << small_v.second << ","
             << large.second << "," << hashed_small.first << "," << hashed_large.first << ","
             << hashed_small.second << "," << hashed_large.second << "," << std_small.first << ","
             << std_large.first << "," << std_small.second << "," << std_large.second << ","

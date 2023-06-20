@@ -13,17 +13,16 @@
             "os": "ubuntu-22.04"
         },
         {
-            "name": "macOS apple-clang 13.0.1",
+            "name": "macOS apple-clang 14.3.1",
             "compiler": "apple-clang",
-            "version": "13.0.1",
-            "os": "macos-11"
+            "version": "14.3.1",
+            "os": "macos-13"
         },
         {
-            "name": "Windows VS2019",
+            "name": "Windows VS2022",
             "compiler": "Visual Studio",
-            "version": "16",
-            "os": "windows-2019",
-            "cmake_toolset": "Visual Studio 16 2019"
+            "version": "17.4",
+            "os": "windows-2022"
         }
     ]
 }

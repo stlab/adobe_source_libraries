@@ -61,7 +61,7 @@ struct thread_pool {
 
     void async(any_packaged_task_&& p) {
         queue_t tmp;
-        tmp.push_back(move(p));
+        tmp.push_back(std::move(p));
 
         {
             lock_t lock(mutex_);
@@ -109,18 +109,18 @@ struct timed_queue {
                     condition_.wait_until(lock, t);
                 }
                 pop_heap(begin(q_), end(q_), greater_first());
-                task = move(q_.back().second);
+                task = std::move(q_.back().second);
                 q_.pop_back();
             }
 
-            adobe::details::async_(move(task));
+            adobe::details::async_(std::move(task));
         }
     }
 
     void async(const steady_clock::time_point& when, any_packaged_task_&& p) {
         {
             lock_t lock(mutex_);
-            q_.push_back(element_t(when, move(p)));
+            q_.push_back(element_t(when, std::move(p)));
             push_heap(begin(q_), end(q_), greater_first());
         }
         condition_.notify_one();
@@ -155,12 +155,12 @@ void async_(any_packaged_task_&& p) {
 
     static thread_pool pool_s;
 
-    pool_s.async(move(p));
+    pool_s.async(std::move(p));
 }
 
 void async_(const steady_clock::time_point& when, any_packaged_task_&& p) {
     static timed_queue queue_s;
-    queue_s.async(when, move(p));
+    queue_s.async(when, std::move(p));
 }
 
 } // namespace details
@@ -191,7 +191,7 @@ struct shared_task_queue::task_queue_ {
         }
 
         if (!tmp.empty())
-            details::async_(move(tmp.front()));
+            details::async_(std::move(tmp.front()));
     }
 
     void _continue() {
@@ -206,12 +206,12 @@ struct shared_task_queue::task_queue_ {
         }
 
         if (!tmp.empty())
-            details::async_(move(tmp.front()));
+            details::async_(std::move(tmp.front()));
     }
 
     void async(any_packaged_task_&& p) {
         queue_t tmp;
-        tmp.push_back(move(p));
+        tmp.push_back(std::move(p));
 
         {
             lock_t lock(mutex_);
@@ -222,7 +222,7 @@ struct shared_task_queue::task_queue_ {
         }
 
         if (!tmp.empty())
-            details::async_(move(tmp.front()));
+            details::async_(std::move(tmp.front()));
     }
 
     queue_t q_;
@@ -235,7 +235,7 @@ auto shared_task_queue::make_task_queue_() -> std::shared_ptr<task_queue_> {
     return make_shared<task_queue_>();
 }
 
-void shared_task_queue::async_(details::any_packaged_task_&& task) { object_->async(move(task)); }
+void shared_task_queue::async_(details::any_packaged_task_&& task) { object_->async(std::move(task)); }
 void shared_task_queue::continue_(const std::shared_ptr<task_queue_>& q) { q->_continue(); }
 void shared_task_queue::suspend_(const std::shared_ptr<task_queue_>& q) { q->_suspend(); }
 void shared_task_queue::resume_(const std::shared_ptr<task_queue_>& q) { q->_resume(); }
