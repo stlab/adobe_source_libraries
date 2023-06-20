@@ -17,13 +17,9 @@ add_definitions ("-Wall")
 # include double-conversion, respectively. Build environments vary and we're
 # trying to support all of them.
 #
-# If USE_SYSTEM_BOOST is defined, that means the headers and libraries have been built
-# and are ready for use by CMake. Otherwise, we'll have to roll them ourselves.
-#
 # For double-conversion, the unix makefile setup is able to download the git
 # repo and build it
 
-option(USE_SYSTEM_BOOST "use cmake found boost instead of ../boost_libraries" ON)
 option(USE_STLAB_DOUBLECONV "use stlab mirror of double-conversion repository" OFF)
 
 set(root_path ${CMAKE_SOURCE_DIR}/..)
@@ -77,134 +73,17 @@ else()
 endif()
 
 function(target_link_boost target)
-    if (USE_SYSTEM_BOOST)
-        target_link_libraries(${target} PUBLIC Boost::system Boost::filesystem)
-    else()
-        target_link_libraries(${target} PUBLIC boost_glob)
-    endif()
+    target_link_libraries(${target} PUBLIC Boost::system Boost::filesystem)
 endfunction(target_link_boost)
 
 function(target_link_boost_test target)
-    if (USE_SYSTEM_BOOST)
-        target_compile_definitions(${target} PRIVATE BOOST_TEST_DYN_LINK)
-        target_link_libraries(${target} PRIVATE Boost::unit_test_framework)
-    else()
-        target_link_libraries(${target} PUBLIC boost_unit_test)
-    endif()
+    target_compile_definitions(${target} PRIVATE BOOST_TEST_DYN_LINK)
+    target_link_libraries(${target} PRIVATE Boost::unit_test_framework)
 endfunction(target_link_boost_test)
 
-if (USE_SYSTEM_BOOST)
-    message("ASL_INFO: Using system boost.")
-    set(ASL_BOOST_COMPONENTS system filesystem unit_test_framework program_options)
-    find_package(Boost COMPONENTS ${ASL_BOOST_COMPONENTS} REQUIRED)
-else()
-    message("ASL_INFO: Building boost ourselves.")
-
-    set(BOOST_SUBMODULES
-        # required by asl
-        libs/system
-        libs/filesystem
-        libs/thread
-        libs/program_options
-        libs/signals2
-        libs/variant
-        libs/gil
-        # required by adobe::fnv unless ADOBE_FNV_NO_BIGINTS is defined
-        libs/multiprecision
-        # required by boost test or by the one above
-        libs/test
-        libs/detail
-        libs/config
-        libs/type_traits
-        libs/preprocessor
-        libs/utility
-        libs/core
-        libs/smart_ptr
-        libs/assert
-        libs/predef
-        libs/throw_exception
-        libs/function
-        libs/integer
-        libs/static_assert
-        libs/mpl
-        libs/bind
-        libs/move
-        libs/exception
-        libs/timer
-        libs/io
-        libs/iterator
-        libs/numeric
-        libs/numeric/conversion
-        libs/functional
-        libs/algorithm
-        libs/range
-        # required by program_options
-        libs/optional
-        libs/any
-        libs/type_index
-        libs/lexical_cast
-        libs/tokenizer
-        # required by range
-        libs/concept_check
-        # required by lexical_cast
-        libs/array
-        libs/container
-        libs/math
-        # required by thread
-        libs/atomic
-        libs/date_time
-        libs/chrono
-        libs/tuple
-        libs/align
-        # required by chrono
-        libs/ratio
-        # required by multiprecision
-        libs/format
-        libs/rational
-        # required by signals2
-        libs/multi_index
-        # required by type_ndex
-        libs/container_hash
-        #required by hash
-        )
-
-    setup_dep(NAME boost_libraries URL https://github.com/boostorg/boost.git BRANCH boost-1.82.0 SUBMODULES ${BOOST_SUBMODULES})
-
-    # There really isn't a need to separate out these sources, so we build them
-    # in one large static library.
-
-    file(GLOB ASL_BOOST_FILESYSTEM_SRC ../boost_libraries/libs/filesystem/src/*.cpp)
-    file(GLOB ASL_BOOST_PROGRAM_OPTIONS_SRC ../boost_libraries/libs/program_options/src/*.cpp)
-    file(GLOB ASL_BOOST_SYSTEM_SRC ../boost_libraries/libs/system/src/*.cpp)
-
-    set(BOOST_GLOB_SOURCES
-          ${ASL_BOOST_FILESYSTEM_SRC}
-          ${ASL_BOOST_PROGRAM_OPTIONS_SRC}
-          ${ASL_BOOST_SYSTEM_SRC})
-
-    add_library(boost_glob STATIC ${BOOST_GLOB_SOURCES})
-
-    target_include_directories(boost_glob PUBLIC ../boost_libraries)
-
-    foreach (submodule ${BOOST_SUBMODULES})
-        target_include_directories(boost_glob PUBLIC ../boost_libraries/${submodule}/include)
-    endforeach(submodule)
-
-    # We separate out the unit test framework from the rest of the boost
-    # add_library support because it has its own main routine which we only need
-    # when building unit tests.
-
-    file(GLOB ASL_BOOST_TEST_SRC RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} ../boost_libraries/libs/test/src/*.cpp)
-    list(REMOVE_ITEM ASL_BOOST_TEST_SRC ../boost_libraries/libs/test/src/cpp_main.cpp)
-
-    add_library(boost_unit_test STATIC ${ASL_BOOST_TEST_SRC})
-
-    target_include_directories(boost_unit_test PUBLIC ../boost_libraries)
-
-    foreach (submodule ${BOOST_SUBMODULES})
-        target_include_directories(boost_unit_test PUBLIC ../boost_libraries/${submodule}/include)
-    endforeach(submodule)
-endif()
+message("ASL_INFO: Using system boost.")
+set(ASL_BOOST_COMPONENTS system filesystem unit_test_framework program_options)
+find_package(Boost COMPONENTS ${ASL_BOOST_COMPONENTS} REQUIRED)
 
 add_subdirectory(source)
 add_subdirectory(test)
