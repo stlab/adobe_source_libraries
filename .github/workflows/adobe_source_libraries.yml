@@ -51,7 +51,7 @@ jobs:
         run: |
           choco install --yes ninja
           vcpkg install boost-system:x64-windows boost-filesystem:x64-windows boost-test:x64-windows boost-program-options:x64-windows boost-multiprecision:x64-windows boost-signals2:x64-windows boost-date-time:x64-windows boost-thread:x64-windows
-        shell: bash
+        shell: cmd
 
       - name: Set enviroment variables (Linux+GCC)
         if: ${{ matrix.config.compiler == 'gcc' }}
@@ -90,8 +90,9 @@ jobs:
 
       - name: Configure (Windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
-        shell: bash
+        shell: cmd
         run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           mkdir ..\build
           cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=23 -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DBOOST_TEST_DYN_LINK=TRUE
 
@@ -103,8 +104,9 @@ jobs:
 
       - name: Build (windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
-        shell: bash
+        shell: cmd
         run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           cmake --build ../build/
 
       - name: Test

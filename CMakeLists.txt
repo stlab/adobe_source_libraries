@@ -10,6 +10,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++17")
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
+set(VCPKG_FEATURE_FLAGS "versions")
+project(adobe-source-libraries CXX)
+
 add_definitions ("-Wall")
 #add_definitions ("-Werror")
 
