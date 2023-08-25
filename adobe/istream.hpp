@@ -10,17 +10,15 @@
 
 #include <adobe/config.hpp>
 
+#include <functional>
 #include <ios>
 #include <istream>
+#include <memory>
 #include <stdexcept>
 #include <vector>
 
 #include <adobe/istream_fwd.hpp>
 #include <adobe/name.hpp>
-
-#include <boost/any.hpp>
-#include <boost/function.hpp>
-#include <boost/shared_ptr.hpp>
 
 /**************************************************************************************************/
 
@@ -159,8 +157,8 @@ intended to be displayed on multiple lines with a monospaced font.
 
 struct line_position_t {
 public:
-    typedef boost::function<std::string(name_t, std::streampos)> getline_proc_impl_t;
-    typedef boost::shared_ptr<getline_proc_impl_t> getline_proc_t;
+    typedef std::function<std::string(name_t, std::streampos)> getline_proc_impl_t;
+    typedef std::shared_ptr<getline_proc_impl_t> getline_proc_t;
 
     // line_number starts at 1.
     line_position_t(name_t file_path, getline_proc_t getline_proc, int line_number = 1,
