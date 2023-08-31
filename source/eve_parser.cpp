@@ -16,6 +16,7 @@
 #include <adobe/algorithm/sorted.hpp>
 #include <adobe/any_regular.hpp>
 #include <adobe/array.hpp>
+#include <adobe/cassert.hpp>
 #include <adobe/dictionary.hpp>
 #include <adobe/functional/operator.hpp>
 #include <adobe/implementation/token.hpp>
@@ -56,7 +57,7 @@ bool keyword_lookup(const name_t& name) {
 #ifndef NDEBUG
     static bool inited = false;
     if (!inited) {
-        assert(is_sorted(keyword_table));
+        ADOBE_ASSERT(is_sorted(keyword_table));
         inited = true;
     }
 #endif
@@ -76,8 +77,8 @@ public:
         : expression_parser(in, position), assembler_m(assembler) {
         set_keyword_extension_lookup(boost::bind(&keyword_lookup, _1));
 
-        assert(assembler_m.add_view_proc_m);
-        //  assert(assembler_m.add_cell_proc_m); Only required if you have a sheet state.
+        ADOBE_ASSERT(assembler_m.add_view_proc_m);
+        //  ADOBE_ASSERT(assembler_m.add_cell_proc_m); Only required if you have a sheet state.
     }
 
     void parse(const position_t&);
