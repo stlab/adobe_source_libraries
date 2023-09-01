@@ -13,6 +13,7 @@
 
 #include <adobe/algorithm/sort.hpp>
 #include <adobe/array.hpp>
+#include <adobe/cassert.hpp>
 #include <adobe/dictionary.hpp>
 #include <adobe/name.hpp>
 #include <adobe/once.hpp>
@@ -149,7 +150,7 @@ void add_cell(adobe::sheet_t& sheet, adobe::eve_callback_suite_t::cell_type_t ty
         sheet.add_logic(name, position, init_or_expr);
         break;
     default:
-        assert(false && "cell type not supported.");
+        ADOBE_ASSERT(false && "cell type not supported.");
     }
 }
 

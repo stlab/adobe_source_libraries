@@ -19,6 +19,7 @@
 #include <adobe/algorithm/for_each.hpp>
 #include <adobe/algorithm/for_each_position.hpp>
 #include <adobe/algorithm/transform.hpp>
+#include <adobe/cassert.hpp>
 #include <adobe/cmath.hpp>
 #include <adobe/forest.hpp>
 #include <adobe/functional.hpp>
@@ -387,7 +388,7 @@ void eve_t::implementation_t::solve(slice_select_t select) {
 
     } while (progress && limiter);
 
-    assert(limiter); // Failing to make forward progress - aborting.
+    ADOBE_ASSERT(limiter); // Failing to make forward progress - aborting.
 }
 
 /**************************************************************************************************/
@@ -1127,7 +1128,7 @@ void view_proxy_t::adjust_with(::child_iterator first, ::child_iterator last,
     tranform_range child_spacing_range(
             adobe::make_tranform_range(range, adobe::mem_data(&view_proxy_t::space_before_m));
 
-    assert(!geometry_m.spacing_m.empty());
+    ADOBE_ASSERT(!geometry_m.spacing_m.empty());
 
     std::fill(
         adobe::copy_bound(geometry.spacing_m, child_spacing_range).second,
@@ -1139,7 +1140,7 @@ void view_proxy_t::adjust_with(::child_iterator first, ::child_iterator last,
     const difference_type copy_count(std::min(difference_type(geometry_m.spacing_m.size()),
                                               difference_type(std::distance(first, last))));
 
-    assert(!geometry_m.spacing_m.empty());
+    ADOBE_ASSERT(!geometry_m.spacing_m.empty());
 
     std::fill(std::copy(geometry_m.spacing_m.begin(), geometry_m.spacing_m.begin() + copy_count,
                         boost::make_transform_iterator(
@@ -1291,13 +1292,13 @@ void view_proxy_t::solve_up_with(::child_iterator first, ::child_iterator last,
 
             for (guide_set_t::iterator guide(reverse_child_guide_set.begin());
                  guide != reverse_child_guide_set.end(); ++guide, ++reverse_guide_iter) {
-                assert(reverse_guide_iter != reverse_guide_set.end());
+                ADOBE_ASSERT(reverse_guide_iter != reverse_guide_set.end());
                 *reverse_guide_iter = std::max(*reverse_guide_iter, *guide + rlength);
             }
 
             if ((rfirst->geometry_m.placement_m == adobe::eve_t::place_leaf) &&
                 reverse_child_guide_set.size()) {
-                assert(reverse_first_guide != reverse_guide_set.end());
+                ADOBE_ASSERT(reverse_first_guide != reverse_guide_set.end());
                 int current_rlength(rlength);
                 rlength = *reverse_first_guide - reverse_child_guide_set.front();
                 additional_rlength += rlength - current_rlength;
@@ -1326,13 +1327,13 @@ void view_proxy_t::solve_up_with(::child_iterator first, ::child_iterator last,
 
             for (guide_set_t::iterator guide(forward_child_guide_set.begin());
                  guide != forward_child_guide_set.end(); ++guide, ++forward_guide_iter) {
-                assert(forward_guide_iter != forward_guide_set.end());
+                ADOBE_ASSERT(forward_guide_iter != forward_guide_set.end());
                 *forward_guide_iter = std::max(*forward_guide_iter, *guide + length);
             }
 
             if ((iter->geometry_m.placement_m == adobe::eve_t::place_leaf) &&
                 forward_child_guide_set.size()) {
-                assert(forward_first_guide != forward_guide_set.end());
+                ADOBE_ASSERT(forward_first_guide != forward_guide_set.end());
                 length = *forward_first_guide - forward_child_guide_set.front();
             }
         } break;
@@ -1418,13 +1419,13 @@ bool view_proxy_t::solve_down_with(::child_iterator first, ::child_iterator last
 
             if ((rfirst->geometry_m.placement_m == eve_t::place_leaf) && guide != guide_last) {
                 // Snap the current postion to the guide.
-                assert(reverse_guide_iter !=
+                ADOBE_ASSERT(reverse_guide_iter !=
                        container_guide_set_m[select][layout_attributes_t::align_reverse].end());
                 rlength = *reverse_guide_iter++ - *guide++;
             }
 
             for (; guide != guide_last; ++guide, ++reverse_guide_iter) {
-                assert(reverse_guide_iter !=
+                ADOBE_ASSERT(reverse_guide_iter !=
                        container_guide_set_m[select][layout_attributes_t::align_reverse].end());
                 int new_guide(*reverse_guide_iter - rlength);
 
@@ -1462,13 +1463,13 @@ bool view_proxy_t::solve_down_with(::child_iterator first, ::child_iterator last
 
             if ((iter->geometry_m.placement_m == adobe::eve_t::place_leaf) && guide != guide_last) {
                 // Snap the current postion to the guide.
-                assert(guide_iter !=
+                ADOBE_ASSERT(guide_iter !=
                        container_guide_set_m[select][layout_attributes_t::align_forward].end());
                 length = *guide_iter++ - *guide++;
             }
 
             for (; guide != guide_last; ++guide, ++guide_iter) {
-                assert(guide_iter !=
+                ADOBE_ASSERT(guide_iter !=
                        container_guide_set_m[select][layout_attributes_t::align_forward].end());
                 int new_guide(*guide_iter - length);
 
@@ -1535,7 +1536,7 @@ void view_proxy_t::solve_up_cross(::child_iterator first, ::child_iterator last,
             for (guide_set_t::iterator guide_first(forward_child_guide_set.begin()),
                  guide_last(forward_child_guide_set.end()), base_guide(forward_guide_set.begin());
                  guide_first != guide_last; ++guide_first, ++base_guide) {
-                assert(base_guide != forward_guide_set.end());
+                ADOBE_ASSERT(base_guide != forward_guide_set.end());
                 *base_guide = std::max(*base_guide, *guide_first + forward_iter_length);
             }
         } break;
@@ -1553,7 +1554,7 @@ void view_proxy_t::solve_up_cross(::child_iterator first, ::child_iterator last,
             for (guide_set_t::iterator guide_first(reverse_child_guide_set.begin()),
                  guide_last(reverse_child_guide_set.end()), base_guide(reverse_guide_set.begin());
                  guide_first != guide_last; ++guide_first, ++base_guide) {
-                assert(base_guide != reverse_guide_set.end());
+                ADOBE_ASSERT(base_guide != reverse_guide_set.end());
                 *base_guide = std::max(*base_guide, *guide_first + reverse_iter_length);
             }
         } break;
