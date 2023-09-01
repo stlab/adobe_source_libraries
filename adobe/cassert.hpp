@@ -26,19 +26,10 @@
     If undefined, \c ADOBE_ASSERT(p) is defined to be \c assert(p). \c ADOBE_ASSERT may be defined
     by library clients to us an alternative \c assert() mechanism. The result of mapping
     \c ADOBE_ASSERT to a function with semantics that differ from \c assert() are undefined.
-
-    In \c DEBUG mode Library clients may define \c THROW_EXCEPTION_INSTEAD_OF_ASSERT to throw std::logic_error instead of
-    \c assert() for debugging. Use of \c NDEBUG overrides this and continues with \c assert()
 */
 
 #ifndef ADOBE_ASSERT
-
-#if defined(ASL_THROW_EXCEPTION_INSTEAD_OF_ASSERT) && (defined(DEBUG) || defined(_DEBUG))
-#define ADOBE_ASSERT(p) if( !(p) ) throw std::logic_error(#p)
-#else
 #define ADOBE_ASSERT(p) assert(p)
-#endif
-
 #endif
 
 /**************************************************************************************************/
