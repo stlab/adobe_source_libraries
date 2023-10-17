@@ -362,6 +362,8 @@ constexpr T* construct_at(T* p, Args&&... args) {
 }
 
 #else
+
+template <class T, class... Args>
 auto construct_at(T* p, Args&&... args) -> decltype(std::construct_at(p, std::forward<Args>(args)...)) {
     return std::construct_at(p, std::forward<Args>(args)...);
 }
