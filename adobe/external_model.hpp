@@ -11,9 +11,9 @@
 #include <adobe/config.hpp>
 
 #include <deque>
+#include <functional>
 #include <map>
 
-#include <boost/function.hpp>
 #include <boost/signals2/signal.hpp>
 
 #include <adobe/any_regular_fwd.hpp>
@@ -35,8 +35,8 @@ namespace adobe {
  */
 class external_model_t : boost::noncopyable {
 public:
-    typedef boost::signals2::connection connection_t;
-    typedef boost::function<void(const any_regular_t&)> monitor_t;
+    using connection_t = boost::signals2::connection;
+    using monitor_t = std::function<void(const any_regular_t&)>;
 
     void add_cell(name_t);
 

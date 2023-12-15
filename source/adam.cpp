@@ -13,7 +13,6 @@
 #include <vector>
 
 #include <boost/bind/bind.hpp>
-#include <boost/function.hpp>
 #include <boost/tuple/tuple.hpp>
 
 #include <adobe/algorithm/find.hpp>
@@ -33,6 +32,7 @@
 
 #ifndef NDEBUG
 
+#include <functional>
 #include <iostream>
 
 #endif // NDEBUG
@@ -233,7 +233,7 @@ private:
     };
 
     struct cell_t {
-        typedef boost::function<any_regular_t()> calculator_t;
+        using calculator_t = std::function<any_regular_t()>;
 
         typedef empty_copy<boost::signals2::signal<void(bool)>> monitor_invariant_list_t;
         typedef empty_copy<boost::signals2::signal<void(const any_regular_t&)>>
@@ -305,7 +305,7 @@ private:
         void clear_dirty() {
             dirty_m = false;
             relation_count_m = initial_relation_count_m;
-            term_m.clear();
+            term_m = {};
             evaluated_m = specifier_m == access_input ||
                           specifier_m == access_constant /* || calculator_m.empty() */;
 
@@ -486,7 +486,7 @@ sheet_t::implementation_t::cell_t::cell_t(access_specifier_t specifier, name_t n
                                           const calculator_t& calculator, std::size_t cell_set_pos,
                                           cell_t* input)
     : specifier_m(specifier), name_m(name), calculator_m(calculator), linked_m(false),
-      invariant_m(false), priority_m(0), resolved_m(false), evaluated_m(calculator_m.empty()),
+      invariant_m(false), priority_m(0), resolved_m(false), evaluated_m(!calculator_m),
       relation_count_m(0), initial_relation_count_m(0), cell_set_pos_m(cell_set_pos),
       interface_input_m(input) {}
 
@@ -1528,7 +1528,7 @@ any_regular_t sheet_t::implementation_t::get(name_t variable_name) {
         assert(cell.interface_input_m &&
                "FATAL (sparent) : Only interface cells should be on the get stack.");
 
-        if (!get_stack_m.back().second && !cell.term_m.empty()) {
+        if (!get_stack_m.back().second && cell.term_m) {
             get_stack_m.back().second = true;
             return cell.term_m();
         } else {

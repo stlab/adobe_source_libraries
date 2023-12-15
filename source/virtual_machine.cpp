@@ -8,6 +8,7 @@
 #include <boost/config.hpp>
 
 #include <cmath>
+#include <functional>
 #include <map>
 #include <mutex>
 #include <numeric>
@@ -85,8 +86,8 @@ namespace {
 using namespace adobe::literals;
 
 typedef void (adobe::virtual_machine_t::implementation_t::*operator_t)();
-typedef boost::function<adobe::any_regular_t(const adobe::array_t&)> array_function_t;
-typedef boost::function<adobe::any_regular_t(const adobe::dictionary_t&)> dictionary_function_t;
+using array_function_t = std::function<adobe::any_regular_t(const adobe::array_t&)>;
+using dictionary_function_t = std::function<adobe::any_regular_t(const adobe::dictionary_t&)>;
 
 typedef vector<adobe::any_regular_t> stack_type; // REVISIT (sparent) : GCC 3.1 the symbol stack_t
 // conflicts with a symbol in signal.h
@@ -271,37 +272,37 @@ void throw_function_not_defined(adobe::name_t function_name) {
 /**************************************************************************************************/
 
 struct bitwise_and_t {
-    inline boost::uint32_t operator()(boost::uint32_t x, boost::uint32_t y) const { return x & y; }
+    inline std::uint32_t operator()(std::uint32_t x, std::uint32_t y) const { return x & y; }
 };
 
 /**************************************************************************************************/
 
 struct bitwise_xor_t {
-    inline boost::uint32_t operator()(boost::uint32_t x, boost::uint32_t y) const { return x ^ y; }
+    inline std::uint32_t operator()(std::uint32_t x, std::uint32_t y) const { return x ^ y; }
 };
 
 /**************************************************************************************************/
 
 struct bitwise_or_t {
-    inline boost::uint32_t operator()(boost::uint32_t x, boost::uint32_t y) const { return x | y; }
+    inline std::uint32_t operator()(std::uint32_t x, std::uint32_t y) const { return x | y; }
 };
 
 /**************************************************************************************************/
 
 struct bitwise_rshift_t {
-    inline boost::uint32_t operator()(boost::uint32_t x, boost::uint32_t y) const { return x >> y; }
+    inline std::uint32_t operator()(std::uint32_t x, std::uint32_t y) const { return x >> y; }
 };
 
 /**************************************************************************************************/
 
 struct bitwise_lshift_t {
-    inline boost::uint32_t operator()(boost::uint32_t x, boost::uint32_t y) const { return x << y; }
+    inline std::uint32_t operator()(std::uint32_t x, std::uint32_t y) const { return x << y; }
 };
 
 /**************************************************************************************************/
 
 struct bitwise_negate_t {
-    inline boost::uint32_t operator()(boost::uint32_t x) const { return ~x; }
+    inline std::uint32_t operator()(std::uint32_t x) const { return ~x; }
 };
 
 /**************************************************************************************************/
@@ -752,7 +753,7 @@ void virtual_machine_t::implementation_t::bitwise_binary_operator() {
     // values to which they point... when and if the vm becomes big enough of a
     // bottleneck to warrant the work.
 
-    boost::uint32_t operand2_value(0); // something reasonable
+    std::uint32_t operand2_value(0); // something reasonable
 
     if (back().type_info() == typeid(adobe::array_t)) {
         adobe::array_t operand2_exp(back().cast<adobe::array_t>());
@@ -760,9 +761,9 @@ void virtual_machine_t::implementation_t::bitwise_binary_operator() {
 
         evaluate(operand2_exp);
         adobe::any_regular_t operand2 = back();
-        operand2_value = static_cast<boost::uint32_t>(operand2.cast<double>());
+        operand2_value = static_cast<std::uint32_t>(operand2.cast<double>());
     } else if (back().type_info() == typeid(double)) {
-        operand2_value = static_cast<boost::uint32_t>(back().cast<double>());
+        operand2_value = static_cast<std::uint32_t>(back().cast<double>());
     } else {
         throw std::logic_error("unknown type");
     }
@@ -770,9 +771,9 @@ void virtual_machine_t::implementation_t::bitwise_binary_operator() {
     pop_back(); // pop operand2
 
     adobe::any_regular_t& operand1 = back();
-    boost::uint32_t operand1_value(static_cast<boost::uint32_t>(operand1.cast<double>()));
+    std::uint32_t operand1_value(static_cast<std::uint32_t>(operand1.cast<double>()));
 
-    boost::uint32_t result(BitwiseOp()(operand1_value, operand2_value));
+    std::uint32_t result(BitwiseOp()(operand1_value, operand2_value));
     operand1.assign(static_cast<double>(result)); // assign operand1 in-place
 }
 
@@ -781,8 +782,8 @@ void virtual_machine_t::implementation_t::bitwise_binary_operator() {
 template <typename BitwiseOp>
 void virtual_machine_t::implementation_t::bitwise_unary_operator() {
     adobe::any_regular_t& operand1 = back();
-    boost::uint32_t operand1_value(static_cast<boost::uint32_t>(operand1.cast<double>()));
-    boost::uint32_t result(BitwiseOp()(operand1_value));
+    std::uint32_t operand1_value(static_cast<std::uint32_t>(operand1.cast<double>()));
+    std::uint32_t result(BitwiseOp()(operand1_value));
 
     operand1.assign(static_cast<double>(result)); // assign operand1 in-place
 }

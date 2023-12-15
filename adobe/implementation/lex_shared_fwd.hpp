@@ -17,7 +17,6 @@
 #include <utility>
 
 #include <boost/operators.hpp>
-#include <boost/static_assert.hpp>
 
 #include <adobe/algorithm/copy.hpp>
 #include <adobe/algorithm/lower_bound.hpp>
@@ -242,7 +241,7 @@ warranties as to string ownership.
 
 template <typename T>
 inline token_range_t static_token_range(T* begin) {
-    BOOST_STATIC_ASSERT(sizeof(T) == sizeof(unsigned char));
+    static_assert(sizeof(T) == sizeof(unsigned char));
 
     T* end(begin);
 

@@ -21,7 +21,6 @@
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/next_prior.hpp>
 #include <boost/operators.hpp>
-#include <boost/type_traits/remove_reference.hpp>
 
 #include <adobe/algorithm/count.hpp>
 #include <adobe/algorithm/equal_range.hpp>

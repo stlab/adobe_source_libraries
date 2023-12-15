@@ -11,6 +11,7 @@
 #include <adobe/config.hpp>
 
 #include <functional>
+#include <type_traits>
 
 #include <boost/range/begin.hpp>
 #include <boost/range/const_iterator.hpp>
@@ -147,7 +148,7 @@ template <typename I, // I models ForwardRange
           typename T, // T == result_type(P)
           typename C, // C models StrictWeakOrdering(T, T)
           typename P> // P models UnaryFunction(value_type(I)) -> T
-inline typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_iterator<I>>::type
+inline typename boost::lazy_disable_if<std::is_same<I, T>, boost::range_iterator<I>>::type
 binary_search(I& r, const T& x, C c, P p) {
     return adobe::binary_search(boost::begin(r), boost::end(r), x, c, p);
 }
@@ -158,7 +159,7 @@ template <typename I, // I models ForwardRange
           typename T, // T == result_type(P)
           typename C, // C models StrictWeakOrdering(T, T)
           typename P> // P models UnaryFunction(value_type(I)) -> T
-inline typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_const_iterator<I>>::type
+inline typename boost::lazy_disable_if<std::is_same<I, T>, boost::range_const_iterator<I>>::type
 binary_search(const I& r, const T& x, C c, P p) {
     return adobe::binary_search(boost::begin(r), boost::end(r), x, c, p);
 }

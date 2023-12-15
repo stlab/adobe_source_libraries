@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <cassert>
 #include <functional>
+#include <type_traits>
 #include <utility>
 
 #include <boost/next_prior.hpp>
@@ -189,7 +190,7 @@ template <typename I, // I models ForwardRange
           typename T, // T == result_type(P)
           typename C, // C models StrictWeakOrdering(T, T)
           typename P> // P models UnaryFunction(value_type(I)) -> T
-inline typename boost::lazy_disable_if<boost::is_same<I, T>, implementation::lazy_range<I>>::type
+inline typename boost::lazy_disable_if<std::is_same<I, T>, implementation::lazy_range<I>>::type
 equal_range(I& r, const T& x, C c, P p) {
     return adobe::equal_range(boost::begin(r), boost::end(r), x, c, p);
 }
@@ -205,7 +206,7 @@ template <typename I, // I models ForwardRange
           typename C, // C models StrictWeakOrdering(T, T)
           typename P> // P models UnaryFunction(value_type(I)) -> T
 inline
-    typename boost::lazy_disable_if<boost::is_same<I, T>, implementation::lazy_range_const<I>>::type
+    typename boost::lazy_disable_if<std::is_same<I, T>, implementation::lazy_range_const<I>>::type
     equal_range(const I& r, const T& x, C c, P p) {
     return adobe::equal_range(boost::begin(r), boost::end(r), x, c, p);
 }
@@ -246,7 +247,7 @@ equal_range(const I& r, const T& x) {
 template <typename I, // I models ForwardRange
           typename T, // T == result_type(P)
           typename C> // C models StrictWeakOrdering(T, T)
-inline typename boost::lazy_disable_if<boost::is_same<I, T>, implementation::lazy_range<I>>::type
+inline typename boost::lazy_disable_if<std::is_same<I, T>, implementation::lazy_range<I>>::type
 equal_range(I& r, const T& x, C c) {
     return adobe::equal_range(boost::begin(r), boost::end(r), x, c);
 }
@@ -261,7 +262,7 @@ template <typename I, // I models ForwardRange
           typename T, // T == result_type(P)
           typename C> // C models StrictWeakOrdering(T, T)
 inline
-    typename boost::lazy_disable_if<boost::is_same<I, T>, implementation::lazy_range_const<I>>::type
+    typename boost::lazy_disable_if<std::is_same<I, T>, implementation::lazy_range_const<I>>::type
     equal_range(const I& r, const T& x, C c) {
     return adobe::equal_range(boost::begin(r), boost::end(r), x, c);
 }

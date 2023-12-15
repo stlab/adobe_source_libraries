@@ -9,8 +9,6 @@
 
 /**************************************************************************************************/
 
-#include <boost/cstdint.hpp>
-
 #include <string>
 
 #include <adobe/array.hpp>

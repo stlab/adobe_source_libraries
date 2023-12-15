@@ -24,14 +24,13 @@
 #include <adobe/name.hpp>
 #include <adobe/string.hpp>
 
-#include <boost/array.hpp>
 #include <boost/bind/bind.hpp>
-#include <boost/function.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/operators.hpp>
 
 #include <cassert>
+#include <functional>
 #include <iomanip>
 #include <istream>
 #include <list>
@@ -414,7 +413,7 @@ typedef token_range_t(implementation_xml_element_proc_t)(const token_range_t& en
                                                          const attribute_set_t& attribute_set,
                                                          const token_range_t& value);
 
-typedef boost::function<implementation_xml_element_proc_t> xml_element_proc_t;
+using xml_element_proc_t = std::function<implementation_xml_element_proc_t>;
 
 /**************************************************************************************************/
 
@@ -422,9 +421,9 @@ typedef boost::function<implementation_xml_element_proc_t> xml_element_proc_t;
 template <typename O> // O models OutputIterator
 class xml_parser_t : public boost::noncopyable {
 public:
-    typedef xml_element_proc_t callback_proc_t;
-    typedef boost::function<bool(const token_range_t&)> preorder_predicate_t;
-    typedef xml_lex_t::token_type token_type;
+    using callback_proc_t = xml_element_proc_t;
+    using preorder_predicate_t = std::function<bool(const token_range_t&)>;
+    using token_type = xml_lex_t::token_type;
 
     xml_parser_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t& position,
                  preorder_predicate_t predicate, callback_proc_t callback, O output)

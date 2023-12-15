@@ -18,7 +18,6 @@
 #endif
 
 #include <adobe/typeinfo.hpp>
-#include <boost/static_assert.hpp>
 
 /******************************************************************************/
 
@@ -49,7 +48,7 @@ std::ostream& operator<<(std::ostream& s, const typename atomic<T>::type& x) {
 
 typedef adobe::implementation::atomic<std::size_t> atomic_t;
 
-BOOST_STATIC_ASSERT((sizeof(atomic_t::type) == sizeof(atomic_t::value_type)));
+static_assert(sizeof(atomic_t::type) == sizeof(atomic_t::value_type));
 
 /******************************************************************************/
 

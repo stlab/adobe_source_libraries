@@ -12,9 +12,10 @@
 
 #include <adobe/config.hpp>
 
-#include <boost/array.hpp>
 #include <boost/noncopyable.hpp>
 
+#include <array>
+#include <cassert>
 #include <list>
 
 /**************************************************************************************************/
@@ -51,7 +52,7 @@ class byte_toroid_t : boost::noncopyable {
 private:
     enum { block_size_k = 512 };
 
-    typedef boost::array<toroid_node_t, block_size_k> node_block_t;
+    typedef std::array<toroid_node_t, block_size_k> node_block_t;
     typedef std::list<node_block_t> data_set_t;
     typedef std::vector<toroid_header_t> row_header_set_t;
     typedef std::vector<toroid_header_t> col_header_set_t;

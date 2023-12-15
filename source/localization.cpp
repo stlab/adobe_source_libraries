@@ -40,7 +40,7 @@ std::string localization_invoke(const std::string& source) {
     return localization_proc()(source);
 }
 
-bool localization_ready() { return localization_proc(); }
+bool localization_ready() { return static_cast<bool>(localization_proc()); }
 
 /**************************************************************************************************/
 

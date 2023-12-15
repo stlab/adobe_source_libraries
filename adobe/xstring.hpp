@@ -21,7 +21,6 @@
 #include <adobe/xml_parser.hpp>
 
 #include <boost/bind/bind.hpp>
-#include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
 
 #include <cassert>

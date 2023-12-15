@@ -22,10 +22,7 @@
 #include <memory>
 
 #include <boost/operators.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/type_traits/has_nothrow_constructor.hpp>
-#include <boost/type_traits/is_integral.hpp>
-#include <boost/utility/enable_if.hpp>
 
 #include <adobe/algorithm/minmax.hpp>
 #include <adobe/empty.hpp>
@@ -288,7 +285,7 @@ public:
     friend inline bool operator==(const vector& x, const vector& y) {
 #if defined(_MSC_VER) && _MSC_VER == 1600 && _ITERATOR_DEBUG_LEVEL != 0
         return (x.size() == y.size()) &&
-               std::_Equal1(x.begin(), x.end(), y.begin(), std::tr1::false_type());
+               std::_Equal1(x.begin(), x.end(), y.begin(), std::false_type());
 #else
         return (x.size() == y.size()) && std::equal(x.begin(), x.end(), y.begin());
 #endif
@@ -523,7 +520,7 @@ std::ostream& operator<<(std::ostream& out, const vector<T, A>& x) {
 
 /**************************************************************************************************/
 
-BOOST_STATIC_ASSERT(sizeof(vector<int>) == sizeof(void*));
+static_assert(sizeof(vector<int>) == sizeof(void*));
 
 /**************************************************************************************************/
 

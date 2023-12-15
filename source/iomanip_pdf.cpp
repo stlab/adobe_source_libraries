@@ -11,8 +11,6 @@
 
 #include <string>
 
-#include <boost/cstdint.hpp>
-
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
 #include <adobe/iomanip_pdf.hpp>
@@ -134,7 +132,7 @@ void pdf_format::handle_atom(stream_type& os, bool is_push) {
             os << (value.cast<bool>() ? "true" : "false");
         } else if (value.type_info() == typeid(double)) {
             double dbl_val(value.cast<double>());
-            boost::int64_t int_val(static_cast<boost::int64_t>(dbl_val));
+            std::int64_t int_val(static_cast<std::int64_t>(dbl_val));
 
             if (dbl_val == int_val) {
                 os << int_val;

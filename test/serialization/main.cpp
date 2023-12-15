@@ -6,8 +6,6 @@
 
 #include <iostream>
 
-#include <boost/function.hpp>
-
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
 #include <adobe/empty.hpp>

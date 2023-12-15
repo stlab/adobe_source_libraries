@@ -10,9 +10,8 @@
 
 #include <algorithm>
 #include <exception>
-
-#include <tr1/functional>
-#include <tr1/type_traits>
+#include <functional>
+#include <type_traits>
 
 #include <boost/bind/bind.hpp>
 
@@ -136,18 +135,18 @@ typename F::concept_t* make_model(const T& x) {
 }
 
 template <typename F, typename T>
-typename F::concept_t* create_model(const T& x, std::tr1::true_type) {
+typename F::concept_t* create_model(const T& x, std::true_type) {
     return x ? make_model<F>(boost::bind<typename F::result_type>(x)) : 0;
 }
 
 template <typename F, typename T>
-typename F::concept_t* create_model(const T& x, std::tr1::false_type) {
+typename F::concept_t* create_model(const T& x, std::false_type) {
     return make_model<F>(boost::bind<typename F::result_type>(x));
 }
 
 template <typename F, typename T>
 typename F::concept_t* create_model(const T& x) {
-    return create_model<F>(x, std::tr1::is_pointer<T>());
+    return create_model<F>(x, std::is_pointer<T>());
 }
 
 } // namespace implementation
@@ -223,7 +222,7 @@ public:
     // [3.7.2.4] function invocation
     R operator()() const {
         if (!object_m)
-            throw std::tr1::bad_function_call();
+            throw std::bad_function_call();
         return object_m->apply();
     }
 
@@ -245,16 +244,16 @@ public:
         typedef implementation::concept_base_t<concept_t, vtable_type> base_type;
 
         explicit concept_t(const vtable_type* x) : base_type(x) {}
-        R apply() { return apply(typename std::tr1::is_void<R>()); }
+        R apply() { return apply(typename std::is_void<R>()); }
 
-        void apply(std::tr1::true_type) {
+        void apply(std::true_type) {
             string_t message;
             this->vtable_m->apply(this, message);
             if (message)
                 throw marshaled_exception(move(message));
         }
 
-        R apply(std::tr1::false_type) {
+        R apply(std::false_type) {
             string_t message;
             R result = this->vtable_m->apply(this, message);
             if (message)
@@ -270,10 +269,10 @@ public:
         explicit model(T x) : base_type(&vtable_s), function_m(x) {}
 
         static R apply(concept_t* x, string_t& message) {
-            return apply(x, message, typename std::tr1::is_void<R>());
+            return apply(x, message, typename std::is_void<R>());
         }
 
-        static void apply(concept_t* x, string_t& message, std::tr1::true_type) {
+        static void apply(concept_t* x, string_t& message, std::true_type) {
             try {
                 static_cast<model*>(x)->function_m();
             } catch (...) {
@@ -281,7 +280,7 @@ public:
             }
         }
 
-        static R apply(concept_t* x, string_t& message, std::tr1::false_type) {
+        static R apply(concept_t* x, string_t& message, std::false_type) {
             R result;
             try {
                 result = static_cast<model*>(x)->function_m();

@@ -33,10 +33,6 @@
 #pragma warning(pop)
 #endif
 
-#if defined(BOOST_HAS_THREADS)
-#include <boost/thread/xtime.hpp>
-#endif
-
 #if defined(BOOST_HAS_GETTIMEOFDAY)
 #include <sys/time.h>
 #endif
@@ -87,7 +83,7 @@ namespace {
 struct uuid_state_t {
     adobe::uuid_time_t ts_m;   /* saved timestamp */
     adobe::uuid_node_t node_m; /* saved node ID */
-    boost::uint16_t cs_m;      /* saved clock sequence */
+    std::uint16_t cs_m;        /* saved clock sequence */
 };
 
 /**************************************************************************************************/
@@ -136,9 +132,7 @@ adobe::md5_t::digest_t get_generic_random_info() {
               pid_m(getpid()), uid_m(getuid()), gid_m(getgid())
 #endif
         {
-#if defined(BOOST_HAS_THREADS)
-            boost::xtime_get(&time_m, boost::TIME_UTC_);
-#endif
+            time_m = std::chrono::high_resolution_clock::now();
 #if ADOBE_HAS_UNISTD_H()
             gethostname(hostname_m, 256);
 #endif
@@ -148,9 +142,7 @@ adobe::md5_t::digest_t get_generic_random_info() {
         }
 
         std::size_t thread_id_m;
-#if defined(BOOST_HAS_THREADS)
-        boost::xtime time_m;
-#endif
+        std::chrono::time_point<std::chrono::high_resolution_clock> time_m;
 #if ADOBE_HAS_UNISTD_H()
         pid_t pid_m;
         uid_t uid_m;
@@ -270,8 +262,8 @@ void get_ieee_node_identifier(uuid_node_t* node) {
     This sample doesn't do that, but it's closer than the last one.
 */
 
-boost::uint64_t true_random() {
-    boost::uint64_t result;
+std::uint64_t true_random() {
+    std::uint64_t result;
     adobe::md5_t::digest_t seed(get_random_info());
 
     std::memcpy(&result, &seed[0], sizeof(result));
@@ -282,13 +274,13 @@ boost::uint64_t true_random() {
 /**************************************************************************************************/
 
 /* read_state -- read UUID generator state from non-volatile store */
-boost::int16_t read_state(boost::uint16_t* clockseq, uuid_time_t* timestamp, uuid_node_t* node) {
+std::int16_t read_state(std::uint16_t* clockseq, uuid_time_t* timestamp, uuid_node_t* node) {
     init_zuid_sys_dep_once();
 
     bool& state_inited(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_uuid_state_inited));
 
     if (!state_inited)
-        return boost::int16_t(0);
+        return std::int16_t(0);
 
     uuid_state_t& state(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_uuid_state));
 
@@ -296,11 +288,11 @@ boost::int16_t read_state(boost::uint16_t* clockseq, uuid_time_t* timestamp, uui
     *timestamp = state.ts_m;
     *node = state.node_m;
 
-    return boost::int16_t(1);
+    return std::int16_t(1);
 }
 
 /* write_state -- save UUID generator state back to non-volatile storage */
-void write_state(boost::uint16_t clockseq, uuid_time_t timestamp, uuid_node_t node) {
+void write_state(std::uint16_t clockseq, uuid_time_t timestamp, uuid_node_t node) {
     init_zuid_sys_dep_once();
 
     bool& state_inited(ADOBE_THREAD_LOCAL_STORAGE_ACCESS(zuid_uuid_state_inited));

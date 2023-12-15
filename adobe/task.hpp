@@ -320,51 +320,6 @@ inline void run_with_cancellation_token(const F& f, cancellation_token token) {
 
 /**************************************************************************************************/
 
-namespace details {
-
-/*
-    REVISIT (sparent) : Simple optional - could use Boost but don't want to add the depenency.
-*/
-
-template <typename T>
-class optional {
-public:
-    optional() : initialized_(false) {}
-
-    optional& operator=(T&& x) {
-        if (initialized_)
-            get() = std::forward<T>(x);
-        else
-            new (&storage_) T(std::forward<T>(x));
-        initialized_ = true;
-        return *this;
-    }
-
-    T& get() {
-        assert(initialized_ && "getting unset optional.");
-        return *static_cast<T*>(static_cast<void*>(&storage_));
-    }
-
-    explicit operator bool() const { return initialized_; }
-
-    ~optional() {
-        if (initialized_)
-            get().~T();
-    }
-
-private:
-    optional(const optional&);
-    optional operator=(const optional&);
-
-    typename std::aligned_storage<sizeof(T), std::alignment_of<T>::value>::type storage_;
-
-    bool initialized_;
-};
-
-} // namespace details
-
-/**************************************************************************************************/
-
 /*!
 
     A function object that will execute f with the given cancellation_token in a
@@ -384,7 +339,7 @@ public:
         : function_(std::move(f)), token_(std::move(token)) {}
 
     R operator()(Arg&&... arg) const {
-        details::optional<R> r;
+        std::optional<R> r;
 
         run_with_cancellation_token([&] { r = function_(std::forward<Arg>(arg)...); }, token_);
 

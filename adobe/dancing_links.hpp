@@ -18,7 +18,6 @@
 #include <iostream>
 #endif
 
-#include <boost/function.hpp>
 #include <boost/noncopyable.hpp>
 
 #include <adobe/implementation/toroid.hpp>

@@ -12,7 +12,8 @@
 
 #include <adobe/config.hpp>
 
-#include <boost/function.hpp>
+#include <functional>
+#include <string>
 
 /**************************************************************************************************/
 
@@ -30,7 +31,7 @@ namespace adobe {
     The proc used here can expect utf-8 coming in and should output utf-8 encoded text in kind.
 */
 
-typedef boost::function<std::string(const std::string&)> localization_lookup_proc_t;
+using localization_lookup_proc_t = std::function<std::string(const std::string&)>;
 
 void localization_register(const localization_lookup_proc_t& proc);
 

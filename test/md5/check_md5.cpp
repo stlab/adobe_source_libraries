@@ -5,12 +5,12 @@
 */
 
 #include <array>
+#include <filesystem>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem/path.hpp>
 #include <boost/version.hpp>
 
 #include <adobe/config.hpp>
@@ -33,8 +33,8 @@ int main(int argc, char* argv[]) {
 
     try {
         adobe::md5_t m;
-        boost::filesystem::path file_path(argv[2]);
-        boost::filesystem::ifstream stream(file_path, std::ios::binary | std::ios::in);
+        std::filesystem::path file_path(argv[2]);
+        std::ifstream stream(file_path, std::ios::binary | std::ios::in);
 
         while (stream.good()) {
             std::array<std::ifstream::char_type, 256 * 1024> buffer;

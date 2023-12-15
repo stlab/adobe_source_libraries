@@ -7,9 +7,10 @@
 
 /**************************************************************************************************/
 
+#include <filesystem>
+#include <fstream>
 #include <iterator>
 
-#include <boost/filesystem/fstream.hpp>
 #include <boost/program_options.hpp>
 
 #include <adobe/adam.hpp>
@@ -88,7 +89,7 @@ int main(int argc, char* argv[]) {
         for (std::vector<std::string>::const_iterator i = input_files.begin(),
                                                       end = input_files.end();
              i != end; ++i) {
-            boost::filesystem::path in_path(*i);
+            std::filesystem::path in_path(*i);
             const auto& native_path{in_path.native()};
             std::ifstream in_stream(native_path.c_str());
 

@@ -76,7 +76,7 @@ else()
 endif()
 
 function(target_link_boost target)
-    target_link_libraries(${target} PUBLIC Boost::system Boost::filesystem)
+    target_link_libraries(${target} PUBLIC Boost::system)
 endfunction(target_link_boost)
 
 function(target_link_boost_test target)
@@ -85,7 +85,7 @@ function(target_link_boost_test target)
 endfunction(target_link_boost_test)
 
 message("ASL_INFO: Using system boost.")
-set(ASL_BOOST_COMPONENTS system filesystem unit_test_framework program_options)
+set(ASL_BOOST_COMPONENTS system unit_test_framework program_options)
 find_package(Boost COMPONENTS ${ASL_BOOST_COMPONENTS} REQUIRED)
 
 add_subdirectory(source)

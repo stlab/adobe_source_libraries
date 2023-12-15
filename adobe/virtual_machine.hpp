@@ -11,10 +11,10 @@
 #include <adobe/config.hpp>
 
 #include <bitset>
+#include <functional>
 #include <vector>
 
 #define BOOST_FUNCTION_NO_DEPRECATED
-#include <boost/function.hpp>
 #include <boost/operators.hpp>
 
 #include <adobe/any_regular.hpp>
@@ -29,7 +29,7 @@ namespace adobe {
 /**************************************************************************************************/
 /*
     Note: For all bitwise operators the numeric data type (double) will be cast down to a
-          boost::uint32_t for the operation.
+          std::uint32_t for the operation.
 */
 class virtual_machine_t {
 public:
@@ -42,16 +42,16 @@ public:
     typedef any_regular_t(numeric_index_lookup_signature_t)(const any_regular_t&,
                                                             std::size_t index);
 
-    typedef boost::function<variable_lookup_signature_t> variable_lookup_t;
-    typedef boost::function<dictionary_function_lookup_signature_t> dictionary_function_lookup_t;
-    typedef boost::function<array_function_lookup_signature_t> array_function_lookup_t;
-    typedef boost::function<named_index_lookup_signature_t> named_index_lookup_t;
-    typedef boost::function<numeric_index_lookup_signature_t> numeric_index_lookup_t;
+    using variable_lookup_t = std::function<variable_lookup_signature_t>;
+    using dictionary_function_lookup_t = std::function<dictionary_function_lookup_signature_t>;
+    using array_function_lookup_t = std::function<array_function_lookup_signature_t>;
+    using named_index_lookup_t = std::function<named_index_lookup_signature_t>;
+    using numeric_index_lookup_t = std::function<numeric_index_lookup_signature_t>;
 
     typedef any_regular_t(binary_op_override_signature_t)(const any_regular_t&,
                                                           const any_regular_t&);
 
-    typedef boost::function<binary_op_override_signature_t> binary_op_override_t;
+    using binary_op_override_t = std::function<binary_op_override_signature_t>;
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
     virtual_machine_t();

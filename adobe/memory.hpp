@@ -539,7 +539,7 @@ private:
     const void* storage() const { return &data_m; }
     storage_t data_m;
 
-    BOOST_STATIC_ASSERT(sizeof(T) <= sizeof(storage_t));
+    static_assert(sizeof(T) <= sizeof(storage_t));
 };
 
 //! @} //end addtogroup memory
