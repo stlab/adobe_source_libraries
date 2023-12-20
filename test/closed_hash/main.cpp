@@ -39,12 +39,18 @@ void test_movable(const T& x) {
     // move construction (and RVO)
     const void* addr = remote_address(y);
     T z = std::move(y);
+#ifndef __clang_analyzer__
+    // Use after move
     BOOST_CHECK(y == T());
+#endif
     BOOST_CHECK(z == x);
     BOOST_CHECK(remote_address(z) == addr);
     // move assignment
     y = std::move(z);
+#ifndef __clang_analyzer__
+    // Use after move
     BOOST_CHECK(z == T());
+#endif
     BOOST_CHECK(y == x);
     BOOST_CHECK(remote_address(y) == addr);
 }
@@ -158,7 +164,7 @@ BOOST_AUTO_TEST_CASE(closed_hash) {
         x.reserve(2 * x.capacity());
         BOOST_CHECK(x.capacity() > c);
         BOOST_CHECK(x.size() == 3);
-        BOOST_CHECK(addr = remote_address(x.find(2)->second));
+        BOOST_CHECK(addr == remote_address(x.find(2)->second));
     }
 
 #if 0

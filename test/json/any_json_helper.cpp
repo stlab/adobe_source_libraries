@@ -8,6 +8,7 @@
 
 // stdc++
 #include <any>
+#include <array>
 #include <iostream>
 #include <vector>
 
@@ -38,27 +39,33 @@ struct any_json_helper_t {
     typedef object_type::value_type pair_type;
 
     static json_type type(const value_type& x) {
-        // REVISIT (make this thread safe) - nuke json_type and add functions to table directly.
-        bool inited = false;
-
-        static struct type_table_t {
+        struct type_table_t {
             const std::type_info* type_info_;
             json_type type_;
-        } table[] = {
-            {&typeid(object_type), json_type::object}, {&typeid(array_type), json_type::array},
-            {&typeid(string_type), json_type::string}, {&typeid(double), json_type::number},
-            {&typeid(bool), json_type::boolean},       {&typeid(void), json_type::null}};
-        static const auto projection = [](const type_table_t& x) -> const std::type_info& {
-            return *x.type_info_;
         };
 
-        if (!inited) {
-            adobe::sort(table, adobe::less(), projection);
-            inited = true;
-        }
+        struct projection_t {
+            auto operator()(const type_table_t& x) const -> const std::type_info& {
+                return *x.type_info_;
+            }
+        };
 
-        auto p = adobe::lower_bound(table, x.type(), adobe::less(), projection);
-        assert(p != end(table) && "invalid type for serialization");
+        static const auto table{[] {
+            array<type_table_t, 6> result{{{&typeid(object_type), json_type::object},
+                                           {&typeid(array_type), json_type::array},
+                                           {&typeid(string_type), json_type::string},
+                                           {&typeid(double), json_type::number},
+                                           {&typeid(bool), json_type::boolean},
+                                           {&typeid(void), json_type::null}}};
+
+            adobe::sort(result, adobe::less(), projection_t{});
+
+            return result;
+        }()};
+
+        auto p = adobe::lower_bound(table, x.type(), adobe::less(), projection_t{});
+        assert((p != end(table)) && (projection_t{}(*p) == x.type()) &&
+               "invalid type for serialization");
 
         return p->type_;
     }

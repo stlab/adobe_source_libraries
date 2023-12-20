@@ -33,7 +33,8 @@ BOOST_AUTO_TEST_CASE(conversion_test) {
     using adobe::runtime_cast;
 
     {
-        base* x = new derived;
+        derived d;
+        base* x = &d;
         BOOST_CHECK(runtime_cast<derived*>(x));
         BOOST_CHECK(runtime_cast<const derived*>(x));
         // BOOST_CHECK(runtime_cast<not_derived*>(x));
@@ -44,7 +45,8 @@ BOOST_AUTO_TEST_CASE(conversion_test) {
     }
 
     {
-        const base* x = new derived;
+        const derived d;
+        const base* x = &d;
         // BOOST_CHECK(runtime_cast<derived*>(x));
         BOOST_CHECK(runtime_cast<const derived*>(x));
         derived y = runtime_cast<const derived&>(*x);
