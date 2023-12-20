@@ -28,13 +28,7 @@
 
 #include <adobe/type_inspection.hpp> // ADOBE_HAS_TYPE/ADOBE_HAS_MEMBER
 
-
-// forward declare std::function so we can specialize against it
-namespace std {
-template <typename F>
-class function;
-}
-
+#include <functional>
 
 namespace adobe {
 

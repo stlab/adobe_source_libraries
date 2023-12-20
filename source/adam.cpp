@@ -30,9 +30,10 @@
 #include <adobe/table_index.hpp>
 #include <adobe/virtual_machine.hpp>
 
+#include <functional>
+
 #ifndef NDEBUG
 
-#include <functional>
 #include <iostream>
 
 #endif // NDEBUG
@@ -305,7 +306,7 @@ private:
         void clear_dirty() {
             dirty_m = false;
             relation_count_m = initial_relation_count_m;
-            term_m = {};
+            term_m = nullptr;
             evaluated_m = specifier_m == access_input ||
                           specifier_m == access_constant /* || calculator_m.empty() */;
 
