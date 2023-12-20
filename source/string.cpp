@@ -55,21 +55,21 @@ void string_t::push_back(value_type c)
 
 /**************************************************************************************************/
 
-string16_t::string16_t(const boost::uint16_t* s, std::size_t length)
+string16_t::string16_t(const std::uint16_t* s, std::size_t length)
 {
 	assign(s, s + length);
 }
 
-string16_t::string16_t(const boost::uint16_t* s)
+string16_t::string16_t(const std::uint16_t* s)
 {
-	const boost::uint16_t* last(s);
+	const std::uint16_t* last(s);
 	while (0 != *last) ++last;
 	assign(s, last);
 }
 
-const boost::uint16_t* string16_t::c_str() const
+const std::uint16_t* string16_t::c_str() const
 {
-	static const boost::uint16_t empty_string_s(0);
+	static const std::uint16_t empty_string_s(0);
 	
 	return empty() ? &empty_string_s : &storage_m[0];
 }
@@ -89,9 +89,9 @@ void string16_t::push_back(value_type c)
 	storage_m.push_back(value_type(0));
 }
 
-void string16_t::append(const boost::uint16_t* s)
+void string16_t::append(const std::uint16_t* s)
 {
-	const boost::uint16_t* last(s);
+	const std::uint16_t* last(s);
 	while (0 != *last) ++last;
 	append(s, last);
 }

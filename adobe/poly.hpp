@@ -15,12 +15,12 @@
 #include <boost/mpl/or.hpp>
 #include <boost/type_traits/has_nothrow_constructor.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include <boost/type_traits/remove_pointer.hpp>
-#include <boost/type_traits/remove_reference.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <adobe/implementation/swap.hpp>
 #include <adobe/typeinfo.hpp>
+
+#include <type_traits>
 
 /**************************************************************************************************/
 
@@ -46,7 +46,7 @@ namespace adobe {
 
 template <typename T, typename U>
 struct is_base_derived_or_same
-    : boost::mpl::or_<boost::is_base_of<T, U>, boost::is_base_of<U, T>, boost::is_same<T, U>> {};
+    : boost::mpl::or_<boost::is_base_of<T, U>, boost::is_base_of<U, T>, std::is_same<T, U>> {};
 #endif
 // !defined(ADOBE_NO_DOCUMENTATION)
 
@@ -169,7 +169,7 @@ template <typename T, int N = sizeof(storage_t)>
 struct is_small {
     enum {
         value = sizeof(T) <= N && (boost::has_nothrow_constructor<typename T::value_type>::value ||
-                                   boost::is_same<std::string, typename T::value_type>::value)
+                                   std::is_same<std::string, typename T::value_type>::value)
     };
 };
 

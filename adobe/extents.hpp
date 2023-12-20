@@ -10,9 +10,9 @@
 
 #include <adobe/config.hpp>
 
-#include <boost/array.hpp>
 #include <boost/operators.hpp>
 
+#include <array>
 #include <vector>
 
 /**************************************************************************************************/
@@ -81,7 +81,7 @@ struct extents_t :
         friend bool operator==(const slice_t& x, const slice_t& y);
     };
 
-    boost::array<slice_t, 2> slice_m;
+    std::array<slice_t, 2> slice_m;
 
     slice_t& vertical() { return slice_m[extents_slices_t::vertical]; }
     slice_t& horizontal() { return slice_m[extents_slices_t::horizontal]; }

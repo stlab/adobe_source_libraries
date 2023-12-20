@@ -19,11 +19,10 @@
 #include <adobe/name.hpp>
 #include <adobe/string.hpp>
 
+#include <array>
 #include <cstdio>
+#include <functional>
 #include <iostream>
-
-#include <boost/array.hpp>
-#include <boost/function.hpp>
 
 /**************************************************************************************************/
 
@@ -45,9 +44,9 @@ namespace adobe {
 template <std::size_t S, typename E> // E models Enumeration
 struct lex_base_t {
 public:
-    typedef std::istream::pos_type pos_type;
-    typedef boost::function<void()> parse_token_proc_t;
-    typedef lex_token_t<E> token_type;
+    using pos_type = std::istream::pos_type;
+    using parse_token_proc_t = std::function<void()>;
+    using token_type = lex_token_t<E>;
 
     lex_base_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t& position);
 
@@ -110,8 +109,8 @@ private:
     line_position_t line_position_m;
     parse_token_proc_t parse_proc_m;
     bool skip_white_m;
-    boost::array<char, 8> putback_m; // stack-based is faster
-    std::size_t index_m;             // for putback_m
+    std::array<char, 8> putback_m; // stack-based is faster
+    std::size_t index_m;           // for putback_m
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
     circular_queue<lex_fragment_t> last_token_m; // N token lookahead
@@ -291,8 +290,8 @@ struct lex_fragment_t {
 template <std::size_t S, typename I> // I models InputIterator
 struct stream_lex_base_t {
 public:
-    typedef std::istream::pos_type pos_type;
-    typedef boost::function<void(char)> parse_token_proc_t;
+    using pos_type = std::istream::pos_type;
+    using parse_token_proc_t = std::function<void(char)>;
 
     stream_lex_base_t(I first, I last, const line_position_t& position);
 
@@ -329,8 +328,8 @@ private:
     line_position_t line_position_m;
     parse_token_proc_t parse_proc_m;
     bool skip_white_m;
-    boost::array<char, 8> putback_m; // stack-based is faster
-    std::size_t index_m;             // for putback_m
+    std::array<char, 8> putback_m; // stack-based is faster
+    std::size_t index_m;           // for putback_m
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
     circular_queue<implementation::lex_fragment_t> last_token_m; // N token lookahead

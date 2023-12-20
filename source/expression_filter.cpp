@@ -103,11 +103,11 @@ copy_until(I first, I last, O output,
 
 /**************************************************************************************************/
 
-#define ADOBE_CODE_POINT(x) boost::uint32_t(x##UL)
+#define ADOBE_CODE_POINT(x) std::uint32_t(x##UL)
 
 /**************************************************************************************************/
 
-typedef pair<string, boost::uint32_t> code_point_set_value_type;
+typedef pair<string, std::uint32_t> code_point_set_value_type;
 typedef vector<code_point_set_value_type> code_point_set_t;
 
 /**************************************************************************************************/
@@ -403,7 +403,7 @@ const code_point_set_t& code_point_set() {
 
 /**************************************************************************************************/
 
-typedef adobe::table_index<const boost::uint32_t, const code_point_set_t::value_type>
+typedef adobe::table_index<const std::uint32_t, const code_point_set_t::value_type>
     code_point_index_type;
 
 /**************************************************************************************************/
@@ -427,7 +427,7 @@ const code_point_index_type& code_point_index() {
 
 /**************************************************************************************************/
 
-code_point_index_type::const_iterator code_point_index_find(boost::uint32_t code_point) {
+code_point_index_type::const_iterator code_point_index_find(std::uint32_t code_point) {
     const code_point_index_type& index(code_point_index());
     code_point_index_type::const_iterator found(adobe::lower_bound(
         index, code_point, adobe::compare_members(&code_point_set_t::value_type::second)));
@@ -482,7 +482,7 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-const string& entity_map_find(boost::uint32_t code_point) {
+const string& entity_map_find(std::uint32_t code_point) {
     code_point_index_type::const_iterator found(code_point_index_find(code_point));
 
     if (found == code_point_index().end())
@@ -493,12 +493,12 @@ const string& entity_map_find(boost::uint32_t code_point) {
 
 /**************************************************************************************************/
 
-boost::uint32_t entity_map_find(const string& entity) {
+std::uint32_t entity_map_find(const string& entity) {
     string::const_iterator first(entity.begin());
 
     if (entity.size() > 1 && *first == '#') {
         string::const_iterator last(entity.end());
-        boost::uint32_t result;
+        std::uint32_t result;
 
         ++first;
 
@@ -528,7 +528,7 @@ bool needs_entity_escape(const string& value) {
             return true;
 
         code_point_index_type::const_iterator found(
-            code_point_index_find(static_cast<boost::uint32_t>(c)));
+            code_point_index_find(static_cast<std::uint32_t>(c)));
 
         if (found != code_point_index().end())
             return true;
@@ -548,7 +548,7 @@ string entity_escape(const string& value) {
         unsigned char c(*iter);
 
         code_point_index_type::const_iterator found(
-            code_point_index_find(static_cast<boost::uint32_t>(c)));
+            code_point_index_find(static_cast<std::uint32_t>(c)));
 
         if (found != code_point_index().end()) {
             result.push_back('&');
@@ -611,7 +611,7 @@ string entity_unescape(const string& value) {
 
         // snip out the entity and look it up in the map
 
-        boost::uint32_t code_point(entity_map_find(string(next, next_end)));
+        std::uint32_t code_point(entity_map_find(string(next, next_end)));
 
         if (code_point != 0)
             adobe::copy_utf<char>(&code_point, &code_point + 1, std::back_inserter(result));

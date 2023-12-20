@@ -25,9 +25,7 @@
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/next_prior.hpp>
 #include <boost/operators.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/type_traits/has_nothrow_constructor.hpp>
-#include <boost/type_traits/remove_reference.hpp>
 
 #include <adobe/algorithm/lower_bound.hpp>
 #include <adobe/conversion.hpp>
@@ -244,10 +242,10 @@ private:
         either equal to the sizeof a pointer or a lower power of two so this packs tightly.
         */
 
-        BOOST_STATIC_ASSERT(!(sizeof(A) == sizeof(void*) || sizeof(A) == 0) ||
-                            (sizeof(compact_header_t) ==
-                             (sizeof(allocator_type) + 2 * sizeof(node_base_t) +
-                              2 * sizeof(std::size_t))));
+        static_assert(!(sizeof(A) == sizeof(void*) || sizeof(A) == 0) ||
+                      (sizeof(compact_header_t) ==
+                       (sizeof(allocator_type) + 2 * sizeof(node_base_t) +
+                        2 * sizeof(std::size_t))));
 
         aligned_storage<compact_header_t> header_m;
         node_t storage_m[1];
@@ -677,7 +675,7 @@ public:
 
 /**************************************************************************************************/
 
-BOOST_STATIC_ASSERT(sizeof(closed_hash_set<int>) == sizeof(void*));
+static_assert(sizeof(closed_hash_set<int>) == sizeof(void*));
 
 
 #ifndef ADOBE_NO_DOCUMENTATION

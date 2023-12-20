@@ -11,6 +11,8 @@
 #include <adobe/config.hpp>
 #include <adobe/extents.hpp>
 
+#include <array>
+
 /*!
 \defgroup layout_attributes Layout Attributes
 \ingroup layout_library
@@ -86,7 +88,7 @@ struct layout_attributes_t
     int indent_m;
     bool create_m;
     spacing_t spacing_m;
-    boost::array<slice_t, 2> slice_m;
+    std::array<slice_t, 2> slice_m;
 
     // containers only
     placement_t placement_m;
@@ -126,7 +128,7 @@ struct place_data_t
         guide_set_t guide_set_m;
     };
 
-    boost::array<slice_t, 2> slice_m;
+    std::array<slice_t, 2> slice_m;
 
     slice_t& vertical() { return slice_m[extents_slices_t::vertical]; }
     slice_t& horizontal() { return slice_m[extents_slices_t::horizontal]; }

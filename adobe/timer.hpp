@@ -106,13 +106,10 @@ ones used above.
 #undef WINDOWS_LEAN_AND_MEAN
 #undef ADOBE_UNDEFINE_WINDOWS_LEAN_AND_MEAN
 #endif
-#elif defined(BOOST_HAS_THREADS)
-#include <boost/thread/xtime.hpp>
-#elif defined(BOOST_HAS_GETTIMEOFDAY)
-#include <sys/time.h>
 #endif
 
 #include <cassert>
+#include <chrono>
 #include <iostream>
 #include <vector>
 
@@ -123,13 +120,7 @@ namespace adobe {
 /**************************************************************************************************/
 
 class timer_t : boost::totally_ordered<timer_t> {
-#if ADOBE_PLATFORM_WIN
-    typedef LARGE_INTEGER value_type;
-#elif defined(BOOST_HAS_THREADS)
-    typedef boost::xtime value_type;
-#elif defined(BOOST_HAS_GETTIMEOFDAY)
-    typedef timeval value_type;
-#endif
+    using value_type = std::chrono::time_point<std::chrono::high_resolution_clock>;
 
     typedef std::vector<double> accumulator_type;
 
@@ -139,19 +130,11 @@ public:
 #ifndef ADOBE_NO_DOCUMENTATION
 
     timer_t() {
-#if ADOBE_PLATFORM_WIN
-        (void)::QueryPerformanceFrequency(&frequency_m);
-#endif
-
         reset();
     }
 
     timer_t(const timer_t& rhs)
         : epoch_m(rhs.epoch_m), split_m(rhs.split_m), time_set_m(rhs.time_set_m)
-#if ADOBE_PLATFORM_WIN
-          ,
-          frequency_m(rhs.frequency_m)
-#endif
     {
     }
 
@@ -159,10 +142,6 @@ public:
         epoch_m = rhs.epoch_m;
         split_m = rhs.split_m;
         time_set_m = rhs.time_set_m;
-
-#if ADOBE_PLATFORM_WIN
-        frequency_m = rhs.frequency_m;
-#endif
 
         return *this;
     }
@@ -173,14 +152,8 @@ public:
         Resets the epoch of the timer to now
     */
 
-    inline void reset() {
-#if ADOBE_PLATFORM_WIN
-        (void)::QueryPerformanceCounter(&epoch_m);
-#elif defined(BOOST_HAS_THREADS)
-        boost::xtime_get(&epoch_m, boost::TIME_UTC_);
-#elif defined(BOOST_HAS_GETTIMEOFDAY)
-        gettimeofday(&epoch_m, static_cast<struct timezone*>(0));
-#endif
+    inline void reset() { 
+        epoch_m = std::chrono::high_resolution_clock::now();
     }
 
     /*!
@@ -195,21 +168,9 @@ public:
     */
 
     inline double split() {
-#if ADOBE_PLATFORM_WIN
-        (void)::QueryPerformanceCounter(&split_m);
-        return (split_m.QuadPart - epoch_m.QuadPart) / static_cast<double>(frequency_m.QuadPart) *
-               double(1e3);
-#elif defined(BOOST_HAS_THREADS)
-        boost::xtime_get(&split_m, boost::TIME_UTC_);
-        return ((split_m.sec - epoch_m.sec) * double(1e3) +
-                (split_m.nsec - epoch_m.nsec) / double(1e6));
-#elif defined(BOOST_HAS_GETTIMEOFDAY)
-        gettimeofday(&split_m, static_cast<struct timezone*>(0));
-        return ((split_m.tv_sec - epoch_m.tv_sec) * double(1e3) +
-                (split_m.tv_usec - epoch_m.tv_usec) / double(1e3));
-#else
-        return -1;
-#endif
+        const std::chrono::duration<double, std::milli> delta{
+            std::chrono::high_resolution_clock::now() - epoch_m};
+        return delta.count();
     }
 
     /*!
@@ -306,9 +267,6 @@ private:
     value_type epoch_m;
     value_type split_m;
     mutable accumulator_type time_set_m;
-#if ADOBE_PLATFORM_WIN
-    value_type frequency_m;
-#endif
 };
 
 /**************************************************************************************************/

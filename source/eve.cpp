@@ -7,14 +7,13 @@
 
 #include <adobe/eve.hpp>
 
+#include <array>
 #include <iterator>
 #include <utility>
 
 #include <boost/bind/bind.hpp>
 #include <boost/iterator/filter_iterator.hpp>
 #include <boost/iterator/transform_iterator.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/variant/static_visitor.hpp>
 
 #include <adobe/algorithm/for_each.hpp>
 #include <adobe/algorithm/for_each_position.hpp>
@@ -90,16 +89,16 @@ struct view_proxy_t : adobe::extents_slices_t {
 
     bool visible_m;
 
-    typedef boost::array<guide_set_t, 2> fr_guide_set_t;
+    typedef std::array<guide_set_t, 2> fr_guide_set_t;
 
     layout_attributes_t geometry_m; // REVISIT (sparent) : make const
     place_data_t place_m;
 
     int space_before_m;                      // populated from spacing_m of parent
-    boost::array<int, 2> container_length_m; // calculated length of container
-    boost::array<int, 2> measured_length_m;  // length of container children only
+    std::array<int, 2> container_length_m;   // calculated length of container
+    std::array<int, 2> measured_length_m;    // length of container children only
 
-    boost::array<fr_guide_set_t, 2> container_guide_set_m; // forward/reverse guide set for
+    std::array<fr_guide_set_t, 2> container_guide_set_m; // forward/reverse guide set for
     // container
 
     void calculate();
@@ -492,15 +491,6 @@ std::pair<int, int> eve_t::implementation_t::adjust(evaluate_options_t options, 
 /**************************************************************************************************/
 
 namespace implementation {
-
-/**************************************************************************************************/
-
-struct calculate : public boost::static_visitor<> {
-    template <typename T>
-    void operator()(T& operand) const {
-        operand += operand;
-    }
-};
 
 /**************************************************************************************************/
 

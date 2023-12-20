@@ -13,7 +13,6 @@
 #include <sstream>
 #include <utility>
 
-#include <boost/array.hpp>
 #include <boost/bind/bind.hpp>
 
 #include <adobe/algorithm/binary_search.hpp>

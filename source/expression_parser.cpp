@@ -18,7 +18,6 @@ with regards to state.
 #include <sstream>
 #include <utility>
 
-#include <boost/array.hpp>
 #include <boost/bind/bind.hpp>
 #include <boost/config.hpp>
 

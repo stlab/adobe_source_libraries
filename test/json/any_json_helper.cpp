@@ -7,13 +7,13 @@
 /**************************************************************************************************/
 
 // stdc++
+#include <any>
 #include <iostream>
 #include <vector>
 
 #define BOOST_TEST_MAIN
 
 // boost
-#include <boost/any.hpp>
 #include <boost/test/unit_test.hpp>
 
 // asl
@@ -25,7 +25,6 @@
 /**************************************************************************************************/
 
 using namespace std;
-using namespace boost;
 using namespace adobe;
 
 /**************************************************************************************************/

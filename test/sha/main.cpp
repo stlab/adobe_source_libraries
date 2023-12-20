@@ -50,16 +50,16 @@ namespace {
 /**************************************************************************************************/
 
 struct unit_test_t {
-    unit_test_t(const char* message, boost::uint64_t bitsize, const char* digest)
+    unit_test_t(const char* message, std::uint64_t bitsize, const char* digest)
         : message_m(message, static_cast<std::size_t>(bitsize / 8 + ((bitsize % 8 == 0) ? 0 : 1))),
           bitsize_m(bitsize), digest_m(digest) {}
 
     unit_test_t(const std::string& message, const char* digest)
-        : message_m(message), bitsize_m(std::numeric_limits<boost::uint64_t>::max()),
+        : message_m(message), bitsize_m(std::numeric_limits<std::uint64_t>::max()),
           digest_m(digest) {}
 
     std::string message_m;
-    boost::uint64_t bitsize_m;
+    std::uint64_t bitsize_m;
     const char* digest_m;
 };
 
@@ -224,7 +224,7 @@ void test_hash(const C& container) {
         const std::string& test_string(cur_test.message_m);
         std::string::const_iterator test_string_first(test_string.begin());
         std::string::const_iterator test_string_last(test_string.end());
-        bool modified_bitsize(cur_test.bitsize_m != std::numeric_limits<boost::uint64_t>::max());
+        bool modified_bitsize(cur_test.bitsize_m != std::numeric_limits<std::uint64_t>::max());
         digest_type hash_digest = {{0}};
         adobe::timer_t timer;
 

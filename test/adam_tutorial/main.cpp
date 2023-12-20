@@ -7,12 +7,12 @@
 
 #include <adobe/config.hpp>
 
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <map>
 
 #include <boost/bind/bind.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem/operations.hpp>
 #include <boost/version.hpp>
 
 #include <adobe/adam.hpp>
@@ -30,7 +30,7 @@
 
 /**************************************************************************************************/
 
-namespace bfs = boost::filesystem;
+namespace fs = std::filesystem;
 using namespace boost::placeholders;
 
 /**************************************************************************************************/
@@ -56,7 +56,7 @@ void stream_cell_state(const cell_set_t::value_type& cell) {
 
 /**************************************************************************************************/
 
-adobe::dictionary_t parse_input_dictionary(const bfs::path& input_path) {
+adobe::dictionary_t parse_input_dictionary(const fs::path& input_path) {
     const auto& path_str{input_path.native()};
     std::ifstream input_stream{path_str.c_str()};
     adobe::array_t token_stream;
@@ -83,7 +83,7 @@ adobe::dictionary_t parse_input_dictionary(const bfs::path& input_path) {
 /**************************************************************************************************/
 
 struct sheet_tracker {
-    sheet_tracker(const bfs::path& sheet_path, const bfs::path& input_path)
+    sheet_tracker(const fs::path& sheet_path, const fs::path& input_path)
         : callbacks_m(adobe::bind_to_sheet(sheet_m)) {
         //  attach the VM to the sheet.
         sheet_m.machine_m.set_variable_lookup(boost::bind(&adobe::sheet_t::get, &sheet_m, _1));
@@ -257,9 +257,9 @@ int main(int argc, char* argv[]) {
         std::cout << "--" << std::endl;
 
         std::string sheet_pathname(argc > 1 ? (argv[1]) : ("default.adm"));
-        bfs::path sheet_filepath(sheet_pathname.c_str());
+        fs::path sheet_filepath(sheet_pathname.c_str());
         std::string input_pathname(argc > 2 ? (argv[2]) : ("input.cel"));
-        bfs::path input_filepath(input_pathname.c_str());
+        fs::path input_filepath(input_pathname.c_str());
 
         sheet_tracker(sheet_filepath, input_filepath).loop();
     } catch (const std::exception& error) {

@@ -24,21 +24,11 @@
 #include <boost/fusion/include/invoke.hpp>
 #include <boost/fusion/include/push_back.hpp>
 
-#include <boost/type_traits/add_pointer.hpp>
-#include <boost/type_traits/remove_cv.hpp>
-#include <boost/type_traits/remove_reference.hpp>
-
 #include <boost/utility/enable_if.hpp>
 
 #include <adobe/type_inspection.hpp> // ADOBE_HAS_TYPE/ADOBE_HAS_MEMBER
 
-
-// forward declare boost::function so we can specialize against it
-namespace boost {
-template <typename F>
-class function;
-}
-
+#include <functional>
 
 namespace adobe {
 
@@ -199,17 +189,13 @@ R get_next_arg(ArgStream const* as) {
 
 \template_parameters F must model callable_object(?)
 */
-
-// for some reason boost::function_types does not handle boost::functions,
-// nor does boost::function have a function::signature typedef,
-// so in order to support boost, we use this signature<F>::type mechanism:
 template <typename F>
 struct signature {
     typedef F type;
 };
-// specialize for boost::function
+// specialize for std::function
 template <typename F>
-struct signature<boost::function<F>> {
+struct signature<std::function<F>> {
     typedef F type;
 };
 

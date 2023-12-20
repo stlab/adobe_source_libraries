@@ -12,6 +12,7 @@
 
 #include <adobe/config.hpp>
 
+#include <functional>
 #include <stdexcept>
 #include <utility>
 
@@ -41,7 +42,7 @@ sorted will have undefined results.
 
 \example
 \code
-    typdef adobe::static_table<adobe::name_t, boost::function<void (int)>, 4> table_t;
+    using table_t = adobe::static_table<adobe::name_t, std::function<void (int)>, 4>;
 
     static table_t some_table_s =
     {{

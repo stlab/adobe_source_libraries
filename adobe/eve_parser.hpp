@@ -10,11 +10,10 @@
 
 #include <adobe/config.hpp>
 
+#include <any>
+#include <functional>
 #include <string>
 #include <vector>
-
-#include <boost/any.hpp>
-#include <boost/function.hpp>
 
 #include <adobe/array.hpp>
 #include <adobe/istream.hpp>
@@ -164,31 +163,26 @@ struct eve_callback_suite_t {
         std::string brief_m;
     };
 
-    typedef boost::any position_t;
+    using position_t = std::any;
 
-    typedef boost::function<position_t(
+    using add_view_proc_t = std::function<position_t(
         const position_t& parent, const line_position_t& parse_location, name_t name,
-        const array_t& parameters, const std::string& brief, const std::string& detailed)>
-        add_view_proc_t;
+        const array_t& parameters, const std::string& brief, const std::string& detailed)>;
 
-    typedef boost::function<void(cell_type_t type, name_t name, const line_position_t& position,
-                                 const array_t& initializer, const std::string& brief,
-                                 const std::string& detailed)>
-        add_cell_proc_t;
+    using add_cell_proc_t = std::function<void(
+        cell_type_t type, name_t name, const line_position_t& position, const array_t& initializer,
+        const std::string& brief, const std::string& detailed)>;
 
-    typedef boost::function<void(const line_position_t& position, const array_t& conditional,
-                                 const relation_t* first, const relation_t* last,
-                                 const std::string& brief, const std::string& detailed)>
-        add_relation_proc_t;
+    using add_relation_proc_t = std::function<void(
+        const line_position_t& position, const array_t& conditional, const relation_t* first,
+        const relation_t* last, const std::string& brief, const std::string& detailed)>;
 
-    typedef boost::function<void(name_t cell_name, bool linked, const line_position_t& position1,
-                                 const array_t& initializer, const line_position_t& position2,
-                                 const array_t& expression, const std::string& brief,
-                                 const std::string& detailed)>
-        add_interface_proc_t;
+    using add_interface_proc_t = std::function<void(
+        name_t cell_name, bool linked, const line_position_t& position1, const array_t& initializer,
+        const line_position_t& position2, const array_t& expression, const std::string& brief,
+        const std::string& detailed)>;
 
-    typedef boost::function<void()> finalize_sheet_proc_t;
-
+    using finalize_sheet_proc_t = std::function<void()>;
 
     add_view_proc_t add_view_proc_m;
     add_cell_proc_t add_cell_proc_m;

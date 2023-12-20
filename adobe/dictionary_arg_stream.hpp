@@ -11,12 +11,12 @@
 #include <adobe/dictionary.hpp>
 #include <adobe/is_range.hpp>
 
-#include <boost/array.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <boost/range/value_type.hpp>
 #include <boost/utility/value_init.hpp>
 
+#include <array>
 #include <new> // std::nothrow_t
 
 namespace adobe {
@@ -182,7 +182,7 @@ struct is_range_for_dictionary {
 };
 
 static const int test =
-    is_range_for_dictionary<adobe::dictionary_t, boost::array<adobe::name_t, 3>>::value;
+    is_range_for_dictionary<adobe::dictionary_t, std::array<adobe::name_t, 3>>::value;
 
 ADOBE_HAS_TYPE_IMPL(key_type);
 
@@ -295,7 +295,7 @@ template <typename F, typename Dictionary, typename T1, typename T2>
 typename arg_stream::result_type<F>::type call_with_dictionary(F f, Dictionary const& dict,
                                                                T1 const& key1, T2 const& key2) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 2> arr = {key_type(key1), key_type(key2)};
+    std::array<key_type, 2> arr = {key_type(key1), key_type(key2)};
     return call_with_dictionary(f, dict, arr);
 }
 
@@ -303,7 +303,7 @@ template <typename X, typename F, typename Dictionary, typename T1, typename T2>
 typename arg_stream::result_type<F>::type
 call_member_with_dictionary(X& x, F f, Dictionary const& dict, T1 const& key1, T2 const& key2) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 2> arr = {key_type(key1), key_type(key2)};
+    std::array<key_type, 2> arr = {key_type(key1), key_type(key2)};
     return call_member_with_dictionary(x, f, dict, arr);
 }
 
@@ -311,7 +311,7 @@ template <typename F, typename Dictionary, typename T1, typename T2>
 typename arg_stream::result_type<F>::type
 call_with_dictionary(F f, std::nothrow_t, Dictionary const& dict, T1 const& key1, T2 const& key2) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 2> arr = {key_type(key1), key_type(key2)};
+    std::array<key_type, 2> arr = {key_type(key1), key_type(key2)};
     return call_with_dictionary(f, std::nothrow, dict, arr);
 }
 
@@ -320,7 +320,7 @@ typename arg_stream::result_type<F>::type
 call_member_with_dictionary(X x, F f, std::nothrow_t, Dictionary const& dict, T1 const& key1,
                             T2 const& key2) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 2> arr = {key_type(key1), key_type(key2)};
+    std::array<key_type, 2> arr = {key_type(key1), key_type(key2)};
     return call_member_with_dictionary(x, f, std::nothrow, dict, arr);
 }
 
@@ -329,7 +329,7 @@ template <typename F, typename Dictionary, typename T1, typename T2, typename T3
 typename arg_stream::result_type<F>::type
 call_with_dictionary(F f, Dictionary const& dict, T1 const& key1, T2 const& key2, T3 const& key3) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 3> arr = {key_type(key1), key_type(key2), key_type(key3)};
+    std::array<key_type, 3> arr = {key_type(key1), key_type(key2), key_type(key3)};
     return call_with_dictionary(f, dict, arr);
 }
 
@@ -338,7 +338,7 @@ typename arg_stream::result_type<F>::type
 call_member_with_dictionary(X& x, F f, Dictionary const& dict, T1 const& key1, T2 const& key2,
                             T3 const& key3) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 3> arr = {key_type(key1), key_type(key2), key_type(key3)};
+    std::array<key_type, 3> arr = {key_type(key1), key_type(key2), key_type(key3)};
     return call_member_with_dictionary(x, f, dict, arr);
 }
 
@@ -347,7 +347,7 @@ typename arg_stream::result_type<F>::type
 call_with_dictionary(F f, std::nothrow_t, Dictionary const& dict, T1 const& key1, T2 const& key2,
                      T3 const& key3) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 3> arr = {key_type(key1), key_type(key2), key_type(key3)};
+    std::array<key_type, 3> arr = {key_type(key1), key_type(key2), key_type(key3)};
     return call_with_dictionary(f, std::nothrow, dict, arr);
 }
 
@@ -356,7 +356,7 @@ typename arg_stream::result_type<F>::type
 call_member_with_dictionary(X x, F f, std::nothrow_t, Dictionary const& dict, T1 const& key1,
                             T2 const& key2, T3 const& key3) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 3> arr = {key_type(key1), key_type(key2), key_type(key3)};
+    std::array<key_type, 3> arr = {key_type(key1), key_type(key2), key_type(key3)};
     return call_member_with_dictionary(x, f, std::nothrow, dict, arr);
 }
 
@@ -366,8 +366,7 @@ typename arg_stream::result_type<F>::type call_with_dictionary(F f, Dictionary c
                                                                T1 const& key1, T2 const& key2,
                                                                T3 const& key3, T4 const& key4) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 4> arr = {key_type(key1), key_type(key2), key_type(key3),
-                                     key_type(key4)};
+    std::array<key_type, 4> arr = {key_type(key1), key_type(key2), key_type(key3), key_type(key4)};
     return call_with_dictionary(f, dict, arr);
 }
 
@@ -377,8 +376,7 @@ typename arg_stream::result_type<F>::type
 call_member_with_dictionary(X& x, F f, Dictionary const& dict, T1 const& key1, T2 const& key2,
                             T3 const& key3, T4 const& key4) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 4> arr = {key_type(key1), key_type(key2), key_type(key3),
-                                     key_type(key4)};
+    std::array<key_type, 4> arr = {key_type(key1), key_type(key2), key_type(key3), key_type(key4)};
     return call_member_with_dictionary(x, f, dict, arr);
 }
 
@@ -387,8 +385,7 @@ typename arg_stream::result_type<F>::type
 call_with_dictionary(F f, std::nothrow_t, Dictionary const& dict, T1 const& key1, T2 const& key2,
                      T3 const& key3, T4 const& key4) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 4> arr = {key_type(key1), key_type(key2), key_type(key3),
-                                     key_type(key4)};
+    std::array<key_type, 4> arr = {key_type(key1), key_type(key2), key_type(key3), key_type(key4)};
     return call_with_dictionary(f, std::nothrow, dict, arr);
 }
 
@@ -398,8 +395,7 @@ typename arg_stream::result_type<F>::type
 call_member_with_dictionary(X x, F f, std::nothrow_t, Dictionary const& dict, T1 const& key1,
                             T2 const& key2, T3 const& key3, T4 const& key4) {
     typedef typename dictionary_arg_stream_detail::key_type<Dictionary, T1>::type key_type;
-    boost::array<key_type, 4> arr = {key_type(key1), key_type(key2), key_type(key3),
-                                     key_type(key4)};
+    std::array<key_type, 4> arr = {key_type(key1), key_type(key2), key_type(key3), key_type(key4)};
     return call_member_with_dictionary(x, f, std::nothrow, dict, arr);
 }
 

@@ -14,20 +14,14 @@
 #include <adobe/any_regular_fwd.hpp>
 
 #include <cstdint>
+#include <type_traits>
 
 #include <boost/concept_check.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/operators.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/type_traits/has_nothrow_copy.hpp>
-#include <boost/type_traits/is_pointer.hpp>
-#include <boost/type_traits/is_reference.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/remove_const.hpp>
-#include <boost/type_traits/remove_pointer.hpp>
-#include <boost/type_traits/remove_reference.hpp>
 
 #include <adobe/conversion.hpp>
 #include <adobe/empty.hpp>
@@ -179,7 +173,7 @@ struct vtable_t {
 
 // Ensure that the vtable_t has a fixed layout regardless of alignment or packing.
 
-BOOST_STATIC_ASSERT(sizeof(vtable_t) == 9 * sizeof(void*));
+static_assert(sizeof(vtable_t) == 9 * sizeof(void*));
 
 /**************************************************************************************************/
 
@@ -188,7 +182,7 @@ union pad_vtable_t {
     double pad_m; // unused padding
 };
 
-BOOST_STATIC_ASSERT(sizeof(pad_vtable_t) == sizeof(double));
+static_assert(sizeof(pad_vtable_t) == sizeof(double));
 
 /**************************************************************************************************/
 
@@ -261,7 +255,7 @@ struct any_regular_model_local : any_regular_interface_t, boost::noncopyable {
     T& get() { return object_m; }
 };
 
-BOOST_STATIC_ASSERT(sizeof(any_regular_model_local<double>) == 16);
+static_assert(sizeof(any_regular_model_local<double>) == 16);
 
 template <typename T>
 const vtable_t any_regular_model_local<T>::vtable_s = {
@@ -356,7 +350,7 @@ struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable {
     T& get() { return object_ptr_m->data_m; }
 };
 
-BOOST_STATIC_ASSERT(sizeof(any_regular_model_remote<double>) <= 16);
+static_assert(sizeof(any_regular_model_remote<double>) <= 16);
 
 template <typename T>
 const vtable_t any_regular_model_remote<T>::vtable_s = {
@@ -461,10 +455,10 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t> {
         typedef typename boost::mpl::if_<use_local_type, regular_model_local_type,
                                          regular_model_remote_type>::type model_type;
 
-        typedef typename boost::mpl::if_c<boost::is_same<promote_type, T>::value, reference_type,
+        typedef typename boost::mpl::if_c<std::is_same<promote_type, T>::value, reference_type,
                                           T>::type result_type;
 
-        typedef typename boost::mpl::if_c<boost::is_same<promote_type, T>::value,
+        typedef typename boost::mpl::if_c<std::is_same<promote_type, T>::value,
                                           const_reference_type, T>::type const_result_type;
     };
 
@@ -657,7 +651,7 @@ public:
 
 #ifndef ADOBE_NO_DOCUMENTATION
 
-BOOST_STATIC_ASSERT((sizeof(any_regular_t) == 16));
+static_assert(sizeof(any_regular_t) == 16);
 
 inline bool operator==(const any_regular_t& x, const any_regular_t& y) {
     return (x.type_info() == y.type_info()) && x.object().equals(y.object());
@@ -770,11 +764,10 @@ struct runtime_cast_t<R, const any_regular_t> {
         typedef typename boost::remove_const<typename boost::remove_reference<R>::type>::type
             result_type;
 
-        BOOST_STATIC_ASSERT((boost::is_reference<R>::value));
+        static_assert(boost::is_reference<R>::value);
 
         /* There is no auto-promotion through the new interface. Soon promotion will be disabled. */
-        BOOST_STATIC_ASSERT(
-            (boost::is_same<typename promote<result_type>::type, result_type>::value));
+        static_assert(std::is_same<typename promote<result_type>::type, result_type>::value);
 
         return x.cast<result_type>();
     }
@@ -787,11 +780,10 @@ struct runtime_cast_t<R, any_regular_t> {
     R operator()(any_regular_t& x) const {
         typedef typename boost::remove_reference<R>::type result_type;
 
-        BOOST_STATIC_ASSERT((boost::is_reference<R>::value));
+        static_assert(boost::is_reference<R>::value);
 
         /* There is no auto-promotion through the new interface. Soon promotion will be disabled. */
-        BOOST_STATIC_ASSERT(
-            (boost::is_same<typename promote<result_type>::type, result_type>::value));
+        static_assert(std::is_same<typename promote<result_type>::type, result_type>::value);
 
         return x.cast<result_type>();
     }
@@ -804,11 +796,10 @@ struct runtime_cast_t<R, any_regular_t*> {
     R operator()(any_regular_t* x) const {
         typedef typename boost::remove_pointer<R>::type result_type;
 
-        BOOST_STATIC_ASSERT((boost::is_pointer<R>::value));
+        static_assert(boost::is_pointer<R>::value);
 
         /* There is no auto-promotion through the new interface. Soon promotion will be disabled. */
-        BOOST_STATIC_ASSERT(
-            (boost::is_same<typename promote<result_type>::type, result_type>::value));
+        static_assert(std::is_same<typename promote<result_type>::type, result_type>::value);
 
         return x->ptr_cast<result_type>();
     }
@@ -822,11 +813,10 @@ struct runtime_cast_t<R, const any_regular_t*> {
         typedef
             typename boost::remove_const<typename boost::remove_pointer<R>::type>::type result_type;
 
-        BOOST_STATIC_ASSERT((boost::is_pointer<R>::value));
+        static_assert(boost::is_pointer<R>::value);
 
         /* There is no auto-promotion through the new interface. Soon promotion will be disabled. */
-        BOOST_STATIC_ASSERT(
-            (boost::is_same<typename promote<result_type>::type, result_type>::value));
+        static_assert(std::is_same<typename promote<result_type>::type, result_type>::value);
 
         if (x->type_info() != typeid(result_type))
             return 0;

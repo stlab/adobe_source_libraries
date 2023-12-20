@@ -14,16 +14,7 @@
 #include <iterator>
 #include <numeric>
 
-// REVISIT (sparent): dissable warnings for unused arguments in boost 1.32.0
-#if defined(__MWERKS__)
-#pragma warn_unusedarg off
-#endif
-
 #include <boost/range.hpp>
-
-#if defined(__MWERKS__)
-#pragma warn_unusedarg reset
-#endif
 
 namespace adobe {
 /*!

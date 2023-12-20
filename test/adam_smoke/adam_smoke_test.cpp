@@ -7,12 +7,12 @@
 
 #include <adobe/config.hpp>
 
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <iterator>
 
 #include <boost/bind/bind.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem/operations.hpp>
 
 #include <adobe/adam.hpp>
 #include <adobe/adam_evaluate.hpp>
@@ -33,7 +33,7 @@ using namespace boost::placeholders;
 
 /**************************************************************************************************/
 
-namespace bfs = boost::filesystem;
+namespace fs = std::filesystem;
 
 /**************************************************************************************************/
 
@@ -66,7 +66,7 @@ void usage(const std::string& app_name) {
 
 /**************************************************************************************************/
 
-adobe::dictionary_t read_dictionary(const bfs::path& filepath) {
+adobe::dictionary_t read_dictionary(const fs::path& filepath) {
     std::ifstream input_file(filepath.native().c_str());
     adobe::expression_parser parser(input_file, adobe::line_position_t("input dictionary"));
     adobe::array_t expression;
@@ -93,7 +93,7 @@ adobe::dictionary_t read_dictionary(const bfs::path& filepath) {
 
 /**************************************************************************************************/
 
-void read_sheet(const bfs::path& filepath, adobe::sheet_t& sheet) {
+void read_sheet(const fs::path& filepath, adobe::sheet_t& sheet) {
     std::ifstream input_file(filepath.native().c_str());
 
     if (!input_file.is_open()) {
@@ -149,12 +149,12 @@ bool compare_arrays(const adobe::array_t& a, const adobe::array_t& b) {
 
 /**************************************************************************************************/
 
-bool test_sheet(const bfs::path& root) {
+bool test_sheet(const fs::path& root) {
     using namespace adobe::literals;
 
     bool success(true);
-    bfs::path sheet_path(root);
-    bfs::path input_path(root.string() + "i");
+    fs::path sheet_path(root);
+    fs::path input_path(root.string() + "i");
     adobe::sheet_t sheet;
     adobe::dictionary_t input;
     adobe::dictionary_t contributing;
@@ -223,7 +223,7 @@ int main(int argc, char* argv[]) {
             if (!std::strcmp(argv[1], "--help")) {
                 usage(argv[0]);
             } else {
-                result = !test_sheet(bfs::path(argv[1]));
+                result = !test_sheet(fs::path(argv[1]));
             }
         }
     } catch (const std::exception& error) {

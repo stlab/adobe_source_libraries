@@ -20,7 +20,6 @@
 
 #include <boost/noncopyable.hpp>
 #include <boost/operators.hpp>
-#include <boost/static_assert.hpp>
 
 #include <adobe/counter.hpp>
 #include <adobe/memory.hpp>
@@ -342,9 +341,9 @@ typename copy_on_write<T, A>::implementation_t* copy_on_write<T, A>::default_s;
 template <typename T, typename A>
 struct copy_on_write<T, A>::implementation_t : private boost::noncopyable {
     // Assert proper size for counter_t
-    BOOST_STATIC_ASSERT((sizeof(counter_t) == sizeof(std::size_t)));
+    static_assert(sizeof(counter_t) == sizeof(std::size_t));
     // Assert proper alignment for counter_t
-    BOOST_STATIC_ASSERT((sizeof(counter_t) == sizeof(void*)));
+    static_assert(sizeof(counter_t) == sizeof(void*));
 
     struct header_t {
         counter_t count_m;

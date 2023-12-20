@@ -48,16 +48,16 @@ namespace {
 
 /* make a UUID from the timestamp, clockseq, and node ID */
 
-void format_uuid_v1(uuid_t* uuid, boost::uint16_t clock_seq, uuid_time_t timestamp,
+void format_uuid_v1(uuid_t* uuid, std::uint16_t clock_seq, uuid_time_t timestamp,
                     uuid_node_t node) {
     // Construct a version 1 uuid with the information we've gathered plus a few constants.
 
-    uuid->data1_m = (boost::uint32_t)(timestamp & 0xFFFFFFFF);
-    uuid->data2_m = (boost::uint16_t)((timestamp >> 32) & 0xFFFF);
-    uuid->data3_m = (boost::uint16_t)((timestamp >> 48) & 0x0FFF);
+    uuid->data1_m = (std::uint32_t)(timestamp & 0xFFFFFFFF);
+    uuid->data2_m = (std::uint16_t)((timestamp >> 32) & 0xFFFF);
+    uuid->data3_m = (std::uint16_t)((timestamp >> 48) & 0x0FFF);
     uuid->data3_m |= (1 << 12);
-    uuid->data4_m[1] = boost::uint8_t(clock_seq & 0xFF);
-    uuid->data4_m[0] = boost::uint8_t((clock_seq & 0x3F00) >> 8);
+    uuid->data4_m[1] = std::uint8_t(clock_seq & 0xFF);
+    uuid->data4_m[0] = std::uint8_t((clock_seq & 0x3F00) >> 8);
     uuid->data4_m[0] |= 0x80;
 
     std::memcpy(&uuid->data4_m[2], &node, 6);
@@ -67,7 +67,7 @@ void format_uuid_v1(uuid_t* uuid, boost::uint16_t clock_seq, uuid_time_t timesta
 
 /* make a UUID from a (pseudo)random 128 bit number */
 
-void format_uuid_v3(uuid_t* uuid, boost::uint8_t hash[16]) {
+void format_uuid_v3(uuid_t* uuid, std::uint8_t hash[16]) {
     /* Construct a version 3 uuid with the (pseudo-)random number
      * plus a few constants. */
 
@@ -99,7 +99,7 @@ void format_uuid_v3(uuid_t* uuid, boost::uint8_t hash[16]) {
 
 void get_current_time(uuid_time_t* timestamp) {
     static uuid_time_t time_last;
-    static boost::uint16_t uuids_this_tick(0);
+    static std::uint16_t uuids_this_tick(0);
     static bool inited(false);
 
     if (!inited) {
@@ -136,13 +136,13 @@ void get_current_time(uuid_time_t* timestamp) {
 /**************************************************************************************************/
 
 /* uuid_create -- generator a UUID */
-boost::int16_t uuid_create(uuid_t* uuid) {
+std::int16_t uuid_create(uuid_t* uuid) {
     uuid_time_t timestamp;
     uuid_time_t last_time;
-    boost::uint16_t clockseq;
+    std::uint16_t clockseq;
     uuid_node_t node;
     uuid_node_t last_node;
-    boost::int16_t f;
+    std::int16_t f;
 
     /* get current time */
     get_current_time(&timestamp);
@@ -159,7 +159,7 @@ boost::int16_t uuid_create(uuid_t* uuid) {
     */
 
     if (!f || node != last_node)
-        clockseq = static_cast<boost::uint16_t>(true_random());
+        clockseq = static_cast<std::uint16_t>(true_random());
     else if (timestamp < last_time)
         clockseq++;
 
@@ -169,15 +169,14 @@ boost::int16_t uuid_create(uuid_t* uuid) {
     /* save the state for next time */
     write_state(clockseq, timestamp, node);
 
-    return boost::int16_t(1);
+    return std::int16_t(1);
 }
 
 /**************************************************************************************************/
 
 /* uuid_create_from_name -- create a UUID using a "name" from a "name space" */
 
-void uuid_create_from_name(uuid_t* uuid, uuid_t nsid, boost::uint8_t* name,
-                           boost::uint16_t namelen) {
+void uuid_create_from_name(uuid_t* uuid, uuid_t nsid, std::uint8_t* name, std::uint16_t namelen) {
     uuid_t net_nsid; /* context UUID in network byte order */
 
     /*
@@ -201,16 +200,16 @@ void uuid_create_from_name(uuid_t* uuid, uuid_t nsid, boost::uint8_t* name,
 
 /**************************************************************************************************/
 
-boost::int16_t uuid_compare(const uuid_t* u1, const uuid_t* u2) {
+std::int16_t uuid_compare(const uuid_t* u1, const uuid_t* u2) {
 #define ADOBE_UUID_COMPARE_CHECK(f1, f2)                                                           \
     if (f1 != f2)                                                                                  \
-        return (f1 < f2) ? boost::int16_t(-1) : boost::int16_t(1);
+        return (f1 < f2) ? std::int16_t(-1) : std::int16_t(1);
 
     ADOBE_UUID_COMPARE_CHECK(u1->data1_m, u2->data1_m);
     ADOBE_UUID_COMPARE_CHECK(u1->data2_m, u2->data2_m);
     ADOBE_UUID_COMPARE_CHECK(u1->data3_m, u2->data3_m);
 
-    for (boost::int16_t i(0); i < 8; ++i) {
+    for (std::int16_t i(0); i < 8; ++i) {
         ADOBE_UUID_COMPARE_CHECK(u1->data4_m[i], u2->data4_m[i]);
     }
 

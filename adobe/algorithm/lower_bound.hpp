@@ -13,11 +13,11 @@
 #include <algorithm>
 #include <functional>
 #include <iterator>
+#include <type_traits>
 
 #include <boost/next_prior.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <adobe/functional/operator.hpp>
@@ -148,7 +148,7 @@ template <typename I, // I models ForwardRange
           typename T, // T == result_type(P)
           typename C, // C models StrictWeakOrdering(T, T)
           typename P> // P models UnaryFunction(value_type(I)) -> T
-inline typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_iterator<I>>::type
+inline typename boost::lazy_disable_if<std::is_same<I, T>, boost::range_iterator<I>>::type
 lower_bound(I& r, const T& x, C c, P p) {
     return adobe::lower_bound(boost::begin(r), boost::end(r), x, c, p);
 }
@@ -159,7 +159,7 @@ template <typename I, // I models ForwardRange
           typename T, // T == result_type(P)
           typename C, // C models StrictWeakOrdering(T, T)
           typename P> // P models UnaryFunction(value_type(I)) -> T
-inline typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_const_iterator<I>>::type
+inline typename boost::lazy_disable_if<std::is_same<I, T>, boost::range_const_iterator<I>>::type
 lower_bound(const I& r, const T& x, C c, P p) {
     return adobe::lower_bound(boost::begin(r), boost::end(r), x, c, p);
 }
@@ -198,7 +198,7 @@ lower_bound(const ForwardRange& range, const T& value) {
     \brief lower_bound implementation
 */
 template <typename I, class T, class Compare>
-inline typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_iterator<I>>::type
+inline typename boost::lazy_disable_if<std::is_same<I, T>, boost::range_iterator<I>>::type
 lower_bound(I& range, const T& value, Compare comp) {
     return adobe::lower_bound(boost::begin(range), boost::end(range), value, comp);
 }
@@ -209,7 +209,7 @@ lower_bound(I& range, const T& value, Compare comp) {
     \brief lower_bound implementation
 */
 template <class I, class T, class Compare>
-inline typename boost::lazy_disable_if<boost::is_same<I, T>, boost::range_const_iterator<I>>::type
+inline typename boost::lazy_disable_if<std::is_same<I, T>, boost::range_const_iterator<I>>::type
 lower_bound(const I& range, const T& value, Compare comp) {
     return adobe::lower_bound(boost::begin(range), boost::end(range), value, comp);
 }

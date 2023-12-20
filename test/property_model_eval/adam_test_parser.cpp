@@ -11,9 +11,9 @@
 #include "adam_test_parser.hpp"
 #include "adam_test_parser_impl.hpp"
 
+#include <array>
 #include <mutex>
 
-#include <boost/array.hpp>
 #include <boost/bind/bind.hpp>
 
 #include "iomanip_flat.hpp"
@@ -38,7 +38,7 @@ namespace {
 
 /**************************************************************************************************/
 
-typedef boost::array<adobe::name_t, 7> keyword_table_t;
+using keyword_table_t = std::array<adobe::name_t, 7>;
 
 /**************************************************************************************************/
 

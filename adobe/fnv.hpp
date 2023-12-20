@@ -12,6 +12,7 @@
 /**************************************************************************************************/
 
 #include <cstddef>
+#include <cstdint>
 
 #ifndef ADOBE_FNV_NO_BIGINTS
 #include <boost/multiprecision/cpp_int.hpp>

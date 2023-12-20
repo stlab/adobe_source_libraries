@@ -29,7 +29,7 @@ namespace {
 
 /**************************************************************************************************/
 
-adobe::token_range_t to_token_range(boost::uint32_t code) {
+adobe::token_range_t to_token_range(std::uint32_t code) {
     // REVISIT (fbrereto) : Allocation in this function needs to go
 
     if (code == 0)

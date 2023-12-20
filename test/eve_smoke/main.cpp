@@ -5,14 +5,14 @@
 */
 /**************************************************************************************************/
 
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <iterator>
 #include <sstream>
 #include <string>
 
 #include <boost/bind/bind.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem/path.hpp>
 
 #include <adobe/any_regular.hpp>
 #include <adobe/array.hpp>
@@ -63,11 +63,11 @@ adobe::eve_callback_suite_t::position_t assemble(adobe::name_t name,
 ///
 /// \param      fileName        the name of the file to parse.
 //
-void testParse(boost::filesystem::path& fileName) {
+void testParse(std::filesystem::path& fileName) {
     //
     // Open our input stream.
     //
-    boost::filesystem::ifstream stream(fileName);
+    std::ifstream stream(fileName);
 
     if (!stream.is_open()) {
         std::stringstream err;
@@ -119,10 +119,10 @@ int main(int argc, char* argv[]) {
     // try to open "default.eve".
     //
     try {
-        boost::filesystem::path file_path("default.eve");
+        std::filesystem::path file_path("default.eve");
 
         if (argc > 1)
-            file_path = boost::filesystem::path(argv[1]);
+            file_path = std::filesystem::path(argv[1]);
 
         //
         // Call our testParse function with the selected filename.

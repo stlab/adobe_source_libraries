@@ -135,8 +135,8 @@ std::string make_value(const long& x) {
 template <typename CowType>
 void test_copy_on_write() {
     enum {
-        is_noisy = boost::is_same<typename CowType::allocator_type,
-                                  noisy_allocator<typename CowType::value_type>>::value
+        is_noisy = std::is_same<typename CowType::allocator_type,
+                                noisy_allocator<typename CowType::value_type>>::value
     };
 
     typename CowType::value_type (*mv)(const long&) =
