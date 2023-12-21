@@ -30,7 +30,7 @@ struct any_packaged_task_ {
     any_packaged_task_() = default;
 
     template <typename T>
-    any_packaged_task_(T&& task) : object_(new model_<T>(std::move(task))) {}
+    any_packaged_task_(T&& task) : object_(new model_<T>(std::forward<T>(task))) {}
 
     any_packaged_task_(any_packaged_task_&& x) noexcept = default;
     any_packaged_task_& operator=(any_packaged_task_&& x) noexcept = default;

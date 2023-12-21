@@ -197,12 +197,18 @@ void test_copy_on_write() {
         CowType value_2(mv(21)); // allocation
         CowType value_move(std::move(value_1));
 
+#ifndef __clang_analyzer__
+        // Use after move
         BOOST_CHECK_MESSAGE(value_move != value_1, "move failure");
+#endif
 
         value_move = std::move(value_2); // deallocation
 
+#ifndef __clang_analyzer__
+        // Use after move
         BOOST_CHECK_MESSAGE(value_move != value_2, "move failure");
         BOOST_CHECK_MESSAGE(value_1 == value_2, "move failure"); // both should be object_m == 0
+#endif
     }
     // Check
     if (is_noisy) {
