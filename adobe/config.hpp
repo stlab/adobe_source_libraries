@@ -27,7 +27,7 @@
 
 #define ADOBE_VERSION_MAJOR 1
 #define ADOBE_VERSION_MINOR 0
-#define ADOBE_VERSION_SUBMINOR 45
+#define ADOBE_VERSION_SUBMINOR 46
 
 #define ADOBE_VERSION                                                                              \
     (ADOBE_VERSION_MAJOR * 100000 + ADOBE_VERSION_MINOR * 100 + ADOBE_VERSION_SUBMINOR)
