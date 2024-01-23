@@ -23,7 +23,7 @@ void check_traversable(const T& c) {
 
     // http://www.sgi.com/tech/stl/Container.html
 
-    boost::function_requires<boost::ContainerConcept<T>>();
+    std::function_requires<boost::ContainerConcept<T>>();
     check_regular(c);
     {
         // some valid expressions

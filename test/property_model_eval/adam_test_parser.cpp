@@ -14,8 +14,6 @@
 #include <array>
 #include <mutex>
 
-#include <boost/bind/bind.hpp>
-
 #include "iomanip_flat.hpp"
 #include <adobe/adam_evaluate.hpp>
 #include <adobe/algorithm/find.hpp>
@@ -107,7 +105,7 @@ adam_test_parser::adam_test_parser(std::istream& in_stream, const line_position_
 // namespace {
 
 // inline name_t qs_name(const queryable_sheet_t* qs) { return qs->name(); }
-//         adobe::find(sheets_m, boost::bind(&qs_name, _1) == sheet_name);
+//         adobe::find(sheets_m, std::bind(&qs_name, _1) == sheet_name);
 // }
 
 queryable_sheet_t& adam_test_parser::sheet_from_name(name_t sheet_name) {

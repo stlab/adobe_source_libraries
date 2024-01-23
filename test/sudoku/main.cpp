@@ -8,10 +8,8 @@
 #include <adobe/config.hpp>
 #include <adobe/timer.hpp>
 
-#include <boost/array.hpp>
 #include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/operations.hpp>
-#include <boost/function.hpp>
 
 #include "sudoku.hpp"
 #include "sudoku_utilities.hpp"
@@ -73,7 +71,7 @@ private:
     bfs::path prefs_path_m;
     sudoku_set_t sudoku_set_m;
     sudoku::sudoku_t puzzle_m;
-    boost::array<bool, setting_set_size> solver_usage_m;
+    std::array<bool, setting_set_size> solver_usage_m;
 };
 
 /**************************************************************************************************/

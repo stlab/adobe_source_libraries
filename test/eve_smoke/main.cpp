@@ -12,8 +12,6 @@
 #include <sstream>
 #include <string>
 
-#include <boost/bind/bind.hpp>
-
 #include <adobe/any_regular.hpp>
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
@@ -26,7 +24,7 @@
 
 /**************************************************************************************************/
 
-using namespace boost::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -92,7 +90,7 @@ void testParse(std::filesystem::path& fileName) {
     adobe::parse(
         stream, adobe::line_position_t(path.c_str()),
         adobe::eve_callback_suite_t::position_t(),
-        adobe::bind_layout(boost::bind(&assemble, _2, _3), layout_sheet, layout_sheet.machine_m));
+        adobe::bind_layout(std::bind(&assemble, _2, _3), layout_sheet, layout_sheet.machine_m));
 }
 
 /**************************************************************************************************/

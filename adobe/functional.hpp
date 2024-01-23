@@ -14,7 +14,6 @@
 #include <utility>
 
 #include <boost/compressed_pair.hpp>
-#include <boost/tuple/tuple.hpp>
 
 #include <adobe/functional/is_member.hpp>
 #include <adobe/functional/operator.hpp>
@@ -102,7 +101,7 @@ reference (or const reference for a const object) to the data.
 \class adobe::mem_data_t
 \ingroup mem_data
 
-\brief Adaptor similar to \c boost::mem_fn() used by \c boost::bind.
+\brief Adaptor similar to \c boost::mem_fn() used by \c std::bind.
 
 Unlike boost::mem_fn() this is of use when you want to use a pointer to a member and have it return
 a reference.
@@ -219,9 +218,9 @@ struct binary_compose {
 
 /**************************************************************************************************/
 
-template <int N, typename T> // T is boost::tuple<>
+template <int N, typename T> // T is std::tuple<>
 struct element {
-    typedef typename boost::tuples::element<N, T>::type type;
+    typedef typename std::tuple_element<N, T>::type type;
 };
 
 template <typename T1, typename T2>
@@ -238,9 +237,9 @@ struct element<1, std::pair<T1, T2>> {
 
 template <int N, typename T> // T is pair or tuple
 struct get_element {
-    typename element<N, T>::type& operator()(T& x) const { return boost::get<N>(x); }
+    typename element<N, T>::type& operator()(T& x) const { return std::get<N>(x); }
 
-    const typename element<N, T>::type& operator()(const T& x) const { return boost::get<N>(x); }
+    const typename element<N, T>::type& operator()(const T& x) const { return std::get<N>(x); }
 };
 
 /**************************************************************************************************/

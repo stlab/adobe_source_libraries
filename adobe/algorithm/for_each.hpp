@@ -29,8 +29,8 @@ namespace adobe {
 
 \note Unlike \c std::for_each(), \c adobe::for_each() does not return a copy of \c f because \c f
 may not be a function object (it must model \ref concept_convertible_to_function). If it is
-necessary to retrieve information from the function object, pass a \c boost::reference_wrapper of
-the function object using \c boost::ref() instead.
+necessary to retrieve information from the function object, pass a \c std::reference_wrapper of
+the function object using \c std::ref() instead.
 */
 /**************************************************************************************************/
 /*!

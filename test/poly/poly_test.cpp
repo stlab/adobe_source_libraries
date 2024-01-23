@@ -36,8 +36,8 @@ inline double size(int x) { return static_cast<double>(std::abs(x)); }
 
 template <class M1, class M2> // M1 models Measurable, M2 models Measurable
 double max_size(const M1& x, const M2& y) {
-    boost::function_requires<MeasurableConcept<M1>>();
-    boost::function_requires<MeasurableConcept<M2>>();
+    std::function_requires<MeasurableConcept<M1>>();
+    std::function_requires<MeasurableConcept<M2>>();
 
     return std::max(MeasurableConcept<M1>::size(x), MeasurableConcept<M2>::size(y));
 }

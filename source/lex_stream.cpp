@@ -12,8 +12,6 @@
 #include <mutex>
 #include <sstream>
 
-#include <boost/bind/bind.hpp>
-
 #include <adobe/circular_queue.hpp>
 #include <adobe/implementation/lex_shared.hpp>
 #include <adobe/implementation/token.hpp>
@@ -25,7 +23,7 @@
 /**************************************************************************************************/
 
 using namespace std;
-using namespace boost::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -332,7 +330,7 @@ lex_stream_t::implementation_t::implementation_t(std::istream& in, const line_po
     in.unsetf(std::ios_base::skipws);
 
     _super::set_parse_token_proc(
-        boost::bind(&lex_stream_t::implementation_t::parse_token, boost::ref(*this), _1));
+        std::bind(&lex_stream_t::implementation_t::parse_token, std::ref(*this), _1));
 }
 
 /**************************************************************************************************/

@@ -87,7 +87,7 @@ inline void ostream_insertion<double>(std::ostream& s, const double& x) {
 
 /**************************************************************************************************/
 // serialize<T> is an opportunity to hook user-defined wrapper types (e.g.,
-// boost::reference_wrapper)
+// std::reference_wrapper)
 
 template <typename T>
 struct serialize {

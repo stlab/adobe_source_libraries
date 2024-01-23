@@ -15,7 +15,6 @@
 #include <typeinfo>
 #include <vector>
 
-#include <boost/bind/bind.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 
 #include <adobe/algorithm/minmax.hpp>
@@ -41,7 +40,7 @@
 /**************************************************************************************************/
 
 using namespace std;
-using namespace boost::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -205,8 +204,8 @@ adobe::any_regular_t min_function(const adobe::array_t& parameters) {
 
     return *adobe::min_element(
         parameters,
-        boost::bind(std::less<double>(), boost::bind(adobe::any_regular_t::transform<double>(), _1),
-                    boost::bind(adobe::any_regular_t::transform<double>(), _2)));
+        std::bind(std::less<double>(), std::bind(adobe::any_regular_t::transform<double>(), _1),
+                    std::bind(adobe::any_regular_t::transform<double>(), _2)));
 }
 
 /**************************************************************************************************/
@@ -217,8 +216,8 @@ adobe::any_regular_t max_function(const adobe::array_t& parameters) {
 
     return *adobe::max_element(
         parameters,
-        boost::bind(std::less<double>(), boost::bind(adobe::any_regular_t::transform<double>(), _1),
-                    boost::bind(adobe::any_regular_t::transform<double>(), _2)));
+        std::bind(std::less<double>(), std::bind(adobe::any_regular_t::transform<double>(), _1),
+                    std::bind(adobe::any_regular_t::transform<double>(), _2)));
 }
 
 /**************************************************************************************************/

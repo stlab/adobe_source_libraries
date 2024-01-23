@@ -26,7 +26,7 @@ extents_t is an equality comparable class for storing intrinsic geometry about a
 */
 
 /*!
-\var boost::array<adobe::extents_t::slice_t, 2> adobe::extents_t::slice_m
+\var std::array<adobe::extents_t::slice_t, 2> adobe::extents_t::slice_m
 
 The two slices that comprise this extents.
 */

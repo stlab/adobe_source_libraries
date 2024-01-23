@@ -12,8 +12,6 @@
 #include <iostream>
 #include <iterator>
 
-#include <boost/bind/bind.hpp>
-
 #include <adobe/adam.hpp>
 #include <adobe/adam_evaluate.hpp>
 #include <adobe/adam_parser.hpp>
@@ -29,7 +27,7 @@
 
 /**************************************************************************************************/
 
-using namespace boost::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -163,7 +161,7 @@ bool test_sheet(const fs::path& root) {
 
     // Connect the virtual machine to the sheet.
 
-    sheet.machine_m.set_variable_lookup(boost::bind(&adobe::sheet_t::get, &sheet, _1));
+    sheet.machine_m.set_variable_lookup(std::bind(&adobe::sheet_t::get, &sheet, _1));
 
     read_sheet(sheet_path, sheet);
 

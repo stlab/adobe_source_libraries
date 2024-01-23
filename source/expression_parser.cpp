@@ -18,7 +18,6 @@ with regards to state.
 #include <sstream>
 #include <utility>
 
-#include <boost/bind/bind.hpp>
 #include <boost/config.hpp>
 
 #include <adobe/any_regular.hpp>

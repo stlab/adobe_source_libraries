@@ -16,8 +16,6 @@
 #include <adobe/name.hpp>
 #include <adobe/once.hpp>
 
-#include <boost/bind/bind.hpp>
-
 #include <boost/iterator/transform_iterator.hpp>
 
 #if !defined(NDEBUG) && defined(ADOBE_SERIALIZATION)
@@ -307,7 +305,7 @@ private:
 /**************************************************************************************************/
 
 template <typename Range, typename UnaryFunction>
-boost::tuple<std::size_t, std::size_t, typename boost::range_iterator<Range>::type>
+std::tuple<std::size_t, std::size_t, typename boost::range_iterator<Range>::type>
 count_max_element_tuple(Range& x, UnaryFunction f) {
     typedef transform_range<UnaryFunction, Range> transform_range_t;
 
@@ -340,8 +338,8 @@ context_frame_t::closest_match(store_range_pair_t range, const adobe::attribute_
     if (!range_size)
         return glossary_m.end();
 
-    boost::tuple<std::size_t, std::size_t, store_iterator> result_tuple = count_max_element_tuple(
-        range, boost::bind(store_count_same_t(), _1, boost::cref(searching)));
+    std::tuple<std::size_t, std::size_t, store_iterator> result_tuple = count_max_element_tuple(
+        range, std::bind(store_count_same_t(), _1, boost::cref(searching)));
 
     if (boost::get<1>(result_tuple) == 0)
         return glossary_m.end();
@@ -507,31 +505,31 @@ struct replacement_engine_t {
         : score_m(-1), xstring_id_m(adobe::static_token_range(id.c_str())) {}
 
     replacement_engine_t(const std::string& xstr) : score_m(-1) {
-        using namespace boost::placeholders;
+        using namespace std::placeholders;
 
         adobe::make_xml_parser(
             reinterpret_cast<uchar_ptr_t>(&xstr[0]),
             reinterpret_cast<uchar_ptr_t>(&xstr[0]) + xstr.size(),
             adobe::line_position_t("replacement_engine_t"),
             adobe::implementation::xstring_preorder_predicate,
-            boost::bind(&replacement_engine_t::xstr_id_harvest, boost::ref(*this), _1, _2, _3, _4),
+            std::bind(&replacement_engine_t::xstr_id_harvest, std::ref(*this), _1, _2, _3, _4),
             adobe::implementation::null_output_t())
             .parse_content();
     }
 
     void add_marker(const std::string& marker) {
-        using namespace boost::placeholders;
+        using namespace std::placeholders;
         adobe::make_xml_parser(
             reinterpret_cast<uchar_ptr_t>(&marker[0]),
             reinterpret_cast<uchar_ptr_t>(&marker[0]) + marker.size(),
             adobe::line_position_t("add_marker"), adobe::implementation::xstring_preorder_predicate,
-            boost::bind(&replacement_engine_t::marker_parse, boost::ref(*this), _1, _2, _3, _4),
+            std::bind(&replacement_engine_t::marker_parse, std::ref(*this), _1, _2, _3, _4),
             adobe::implementation::null_output_t())
             .parse_content();
     }
 
     std::string run() {
-        using namespace boost::placeholders;
+        using namespace std::placeholders;
 
         implementation::context_frame_t::store_range_pair_t range(
             implementation::top_frame().range_for_key(xstring_id_m));
@@ -549,9 +547,9 @@ struct replacement_engine_t {
 
             adobe::make_xml_parser(first, last, adobe::line_position_t("replacement_engine_t::run"),
                                    adobe::implementation::xstring_preorder_predicate,
-                                   boost::bind(&replacement_engine_t::candidate_parse,
-                                               boost::ref(*this), _1, _2, _3, _4,
-                                               boost::ref(score)),
+                                   std::bind(&replacement_engine_t::candidate_parse,
+                                               std::ref(*this), _1, _2, _3, _4,
+                                               std::ref(score)),
                                    std::back_inserter(temp_result))
                 .parse_content();
 

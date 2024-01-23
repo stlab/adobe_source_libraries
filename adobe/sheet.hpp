@@ -48,13 +48,13 @@ concept_map SheetConcept<T>{
 /**************************************************************************************************/
 
 template <BasicSheetConcept T>
-concept_map BasicSheetConcept<boost::reference_wrapper<T>>{};
+concept_map BasicSheetConcept<std::reference_wrapper<T>>{};
 
 /**************************************************************************************************/
 
 template <SheetConcept T>
-concept_map SheetConcept<boost::reference_wrapper<T>>{
-    inline void touch(boost::reference_wrapper<T> & r, const name_t* x,
+concept_map SheetConcept<std::reference_wrapper<T>>{
+    inline void touch(std::reference_wrapper<T> & r, const name_t* x,
                       const name_t* y){SheetConcept<T>::touch(static_cast<T&>(r), x, y);
 }
 }

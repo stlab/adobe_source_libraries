@@ -12,9 +12,6 @@
 #include <utility>
 #include <vector>
 
-#include <boost/bind/bind.hpp>
-#include <boost/tuple/tuple.hpp>
-
 #include <adobe/algorithm/find.hpp>
 #include <adobe/algorithm/for_each.hpp>
 #include <adobe/algorithm/sort.hpp>
@@ -41,7 +38,7 @@
 /**************************************************************************************************/
 
 using namespace std;
-using namespace boost::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -721,8 +718,8 @@ void sheet_t::implementation_t::add_output(name_t name, const line_position_t& p
                                            const array_t& expression) {
     // REVISIT (sparent) : Non-transactional on failure.
     cell_set_m.push_back(cell_t(access_output, name,
-                                boost::bind(&implementation_t::calculate_expression,
-                                            boost::ref(*this), position, expression),
+                                std::bind(&implementation_t::calculate_expression,
+                                            std::ref(*this), position, expression),
                                 cell_set_m.size(), nullptr));
 
     output_index_m.insert(cell_set_m.back());
@@ -749,7 +746,7 @@ void sheet_t::implementation_t::add_interface(name_t name, bool linked,
     if (initializer_expression.size()) {
         cell_set_m.push_back(
             cell_t(name, linked,
-                   boost::bind(&implementation_t::calculate_expression, boost::ref(*this),
+                   std::bind(&implementation_t::calculate_expression, std::ref(*this),
                                position1, initializer_expression),
                    cell_set_m.size()));
     } else {
@@ -765,12 +762,12 @@ void sheet_t::implementation_t::add_interface(name_t name, bool linked,
     if (expression.size()) {
         // REVISIT (sparent) : Non-transactional on failure.
         cell_set_m.push_back(cell_t(access_interface_output, name,
-                                    boost::bind(&implementation_t::calculate_expression,
-                                                boost::ref(*this), position2, expression),
+                                    std::bind(&implementation_t::calculate_expression,
+                                                std::ref(*this), position2, expression),
                                     cell_set_m.size(), &cell_set_m.back()));
     } else {
         cell_set_m.push_back(cell_t(access_interface_output, name,
-                                    boost::bind(&implementation_t::get, boost::ref(*this), name),
+                                    std::bind(&implementation_t::get, std::ref(*this), name),
                                     cell_set_m.size(), &cell_set_m.back()));
     }
     output_index_m.insert(cell_set_m.back());
@@ -794,7 +791,7 @@ void sheet_t::implementation_t::add_interface(name_t name, any_regular_t initial
     cell.priority_m = ++priority_high_m;
 
     cell_set_m.push_back(cell_t(access_interface_output, name,
-                                boost::bind(&implementation_t::get, boost::ref(*this), name),
+                                std::bind(&implementation_t::get, std::ref(*this), name),
                                 cell_set_m.size(), &cell));
 
     output_index_m.insert(cell_set_m.back());
@@ -835,8 +832,8 @@ void sheet_t::implementation_t::add_constant(name_t name, any_regular_t value) {
 void sheet_t::implementation_t::add_logic(name_t logic, const line_position_t& position,
                                           const array_t& expression) {
     cell_set_m.push_back(cell_t(access_logic, logic,
-                                boost::bind(&implementation_t::calculate_expression,
-                                            boost::ref(*this), position, expression),
+                                std::bind(&implementation_t::calculate_expression,
+                                            std::ref(*this), position, expression),
                                 cell_set_m.size(), nullptr));
 
     if (!name_index_m.insert(cell_set_m.back()).second) {
@@ -851,8 +848,8 @@ void sheet_t::implementation_t::add_invariant(name_t name, const line_position_t
                                               const array_t& expression) {
     // REVISIT (sparent) : Non-transactional on failure.
     cell_set_m.push_back(cell_t(access_invariant, name,
-                                boost::bind(&implementation_t::calculate_expression,
-                                            boost::ref(*this), position, expression),
+                                std::bind(&implementation_t::calculate_expression,
+                                            std::ref(*this), position, expression),
                                 cell_set_m.size(), nullptr));
 
     output_index_m.insert(cell_set_m.back());
@@ -938,7 +935,7 @@ sheet_t::connection_t sheet_t::implementation_t::monitor_enabled(name_t n, const
     monitor(active_m.test(iter->cell_set_pos_m) || (value_accessed_m.test(iter->cell_set_pos_m) &&
                                                     (touch_set & priority_accessed_m).any()));
 
-    return monitor_enabled_m.connect(boost::bind(&sheet_t::implementation_t::enabled_filter, this,
+    return monitor_enabled_m.connect(std::bind(&sheet_t::implementation_t::enabled_filter, this,
                                                  touch_set, iter->cell_set_pos_m, monitor, _1, _2));
 }
 
@@ -991,8 +988,8 @@ sheet_t::implementation_t::monitor_contributing(name_t n, const dictionary_t& ma
     monitor(contributing_set(mark, iter->contributing_m));
 
     return iter->monitor_contributing_m.connect(
-        boost::bind(monitor, boost::bind(&sheet_t::implementation_t::contributing_set,
-                                         boost::ref(*this), mark, _1)));
+        std::bind(monitor, std::bind(&sheet_t::implementation_t::contributing_set,
+                                         std::ref(*this), mark, _1)));
 }
 
 /**************************************************************************************************/
@@ -1125,11 +1122,11 @@ void sheet_t::implementation_t::flow(cell_bits_t& priority_accessed) {
 
                 if (count == 1) {
                     cell.term_m =
-                        boost::bind(&implementation_t::calculate_expression, boost::ref(*this),
+                        std::bind(&implementation_t::calculate_expression, std::ref(*this),
                                     term->position_m, term->expression_m);
                 } else {
                     cell.term_m =
-                        boost::bind(&implementation_t::calculate_indexed, boost::ref(*this),
+                        std::bind(&implementation_t::calculate_indexed, std::ref(*this),
                                     term->position_m, term->expression_m, n);
                 }
 

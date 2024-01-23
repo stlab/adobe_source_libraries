@@ -16,7 +16,6 @@
 #include <set>
 #include <vector>
 
-#include <boost/bind/bind.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
@@ -32,7 +31,7 @@
 
 /**************************************************************************************************/
 
-using namespace boost::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -72,7 +71,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_key_value_erase_if, Container, test_key_value
                                 value_type(5, 6)};
         Container x(begin(a), end(a));
 
-        erase_if(x, boost::bind(adobe::equal_to(), typename Container::value_type(4, 2), _1));
+        erase_if(x, std::bind(adobe::equal_to(), typename Container::value_type(4, 2), _1));
         // REVISIT(mmarcus) : BOOST_SIZE_ISSUE replaced boost::size with
         // distance(begin, end) Until figure out how to work around boost
         // 1.35.0 apparently buggy size, begin, end return type calculation
