@@ -313,9 +313,9 @@ count_max_element_tuple(Range& x, UnaryFunction f) {
 
     typename transform_range_t::iterator max_item = max_element(container);
     if (max_item == container.end())
-        return boost::make_tuple(1, 0, max_item.base());
+        return std::make_tuple(1, 0, max_item.base());
 
-    return boost::make_tuple(std::count(max_item, container.end(), *max_item), *max_item,
+    return std::make_tuple(std::count(max_item, container.end(), *max_item), *max_item,
                              max_item.base());
 }
 

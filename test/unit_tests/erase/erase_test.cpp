@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_erase_if, Container, test_types) {
         const int a[] = {9, 2, 4, 4, 7, 3, 5};
         Container x(begin(a), end(a));
 
-        erase_if(x, bind(adobe::equal_to(), 4, _1));
+        erase_if(x, std::bind(adobe::equal_to(), 4, _1));
         // REVISIT(mmarcus) : BOOST_SIZE_ISSUE replaced boost::size with
         // distance(begin, end) Until figure out how to work around boost
         // 1.35.0 apparently buggy size, begin, end return type calculation

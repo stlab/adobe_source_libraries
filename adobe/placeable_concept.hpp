@@ -225,8 +225,8 @@ struct PlaceableConcept {
     // Concept checking:
 
     void constraints() {
-        // not yet: std::function_requires<RegularConcept<Placeable> >();
-        // std::function_requires<boost::CopyConstructibleConcept<Placeable> >();
+        // not yet: boost::function_requires<RegularConcept<Placeable> >();
+        // boost::function_requires<boost::CopyConstructibleConcept<Placeable> >();
 
         using adobe::measure;
         measure(*placeable, extents);
@@ -315,8 +315,8 @@ struct PlaceableTwoPassConcept : PlaceableConcept<T> {
     }
 
     void constraints() {
-        // not yet: std::function_requires<RegularConcept<T> >();
-        // std::function_requires<boost::CopyConstructibleConcept<T> >();
+        // not yet: boost::function_requires<RegularConcept<T> >();
+        // boost::function_requires<boost::CopyConstructibleConcept<T> >();
 
         using adobe::place;
         place(*t2, this->place_data);

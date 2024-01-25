@@ -9,6 +9,7 @@
 #define ADOBE_JSON_HELPER_HPP
 
 #include <adobe/any_regular.hpp>
+#include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
 #include <adobe/json.hpp>
 

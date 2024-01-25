@@ -40,22 +40,22 @@ BOOST_AUTO_TEST_CASE(forest_int_iterator_test) {
     forest<int>::iterator begin = f.begin(), end = f.end();
     (void)begin;
     (void)end;
-    std::function_requires<boost::BidirectionalIteratorConcept<forest<int>::iterator>>();
-    std::function_requires<boost::BidirectionalIteratorConcept<forest<int>::const_iterator>>();
-    std::function_requires<boost::BidirectionalIteratorConcept<forest<int>::preorder_iterator>>();
-    std::function_requires<
+    boost::function_requires<boost::BidirectionalIteratorConcept<forest<int>::iterator>>();
+    boost::function_requires<boost::BidirectionalIteratorConcept<forest<int>::const_iterator>>();
+    boost::function_requires<boost::BidirectionalIteratorConcept<forest<int>::preorder_iterator>>();
+    boost::function_requires<
         boost::BidirectionalIteratorConcept<forest<int>::const_preorder_iterator>>();
-    std::function_requires<
+    boost::function_requires<
         boost::BidirectionalIteratorConcept<forest<int>::postorder_iterator>>();
-    std::function_requires<
+    boost::function_requires<
         boost::BidirectionalIteratorConcept<forest<int>::const_postorder_iterator>>();
-    std::function_requires<boost::BidirectionalIteratorConcept<forest<int>::child_iterator>>();
-    std::function_requires<
+    boost::function_requires<boost::BidirectionalIteratorConcept<forest<int>::child_iterator>>();
+    boost::function_requires<
         boost::BidirectionalIteratorConcept<forest<int>::const_child_iterator>>();
-    std::function_requires<
+    boost::function_requires<
         boost::BidirectionalIteratorConcept<forest<int>::reverse_child_iterator>>();
-    std::function_requires<boost::BidirectionalIteratorConcept<forest<int>::reverse_iterator>>();
-    std::function_requires<
+    boost::function_requires<boost::BidirectionalIteratorConcept<forest<int>::reverse_iterator>>();
+    boost::function_requires<
         boost::BidirectionalIteratorConcept<forest<int>::const_reverse_iterator>>();
 }
 } // namespace adobe
