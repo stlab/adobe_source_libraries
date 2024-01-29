@@ -353,21 +353,10 @@ inline void destroy(T* p) {
     https://en.cppreference.com/w/cpp/memory/construct_at
 */
 
-#if __cplusplus < 202002L
-
 template <class T, class... Args>
-constexpr T* construct_at(T* p, Args&&... args) {
-    return ::new (const_cast<void*>(static_cast<const volatile void*>(p)))
-        T(std::forward<Args>(args)...);
+T* construct_at(T* p, Args&&... args) {
+    return ::new (static_cast<void*>(p)) T(std::forward<Args>(args)...);
 }
-
-#else
-
-template <class T, class... Args>
-auto construct_at(T* p, Args&&... args) -> decltype(std::construct_at(p, std::forward<Args>(args)...)) {
-    return std::construct_at(p, std::forward<Args>(args)...);
-}
-#endif
 
 template <typename T, typename U> // T models Regular
 [[deprecated("Use adobe::construct_at(p, x)")]] constexpr auto construct(T* p, U&& x) {
