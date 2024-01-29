@@ -15,6 +15,8 @@
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 
+#include <array>
+#include <functional>
 #include <stdexcept>
 #include <string>
 

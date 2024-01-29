@@ -8,6 +8,7 @@
 #include <adobe/eve.hpp>
 
 #include <array>
+#include <functional>
 #include <iterator>
 #include <utility>
 

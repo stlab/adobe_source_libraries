@@ -8,7 +8,9 @@
 #include <adobe/adam.hpp>
 
 #include <deque>
+#include <functional>
 #include <string>
+#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -26,8 +28,6 @@
 #include <adobe/istream.hpp>
 #include <adobe/table_index.hpp>
 #include <adobe/virtual_machine.hpp>
-
-#include <functional>
 
 #ifndef NDEBUG
 

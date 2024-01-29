@@ -16,6 +16,8 @@
 
 #include "sudoku.hpp"
 
+#include <array>
+#include <functional>
 #include <iostream>
 #include <limits>
 #include <sstream>

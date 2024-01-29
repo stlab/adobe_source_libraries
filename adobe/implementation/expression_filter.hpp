@@ -11,6 +11,8 @@
 #include <adobe/config.hpp>
 
 #include <cstdint>
+
+#include <adobe/array.hpp>
 #include <adobe/string.hpp>
 
 /**************************************************************************************************/

@@ -7,6 +7,7 @@
 
 #include <adobe/eve_evaluate.hpp>
 
+#include <functional>
 #include <mutex>
 
 #include <adobe/algorithm/sort.hpp>

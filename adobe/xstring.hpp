@@ -24,6 +24,7 @@
 
 #include <cassert>
 #include <cctype>
+#include <functional>
 #include <map>
 #include <sstream>
 #include <vector>
@@ -185,15 +186,14 @@ void xstring_clear_glossary();
 
 template <typename O> // O models OutputIterator
 inline void parse_xml_fragment(uchar_ptr_t fragment, std::size_t n, O output) {
+    using namespace std::placeholders;
+
     const implementation::context_frame_t& context(implementation::top_frame());
 
     make_xml_parser(fragment, fragment + n, line_position_t("parse_xml_fragment"),
                     always_true<token_range_t>(),
-                    [&context] (const token_range_t& entire_element_range,
-                                  const token_range_t& name, const attribute_set_t& attribute_set,
-                                  const token_range_t& value) -> token_range_t{
-                        return context.element_handler(entire_element_range, name, attribute_set, value);
-                    },
+                    std::bind(&implementation::context_frame_t::element_handler,
+                                std::cref(context), _1, _2, _3, _4),
                     output)
         .parse_content(); // REVISIT (fbrereto) : More or less legible than
                           // having it after the above declaration?

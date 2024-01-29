@@ -7,6 +7,7 @@
 
 #include <adobe/eve_parser.hpp>
 
+#include <functional>
 #include <string>
 #include <adobe/algorithm/binary_search.hpp>
 #include <adobe/algorithm/sorted.hpp>

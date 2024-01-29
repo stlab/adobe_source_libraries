@@ -8,6 +8,7 @@
 #include <adobe/implementation/expression_filter.hpp>
 
 #include <cctype>
+#include <functional>
 #include <iterator>
 #include <vector>
 #include <locale>

@@ -8,6 +8,7 @@
 #include <adobe/implementation/lex_stream.hpp>
 
 #include <array>
+#include <functional>
 #include <iostream>
 #include <mutex>
 #include <sstream>

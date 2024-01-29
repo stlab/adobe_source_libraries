@@ -14,6 +14,8 @@
 #include "sudoku.hpp"
 #include "sudoku_utilities.hpp"
 
+#include <array>
+#include <functional>
 #include <iostream>
 #include <numeric>
 #include <sstream>

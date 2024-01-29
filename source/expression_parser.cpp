@@ -13,6 +13,7 @@ with regards to state.
 /**************************************************************************************************/
 
 #include <cassert>
+#include <functional>
 #include <iomanip>
 #include <istream>
 #include <sstream>

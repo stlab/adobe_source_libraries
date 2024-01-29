@@ -12,6 +12,7 @@
 
 #include <functional>
 #include <utility>
+#include <tuple>
 
 #include <boost/compressed_pair.hpp>
 

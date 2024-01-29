@@ -16,7 +16,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include <boost/bind/bind.hpp>
 #include <boost/iterator/indirect_iterator.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/next_prior.hpp>

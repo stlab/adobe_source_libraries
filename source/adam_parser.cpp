@@ -8,6 +8,7 @@
 #include <adobe/implementation/adam_parser_impl.hpp>
 
 #include <cassert>
+#include <functional>
 #include <iomanip>
 #include <istream>
 #include <sstream>

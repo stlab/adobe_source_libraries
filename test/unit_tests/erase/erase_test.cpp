@@ -10,6 +10,7 @@
 
 
 #include <deque>
+#include <functional>
 #include <iostream>
 #include <list>
 #include <map>
