@@ -25,7 +25,7 @@
 
 /**************************************************************************************************/
 
-using namespace std::placeholders;
+namespace ph = std::placeholders;
 
 /**************************************************************************************************/
 
@@ -91,7 +91,7 @@ void testParse(std::filesystem::path& fileName) {
     adobe::parse(
         stream, adobe::line_position_t(path.c_str()),
         adobe::eve_callback_suite_t::position_t(),
-        adobe::bind_layout(std::bind(&assemble, _2, _3), layout_sheet, layout_sheet.machine_m));
+        adobe::bind_layout(std::bind(&assemble, ph::_2, ph::_3), layout_sheet, layout_sheet.machine_m));
 }
 
 /**************************************************************************************************/

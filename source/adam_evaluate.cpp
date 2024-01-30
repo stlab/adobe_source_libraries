@@ -13,7 +13,7 @@
 
 /**************************************************************************************************/
 
-using namespace std::placeholders;
+namespace ph = std::placeholders;
 
 /**************************************************************************************************/
 
@@ -90,8 +90,8 @@ namespace adobe {
 adam_callback_suite_t bind_to_sheet(sheet_t& sheet) {
     adam_callback_suite_t suite;
 
-    suite.add_cell_proc_m = std::bind(&add_cell, std::ref(sheet), _1, _2, _3, _4);
-    suite.add_relation_proc_m = std::bind(&add_relation, std::ref(sheet), _1, _2, _3, _4);
+    suite.add_cell_proc_m = std::bind(&add_cell, std::ref(sheet), ph::_1, ph::_2, ph::_3, ph::_4);
+    suite.add_relation_proc_m = std::bind(&add_relation, std::ref(sheet), ph::_1, ph::_2, ph::_3, ph::_4);
     suite.add_interface_proc_m = [&sheet](name_t name, bool linked, const line_position_t& position1,
                                          const array_t& initializer, const line_position_t& position2,
                                          const array_t& expression, const std::string& brief,
@@ -107,7 +107,7 @@ adam_callback_suite_t bind_to_sheet(sheet_t& sheet, external_model_t& external_m
     adam_callback_suite_t suite = bind_to_sheet(sheet);
 
     suite.add_external_proc_m =
-        std::bind(&adobe::external_model_t::add_cell, std::ref(external_model), _1);
+        std::bind(&adobe::external_model_t::add_cell, std::ref(external_model), ph::_1);
 
     return suite;
 }

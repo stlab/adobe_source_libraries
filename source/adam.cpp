@@ -38,7 +38,7 @@
 /**************************************************************************************************/
 
 using namespace std;
-using namespace std::placeholders;
+namespace ph = std::placeholders;
 
 /**************************************************************************************************/
 
@@ -936,7 +936,7 @@ sheet_t::connection_t sheet_t::implementation_t::monitor_enabled(name_t n, const
                                                     (touch_set & priority_accessed_m).any()));
 
     return monitor_enabled_m.connect(std::bind(&sheet_t::implementation_t::enabled_filter, this,
-                                                 touch_set, iter->cell_set_pos_m, monitor, _1, _2));
+                                                 touch_set, iter->cell_set_pos_m, monitor, ph::_1, ph::_2));
 }
 
 /**************************************************************************************************/
@@ -989,7 +989,7 @@ sheet_t::implementation_t::monitor_contributing(name_t n, const dictionary_t& ma
 
     return iter->monitor_contributing_m.connect(
         std::bind(monitor, std::bind(&sheet_t::implementation_t::contributing_set,
-                                         std::ref(*this), mark, _1)));
+                                         std::ref(*this), mark, ph::_1)));
 }
 
 /**************************************************************************************************/

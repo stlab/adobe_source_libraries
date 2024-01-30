@@ -8,6 +8,7 @@
 #define ADOBE_PLACEABLE_HPP
 
 /************************************************************************************************/
+#include <functional>
 
 #include <boost/concept_check.hpp>
 
