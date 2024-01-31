@@ -482,7 +482,13 @@ public:
 
     any_regular_t(any_regular_t&& x) noexcept { x.object().move_clone(storage()); }
 
-    any_regular_t& operator=(any_regular_t x) {
+    any_regular_t& operator=(const any_regular_t& x) noexcept {
+        object().destruct();
+        x.object().clone(storage());
+        return *this;
+    }
+
+    any_regular_t& operator=(any_regular_t&& x) noexcept {
         object().destruct();
         x.object().move_clone(storage());
         return *this;
