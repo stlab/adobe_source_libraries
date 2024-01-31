@@ -48,29 +48,23 @@ void queryable_sheet_t::begin_monitoring() {
 
         std::vector<name_t> v;
         v.push_back(name);
-        sheet_m.monitor_enabled(
-            dummy, &v[0], 1 + &v[0],
-            std::bind(adobe::assign(), _1, std::ref(priority_accessed_m[i])));
+        sheet_m.monitor_enabled(dummy, &v[0], 1 + &v[0],
+                                std::bind(adobe::assign(), _1, std::ref(priority_accessed_m[i])));
 
-        sheet_m.monitor_value(name, [&value_m_at_index_i = value_m[i]](any_regular_t val) {
-            adobe::assign{}(val, value_m_at_index_i);
-        });
+        sheet_m.monitor_value(name, std::bind(adobe::assign(), _1, std::ref(value_m[i])));
 
-        sheet_m.monitor_contributing(
-            name, dictionary_t(), std::bind(adobe::assign(), _1, std::ref(contributors_m[i])));
+        sheet_m.monitor_contributing(name, dictionary_t(),
+                                     std::bind(adobe::assign(), _1, std::ref(contributors_m[i])));
     }
 
     for (queryable_sheet_t::index_t::iterator iter = output_index_m.begin(),
                                               e = output_index_m.end();
          iter != e; ++iter) {
         std::size_t i(iter->second);
-        sheet_m.monitor_value(name_m[i], [&value_m_at_index_i = value_m[i]](any_regular_t val) {
-            adobe::assign{}(val, value_m_at_index_i);
-        });
+        sheet_m.monitor_value(name_m[i], std::bind(adobe::assign(), _1, std::ref(value_m[i])));
 
-        sheet_m.monitor_contributing(
-            name_m[i], dictionary_t(),
-            std::bind(adobe::assign(), _1, std::ref(contributors_m[i])));
+        sheet_m.monitor_contributing(name_m[i], dictionary_t(),
+                                     std::bind(adobe::assign(), _1, std::ref(contributors_m[i])));
     }
     for (queryable_sheet_t::index_t::iterator iter = invariant_index_m.begin(),
                                               e = invariant_index_m.end();
@@ -83,7 +77,6 @@ void queryable_sheet_t::begin_monitoring() {
 /**************************************************************************************************/
 
 void queryable_sheet_t::update() { sheet_m.update(); }
-
 
 /**************************************************************************************************/
 
@@ -118,10 +111,10 @@ any_regular_t queryable_sheet_t::inspect(const array_t& expression) {
 adam_callback_suite_t queryable_sheet_t::setup_callbacks() {
     adam_callback_suite_t callbacks(adobe::bind_to_sheet(sheet_m));
     callbacks.add_cell_proc_m = std::bind(&queryable_sheet_t::add_cell_trap, this,
-                                            callbacks.add_cell_proc_m, _1, _2, _3, _4);
+                                          callbacks.add_cell_proc_m, _1, _2, _3, _4);
     callbacks.add_interface_proc_m =
-        std::bind(&queryable_sheet_t::add_interface_trap, this, callbacks.add_interface_proc_m,
-                    _1, _2, _3, _4, _5, _6);
+        std::bind(&queryable_sheet_t::add_interface_trap, this, callbacks.add_interface_proc_m, _1,
+                  _2, _3, _4, _5, _6);
     return callbacks;
 }
 
@@ -204,6 +197,7 @@ void queryable_sheet_t::add_cell_trap(adam_callback_suite_t::add_cell_proc_t ori
 }
 
 /**************************************************************************************************/
+
 } // namespace adobe
 
 /**************************************************************************************************/
