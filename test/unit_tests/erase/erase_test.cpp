@@ -42,7 +42,7 @@ typedef boost::mpl::list<std::vector<int>, std::list<int>, std::set<int>, std::d
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_erase_if, Container, test_types) {
     using namespace adobe;
-    using namespace boost;
+    using namespace std;
     {
         const int a[] = {9, 2, 4, 4, 7, 3, 5};
         Container x(begin(a), end(a));
@@ -63,7 +63,7 @@ typedef boost::mpl::list<std::map<int, int>, std::multimap<int, int>> test_key_v
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_key_value_erase_if, Container, test_key_value_types) {
     using namespace adobe;
-    using namespace boost;
+    using namespace std;
     {
         typedef typename Container::value_type value_type;
 

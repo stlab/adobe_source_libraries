@@ -38,7 +38,7 @@
 /**************************************************************************************************/
 
 using namespace std;
-namespace ph = std::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -186,7 +186,7 @@ public:
     connection_t monitor_contributing(name_t, const dictionary_t&, const monitor_contributing_t&);
 
 #if 0
-    connection_t    monitor_invariant_contributing(name_t invariant, const monitor_invariant_t&); 
+    connection_t    monitor_invariant_contributing(name_t invariant, const monitor_invariant_t&);
 // REVISIT (sparent) : UNIMPLEMENTED
 #endif
 
@@ -566,7 +566,7 @@ sheet_t::connection_t sheet_t::monitor_enabled(name_t input, const name_t* first
 }
 
 #if 0
-sheet_t::connection_t sheet_t::monitor_invariant_contributing(name_t input, 
+sheet_t::connection_t sheet_t::monitor_invariant_contributing(name_t input,
                                                               const monitor_invariant_t& monitor)
 { return object_m->monitor_invariant_contributing(input, monitor); }
 #endif
@@ -936,7 +936,7 @@ sheet_t::connection_t sheet_t::implementation_t::monitor_enabled(name_t n, const
                                                     (touch_set & priority_accessed_m).any()));
 
     return monitor_enabled_m.connect(std::bind(&sheet_t::implementation_t::enabled_filter, this,
-                                                 touch_set, iter->cell_set_pos_m, monitor, ph::_1, ph::_2));
+                                                 touch_set, iter->cell_set_pos_m, monitor, _1, _2));
 }
 
 /**************************************************************************************************/
@@ -989,7 +989,7 @@ sheet_t::implementation_t::monitor_contributing(name_t n, const dictionary_t& ma
 
     return iter->monitor_contributing_m.connect(
         std::bind(monitor, std::bind(&sheet_t::implementation_t::contributing_set,
-                                         std::ref(*this), mark, ph::_1)));
+                                         std::ref(*this), mark, _1)));
 }
 
 /**************************************************************************************************/
@@ -1478,7 +1478,7 @@ any_regular_t sheet_t::implementation_t::get(name_t variable_name) {
     // However, it would be good to seperate out this get from the operator[] and
     // only use this one for updates. The problem is that inspect shares the same VM
     // so enabling this assert has to wait until I seperate the VM from the sheet_t.
-    
+
     assert(check_update_reentrancy_m
            && "sheet_t::get() can only be called from sheet_t::update().");
 #endif

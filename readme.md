@@ -10,7 +10,7 @@ We use [Travis CI](https://travis-ci.org/stlab/adobe_source_libraries) to valida
 There are multiple ways of building the Adobe Source Libraries.
 
 ## `configure && build`
-From a UNIX terminal you should be able to execute `./configure.sh` and `./build.sh`, which should download all the necessary dependencies (Boost and double-conversion) and begin building. (This is the method employed by Travis CI for build validation.)
+From a UNIX terminal you should be able to execute `./configure.sh` and `./build.sh`, which should download all the necessary dependencies (Boost and double-conversion) and begin building.
 
 ## CMake
 

@@ -31,7 +31,7 @@
 /**************************************************************************************************/
 
 namespace fs = std::filesystem;
-namespace ph = std::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -86,16 +86,16 @@ struct sheet_tracker {
     sheet_tracker(const fs::path& sheet_path, const fs::path& input_path)
         : callbacks_m(adobe::bind_to_sheet(sheet_m)) {
         //  attach the VM to the sheet.
-        sheet_m.machine_m.set_variable_lookup(std::bind(&adobe::sheet_t::get, &sheet_m, ph::_1));
+        sheet_m.machine_m.set_variable_lookup(std::bind(&adobe::sheet_t::get, &sheet_m, _1));
 
         const auto& sheet_path_str{sheet_path.native()};
         std::ifstream sheet_stream{sheet_path_str.c_str()};
 
         callbacks_m.add_cell_proc_m = std::bind(&sheet_tracker::add_cell_trap, std::ref(*this),
-                                                  callbacks_m.add_cell_proc_m, ph::_1, ph::_2, ph::_3, ph::_4);
+                                                  callbacks_m.add_cell_proc_m, _1, _2, _3, _4);
         callbacks_m.add_interface_proc_m =
             std::bind(&sheet_tracker::add_interface_trap, std::ref(*this),
-                        callbacks_m.add_interface_proc_m, ph::_1, ph::_2, ph::_3, ph::_4, ph::_5, ph::_6);
+                        callbacks_m.add_interface_proc_m, _1, _2, _3, _4, _5, _6);
 
         if (!sheet_stream.is_open()) {
             std::cerr << "Could not open \"";
@@ -210,7 +210,7 @@ void sheet_tracker::loop() {
     sheet_m.update();
     for (cell_set_t::iterator iter = cell_set_m.begin(), end = cell_set_m.end(); iter != end;
          ++iter) {
-        sheet_m.monitor_value(iter->first, std::bind(&simple_display, std::ref(*iter), ph::_1));
+        sheet_m.monitor_value(iter->first, std::bind(&simple_display, std::ref(*iter), _1));
     }
 
     while (true) {

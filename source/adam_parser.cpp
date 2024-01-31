@@ -28,7 +28,7 @@
 /**************************************************************************************************/
 
 using namespace std;
-namespace ph = std::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -84,7 +84,7 @@ namespace adobe {
 
 adam_parser::adam_parser(std::istream& in, const line_position_t& position)
     : expression_parser(in, position) {
-    set_keyword_extension_lookup(std::bind(&keyword_lookup, ph::_1));
+    set_keyword_extension_lookup(std::bind(&keyword_lookup, _1));
 }
 
 /**************************************************************************************************/
@@ -92,7 +92,7 @@ adam_parser::adam_parser(std::istream& in, const line_position_t& position)
 adam_parser::adam_parser(std::istream& in, const line_position_t& position,
                          const adam_callback_suite_t& callbacks)
     : expression_parser(in, position), adam_callback_suite_m(callbacks) {
-    set_keyword_extension_lookup(std::bind(&keyword_lookup, ph::_1));
+    set_keyword_extension_lookup(std::bind(&keyword_lookup, _1));
 
     assert(adam_callback_suite_m.add_cell_proc_m); // all callbacks are required.
     assert(adam_callback_suite_m.add_relation_proc_m);
@@ -112,7 +112,7 @@ array_t parse_adam_expression(const std::string& str_expression) {
     std::stringstream expression_stream(str_expression);
 
     adobe::expression_parser parser(expression_stream, line_position_t("expression"));
-    parser.set_keyword_extension_lookup(std::bind(&keyword_lookup, ph::_1));
+    parser.set_keyword_extension_lookup(std::bind(&keyword_lookup, _1));
 
     adobe::array_t expression;
     parser.require_expression(expression);
