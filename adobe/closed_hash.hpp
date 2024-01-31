@@ -543,9 +543,9 @@ private:
             alloc.allocate(sizeof(header_t) - sizeof(node_t) + sizeof(node_t) * n));
         header()->capacity() = n;
         header()->size() = 0;
-        construct_at(&header()->free_tail());
-        construct_at(&header()->used_tail());
-        construct_at(&header()->allocator(), a);
+        adobe::construct_at(&header()->free_tail());
+        adobe::construct_at(&header()->used_tail());
+        adobe::construct_at(&header()->allocator(), a);
 
         node_t* prior = header()->free_tail().address();
         for (node_ptr first(&header()->storage_m[0]), last(&header()->storage_m[0] + n);
@@ -582,7 +582,7 @@ private:
 
     // location points to a free node
     static void insert_raw(iterator location, value_type x, std::size_t state) {
-        construct_at<value_type>(&*location, std::move(x));
+        adobe::construct_at<value_type>(&*location, std::move(x));
         location.set_state(state);
         unsafe::skip_node(location);
     }
