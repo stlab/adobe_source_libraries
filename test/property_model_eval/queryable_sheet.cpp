@@ -5,9 +5,10 @@
 */
 
 /**************************************************************************************************/
-#include <functional>
 
 #include "queryable_sheet.hpp"
+
+#include <functional>
 
 /**************************************************************************************************/
 
@@ -75,9 +76,7 @@ void queryable_sheet_t::begin_monitoring() {
                                               e = invariant_index_m.end();
          iter != e; ++iter) {
         std::size_t i(iter->second);
-        sheet_m.monitor_value(name_m[i], [&value_m_at_index_i = value_m[i]](any_regular_t val) {
-            adobe::assign{}(val, value_m_at_index_i);
-        });
+        sheet_m.monitor_value(name_m[i], std::bind(adobe::assign(), _1, std::ref(value_m[i])));
     }
 }
 
