@@ -295,7 +295,7 @@ token_range_t my_content_callback(
 		make_xml_document(value.first, value.second,
 			line_position_t("canvas"),
 			adobe::always_true<token_range_t>(),
-			boost::bind(my_simple_content_callback, _1, _2, _3, _4, boost::ref(graphics)),
+			std::bind(my_simple_content_callback, _1, _2, _3, _4, std::ref(graphics)),
 			adobe::null_output_t()).parse_content();
 	}
 	else if (token_range_equal(rect_tag_k, name))
@@ -332,7 +332,7 @@ void draw_graphics(const std::string& xml_shape, graphics_context_t& graphics)
 	make_xml_document(xml_shape.begin(), xml_shape.end(),
 		line_position_t("xml shape"),
 		adobe::always_true<token_range_t>(),
-		boost::bind(my_content_callback, _1, _2, _3, _4, boost::ref(graphics)),
+		std::bind(my_content_callback, _1, _2, _3, _4, std::ref(graphics)),
 		adobe::null_output_t()).parse_document();
 }\endverbatim
 With this content callback function and external entry function, we
@@ -415,7 +415,7 @@ token_range_t my_group_callback(
 		make_xml_document(value.first, value.second,
 			line_position_t("group"),
 			adobe::always_true<token_range_t>(),
-			boost::bind(my_group_callback, _1, _2, _3, _4, boost::ref(translated_graphics)),
+			std::bind(my_group_callback, _1, _2, _3, _4, std::ref(translated_graphics)),
 			adobe::null_output_t()).parse_content();
 	}
 	else if (token_range_equal(rect_tag_k, name))
@@ -439,7 +439,7 @@ token_range_t my_group_callback(
 		make_xml_document(value.first, value.second,
 			line_position_t("polygon"),
 			adobe::always_true<token_range_t>(),
-			boost::bind(my_polygon_callback, _1, _2, _3, _4, boost::ref(polygon)),
+			std::bind(my_polygon_callback, _1, _2, _3, _4, std::ref(polygon)),
 			adobe::null_output_t()).parse_content();
 
 		draw_polygon(polygon, graphics);
@@ -466,7 +466,7 @@ token_range_t my_canvas_callback(
 		make_xml_document(value.first, value.second,
 			line_position_t("canvas"),
 			adobe::always_true<token_range_t>(),
-			boost::bind(my_group_callback, _1, _2, _3, _4, boost::ref(graphics)),
+			std::bind(my_group_callback, _1, _2, _3, _4, std::ref(graphics)),
 			adobe::null_output_t()).parse_content();
 	}
 	else
@@ -482,7 +482,7 @@ void draw_graphics(const std::string& xml_shape, graphics_context_t& graphics)
 	make_xml_document(xml_shape.begin(), xml_shape.end(),
 		line_position_t("xml shape"),
 		adobe::always_true<token_range_t>(),
-		boost::bind(my_canvas_callback, _1, _2, _3, _4, boost::ref(graphics)),
+		std::bind(my_canvas_callback, _1, _2, _3, _4, std::ref(graphics)),
 		adobe::null_output_t()).parse_document();
 }\endverbatim
 Note that this solution guarantees that the root element is a canvas,

@@ -13,12 +13,12 @@ with regards to state.
 /**************************************************************************************************/
 
 #include <cassert>
+#include <functional>
 #include <iomanip>
 #include <istream>
 #include <sstream>
 #include <utility>
 
-#include <boost/bind/bind.hpp>
 #include <boost/config.hpp>
 
 #include <adobe/any_regular.hpp>

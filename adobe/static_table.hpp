@@ -144,7 +144,6 @@ is not compatible.
 \typedef adobe::static_table_traits::result_type
 
 The result type retured by operator() in this function object. Must always be <code>bool</code>.
-Required by boost::bind.
 */
 
 /*!

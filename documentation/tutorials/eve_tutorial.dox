@@ -7,8 +7,8 @@
 \section tutorials_eve_prerequsites Prerequisites To This Tutorial
 \par
 The following list of items is a good recommendation of stuff you should know before you attempt to work through this document:
-    - boost::function
-    - boost::bind
+    - std::function
+    - std::bind
     - adobe::dictionary_t
     - Cursory reading of the \ref eve_engine (Engine) and \ref eveparser documentation
 \par
@@ -51,8 +51,8 @@ void parse_my_eve_file(const std::string& path_to_file)
                                 stream,
                                 adobe::line_position_t(path_to_file.c_str()),
                                 adobe::eve::position_t(),
-                                boost::bind(&client_assemble, _1, _3,
-                                    boost::bind(adobe::eve::evaluate_arguments(), _4))));
+                                std::bind(&client_assemble, _1, _3,
+                                    std::bind(adobe::eve::evaluate_arguments(), _4))));
 }
 \endcode
 \par
@@ -88,7 +88,7 @@ adobe::layoutable_t *widget_factory(adobe::name_t widget_name)
    /* a real factory goes here instead */
    //...
    if (widget_name == "push_button") {
-      return boost::ref(*new adobe::placeable_t(boost::ref(*new my_push_button)));
+      return std::ref(*new adobe::placeable_t(std::ref(*new my_push_button)));
    else if //...
 
 }
@@ -169,7 +169,7 @@ my_push_button::measure(adobe::extents_t& geometry)
 \par
 Peeling away the layers of C++ reveals this: using the dictionary_t we obtained from adobe::eve::evaluate_arguments (remember that from earlier?) we can now figure out what, according to the parse, the "name" variable of the widget is, and we can use that value to measure some sort of pixel width. Then we can pass that to the Eve Engine, and now we have what we want: a button that is as wide as it needs to be.
 \par
-At this point a general objection could be raised: Why not avoid the constructor argument by adding another parameter in the layout elements, namely an adobe::dictionary_t, that the Engine can merely propagate but never use? Better yet, why not just some <code>void*</code> that the client can pack with whatever they like? The answer is this: <i>To do so is to require the Eve Engine to carry more of a burden than it absolutely needs in order to do its job</i>. In this case, the mere propagation of parameters is not the job of the Eve Engine. The job of the Eve Engine is to solve for the layout. In order to do that, we distill what is <i>actually needed</i> to accomplish that task, and use that to specify the Eve Engine API. Anything beyond the absolute minimum requirements for Eve to do its job would be "API sugar", and so should be eliminated from the API as unnecessary. (As an historical aside, this was the way the original Eve was implemented, as having a user-specified "tag" that could be anything. In every use of Eve1 the "tag" quickly became a spaghetti tunnel.) Thanks to boost::bind, we are able to pass extra parameters to other parts of the assemblage without requiring components that don't care about this extra information to have to shoulder it.
+At this point a general objection could be raised: Why not avoid the constructor argument by adding another parameter in the layout elements, namely an adobe::dictionary_t, that the Engine can merely propagate but never use? Better yet, why not just some <code>void*</code> that the client can pack with whatever they like? The answer is this: <i>To do so is to require the Eve Engine to carry more of a burden than it absolutely needs in order to do its job</i>. In this case, the mere propagation of parameters is not the job of the Eve Engine. The job of the Eve Engine is to solve for the layout. In order to do that, we distill what is <i>actually needed</i> to accomplish that task, and use that to specify the Eve Engine API. Anything beyond the absolute minimum requirements for Eve to do its job would be "API sugar", and so should be eliminated from the API as unnecessary. (As an historical aside, this was the way the original Eve was implemented, as having a user-specified "tag" that could be anything. In every use of Eve1 the "tag" quickly became a spaghetti tunnel.) Thanks to std::bind, we are able to pass extra parameters to other parts of the assemblage without requiring components that don't care about this extra information to have to shoulder it.
 
 \section tutorials_eve_engine Eve Engine
 \par

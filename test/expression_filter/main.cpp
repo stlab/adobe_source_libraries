@@ -4,9 +4,8 @@
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 
+#include <functional>
 #include <iostream>
-
-#include <boost/function.hpp>
 
 #include <adobe/implementation/expression_filter.hpp>
 #include <adobe/implementation/expression_formatter.hpp>
@@ -15,7 +14,7 @@
 #include <adobe/virtual_machine.hpp>
 
 void test_expression(const char* expression_string,
-                     const boost::function<adobe::array_t(const adobe::array_t&)>& process_func) {
+                     const std::function<adobe::array_t(const adobe::array_t&)>& process_func) {
     adobe::array_t expression;
     std::stringstream stream(expression_string);
 

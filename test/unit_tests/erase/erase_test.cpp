@@ -10,13 +10,13 @@
 
 
 #include <deque>
+#include <functional>
 #include <iostream>
 #include <list>
 #include <map>
 #include <set>
 #include <vector>
 
-#include <boost/bind/bind.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
@@ -32,7 +32,7 @@
 
 /**************************************************************************************************/
 
-using namespace boost::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -42,12 +42,12 @@ typedef boost::mpl::list<std::vector<int>, std::list<int>, std::set<int>, std::d
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_erase_if, Container, test_types) {
     using namespace adobe;
-    using namespace boost;
+    using namespace std;
     {
         const int a[] = {9, 2, 4, 4, 7, 3, 5};
         Container x(begin(a), end(a));
 
-        erase_if(x, bind(adobe::equal_to(), 4, _1));
+        erase_if(x, std::bind(adobe::equal_to(), 4, _1));
         // REVISIT(mmarcus) : BOOST_SIZE_ISSUE replaced boost::size with
         // distance(begin, end) Until figure out how to work around boost
         // 1.35.0 apparently buggy size, begin, end return type calculation
@@ -63,7 +63,7 @@ typedef boost::mpl::list<std::map<int, int>, std::multimap<int, int>> test_key_v
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_key_value_erase_if, Container, test_key_value_types) {
     using namespace adobe;
-    using namespace boost;
+    using namespace std;
     {
         typedef typename Container::value_type value_type;
 
@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_key_value_erase_if, Container, test_key_value
                                 value_type(5, 6)};
         Container x(begin(a), end(a));
 
-        erase_if(x, boost::bind(adobe::equal_to(), typename Container::value_type(4, 2), _1));
+        erase_if(x, std::bind(adobe::equal_to(), typename Container::value_type(4, 2), _1));
         // REVISIT(mmarcus) : BOOST_SIZE_ISSUE replaced boost::size with
         // distance(begin, end) Until figure out how to work around boost
         // 1.35.0 apparently buggy size, begin, end return type calculation

@@ -13,8 +13,6 @@
 #include <functional>
 #include <type_traits>
 
-#include <boost/bind/bind.hpp>
-
 #include <adobe/string.hpp>
 
 /**************************************************************************************************/
@@ -136,12 +134,12 @@ typename F::concept_t* make_model(const T& x) {
 
 template <typename F, typename T>
 typename F::concept_t* create_model(const T& x, std::true_type) {
-    return x ? make_model<F>(boost::bind<typename F::result_type>(x)) : 0;
+    return x ? make_model<F>(std::bind<typename F::result_type>(x)) : 0;
 }
 
 template <typename F, typename T>
 typename F::concept_t* create_model(const T& x, std::false_type) {
-    return make_model<F>(boost::bind<typename F::result_type>(x));
+    return make_model<F>(std::bind<typename F::result_type>(x));
 }
 
 template <typename F, typename T>

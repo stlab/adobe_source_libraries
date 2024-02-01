@@ -24,7 +24,6 @@
 #include <adobe/name.hpp>
 #include <adobe/string.hpp>
 
-#include <boost/bind/bind.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/operators.hpp>

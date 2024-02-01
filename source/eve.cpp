@@ -8,10 +8,10 @@
 #include <adobe/eve.hpp>
 
 #include <array>
+#include <functional>
 #include <iterator>
 #include <utility>
 
-#include <boost/bind/bind.hpp>
 #include <boost/iterator/filter_iterator.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 
@@ -31,7 +31,7 @@
 
 /**************************************************************************************************/
 
-using namespace boost::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -603,7 +603,7 @@ void view_proxy_t::adjust(::child_iterator first, ::child_iterator last, slice_s
                 guide_set = iter->geometry_m.extents_m.slice_m[select].guide_set_m;
 
                 adobe::transform(guide_set, boost::begin(guide_set),
-                                 boost::bind(std::minus<int>(),
+                                 std::bind(std::minus<int>(),
                                              iter->geometry_m.extents_m.slice_m[select].length_m,
                                              _1));
                 adobe::reverse(guide_set);
@@ -699,7 +699,7 @@ void view_proxy_t::flatten(::child_iterator first, ::child_iterator last, slice_
     case layout_attributes_t::align_reverse_fill: {
         guide_set = container_guide_set_m[select][layout_attributes_t::align_reverse];
         adobe::transform(guide_set, boost::begin(guide_set),
-                         boost::bind(std::minus<int>(), place_m.slice_m[select].length_m, _1));
+                         std::bind(std::minus<int>(), place_m.slice_m[select].length_m, _1));
         adobe::reverse(guide_set);
     } break;
     default:

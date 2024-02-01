@@ -7,9 +7,8 @@
 
 #include <adobe/eve_evaluate.hpp>
 
+#include <functional>
 #include <mutex>
-
-#include <boost/bind/bind.hpp>
 
 #include <adobe/algorithm/sort.hpp>
 #include <adobe/array.hpp>
@@ -24,7 +23,7 @@
 /**************************************************************************************************/
 
 using namespace std;
-using namespace boost::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -199,13 +198,17 @@ eve_callback_suite_t bind_layout(const bind_layout_proc_t& proc, sheet_t& sheet,
 
     eve_callback_suite_t suite;
 
-    suite.add_view_proc_m = boost::bind(
-        proc, _1, _3, boost::bind(&evaluate_named_arguments, boost::ref(evaluator), _4));
-    suite.add_cell_proc_m = boost::bind(&add_cell, boost::ref(sheet), _1, _2, _3, _4);
-    suite.add_relation_proc_m = boost::bind(&add_relation, boost::ref(sheet), _1, _2, _3, _4);
-    suite.add_interface_proc_m =
-        boost::bind(&adobe::sheet_t::add_interface, boost::ref(sheet), _1, _2, _3, _4, _5, _6);
-    suite.finalize_sheet_proc_m = boost::bind(&sheet_t::update, boost::ref(sheet));
+    suite.add_view_proc_m = std::bind(
+        proc, _1, _3, std::bind(&evaluate_named_arguments, std::ref(evaluator), _4));
+    suite.add_cell_proc_m = std::bind(&add_cell, std::ref(sheet), _1, _2, _3, _4);
+    suite.add_relation_proc_m = std::bind(&add_relation, std::ref(sheet), _1, _2, _3, _4);
+    suite.add_interface_proc_m = [&sheet](name_t name, bool linked, const line_position_t& position1,
+                                            const array_t& initializer, const line_position_t& position2,
+                                            const array_t& expression, const std::string& brief,
+                                            const std::string& detailed) -> void {
+        sheet.add_interface(name, linked, position1, initializer, position2, expression);
+    };
+    suite.finalize_sheet_proc_m = std::bind(&sheet_t::update, std::ref(sheet));
 
     return suite;
 }
