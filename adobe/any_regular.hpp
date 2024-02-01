@@ -482,10 +482,9 @@ public:
 
     any_regular_t(any_regular_t&& x) noexcept { x.object().move_clone(storage()); }
 
-    any_regular_t& operator=(const any_regular_t& x) noexcept {
-        object().destruct();
-        x.object().clone(storage());
-        return *this;
+    any_regular_t& operator=(const any_regular_t& x) {
+        auto tmp{x};
+        return *this = std::move(tmp);
     }
 
     any_regular_t& operator=(any_regular_t&& x) noexcept {
@@ -504,7 +503,7 @@ public:
     */
 
     template <typename T>
-    any_regular_t(T x) {
+    any_regular_t(T x, std::enable_if_t<!std::is_same<std::reference_wrapper<any_regular_t>, T>::value>* = 0) {
         ::new (storage()) typename traits<T>::model_type(std::move(x));
     }
 
