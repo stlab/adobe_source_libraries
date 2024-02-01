@@ -57,8 +57,7 @@ void queryable_sheet_t::begin_monitoring() {
 
         sheet_m.monitor_value(name, std::bind(adobe::assign(), _1, std::ref(value_m[i])));
         */
-        sheet_m.monitor_value(name,
-                              [i, this](const any_regular_t& value) { value_m[i] = value; });
+        sheet_m.monitor_value(name, [i, this](const any_regular_t& value) { value_m[i] = value; });
 
         sheet_m.monitor_contributing(name, dictionary_t(),
                                      std::bind(adobe::assign(), _1, std::ref(contributors_m[i])));
@@ -69,7 +68,9 @@ void queryable_sheet_t::begin_monitoring() {
          iter != e; ++iter) {
         std::size_t i(iter->second);
 
-        sheet_m.monitor_value(name_m[i], std::bind(adobe::assign(), _1, std::ref(value_m[i])));
+        // sheet_m.monitor_value(name_m[i], std::bind(adobe::assign(), _1, std::ref(value_m[i])));
+        sheet_m.monitor_value(name_m[i],
+                              [i, this](const any_regular_t& value) { value_m[i] = value; });
 
         sheet_m.monitor_contributing(name_m[i], dictionary_t(),
                                      std::bind(adobe::assign(), _1, std::ref(contributors_m[i])));
@@ -78,7 +79,9 @@ void queryable_sheet_t::begin_monitoring() {
                                               e = invariant_index_m.end();
          iter != e; ++iter) {
         std::size_t i(iter->second);
-        sheet_m.monitor_value(name_m[i], std::bind(adobe::assign(), _1, std::ref(value_m[i])));
+        // sheet_m.monitor_value(name_m[i], std::bind(adobe::assign(), _1, std::ref(value_m[i])));
+        sheet_m.monitor_value(name_m[i],
+                              [i, this](const any_regular_t& value) { value_m[i] = value; });
     }
 }
 
