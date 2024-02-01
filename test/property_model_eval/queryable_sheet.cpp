@@ -51,7 +51,14 @@ void queryable_sheet_t::begin_monitoring() {
         sheet_m.monitor_enabled(dummy, &v[0], 1 + &v[0],
                                 std::bind(adobe::assign(), _1, std::ref(priority_accessed_m[i])));
 
+        /*
+        binding to a reference to an any_regular_t is not working with Clang 14 and the gnu
+        standard library. Using a lambda instead.
+
         sheet_m.monitor_value(name, std::bind(adobe::assign(), _1, std::ref(value_m[i])));
+        */
+        sheet_m.monitor_value(name,
+                              [i, this](const any_regular_t& value) { value_m[i] = value; });
 
         sheet_m.monitor_contributing(name, dictionary_t(),
                                      std::bind(adobe::assign(), _1, std::ref(contributors_m[i])));
@@ -61,6 +68,7 @@ void queryable_sheet_t::begin_monitoring() {
                                               e = output_index_m.end();
          iter != e; ++iter) {
         std::size_t i(iter->second);
+
         sheet_m.monitor_value(name_m[i], std::bind(adobe::assign(), _1, std::ref(value_m[i])));
 
         sheet_m.monitor_contributing(name_m[i], dictionary_t(),
