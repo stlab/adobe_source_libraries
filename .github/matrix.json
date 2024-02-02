@@ -7,9 +7,9 @@
             "os": "ubuntu-22.04"
         },
         {
-            "name": "Linux Clang 16",
+            "name": "Linux Clang 14",
             "compiler": "clang",
-            "version": "16",
+            "version": "14",
             "os": "ubuntu-22.04"
         },
         {
