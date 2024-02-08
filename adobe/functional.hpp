@@ -379,12 +379,15 @@ private:
 
 template <class F> // F models a BinaryFunction
 struct transposer {
+    typedef typename F::second_argument_type first_argument_type;
+    typedef typename F::first_argument_type second_argument_type;
+    typedef typename F::result_type result_type;
+
     F fun;
 
     transposer(const F& f) : fun(f) {}
 
-    template<typename T>
-    T operator()(const T& x, const T& y) const {
+    result_type operator()(const first_argument_type& x, const second_argument_type& y) const {
         return fun(y, x);
     }
 };

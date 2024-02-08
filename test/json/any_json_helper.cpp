@@ -88,7 +88,7 @@ struct any_json_helper_t {
 
 BOOST_AUTO_TEST_CASE(any_json_helper_smoke) {
     std::cout << "-=-=- any_json_helper_smoke -=-=-\n";
-    any x = json_parser<any_json_helper_t>(R"raw(
+    any x = json_parser<any_json_helper_t>(u8R"raw(
         [
             42,
             12.536,
