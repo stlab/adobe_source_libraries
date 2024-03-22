@@ -35,7 +35,6 @@ jobs:
       - name: Install dependencies (macos)
         if: ${{ startsWith(matrix.config.os, 'macos') }}
         run: |
-          brew install boost
           rm '/usr/local/bin/2to3'
           rm '/usr/local/bin/2to3-3.12'
           rm '/usr/local/bin/idle3'
@@ -46,6 +45,7 @@ jobs:
           rm '/usr/local/bin/python3.12'
           rm '/usr/local/bin/python3-config'
           rm '/usr/local/bin/python3.12-config'
+          brew install boost
           brew install ninja
         shell: bash
 
