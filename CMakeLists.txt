@@ -16,8 +16,8 @@ set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 set(VCPKG_FEATURE_FLAGS "versions")
 project(adobe-source-libraries CXX)
 
-add_definitions ("-Wall")
-#add_definitions ("-Werror")
+# add_definitions ("-Wall")
+# add_definitions ("-Werror")
 
 # There are two big choices this file makes - how to include Boost, and how to
 # include double-conversion, respectively. Build environments vary and we're

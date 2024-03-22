@@ -62,7 +62,9 @@ struct less {
         return x < y;
     }
 
-    bool operator()(const std::type_info& x, const std::type_info& y) { return x.before(y) != 0; }
+    bool operator()(const std::type_info& x, const std::type_info& y) const {
+        return x.before(y) != 0;
+    }
 };
 
 struct greater_equal {
