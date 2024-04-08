@@ -40,16 +40,10 @@ cancellation_token_source <http://msdn.microsoft.com/en-us/library/hh749985.aspx
 cancellation_token <http://msdn.microsoft.com/en-us/library/hh749975.aspx>
 cancellation_token_registration <http://msdn.microsoft.com/en-us/library/hh750057.aspx>
 task_canceled <http://msdn.microsoft.com/en-us/library/hh750110.aspx>
-is_task_cancellation_requested <http://msdn.microsoft.com/en-us/library/hh750070.aspx>
 cancel_current_task <http://msdn.microsoft.com/en-us/library/hh749945.aspx>
-run_with_cancellation_token <http://msdn.microsoft.com/en-us/library/hh749944.aspx>
 
 For detailed documentation on using this library see:
 <http://msdn.microsoft.com/en-us/library/dd984117.aspx>
-
-There are also two additions:
-    cancelable_function
-    make_cancelable
 
 */
 
@@ -65,8 +59,6 @@ using concurrency::cancel_current_task;
 using concurrency::cancellation_token;
 using concurrency::cancellation_token_registration;
 using concurrency::cancellation_token_source;
-using concurrency::is_task_cancellation_requested;
-using concurrency::run_with_cancellation_token;
 using concurrency::task_canceled;
 
 #else
@@ -296,95 +288,11 @@ private:
 
 /**************************************************************************************************/
 
-inline bool is_task_cancellation_requested() {
-    const details::cancellation_scope* scope = details::get_cancellation_scope();
-    return scope ? scope->token_.is_canceled() : false;
-}
-
 [[noreturn]] inline void cancel_current_task() { throw task_canceled(); }
-
-/*!
-    To be compatible with PPL, this function does nothing if the token is canceled before the
-    function is executed.
-*/
-
-template <typename F> // F models void ()
-inline void run_with_cancellation_token(const F& f, cancellation_token token) {
-    details::cancellation_scope scope(std::move(token));
-    if (!is_task_cancellation_requested())
-        f();
-}
 
 /**************************************************************************************************/
 
 #endif
-
-/**************************************************************************************************/
-
-/*!
-
-    A function object that will execute f with the given cancellation_token in a
-    run_with_cancellation_token() context. If cancelation is already requested then
-    task_canceled is thrown and f is not executed.
-
-*/
-
-template <typename F, typename SIG>
-class cancelable_function;
-template <typename F, typename R, typename... Arg>
-class cancelable_function<F, R(Arg...)> {
-public:
-    typedef R result_type;
-
-    cancelable_function(F f, cancellation_token token)
-        : function_(std::move(f)), token_(std::move(token)) {}
-
-    R operator()(Arg&&... arg) const {
-        std::optional<R> r;
-
-        run_with_cancellation_token([&] { r = function_(std::forward<Arg>(arg)...); }, token_);
-
-        if (!r)
-            cancel_current_task();
-        return std::move(r.get());
-    }
-
-private:
-    F function_;
-    cancellation_token token_;
-};
-
-template <typename F, typename... Arg>
-class cancelable_function<F, void(Arg...)> {
-public:
-    typedef void result_type;
-
-    cancelable_function(F f, cancellation_token token)
-        : function_(std::move(f)), token_(std::move(token)) {}
-
-    void operator()(Arg&&... arg) const {
-        bool executed = false;
-
-        run_with_cancellation_token(
-            [&] {
-                executed = true;
-                function_(std::forward<Arg>(arg)...);
-            },
-            token_);
-
-        if (!executed)
-            cancel_current_task();
-    }
-
-private:
-    F function_;
-    cancellation_token token_;
-};
-
-template <typename SIG, typename F> // F models void ()
-cancelable_function<F, SIG> make_cancelable(F f, cancellation_token token) {
-    return cancelable_function<F, SIG>(f, token);
-}
 
 /**************************************************************************************************/
 
