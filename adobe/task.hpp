@@ -94,7 +94,7 @@ struct cancel_state {
     template <typename F> // F models void ()
     cancellation_token_registration register_callback(F f) {
         /*
-            Avoid heap oerations in the lock by inserting the element in a temporary list then
+            Avoid heap operations in the lock by inserting the element in a temporary list then
             splicing that list into the callback_list_ under the lock.
         */
         list_type list;
@@ -184,72 +184,6 @@ private:
 inline bool operator!=(const cancellation_token& x, const cancellation_token& y) {
     return !(x == y);
 }
-
-/**************************************************************************************************/
-
-namespace details {
-
-/**************************************************************************************************/
-
-struct cancellation_scope;
-
-/*
-    REVISIT (sparent) : The thread local implementation should be the default implementation.
-    The pthread implementation is for current Mac/iOS platforms. Look at what it would take
-    to use boost instead of posix for OS X.
-
-*/
-
-#if defined(_MSC_VER) && (1800 <= _MSC_VER)
-
-template <typename T = void> // placeholder to allow header only library
-cancellation_scope*& get_cancellation_scope_() {
-    __declspec(thread) static cancellation_scope* result = nullptr;
-    return result;
-}
-
-
-inline cancellation_scope* get_cancellation_scope() { return get_cancellation_scope_(); }
-
-
-inline void set_cancellation_scope(cancellation_scope* scope) { get_cancellation_scope_() = scope; }
-
-#else
-
-template <typename T> // placeholder to allow header only library
-pthread_key_t get_cancellation_key() {
-    static pthread_key_t cancellation_key = 0;        // aggregate initialized
-    int r = pthread_key_create(&cancellation_key, 0); // execute once
-    (void)r;                                          // avoid unused arg warning from above
-    return cancellation_key;
-}
-
-inline cancellation_scope* get_cancellation_scope() {
-    return static_cast<cancellation_scope*>(pthread_getspecific(get_cancellation_key<void>()));
-}
-
-
-inline void set_cancellation_scope(cancellation_scope* scope) {
-    pthread_setspecific(get_cancellation_key<void>(), scope);
-}
-
-#endif
-
-struct cancellation_scope {
-    cancellation_scope(cancellation_token token) : token_(std::move(token)) {
-        prior_ = get_cancellation_scope();
-        set_cancellation_scope(this);
-    }
-
-    ~cancellation_scope() { set_cancellation_scope(prior_); }
-
-    cancellation_scope* prior_;
-    const cancellation_token& token_;
-};
-
-/**************************************************************************************************/
-
-} // namespace details
 
 /**************************************************************************************************/
 
