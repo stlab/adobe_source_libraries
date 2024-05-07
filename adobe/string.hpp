@@ -20,8 +20,6 @@
 #include <iosfwd>
 #endif
 
-#include <adobe/cstring.hpp>
-
 #include <adobe/string/to_string.hpp>
 
 /**************************************************************************************************/
@@ -53,7 +51,13 @@ inline std::string make_string(const char* a, const char* b, const char* c) {
 
 //!\ingroup misc_functional
 struct str_less_t {
-    bool operator()(const char* x, const char* y) const { return adobe::strcmp(x, y) < 0; }
+    bool operator()(const char* x, const char* y) const { 
+        while (*x && *x == *y) {
+            ++x;
+            ++y;
+        }
+        return *x < *y;
+    }
 };
 
 /**************************************************************************************************/
