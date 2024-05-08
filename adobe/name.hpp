@@ -23,7 +23,6 @@
 
 // asl
 #include <adobe/conversion.hpp>
-#include <adobe/cstring.hpp>
 #include <adobe/fnv.hpp>
 
 /**
