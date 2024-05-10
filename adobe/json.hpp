@@ -17,8 +17,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include <boost/lexical_cast.hpp>
-
 #include <adobe/cassert.hpp>
 #include <adobe/string/to_string.hpp>
 
@@ -202,8 +200,11 @@ private:
         frac();
         exp();
 
-        double value = boost::lexical_cast<double>(p, p_ - p);
+        const auto p_len = p_ - p;
+        char* p_end = nullptr;
+        double value = std::strtod(p, &p_end);
         require(std::isfinite(value), "finite number");
+        ADOBE_ASSERT(p_len == (p_end - p) && "std::strtod() failure");
 
         t = value_type(value);
 
