@@ -15,6 +15,7 @@
 #include <cmath>
 #include <cstdio>
 #include <string>
+#include <system_error>
 
 #ifndef NDEBUG
 #include <cfloat>
