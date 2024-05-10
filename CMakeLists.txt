@@ -19,14 +19,8 @@ project(adobe-source-libraries CXX)
 # add_definitions ("-Wall")
 # add_definitions ("-Werror")
 
-# There are two big choices this file makes - how to include Boost, and how to
-# include double-conversion, respectively. Build environments vary and we're
-# trying to support all of them.
-#
-# For double-conversion, the unix makefile setup is able to download the git
-# repo and build it
-
-option(USE_STLAB_DOUBLECONV "use stlab mirror of double-conversion repository" OFF)
+# There is a big choice this file makes, namely how to include Boost. Build environments
+# vary and we're trying to support all of them.
 
 set(root_path ${CMAKE_SOURCE_DIR}/..)
 
@@ -67,16 +61,6 @@ function(setup_dep)
     endif()
 
 endfunction()
-
-if (USE_STLAB_DOUBLECONV)
-  setup_dep(URL https://github.com/stlab/double-conversion.git BRANCH master IS_CMAKE)
-  target_include_directories(double-conversion PUBLIC $<BUILD_INTERFACE:${root_path}>)
-else()
-  setup_dep(URL https://github.com/google/double-conversion.git BRANCH master IS_CMAKE)
-  target_include_directories(double-conversion PUBLIC $<BUILD_INTERFACE:${root_path}/double-conversion>)
-  # poorly named flag to fix include path
-  target_compile_definitions(double-conversion PUBLIC ADOBE_BUILT_WITH_CMAKE)
-endif()
 
 function(target_link_boost target)
     target_link_libraries(${target} PUBLIC Boost::system)

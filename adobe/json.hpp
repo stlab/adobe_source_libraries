@@ -17,12 +17,6 @@
 #include <unordered_map>
 #include <vector>
 
-#ifdef ADOBE_BUILT_WITH_CMAKE
-#include <double-conversion/double-conversion.h>
-#else
-#include <double-conversion/src/double-conversion.h>
-#endif
-
 #include <adobe/cassert.hpp>
 #include <adobe/string/to_string.hpp>
 

@@ -26,13 +26,6 @@
 #include <adobe/any_regular.hpp>
 #include <adobe/string/to_string.hpp>
 
-// double-conversion
-#ifdef ADOBE_BUILT_WITH_CMAKE
-#include <double-conversion/double-conversion.h>
-#else
-#include <double-conversion/src/double-conversion.h>
-#endif
-
 /******************************************************************************/
 
 using namespace std;
@@ -124,15 +117,6 @@ std::string std_to_chars(const test_t& test) {
     }
 }
 
-std::string double_conversion_serialization(const test_t& test) {
-    using namespace double_conversion;
-    const DoubleToStringConverter& c = DoubleToStringConverter::EcmaScriptConverter();
-    char buf[32] = {0};
-    StringBuilder builder(buf, sizeof(buf));
-    c.ToShortest(test.value_m, &builder);
-    return builder.Finalize();
-}
-
 std::string any_regular_serialization(const test_t& test) {
     std::stringstream ss;
     ss << adobe::any_regular_t(test.value_m);
@@ -170,9 +154,7 @@ BOOST_AUTO_TEST_CASE(serialization_test_suite) {
 
     BOOST_CHECK_EQUAL(test_suite(&std_to_chars, "std::to_chars"), 6);
 
-    BOOST_CHECK_EQUAL(test_suite(&double_conversion_serialization, "double-conversion"), 14);
-
-    BOOST_CHECK_EQUAL(test_suite(&any_regular_serialization, "adobe::any_regular_t"), 14);
+    BOOST_CHECK_EQUAL(test_suite(&any_regular_serialization, "adobe::any_regular_t"), 9);
 }
 
 /******************************************************************************/

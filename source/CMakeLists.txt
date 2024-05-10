@@ -22,8 +22,6 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" OR
     target_compile_options(asl PUBLIC -ftemplate-depth=1024)
 endif()
 
-target_link_libraries(asl PUBLIC double-conversion)
-
 target_link_boost(asl)
 
 # thread linking

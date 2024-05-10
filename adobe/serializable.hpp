@@ -14,13 +14,8 @@
 #include <ostream>
 #include <type_traits>
 
-#ifdef ADOBE_BUILT_WITH_CMAKE
-#include <double-conversion/double-conversion.h>
-#else
-#include <double-conversion/src/double-conversion.h>
-#endif
-
 #include <adobe/typeinfo.hpp>
+#include <adobe/string/to_string.hpp>
 
 /**************************************************************************************************/
 
@@ -75,14 +70,7 @@ inline void ostream_insertion<bool>(std::ostream& s, const bool& x) {
 
 template <>
 inline void ostream_insertion<double>(std::ostream& s, const double& x) {
-    using namespace double_conversion;
-
-    const DoubleToStringConverter& c(DoubleToStringConverter::EcmaScriptConverter());
-    char buf[32] = {0};
-    StringBuilder builder(buf, sizeof(buf));
-    c.ToShortest(x, &builder);
-
-    s << builder.Finalize();
+    s << adobe::to_string(x);
 }
 
 /**************************************************************************************************/
