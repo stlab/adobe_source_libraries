@@ -63,8 +63,7 @@ public:
     allow 'junk' as it is the end of this token and on to the next one.
     */
     explicit json_parser(const char* p)
-        : p_(p), s2d_(double_conversion::StringToDoubleConverter::ALLOW_TRAILING_JUNK, kNaN, kNaN,
-                      nullptr, nullptr) {}
+        : p_(p) {}
 
     value_type parse() {
         value_type result;
@@ -201,14 +200,16 @@ private:
         frac();
         exp();
 
-        int count = 0;
-        double value = s2d_.StringToDouble(p, static_cast<int>(p_ - p), &count);
+        float value = 0;
+        const auto count = p_ - p;
+        if (const auto [ptr, ec] = std::from_chars(p, p + count, value); ec == std::errc()) {
+            require(std::isfinite(value), "finite number");
+            ADOBE_ASSERT(ptr == p_ && "std::from_chars() failure");
+            t = value_type(value);
+            return true;
+        }
 
-        require(std::isfinite(value), "finite number");
-        ADOBE_ASSERT(count == p_ - p && "StringToDouble() failure");
-
-        t = value_type(value);
-        return true;
+        return false;
     }
 
     void frac() {
@@ -344,7 +345,6 @@ private:
     }
 
     const char* p_;
-    double_conversion::StringToDoubleConverter s2d_;
 
     typedef char table_t_[256];
 
