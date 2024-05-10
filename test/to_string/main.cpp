@@ -86,6 +86,7 @@ test_t suite_g[] = {
     {std::numeric_limits<double>::max(), "1.7976931348623157e+308"},
     {std::numeric_limits<double>::denorm_min(), "5e-324"},
     {std::numeric_limits<double>::infinity(), "Infinity"},
+    {-std::numeric_limits<double>::infinity(), "-Infinity"},
     {std::numeric_limits<double>::quiet_NaN(), "NaN"},
     {std::numeric_limits<double>::signaling_NaN(), "NaN"},
 };
@@ -150,11 +151,11 @@ BOOST_AUTO_TEST_CASE(serialization_test_suite) {
 
     BOOST_CHECK_EQUAL(test_suite(&asl_to_string_v1<false>, "adobe::to_string (short)"), 2);
 
-    BOOST_CHECK_EQUAL(test_suite(&asl_to_string, "adobe::to_string (v2)"), 9);
+    BOOST_CHECK_EQUAL(test_suite(&asl_to_string, "adobe::to_string (v2)"), 10);
 
     BOOST_CHECK_EQUAL(test_suite(&std_to_chars, "std::to_chars"), 6);
 
-    BOOST_CHECK_EQUAL(test_suite(&any_regular_serialization, "adobe::any_regular_t"), 9);
+    BOOST_CHECK_EQUAL(test_suite(&any_regular_serialization, "adobe::any_regular_t"), 10);
 }
 
 /******************************************************************************/

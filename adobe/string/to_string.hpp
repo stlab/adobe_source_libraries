@@ -160,8 +160,12 @@ inline std::string to_string(double x) {
         return "NaN";
     }
 
-    if (std::isinf(x)) {
+    if (x == std::numeric_limits<double>::infinity()) {
         return "Infinity";
+    }
+
+    if (x == -std::numeric_limits<double>::infinity()) {
+        return "-Infinity";
     }
 
     std::array<char, 64> str;
