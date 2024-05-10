@@ -150,11 +150,11 @@ O to_string(double x, O out, bool precise = false) {
 
     `EcmaScriptConverter` sets the `DoubleToStringConverter` knobs a way that is not exactly
     reproducible by `std::to_chars`. `adobe::to_string` gets us as close as possible to
-    `EcmaScriptConverter` without overinundating the implementation with special cases.
-    (Specifically, there are special cases for nan and infinity so that this variant's output
-    exactly matches `EcmaScriptConverter`.) The ways in which `EcmaScriptConverter` and
-    `adobe::to_string` still differ are considered to be acceptable tradeoffs in light of the
-    eliminated dependency.
+    `EcmaScriptConverter` without inundating the implementation with special cases. (There are
+    special cases for nan and +/-infinity so this variant's output matches `EcmaScriptConverter`'s
+    for those values.) The ways in which `EcmaScriptConverter` and `adobe::to_string` still differ
+    are considered to be acceptable tradeoffs in light of the eliminated dependency. Some of those
+    differences can be seen in ASL's `to_string` tests.
 */
 inline std::string to_string(double x) {
     if (std::isnan(x)) return "NaN";
