@@ -163,7 +163,7 @@ inline std::string to_string(double x) {
     }
 
     std::array<char, 64> str;
-    if (auto [ptr, ec] = std::to_chars(str.begin(), str.end(), x); ec == std::errc()) {
+    if (const auto [ptr, ec] = std::to_chars(str.begin(), str.end(), x); ec == std::errc()) {
         return std::string(str.begin(), ptr - str.begin());
     } else {
         return std::make_error_code(ec).message();
