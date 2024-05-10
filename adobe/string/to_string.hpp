@@ -10,6 +10,7 @@
 #define ADOBE_STRING_TO_STRING_HPP
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <charconv>
 #include <cmath>
