@@ -20,8 +20,6 @@
 #include <adobe/cassert.hpp>
 #include <adobe/string/to_string.hpp>
 
-#include <boost/lexical_cast.hpp>
-
 /**************************************************************************************************/
 /**
     \defgroup json JSON Utilities
@@ -202,8 +200,12 @@ private:
         frac();
         exp();
 
-        double value = boost::lexical_cast<double>(std::string(p, p_ - p));
+        const int p_len = static_cast<int>(p_ - p);
+        std::size_t parse_len{0};
+        double value = std::stod(std::string(p, p_len), &parse_len);
         require(std::isfinite(value), "finite number");
+        ADOBE_ASSERT(p_len == parse_len && "std::stod() failure");
+
         t = value_type(value);
 
         return true;

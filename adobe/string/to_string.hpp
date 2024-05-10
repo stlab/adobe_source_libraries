@@ -157,24 +157,18 @@ O to_string(double x, O out, bool precise = false) {
     eliminated dependency.
 */
 inline std::string to_string(double x) {
-    if (std::isnan(x)) {
-        return "NaN";
-    }
-
-    if (x == std::numeric_limits<double>::infinity()) {
-        return "Infinity";
-    }
-
-    if (x == -std::numeric_limits<double>::infinity()) {
-        return "-Infinity";
-    }
+    if (std::isnan(x)) return "NaN";
+    if (x == std::numeric_limits<double>::infinity()) return "Infinity";
+    if (x == -std::numeric_limits<double>::infinity()) return "-Infinity";
 
     std::array<char, 64> str;
-    if (const auto [ptr, ec] = std::to_chars(str.begin(), str.end(), x); ec == std::errc()) {
-        return std::string(str.begin(), ptr - str.begin());
-    } else {
-        return std::make_error_code(ec).message();
-    }
+    char* first = &str[0];
+    char* last = first + str.size();
+    const std::to_chars_result tcr = std::to_chars(first, last, x);
+
+    return tcr.ec == std::errc() ?
+               std::string(first, tcr.ptr - first) :
+               std::make_error_code(tcr.ec).message();
 }
 
 /**************************************************************************************************/
