@@ -7,6 +7,7 @@
 /**************************************************************************************************/
 
 // stdc++
+#include <cmath>
 #include <iostream>
 #include <iterator>
 #include <vector>
