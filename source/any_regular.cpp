@@ -12,12 +12,6 @@
 #include <cassert>
 #include <string>
 
-#ifdef ADOBE_BUILT_WITH_CMAKE
-#include <double-conversion/double-conversion.h>
-#else
-#include <double-conversion/src/double-conversion.h>
-#endif
-
 #include <adobe/algorithm/lower_bound.hpp>
 #include <adobe/algorithm/sorted.hpp>
 #include <adobe/array.hpp>

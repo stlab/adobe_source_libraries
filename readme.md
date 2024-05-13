@@ -10,15 +10,15 @@ We use [Travis CI](https://travis-ci.org/stlab/adobe_source_libraries) to valida
 There are multiple ways of building the Adobe Source Libraries.
 
 ## `configure && build`
-From a UNIX terminal you should be able to execute `./configure.sh` and `./build.sh`, which should download all the necessary dependencies (Boost and double-conversion) and begin building.
+From a UNIX terminal you should be able to execute `./configure.sh` and `./build.sh`, which should download all the necessary dependencies (Boost) and begin building.
 
 ## CMake
 
 CMake support also exists for Unix Makefiles and XCode. CMake will generate separate debug and release projects in a `build_asl` folder (which will be a sibling to the top-level `adobe_source_libraries` folder.)
 
-CMake will download Boost and double-conversion from git repositories if not found, respectively in ../boost_libraries and ../double-conversion.
+If not found, CMake will download Boost from its git repository into ../boost_libraries.
 
-(The `./configure` script can also be used to download and place the Boost and double-conversion libraries where they need to go.)
+(The `./configure` script can also be used to download and place the Boost library where it needs to go.)
 
 ### Makefiles
 

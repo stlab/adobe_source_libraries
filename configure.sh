@@ -27,18 +27,6 @@ BOOST_TAR=$BOOST_DIR.tar.gz
 cd ..
 
 #
-# fetch the double-conversion library.
-#
-
-if [ ! -e 'double-conversion' ]; then
-    echo "INFO : double-conversion not found: setting up."
-
-    echo_run git clone --depth=50 --branch=master git://github.com/stlab/double-conversion.git
-else
-    echo "INFO : double-conversion found: skipping setup."
-fi
-
-#
 # If need be, download Boost and unzip it, moving it to the appropriate location.
 #
 
