@@ -109,7 +109,7 @@ std::string asl_to_string(const test_t& test) {
 }
 
 std::string std_to_chars(const test_t& test) {
-#if defined(_LIBCPP_AVAILABILITY_HAS_NO_TO_CHARS_FLOATING_POINT)
+#if ADOBE_HAS_TO_CHARS_FP()
     return "unavailable";
 #else
     std::array<char, 64> str;
