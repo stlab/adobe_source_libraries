@@ -110,8 +110,6 @@ std::string asl_to_string(const test_t& test) {
 
 std::string std_to_chars(const test_t& test) {
 #if ADOBE_HAS_TO_CHARS_FP()
-    return "unavailable";
-#else
     std::array<char, 64> str;
     if (auto [ptr, ec] = std::to_chars(str.data(), str.data() + str.size(), test.value_m); ec == std::errc()) {
         const auto sz = ptr - str.data();
@@ -119,6 +117,8 @@ std::string std_to_chars(const test_t& test) {
     } else {
         return std::make_error_code(ec).message();
     }
+#else
+    return "unavailable";
 #endif
 }
 
