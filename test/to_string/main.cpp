@@ -109,6 +109,7 @@ std::string asl_to_string(const test_t& test) {
 }
 
 std::string std_to_chars(const test_t& test) {
+#if ADOBE_HAS_TO_CHARS_FP()
     std::array<char, 64> str;
     if (auto [ptr, ec] = std::to_chars(str.data(), str.data() + str.size(), test.value_m); ec == std::errc()) {
         const auto sz = ptr - str.data();
@@ -116,6 +117,9 @@ std::string std_to_chars(const test_t& test) {
     } else {
         return std::make_error_code(ec).message();
     }
+#else
+    return "unavailable";
+#endif
 }
 
 std::string any_regular_serialization(const test_t& test) {
@@ -147,15 +151,23 @@ std::size_t test_suite(std::string (*convert)(const test_t& test), const char* l
 /******************************************************************************/
 
 BOOST_AUTO_TEST_CASE(serialization_test_suite) {
+#if ADOBE_HAS_TO_CHARS_FP()
+    constexpr auto to_string_match_count_k = 10;
+    constexpr auto to_chars_match_count_k = 6;
+#else
+    constexpr auto to_string_match_count_k = 9;
+    constexpr auto to_chars_match_count_k = 0;
+#endif
+
     BOOST_CHECK_EQUAL(test_suite(&asl_to_string_v1<true>, "adobe::to_string (precise)"), 3);
 
     BOOST_CHECK_EQUAL(test_suite(&asl_to_string_v1<false>, "adobe::to_string (short)"), 2);
 
-    BOOST_CHECK_EQUAL(test_suite(&asl_to_string, "adobe::to_string (v2)"), 10);
+    BOOST_CHECK_EQUAL(test_suite(&asl_to_string, "adobe::to_string (v2)"), to_string_match_count_k);
 
-    BOOST_CHECK_EQUAL(test_suite(&std_to_chars, "std::to_chars"), 6);
+    BOOST_CHECK_EQUAL(test_suite(&std_to_chars, "std::to_chars"), to_chars_match_count_k);
 
-    BOOST_CHECK_EQUAL(test_suite(&any_regular_serialization, "adobe::any_regular_t"), 10);
+    BOOST_CHECK_EQUAL(test_suite(&any_regular_serialization, "adobe::any_regular_t"), to_string_match_count_k);
 }
 
 /******************************************************************************/
