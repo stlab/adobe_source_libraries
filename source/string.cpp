@@ -7,6 +7,9 @@
 
 #include <adobe/string/to_string.hpp>
 
+#include <cmath>
+#include <limits>
+
 #if __cpp_lib_to_chars >= 201611L
 #include <array>
 #include <charconv>
