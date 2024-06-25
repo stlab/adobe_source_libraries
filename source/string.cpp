@@ -7,7 +7,7 @@
 
 #include <adobe/string/to_string.hpp>
 
-#if defined(__cpp_lib_to_chars) >= 201611L
+#if __cpp_lib_to_chars >= 201611L
 #include <array>
 #include <charconv>
 #include <system_error>
@@ -24,7 +24,7 @@ std::string to_string(double x) {
     if (x == std::numeric_limits<double>::infinity()) return "Infinity";
     if (x == -std::numeric_limits<double>::infinity()) return "-Infinity";
 
-#if defined(__cpp_lib_to_chars) >= 201611L
+#if __cpp_lib_to_chars >= 201611L
     std::array<char, 64> str;
     char* first = &str[0];
     char* last = first + str.size();
