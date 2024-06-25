@@ -57,7 +57,6 @@ jobs:
         shell: bash
 
       - name: Install dependencies (Windows)
-        continue-on-error: true
         if: ${{ startsWith(matrix.config.os, 'windows') }}
         run: |
           choco install --yes ninja
@@ -65,7 +64,7 @@ jobs:
         shell: cmd
 
       - name: Archive dependency log files (Windows)
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: win-dependency-log-files
