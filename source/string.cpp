@@ -7,7 +7,7 @@
 
 #include <adobe/string/to_string.hpp>
 
-#if defined(__cpp_lib_to_chars)
+#if defined(__cpp_lib_to_chars) >= 201611L
 #include <array>
 #include <charconv>
 #include <system_error>
