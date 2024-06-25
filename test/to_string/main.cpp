@@ -9,6 +9,7 @@
 // stdc++
 #include <cfloat>
 #include <charconv>
+#include <cmath>
 #include <iostream>
 #include <limits>
 #include <vector>
