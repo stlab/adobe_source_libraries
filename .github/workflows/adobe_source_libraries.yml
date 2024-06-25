@@ -70,6 +70,13 @@ jobs:
           name: win-dependency-log-files
           path: C:\vcpkg\buildtrees\boost-filesystem\
 
+      - name: Archive dependency log files (Windows)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: win-dependency-log-body
+          path: D:/a/adobe_source_libraries/adobe_source_libraries/vcpkg_installed/vcpkg/issue_body.md
+
       - name: Set enviroment variables (Linux+GCC)
         if: ${{ matrix.config.compiler == 'gcc' }}
         shell: bash
