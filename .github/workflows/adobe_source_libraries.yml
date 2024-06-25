@@ -119,12 +119,11 @@ jobs:
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           cmake --build ../build/
 
-      - name: Print log file (Windows)
-        if: ${{ startsWith(matrix.config.os, 'windows') }}
-        shell: cmd
-        run: |
-          type C:\vcpkg\buildtrees\boost-filesystem\install-x64-windows-dbg-out.log
-          type C:\vcpkg\buildtrees\boost-filesystem\install-x64-windows-dbg-err.log
+      - name: Archive log file
+        uses: actions/upload-artifact@v4
+        with:
+          name: log-files
+          path: C:\vcpkg\buildtrees\
 
       - name: Test
         shell: bash
