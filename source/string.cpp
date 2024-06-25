@@ -5,14 +5,12 @@
 */
 /**************************************************************************************************/
 
-#if 0
+#include <adobe/string/to_string.hpp>
 
-#include <adobe/string.hpp>
-
-#include <cstring>
-
-#if defined(ADOBE_STD_SERIALIZATION)
-#include <ostream>
+#if defined(__cpp_lib_to_chars)
+#include <array>
+#include <charconv>
+#include <system_error>
 #endif
 
 /**************************************************************************************************/
@@ -21,96 +19,32 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-namespace version_1 {
+std::string to_string(double x) {
+    if (std::isnan(x)) return "NaN";
+    if (x == std::numeric_limits<double>::infinity()) return "Infinity";
+    if (x == -std::numeric_limits<double>::infinity()) return "-Infinity";
 
-string_t::string_t(const char* s)
-{
-	assign(s, s + std::strlen(s));
-}
+#if defined(__cpp_lib_to_chars)
+    std::array<char, 64> str;
+    char* first = &str[0];
+    char* last = first + str.size();
+    const std::to_chars_result tcr = std::to_chars(first, last, x);
 
-string_t::string_t(const char* s, std::size_t length)
-{
-	assign(s, s + length);
-}
-
-string_t::string_t(const std::string& s)
-{
-	assign(s.begin(), s.end());
-}
-
-string_t::size_type string_t::capacity() const
-{
-	const storage_type::size_type storage_capacity = storage_m.capacity();
-	return (0 == storage_capacity ? 0 : storage_capacity - 1);
-}
-
-void string_t::push_back(value_type c)
-{
-	if (!empty())
-		storage_m.pop_back();
-	
-	storage_m.push_back(c);
-	storage_m.push_back(value_type(0));
-}
-
-/**************************************************************************************************/
-
-string16_t::string16_t(const std::uint16_t* s, std::size_t length)
-{
-	assign(s, s + length);
-}
-
-string16_t::string16_t(const std::uint16_t* s)
-{
-	const std::uint16_t* last(s);
-	while (0 != *last) ++last;
-	assign(s, last);
-}
-
-const std::uint16_t* string16_t::c_str() const
-{
-	static const std::uint16_t empty_string_s(0);
-	
-	return empty() ? &empty_string_s : &storage_m[0];
-}
-
-string16_t::size_type string16_t::capacity() const
-{
-	const storage_type::size_type storage_capacity = storage_m.capacity();
-	return (0 == storage_capacity ? 0 : storage_capacity - 1);
-}
-
-void string16_t::push_back(value_type c)
-{
-	if (!empty())
-		storage_m.pop_back();
-	
-	storage_m.push_back(c);
-	storage_m.push_back(value_type(0));
-}
-
-void string16_t::append(const std::uint16_t* s)
-{
-	const std::uint16_t* last(s);
-	while (0 != *last) ++last;
-	append(s, last);
-}
-
-/**************************************************************************************************/
-
-#if defined(ADOBE_STD_SERIALIZATION)
-
-std::ostream& operator<<(std::ostream& os, const string_t& t)
-{ return os << t.c_str(); }
-
+    return tcr.ec == std::errc() ?
+               std::string(first, tcr.ptr - first) :
+               std::make_error_code(tcr.ec).message();
+#else
+    std::string result;
+    double f3;
+    double f2 = std::modf(x, &f3);
+    const auto use_precise = std::abs(std::log10(f2)) > 7;
+    to_string(x, std::back_inserter(result), use_precise);
+    return result;
 #endif
-
-/**************************************************************************************************/
-
-} // namespace version_1
+}
 
 /**************************************************************************************************/
 
 } // namespace adobe
 
-#endif
+/**************************************************************************************************/

@@ -109,7 +109,7 @@ std::string asl_to_string(const test_t& test) {
 }
 
 std::string std_to_chars(const test_t& test) {
-#if ADOBE_HAS_TO_CHARS_FP()
+#if defined(__cpp_lib_to_chars)
     std::array<char, 64> str;
     if (auto [ptr, ec] = std::to_chars(str.data(), str.data() + str.size(), test.value_m); ec == std::errc()) {
         const auto sz = ptr - str.data();
@@ -151,7 +151,7 @@ std::size_t test_suite(std::string (*convert)(const test_t& test), const char* l
 /******************************************************************************/
 
 BOOST_AUTO_TEST_CASE(serialization_test_suite) {
-#if ADOBE_HAS_TO_CHARS_FP()
+#if defined(__cpp_lib_to_chars)
     constexpr auto to_string_match_count_k = 10;
     constexpr auto to_chars_match_count_k = 6;
 #else
