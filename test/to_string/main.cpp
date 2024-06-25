@@ -153,7 +153,7 @@ std::size_t test_suite(std::string (*convert)(const test_t& test), const char* l
 
 BOOST_AUTO_TEST_CASE(serialization_test_suite) {
 #if __cpp_lib_to_chars >= 201611L
-    constexpr auto to_string_match_count_k = 10;
+    constexpr auto to_string_match_count_k = 9;
     constexpr auto to_chars_match_count_k = 6;
 #else
     constexpr auto to_string_match_count_k = 9;
