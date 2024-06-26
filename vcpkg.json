@@ -11,5 +11,11 @@
         "boost-signals2",
         "boost-date-time",
         "boost-thread"
+    ],
+    "overrides": [
+        {
+            "name": "boost-modular-build-helper",
+            "version": "1.84.0#3"
+        }
     ]
 }
