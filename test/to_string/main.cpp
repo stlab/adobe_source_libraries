@@ -9,6 +9,7 @@
 // stdc++
 #include <cfloat>
 #include <charconv>
+#include <cmath>
 #include <iostream>
 #include <limits>
 #include <vector>
@@ -109,7 +110,7 @@ std::string asl_to_string(const test_t& test) {
 }
 
 std::string std_to_chars(const test_t& test) {
-#if ADOBE_HAS_TO_CHARS_FP()
+#if __cpp_lib_to_chars >= 201611L
     std::array<char, 64> str;
     if (auto [ptr, ec] = std::to_chars(str.data(), str.data() + str.size(), test.value_m); ec == std::errc()) {
         const auto sz = ptr - str.data();
@@ -151,10 +152,18 @@ std::size_t test_suite(std::string (*convert)(const test_t& test), const char* l
 /******************************************************************************/
 
 BOOST_AUTO_TEST_CASE(serialization_test_suite) {
-#if ADOBE_HAS_TO_CHARS_FP()
+#if __cpp_lib_to_chars >= 201611L
+    std::cout << "INFO: `to_chars` is available\n";
+
+#if defined(ADOBE_COMPILER_MSVC) && ADOBE_COMPILER_MSVC
     constexpr auto to_string_match_count_k = 10;
+#else
+    constexpr auto to_string_match_count_k = 9;
+#endif // defined(ADOBE_COMPILER_MSVC) && ADOBE_COMPILER_MSVC
     constexpr auto to_chars_match_count_k = 6;
 #else
+    std::cout << "INFO: `to_chars` is NOT available\n";
+
     constexpr auto to_string_match_count_k = 9;
     constexpr auto to_chars_match_count_k = 0;
 #endif

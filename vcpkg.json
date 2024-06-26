@@ -1,39 +1,21 @@
 {
     "name": "adobe-source-libraries",
     "version": "1.0.45",
-    "builtin-baseline": "1ba9a2591f15af5900f2ce2b3e2bf31771e3ac48",
+    "builtin-baseline": "8ccb84df727bdf83045e53c319af05c554838b80",
     "dependencies": [
+        "boost-system",
+        "boost-filesystem",
+        "boost-test",
+        "boost-program-options",
+        "boost-multiprecision",
+        "boost-signals2",
+        "boost-date-time",
+        "boost-thread"
+    ],
+    "overrides": [
         {
-            "name": "boost-system",
-            "version>=": "1.79.0"
-        },
-        {
-            "name": "boost-filesystem",
-            "version>=": "1.79.0"
-        },
-        {
-            "name": "boost-test",
-            "version>=": "1.79.0"
-        },
-        {
-            "name": "boost-program-options",
-            "version>=": "1.79.0"
-        },
-        {
-            "name": "boost-multiprecision",
-            "version>=": "1.79.0"
-        },
-        {
-            "name": "boost-signals2",
-            "version>=": "1.79.0"
-        },
-        {
-            "name": "boost-date-time",
-            "version>=": "1.79.0"
-        },
-        {
-            "name": "boost-thread",
-            "version>=": "1.79.0"
+            "name": "boost-modular-build-helper",
+            "version": "1.84.0#3"
         }
     ]
 }

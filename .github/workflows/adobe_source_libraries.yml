@@ -63,6 +63,17 @@ jobs:
           vcpkg install --triplet=x64-windows
         shell: cmd
 
+      # Keep this around for debugging. If something in the `vcpkg` setup chokes,
+      # this step can be used to extract `issue_body.md` from the build system
+      # and its contents pasted into an issue filed against `vcpkg`.
+      # (for example, https://github.com/microsoft/vcpkg/issues/39518)
+      # - name: Archive dependency log files (Windows)
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: win-dependency-log-body
+      #     path: D:/a/adobe_source_libraries/adobe_source_libraries/vcpkg_installed/vcpkg/issue_body.md
+
       - name: Set enviroment variables (Linux+GCC)
         if: ${{ matrix.config.compiler == 'gcc' }}
         shell: bash
@@ -112,7 +123,7 @@ jobs:
         run: |
           cmake --build ../build/
 
-      - name: Build (windows)
+      - name: Build (Windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
         shell: cmd
         run: |
@@ -123,4 +134,4 @@ jobs:
         shell: bash
         run: |
           cd ../build/
-          ctest
+          ctest --output-on-failure

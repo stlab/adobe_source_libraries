@@ -10,32 +10,11 @@
 #define ADOBE_STRING_TO_STRING_HPP
 
 #include <algorithm>
-#include <array>
-#include <cassert>
-#include <charconv>
-#include <cmath>
 #include <cstdio>
 #include <string>
-#include <system_error>
-
-#ifndef NDEBUG
 #include <cfloat>
-#endif
 
 #include <adobe/cassert.hpp>
-
-// `to_chars` floating-point support was added to macOS 13.3. Some ASL
-// clients have deployment targets that go back earlier than that.
-// In such case, `adobe::to_string` falls back to an implementation
-// that relies on the output-iterator variant of `adobe::to_string`,
-// pivoting on precise/short based on the exponent of the number
-// being serialized. This gets us close to the output of `to_chars`
-// without overcomplicating the fallback.
-#if defined(_LIBCPP_AVAILABILITY_HAS_NO_TO_CHARS_FLOATING_POINT)
-    #define ADOBE_HAS_TO_CHARS_FP() 0
-#else
-    #define ADOBE_HAS_TO_CHARS_FP() 1
-#endif
 
 /**************************************************************************************************/
 
@@ -169,29 +148,7 @@ O to_string(double x, O out, bool precise = false) {
     are considered to be acceptable tradeoffs in light of the eliminated dependency. Some of those
     differences can be seen in ASL's `to_string` tests.
 */
-inline std::string to_string(double x) {
-    if (std::isnan(x)) return "NaN";
-    if (x == std::numeric_limits<double>::infinity()) return "Infinity";
-    if (x == -std::numeric_limits<double>::infinity()) return "-Infinity";
-
-#if ADOBE_HAS_TO_CHARS_FP()
-    std::array<char, 64> str;
-    char* first = &str[0];
-    char* last = first + str.size();
-    const std::to_chars_result tcr = std::to_chars(first, last, x);
-
-    return tcr.ec == std::errc() ?
-               std::string(first, tcr.ptr - first) :
-               std::make_error_code(tcr.ec).message();
-#else
-    std::string result;
-    double f3;
-    double f2 = std::modf(x, &f3);
-    const auto use_precise = std::abs(std::log10(f2)) > 7;
-    to_string(x, std::back_inserter(result), use_precise);
-    return result;
-#endif
-}
+std::string to_string(double x);
 
 /**************************************************************************************************/
 
