@@ -63,12 +63,12 @@ jobs:
           vcpkg install --triplet=x64-windows
         shell: cmd
 
-      - name: Archive dependency log files (Windows)
+      - name: Archive installed files (Windows)
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: win-dependency-log-files
-          path: C:\vcpkg\buildtrees\boost-filesystem\
+          path: D:/a/adobe_source_libraries/adobe_source_libraries/vcpkg_installed/x64-windows/debug/lib
 
       - name: Archive dependency log files (Windows)
         if: always()

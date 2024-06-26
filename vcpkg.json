@@ -1,7 +1,7 @@
 {
     "name": "adobe-source-libraries",
     "version": "1.0.45",
-    "builtin-baseline": "1ba9a2591f15af5900f2ce2b3e2bf31771e3ac48",
+    "builtin-baseline": "8ccb84df727bdf83045e53c319af05c554838b80",
     "dependencies": [
         "boost-system",
         "boost-filesystem",
