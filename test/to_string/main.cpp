@@ -153,9 +153,17 @@ std::size_t test_suite(std::string (*convert)(const test_t& test), const char* l
 
 BOOST_AUTO_TEST_CASE(serialization_test_suite) {
 #if __cpp_lib_to_chars >= 201611L
+    std::cout << "INFO: `to_chars` is available\n";
+
+#if defined(ADOBE_COMPILER_MSVC) && ADOBE_COMPILER_MSVC
+    constexpr auto to_string_match_count_k = 10;
+#else
     constexpr auto to_string_match_count_k = 9;
+#endif // defined(ADOBE_COMPILER_MSVC) && ADOBE_COMPILER_MSVC
     constexpr auto to_chars_match_count_k = 6;
 #else
+    std::cout << "INFO: `to_chars` is NOT available\n";
+
     constexpr auto to_string_match_count_k = 9;
     constexpr auto to_chars_match_count_k = 0;
 #endif

@@ -63,19 +63,16 @@ jobs:
           vcpkg install --triplet=x64-windows
         shell: cmd
 
-      - name: Archive installed files (Windows)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: win-dependency-log-files
-          path: D:/a/adobe_source_libraries/adobe_source_libraries/vcpkg_installed/x64-windows/debug/lib
-
-      - name: Archive dependency log files (Windows)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: win-dependency-log-body
-          path: D:/a/adobe_source_libraries/adobe_source_libraries/vcpkg_installed/vcpkg/issue_body.md
+      # Keep this around for debugging. If something in the `vcpkg` setup chokes,
+      # this step can be used to extract `issue_body.md` from the build system
+      # and its contents pasted into an issue filed against `vcpkg`.
+      # (for example, https://github.com/microsoft/vcpkg/issues/39518)
+      # - name: Archive dependency log files (Windows)
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: win-dependency-log-body
+      #     path: D:/a/adobe_source_libraries/adobe_source_libraries/vcpkg_installed/vcpkg/issue_body.md
 
       - name: Set enviroment variables (Linux+GCC)
         if: ${{ matrix.config.compiler == 'gcc' }}
@@ -118,7 +115,7 @@ jobs:
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           mkdir ..\build
-          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_STANDARD=17 -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DBOOST_TEST_DYN_LINK=TRUE
+          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DBOOST_TEST_DYN_LINK=TRUE
 
       - name: Build (Unix)
         if: ${{ startsWith(matrix.config.os, 'ubuntu') || startsWith(matrix.config.os, 'macos') }}
