@@ -39,7 +39,7 @@ enum class Num : int {
     num_7 = 7
 };
 
-auto stlab_enable_bitmask_enum(Views) -> std::true_type;
+auto adobe_enable_bitmask_enum(Views) -> std::true_type;
 
 ADOBE_DEFINE_BITSET_OPS(Number)
 
@@ -89,7 +89,7 @@ BOOST_AUTO_TEST_CASE(enumclass_bitset_ops) {
 
 
 ADOBE_DEFINE_ARITHMETIC_OPS(Number)
-auto stlab_enable_arithmetic_enum(Num) -> std::true_type;
+auto adobe_enable_arithmetic_enum(Num) -> std::true_type;
 
 BOOST_AUTO_TEST_CASE(enum_arith_ops) {
     Number x;

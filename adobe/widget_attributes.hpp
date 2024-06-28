@@ -84,7 +84,7 @@ ADOBE_DEFINE_BITSET_OPS(theme_t)
     behaviors
 */
 
-enum modifiers_t {
+enum modifiers_t : std::uint32_t {
     /// No modifiers
     modifiers_none_s = 0,
 
@@ -114,13 +114,13 @@ enum modifiers_t {
     modifiers_any_command_s = 1 << 7,
 
     /// Any shift key
-    modifiers_any_shift_s = modifiers_left_shift_s | modifiers_right_shift_s,
+    modifiers_any_shift_s = static_cast<std::underlying_type_t<modifiers_t>>(modifiers_left_shift_s) | static_cast<std::underlying_type_t<modifiers_t>>(modifiers_right_shift_s),
 
     /// Any option (or alt) key (if applicable)
-    modifiers_any_option_s = modifiers_left_option_s | modifiers_right_option_s,
+    modifiers_any_option_s = static_cast<std::underlying_type_t<modifiers_t>>(modifiers_left_option_s) | static_cast<std::underlying_type_t<modifiers_t>>(modifiers_right_option_s),
 
     /// Any control key (if applicable)
-    modifiers_any_control_s = modifiers_left_control_s | modifiers_right_control_s,
+    modifiers_any_control_s = static_cast<std::underlying_type_t<modifiers_t>>(modifiers_left_control_s) | static_cast<std::underlying_type_t<modifiers_t>>(modifiers_right_control_s),
     modifiers_all_s = UINT_MAX
 };
 
