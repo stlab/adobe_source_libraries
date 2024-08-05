@@ -49,7 +49,7 @@ template <class T, class Stream>
 struct has_stream_insertion : decltype(implementation::test_stream_insertion<T, Stream>(0)) {};
 
 template <class T>
-using has_ostream_insertion = has_stream_insertion<T, std::ostream&>;
+using has_ostream_insertion = has_stream_insertion<T, std::ostream>;
 
 /**************************************************************************************************/
 
