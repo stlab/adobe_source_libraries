@@ -200,8 +200,9 @@ token_range_t my_content_callback(
 	static const token_range_t id_attr_k(  static_token_range("id") );
 
 	const token_range_t id( attribute_set[id_addr_k] );
-	if (0 == boost::size(id))
+	if (0 == adobe::token_range_size(id)) {
 		throw std::runtime_error("replace-me tags require an id attribute");
+	}
 
 	return lookup_replacement_text(id);
 }\endverbatim
@@ -300,22 +301,25 @@ token_range_t my_content_callback(
 	}
 	else if (token_range_equal(rect_tag_k, name))
 	{
-		if (0 != boost::size(value))
+		if (0 != adobe::token_range_size(value)) {
 			throw std::runtime_error("rect elements must be empty");
-			
+		}
+
 		draw_rectangle(attribute_set, graphics);
 	}
 	else if (token_range_equal(circle_tag_k, name))
 	{
-		if (0 != boost::size(value))
+		if (0 != adobe::token_range_size(value)) {
 			throw std::runtime_error("circle elements must be empty");
+		}
 
 		draw_circle(attribute_set, graphics);
 	}
 	else if (token_range_equal(polygon_tag_k, name))
 	{
-		if (0 != boost::size(value))
+		if (0 != adobe::token_range_size(value)) {
 			throw std::runtime_error("polygon elements must be empty");
+		}
 
 		draw_polygon(attribute_set, graphics);
 	}
@@ -420,15 +424,17 @@ token_range_t my_group_callback(
 	}
 	else if (token_range_equal(rect_tag_k, name))
 	{
-		if (0 != boost::size(value))
+		if (0 != adobe::token_range_size(value)) {
 			throw std::runtime_error("rect elements must be empty");
-			
+		}
+
 		draw_rectangle(attribute_set, graphics);
 	}
 	else if (token_range_equal(circle_tag_k, name))
 	{
-		if (0 != boost::size(value))
+		if (0 != adobe::token_range_size(value)) {
 			throw std::runtime_error("circle elements must be empty");
+		}
 
 		draw_circle(attribute_set, graphics);
 	}
