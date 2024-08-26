@@ -200,7 +200,7 @@ token_range_t my_content_callback(
 	static const token_range_t id_attr_k(  static_token_range("id") );
 
 	const token_range_t id( attribute_set[id_addr_k] );
-	if (0 == adobe::token_range_size(id)) {
+	if (0 == id.size()) {
 		throw std::runtime_error("replace-me tags require an id attribute");
 	}
 
@@ -301,7 +301,7 @@ token_range_t my_content_callback(
 	}
 	else if (token_range_equal(rect_tag_k, name))
 	{
-		if (0 != adobe::token_range_size(value)) {
+		if (0 != value.size()) {
 			throw std::runtime_error("rect elements must be empty");
 		}
 
@@ -309,7 +309,7 @@ token_range_t my_content_callback(
 	}
 	else if (token_range_equal(circle_tag_k, name))
 	{
-		if (0 != adobe::token_range_size(value)) {
+		if (0 != value.size()) {
 			throw std::runtime_error("circle elements must be empty");
 		}
 
@@ -317,7 +317,7 @@ token_range_t my_content_callback(
 	}
 	else if (token_range_equal(polygon_tag_k, name))
 	{
-		if (0 != adobe::token_range_size(value)) {
+		if (0 != value.size()) {
 			throw std::runtime_error("polygon elements must be empty");
 		}
 
@@ -424,7 +424,7 @@ token_range_t my_group_callback(
 	}
 	else if (token_range_equal(rect_tag_k, name))
 	{
-		if (0 != adobe::token_range_size(value)) {
+		if (0 != value.size()) {
 			throw std::runtime_error("rect elements must be empty");
 		}
 
@@ -432,7 +432,7 @@ token_range_t my_group_callback(
 	}
 	else if (token_range_equal(circle_tag_k, name))
 	{
-		if (0 != adobe::token_range_size(value)) {
+		if (0 != value.size()) {
 			throw std::runtime_error("circle elements must be empty");
 		}
 
