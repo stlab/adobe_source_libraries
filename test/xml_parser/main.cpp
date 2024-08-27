@@ -147,8 +147,7 @@ long to_long(const adobe::token_range_t& value) {
 long calculate_expression(const adobe::token_range_t& content) {
     std::vector<long> value_stack;
 
-    adobe::make_xml_parser(content.data(), content.data() + content.size(),
-                           adobe::line_position_t("expression"),
+    adobe::make_xml_parser(content.first, content.second, adobe::line_position_t("expression"),
                            adobe::always_true<adobe::token_range_t>(),
                            std::bind(expression_content, _1, _2, _3, _4, std::ref(value_stack)),
                            adobe::implementation::null_output_t())
@@ -168,8 +167,7 @@ adobe::token_range_t document_content(const adobe::token_range_t& /*entire_eleme
     if (adobe::token_range_equal(name, math_test_token_k)) {
         math_test_t test;
 
-        adobe::make_xml_parser(value.data(), value.data() + value.size(),
-                               adobe::line_position_t("math-test"),
+        adobe::make_xml_parser(value.first, value.second, adobe::line_position_t("math-test"),
                                adobe::always_true<adobe::token_range_t>(),
                                std::bind(test_content, _1, _2, _3, _4, std::ref(test)),
                                adobe::implementation::null_output_t())
@@ -254,7 +252,7 @@ adobe::token_range_t expression_content(const adobe::token_range_t& /*entire_ele
 bool run_test(const adobe::token_range_t& document, const adobe::line_position_t& line_position) {
     bool passed = false;
 
-    adobe::make_xml_parser(document.data(), document.data() + document.size(), line_position,
+    adobe::make_xml_parser(document.first, document.second, line_position,
                            adobe::always_true<adobe::token_range_t>(),
                            std::bind(document_content, _1, _2, _3, _4, std::ref(passed)),
                            adobe::implementation::null_output_t())

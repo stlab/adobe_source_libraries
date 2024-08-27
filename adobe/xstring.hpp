@@ -315,9 +315,9 @@ private:
             return;
         }
 
-        make_xml_parser(context.slurp_m.data(), context.slurp_m.data() + context.slurp_m.size(),
-                        context.parse_info_m, implementation::xstring_preorder_predicate,
-                        &implementation::xml_xstr_store, implementation::null_output_t())
+        make_xml_parser(context.slurp_m.first, context.slurp_m.second, context.parse_info_m,
+                        implementation::xstring_preorder_predicate, &implementation::xml_xstr_store,
+                        implementation::null_output_t())
             .parse_element_sequence(); // REVISIT (fbrereto) : More or less legible than having it
         // after the above declaration?
 

@@ -542,8 +542,8 @@ struct replacement_engine_t {
         for (; range.first != range.second; ++range.first) {
             int score(0);
             const token_range_t& cur_token_range(range.first->second.second);
-            uchar_ptr_t first(cur_token_range.data());
-            uchar_ptr_t last(cur_token_range.data() + cur_token_range.size());
+            uchar_ptr_t first(cur_token_range.first);
+            uchar_ptr_t last(cur_token_range.second);
             std::string temp_result;
 
             adobe::make_xml_parser(first, last, adobe::line_position_t("replacement_engine_t::run"),

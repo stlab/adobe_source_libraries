@@ -508,7 +508,7 @@ token_range_t top_level_callback(
 {
     assert(token_range_equal(name, static_token_range("root")));
 
-    make_xml_parser(value.data(), value.data() + value.size(),
+    make_xml_parser(value.first, value.second,
                            line_position_t("top_level_callback"),
                            always_true<token_range_t>(),
                            root_callback,
