@@ -262,7 +262,7 @@ struct lex_token_t {
     lex_token_t() {}
 
     explicit lex_token_t(E enumeration, uchar_ptr_t first = 0, uchar_ptr_t last = 0)
-        : enum_m(enumeration), range_m(first, std::distance(first, last)) {}
+        : enum_m(enumeration), range_m(first, last) {}
 
     E enum_m;
     token_range_t range_m;
