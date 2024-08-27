@@ -311,8 +311,9 @@ private:
     void glossary_parse() {
         implementation::context_frame_t& context(implementation::top_frame());
 
-        if (context.parsed_m || !boost::size(context.slurp_m))
+        if (context.parsed_m || !adobe::token_range_size(context.slurp_m)) {
             return;
+        }
 
         make_xml_parser(context.slurp_m.first, context.slurp_m.second, context.parse_info_m,
                         implementation::xstring_preorder_predicate, &implementation::xml_xstr_store,

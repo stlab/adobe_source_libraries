@@ -193,8 +193,9 @@ adobe::token_range_t test_content(const adobe::token_range_t& /*entire_element_r
     } else if (adobe::token_range_equal(name, result_token_k)) {
         const adobe::token_range_t value_attr(attribute_set[value_attr_k]);
 
-        if (0 == boost::size(value_attr))
+        if (0 == adobe::token_range_size(value_attr)) {
             throw std::runtime_error("result element is missing value attribute");
+        }
 
         test.expected_m = to_long(value_attr);
     } else {
@@ -220,8 +221,9 @@ adobe::token_range_t expression_content(const adobe::token_range_t& /*entire_ele
     } else if (adobe::token_range_equal(name, operand_token_k)) {
         const adobe::token_range_t value_attr(attribute_set[value_attr_k]);
 
-        if (0 == boost::size(value_attr))
+        if (0 == adobe::token_range_size(value_attr)) {
             throw std::runtime_error("result element is missing value attribute");
+        }
 
         stack.push_back(to_long(value_attr));
     } else if (adobe::token_range_equal(name, add_token_k)) {
