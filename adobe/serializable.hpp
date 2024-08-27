@@ -20,7 +20,7 @@
 /**************************************************************************************************/
 
 namespace adobe {
-
+#if __cplusplus < 202002L
 /**************************************************************************************************/
 
 namespace implementation {
@@ -62,6 +62,16 @@ ostream_insertion(std::ostream& s, const T& x) {
 template <class T>
 inline typename std::enable_if<!has_ostream_insertion<T>::value>::type
 ostream_insertion(std::ostream&, const T&) {}
+
+#else // __cplusplus < 202002L
+
+template <class T>
+void ostream_insertion(std::ostream& s, const T& x) {
+    if constexpr (requires { s << x; }) {
+        s << x;
+    }
+}
+#endif // __cplusplus < 202002L
 
 template <>
 inline void ostream_insertion<bool>(std::ostream& s, const bool& x) {
