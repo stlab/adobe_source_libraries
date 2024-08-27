@@ -191,7 +191,6 @@ context_frame_t::exact_match_exists(const adobe::attribute_set_t& attribute_set,
 /**************************************************************************************************/
 
 token_range_t context_frame_t::clone(const token_range_t& range) {
-    // std::size_t len(boost::size(range));
     std::string str(boost::begin(range), boost::end(range));
     const char* added(pool_m.add(str.c_str()));
 
