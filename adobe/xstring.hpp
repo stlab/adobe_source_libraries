@@ -311,7 +311,7 @@ private:
     void glossary_parse() {
         implementation::context_frame_t& context(implementation::top_frame());
 
-        if (context.parsed_m || !context.slurp_m.size()) {
+        if (context.parsed_m || !adobe::token_range_size(context.slurp_m)) {
             return;
         }
 

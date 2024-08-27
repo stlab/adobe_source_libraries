@@ -14,8 +14,6 @@
 
 #include <functional>
 #include <iterator>
-#include <string_view>
-#include <type_traits>
 #include <utility>
 
 #include <boost/operators.hpp>
@@ -142,7 +140,26 @@ and second value are equivalent, but any value. Typically this value is
 0, but this is not required.
 */
 
-using token_range_t = std::basic_string_view<std::remove_pointer_t<uchar_ptr_t>>;
+using token_range_t = std::pair<uchar_ptr_t, uchar_ptr_t>;
+
+/**************************************************************************************************/
+
+/*!
+\ingroup asl_xml_parser
+
+Determines the size of a token range.
+
+Determines the character count represented by the range (does not consider
+interstitial null terminators).
+
+\param r the range we are determining the size of
+
+\return the distance between the first and second members of the range
+*/
+
+inline auto token_range_size(const token_range_t& r) {
+    return std::distance(r.first, r.second);
+}
 
 /**************************************************************************************************/
 
@@ -162,7 +179,7 @@ in equality for each set of characters. false otherwise.
 */
 
 inline bool token_range_equal(const token_range_t& x, const token_range_t& y) {
-    return x.size() == y.size() && adobe::bounded_equal(x, y);
+    return adobe::token_range_size(x) == adobe::token_range_size(y) && adobe::bounded_equal(x, y);
 }
 
 /**************************************************************************************************/
@@ -191,8 +208,8 @@ as adobe::mismatch.
 */
 
 inline bool token_range_less(const token_range_t& x, const token_range_t& y) {
-    const auto sizex{x.size()};
-    const auto sizey{y.size()};
+    const auto sizex{adobe::token_range_size(x)};
+    const auto sizey{adobe::token_range_size(y)};
 
     if (sizex < sizey) {
         return true;
