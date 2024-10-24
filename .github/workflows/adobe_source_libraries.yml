@@ -100,7 +100,7 @@ jobs:
         shell: bash
         run: |
           mkdir ../build
-          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17
+          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=20
 
       - name: Configure (MacOS)
         if: ${{ startsWith(matrix.config.os, 'macos') }}
@@ -115,7 +115,7 @@ jobs:
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           mkdir ..\build
-          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=20 -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DBOOST_TEST_DYN_LINK=TRUE
+          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DBOOST_TEST_DYN_LINK=TRUE
 
       - name: Build (Unix)
         if: ${{ startsWith(matrix.config.os, 'ubuntu') || startsWith(matrix.config.os, 'macos') }}

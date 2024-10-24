@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE(asl_json_floating_point_parsing) {
 
 BOOST_AUTO_TEST_CASE(asl_json_helper_smoke) {
     std::cout << "-=-=- asl_json_helper_smoke -=-=-\n";
-    adobe::any_regular_t x = adobe::json_parse(u8R"raw(
+    adobe::any_regular_t x = adobe::json_parse(reinterpret_cast<const char*>(u8R"raw(
         [
             42,
             12.536,
@@ -73,7 +73,7 @@ BOOST_AUTO_TEST_CASE(asl_json_helper_smoke) {
                 "Country": "US"
             }
         ]
-    )raw");
+    )raw"));
 
     adobe::json_generate(x, std::ostream_iterator<char>(std::cout));
 }
