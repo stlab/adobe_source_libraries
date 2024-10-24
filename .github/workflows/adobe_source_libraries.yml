@@ -100,7 +100,7 @@ jobs:
         shell: bash
         run: |
           mkdir ../build
-          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=20
+          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{matrix.config.cxxstd}}
 
       - name: Configure (MacOS)
         if: ${{ startsWith(matrix.config.os, 'macos') }}
