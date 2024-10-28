@@ -24,13 +24,31 @@
             }
         },
         {
-            "name": "macos-debug",
-            "displayName": "macos-debug",
+            "name": "macos-debug-C++20",
+            "displayName": "macos-debug-C++20",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_STANDARD": "20",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [ "macOS" ]
+                }
+            }
+        },
+        {
+            "name": "macos-debug-C++17",
+            "displayName": "macos-debug-C++17",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_STANDARD": "17",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
             },
             "vendor": {

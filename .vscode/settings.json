@@ -129,5 +129,6 @@
         "*.tcc": "cpp",
         "rope": "cpp",
         "slist": "cpp"
-    }
+    },
+    "C_Cpp.default.compilerPath": "/usr/bin/clang++"
 }

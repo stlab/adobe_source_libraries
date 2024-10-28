@@ -113,7 +113,7 @@ reduce_balanced(I f, I l, Op op, ADOBE_VALUE_TYPE(I) z = adobe::identity_element
         ++f;
     }
 
-    return reduce_nonzeros(v.begin(), v.end(), f_transpose(op), z);
+    return reduce_nonzeros(v.begin(), v.end(), transpose(op), z);
 }
 
 /**************************************************************************************************/
