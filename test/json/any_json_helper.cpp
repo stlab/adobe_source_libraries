@@ -88,7 +88,7 @@ struct any_json_helper_t {
 
 BOOST_AUTO_TEST_CASE(any_json_helper_smoke) {
     std::cout << "-=-=- any_json_helper_smoke -=-=-\n";
-    any x = json_parser<any_json_helper_t>(u8R"raw(
+    any x = json_parser<any_json_helper_t>(reinterpret_cast<const char*>(u8R"raw(
         [
             42,
             12.536,
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE(any_json_helper_smoke) {
                 "Country": "US"
             }
         ]
-    )raw")
+    )raw"))
                 .parse();
 
     json_generator<any_json_helper_t, ostream_iterator<char>>(ostream_iterator<char>(cout))

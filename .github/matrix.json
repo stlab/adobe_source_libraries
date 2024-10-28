@@ -1,28 +1,46 @@
 {
     "config": [
         {
-            "name": "Linux GCC 11",
+            "name": "Linux GCC 11 C++17",
             "compiler": "gcc",
             "version": "11",
-            "os": "ubuntu-22.04"
+            "os": "ubuntu-22.04",
+            "cxxstd" : "17"
         },
         {
-            "name": "Linux Clang 14",
+            "name": "Linux GCC 11 C++20",
+            "compiler": "gcc",
+            "version": "11",
+            "os": "ubuntu-22.04",
+            "cxxstd" : "20"
+        },
+        {
+            "name": "Linux Clang 14 C++17",
             "compiler": "clang",
             "version": "14",
-            "os": "ubuntu-22.04"
+            "os": "ubuntu-22.04",
+            "cxxstd" : "17"
+        },
+        {
+            "name": "Linux Clang 14 C++20",
+            "compiler": "clang",
+            "version": "14",
+            "os": "ubuntu-22.04",
+            "cxxstd" : "20"
         },
         {
             "name": "macOS apple-clang 14.3.1",
             "compiler": "apple-clang",
             "version": "14.3.1",
-            "os": "macos-13"
+            "os": "macos-13",
+            "cxxstd" : "17"
         },
         {
             "name": "Windows VS2022",
             "compiler": "Visual Studio",
             "version": "17.4",
-            "os": "windows-2022"
+            "os": "windows-2022",
+            "cxxstd" : "17"
         }
     ]
 }
