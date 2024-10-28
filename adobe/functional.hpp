@@ -375,7 +375,7 @@ using transposer [[deprecated("Use `adobe::transpose` instead.")]] = transpose<F
 
 
 template <typename F> // F models BinaryFunction
-inline transposer<F> f_transpose [[deprecated("Use `adobe::transpose` instead.")]] (F f) {
+inline auto f_transpose [[deprecated("Use `adobe::transpose` instead.")]] (F f) -> transpose<F> {
     return transpose<F>(f);
 }
 
