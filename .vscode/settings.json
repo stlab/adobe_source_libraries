@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.cpp": "cpp",
         "__bit_reference": "cpp",
         "__bits": "cpp",
         "__config": "cpp",
@@ -128,7 +129,8 @@
         "*.ipp": "cpp",
         "*.tcc": "cpp",
         "rope": "cpp",
-        "slist": "cpp"
+        "slist": "cpp",
+        "print": "cpp"
     },
     "C_Cpp.default.compilerPath": "/usr/bin/clang++"
 }

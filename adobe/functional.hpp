@@ -348,24 +348,28 @@ template <class F> // F models a BinaryFunction
 struct transpose {
     F function;
 
-    transpose(F&& f) : function(std::move(f)) {}
-    transpose(const F& f) : function(f) {}
+    transpose() = default;
+    explicit transpose(F&& f) noexcept : function(std::move(f)) {}
+    explicit transpose(const F& f) : function(f) {}
+
+    transpose(const transpose& x) = default;
+    transpose(transpose&& x) noexcept = default;
 
     transpose& operator=(const transpose& x) = default;
     transpose& operator=(transpose&& x) noexcept = default;
 
     template <class T1, class T2>
-    auto operator()(T1&& x, T2&& y) const& {
+    auto operator()(T1&& x, T2&& y) const& noexcept(std::is_nothrow_invocable_v<const F&, T2, T1>) {
         return function(std::forward<T2>(y), std::forward<T1>(x));
     }
 
     template <class T1, class T2>
-    auto operator()(T1&& x, T2&& y) & {
+    auto operator()(T1&& x, T2&& y) & noexcept(std::is_nothrow_invocable_v<F&, T2, T1>) {
         return function(std::forward<T2>(y), std::forward<T1>(x));
     }
 
     template <class T1, class T2>
-    auto operator()(T1&& x, T2&& y) && {
+    auto operator()(T1&& x, T2&& y) && noexcept(std::is_nothrow_invocable_v<F&&, T2, T1>) {
         return std::move(function)(std::forward<T2>(y), std::forward<T1>(x));
     }
 };
