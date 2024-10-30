@@ -7,6 +7,8 @@ on:
       - main
 
 jobs:
+  # Information on the runner matrix can be found in the `matrix.json` file. To find available
+  # versions of compilers, check https://github.com/actions/runner-images/.
   generate-matrix:
     name: Generate job matrix
     runs-on: ubuntu-22.04
