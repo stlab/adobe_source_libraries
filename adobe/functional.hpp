@@ -11,8 +11,9 @@
 #include <adobe/config.hpp>
 
 #include <functional>
-#include <utility>
 #include <tuple>
+#include <type_traits>
+#include <utility>
 
 #include <boost/compressed_pair.hpp>
 
@@ -122,42 +123,6 @@ pointed to by \c member.
 
 \return
     An adobe::mem_data_t function object.
-*/
-
-/*!
-\class adobe::indirect_t
-\ingroup misc_functional
-
-\brief Adapter used to convert pointers to references.
-*/
-
-/*!
-\defgroup bitwise_operators Bitwise Operations
-\ingroup adobe_functional
-
-The library provides basic function object classes for all of the bitwise logical operators in the
-language.
-*/
-
-/*!
-\class adobe::bitwise_or
-\ingroup bitwise_operators
-
-\brief \c operator() returns <code>x | y</code>.
-*/
-
-/*!
-\class adobe::bitwise_and
-\ingroup bitwise_operators
-
-\brief \c operator() returns <code>x & y</code>.
-*/
-
-/*!
-\class adobe::bitwise_xor
-\ingroup bitwise_operators
-
-\brief \c operator() returns <code>x ^ y</code>.
 */
 
 
@@ -301,7 +266,7 @@ private:
 
 template <class T, typename R, class Compare>
 struct compare_members_t {
-    compare_members_t(R T::*member, Compare compare) : compare_m(compare), member_m(member) {}
+    compare_members_t(R T::* member, Compare compare) : compare_m(compare), member_m(member) {}
 
     bool operator()(const T& x, const T& y) const { return compare_m(x.*member_m, y.*member_m); }
 
@@ -315,16 +280,16 @@ private:
     */
 
     Compare compare_m;
-    R T::*member_m;
+    R T::* member_m;
 };
 
 template <class T, typename R>
-compare_members_t<T, R, std::less<R>> compare_members(R T::*member) {
+compare_members_t<T, R, std::less<R>> compare_members(R T::* member) {
     return compare_members_t<T, R, std::less<R>>(member, std::less<R>());
 }
 
 template <class T, typename R, class Compare>
-compare_members_t<T, R, Compare> compare_members(R T::*member, Compare compare) {
+compare_members_t<T, R, Compare> compare_members(R T::* member, Compare compare) {
     return compare_members_t<T, R, Compare>(member, compare);
 }
 
@@ -334,28 +299,28 @@ template <class T, typename R>
 struct mem_data_t {
     mem_data_t() {}
 
-    explicit mem_data_t(R T::*member) : member_m(member) {}
+    explicit mem_data_t(R T::* member) : member_m(member) {}
 
     R& operator()(T& x) const { return x.*member_m; }
 
     const R& operator()(const T& x) const { return x.*member_m; }
 
 private:
-    R T::*member_m;
+    R T::* member_m;
 };
 
 template <class T, typename R>
 struct mem_data_t<const T, R> {
-    explicit mem_data_t(R T::*member) : member_m(member) {}
+    explicit mem_data_t(R T::* member) : member_m(member) {}
 
     const R& operator()(const T& x) const { return x.*member_m; }
 
 private:
-    R T::*member_m;
+    R T::* member_m;
 };
 
 template <class T, typename R>
-mem_data_t<T, R> mem_data(R T::*member) {
+mem_data_t<T, R> mem_data(R T::* member) {
     return mem_data_t<T, R>(member);
 }
 
@@ -377,24 +342,45 @@ private:
 
 /**************************************************************************************************/
 
+/// A function object that transposes the arguments of a binary function. The call qualifiers are
+/// preserved.
 template <class F> // F models a BinaryFunction
-struct transposer {
-    typedef typename F::second_argument_type first_argument_type;
-    typedef typename F::first_argument_type second_argument_type;
-    typedef typename F::result_type result_type;
+struct transpose {
+    F function;
 
-    F fun;
+    transpose() = default;
+    explicit transpose(F&& f) noexcept : function(std::move(f)) {}
+    explicit transpose(const F& f) : function(f) {}
 
-    transposer(const F& f) : fun(f) {}
+    transpose(const transpose& x) = default;
+    transpose(transpose&& x) noexcept = default;
 
-    result_type operator()(const first_argument_type& x, const second_argument_type& y) const {
-        return fun(y, x);
+    transpose& operator=(const transpose& x) = default;
+    transpose& operator=(transpose&& x) noexcept = default;
+
+    template <class T1, class T2>
+    auto operator()(T1&& x, T2&& y) const& noexcept(std::is_nothrow_invocable_v<const F&, T2, T1>) {
+        return function(std::forward<T2>(y), std::forward<T1>(x));
+    }
+
+    template <class T1, class T2>
+    auto operator()(T1&& x, T2&& y) & noexcept(std::is_nothrow_invocable_v<F&, T2, T1>) {
+        return function(std::forward<T2>(y), std::forward<T1>(x));
+    }
+
+    template <class T1, class T2>
+    auto operator()(T1&& x, T2&& y) && noexcept(std::is_nothrow_invocable_v<F&&, T2, T1>) {
+        return std::move(function)(std::forward<T2>(y), std::forward<T1>(x));
     }
 };
 
+template <class F> // F models a BinaryFunction
+using transposer [[deprecated("Use `adobe::transpose` instead.")]] = transpose<F>;
+
+
 template <typename F> // F models BinaryFunction
-inline transposer<F> f_transpose(F f) {
-    return transposer<F>(f);
+inline auto f_transpose [[deprecated("Use `adobe::transpose` instead.")]] (F f) -> transpose<F> {
+    return transpose<F>(f);
 }
 
 //!@}

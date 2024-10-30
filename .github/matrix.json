@@ -37,8 +37,6 @@
         },
         {
             "name": "Windows VS2022",
-            "compiler": "Visual Studio",
-            "version": "17.4",
             "os": "windows-2022",
             "cxxstd" : "17"
         }
