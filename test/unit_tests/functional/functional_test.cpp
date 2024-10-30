@@ -51,6 +51,11 @@ struct test_binary_function {
 
 } // namespace
 
+/*
+    REVISIT(sean-parent) : The static casts are necessary to get this code to compile on VC++14.
+    It is unclear why the compiler is unable to find the enum operators.
+*/
+
 
 BOOST_AUTO_TEST_CASE(functional_transpose) {
 
@@ -58,8 +63,10 @@ BOOST_AUTO_TEST_CASE(functional_transpose) {
     // function. It also tests that the correct overload is selected and that the noexcept
     // qualifier is correctly propagated.
 
-    transpose lvalue{test_binary_function<(_all ^ _lvalue)>{}};
-    const transpose const_lvalue{test_binary_function<(_all ^ _const_lvalue)>{}};
+    transpose lvalue{
+        test_binary_function<static_cast<member_function_qualifiers>(_all ^ _lvalue)>{}};
+    const transpose const_lvalue{
+        test_binary_function<static_cast<member_function_qualifiers>(_all ^ _const_lvalue)>{}};
     transpose lvalue_noexcept{test_binary_function<_lvalue>{}};
     const transpose const_lvalue_noexcept{test_binary_function<_const_lvalue>{}};
 
@@ -75,8 +82,11 @@ BOOST_AUTO_TEST_CASE(functional_transpose) {
     BOOST_TEST((const_lvalue_noexcept(1, 2) == tuple(2, 1, _const_lvalue)));
     BOOST_TEST(noexcept(const_lvalue_noexcept(1, 2)));
 
-    BOOST_TEST((transpose(test_binary_function<(_all ^ _rvalue)>{})(1, 2) == tuple(2, 1, _rvalue)));
-    BOOST_TEST(!noexcept(transpose(test_binary_function<(_all ^ _rvalue)>{})(1, 2)));
+    BOOST_TEST(
+        (transpose(test_binary_function<static_cast<member_function_qualifiers>(_all ^ _rvalue)>{})(
+             1, 2) == tuple(2, 1, _rvalue)));
+    BOOST_TEST(!noexcept(transpose(
+        test_binary_function<static_cast<member_function_qualifiers>(_all ^ _rvalue)>{})(1, 2)));
 
     BOOST_TEST((transpose(test_binary_function<_rvalue>{})(1, 2) == tuple(2, 1, _rvalue)));
     BOOST_TEST(noexcept(transpose(test_binary_function<_rvalue>{})(1, 2)));
