@@ -200,11 +200,10 @@ private:
         frac();
         exp();
 
-        const auto p_len = p_ - p;
         char* p_end = nullptr;
         double value = std::strtod(p, &p_end);
         require(std::isfinite(value), "finite number");
-        ADOBE_ASSERT(p_len == (p_end - p) && "std::strtod() failure");
+        ADOBE_ASSERT((p_ - p) == (p_end - p) && "std::strtod() failure");
 
         t = value_type(value);
 
