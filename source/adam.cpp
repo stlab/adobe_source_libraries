@@ -1121,13 +1121,11 @@ void sheet_t::implementation_t::flow(cell_bits_t& priority_accessed) {
                     throw logic_error("over constrained.");
 
                 if (count == 1) {
-                    e.term_m =
-                        std::bind(&implementation_t::calculate_expression, std::ref(*this),
-                                    term->position_m, term->expression_m);
+                    e.term_m = std::bind(&implementation_t::calculate_expression, std::ref(*this),
+                                         term->position_m, term->expression_m);
                 } else {
-                    e.term_m =
-                        std::bind(&implementation_t::calculate_indexed, std::ref(*this),
-                                    term->position_m, term->expression_m, n);
+                    e.term_m = std::bind(&implementation_t::calculate_indexed, std::ref(*this),
+                                         term->position_m, term->expression_m, n);
                 }
 
                 --e.relation_count_m;
