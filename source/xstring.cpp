@@ -323,7 +323,7 @@ count_max_element_tuple(Range& x, UnaryFunction f) {
 /**************************************************************************************************/
 
 context_frame_t::store_iterator
-context_frame_t::closest_match(store_range_pair_t range,
+context_frame_t::closest_match(store_range_pair_t /* range */,
                                const adobe::attribute_set_t& /* searching */) {
     // REVISIT: (fbrereto) This function fails to compile because `store_range_pair_t range`'s
     // iterators fail to evaluate as modeling the ForwardIterator concept, so the
