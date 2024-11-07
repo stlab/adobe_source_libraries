@@ -14,18 +14,11 @@
 
 #include <array>
 #include <cstdint>
+#include <cstdio>
 #include <memory>
 #include <mutex>
 #include <string>
 #include <vector>
-
-// Use scanf_s if available to avoid warning on Windows. https://en.cppreference.com/w/c/io/fscanf
-#ifdef __STDC_LIB_EXT1__
-#define __STDC_WANT_LIB_EXT1__ 1
-#include <stdio.h>
-#else
-#include <cstdio>
-#endif
 
 /**************************************************************************************************/
 
@@ -173,7 +166,8 @@ zuid_t::zuid_t(const char* zuid_t) : uuid_m(empty_uuid()) {
     unsigned long temp_data1;
     int temp_data[8];
 
-#ifdef __STDC_LIB_EXT1__
+// Secure versions of sscanf is used on MSVC to avoid warnings.
+#ifdef _MSC_VER
     ::sscanf_s(zuid_t, "%8lx-%4hx-%4hx-%2x%2x-%2x%2x%2x%2x%2x%2x", &temp_data1, &uuid_m.data2_m,
                &uuid_m.data3_m, &temp_data[0], &temp_data[1], &temp_data[2], &temp_data[3],
                &temp_data[4], &temp_data[5], &temp_data[6], &temp_data[7]);
