@@ -204,8 +204,8 @@ eve_callback_suite_t bind_layout(const bind_layout_proc_t& proc, sheet_t& sheet,
     suite.add_relation_proc_m = std::bind(&add_relation, std::ref(sheet), _1, _2, _3, _4);
     suite.add_interface_proc_m = [&sheet](name_t name, bool linked, const line_position_t& position1,
                                             const array_t& initializer, const line_position_t& position2,
-                                            const array_t& expression, const std::string& brief,
-                                            const std::string& detailed) -> void {
+                                            const array_t& expression, const std::string& /* brief */,
+                                            const std::string& /* detailed */) -> void {
         sheet.add_interface(name, linked, position1, initializer, position2, expression);
     };
     suite.finalize_sheet_proc_m = std::bind(&sheet_t::update, std::ref(sheet));
@@ -325,9 +325,9 @@ void apply_layout_parameters(layout_attributes_t& data, const dictionary_t& para
 
                 layout_attributes_t::spacing_t::iterator dest_iter(data.spacing_m.begin() + 1);
 
-                for (array_t::const_iterator iter(spacing_array.begin());
-                     iter != spacing_array.end(); ++iter) {
-                    *dest_iter = iter->cast<int>();
+                for (array_t::const_iterator spacing_iter(spacing_array.begin());
+                     spacing_iter != spacing_array.end(); ++spacing_iter) {
+                    *dest_iter = spacing_iter->cast<int>();
                     ++dest_iter;
                 }
             } else {

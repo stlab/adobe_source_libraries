@@ -1347,11 +1347,11 @@ void view_proxy_t::solve_up_with(::child_iterator first, ::child_iterator last,
         accumulate function object.
         */
 
-        for (guide_set_t::iterator first(boost::next(forward_guide_set.begin())),
-             last(forward_guide_set.end());
-             first != last; ++first) {
+        for (guide_set_t::iterator f(boost::next(forward_guide_set.begin())),
+             l(forward_guide_set.end());
+             f != l; ++f) {
             accumulate += difference;
-            *first = accumulate;
+            *f = accumulate;
         }
     }
 

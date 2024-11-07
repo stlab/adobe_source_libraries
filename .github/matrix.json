@@ -39,6 +39,11 @@
             "name": "Windows VS2022",
             "os": "windows-2022",
             "cxxstd" : "17"
+        },
+        {
+            "name": "Windows VS2022",
+            "os": "windows-2022",
+            "cxxstd" : "20"
         }
     ]
 }

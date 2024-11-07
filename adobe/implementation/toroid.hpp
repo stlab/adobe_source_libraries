@@ -227,7 +227,7 @@ public:
 
     void purify(toroid_node_t* p) {
         toroid_header_t* c(column_of(p));
-        int x(p->color_m);
+        auto x(p->color_m);
 
         c->color_m = x;
 
@@ -248,7 +248,7 @@ public:
 
     void unpurify(toroid_node_t* p) {
         toroid_header_t* c(column_of(p));
-        int x(p->color_m);
+        auto x(p->color_m);
 
         for (toroid_node_t* rr = up_of(c); rr != c; rr = up_of(rr)) {
             if (rr->color_m < 0) {

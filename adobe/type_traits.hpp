@@ -10,6 +10,9 @@
 #ifndef ADOBE_TYPE_TRAITS_HPP
 #define ADOBE_TYPE_TRAITS_HPP
 
+#include <type_traits>
+
+/**************************************************************************************************/
 
 namespace adobe {
 
@@ -26,5 +29,7 @@ using invoke_result_t = std::invoke_result_t<F, Args...>;
 #endif
 
 } // namespace adobe
+
+/**************************************************************************************************/
 
 #endif // include guard

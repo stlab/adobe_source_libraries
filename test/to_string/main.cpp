@@ -17,10 +17,14 @@
 #define BOOST_TEST_MAIN
 
 // boost
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunneeded-internal-declaration"
+#endif
 #include <boost/test/unit_test.hpp>
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif
 
 // asl
 #include <adobe/algorithm/for_each.hpp>

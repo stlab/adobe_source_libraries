@@ -1114,36 +1114,36 @@ void sheet_t::implementation_t::flow(cell_bits_t& priority_accessed) {
                 index_t::iterator iter = output_index_m.find(term->name_set_m[n]);
                 assert(iter != output_index_m.end());
 
-                cell_t& cell = *iter;
+                cell_t& e = *iter;
 
                 // REVISIT (sparent) : Better error reporting here.
-                if (cell.term_m)
+                if (e.term_m)
                     throw logic_error("over constrained.");
 
                 if (count == 1) {
-                    cell.term_m =
+                    e.term_m =
                         std::bind(&implementation_t::calculate_expression, std::ref(*this),
                                     term->position_m, term->expression_m);
                 } else {
-                    cell.term_m =
+                    e.term_m =
                         std::bind(&implementation_t::calculate_indexed, std::ref(*this),
                                     term->position_m, term->expression_m, n);
                 }
 
-                --cell.relation_count_m;
+                --e.relation_count_m;
 
                 // This will be a derived cell and will have a priority lower than any cell
                 // contributing to it
 
-                assert(cell.interface_input_m && "Missing input half of interface cell.");
-                if (cell.interface_input_m->linked_m) {
-                    cell.interface_input_m->priority_m = --priority_low_m;
+                assert(e.interface_input_m && "Missing input half of interface cell.");
+                if (e.interface_input_m->linked_m) {
+                    e.interface_input_m->priority_m = --priority_low_m;
                 }
 
-                if (cell.relation_count_m)
-                    cells.push_back(&cell);
+                if (e.relation_count_m)
+                    cells.push_back(&e);
                 else
-                    cell.resolved_m = true;
+                    e.resolved_m = true;
             }
 
             // Remove the relation from any cells to which it is still attached. That is,
