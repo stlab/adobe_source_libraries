@@ -149,8 +149,7 @@ private:
         instance_t* _copy() const override { return new instance(object_m); }
 
         void _out(std::ostream& s) const override {
-            // ostream_insertion(s, object_m);
-            s << object_m;
+            ostream_insertion(s, object_m);
         }
 
         const std::type_info& type_info() const override { return typeid(T); }
