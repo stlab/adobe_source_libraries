@@ -18,10 +18,16 @@
 
 #include <iostream>
 
+/*
+    REVISIT (sean-parent): As far as I can determine, this file does not use adobe/serializable.hpp
+    However, if it is not included here, the build fails for C++17 under MSVC only. I have not been
+    able to determine why this is the case.
+*/
+#include <adobe/serializable.hpp>
+
 /**************************************************************************************************/
 
 namespace adobe {
-
 
 /**************************************************************************************************/
 
