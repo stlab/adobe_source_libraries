@@ -899,8 +899,7 @@ void sheet_t::implementation_t::add_relation(const line_position_t& position,
         cell_set.insert(cell_set.end(), first->name_set_m.begin(), first->name_set_m.end());
     }
 
-    sort(cell_set);
-    cell_set.erase(unique(cell_set), cell_set.end());
+    sort_unique(cell_set);
 
     for (vector<name_t>::iterator f = cell_set.begin(), l = cell_set.end(); f != l; ++f) {
         index_t::iterator p = output_index_m.find(*f);
@@ -1043,8 +1042,7 @@ void sheet_t::implementation_t::flow(cell_bits_t& priority_accessed) {
         if (!relation.resolved_m)
             append(cells, relation.edges_m);
     }
-    sort(cells);
-    cells.erase(unique(cells), cells.end());
+    sort_unique(cells);
 
     // sort the cells by priority
     sort(cells, less(), &cell_t::priority);
@@ -1053,7 +1051,7 @@ void sheet_t::implementation_t::flow(cell_bits_t& priority_accessed) {
     // REVISIT <seanparent@google.com> : This is an approximation for enablement that could do
     // better with connected components
 
-    for (const auto& cell: cells) {
+    for (const auto& cell : cells) {
         priority_accessed.set(cell->interface_input_m->cell_set_pos_m);
     }
 
@@ -1144,16 +1142,15 @@ void sheet_t::implementation_t::flow(cell_bits_t& priority_accessed) {
                 append(remaining_cells, in_term.name_set_m);
             }
 
-            sort(remaining_cells);
-            remaining_cells.erase(unique(remaining_cells), remaining_cells.end());
+            sort_unique(remaining_cells);
 
-            /// REVISIT (sparent) : Rather than for_each we should have a set of in place transform
-            /// algorithms. This is transform_if taking a projection and a predicate.
+            /// REVISIT (sean-parent) : Rather than for_each we should have a set of in place
+            /// transform algorithms. This is transform_if taking a projection and a predicate.
             for (const auto& name : remaining_cells) {
-                auto& cell = output_cell(name);
-                if (cell.resolved_m)
+                auto& out_cell = output_cell(name);
+                if (out_cell.resolved_m)
                     continue;
-                --cell.relation_count_m;
+                --out_cell.relation_count_m;
             }
         }
         assert(cell.relation_count_m == 0 &&

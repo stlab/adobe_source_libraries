@@ -15,7 +15,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Generate job matrix
         id: set-matrix
@@ -32,7 +32,7 @@ jobs:
     name: ${{ matrix.config.name }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Install dependencies (macos)
         if: ${{ startsWith(matrix.config.os, 'macos') }}

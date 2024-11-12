@@ -8,18 +8,19 @@
 #ifndef ADOBE_ALGORITHM_APPEND_HPP
 #define ADOBE_ALGORITHM_APPEND_HPP
 
+#include <iterator>
+
 /**************************************************************************************************/
 
 namespace adobe {
 
 /**************************************************************************************************/
 
-/// Insert the range `r` at the end of the sequence container `x`.
-/// Returns an iterator pointing to the first element inserted, or `x.end()` if `r` is empty.
-template <class T, // T models SequenceContainer
-          class R> // R models Range
-inline auto append(T& x, const R& r) {
-    return x.insert(std::end(x), std::begin(r), std::end(r));
+/// Insert the _input range_ `r` at the end of the _sequence container_ `c`.
+/// Returns an iterator pointing to the first element inserted, or `end(c)` if `r` is empty.
+template <class T, class R>
+inline auto append(T& c, const R& r) {
+    return c.insert(std::end(c), std::begin(r), std::end(r));
 }
 
 /**************************************************************************************************/
