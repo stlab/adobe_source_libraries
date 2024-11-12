@@ -11,21 +11,19 @@
 
 /**************************************************************************************************/
 
-#include <type_traits>
-#include <utility>
-
 #if defined(_MSC_VER)
 
 #include <ppltasks.h>
 
 #else
 
+#include <exception>
 #include <functional>
-#include <future>
 #include <list>
 #include <memory>
 #include <mutex>
-#include <optional>
+#include <string>
+#include <utility>
 
 #endif
 

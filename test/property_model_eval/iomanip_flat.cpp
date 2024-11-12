@@ -151,7 +151,7 @@ void flat_format::handle_atom(stream_type& os, bool is_push) {
         } else if (value.type_info() == typeid(dictionary_t)) {
             os << value.cast<dictionary_t>();
         } else if (value.type_info() == typeid(array_t)) {
-            os << top.value().cast<::adobe::array_t>();
+            os << value.cast<array_t>();;
         } else {
             os << "'cel_unknown: " << value.type_info().name() << "'";
         }

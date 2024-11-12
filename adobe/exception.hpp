@@ -16,7 +16,9 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-/// invoke `std::terminate` with the given message.
+/// invoke `std::terminate` with the given message in `what()` for the current exception. The
+/// message can be retrieved in a terminate handler and is reported by the default terminate
+/// handler.
 [[noreturn]] void terminate(const char*);
 [[noreturn]] void terminate(const std::string&);
 
