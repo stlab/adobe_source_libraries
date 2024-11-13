@@ -94,9 +94,9 @@ struct view_proxy_t : adobe::extents_slices_t {
     layout_attributes_t geometry_m; // REVISIT (sparent) : make const
     place_data_t place_m;
 
-    int space_before_m;                      // populated from spacing_m of parent
-    std::array<int, 2> container_length_m;   // calculated length of container
-    std::array<int, 2> measured_length_m;    // length of container children only
+    int space_before_m;                    // populated from spacing_m of parent
+    std::array<int, 2> container_length_m; // calculated length of container
+    std::array<int, 2> measured_length_m;  // length of container children only
 
     std::array<fr_guide_set_t, 2> container_guide_set_m; // forward/reverse guide set for
     // container
@@ -299,8 +299,9 @@ eve_t::iterator eve_t::add_placeable(iterator parent, const layout_attributes_t&
 
 void eve_t::set_visible(iterator c, bool visible) { return object_m->set_visible(c, visible); }
 
-void eve_t::set_layout_attributes(iterator c, const layout_attributes_t& geometry)
-{ return object_m->set_layout_attributes(c, geometry); }
+void eve_t::set_layout_attributes(iterator c, const layout_attributes_t& geometry) {
+    return object_m->set_layout_attributes(c, geometry);
+}
 
 
 /**************************************************************************************************/
@@ -331,7 +332,7 @@ eve_t::iterator eve_t::implementation_t::add_placeable(iterator parent,
     if (parent == iterator())
         parent = proxies_m.end();
 
-    parent = proxies_m.insert(reverse ? boost::next(adobe::leading_of(parent))
+    parent = proxies_m.insert(reverse ? std::next(adobe::leading_of(parent))
                                       : adobe::trailing_of(parent),
                               implementation::view_proxy_t(initial, placeable));
 
@@ -345,7 +346,10 @@ eve_t::iterator eve_t::implementation_t::add_placeable(iterator parent,
 
 void eve_t::implementation_t::set_visible(iterator c, bool visible) { c->visible_m = visible; }
 
-void eve_t::implementation_t::set_layout_attributes(iterator c, const layout_attributes_t& geometry) { c->geometry_m = geometry; }
+void eve_t::implementation_t::set_layout_attributes(iterator c,
+                                                    const layout_attributes_t& geometry) {
+    c->geometry_m = geometry;
+}
 
 /**************************************************************************************************/
 
@@ -374,8 +378,8 @@ void eve_t::implementation_t::solve(slice_select_t select) {
         --limiter;
         progress = false;
 
-        for (preorder_iterator first(boost::begin(preorder_range())),
-             last(boost::end(preorder_range()));
+        for (preorder_iterator first(std::begin(preorder_range())),
+             last(std::end(preorder_range()));
              first != last; ++first) {
             progress |=
                 first->solve_down(::child_begin(first.base()), ::child_end(first.base()), select);
@@ -602,10 +606,10 @@ void view_proxy_t::adjust(::child_iterator first, ::child_iterator last, slice_s
 
                 guide_set = iter->geometry_m.extents_m.slice_m[select].guide_set_m;
 
-                adobe::transform(guide_set, boost::begin(guide_set),
+                adobe::transform(guide_set, std::begin(guide_set),
                                  std::bind(std::minus<int>(),
-                                             iter->geometry_m.extents_m.slice_m[select].length_m,
-                                             _1));
+                                           iter->geometry_m.extents_m.slice_m[select].length_m,
+                                           _1));
                 adobe::reverse(guide_set);
             } break;
             default:
@@ -698,7 +702,7 @@ void view_proxy_t::flatten(::child_iterator first, ::child_iterator last, slice_
     case layout_attributes_t::align_reverse:
     case layout_attributes_t::align_reverse_fill: {
         guide_set = container_guide_set_m[select][layout_attributes_t::align_reverse];
-        adobe::transform(guide_set, boost::begin(guide_set),
+        adobe::transform(guide_set, std::begin(guide_set),
                          std::bind(std::minus<int>(), place_m.slice_m[select].length_m, _1));
         adobe::reverse(guide_set);
     } break;
@@ -1122,7 +1126,7 @@ void view_proxy_t::adjust_with(::child_iterator first, ::child_iterator last,
 
     std::fill(
         adobe::copy_bound(geometry.spacing_m, child_spacing_range).second,
-        boost::end(child_spacing_range), geometry_m.spacing_m.back());
+        std::end(child_spacing_range), geometry_m.spacing_m.back());
     */
 
     typedef layout_attributes_t::spacing_t::difference_type difference_type;
@@ -1337,22 +1341,13 @@ void view_proxy_t::solve_up_with(::child_iterator first, ::child_iterator last,
     // balance the guides
 
     if (gslice.balance_m && forward_guide_set.size() > 2) {
-        guide_set_t::iterator iter(adobe::max_adjacent_difference(forward_guide_set));
-        guide_set_t::value_type difference(*boost::next(iter) - *iter);
+        guide_set_t::iterator iter{adobe::max_adjacent_difference(forward_guide_set)};
 
         guide_set_t::value_type accumulate(forward_guide_set.front());
 
-        /*
-        REVISIT (sparent) : This should be a call to generate - but I need a simple to create
-        accumulate function object.
-        */
-
-        for (guide_set_t::iterator f(boost::next(forward_guide_set.begin())),
-             l(forward_guide_set.end());
-             f != l; ++f) {
-            accumulate += difference;
-            *f = accumulate;
-        }
+        std::generate(
+            std::next(forward_guide_set.begin()), forward_guide_set.end(),
+            [&, _difference = *std::next(iter) - *iter] { return accumulate += _difference; });
     }
 
     length += additional_rlength;
@@ -1409,14 +1404,16 @@ bool view_proxy_t::solve_down_with(::child_iterator first, ::child_iterator last
 
             if ((rfirst->geometry_m.placement_m == eve_t::place_leaf) && guide != guide_last) {
                 // Snap the current postion to the guide.
-                ADOBE_ASSERT(reverse_guide_iter !=
-                       container_guide_set_m[select][layout_attributes_t::align_reverse].end());
+                ADOBE_ASSERT(
+                    reverse_guide_iter !=
+                    container_guide_set_m[select][layout_attributes_t::align_reverse].end());
                 rlength = *reverse_guide_iter++ - *guide++;
             }
 
             for (; guide != guide_last; ++guide, ++reverse_guide_iter) {
-                ADOBE_ASSERT(reverse_guide_iter !=
-                       container_guide_set_m[select][layout_attributes_t::align_reverse].end());
+                ADOBE_ASSERT(
+                    reverse_guide_iter !=
+                    container_guide_set_m[select][layout_attributes_t::align_reverse].end());
                 int new_guide(*reverse_guide_iter - rlength);
 
                 if (new_guide != *guide) {
@@ -1453,14 +1450,16 @@ bool view_proxy_t::solve_down_with(::child_iterator first, ::child_iterator last
 
             if ((iter->geometry_m.placement_m == adobe::eve_t::place_leaf) && guide != guide_last) {
                 // Snap the current postion to the guide.
-                ADOBE_ASSERT(guide_iter !=
-                       container_guide_set_m[select][layout_attributes_t::align_forward].end());
+                ADOBE_ASSERT(
+                    guide_iter !=
+                    container_guide_set_m[select][layout_attributes_t::align_forward].end());
                 length = *guide_iter++ - *guide++;
             }
 
             for (; guide != guide_last; ++guide, ++guide_iter) {
-                ADOBE_ASSERT(guide_iter !=
-                       container_guide_set_m[select][layout_attributes_t::align_forward].end());
+                ADOBE_ASSERT(
+                    guide_iter !=
+                    container_guide_set_m[select][layout_attributes_t::align_forward].end());
                 int new_guide(*guide_iter - length);
 
                 if (new_guide != *guide) {
