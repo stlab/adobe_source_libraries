@@ -16,8 +16,8 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-/// Insert the _input range_ `r` at the end of the _sequence container_ `c`.
-/// Returns an iterator pointing to the first element inserted, or `end(c)` if `r` is empty.
+/// Insert the elements  of _input_range_ `r` at the end of the _sequence container_ `c`,
+/// returning the position corresponding to the incoming `end` of `c`.
 template <class T, class R>
 inline auto append(T& c, const R& r) {
     return c.insert(std::end(c), std::begin(r), std::end(r));

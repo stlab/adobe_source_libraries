@@ -347,7 +347,8 @@ private:
     void flow(cell_bits_t& priority_accessed);
 
     /// Returns the output cell with the given name.
-    /// \pre the output cell must exist.
+    ///
+    /// \pre A cell with that name exists.
     cell_t& output_cell(const name_t& name) {
         auto p = output_index_m.find(name);
         assert(p != output_index_m.end() && "output cell not found");
@@ -359,7 +360,7 @@ private:
         return *p;
     }
 
-    /// Returns `true` if any output cells in the relation are resolved, false otherwise.
+    /// Returns whether any output cells in the relation are resolved.
     bool resolved(const relation_t& relation) const {
         return find_if(relation.name_set_m, [&](const auto& name) {
                    return output_cell(name).resolved_m;
