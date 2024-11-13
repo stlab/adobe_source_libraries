@@ -17,8 +17,10 @@
 /// a string literal for __LINE__.
 #define ADOBE_LINE_STRING() ADOBE_STRINGIZE(__LINE__) // NOLINT(cppcoreguidelines-macro-usage)
 
-/// Constructs a [GNU error formatted](https://www.gnu.org/prep/standards/standards.html#Errors)
-/// message string. Message must be a string literal.
+/// Expands to a [GNU error formatted](https://www.gnu.org/prep/standards/standards.html#Errors)
+/// string literal reporting `message` at the line where it is invoked.
+///
+/// - Requires: `message` is a string literal.
 #define ADOBE_MESSAGE(message)                                                                     \
     __FILE__ ":" ADOBE_LINE_STRING() ": " message // NOLINT(cppcoreguidelines-macro-usage)
 
