@@ -11,6 +11,7 @@
 #include <mutex>
 
 #include <adobe/algorithm/sort.hpp>
+#include <adobe/algorithm/transform.hpp>
 #include <adobe/array.hpp>
 #include <adobe/cassert.hpp>
 #include <adobe/dictionary.hpp>
@@ -198,14 +199,15 @@ eve_callback_suite_t bind_layout(const bind_layout_proc_t& proc, sheet_t& sheet,
 
     eve_callback_suite_t suite;
 
-    suite.add_view_proc_m = std::bind(
-        proc, _1, _3, std::bind(&evaluate_named_arguments, std::ref(evaluator), _4));
+    suite.add_view_proc_m =
+        std::bind(proc, _1, _3, std::bind(&evaluate_named_arguments, std::ref(evaluator), _4));
     suite.add_cell_proc_m = std::bind(&add_cell, std::ref(sheet), _1, _2, _3, _4);
     suite.add_relation_proc_m = std::bind(&add_relation, std::ref(sheet), _1, _2, _3, _4);
-    suite.add_interface_proc_m = [&sheet](name_t name, bool linked, const line_position_t& position1,
-                                            const array_t& initializer, const line_position_t& position2,
-                                            const array_t& expression, const std::string& brief,
-                                            const std::string& detailed) -> void {
+    suite.add_interface_proc_m =
+        [&sheet](name_t name, bool linked, const line_position_t& position1,
+                 const array_t& initializer, const line_position_t& position2,
+                 const array_t& expression, const std::string& /* brief */,
+                 const std::string& /* detailed */) -> void {
         sheet.add_interface(name, linked, position1, initializer, position2, expression);
     };
     suite.finalize_sheet_proc_m = std::bind(&sheet_t::update, std::ref(sheet));
@@ -320,16 +322,16 @@ void apply_layout_parameters(layout_attributes_t& data, const dictionary_t& para
         dictionary_t::const_iterator iter(parameters.find(key_spacing));
         if (iter != parameters.end()) {
             if (iter->second.type_info() == typeid(array_t)) {
+                // REVISIT (sean-parent) : This could use a back inserter but this is overwriting
+                // starting at the second element (contains a default value). Maybe a simpler
+                // expression?
                 const array_t& spacing_array = iter->second.cast<array_t>();
                 data.spacing_m.resize(spacing_array.size() + 1);
 
                 layout_attributes_t::spacing_t::iterator dest_iter(data.spacing_m.begin() + 1);
 
-                for (array_t::const_iterator iter(spacing_array.begin());
-                     iter != spacing_array.end(); ++iter) {
-                    *dest_iter = iter->cast<int>();
-                    ++dest_iter;
-                }
+                transform(spacing_array, dest_iter,
+                          [](const any_regular_t& x) { return x.cast<int>(); });
             } else {
                 double tmp(data.spacing_m[1]);
                 iter->second.cast(tmp); // Try getting as number

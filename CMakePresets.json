@@ -3,12 +3,13 @@
     "configurePresets": [
         {
             "name": "debug",
-            "displayName": "Custom configure preset",
+            "displayName": "debug-windows",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
             "binaryDir": "${sourceDir}/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_STANDARD": "20",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
                 "VCPKG_TARGET_TRIPLET": "x64-windows"
             },
@@ -16,10 +17,37 @@
                 "value": "x64",
                 "strategy": "external"
             },
-            "toolchainFile": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake",
+            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
-                "hostOS": [ "Windows" ]
+                    "hostOS": [
+                        "Windows"
+                    ]
+                }
+            }
+        },
+    {
+            "name": "debug-windows-cpp17",
+            "displayName": "debug-windows-cpp17",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_STANDARD": "17",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "VCPKG_TARGET_TRIPLET": "x64-windows"
+            },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [
+                        "Windows"
+                    ]
                 }
             }
         },
@@ -36,7 +64,9 @@
             },
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
-                    "hostOS": [ "macOS" ]
+                    "hostOS": [
+                        "macOS"
+                    ]
                 }
             }
         },
@@ -53,14 +83,16 @@
             },
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
-                    "hostOS": [ "macOS" ]
+                    "hostOS": [
+                        "macOS"
+                    ]
                 }
             }
         }
     ],
     "buildPresets": [
         {
-            "name": "debug",
+            "name": "debug-windows",
             "description": "",
             "displayName": "",
             "configurePreset": "debug"

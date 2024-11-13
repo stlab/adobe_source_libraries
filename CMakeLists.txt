@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.29)
 include(FindGit)
 include(CMakeParseArguments)
 enable_testing()
@@ -7,8 +7,7 @@ project(adobe_source_libraries CXX)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 if(NOT DEFINED CMAKE_CXX_STANDARD)
-    set(CMAKE_CXX_STANDARD 17)
-    set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD "c++17")
+    set(CMAKE_CXX_STANDARD 20)
 endif(NOT DEFINED CMAKE_CXX_STANDARD)
 
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")

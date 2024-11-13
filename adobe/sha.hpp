@@ -17,6 +17,8 @@
 #include <iterator>
 #include <string>
 
+#include <adobe/cassert.hpp>
+
 /**************************************************************************************************/
 
 namespace adobe {
@@ -239,8 +241,9 @@ std::uint64_t stuff_into_state(typename HashTraits::message_block_type& state,
             v <<= message_end - 8;
 
         *dst |= v;
-        stuff_bit_offset += num_bits;
-        n_stuffed_bits += num_bits;
+        ADOBE_ASSERT(num_bits < 8);
+        stuff_bit_offset += static_cast<std::uint16_t>(num_bits);
+        n_stuffed_bits += static_cast<std::uint16_t>(num_bits);
     }
     return n_stuffed_bits;
 }
@@ -309,8 +312,8 @@ void block_and_digest(typename HashTraits::message_block_type& state, std::uint1
 
 template <bool overshift, typename message_block_type>
 struct shift_down {
-    void operator()(message_block_type& state, std::uint64_t message_size,
-                    typename message_block_type::value_type value_type_mask) const {}
+    void operator()(message_block_type&, std::uint64_t,
+                    typename message_block_type::value_type) const {}
 };
 
 template <typename message_block_type>

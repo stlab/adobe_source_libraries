@@ -14,6 +14,7 @@
 #include <utility>
 #include <vector>
 
+#include <adobe/algorithm/append.hpp>
 #include <adobe/algorithm/find.hpp>
 #include <adobe/algorithm/for_each.hpp>
 #include <adobe/algorithm/sort.hpp>
@@ -344,6 +345,28 @@ private:
 
     priority_t name_to_priority(name_t name) const;
     void flow(cell_bits_t& priority_accessed);
+
+    /// Returns the output cell with the given name.
+    ///
+    /// \pre A cell with that name exists.
+    cell_t& output_cell(const name_t& name) {
+        auto p = output_index_m.find(name);
+        assert(p != output_index_m.end() && "output cell not found");
+        return *p;
+    }
+    const cell_t& output_cell(const name_t& name) const {
+        auto p = output_index_m.find(name);
+        assert(p != output_index_m.end() && "output cell not found");
+        return *p;
+    }
+
+    /// Returns whether any output cells in the relation are resolved.
+    bool resolved(const relation_t& relation) const {
+        return find_if(relation.name_set_m, [&](const auto& name) {
+                   return output_cell(name).resolved_m;
+               }) != relation.name_set_m.end();
+    }
+
 
     /*
         NOTE (sparent) : cell_t contains boost::signals2::signal<> which is not copyable. The cells
@@ -717,10 +740,10 @@ void sheet_t::implementation_t::add_input(name_t name, const line_position_t& po
 void sheet_t::implementation_t::add_output(name_t name, const line_position_t& position,
                                            const array_t& expression) {
     // REVISIT (sparent) : Non-transactional on failure.
-    cell_set_m.push_back(cell_t(access_output, name,
-                                std::bind(&implementation_t::calculate_expression,
-                                            std::ref(*this), position, expression),
-                                cell_set_m.size(), nullptr));
+    cell_set_m.push_back(cell_t(
+        access_output, name,
+        std::bind(&implementation_t::calculate_expression, std::ref(*this), position, expression),
+        cell_set_m.size(), nullptr));
 
     output_index_m.insert(cell_set_m.back());
 
@@ -744,11 +767,10 @@ void sheet_t::implementation_t::add_interface(name_t name, bool linked,
     scope_value_t<bool> scope(initialize_mode_m, true);
 
     if (initializer_expression.size()) {
-        cell_set_m.push_back(
-            cell_t(name, linked,
-                   std::bind(&implementation_t::calculate_expression, std::ref(*this),
-                               position1, initializer_expression),
-                   cell_set_m.size()));
+        cell_set_m.push_back(cell_t(name, linked,
+                                    std::bind(&implementation_t::calculate_expression,
+                                              std::ref(*this), position1, initializer_expression),
+                                    cell_set_m.size()));
     } else {
         cell_set_m.push_back(cell_t(name, linked, cell_t::calculator_t(), cell_set_m.size()));
     }
@@ -763,7 +785,7 @@ void sheet_t::implementation_t::add_interface(name_t name, bool linked,
         // REVISIT (sparent) : Non-transactional on failure.
         cell_set_m.push_back(cell_t(access_interface_output, name,
                                     std::bind(&implementation_t::calculate_expression,
-                                                std::ref(*this), position2, expression),
+                                              std::ref(*this), position2, expression),
                                     cell_set_m.size(), &cell_set_m.back()));
     } else {
         cell_set_m.push_back(cell_t(access_interface_output, name,
@@ -831,10 +853,10 @@ void sheet_t::implementation_t::add_constant(name_t name, any_regular_t value) {
 
 void sheet_t::implementation_t::add_logic(name_t logic, const line_position_t& position,
                                           const array_t& expression) {
-    cell_set_m.push_back(cell_t(access_logic, logic,
-                                std::bind(&implementation_t::calculate_expression,
-                                            std::ref(*this), position, expression),
-                                cell_set_m.size(), nullptr));
+    cell_set_m.push_back(cell_t(
+        access_logic, logic,
+        std::bind(&implementation_t::calculate_expression, std::ref(*this), position, expression),
+        cell_set_m.size(), nullptr));
 
     if (!name_index_m.insert(cell_set_m.back()).second) {
         throw stream_error_t(make_string("cell named '", logic.c_str(), "'already exists."),
@@ -847,10 +869,10 @@ void sheet_t::implementation_t::add_logic(name_t logic, const line_position_t& p
 void sheet_t::implementation_t::add_invariant(name_t name, const line_position_t& position,
                                               const array_t& expression) {
     // REVISIT (sparent) : Non-transactional on failure.
-    cell_set_m.push_back(cell_t(access_invariant, name,
-                                std::bind(&implementation_t::calculate_expression,
-                                            std::ref(*this), position, expression),
-                                cell_set_m.size(), nullptr));
+    cell_set_m.push_back(cell_t(
+        access_invariant, name,
+        std::bind(&implementation_t::calculate_expression, std::ref(*this), position, expression),
+        cell_set_m.size(), nullptr));
 
     output_index_m.insert(cell_set_m.back());
 
@@ -878,8 +900,7 @@ void sheet_t::implementation_t::add_relation(const line_position_t& position,
         cell_set.insert(cell_set.end(), first->name_set_m.begin(), first->name_set_m.end());
     }
 
-    sort(cell_set);
-    cell_set.erase(unique(cell_set), cell_set.end());
+    sort_unique(cell_set);
 
     for (vector<name_t>::iterator f = cell_set.begin(), l = cell_set.end(); f != l; ++f) {
         index_t::iterator p = output_index_m.find(*f);
@@ -936,7 +957,7 @@ sheet_t::connection_t sheet_t::implementation_t::monitor_enabled(name_t n, const
                                                     (touch_set & priority_accessed_m).any()));
 
     return monitor_enabled_m.connect(std::bind(&sheet_t::implementation_t::enabled_filter, this,
-                                                 touch_set, iter->cell_set_pos_m, monitor, _1, _2));
+                                               touch_set, iter->cell_set_pos_m, monitor, _1, _2));
 }
 
 /**************************************************************************************************/
@@ -988,8 +1009,8 @@ sheet_t::implementation_t::monitor_contributing(name_t n, const dictionary_t& ma
     monitor(contributing_set(mark, iter->contributing_m));
 
     return iter->monitor_contributing_m.connect(
-        std::bind(monitor, std::bind(&sheet_t::implementation_t::contributing_set,
-                                         std::ref(*this), mark, _1)));
+        std::bind(monitor, std::bind(&sheet_t::implementation_t::contributing_set, std::ref(*this),
+                                     mark, _1)));
 }
 
 /**************************************************************************************************/
@@ -1018,13 +1039,11 @@ priority_t sheet_t::implementation_t::name_to_priority(name_t name) const {
 void sheet_t::implementation_t::flow(cell_bits_t& priority_accessed) {
     // Generate the set of cells connected to unresolved relations
     vector<cell_t*> cells;
-    for (relation_cell_set_t::iterator f(relation_cell_set_m.begin()), l(relation_cell_set_m.end());
-         f != l; ++f) {
-        if (!f->resolved_m)
-            cells.insert(cells.end(), f->edges_m.begin(), f->edges_m.end());
+    for (const auto& relation : relation_cell_set_m) {
+        if (!relation.resolved_m)
+            append(cells, relation.edges_m);
     }
-    sort(cells);
-    cells.erase(unique(cells), cells.end());
+    sort_unique(cells);
 
     // sort the cells by priority
     sort(cells, less(), &cell_t::priority);
@@ -1033,8 +1052,8 @@ void sheet_t::implementation_t::flow(cell_bits_t& priority_accessed) {
     // REVISIT <seanparent@google.com> : This is an approximation for enablement that could do
     // better with connected components
 
-    for (vector<cell_t*>::iterator f = cells.begin(), l = cells.end(); f != l; ++f) {
-        priority_accessed.set((*f)->interface_input_m->cell_set_pos_m);
+    for (const auto& cell : cells) {
+        priority_accessed.set(cell->interface_input_m->cell_set_pos_m);
     }
 
     /*
@@ -1057,93 +1076,60 @@ void sheet_t::implementation_t::flow(cell_bits_t& priority_accessed) {
 
         cell.resolved_m = true;
 
-        for (relation_index_t::iterator f = cell.relation_index_m.begin(),
-                                        l = cell.relation_index_m.end();
-             f != l; ++f) {
-
-            if ((*f)->resolved_m)
+        for (const auto& relation : cell.relation_index_m) {
+            if (relation->resolved_m)
                 continue;
 
             --cell.relation_count_m;
 
-            const relation_t* term = 0;
-            bool at_least_one = false;
-
-            for (relation_set_t::iterator tf((*f)->terms_m.begin()), tl((*f)->terms_m.end());
-                 tf != tl; ++tf) {
-                // each term has a set of cells. If any cell is resolved then the term is resolved.
-
-                bool resolved = false;
-                for (vector<name_t>::iterator fc = tf->name_set_m.begin(),
-                                              lc = tf->name_set_m.end();
-                     fc != lc; ++fc) {
-
-                    index_t::iterator iter = output_index_m.find(*fc);
-                    assert(iter != output_index_m.end());
-
-                    if (iter->resolved_m) {
-                        resolved = true;
-                        break;
-                    }
-                }
-                if (resolved)
-                    continue;
-
-                if (!term) {
-                    term = &(*tf);
-                    at_least_one = true;
-                } else {
-                    term = NULL;
-                    break;
-                }
-            }
+            auto term =
+                find_if(relation->terms_m, [&](const auto& term) { return !resolved(term); });
 
             // REVISIT (sparent) : Better error reporting here.
-            if (!at_least_one) {
+            if (term == relation->terms_m.end())
                 throw std::logic_error("all terms of relation resolve but relation not applied.");
-            }
 
-            if (!term)
+            // If there is more than one unresolved term, continue.
+            if (std::find_if(next(term), relation->terms_m.end(), [&](const auto& term) {
+                    return !resolved(term);
+                }) != relation->terms_m.end())
                 continue;
 
             // Flow out to lhs cells
 
-            (*f)->resolved_m = true;
+            relation->resolved_m = true;
 
             for (std::size_t n = 0, count = term->name_set_m.size(); n != count; ++n) {
-                index_t::iterator iter = output_index_m.find(term->name_set_m[n]);
-                assert(iter != output_index_m.end());
-
-                cell_t& cell = *iter;
+                auto& out_cell = output_cell(term->name_set_m[n]);
 
                 // REVISIT (sparent) : Better error reporting here.
-                if (cell.term_m)
+                if (out_cell.term_m)
                     throw logic_error("over constrained.");
 
                 if (count == 1) {
-                    cell.term_m =
+                    out_cell.term_m =
                         std::bind(&implementation_t::calculate_expression, std::ref(*this),
-                                    term->position_m, term->expression_m);
+                                  term->position_m, term->expression_m);
                 } else {
-                    cell.term_m =
+                    out_cell.term_m =
                         std::bind(&implementation_t::calculate_indexed, std::ref(*this),
-                                    term->position_m, term->expression_m, n);
+                                  term->position_m, term->expression_m, n);
                 }
 
-                --cell.relation_count_m;
+                --out_cell.relation_count_m;
 
                 // This will be a derived cell and will have a priority lower than any cell
                 // contributing to it
 
-                assert(cell.interface_input_m && "Missing input half of interface cell.");
-                if (cell.interface_input_m->linked_m) {
-                    cell.interface_input_m->priority_m = --priority_low_m;
+                assert(out_cell.interface_input_m && "Missing input half of interface cell.");
+                if (out_cell.interface_input_m->linked_m) {
+                    out_cell.interface_input_m->priority_m = --priority_low_m;
                 }
 
-                if (cell.relation_count_m)
-                    cells.push_back(&cell);
+                if (out_cell.relation_count_m)
+                    cells.push_back(&out_cell);
                 else
-                    cell.resolved_m = true;
+                    out_cell.resolved_m = true;
             }
 
             // Remove the relation from any cells to which it is still attached. That is,
@@ -1151,28 +1137,21 @@ void sheet_t::implementation_t::flow(cell_bits_t& priority_accessed) {
 
             vector<name_t> remaining_cells;
 
-            for (relation_set_t::iterator tf((*f)->terms_m.begin()), tl((*f)->terms_m.end());
-                 tf != tl; ++tf) {
-
-                if (&(*tf) == term)
+            for (const auto& in_term : relation->terms_m) {
+                if (&in_term == &(*term))
                     continue;
-
-                remaining_cells.insert(remaining_cells.end(), tf->name_set_m.begin(),
-                                       tf->name_set_m.end());
+                append(remaining_cells, in_term.name_set_m);
             }
 
-            sort(remaining_cells);
-            remaining_cells.erase(unique(remaining_cells), remaining_cells.end());
+            sort_unique(remaining_cells);
 
-            for (vector<name_t>::iterator fc = remaining_cells.begin(), lc = remaining_cells.end();
-                 fc != lc; ++fc) {
-
-                index_t::iterator iter = output_index_m.find(*fc);
-                assert(iter != output_index_m.end());
-
-                if (iter->resolved_m)
+            /// REVISIT (sean-parent) : Rather than for_each we should have a set of in place
+            /// transform algorithms. This is transform_if taking a projection and a predicate.
+            for (const auto& name : remaining_cells) {
+                auto& out_cell = output_cell(name);
+                if (out_cell.resolved_m)
                     continue;
-                --iter->relation_count_m;
+                --out_cell.relation_count_m;
             }
         }
         assert(cell.relation_count_m == 0 &&

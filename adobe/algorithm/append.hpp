@@ -1,16 +1,13 @@
 /*
-    Copyright 2013 Adobe
+    Copyright 2024 Adobe
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 /**************************************************************************************************/
 
-#ifndef ADOBE_ALGORITHM_GENERATE_HPP
-#define ADOBE_ALGORITHM_GENERATE_HPP
+#ifndef ADOBE_ALGORITHM_APPEND_HPP
+#define ADOBE_ALGORITHM_APPEND_HPP
 
-#include <adobe/config.hpp>
-
-#include <algorithm>
 #include <iterator>
 
 /**************************************************************************************************/
@@ -18,22 +15,12 @@
 namespace adobe {
 
 /**************************************************************************************************/
-/*!
-\defgroup generate generate
-\ingroup mutating_algorithm
 
-\see
-    - STL documentation for \ref stldoc_generate
-*/
-/**************************************************************************************************/
-/*!
-    \ingroup generate
-
-    \brief generate implementation
-*/
-template <class ForwardRange, class Generator>
-inline void generate(ForwardRange& range, Generator gen) {
-    std::generate(std::begin(range), std::end(range), gen);
+/// Insert the elements  of _input_range_ `r` at the end of the _sequence container_ `c`,
+/// returning the position corresponding to the incoming `end` of `c`.
+template <class T, class R>
+inline auto append(T& c, const R& r) {
+    return c.insert(std::end(c), std::begin(r), std::end(r));
 }
 
 /**************************************************************************************************/
@@ -43,5 +30,3 @@ inline void generate(ForwardRange& range, Generator gen) {
 /**************************************************************************************************/
 
 #endif
-
-/**************************************************************************************************/

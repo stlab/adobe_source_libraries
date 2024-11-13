@@ -16,6 +16,8 @@
 
 #include <adobe/config.hpp>
 
+#include <adobe/iomanip_fwd.hpp>
+
 #include <cassert>
 #include <functional>
 #include <iosfwd>
@@ -24,12 +26,13 @@
 #include <stdexcept>
 #include <string>
 
-#include <adobe/iomanip_fwd.hpp>
+#include <boost/next_prior.hpp>
+
 #include <adobe/manip.hpp>
 #include <adobe/name.hpp>
 #include <adobe/serializable.hpp>
 
-#include <boost/next_prior.hpp>
+
 
 /**************************************************************************************************/
 

@@ -22,6 +22,14 @@ if (${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang" OR
     target_compile_options(asl PUBLIC -ftemplate-depth=1024)
 endif()
 
+ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    target_compile_options (asl PUBLIC "/DNOMINMAX")
+    target_compile_options (asl PUBLIC "/permissive-")
+    target_compile_options (asl PUBLIC "/Zc:__cplusplus")
+    target_compile_options (asl PRIVATE "/W4")
+    target_compile_options (asl PRIVATE "/WX")
+endif()
+
 target_link_boost(asl)
 
 # thread linking

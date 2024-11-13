@@ -5,36 +5,22 @@
 */
 /**************************************************************************************************/
 
-#ifndef ADOBE_ALGORITHM_GENERATE_HPP
-#define ADOBE_ALGORITHM_GENERATE_HPP
+#ifndef ADOBE_EXCEPTION_HPP
+#define ADOBE_EXCEPTION_HPP
 
-#include <adobe/config.hpp>
-
-#include <algorithm>
-#include <iterator>
+#include <string>
 
 /**************************************************************************************************/
 
 namespace adobe {
 
 /**************************************************************************************************/
-/*!
-\defgroup generate generate
-\ingroup mutating_algorithm
 
-\see
-    - STL documentation for \ref stldoc_generate
-*/
-/**************************************************************************************************/
-/*!
-    \ingroup generate
-
-    \brief generate implementation
-*/
-template <class ForwardRange, class Generator>
-inline void generate(ForwardRange& range, Generator gen) {
-    std::generate(std::begin(range), std::end(range), gen);
-}
+/// invoke `std::terminate` with the given message in `what()` for the current exception. The
+/// message can be retrieved in a terminate handler and is reported by the default terminate
+/// handler.
+[[noreturn]] void terminate(const char*);
+[[noreturn]] void terminate(const std::string&);
 
 /**************************************************************************************************/
 

@@ -166,9 +166,16 @@ zuid_t::zuid_t(const char* zuid_t) : uuid_m(empty_uuid()) {
     unsigned long temp_data1;
     int temp_data[8];
 
+// Secure versions of sscanf is used on MSVC to avoid warnings.
+#ifdef _MSC_VER
+    ::sscanf_s(zuid_t, "%8lx-%4hx-%4hx-%2x%2x-%2x%2x%2x%2x%2x%2x", &temp_data1, &uuid_m.data2_m,
+               &uuid_m.data3_m, &temp_data[0], &temp_data[1], &temp_data[2], &temp_data[3],
+               &temp_data[4], &temp_data[5], &temp_data[6], &temp_data[7]);
+#else
     std::sscanf(zuid_t, "%8lx-%4hx-%4hx-%2x%2x-%2x%2x%2x%2x%2x%2x", &temp_data1, &uuid_m.data2_m,
                 &uuid_m.data3_m, &temp_data[0], &temp_data[1], &temp_data[2], &temp_data[3],
                 &temp_data[4], &temp_data[5], &temp_data[6], &temp_data[7]);
+#endif
 
     uuid_m.data1_m = static_cast<std::int32_t>(temp_data1);
 

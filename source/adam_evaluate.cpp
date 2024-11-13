@@ -92,10 +92,11 @@ adam_callback_suite_t bind_to_sheet(sheet_t& sheet) {
 
     suite.add_cell_proc_m = std::bind(&add_cell, std::ref(sheet), _1, _2, _3, _4);
     suite.add_relation_proc_m = std::bind(&add_relation, std::ref(sheet), _1, _2, _3, _4);
-    suite.add_interface_proc_m = [&sheet](name_t name, bool linked, const line_position_t& position1,
-                                         const array_t& initializer, const line_position_t& position2,
-                                         const array_t& expression, const std::string& brief,
-                                         const std::string& detailed) -> void {
+    suite.add_interface_proc_m =
+        [&sheet](name_t name, bool linked, const line_position_t& position1,
+                 const array_t& initializer, const line_position_t& position2,
+                 const array_t& expression, const std::string& /* brief */,
+                 const std::string& /* detailed */) -> void {
         sheet.add_interface(name, linked, position1, initializer, position2, expression);
     };
     return suite;
