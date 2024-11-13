@@ -8,3 +8,4 @@ gh-pages/
 documentation/doxyfile.bak
 build_asl/
 .vs/
+.vscode/
