@@ -41,6 +41,7 @@
 
 using namespace std;
 using namespace std::placeholders;
+using namespace adobe;
 
 /**************************************************************************************************/
 
@@ -93,9 +94,12 @@ typedef vector<adobe::any_regular_t> stack_type; // REVISIT (sparent) : GCC 3.1 
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 typedef adobe::static_table<adobe::name_t, operator_t, 27> operator_table_t;
+using variable_table_t = adobe::static_table<adobe::name_t, adobe::any_regular_t, 8>;
+#if 0
 typedef adobe::static_table<adobe::name_t, array_function_t, 7> array_function_table_t;
 typedef adobe::static_table<adobe::name_t, dictionary_function_t, 1> dictionary_function_table_t;
-typedef adobe::static_table<const std::type_info*, adobe::name_t, 7> type_table_t;
+#endif
+typedef adobe::static_table<const std::type_info*, adobe::name_t, 8> type_table_t;
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 
 /**************************************************************************************************/
@@ -124,6 +128,7 @@ void get_type_name_init_() {
          type_table_t::entry_type(&typeid(string), "string"_name),
          type_table_t::entry_type(&typeid(adobe::array_t), "array"_name),
          type_table_t::entry_type(&typeid(adobe::dictionary_t), "dictionary"_name),
+         type_table_t::entry_type(&typeid(adobe::function_t), "function"_name),
          type_table_t::entry_type(&typeid(adobe::name_t), "name"_name)}};
 
     type_table_s.sort();
@@ -138,6 +143,17 @@ void get_type_name_init() { call_once(get_type_name_flag, &get_type_name_init_);
 
 /**************************************************************************************************/
 
+const char* get_type_name(const std::type_info& type) {
+    get_type_name_init();
+
+    adobe::name_t result;
+
+    (*type_table_g)(&type, result);
+
+    if (result) return result.c_str();
+    return type.name();
+}
+
 adobe::name_t get_type_name(const adobe::any_regular_t& val) {
     get_type_name_init();
 
@@ -146,9 +162,19 @@ adobe::name_t get_type_name(const adobe::any_regular_t& val) {
     (*type_table_g)(&val.type_info(), result);
 
     if (!result)
-        result = "unknown"_name;
+        result = name_t{val.type_info().name()};
 
     return result;
+}
+
+/**************************************************************************************************/
+
+template <class T>
+auto cast(adobe::any_regular_t& x) -> decltype(x.cast<T>()) {
+    if (x.type_info() != typeid(T))
+        throw std::runtime_error("expected \""s + get_type_name(typeid(T)) + "\" found \"" +
+                                 get_type_name(x.type_info()) + "\"");
+    return x.cast<T>();
 }
 
 /**************************************************************************************************/
@@ -159,7 +185,8 @@ adobe::name_t get_type_name(const adobe::any_regular_t& val) {
 
 /**************************************************************************************************/
 
-adobe::any_regular_t xml_escape_function(const adobe::array_t& parameters) {
+adobe::any_regular_t xml_escape_function(const adobe::any_regular_t& arg) {
+    const auto& parameters{arg.cast<adobe::array_t>()};
     if (parameters.size() != 1 || parameters[0].type_info() != typeid(string))
         throw std::runtime_error("xml_escape: parameter error");
 
@@ -168,7 +195,8 @@ adobe::any_regular_t xml_escape_function(const adobe::array_t& parameters) {
 
 /**************************************************************************************************/
 
-adobe::any_regular_t xml_unescape_function(const adobe::array_t& parameters) {
+adobe::any_regular_t xml_unescape_function(const adobe::any_regular_t& arg) {
+    const auto& parameters{arg.cast<adobe::array_t>()};
     if (parameters.size() != 1 || parameters[0].type_info() != typeid(string))
         throw std::runtime_error("xml_unescape: parameter error");
 
@@ -177,7 +205,8 @@ adobe::any_regular_t xml_unescape_function(const adobe::array_t& parameters) {
 
 /**************************************************************************************************/
 
-adobe::any_regular_t localize_function(const adobe::array_t& parameters) {
+adobe::any_regular_t localize_function(const adobe::any_regular_t& arg) {
+    const auto& parameters{arg.cast<adobe::array_t>()};
     if (parameters.size() != 1)
         throw std::runtime_error("localize: parameter error");
 
@@ -189,7 +218,8 @@ adobe::any_regular_t localize_function(const adobe::array_t& parameters) {
 
 /**************************************************************************************************/
 
-adobe::any_regular_t round_function(const adobe::array_t& parameters) {
+adobe::any_regular_t round_function(const adobe::any_regular_t& arg) {
+    const auto& parameters{arg.cast<adobe::array_t>()};
     if (parameters.size() == 0)
         throw std::runtime_error("round: parameter error");
 
@@ -198,31 +228,34 @@ adobe::any_regular_t round_function(const adobe::array_t& parameters) {
 
 /**************************************************************************************************/
 
-adobe::any_regular_t min_function(const adobe::array_t& parameters) {
+adobe::any_regular_t min_function(const adobe::any_regular_t& arg) {
+    const auto& parameters{arg.cast<adobe::array_t>()};
     if (parameters.size() == 0)
         throw std::runtime_error("min: parameter error");
 
-    return *adobe::min_element(
-        parameters,
-        std::bind(std::less<double>(), std::bind(adobe::any_regular_t::transform<double>(), _1),
-                    std::bind(adobe::any_regular_t::transform<double>(), _2)));
+    return *adobe::min_element(parameters,
+                               std::bind(std::less<double>(),
+                                         std::bind(adobe::any_regular_t::transform<double>(), _1),
+                                         std::bind(adobe::any_regular_t::transform<double>(), _2)));
 }
 
 /**************************************************************************************************/
 
-adobe::any_regular_t max_function(const adobe::array_t& parameters) {
+adobe::any_regular_t max_function(const adobe::any_regular_t& arg) {
+    const auto& parameters{arg.cast<adobe::array_t>()};
     if (parameters.size() == 0)
         throw std::runtime_error("max: parameter error");
 
-    return *adobe::max_element(
-        parameters,
-        std::bind(std::less<double>(), std::bind(adobe::any_regular_t::transform<double>(), _1),
-                    std::bind(adobe::any_regular_t::transform<double>(), _2)));
+    return *adobe::max_element(parameters,
+                               std::bind(std::less<double>(),
+                                         std::bind(adobe::any_regular_t::transform<double>(), _1),
+                                         std::bind(adobe::any_regular_t::transform<double>(), _2)));
 }
 
 /**************************************************************************************************/
 
-adobe::any_regular_t typeof_function(const adobe::array_t& parameters) {
+adobe::any_regular_t typeof_function(const adobe::any_regular_t& arg) {
+    const auto& parameters{arg.cast<adobe::array_t>()};
     if (parameters.size() == 0)
         throw std::runtime_error("typeof: parameter error");
 
@@ -237,7 +270,8 @@ adobe::any_regular_t typeof_function(const adobe::array_t& parameters) {
 
 /**************************************************************************************************/
 
-adobe::any_regular_t scale_function(const adobe::dictionary_t& parameters) {
+adobe::any_regular_t scale_function(const adobe::any_regular_t& arg) {
+    const auto& parameters{arg.cast<adobe::dictionary_t>()};
     double m(1.0);
     double x(0.0);
     double b(0.0);
@@ -257,9 +291,14 @@ adobe::any_regular_t scale_function(const adobe::dictionary_t& parameters) {
 
 /**************************************************************************************************/
 
-void throw_function_not_defined(adobe::name_t function_name) {
+[[noreturn]] void throw_function_not_defined(adobe::name_t function_name) {
     throw std::logic_error(
-        adobe::make_string("Function \'", function_name.c_str(), "\' not defined."));
+        adobe::make_string("function \'", function_name.c_str(), "\' not defined."));
+}
+
+[[noreturn]] void throw_variable_not_defined(adobe::name_t variable_name) {
+    throw std::logic_error(
+        adobe::make_string("variable \'", variable_name.c_str(), "\' not defined."));
 }
 
 /**************************************************************************************************/
@@ -271,7 +310,9 @@ void throw_function_not_defined(adobe::name_t function_name) {
 /**************************************************************************************************/
 
 struct bitwise_and_t {
-    inline std::uint32_t operator()(std::uint32_t x, std::uint32_t y) const { return x & y; }
+    inline std::uint32_t operator()(std::uint32_t x, std::uint32_t y) const {
+        return x & y;
+    } // namespace
 };
 
 /**************************************************************************************************/
@@ -326,6 +367,19 @@ public:
     any_regular_t& back();
     void pop_back();
 
+    template <class T>
+    auto pop_as() -> T {
+        if constexpr (std::is_same_v<T, any_regular_t>) {
+            auto result = std::move(back());
+            pop_back();
+            return result;
+        } else {
+            auto result = std::move(cast<T>(back()));
+            pop_back();
+            return result;
+        }
+    }
+
     variable_lookup_t variable_lookup_m;
     array_function_lookup_t array_function_lookup_m;
     dictionary_function_lookup_t dictionary_function_lookup_m;
@@ -334,6 +388,50 @@ public:
 
     // override maps
     binary_op_override_map_t binary_op_override_map_m;
+
+    any_regular_t variable_lookup(name_t name) const {
+        // todo: We should have a new array of lookup functions that can chain here
+
+        // This section handles the legacy lookup mechanism. The old callback simply failed if not
+        // found.
+        exception_ptr error;
+        if (variable_lookup_m) {
+            try {
+                return variable_lookup_m(name);
+            } catch (...) {
+                error = current_exception();
+            }
+        }
+        // builtin variables are searched "last" so clients can override.
+        if (any_regular_t value; (*variable_table_g)(name, value))
+            return value;
+
+        // This section handles the legacy function support. Functions were not first class and were
+        // looked up after the arguments where parsed. To support the old API, we capture the
+        // function name and return a function object that will try and lookup the function when
+        // invoked. This has the unfortunate side effect that referencing an undefined variable will
+        // fail late with an error "expected `<type>` found `function`."
+        if (array_function_lookup_m || dictionary_function_lookup_m) {
+            return function_t{[this, name](const any_regular_t& args) {
+                if (array_function_lookup_m && args.type_info() == typeid(array_t)) {
+                    try {
+                        return array_function_lookup_m(name, args.cast<array_t>());
+                    } catch (...) {
+                    }
+                }
+                if (dictionary_function_lookup_m && args.type_info() == typeid(dictionary_t)) {
+                    try {
+                        return dictionary_function_lookup_m(name, args.cast<dictionary_t>());
+                    } catch (...) {
+                    }
+                }
+                throw_function_not_defined(name);
+            }};
+        }
+        if (error)
+            rethrow_exception(error);
+        throw_variable_not_defined(name);
+    }
 
 private:
     stack_type value_stack_m;
@@ -368,15 +466,21 @@ public:
     void dictionary_operator();
 
     static operator_table_t* operator_table_g;
+    static variable_table_t* variable_table_g;
+#if 0
     static array_function_table_t* array_function_table_g;
     static dictionary_function_table_t* dictionary_function_table_g;
+#endif
 };
 
 /**************************************************************************************************/
 
 operator_table_t* virtual_machine_t::implementation_t::operator_table_g;
+variable_table_t* virtual_machine_t::implementation_t::variable_table_g;
+#if 0
 array_function_table_t* virtual_machine_t::implementation_t::array_function_table_g;
 dictionary_function_table_t* virtual_machine_t::implementation_t::dictionary_function_table_g;
+#endif
 
 /**************************************************************************************************/
 
@@ -439,26 +543,21 @@ void virtual_machine_init_() {
          op_entry_type(adobe::bitwise_negate_k,
                        &implementation_t::bitwise_unary_operator<bitwise_negate_t>)}};
 
-    static array_function_table_t array_function_table_s = {
-        {array_function_table_t::entry_type("typeof"_name, &typeof_function),
-         array_function_table_t::entry_type("min"_name, &min_function),
-         array_function_table_t::entry_type("max"_name, &max_function),
-         array_function_table_t::entry_type("round"_name, &round_function),
-         array_function_table_t::entry_type("localize"_name, &localize_function),
-         array_function_table_t::entry_type("xml_escape"_name, &xml_escape_function),
-         array_function_table_t::entry_type("xml_unescape"_name, &xml_unescape_function)}};
-
-    static dictionary_function_table_t dictionary_function_table_s = {
-        {dictionary_function_table_t::entry_type("scale"_name, &scale_function)}};
+    static variable_table_t variable_table_s = {
+        {variable_table_t::entry_type("typeof"_name, function_t{&typeof_function}),
+         variable_table_t::entry_type("min"_name, function_t{&min_function}),
+         variable_table_t::entry_type("max"_name, function_t{&max_function}),
+         variable_table_t::entry_type("round"_name, function_t{&round_function}),
+         variable_table_t::entry_type("localize"_name, function_t{&localize_function}),
+         variable_table_t::entry_type("xml_escape"_name, function_t{&xml_escape_function}),
+         variable_table_t::entry_type("xml_unescape"_name, function_t{&xml_unescape_function}),
+         variable_table_t::entry_type("scale"_name, function_t{&scale_function})}};
 
     operator_table_s.sort();
-    array_function_table_s.sort();
-    dictionary_function_table_s.sort();
+    variable_table_s.sort();
 
     adobe::virtual_machine_t::implementation_t::operator_table_g = &operator_table_s;
-    adobe::virtual_machine_t::implementation_t::array_function_table_g = &array_function_table_s;
-    adobe::virtual_machine_t::implementation_t::dictionary_function_table_g =
-        &dictionary_function_table_s;
+    adobe::virtual_machine_t::implementation_t::variable_table_g = &variable_table_s;
 }
 
 /**************************************************************************************************/
@@ -588,19 +687,17 @@ void virtual_machine_t::implementation_t::unary_operator() {
 /**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::logical_operator(bool do_and) {
-    adobe::array_t operand_exp(back().cast<adobe::array_t>());
-    pop_back();
+    array_t operand_exp(pop_as<array_t>());
+    bool operand1 = back().cast<bool>();
 
-    any_regular_t operand1 = back();
-
-    if (operand1.cast<bool>() == do_and) {
+    if (operand1 == do_and) {
         pop_back();
         evaluate(operand_exp);
 
         any_regular_t& operand2(value_stack_m.back());
 
         if (operand2.type_info() != typeid(bool))
-            throw std::bad_cast();
+            throw std::bad_cast(); // todo: better error
     }
 }
 
@@ -667,14 +764,11 @@ void virtual_machine_t::implementation_t::ifelse_operator() {
 /**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::variable_operator() {
-    adobe::name_t variable(back().cast<adobe::name_t>());
 
+    adobe::name_t variable(back().cast<adobe::name_t>());
     pop_back();
 
-    if (!variable_lookup_m)
-        throw std::logic_error("No variable lookup installed.");
-
-    value_stack_m.push_back(variable_lookup_m(variable));
+    value_stack_m.push_back(variable_lookup(variable));
 }
 
 /**************************************************************************************************/
@@ -792,10 +886,11 @@ void virtual_machine_t::implementation_t::bitwise_unary_operator() {
 void virtual_machine_t::implementation_t::function_operator() {
     virtual_machine_init();
 
-    // pop the function name
-    adobe::name_t function_name(back().cast<adobe::name_t>());
-    pop_back();
+    auto argument{pop_as<any_regular_t>()};
+    auto function{pop_as<function_t>()};
+    value_stack_m.push_back(function(argument));
 
+#if 0
     if (back().type_info() == typeid(adobe::array_t)) {
         // handle unnamed parameter functions
         array_function_t array_func;
@@ -821,6 +916,7 @@ void virtual_machine_t::implementation_t::function_operator() {
         else
             throw_function_not_defined(function_name);
     }
+#endif
 }
 
 /**************************************************************************************************/

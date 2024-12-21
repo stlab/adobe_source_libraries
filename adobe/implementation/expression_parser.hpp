@@ -46,15 +46,14 @@ multiplicative_expression   = unary_expression { ("*" | "/" | "%") unary_express
 unary_expression            = postfix_expression | (unary_operator unary_expression).
 unary_operator              = "+" | "-" | "!" | "~".
 
-postfix_expression          = primary_expression { ("[" expression "]") | ("." identifier) }.
+postfix_expression          = primary_expression { ("[" expression "]") | ("." identifier)
+                                | "(" [argument_expression_list] ")"}.
 
 primary_expression          = name | number | boolean | string | "empty" | array | dictionary
-                                | variable_or_fuction | ( "(" expression ")" ).
-
-variable_or_function        = identifier ["(" [argument_expression_list] ")"].
+                                | identifier | ( "(" expression ")" ).
 
 array                       = "[" [argument_list] "]".
-dictionary                  = "{" named_argument_list "}".
+dictionary                  = "{" [named_argument_list] "}".
 
 argument_expression_list    = named_argument_list | argument_list.
 
@@ -127,15 +126,18 @@ public:
     //  unary_operator = "+" | "-" | "!" | "~".
     bool is_unary_operator(name_t&);
 
-    //  postfix_expression = primary_expression { ("[" expression "]") | ("." identifier) }.
+    //  postfix_expression          = primary_expression { ("[" expression "]") | ("." identifier)
+    //                                  | "(" [argument_expression_list] ")"}.
     bool is_postfix_expression(array_t&);
 
-    //  primary_expression = name | number | boolean | string | "empty" | array | dictionary
-    //      | variable_or_fuction | ( "(" expression ")" ).
+    //  primary_expression          = name | number | boolean | string | "empty" | array | dictionary
+    //                                  | identifier | ( "(" expression ")" ).
     bool is_primary_expression(array_t&);
 
+#if 0
     //  variable_or_fuctiontion = identifier ["(" [argument_expression_list] ")"].
     bool is_variable_or_function(array_t&);
+#endif
 
     //  argument_expression_list = named_argument_list | argument_list.
     bool is_argument_expression_list(array_t&);
@@ -143,7 +145,7 @@ public:
     //  array = "[" [argument_list] "]".
     bool is_array(array_t&);
 
-    //  dictionary = "{" named_argument_list "}".
+    //  dictionary = "{" [named_argument_list] "}".
     bool is_dictionary(array_t&);
 
     //  argument_list = expression { "," expression }.

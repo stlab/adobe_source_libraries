@@ -27,6 +27,32 @@
 namespace adobe {
 
 /**************************************************************************************************/
+
+// todo: temporary hack to get around std::function not being comparable
+class function_t : public std::function<any_regular_t(const any_regular_t&)> {
+public:
+    using base_t = std::function<any_regular_t(const any_regular_t&)>;
+    using base_t::function;
+    using base_t::operator=;
+    using base_t::swap;
+    using base_t::operator bool;
+    using base_t::target;
+    using base_t::target_type;
+
+    function_t() noexcept = default;
+    function_t(std::nullptr_t) noexcept : base_t(nullptr) {}
+    function_t(const function_t&) = default;
+    function_t(function_t&&) noexcept = default;
+    template <class F, std::enable_if_t<!std::is_same_v<std::decay_t<F>, function_t>, int> = 0>
+    function_t(F&& f) : base_t(std::forward<F>(f)) {}
+    function_t& operator=(const function_t&) = default;
+    function_t& operator=(function_t&&) noexcept = default;
+
+    bool operator==(const function_t&) const { return true; }
+    bool operator!=(const function_t&) const { return false; }
+};
+
+/**************************************************************************************************/
 /*
     Note: For all bitwise operators the numeric data type (double) will be cast down to a
           std::uint32_t for the operation.
@@ -78,6 +104,8 @@ public:
     void set_numeric_index_lookup(const numeric_index_lookup_t&);
 
     void override_operator(name_t, const binary_op_override_t&);
+
+    void add_variable(const name_t& name, const any_regular_t& value);
 
     class implementation_t;
 
