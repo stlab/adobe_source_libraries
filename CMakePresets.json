@@ -10,14 +10,12 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_CXX_STANDARD": "20",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "VCPKG_TARGET_TRIPLET": "x64-windows"
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
             },
             "architecture": {
                 "value": "x64",
                 "strategy": "external"
             },
-            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
                     "hostOS": [
@@ -31,18 +29,16 @@
             "displayName": "debug-windows-cpp17",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/${presetName}",
+            "binaryDir": "d:/build/${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "CMAKE_CXX_STANDARD": "17",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "VCPKG_TARGET_TRIPLET": "x64-windows"
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
             },
             "architecture": {
                 "value": "x64",
                 "strategy": "external"
             },
-            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
                     "hostOS": [
