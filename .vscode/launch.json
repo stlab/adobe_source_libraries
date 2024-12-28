@@ -2,6 +2,25 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "(Windows) Launch",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "${env:PATH};${command:cmake.launchTargetDirectory}"
+                }
+            ],
+            "console": "integratedTerminal",
+            "windows": {
+                "type": "cppvsdbg"
+            }
+        },
+        {
             "name": "(lldb) Launch",
             "type": "lldb",
             "request": "launch",
@@ -30,7 +49,27 @@
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
-            ]
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "(Windows) property_model_eval - minmax",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": ["${workspaceFolder}/test/property_model_eval/minmax.pme"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "${env:PATH};${command:cmake.launchTargetDirectory}"
+                }
+            ],
+            "console": "integratedTerminal",
+            "windows": {
+                "type": "cppvsdbg"
+            }
         },
         {
             "name": "property_model_eval - minmax",
@@ -54,7 +93,18 @@
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
-            ]
+            ],
+            "console": "integratedTerminal"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Launch (Platform Specific)",
+            "configurations": ["(Windows) Launch", "(lldb) Launch"]
+        },
+        {
+            "name": "property_model_eval (Platform Specific)",
+            "configurations": ["(Windows) property_model_eval - minmax", "property_model_eval - minmax"]
         }
     ]
 }
