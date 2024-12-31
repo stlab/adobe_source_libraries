@@ -326,9 +326,8 @@ void lex_stream_t::set_comment_bypass(bool bypass) { return object_m->set_commen
 /**************************************************************************************************/
 
 lex_stream_t::implementation_t::implementation_t(std::istream& in, const line_position_t& position)
-    : _super(std::istream_iterator<char>(in), std::istream_iterator<char>(), position),
+    : _super(std::istream_iterator<char>(in >> std::noskipws), std::istream_iterator<char>(), position),
       comment_bypass_m(false) {
-    in.unsetf(std::ios_base::skipws);
 
     _super::set_parse_token_proc(
         std::bind(&lex_stream_t::implementation_t::parse_token, std::ref(*this), _1));
@@ -635,6 +634,9 @@ void lex_stream_t::implementation_t::parse_token(char c) {
     if (!found_comment || !comment_bypass_m)
         put_token(std::move(result));
 }
+
+
+const char* token_name_to_string(name_t token_name);
 
 /**************************************************************************************************/
 

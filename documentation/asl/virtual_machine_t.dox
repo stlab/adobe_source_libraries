@@ -231,22 +231,6 @@ Sets the function callback for simple variable lookup.
 */
 
 /*!
-\fn void adobe::virtual_machine_t::set_array_function_lookup(const adobe::virtual_machine_t::array_function_lookup_t& function)
-
-Sets a client-side callback for use when looking up unnamed-argument functions.
-
-\param function The function to be used as the callback.
-*/
-
-/*!
-\fn void adobe::virtual_machine_t::set_dictionary_function_lookup(const adobe::virtual_machine_t::dictionary_function_lookup_t& function)
-
-Sets a client-side callback for use when looking up named-argument functions.
-
-\param function The function to be used as the callback.
-*/
-
-/*!
 \class adobe::virtual_machine_t::tracked_value_t virtual_machine.hpp <adobe/virtual_machine.hpp>
 
 \brief Primary element of the virtual machine evaluation stack.

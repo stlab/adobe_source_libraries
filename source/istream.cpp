@@ -69,11 +69,9 @@ namespace adobe {
 /**************************************************************************************************/
 
 std::ostream& operator<<(std::ostream& result, const line_position_t& position) {
-    typedef std::streampos pos_t;
-
     if (position.stream_name() && *position.stream_name()) {
         try {
-            result << filesystem::path{position.stream_name()}; // output quoted path
+            result << filesystem::path{position.stream_name()}.generic_string(); // output quoted path
         } catch (...) {
             result << position.stream_name();
         }
@@ -83,61 +81,6 @@ std::ostream& operator<<(std::ostream& result, const line_position_t& position) 
 
     result << ':' << position.line_number_m << ':' << (position.position_m - position.line_start_m + 1);
 
-#if 0
-    // By capitalizing Line and keeping char lowercase, it allows things to
-    // line up in most proportional fonts.  By using the good part of the
-    // line instead of spaces or other character constant, we allow the
-    // arrows to be under the offending characters, even for a proportional
-    // font.
-
-    result << "Line " << std::setw(5) << std::setfill('0') << position.line_number_m;
-    result << ": " << line_string << "\nchar ";
-    result << std::setw(5) << std::setfill('0') << width_int;
-
-    std::string line_string(position.file_snippet());
-
-    // Replace any tabs with spaces
-    std::replace(line_string.begin(), line_string.end(), '\t', ' ');
-
-    // Count any leading spaces
-    std::string::size_type leading_spaces(line_string.find_first_not_of(' '));
-
-    if (leading_spaces != std::string::npos)
-        line_string.erase(0, leading_spaces);
-
-    std::string::size_type trailing_nulls(line_string.find_last_not_of((char)0));
-
-    if (trailing_nulls != std::string::npos)
-        line_string.erase(trailing_nulls + 1);
-
-    // Determine the carret position
-    pos_t width = (position.position_m == pos_t(-1))
-                      ? pos_t(std::streamoff(line_string.size()))
-                      : pos_t(position.position_m - position.line_start_m);
-
-    width -= std::streamoff(leading_spaces);
-
-    size_t width_int(static_cast<size_t>(std::streamoff(width))); // convert to size_t
-
-
-
-    // By capitalizing Line and keeping char lowercase, it allows things to
-    // line up in most proportional fonts.  By using the good part of the
-    // line instead of spaces or other character constant, we allow the
-    // arrows to be under the offending characters, even for a proportional
-    // font.
-
-    result << "Line " << std::setw(5) << std::setfill('0') << position.line_number_m;
-    result << ": " << line_string << "\nchar ";
-    result << std::setw(5) << std::setfill('0') << width_int;
-
-    // This used to crash when line_string is empty from the start
-    // putting a more defensive check.
-    if (line_string.size() > width_int)
-        line_string.erase(width_int);
-
-    result << ": " << line_string << "^^^\n";
-#endif
     return result;
 }
 
@@ -149,8 +92,8 @@ line_position_t::line_position_t(adobe::name_t file_path, getline_proc_t getline
     : line_number_m(line_number), line_start_m(line_start), position_m(position),
       file_name_m(file_path), getline_proc_m(getline_proc) {}
 
-line_position_t::line_position_t(const char* stream_name, int line_index)
-    : line_number_m(line_index + 1), line_start_m(0), position_m(-1),
+line_position_t::line_position_t(const char* stream_name, int line_number)
+    : line_number_m(line_number), line_start_m(0), position_m(-1),
       file_name_m(adobe::name_t(stream_name)) {}
 
 #if !defined(ADOBE_NO_DOCUMENTATION)

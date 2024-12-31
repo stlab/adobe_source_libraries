@@ -12,7 +12,11 @@
 
 #include <bitset>
 #include <functional>
+#include <optional>
+#include <stdexcept>
+#include <string>
 #include <vector>
+
 
 #define BOOST_FUNCTION_NO_DEPRECATED
 #include <boost/operators.hpp>
@@ -53,6 +57,63 @@ public:
 };
 
 /**************************************************************************************************/
+
+const char* type_name(const std::type_info& type);
+
+/**************************************************************************************************/
+
+template <class T>
+auto cast(adobe::any_regular_t& x) -> decltype(x.cast<T>()) {
+    if constexpr (!std::is_same_v<T, adobe::any_regular_t>) {
+        if (x.type_info() != typeid(promote_t<T>))
+            throw std::runtime_error(std::string{"expected `"} + type_name(typeid(promote_t<T>)) +
+                                     "` found `" + type_name(x.type_info()) + "`");
+    }
+    return x.cast<T>();
+}
+
+template <class T>
+auto cast(const adobe::any_regular_t& x) -> decltype(x.cast<T>()) {
+    if constexpr (!std::is_same_v<T, adobe::any_regular_t>) {
+        if (x.type_info() != typeid(promote_t<T>))
+            throw std::runtime_error(std::string{"expected `"} + type_name(typeid(promote_t<T>)) +
+                                     "` found `" + type_name(x.type_info()) + "`");
+    }
+    return x.cast<T>();
+}
+
+/**************************************************************************************************/
+
+template <class Sig>
+struct function_packager;
+
+template <class R, class... Args>
+struct function_packager<R(Args...)> {
+    template <class F, std::size_t... Indicies>
+    static auto invoke(const F& f, const array_t& args, std::index_sequence<Indicies...>) {
+        if (args.size() != sizeof...(Args))
+            throw std::logic_error("expected `" + std::to_string(sizeof...(Args)) +
+                                   "` arguments, found `" + std::to_string(args.size()) + "`.");
+        // Use std::invoke to make it easier to handle member function pointers?
+        return f(cast<Args>(args[Indicies])...);
+    }
+    template <class F>
+    static auto invoke(const F& f, const array_t& args) {
+        return invoke(f, args, std::index_sequence_for<Args...>());
+    }
+};
+
+/**************************************************************************************************/
+
+/// Create a function_t from an invocable object.
+template <class Sig, class F>
+any_regular_t make_function(F&& f) {
+    return function_t{[f = std::forward<F>(f)](const any_regular_t& args) {
+        return function_packager<Sig>::invoke(f, args.cast<array_t>());
+    }};
+}
+
+/**************************************************************************************************/
 /*
     Note: For all bitwise operators the numeric data type (double) will be cast down to a
           std::uint32_t for the operation.
@@ -68,9 +129,11 @@ public:
     typedef any_regular_t(numeric_index_lookup_signature_t)(const any_regular_t&,
                                                             std::size_t index);
 
+
+    using variable_scope_t = std::function<std::optional<any_regular_t>(name_t)>;
+
     using variable_lookup_t = std::function<variable_lookup_signature_t>;
-    using dictionary_function_lookup_t = std::function<dictionary_function_lookup_signature_t>;
-    using array_function_lookup_t = std::function<array_function_lookup_signature_t>;
+
     using named_index_lookup_t = std::function<named_index_lookup_signature_t>;
     using numeric_index_lookup_t = std::function<numeric_index_lookup_signature_t>;
 
@@ -97,9 +160,10 @@ public:
     any_regular_t& back();
     void pop_back();
 
+    void push_scope(variable_scope_t&& scope);
+
     void set_variable_lookup(const variable_lookup_t&);
-    void set_array_function_lookup(const array_function_lookup_t&);
-    void set_dictionary_function_lookup(const dictionary_function_lookup_t&);
+
     void set_named_index_lookup(const named_index_lookup_t&);
     void set_numeric_index_lookup(const numeric_index_lookup_t&);
 

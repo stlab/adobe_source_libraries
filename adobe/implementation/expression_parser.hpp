@@ -134,11 +134,6 @@ public:
     //                                  | identifier | ( "(" expression ")" ).
     bool is_primary_expression(array_t&);
 
-#if 0
-    //  variable_or_fuctiontion = identifier ["(" [argument_expression_list] ")"].
-    bool is_variable_or_function(array_t&);
-#endif
-
     //  argument_expression_list = named_argument_list | argument_list.
     bool is_argument_expression_list(array_t&);
 

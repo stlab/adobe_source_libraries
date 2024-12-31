@@ -746,10 +746,13 @@ void expression_parser::require_token(name_t tokenName, any_regular_t& tokenValu
 
 void expression_parser::require_keyword(name_t keyword_name) {
     const stream_lex_token_t& result(get_token());
-    if (result.first == keyword_k && result.second.cast<name_t>() == keyword_name)
-        return;
-
-    throw_exception(keyword_name, result.second.cast<name_t>());
+    if (result.first != keyword_k) {
+        throw_parser_exception(keyword_name.c_str(), token_to_string(result.first),
+                               next_position());
+    }
+    if (result.second.cast<name_t>() != keyword_name) {
+        throw_exception(keyword_name, result.second.cast<name_t>());
+    }
 }
 
 /**************************************************************************************************/

@@ -14,6 +14,7 @@
 #include <numeric>
 #include <typeinfo>
 #include <vector>
+#include <iostream>
 
 #include <boost/iterator/transform_iterator.hpp>
 
@@ -33,7 +34,7 @@
 #include <adobe/string.hpp>
 #include <adobe/virtual_machine.hpp>
 
-#include <iostream>
+#include <adobe/iomanip_asl_cel.hpp>
 
 /**************************************************************************************************/
 
@@ -91,9 +92,11 @@ typedef vector<adobe::any_regular_t> stack_type; // REVISIT (sparent) : GCC 3.1 
 // conflicts with a symbol in signal.h
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
+
 typedef adobe::static_table<adobe::name_t, operator_t, 27> operator_table_t;
-using variable_table_t = adobe::static_table<adobe::name_t, adobe::any_regular_t, 8>;
-typedef adobe::static_table<const std::type_info*, adobe::name_t, 8> type_table_t;
+using variable_table_t = adobe::static_table<adobe::name_t, adobe::any_regular_t, 9>;
+using type_table_t = adobe::static_table<const std::type_info*, adobe::name_t, 8>;
+
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 
 /**************************************************************************************************/
@@ -110,78 +113,31 @@ struct make {
 
 /**************************************************************************************************/
 
-static type_table_t* type_table_g;
+name_t known_type_name(const std::type_info& type) {
+    static type_table_t type_table = [] {
+        type_table_t result = {
+            {type_table_t::entry_type(&typeid(double), "number"_name),
+             type_table_t::entry_type(&typeid(bool), "boolean"_name),
+             type_table_t::entry_type(&typeid(adobe::empty_t), "empty"_name),
+             type_table_t::entry_type(&typeid(string), "string"_name),
+             type_table_t::entry_type(&typeid(adobe::array_t), "array"_name),
+             type_table_t::entry_type(&typeid(adobe::dictionary_t), "dictionary"_name),
+             type_table_t::entry_type(&typeid(adobe::function_t), "function"_name),
+             type_table_t::entry_type(&typeid(adobe::name_t), "name"_name)}};
 
-/**************************************************************************************************/
-
-void get_type_name_init_() {
-    static type_table_t type_table_s = {
-        {type_table_t::entry_type(&typeid(double), "number"_name),
-         type_table_t::entry_type(&typeid(bool), "boolean"_name),
-         type_table_t::entry_type(&typeid(adobe::empty_t), "empty"_name),
-         type_table_t::entry_type(&typeid(string), "string"_name),
-         type_table_t::entry_type(&typeid(adobe::array_t), "array"_name),
-         type_table_t::entry_type(&typeid(adobe::dictionary_t), "dictionary"_name),
-         type_table_t::entry_type(&typeid(adobe::function_t), "function"_name),
-         type_table_t::entry_type(&typeid(adobe::name_t), "name"_name)}};
-
-    type_table_s.sort();
-
-    type_table_g = &type_table_s;
-}
-
-/**************************************************************************************************/
-
-once_flag get_type_name_flag;
-void get_type_name_init() { call_once(get_type_name_flag, &get_type_name_init_); }
-
-/**************************************************************************************************/
-
-const char* get_type_name(const std::type_info& type) {
-    get_type_name_init();
+        result.sort();
+        return result;
+    }();
 
     adobe::name_t result;
-
-    (*type_table_g)(&type, result);
-
-    if (result)
-        return result.c_str();
-    return type.name();
-}
-
-adobe::name_t get_type_name(const adobe::any_regular_t& val) {
-    get_type_name_init();
-
-    adobe::name_t result;
-
-    (*type_table_g)(&val.type_info(), result);
-
-    if (!result)
-        result = name_t{val.type_info().name()};
-
+    type_table(&type, result);
     return result;
 }
 
-/**************************************************************************************************/
-
-template <class T>
-auto cast(adobe::any_regular_t& x) -> decltype(x.cast<T>()) {
-    if constexpr (!std::is_same_v<T, adobe::any_regular_t>) {
-        if (x.type_info() != typeid(promote_t<T>))
-            throw std::runtime_error("expected \""s + get_type_name(typeid(T)) + "\" found \"" +
-                                     get_type_name(x.type_info()) + "\"");
-    }
-    return x.cast<T>();
-}
-template <class T>
-
-auto cast(const adobe::any_regular_t& x) -> decltype(x.cast<T>()) {
-    if constexpr (!std::is_same_v<T, adobe::any_regular_t>) {
-        if (x.type_info() != typeid(promote_t<T>))
-            throw std::runtime_error("expected \""s + get_type_name(typeid(T)) + "\" found \"" +
-                                     get_type_name(x.type_info()) + "\"");
-    }
-    return x.cast<T>();
+adobe::name_t type_name(const adobe::any_regular_t& val) {
+    if (name_t result = known_type_name(val.type_info()); result)
+        return result; 
+    return name_t{val.type_info().name()};
 }
 
 /**************************************************************************************************/
@@ -266,7 +222,7 @@ adobe::any_regular_t typeof_function(const adobe::any_regular_t& arg) {
     if (parameters.size() == 0)
         throw std::runtime_error("typeof: parameter error");
 
-    return adobe::any_regular_t(get_type_name(parameters.front()));
+    return adobe::any_regular_t(type_name(parameters.front()));
 }
 
 /**************************************************************************************************/
@@ -362,6 +318,14 @@ namespace adobe {
 
 /**************************************************************************************************/
 
+const char* type_name(const std::type_info& type) {
+    if (name_t result = known_type_name(type); result)
+        return result.c_str();
+    return type.name();
+}
+
+/**************************************************************************************************/
+
 class virtual_machine_t::implementation_t {
     typedef std::map<adobe::name_t, binary_op_override_t> binary_op_override_map_t;
 
@@ -387,9 +351,16 @@ public:
         }
     }
 
+
+    vector<variable_scope_t> variable_scope_m;
+
+    void push_scope(variable_scope_t&& scope) { variable_scope_m.push_back(std::move(scope)); }
+
     variable_lookup_t variable_lookup_m;
+#if 0
     array_function_lookup_t array_function_lookup_m;
     dictionary_function_lookup_t dictionary_function_lookup_m;
+#endif
     named_index_lookup_t named_index_lookup_m;
     numeric_index_lookup_t numeric_index_lookup_m;
 
@@ -398,62 +369,11 @@ public:
 
     any_regular_t variable_lookup(name_t name) const {
 
-        // todo: We should have a new array of lookup functions that can chain here
-
-        // This section handles the legacy lookup mechanism. The old callback simply failed if not
-        // found.
-        exception_ptr error;
-        if (variable_lookup_m) {
-
-            try {
-                auto r = variable_lookup_m(name);
-
-                // legacy functions sorted by name
-                constexpr static_name_t legacy_functions_s[]{
-                    "localize"_name, "max"_name,    "min"_name,        "round"_name,
-                    "scale"_name,    "typeof"_name, "xml_escape"_name, "xml_unescape"_name};
-
-                // todo: (sean-parent) This should report the source file/line/character when that
-                // information is integrated into the virtual machine.
-                if (binary_search(legacy_functions_s, name, less{}, make<name_t>{}) !=
-                    std::end(legacy_functions_s)) {
-                    clog << "warning: variable `" << name << "` hides a deprecated function\n";
-                    clog << "note: to call the function, use `std." << name << '\n';
-                }
-
-                return variable_lookup_m(name);
-            } catch (...) {
-                error = current_exception();
-            }
+        for (auto iter = variable_scope_m.rbegin(); iter != variable_scope_m.rend(); ++iter) {
+            if (auto result = (*iter)(name))
+                return *result;
         }
-        // builtin variables are searched "last" so clients can override.
-        if (any_regular_t value; (*variable_table_g)(name, value))
-            return value;
 
-        // This section handles the legacy function support. Functions were not first class and were
-        // looked up after the arguments where parsed. To support the old API, we capture the
-        // function name and return a function object that will try and lookup the function when
-        // invoked. This has the unfortunate side effect that referencing an undefined variable will
-        // fail late with an error "expected `<type>` found `function`."
-        if (array_function_lookup_m || dictionary_function_lookup_m) {
-            return function_t{[this, name](const any_regular_t& args) {
-                if (array_function_lookup_m && args.type_info() == typeid(array_t)) {
-                    try {
-                        return array_function_lookup_m(name, cast<array_t>(args));
-                    } catch (...) {
-                    }
-                }
-                if (dictionary_function_lookup_m && args.type_info() == typeid(dictionary_t)) {
-                    try {
-                        return dictionary_function_lookup_m(name, cast<dictionary_t>(args));
-                    } catch (...) {
-                    }
-                }
-                throw_function_not_defined(name);
-            }};
-        }
-        if (error)
-            rethrow_exception(error);
         throw_variable_not_defined(name);
     }
 
@@ -572,11 +492,21 @@ void virtual_machine_init_() {
         {variable_table_t::entry_type("typeof"_name, function_t{&typeof_function}),
          variable_table_t::entry_type("min"_name, function_t{&min_function}),
          variable_table_t::entry_type("max"_name, function_t{&max_function}),
-         variable_table_t::entry_type("round"_name, function_t{&round_function}),
+         variable_table_t::entry_type("round"_name, make_function<double(double)>((double(*)(double))std::round)),
          variable_table_t::entry_type("localize"_name, function_t{&localize_function}),
          variable_table_t::entry_type("xml_escape"_name, function_t{&xml_escape_function}),
          variable_table_t::entry_type("xml_unescape"_name, function_t{&xml_unescape_function}),
-         variable_table_t::entry_type("scale"_name, function_t{&scale_function})}};
+         variable_table_t::entry_type("scale"_name, function_t{&scale_function}),
+         variable_table_t::entry_type(
+             "std"_name, dictionary_t{{"typeof"_name, function_t{&typeof_function}},
+                                      {"min"_name, function_t{&min_function}},
+                                      {"max"_name, function_t{&max_function}},
+                                      {"round"_name, function_t{&round_function}},
+                                      {"localize"_name, function_t{&localize_function}},
+                                      {"xml_escape"_name, function_t{&xml_escape_function}},
+                                      {"xml_unescape"_name, function_t{&xml_unescape_function}},
+                                      {"scale"_name, function_t{&scale_function}}})}};
+
 
     operator_table_s.sort();
     variable_table_s.sort();
@@ -606,21 +536,78 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-virtual_machine_t::implementation_t::implementation_t() { virtual_machine_init(); }
+virtual_machine_t::implementation_t::implementation_t() {
+    virtual_machine_init();
+
+    push_scope([this](name_t name) -> optional<any_regular_t> {
+        // This section handles the legacy lookup mechanism. The old callback simply failed if not
+        // found.
+
+        if (any_regular_t value; (*variable_table_g)(name, value)) {
+            // legacy functions sorted by name
+            constexpr static_name_t legacy_functions_s[]{
+                "localize"_name, "max"_name,    "min"_name,        "round"_name,
+                "scale"_name,    "typeof"_name, "xml_escape"_name, "xml_unescape"_name};
+
+            // todo: (sean-parent) This should report the source file/line/character when that
+            // information is integrated into the virtual machine.
+            if (binary_search(legacy_functions_s, name, less{}, make<name_t>{}) !=
+                std::end(legacy_functions_s)) {
+                clog << "warning: deprecated legacy function `" << name
+                     << "` may hide a variable.\n";
+                clog << "note: use `std." << name << "` for the function or rename the variable.\n";
+            }
+            return value;
+        }
+
+#if 0
+        // This section handles the legacy function support. Functions were not first class and were
+        // looked up after the arguments where parsed. To support the old API, we capture the
+        // function name and return a function object that will try and lookup the function when
+        // invoked. This has the unfortunate side effect that referencing an undefined variable will
+        // fail late with an error "expected `<type>` found `function`."
+        if (array_function_lookup_m || dictionary_function_lookup_m) {
+            return function_t{[this, name](const any_regular_t& args) {
+                if (array_function_lookup_m && args.type_info() == typeid(array_t)) {
+                    try {
+                        return array_function_lookup_m(name, cast<array_t>(args));
+                    } catch (...) {
+                    }
+                }
+                if (dictionary_function_lookup_m && args.type_info() == typeid(dictionary_t)) {
+                    try {
+                        return dictionary_function_lookup_m(name, cast<dictionary_t>(args));
+                    } catch (...) {
+                    }
+                }
+                throw_function_not_defined(name);
+            }};
+        }
+#endif
+        // The legacy variable lookup function must be last. It will throw if the variable is not
+        // found. Because the throw may have terminated a evaluation within a sheet, we cannot
+        // squelch the error and continue.
+        if (variable_lookup_m) {
+            return variable_lookup_m(name);
+        }
+        return nullopt;
+    });
+}
 
 /**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::evaluate(const array_t& expression) {
-    for (expression_t::const_iterator iter(expression.begin()); iter != expression.end(); ++iter) {
+    std::cout << begin_asl_cel << expression << end_asl_cel  << std::endl;
+    for (const auto& e : expression) {
         adobe::name_t op_name;
 
-        iter->cast(op_name);
+        e.cast(op_name);
 
         if (op_name && op_name.c_str()[0] == '.') {
             if (!operator_override(op_name))
                 ((*this).*(find_operator(op_name)))();
         } else {
-            value_stack_m.push_back(*iter);
+            value_stack_m.push_back(e);
         }
     }
 }
@@ -974,16 +961,26 @@ void virtual_machine_t::set_variable_lookup(const variable_lookup_t& lookup) {
 
 /**************************************************************************************************/
 
-void virtual_machine_t::set_array_function_lookup(const array_function_lookup_t& function) {
-    object_m->array_function_lookup_m = function;
+void virtual_machine_t::push_scope(variable_scope_t&& scope) {
+    object_m->push_scope(std::move(scope));
 }
 
 /**************************************************************************************************/
 
+#if 0
+void virtual_machine_t::set_array_function_lookup(const array_function_lookup_t& function) {
+    object_m->array_function_lookup_m = function;
+}
+#endif
+
+/**************************************************************************************************/
+
+#if 0
 void virtual_machine_t::set_dictionary_function_lookup(
     const dictionary_function_lookup_t& function) {
     object_m->dictionary_function_lookup_m = function;
 }
+#endif
 
 /**************************************************************************************************/
 

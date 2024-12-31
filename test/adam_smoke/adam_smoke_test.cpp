@@ -162,7 +162,9 @@ bool test_sheet(const fs::path& root) {
 
     // Connect the virtual machine to the sheet.
 
-    sheet.machine_m.set_variable_lookup(std::bind(&adobe::sheet_t::get, &sheet, _1));
+    sheet.machine_m.push_scope(std::bind(&adobe::sheet_t::cell_value, &sheet, _1));
+
+    sheet.machine_m.push_scope(std::bind(&adobe::sheet_t::cell_value, &sheet, _1));
 
     read_sheet(sheet_path, sheet);
 

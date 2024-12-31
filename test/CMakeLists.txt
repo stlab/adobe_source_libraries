@@ -1,3 +1,7 @@
+
+include(CTest)
+enable_testing()
+
 function(asl_test)
   set(options SKIPPED BOOST BENCHMARK)
   set(oneValueArgs NAME)
@@ -37,7 +41,6 @@ function(asl_test)
     endif(asl_test_BENCHMARK)
   endif(NOT asl_test_SKIPPED)
 endfunction(asl_test)
-
 
 add_subdirectory(unit_tests)
 

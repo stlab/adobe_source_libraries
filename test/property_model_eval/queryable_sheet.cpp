@@ -22,7 +22,7 @@ namespace adobe {
 
 queryable_sheet_t::queryable_sheet_t(adam_parser& p) : no_pure_outputs_m(true), parser_m(p) {
     //  attach the VM to the sheet.
-    sheet_m.machine_m.set_variable_lookup(std::bind(&adobe::sheet_t::get, &sheet_m, _1));
+    sheet_m.machine_m.push_scope(std::bind(&adobe::sheet_t::cell_value, &sheet_m, _1));
 
     parser_m.adam_callback_suite_m = setup_callbacks();
     (void)parser_m.is_sheet_specifier(sheet_name_m);

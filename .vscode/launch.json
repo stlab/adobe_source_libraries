@@ -72,11 +72,11 @@
             }
         },
         {
-            "name": "property_model_eval - minmax",
+            "name": "property_model_eval - default",
             "type": "lldb",
             "request": "launch",
             "program": "${command:cmake.launchTargetPath}",
-            "args": ["${workspaceFolder}/test/property_model_eval/minmax.pme"],
+            "args": ["${workspaceFolder}/test/property_model_eval/default.pme"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [

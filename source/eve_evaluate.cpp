@@ -372,7 +372,7 @@ adobe::any_regular_t layout_variables(adobe::sheet_t& layout_sheet, adobe::name_
     if (found != reflected_range_g->second && *found == name)
         return adobe::any_regular_t(name);
 
-    return layout_sheet.get(name);
+    return *layout_sheet.cell_value(name);
 }
 
 

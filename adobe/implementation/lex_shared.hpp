@@ -240,15 +240,10 @@ void lex_base_t<S, E>::set_skip_white_space(bool skip) {
 
 template <std::size_t S, typename E>
 void lex_base_t<S, E>::skip_white_space() {
-    while (true) {
-        (void)is_line_end();
+    while (first_m != last_m) {
+        if (is_line_end()) continue;
 
-        if (first_m == last_m)
-            break;
-
-        char c;
-
-        if (peek_char(c) && std::isspace(static_cast<unsigned char>(c)))
+        if (char c; peek_char(c) && std::isspace(static_cast<unsigned char>(c)))
             advance_lex();
         else
             break;

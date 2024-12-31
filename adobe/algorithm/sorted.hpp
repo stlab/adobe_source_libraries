@@ -127,7 +127,7 @@ inline bool is_sorted(const I& r, C c) {
 */
 template <typename I> // I models ForwardRange
 inline bool is_sorted(const I& r) {
-    return is_sorted(boost::begin(r), boost::end(r), less());
+    return std::is_sorted(boost::begin(r), boost::end(r), less());
 }
 
 /**************************************************************************************************/
