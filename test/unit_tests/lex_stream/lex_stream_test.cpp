@@ -20,10 +20,8 @@ using namespace std;
 
 /**************************************************************************************************/
 
-void exception_test(const char* const expression,
-                    const adobe::line_position_t& expression_position,
-                    int expected_line_number,
-                    std::streampos expected_character_position) {
+void exception_test(const char* const expression, const adobe::line_position_t& expression_position,
+                    int expected_line_number, std::streampos expected_character_position) {
     istringstream expression_stream(expression);
     lex_stream_t lex(expression_stream, expression_position);
     bool caught(false);
@@ -34,10 +32,10 @@ void exception_test(const char* const expression,
         caught = true;
         BOOST_REQUIRE_EQUAL(error.line_position_set().size(), 1u);
         const auto& error_position = error.line_position_set().front();
-        BOOST_REQUIRE_EQUAL(error_position.line_number_m,
-                            expected_line_number);
+        BOOST_REQUIRE_EQUAL(error_position.line_number_m, expected_line_number);
         BOOST_REQUIRE_LT(error_position.line_start_m, error_position.position_m);
-        BOOST_REQUIRE_EQUAL(error_position.position_m - error_position.line_start_m + 1, expected_character_position);
+        BOOST_REQUIRE_EQUAL(error_position.position_m - error_position.line_start_m + 1,
+                            expected_character_position);
     }
     BOOST_REQUIRE(caught);
 }

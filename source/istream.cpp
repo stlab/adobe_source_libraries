@@ -10,10 +10,10 @@
 
 /**************************************************************************************************/
 
+#include <filesystem>
 #include <iomanip>
 #include <ostream>
 #include <sstream>
-#include <filesystem>
 
 #include <adobe/istream.hpp>
 #include <adobe/name.hpp>
@@ -48,8 +48,8 @@ auto format_snippet(ostream& out, const line_position_t& position) -> ostream& {
 
     // Determine the caret position
     auto width = (position.position_m == streampos(-1))
-                      ? streampos(std::streamoff(line_string.size()))
-                      : streampos(position.position_m - position.line_start_m);
+                     ? streampos(std::streamoff(line_string.size()))
+                     : streampos(position.position_m - position.line_start_m);
 
     width -= std::streamoff(leading_spaces);
 
@@ -70,19 +70,20 @@ namespace adobe {
 
 std::ostream& operator<<(std::ostream& result, const line_position_t& position) {
     if (position.stream_name() && *position.stream_name()) {
-        #ifdef _WIN32
-            result << '"' << filesystem::path{position.stream_name()}.generic_string() << '"';
-        #else
-            // macOS/Linux: Use escaping for spaces instead of quotes
-            std::string path_str = filesystem::path{position.stream_name()}.generic_string();
-            std::regex_replace(path_str, std::regex(" "), "\\ ");
-            result << path_str;
-        #endif
+#ifdef _WIN32
+        result << '"' << filesystem::path{position.stream_name()}.generic_string() << '"';
+#else
+        // macOS/Linux: Use escaping for spaces instead of quotes
+        std::string path_str = filesystem::path{position.stream_name()}.generic_string();
+        std::regex_replace(path_str, std::regex(" "), "\\ ");
+        result << path_str;
+#endif
     } else {
         result << "<unknown>";
     }
 
-    result << ':' << position.line_number_m << ':' << (position.position_m - position.line_start_m + 1);
+    result << ':' << position.line_number_m << ':'
+           << (position.position_m - position.line_start_m + 1);
 
     return result;
 }
@@ -116,8 +117,7 @@ std::string format_stream_error(const stream_error_t& error) {
 
     format_snippet(out, error.line_position_set().front());
 
-    for (auto iter(error.line_position_set().begin() + 1),
-         last(error.line_position_set().end());
+    for (auto iter(error.line_position_set().begin() + 1), last(error.line_position_set().end());
          iter != last; ++iter) {
         out << *iter << '\n';
         format_snippet(out, *iter);

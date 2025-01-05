@@ -24,7 +24,7 @@
                 }
             }
         },
-    {
+        {
             "name": "debug-windows-cpp17",
             "displayName": "debug-windows-cpp17",
             "description": "Sets Ninja generator, build and install directory",

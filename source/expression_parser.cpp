@@ -56,8 +56,8 @@ namespace {
 //  `<expression> { ("&&" | "||") <expression> }.`
 template <class IsExpression, class IsOperator>
 bool is_logical_expression(expression_parser& parser, array_t& expression_stack,
-                          IsExpression is_expression, IsOperator is_operator,
-                          const char* error_message) {
+                           IsExpression is_expression, IsOperator is_operator,
+                           const char* error_message) {
     if (!is_expression(expression_stack))
         return false;
 

@@ -9,12 +9,12 @@
 
 #include <cmath>
 #include <functional>
+#include <iostream>
 #include <map>
 #include <mutex>
 #include <numeric>
 #include <typeinfo>
 #include <vector>
-#include <iostream>
 
 #include <boost/iterator/transform_iterator.hpp>
 
@@ -136,7 +136,7 @@ name_t known_type_name(const std::type_info& type) {
 
 adobe::name_t type_name(const adobe::any_regular_t& val) {
     if (name_t result = known_type_name(val.type_info()); result)
-        return result; 
+        return result;
     return name_t{val.type_info().name()};
 }
 
@@ -492,7 +492,8 @@ void virtual_machine_init_() {
         {variable_table_t::entry_type("typeof"_name, function_t{&typeof_function}),
          variable_table_t::entry_type("min"_name, function_t{&min_function}),
          variable_table_t::entry_type("max"_name, function_t{&max_function}),
-         variable_table_t::entry_type("round"_name, make_function<double(double)>((double(*)(double))std::round)),
+         variable_table_t::entry_type(
+             "round"_name, make_function<double(double)>((double (*)(double))std::round)),
          variable_table_t::entry_type("localize"_name, function_t{&localize_function}),
          variable_table_t::entry_type("xml_escape"_name, function_t{&xml_escape_function}),
          variable_table_t::entry_type("xml_unescape"_name, function_t{&xml_unescape_function}),
@@ -597,7 +598,7 @@ virtual_machine_t::implementation_t::implementation_t() {
 /**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::evaluate(const array_t& expression) {
-    std::cout << begin_asl_cel << expression << end_asl_cel  << std::endl;
+    std::cout << begin_asl_cel << expression << end_asl_cel << std::endl;
     for (const auto& e : expression) {
         adobe::name_t op_name;
 

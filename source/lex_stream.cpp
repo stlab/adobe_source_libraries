@@ -326,7 +326,8 @@ void lex_stream_t::set_comment_bypass(bool bypass) { return object_m->set_commen
 /**************************************************************************************************/
 
 lex_stream_t::implementation_t::implementation_t(std::istream& in, const line_position_t& position)
-    : _super(std::istream_iterator<char>(in >> std::noskipws), std::istream_iterator<char>(), position),
+    : _super(std::istream_iterator<char>(in >> std::noskipws), std::istream_iterator<char>(),
+             position),
       comment_bypass_m(false) {
 
     _super::set_parse_token_proc(

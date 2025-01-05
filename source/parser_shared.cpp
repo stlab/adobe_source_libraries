@@ -33,8 +33,7 @@ void throw_parser_exception(std::string&& error_string, const line_position_t& p
 
 void throw_parser_exception(const char* expected, const char* found,
                             const adobe::line_position_t& position) {
-    throw stream_error_t(string{"expected `"} + expected + "`, found `" + found + "`.",
-                         position);
+    throw stream_error_t(string{"expected `"} + expected + "`, found `" + found + "`.", position);
 }
 
 /**************************************************************************************************/

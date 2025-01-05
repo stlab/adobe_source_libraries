@@ -123,8 +123,8 @@ private:
 
 template <std::size_t S, typename E>
 lex_base_t<S, E>::lex_base_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t& position)
-    : first_m(first), last_m(last), current_position_m(position), skip_white_m(true),
-      index_m(0), last_token_m(S) {}
+    : first_m(first), last_m(last), current_position_m(position), skip_white_m(true), index_m(0),
+      last_token_m(S) {}
 
 /**************************************************************************************************/
 
@@ -195,7 +195,8 @@ bool lex_base_t<S, E>::is_line_end() {
     if (result) {
         ++current_position_m.line_number_m;
 
-        current_position_m.position_m += static_cast<std::streamoff>(std::distance(old_first, first_m));
+        current_position_m.position_m +=
+            static_cast<std::streamoff>(std::distance(old_first, first_m));
 
         current_position_m.line_start_m = current_position_m.position_m;
     }
@@ -243,7 +244,8 @@ void lex_base_t<S, E>::set_skip_white_space(bool skip) {
 template <std::size_t S, typename E>
 void lex_base_t<S, E>::skip_white_space() {
     while (first_m != last_m) {
-        if (is_line_end()) continue;
+        if (is_line_end())
+            continue;
 
         if (char c; peek_char(c) && std::isspace(static_cast<unsigned char>(c)))
             advance_lex();
@@ -340,7 +342,8 @@ private:
 
 template <std::size_t S, typename I>
 stream_lex_base_t<S, I>::stream_lex_base_t(I first, I last, const line_position_t& position)
-    : identifier_buffer_m(128), first_m(first), last_m(last), current_position_m(position), skip_white_m(true), index_m(0), last_token_m(S) {}
+    : identifier_buffer_m(128), first_m(first), last_m(last), current_position_m(position),
+      skip_white_m(true), index_m(0), last_token_m(S) {}
 
 /**************************************************************************************************/
 
@@ -451,7 +454,8 @@ const stream_lex_token_t& stream_lex_base_t<S, I>::get_token() {
 
 template <std::size_t S, typename I>
 void stream_lex_base_t<S, I>::put_token(stream_lex_token_t token) {
-    last_token_m.push_back(implementation::lex_fragment_t(std::move(token), start_token_position_m));
+    last_token_m.push_back(
+        implementation::lex_fragment_t(std::move(token), start_token_position_m));
 }
 
 /**************************************************************************************************/
