@@ -70,11 +70,14 @@ namespace adobe {
 
 std::ostream& operator<<(std::ostream& result, const line_position_t& position) {
     if (position.stream_name() && *position.stream_name()) {
-        try {
-            result << filesystem::path{position.stream_name()}.generic_string(); // output quoted path
-        } catch (...) {
-            result << position.stream_name();
-        }
+        #ifdef _WIN32
+            result << '"' << filesystem::path{position.stream_name()}.generic_string() << '"';
+        #else
+            // macOS/Linux: Use escaping for spaces instead of quotes
+            std::string path_str = filesystem::path{position.stream_name()}.generic_string();
+            std::regex_replace(path_str, std::regex(" "), "\\ ");
+            result << path_str;
+        #endif
     } else {
         result << "<unknown>";
     }
@@ -121,6 +124,13 @@ std::string format_stream_error(const stream_error_t& error) {
     }
 
     return out.str();
+}
+
+/**************************************************************************************************/
+
+std::ostream& operator<<(std::ostream& out, const stream_error_t& error) {
+    out << format_stream_error(error);
+    return out;
 }
 
 /**************************************************************************************************/

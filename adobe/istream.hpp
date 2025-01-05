@@ -11,8 +11,7 @@
 #include <adobe/config.hpp>
 
 #include <functional>
-#include <ios>
-#include <istream>
+#include <iosfwd>
 #include <memory>
 #include <stdexcept>
 #include <vector>
@@ -196,7 +195,7 @@ std::ostream& operator<<(std::ostream&, const line_position_t&);
 
 class stream_error_t : public std::logic_error {
 public:
-    typedef std::vector<line_position_t> position_set_t;
+    using position_set_t = std::vector<line_position_t>;
 
     stream_error_t(const std::exception& base, const line_position_t& position)
         : std::logic_error(base.what()) {
@@ -220,12 +219,17 @@ public:
     const position_set_t& line_position_set() const { return line_position_set_m; }
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
-    ~stream_error_t() throw() {}
+    ~stream_error_t() {}
 
 private:
     position_set_t line_position_set_m;
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 };
+
+
+/**************************************************************************************************/
+
+std::ostream& operator<<(std::ostream&, const stream_error_t&);
 
 /**************************************************************************************************/
 

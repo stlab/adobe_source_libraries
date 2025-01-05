@@ -105,8 +105,10 @@ private:
 
     uchar_ptr_t first_m;
     uchar_ptr_t last_m;
-    std::streampos streampos_m;
-    line_position_t line_position_m;
+
+    line_position_t start_token_position_m;
+    line_position_t current_position_m;
+
     parse_token_proc_t parse_proc_m;
     bool skip_white_m;
     std::array<char, 8> putback_m; // stack-based is faster
@@ -121,7 +123,7 @@ private:
 
 template <std::size_t S, typename E>
 lex_base_t<S, E>::lex_base_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t& position)
-    : first_m(first), last_m(last), streampos_m(0), line_position_m(position), skip_white_m(true),
+    : first_m(first), last_m(last), current_position_m(position), skip_white_m(true),
       index_m(0), last_token_m(S) {}
 
 /**************************************************************************************************/
@@ -139,7 +141,7 @@ const typename lex_base_t<S, E>::token_type& lex_base_t<S, E>::get_token() {
         if (skip_white_m)
             skip_white_space();
 
-        line_position_m.position_m = streampos_m; // remember the start of the token position
+        start_token_position_m = current_position_m; // remember the start of the token position
 
         if (!is_eof())
             parse_proc_m();
@@ -156,7 +158,7 @@ const typename lex_base_t<S, E>::token_type& lex_base_t<S, E>::get_token() {
 
 template <std::size_t S, typename E>
 void lex_base_t<S, E>::put_token(const token_type& token) {
-    last_token_m.push_back(lex_fragment_t(token, line_position_m));
+    last_token_m.push_back(lex_fragment_t(token, start_token_position_m));
 }
 
 /**************************************************************************************************/
@@ -191,11 +193,11 @@ bool lex_base_t<S, E>::is_line_end() {
     bool result(is_line_end(first_m, last_m));
 
     if (result) {
-        ++line_position_m.line_number_m;
+        ++current_position_m.line_number_m;
 
-        streampos_m += static_cast<std::streamoff>(std::distance(old_first, first_m));
+        current_position_m.position_m += static_cast<std::streamoff>(std::distance(old_first, first_m));
 
-        line_position_m.line_start_m = streampos_m;
+        current_position_m.line_start_m = current_position_m.position_m;
     }
 
     return result;
@@ -219,7 +221,7 @@ template <std::size_t S, typename E>
 void lex_base_t<S, E>::throw_parser_exception(const char* error_string) {
     using adobe::throw_parser_exception;
 
-    throw_parser_exception(error_string, line_position_m);
+    throw_parser_exception(error_string, start_token_position_m);
 }
 
 /**************************************************************************************************/
@@ -303,6 +305,7 @@ public:
 
     void throw_exception(const name_t& expected, const name_t& found);
     void throw_parser_exception(const char* error_string);
+    void throw_parser_exception(std::string&& error_string);
 
     void set_skip_white_space(bool skip);
 
@@ -319,8 +322,10 @@ public:
 private:
     I first_m;
     I last_m;
-    std::streampos streampos_m;
-    line_position_t line_position_m;
+
+    line_position_t start_token_position_m;
+    line_position_t current_position_m;
+
     parse_token_proc_t parse_proc_m;
     bool skip_white_m;
     std::array<char, 8> putback_m; // stack-based is faster
@@ -335,8 +340,7 @@ private:
 
 template <std::size_t S, typename I>
 stream_lex_base_t<S, I>::stream_lex_base_t(I first, I last, const line_position_t& position)
-    : identifier_buffer_m(128), first_m(first), last_m(last), streampos_m(1),
-      line_position_m(position), skip_white_m(true), index_m(0), last_token_m(S) {}
+    : identifier_buffer_m(128), first_m(first), last_m(last), current_position_m(position), skip_white_m(true), index_m(0), last_token_m(S) {}
 
 /**************************************************************************************************/
 
@@ -352,7 +356,7 @@ bool stream_lex_base_t<S, I>::get_char(char& c) {
 
         --index_m;
 
-        streampos_m += 1;
+        current_position_m.position_m += 1;
 
         return true;
     }
@@ -364,7 +368,7 @@ bool stream_lex_base_t<S, I>::get_char(char& c) {
 
     ++first_m;
 
-    streampos_m += 1;
+    current_position_m.position_m += 1;
 
     return true;
 }
@@ -375,7 +379,7 @@ template <std::size_t S, typename I>
 void stream_lex_base_t<S, I>::putback_char(char c) {
     putback_m[++index_m] = c;
 
-    streampos_m -= 1;
+    current_position_m.position_m -= 1;
 }
 
 /**************************************************************************************************/
@@ -401,7 +405,7 @@ void stream_lex_base_t<S, I>::ignore_char() {
     else
         ++first_m;
 
-    streampos_m += 1;
+    current_position_m.position_m += 1;
 }
 
 /**************************************************************************************************/
@@ -423,7 +427,7 @@ const stream_lex_token_t& stream_lex_base_t<S, I>::get_token() {
         if (skip_white_m)
             skip_white_space();
 
-        line_position_m.position_m = streampos_m; // remember the start of the token position
+        start_token_position_m = current_position_m; // remember the start of the token position
 
         /*
             REVISIT (sparent) : I don't like that eof is not handled as the other tokens are handled
@@ -447,7 +451,7 @@ const stream_lex_token_t& stream_lex_base_t<S, I>::get_token() {
 
 template <std::size_t S, typename I>
 void stream_lex_base_t<S, I>::put_token(stream_lex_token_t token) {
-    last_token_m.push_back(implementation::lex_fragment_t(std::move(token), line_position_m));
+    last_token_m.push_back(implementation::lex_fragment_t(std::move(token), start_token_position_m));
 }
 
 /**************************************************************************************************/
@@ -480,12 +484,12 @@ bool stream_lex_base_t<S, I>::is_line_end(char c) {
     std::size_t num_chars_eaten(is_line_end(first_m, last_m, c));
 
     if (num_chars_eaten != 0) {
-        ++line_position_m.line_number_m;
+        ++current_position_m.line_number_m;
 
         if (num_chars_eaten == 2)
-            streampos_m += 1;
+            current_position_m.position_m += 1;
 
-        line_position_m.line_start_m = streampos_m;
+        current_position_m.line_start_m = current_position_m.position_m;
     }
 
     return num_chars_eaten != 0;
@@ -497,7 +501,16 @@ template <std::size_t S, typename I>
 void stream_lex_base_t<S, I>::throw_parser_exception(const char* error_string) {
     using adobe::throw_parser_exception;
 
-    throw_parser_exception(error_string, line_position_m);
+    throw_parser_exception(error_string, start_token_position_m);
+}
+
+/**************************************************************************************************/
+
+template <std::size_t S, typename I>
+void stream_lex_base_t<S, I>::throw_parser_exception(std::string&& error_string) {
+    using adobe::throw_parser_exception;
+
+    throw_parser_exception(std::move(error_string), start_token_position_m);
 }
 
 /**************************************************************************************************/

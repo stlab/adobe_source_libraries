@@ -5,11 +5,12 @@
 */
 /**************************************************************************************************/
 
-#include <adobe/implementation/expression_parser.hpp>
+#include <adobe/implementation/lex_stream.hpp>
 
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
 
+#include "lex_stream_test.h"
 #include <sstream>
 
 /**************************************************************************************************/
@@ -19,66 +20,56 @@ using namespace std;
 
 /**************************************************************************************************/
 
-void exception_test(const char* const expression, const adobe::line_position_t& expression_position,
-                    int expected_line_number, std::streampos expected_character_position) {
+void exception_test(const char* const expression,
+                    const adobe::line_position_t& expression_position,
+                    int expected_line_number,
+                    std::streampos expected_character_position) {
     istringstream expression_stream(expression);
-    expression_parser exp(expression_stream, expression_position);
+    lex_stream_t lex(expression_stream, expression_position);
     bool caught(false);
     try {
-        array_t instructions;
-        exp.require_expression(instructions);
+        auto token = lex.get();
     } catch (const stream_error_t& error) {
         cerr << error;
         caught = true;
         BOOST_REQUIRE_EQUAL(error.line_position_set().size(), 1u);
         const auto& error_position = error.line_position_set().front();
-        BOOST_REQUIRE_EQUAL(error_position.line_number_m, expected_line_number);
+        BOOST_REQUIRE_EQUAL(error_position.line_number_m,
+                            expected_line_number);
         BOOST_REQUIRE_LT(error_position.line_start_m, error_position.position_m);
-        BOOST_REQUIRE_EQUAL(error_position.position_m - error_position.line_start_m + 1,
-                            expected_character_position);
+        BOOST_REQUIRE_EQUAL(error_position.position_m - error_position.line_start_m + 1, expected_character_position);
     }
     BOOST_REQUIRE(caught);
 }
 
 /**************************************************************************************************/
 
-BOOST_AUTO_TEST_CASE(expression_parser_require_bitwise_xor_expression) {
+BOOST_AUTO_TEST_CASE(lex_stream_eof_in_string) {
     const line_position_t expression_position{__FILE__, __LINE__ + 1};
     constexpr const char* expression = R"(
-        42 | /* No Expression */
+        "This is a string that never ends
     )";
 
-    exception_test(expression, expression_position, expression_position.line_number_m + 1, 14);
+    exception_test(expression, expression_position, expression_position.line_number_m + 1, 9);
 }
 
 /**************************************************************************************************/
 
-BOOST_AUTO_TEST_CASE(expression_parser_require_bitwise_or_expression) {
+BOOST_AUTO_TEST_CASE(lex_stream_eof_in_comment) {
     const line_position_t expression_position{__FILE__, __LINE__ + 1};
     constexpr const char* expression = R"(
-        true && /* No Expression */
+        /*
     )";
 
-    exception_test(expression, expression_position, expression_position.line_number_m + 1, 17);
+    exception_test(expression, expression_position, expression_position.line_number_m + 1, 9);
 }
 
 /**************************************************************************************************/
 
-BOOST_AUTO_TEST_CASE(expression_parser_require_and_expression) {
+BOOST_AUTO_TEST_CASE(lex_stream_unexpected_character) {
     const line_position_t expression_position{__FILE__, __LINE__ + 1};
     constexpr const char* expression = R"(
-        true || /* No Expression */
-    )";
-
-    exception_test(expression, expression_position, expression_position.line_number_m + 1, 17);
-}
-
-/**************************************************************************************************/
-
-BOOST_AUTO_TEST_CASE(expression_parser_require_expression) {
-    const line_position_t expression_position{__FILE__, __LINE__ + 1};
-    constexpr const char* expression = R"(
-        /* No Expression */
+        $
     )";
 
     exception_test(expression, expression_position, expression_position.line_number_m + 1, 9);

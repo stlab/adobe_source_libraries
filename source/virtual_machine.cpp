@@ -852,7 +852,7 @@ void virtual_machine_t::implementation_t::dictionary_operator() {
 
 template <typename BitwiseOp>
 void virtual_machine_t::implementation_t::bitwise_binary_operator() {
-    // We might be able to make some performance improvments here by referencing
+    // We might be able to make some performance improvements here by referencing
     // our stack values by const ref and then being smart about when to pop the
     // values to which they point... when and if the vm becomes big enough of a
     // bottleneck to warrant the work.

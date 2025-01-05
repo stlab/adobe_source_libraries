@@ -72,6 +72,44 @@
             }
         },
         {
+            "name": "(Windows) property_model_eval - default",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": ["${workspaceFolder}/test/property_model_eval/default.pme"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "${env:PATH};${command:cmake.launchTargetDirectory}"
+                }
+            ],
+            "console": "integratedTerminal",
+            "windows": {
+                "type": "cppvsdbg"
+            }
+        },
+        {
+            "name": "(Windows) property_model_eval - pm_tut",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": ["${workspaceFolder}/test/property_model_eval/pm_tut.pme"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "${env:PATH};${command:cmake.launchTargetDirectory}"
+                }
+            ],
+            "console": "integratedTerminal",
+            "windows": {
+                "type": "cppvsdbg"
+            }
+        },
+        {
             "name": "property_model_eval - default",
             "type": "lldb",
             "request": "launch",

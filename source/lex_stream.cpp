@@ -478,7 +478,7 @@ bool lex_stream_t::implementation_t::is_comment(char c, stream_lex_token_t& resu
     {
         while (true) {
             if (!_super::get_char(c))
-                throw_parser_exception("Unexpected EOF in comment.");
+                throw_parser_exception("unexpected `eof` in comment.");
 
             if (c == '*') {
                 peek_c = _super::peek_char();
@@ -521,7 +521,7 @@ bool lex_stream_t::implementation_t::is_string(char c, stream_lex_token_t& resul
         }
 
         if (c != end_char)
-            throw_parser_exception("Unexpected EOF in string.");
+            throw_parser_exception("unexpected `eof` in string.");
 
         if (!skip_space(c))
             break;
@@ -628,7 +628,7 @@ void lex_stream_t::implementation_t::parse_token(char c) {
 
     if (!(is_number(c, result) || is_identifier_or_keyword(c, result) || found_comment ||
           is_string(c, result) || is_compound(c, result) || is_simple(c, result))) {
-        throw_parser_exception("Syntax Error");
+        throw_parser_exception("unexpected character `"s + c + "`.");
     }
 
     if (!found_comment || !comment_bypass_m)
