@@ -5,18 +5,14 @@
 */
 /**************************************************************************************************/
 
-#include <boost/config.hpp>
-
+#include <algorithm>
 #include <cmath>
 #include <functional>
 #include <iostream>
 #include <map>
-#include <mutex>
 #include <numeric>
 #include <typeinfo>
 #include <vector>
-
-#include <boost/iterator/transform_iterator.hpp>
 
 #include <adobe/algorithm/minmax.hpp>
 #include <adobe/any_regular.hpp>
@@ -33,8 +29,6 @@
 #include <adobe/static_table.hpp>
 #include <adobe/string.hpp>
 #include <adobe/virtual_machine.hpp>
-
-#include <adobe/iomanip_asl_cel.hpp>
 
 /**************************************************************************************************/
 
@@ -357,10 +351,6 @@ public:
     void push_scope(variable_scope_t&& scope) { variable_scope_m.push_back(std::move(scope)); }
 
     variable_lookup_t variable_lookup_m;
-#if 0
-    array_function_lookup_t array_function_lookup_m;
-    dictionary_function_lookup_t dictionary_function_lookup_m;
-#endif
     named_index_lookup_t named_index_lookup_m;
     numeric_index_lookup_t numeric_index_lookup_m;
 
@@ -561,30 +551,7 @@ virtual_machine_t::implementation_t::implementation_t() {
             return value;
         }
 
-#if 0
-        // This section handles the legacy function support. Functions were not first class and were
-        // looked up after the arguments where parsed. To support the old API, we capture the
-        // function name and return a function object that will try and lookup the function when
-        // invoked. This has the unfortunate side effect that referencing an undefined variable will
-        // fail late with an error "expected `<type>` found `function`."
-        if (array_function_lookup_m || dictionary_function_lookup_m) {
-            return function_t{[this, name](const any_regular_t& args) {
-                if (array_function_lookup_m && args.type_info() == typeid(array_t)) {
-                    try {
-                        return array_function_lookup_m(name, cast<array_t>(args));
-                    } catch (...) {
-                    }
-                }
-                if (dictionary_function_lookup_m && args.type_info() == typeid(dictionary_t)) {
-                    try {
-                        return dictionary_function_lookup_m(name, cast<dictionary_t>(args));
-                    } catch (...) {
-                    }
-                }
-                throw_function_not_defined(name);
-            }};
-        }
-#endif
+
         // The legacy variable lookup function must be last. It will throw if the variable is not
         // found. Because the throw may have terminated a evaluation within a sheet, we cannot
         // squelch the error and continue.
@@ -598,7 +565,6 @@ virtual_machine_t::implementation_t::implementation_t() {
 /**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::evaluate(const array_t& expression) {
-    std::cout << begin_asl_cel << expression << end_asl_cel << std::endl;
     for (const auto& e : expression) {
         adobe::name_t op_name;
 
@@ -705,11 +671,7 @@ void virtual_machine_t::implementation_t::logical_operator(bool do_and) {
     if (operand1 == do_and) {
         pop_back();
         evaluate(operand_exp);
-
-        any_regular_t& operand2(value_stack_m.back());
-
-        if (operand2.type_info() != typeid(bool))
-            throw std::bad_cast(); // todo: better error
+        (void)cast<bool>(back()); // verify the result is a boolean
     }
 }
 
@@ -732,20 +694,20 @@ void virtual_machine_t::implementation_t::index_operator() {
     adobe::any_regular_t result;
 
     if (operand2.type_info() == typeid(adobe::name_t)) {
-        adobe::name_t index(operand2.cast<adobe::name_t>());
+        adobe::name_t index(cast<name_t>(operand2));
 
         if (named_index_lookup_m) {
             result = named_index_lookup_m(operand1, index);
         } else {
-            result = get_value(operand1.cast<adobe::dictionary_t>(), index);
+            result = get_value(cast<dictionary_t>(operand1), index);
         }
     } else {
-        std::size_t index(static_cast<std::size_t>(operand2.cast<double>()));
+        auto index{cast<size_t>(operand2)};
 
         if (numeric_index_lookup_m) {
             result = numeric_index_lookup_m(operand1, index);
         } else {
-            const array_t& array = operand1.cast<array_t>();
+            const array_t& array = cast<array_t>(operand1);
 
             if (!(index < array.size()))
                 throw std::runtime_error("index: array index out of range");
@@ -762,13 +724,10 @@ void virtual_machine_t::implementation_t::index_operator() {
 /**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::ifelse_operator() {
-    adobe::array_t else_exp(back().cast<adobe::array_t>());
-    pop_back();
-    adobe::array_t then_exp(back().cast<adobe::array_t>());
-    pop_back();
+    auto else_exp = pop_as<adobe::array_t>();
+    auto then_exp = pop_as<adobe::array_t>();
 
-    bool predicate(back().cast<bool>());
-    pop_back();
+    bool predicate(pop_as<bool>());
 
     evaluate(predicate ? then_exp : else_exp);
 }
@@ -776,121 +735,56 @@ void virtual_machine_t::implementation_t::ifelse_operator() {
 /**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::variable_operator() {
-
-    adobe::name_t variable(back().cast<adobe::name_t>());
-    pop_back();
-
-    value_stack_m.push_back(variable_lookup(variable));
+    value_stack_m.push_back(variable_lookup(pop_as<adobe::name_t>()));
 }
-
-/**************************************************************************************************/
-
-#if 0
-
-// This is good code - it was just overkill for this problem - we ended up generated a fair
-// amount of code for this.
-
-template <typename Iterator, typename UnaryFunction>
-typename std::pair<boost::transform_iterator<UnaryFunction, Iterator>,
-    boost::transform_iterator<UnaryFunction, Iterator> >
-        make_transform_range(const Iterator& first, const Iterator& last, UnaryFunction f)
-{
-    typedef typename boost::transform_iterator<UnaryFunction, Iterator> transform_type;
-    
-    return std::make_pair(transform_type(first, f), transform_type(last, f));
-}
-
-template <class InputRange, class T, class BinaryOperation>
-T accumulate(const InputRange& range, T init, BinaryOperation binary_op)
-{
-    return std::accumulate(boost::begin(range), boost::end(range), init, binary_op);
-}
-#endif
-
 /**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::array_operator() {
-    stack_type::difference_type count =
-        static_cast<stack_type::difference_type>(back().cast<double>());
-
-    pop_back();
+    auto count{pop_as<stack_type::difference_type>()};
 
     adobe::array_t result;
-
-    for (stack_type::iterator first(value_stack_m.end() - count), last(value_stack_m.end());
-         first != last; ++first) {
-        result.push_back(std::move(*first));
-    }
+    result.reserve(count);
+    move(value_stack_m.end() - count, value_stack_m.end(), back_inserter(result));
 
     value_stack_m.resize(value_stack_m.size() - count);
-    value_stack_m.push_back(any_regular_t(std::move(result)));
+    value_stack_m.push_back(std::move(result));
 }
 
 /**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::dictionary_operator() {
-    stack_type::difference_type count =
-        2 * static_cast<stack_type::difference_type>(back().cast<double>());
-
-    pop_back();
+    auto count{pop_as<stack_type::difference_type>() * 2};
 
     adobe::dictionary_t result;
 
-    stack_type::iterator first(value_stack_m.end() - count), last(value_stack_m.end());
+    auto first(value_stack_m.end() - count), last(value_stack_m.end());
 
     while (first != last) {
-        name_t name = first->cast<adobe::name_t>();
+        auto name{cast<name_t>(*first)};
         ++first;
         result.insert(make_pair(name, std::move(*first)));
         ++first;
     }
 
     value_stack_m.resize(value_stack_m.size() - count);
-    value_stack_m.push_back(any_regular_t(std::move(result)));
+    value_stack_m.push_back(std::move(result));
 }
 
 /**************************************************************************************************/
 
 template <typename BitwiseOp>
 void virtual_machine_t::implementation_t::bitwise_binary_operator() {
-    // We might be able to make some performance improvements here by referencing
-    // our stack values by const ref and then being smart about when to pop the
-    // values to which they point... when and if the vm becomes big enough of a
-    // bottleneck to warrant the work.
-
-    std::uint32_t operand2_value(0); // something reasonable
-
-    if (back().type_info() == typeid(adobe::array_t)) {
-        adobe::array_t operand2_exp(back().cast<adobe::array_t>());
-        pop_back(); // pop operand2_exp
-
-        evaluate(operand2_exp);
-        adobe::any_regular_t operand2 = back();
-        operand2_value = static_cast<std::uint32_t>(operand2.cast<double>());
-    } else if (back().type_info() == typeid(double)) {
-        operand2_value = static_cast<std::uint32_t>(back().cast<double>());
-    } else {
-        throw std::logic_error("unknown type");
-    }
-
-    pop_back(); // pop operand2
-
-    adobe::any_regular_t& operand1 = back();
-    std::uint32_t operand1_value(static_cast<std::uint32_t>(operand1.cast<double>()));
-
-    std::uint32_t result(BitwiseOp()(operand1_value, operand2_value));
-    operand1.assign(static_cast<double>(result)); // assign operand1 in-place
+    auto operand2{pop_as<uint32_t>()};
+    auto operand1{pop_as<uint32_t>()};
+    value_stack_m.push_back(BitwiseOp()(operand1, operand2));
 }
 
 /**************************************************************************************************/
 
 template <typename BitwiseOp>
 void virtual_machine_t::implementation_t::bitwise_unary_operator() {
-    adobe::any_regular_t& operand1 = back();
-    std::uint32_t operand1_value(static_cast<std::uint32_t>(operand1.cast<double>()));
-    std::uint32_t result(BitwiseOp()(operand1_value));
-
-    operand1.assign(static_cast<double>(result)); // assign operand1 in-place
+    auto operand1{pop_as<uint32_t>()};
+    value_stack_m.push_back(BitwiseOp()(operand1));
 }
 
 /**************************************************************************************************/
@@ -901,34 +795,6 @@ void virtual_machine_t::implementation_t::function_operator() {
     auto argument{pop_as<any_regular_t>()};
     auto function{pop_as<function_t>()};
     value_stack_m.push_back(function(argument));
-
-#if 0
-    if (back().type_info() == typeid(adobe::array_t)) {
-        // handle unnamed parameter functions
-        array_function_t array_func;
-        adobe::array_t arguments(back().cast<adobe::array_t>());
-
-        // handle function lookup
-
-        if ((*array_function_table_g)(function_name, array_func))
-            value_stack_m.back() = array_func(arguments);
-        else if (array_function_lookup_m)
-            value_stack_m.back() = array_function_lookup_m(function_name, arguments);
-        else
-            throw_function_not_defined(function_name);
-    } else {
-        // handle named parameter functions
-        dictionary_function_t dictionary_func;
-        adobe::dictionary_t arguments(back().cast<adobe::dictionary_t>());
-
-        if ((*dictionary_function_table_g)(function_name, dictionary_func))
-            value_stack_m.back() = dictionary_func(arguments);
-        else if (dictionary_function_lookup_m)
-            value_stack_m.back() = dictionary_function_lookup_m(function_name, arguments);
-        else
-            throw_function_not_defined(function_name);
-    }
-#endif
 }
 
 /**************************************************************************************************/
