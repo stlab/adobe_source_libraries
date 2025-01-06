@@ -44,10 +44,10 @@ namespace adobe {
 
 template <typename ValueType>
 struct static_table_traits<const std::type_info*, ValueType> {
-    typedef bool result_type;
-    typedef const std::type_info* key_type;
-    typedef ValueType value_type;
-    typedef std::pair<key_type, value_type> entry_type;
+    using result_type = bool;
+    using key_type = const std::type_info*;
+    using value_type = ValueType;
+    using entry_type = std::pair<key_type, value_type>;
 
     result_type operator()(const entry_type& x, const entry_type& y) const {
         return (*this)(x, y.first);
@@ -78,16 +78,14 @@ namespace {
 
 using namespace adobe::literals;
 
-typedef void (adobe::virtual_machine_t::implementation_t::*operator_t)();
+using stack_type = vector<adobe::any_regular_t>; // REVISIT (sparent) : GCC 3.1 the symbol `stack_t` conflicts with a symbol in signal.h
+using operator_t = void (adobe::virtual_machine_t::implementation_t::*)();
 using array_function_t = std::function<adobe::any_regular_t(const adobe::array_t&)>;
 using dictionary_function_t = std::function<adobe::any_regular_t(const adobe::dictionary_t&)>;
 
-typedef vector<adobe::any_regular_t> stack_type; // REVISIT (sparent) : GCC 3.1 the symbol stack_t
-// conflicts with a symbol in signal.h
-
 #if !defined(ADOBE_NO_DOCUMENTATION)
 
-typedef adobe::static_table<adobe::name_t, operator_t, 27> operator_table_t;
+using operator_table_t = adobe::static_table<adobe::name_t, operator_t, 27>;
 using variable_table_t = adobe::static_table<adobe::name_t, adobe::any_regular_t, 9>;
 using type_table_t = adobe::static_table<const std::type_info*, adobe::name_t, 8>;
 
@@ -97,7 +95,7 @@ using type_table_t = adobe::static_table<const std::type_info*, adobe::name_t, 8
 
 template <typename Result>
 struct make {
-    typedef Result result_type;
+    using result_type = Result;
 
     template <typename T>
     Result operator()(const T& x) {
@@ -321,7 +319,7 @@ const char* type_name(const std::type_info& type) {
 /**************************************************************************************************/
 
 class virtual_machine_t::implementation_t {
-    typedef std::map<adobe::name_t, binary_op_override_t> binary_op_override_map_t;
+    using binary_op_override_map_t = std::map<adobe::name_t, binary_op_override_t>;
 
 public:
     implementation_t();
@@ -433,8 +431,8 @@ namespace {
 /**************************************************************************************************/
 
 void virtual_machine_init_() {
-    typedef operator_table_t::entry_type op_entry_type;
-    typedef adobe::virtual_machine_t::implementation_t implementation_t;
+    using op_entry_type = operator_table_t::entry_type;
+    using implementation_t = adobe::virtual_machine_t::implementation_t;
 
     static operator_table_t operator_table_s = {
         {op_entry_type(adobe::not_k, &implementation_t::unary_operator<std::logical_not, bool>),
@@ -611,8 +609,8 @@ operator_t virtual_machine_t::implementation_t::find_operator(adobe::name_t oper
 
 template <template <class T> class Operator, class OperandType>
 void virtual_machine_t::implementation_t::binary_operator() {
-    typedef OperandType operand_t;
-    typedef Operator<operand_t> operator_class;
+    using operand_t = OperandType;
+    using operator_class = Operator<operand_t>;
 
     stack_type::iterator iter(
         value_stack_m.end()); // REVISIT (sparent) : GCC 3.1 requires :: qualifier
@@ -652,8 +650,8 @@ bool virtual_machine_t::implementation_t::operator_override(adobe::name_t name) 
 
 template <template <class T> class Operator, class OperandType>
 void virtual_machine_t::implementation_t::unary_operator() {
-    typedef OperandType operand_t;
-    typedef Operator<operand_t> operator_class;
+    using operand_t = OperandType;
+    using operator_class = Operator<operand_t>;
 
     stack_type::iterator iter(value_stack_m.end());
 
