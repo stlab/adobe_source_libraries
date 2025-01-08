@@ -151,7 +151,9 @@ void test_copy_on_write() {
     }
 
     // Test default constructor
-    { CowType value_0; }
+    {
+        CowType value_0;
+    }
     // Check
     if constexpr (is_noisy) {
         BOOST_CHECK_MESSAGE(noisy_check_allocation() == 1, "allocation count mismatch");

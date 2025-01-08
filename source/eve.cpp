@@ -912,7 +912,8 @@ void view_proxy_t::layout_with(::child_iterator first, ::child_iterator last,
         */
 
         if (iter_gslice.alignment_m == adobe::layout_attributes_t::align_reverse_fill) {
-            ADOBE_ASSERT(padded_count && "align_reverse_fill item not accounted for in padded_count.");
+            ADOBE_ASSERT(padded_count &&
+                         "align_reverse_fill item not accounted for in padded_count.");
             int additional_length(remaining_additional_length / padded_count);
 
             --padded_count;

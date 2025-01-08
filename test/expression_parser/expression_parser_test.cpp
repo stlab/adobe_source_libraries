@@ -42,9 +42,7 @@ void exception_test(const char* const expression, const adobe::line_position_t& 
 
 /**************************************************************************************************/
 
-BOOST_AUTO_TEST_CASE(expression_parser_configure_output) {
-    cerr << "CTEST_FULL_OUTPUT\n\n";
-}
+BOOST_AUTO_TEST_CASE(expression_parser_configure_output) { cerr << "CTEST_FULL_OUTPUT\n\n"; }
 
 /**************************************************************************************************/
 
