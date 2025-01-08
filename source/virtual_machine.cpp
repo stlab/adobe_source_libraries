@@ -10,6 +10,7 @@
 #include <functional>
 #include <iostream>
 #include <map>
+#include <mutex>
 #include <numeric>
 #include <typeinfo>
 #include <vector>
@@ -78,7 +79,8 @@ namespace {
 
 using namespace adobe::literals;
 
-using stack_type = vector<adobe::any_regular_t>; // REVISIT (sparent) : GCC 3.1 the symbol `stack_t` conflicts with a symbol in signal.h
+using stack_type = vector<adobe::any_regular_t>; // REVISIT (sparent) : GCC 3.1 the symbol `stack_t`
+                                                 // conflicts with a symbol in signal.h
 using operator_t = void (adobe::virtual_machine_t::implementation_t::*)();
 using array_function_t = std::function<adobe::any_regular_t(const adobe::array_t&)>;
 using dictionary_function_t = std::function<adobe::any_regular_t(const adobe::dictionary_t&)>;
