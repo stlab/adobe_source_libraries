@@ -399,20 +399,12 @@ public:
 
     static operator_table_t* operator_table_g;
     static variable_table_t* variable_table_g;
-#if 0
-    static array_function_table_t* array_function_table_g;
-    static dictionary_function_table_t* dictionary_function_table_g;
-#endif
 };
 
 /**************************************************************************************************/
 
 operator_table_t* virtual_machine_t::implementation_t::operator_table_g;
 variable_table_t* virtual_machine_t::implementation_t::variable_table_g;
-#if 0
-array_function_table_t* virtual_machine_t::implementation_t::array_function_table_g;
-dictionary_function_table_t* virtual_machine_t::implementation_t::dictionary_function_table_g;
-#endif
 
 /**************************************************************************************************/
 
@@ -829,23 +821,6 @@ void virtual_machine_t::set_variable_lookup(const variable_lookup_t& lookup) {
 void virtual_machine_t::push_scope(variable_scope_t&& scope) {
     object_m->push_scope(std::move(scope));
 }
-
-/**************************************************************************************************/
-
-#if 0
-void virtual_machine_t::set_array_function_lookup(const array_function_lookup_t& function) {
-    object_m->array_function_lookup_m = function;
-}
-#endif
-
-/**************************************************************************************************/
-
-#if 0
-void virtual_machine_t::set_dictionary_function_lookup(
-    const dictionary_function_lookup_t& function) {
-    object_m->dictionary_function_lookup_m = function;
-}
-#endif
 
 /**************************************************************************************************/
 

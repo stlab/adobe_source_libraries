@@ -32,7 +32,8 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-// todo: temporary hack to get around std::function not being comparable
+/// Any function of the form `any_regular_t(const any_regular_t&)`. All function_t objects compare
+/// equal so they can be placed in an `any_regular_t` object.
 class function_t : public std::function<any_regular_t(const any_regular_t&)> {
 public:
     using base_t = std::function<any_regular_t(const any_regular_t&)>;
@@ -58,10 +59,12 @@ public:
 
 /**************************************************************************************************/
 
+/// Returns a simple name for the core types used by the virtual machine.
 const char* type_name(const std::type_info& type);
 
 /**************************************************************************************************/
 
+/// Does a runtime cast on an any_regular_t with better error reporting.
 template <class T>
 auto cast(adobe::any_regular_t& x) -> decltype(x.cast<T>()) {
     if constexpr (!std::is_same_v<T, adobe::any_regular_t>) {
@@ -72,6 +75,7 @@ auto cast(adobe::any_regular_t& x) -> decltype(x.cast<T>()) {
     return x.cast<T>();
 }
 
+/// Does a runtime cast on an any_regular_t with better error reporting.
 template <class T>
 auto cast(const adobe::any_regular_t& x) -> decltype(x.cast<T>()) {
     if constexpr (!std::is_same_v<T, adobe::any_regular_t>) {
@@ -84,6 +88,12 @@ auto cast(const adobe::any_regular_t& x) -> decltype(x.cast<T>()) {
 
 /**************************************************************************************************/
 
+namespace detail {
+
+/// Provide an invoke function for an invocable F with a signature Sig, that will extract the
+/// arguments from an array_t. An exception will be thrown if the number of items in the array
+/// does not match the number of arguments in the signature, or if any of the argument types do
+/// not match the corresponding array_t item type.
 template <class Sig>
 struct function_packager;
 
@@ -103,13 +113,15 @@ struct function_packager<R(Args...)> {
     }
 };
 
+} // namespace detail
+
 /**************************************************************************************************/
 
 /// Create a function_t from an invocable object.
 template <class Sig, class F>
 any_regular_t make_function(F&& f) {
     return function_t{[f = std::forward<F>(f)](const any_regular_t& args) {
-        return function_packager<Sig>::invoke(f, args.cast<array_t>());
+        return detail::function_packager<Sig>::invoke(f, args.cast<array_t>());
     }};
 }
 
