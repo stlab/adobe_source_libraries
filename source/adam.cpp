@@ -83,8 +83,6 @@ typedef adobe::sheet_t sheet_t;
 typedef std::bitset<1024> cell_bits_t;
 typedef int priority_t;
 
-struct compare_contributing_t;
-
 enum access_specifier_t {
     access_input,
     access_interface_input,
@@ -324,7 +322,6 @@ private:
     };
 
     friend struct cell_t;
-    friend struct compare_contributing_t;
 
     any_regular_t calculate_expression(const line_position_t& position, const array_t& expression);
 

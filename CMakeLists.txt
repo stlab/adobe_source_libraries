@@ -19,15 +19,17 @@ set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
 project(adobe-source-libraries CXX)
 
-# boost is a huge project and directly downloading the 'alternate release'
-# from github is much faster than recursively cloning the repo.
+
 CPMAddPackage(
-  NAME Boost
-  VERSION 1.87.0
-  URL https://github.com/boostorg/boost/releases/download/boost-1.87.0/boost-1.87.0-cmake.7z
-  URL_HASH SHA256=61d61a3f33283bab8f3736745a4e47c37141f07e413986cd05d1f942c69d529a
-  OPTIONS "BOOST_ENABLE_CMAKE ON"
+    NAME Boost
+    VERSION 1.87.0
+    URL https://github.com/boostorg/boost/releases/download/boost-1.87.0/boost-1.87.0-cmake.7z
+    URL_HASH SHA256=61d61a3f33283bab8f3736745a4e47c37141f07e413986cd05d1f942c69d529a
+    OPTIONS
+    "BOOST_ENABLE_CMAKE ON"
+    "CMAKE_CXX_CLANG_TIDY ;"
 )
+
 
 function(target_link_boost target)
     target_link_libraries(${target} PUBLIC Boost::system)

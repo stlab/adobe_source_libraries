@@ -509,7 +509,7 @@ bool expression_parser::is_name(any_regular_t& result) {
         return false;
 
     if (!is_token(keyword_k, result) && !is_token(identifier_k, result))
-        throw_exception("identifier or keyword required.");
+        throw_exception("`identifier` or `keyword` required.");
 
     return true;
 }
@@ -635,6 +635,7 @@ void expression_parser::putback() { object->token_stream_m.putback(); }
 void expression_parser::require_token(name_t tokenName, any_regular_t& tokenValue) {
     const stream_lex_token_t& result(get_token());
     if (result.first != tokenName) {
+        putback();
         throw_exception(tokenName, result.first);
     }
 
@@ -646,10 +647,12 @@ void expression_parser::require_token(name_t tokenName, any_regular_t& tokenValu
 void expression_parser::require_keyword(name_t keyword_name) {
     const stream_lex_token_t& result(get_token());
     if (result.first != keyword_k) {
+        putback();
         throw_parser_exception(keyword_name.c_str(), token_to_string(result.first),
                                next_position());
     }
     if (result.second.cast<name_t>() != keyword_name) {
+        putback();
         throw_exception(keyword_name, result.second.cast<name_t>());
     }
 }
@@ -661,6 +664,7 @@ void expression_parser::require_token(name_t tokenName) {
     if (result.first == tokenName)
         return;
 
+    putback();
     throw_exception(tokenName, result.first);
 }
 

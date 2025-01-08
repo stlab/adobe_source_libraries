@@ -70,14 +70,7 @@ namespace adobe {
 
 std::ostream& operator<<(std::ostream& result, const line_position_t& position) {
     if (position.stream_name() && *position.stream_name()) {
-#ifdef _WIN32
-        result << '"' << filesystem::path{position.stream_name()}.generic_string() << '"';
-#else
-        // macOS/Linux: Use escaping for spaces instead of quotes
-        std::string path_str = filesystem::path{position.stream_name()}.generic_string();
-        std::regex_replace(path_str, std::regex(" "), "\\ ");
-        result << path_str;
-#endif
+        result << position.stream_name();
     } else {
         result << "<unknown>";
     }

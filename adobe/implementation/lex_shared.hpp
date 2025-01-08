@@ -95,7 +95,8 @@ public:
 
 private:
     struct lex_fragment_t {
-        lex_fragment_t(const token_type& token = token_type(),
+        lex_fragment_t() = default;
+        lex_fragment_t(const token_type& token,
                        const line_position_t& line_position = line_position_t())
             : token_value_m(token), line_position_m(line_position) {}
 

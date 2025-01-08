@@ -907,12 +907,12 @@ void view_proxy_t::layout_with(::child_iterator first, ::child_iterator last,
         }
 
         /*
-            REVISIT (sparent) : Filled items fill forward. The space to behind is going to
+            REVISIT (sparent) : Filled items fill forward. The space behind is going to
             be dead space... It would be good to allow it to be filled.
         */
 
         if (iter_gslice.alignment_m == adobe::layout_attributes_t::align_reverse_fill) {
-
+            ADOBE_ASSERT(padded_count && "align_reverse_fill item not accounted for in padded_count.");
             int additional_length(remaining_additional_length / padded_count);
 
             --padded_count;
@@ -953,6 +953,7 @@ void view_proxy_t::layout_with(::child_iterator first, ::child_iterator last,
         case adobe::layout_attributes_t::align_forward_fill:
         case adobe::layout_attributes_t::align_center:
         case adobe::layout_attributes_t::align_proportional: {
+            ADOBE_ASSERT(padded_count && "item not accounted for in padded_count.");
             additional_length = remaining_additional_length / padded_count;
             --padded_count;
             remaining_additional_length -= additional_length;
