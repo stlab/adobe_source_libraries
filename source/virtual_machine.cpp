@@ -730,7 +730,7 @@ void virtual_machine_t::implementation_t::variable_operator() {
 /**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::array_operator() {
-    auto count{pop_as<stack_type::difference_type>()};
+    auto count{pop_as<uint32_t>()};
 
     adobe::array_t result;
     result.reserve(count);
@@ -743,7 +743,7 @@ void virtual_machine_t::implementation_t::array_operator() {
 /**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::dictionary_operator() {
-    auto count{pop_as<stack_type::difference_type>() * 2};
+    auto count{pop_as<uint32_t>() * 2};
 
     adobe::dictionary_t result;
 
