@@ -132,28 +132,8 @@ position)
     The vector of <code>line_position_t</code>s detailing the trace history of this exception.
 */
 
-//***************************************************************************//
-//***************************************************************************//
-//***************************************************************************//
-
-/*!
-\fn std::string adobe::format_stream_error(std::istream& stream, const adobe::stream_error_t&
-error);
-\relates adobe::stream_error_t
-
-A function used to format data stored in an adobe::stream_error_t into something human-readable.
-
-\param stream The stream containing the parsing information from which the error came.
-\param error The error detailing the cause for the parsing failure.
-
-\return
-    A string that presents the parsing failure in a human readable form. Note that the string is
-intended to be displayed on multiple lines with a monospaced font.
-*/
-
 
 // line_position_t is used to remember a position on a particular line of a file.
-
 struct line_position_t {
 public:
     typedef std::function<std::string(name_t, std::streampos)> getline_proc_impl_t;
@@ -163,8 +143,8 @@ public:
     line_position_t(name_t file_path, getline_proc_t getline_proc, int line_number = 1,
                     std::streampos line_start = 0, std::streampos position = -1);
 
-    // This constructor is used with __FILE__ and __LINE__, line_index starts at 0
-    explicit line_position_t(const char*, int line_index = 0);
+    // This constructor is used with __FILE__ and __LINE__, line_number starts at 1
+    explicit line_position_t(const char*, int line_number = 1);
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
     line_position_t();
