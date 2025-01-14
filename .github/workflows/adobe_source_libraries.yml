@@ -47,7 +47,6 @@ jobs:
           rm '/usr/local/bin/python3.12'
           rm '/usr/local/bin/python3-config'
           rm '/usr/local/bin/python3.12-config'
-          brew install boost
           brew install ninja
         shell: bash
 
@@ -55,7 +54,6 @@ jobs:
         if: ${{ startsWith(matrix.config.os, 'ubuntu') }}
         run: |
           sudo apt-get install -y ninja-build
-          sudo apt-get install -y libboost-all-dev
         shell: bash
 
       - name: Install dependencies (Windows)
