@@ -25,8 +25,11 @@ struct promote {
 
 template <>
 struct promote<const char*> {
-    typedef std::string type;
+    using type = std::string;
 };
+
+template <class T>
+using promote_t = typename promote<T>::type;
 
 /**************************************************************************************************/
 

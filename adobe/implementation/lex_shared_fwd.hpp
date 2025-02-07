@@ -276,13 +276,13 @@ inline token_range_t static_token_range(T* begin) {
 
 template <typename E> // E models Enumeration
 struct lex_token_t {
-    lex_token_t() {}
+    lex_token_t() = default;
 
     explicit lex_token_t(E enumeration, uchar_ptr_t first = 0, uchar_ptr_t last = 0)
         : enum_m(enumeration), range_m(first, last) {}
 
-    E enum_m;
-    token_range_t range_m;
+    E enum_m{static_cast<E>(0)};
+    token_range_t range_m{nullptr, nullptr};
 };
 
 /**************************************************************************************************/

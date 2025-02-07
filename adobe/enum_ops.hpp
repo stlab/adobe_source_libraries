@@ -95,28 +95,28 @@ template <typename T>
 constexpr auto operator&(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) & static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) & static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator~(const T a)
     -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(~static_cast<underlying>(a));
+    return static_cast<T>(~static_cast<underlying>(a)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator|(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) | static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) | static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator^(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) ^ static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) ^ static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
@@ -144,49 +144,49 @@ template <typename T>
 constexpr auto operator+(const T a)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(+static_cast<underlying>(a));
+    return static_cast<T>(+static_cast<underlying>(a)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator-(const T a)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(-static_cast<underlying>(a));
+    return static_cast<T>(-static_cast<underlying>(a)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator+(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) + static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) + static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator-(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) - static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) - static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator*(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) * static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) * static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator/(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) / static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) / static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator%(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) % static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) % static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
@@ -222,28 +222,28 @@ constexpr auto operator%=(T& lhs, const T rhs)
 template <typename T>
 constexpr auto operator++(T& lhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
-    return lhs += static_cast<T>(1);
+    return lhs += static_cast<T>(1); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator++(T& lhs, int)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     T result = lhs;
-    lhs += static_cast<T>(1);
+    lhs += static_cast<T>(1); // NOLINT
     return result;
 }
 
 template <typename T>
 constexpr auto operator--(T& lhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
-    return lhs -= static_cast<T>(1);
+    return lhs -= static_cast<T>(1); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator--(T& lhs, int)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     T result = lhs;
-    lhs -= static_cast<T>(1);
+    lhs -= static_cast<T>(1); // NOLINT
     return result;
 }
 

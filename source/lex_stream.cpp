@@ -251,8 +251,8 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-struct lex_stream_t::implementation_t : stream_lex_base_t<2, std::istream_iterator<char>> {
-    typedef stream_lex_base_t<2, std::istream_iterator<char>> _super;
+struct lex_stream_t::implementation_t : stream_lex_base_t<2, std::istreambuf_iterator<char>> {
+    typedef stream_lex_base_t<2, std::istreambuf_iterator<char>> _super;
 
 public:
     typedef std::istream::pos_type pos_type;
@@ -326,9 +326,9 @@ void lex_stream_t::set_comment_bypass(bool bypass) { return object_m->set_commen
 /**************************************************************************************************/
 
 lex_stream_t::implementation_t::implementation_t(std::istream& in, const line_position_t& position)
-    : _super(std::istream_iterator<char>(in), std::istream_iterator<char>(), position),
+    : _super(std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>(),
+             position),
       comment_bypass_m(false) {
-    in.unsetf(std::ios_base::skipws);
 
     _super::set_parse_token_proc(
         std::bind(&lex_stream_t::implementation_t::parse_token, std::ref(*this), _1));
@@ -479,7 +479,7 @@ bool lex_stream_t::implementation_t::is_comment(char c, stream_lex_token_t& resu
     {
         while (true) {
             if (!_super::get_char(c))
-                throw_parser_exception("Unexpected EOF in comment.");
+                throw_parser_exception("unexpected `eof` in comment.");
 
             if (c == '*') {
                 peek_c = _super::peek_char();
@@ -522,7 +522,7 @@ bool lex_stream_t::implementation_t::is_string(char c, stream_lex_token_t& resul
         }
 
         if (c != end_char)
-            throw_parser_exception("Unexpected EOF in string.");
+            throw_parser_exception("unexpected `eof` in string.");
 
         if (!skip_space(c))
             break;
@@ -629,12 +629,15 @@ void lex_stream_t::implementation_t::parse_token(char c) {
 
     if (!(is_number(c, result) || is_identifier_or_keyword(c, result) || found_comment ||
           is_string(c, result) || is_compound(c, result) || is_simple(c, result))) {
-        throw_parser_exception("Syntax Error");
+        throw_parser_exception("unexpected character `"s + c + "`.");
     }
 
     if (!found_comment || !comment_bypass_m)
         put_token(std::move(result));
 }
+
+
+const char* token_name_to_string(name_t token_name);
 
 /**************************************************************************************************/
 

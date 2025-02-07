@@ -10,7 +10,7 @@
 
 /**************************************************************************************************/
 
-#include <adobe/config.hpp>
+#include <string>
 
 #include <adobe/istream_fwd.hpp>
 #include <adobe/name.hpp>
@@ -22,6 +22,7 @@ namespace adobe {
 /**************************************************************************************************/
 
 void throw_parser_exception(const char* error_string, const line_position_t& position);
+void throw_parser_exception(std::string&& error_string, const line_position_t& position);
 
 void throw_parser_exception(const char* expected, const char* found,
                             const line_position_t& position);

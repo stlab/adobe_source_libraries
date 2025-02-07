@@ -1,0 +1,2 @@
+run enum_ops_test.cpp ;
+compile-fail fail_assign_test.cpp ;

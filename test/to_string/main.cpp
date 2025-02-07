@@ -160,11 +160,11 @@ BOOST_AUTO_TEST_CASE(serialization_test_suite) {
     std::cout << "INFO: `to_chars` is available\n";
 
 #if defined(ADOBE_COMPILER_MSVC) && ADOBE_COMPILER_MSVC
-    constexpr auto to_string_match_count_k = 10;
+    constexpr std::size_t to_string_match_count_k = 10;
 #else
     constexpr auto to_string_match_count_k = 9;
 #endif // defined(ADOBE_COMPILER_MSVC) && ADOBE_COMPILER_MSVC
-    constexpr auto to_chars_match_count_k = 6;
+    constexpr std::size_t to_chars_match_count_k = 6;
 #else
     std::cout << "INFO: `to_chars` is NOT available\n";
 
@@ -172,9 +172,9 @@ BOOST_AUTO_TEST_CASE(serialization_test_suite) {
     constexpr auto to_chars_match_count_k = 0;
 #endif
 
-    BOOST_CHECK_EQUAL(test_suite(&asl_to_string_v1<true>, "adobe::to_string (precise)"), 3);
+    BOOST_CHECK_EQUAL(test_suite(&asl_to_string_v1<true>, "adobe::to_string (precise)"), 3u);
 
-    BOOST_CHECK_EQUAL(test_suite(&asl_to_string_v1<false>, "adobe::to_string (short)"), 2);
+    BOOST_CHECK_EQUAL(test_suite(&asl_to_string_v1<false>, "adobe::to_string (short)"), 2u);
 
     BOOST_CHECK_EQUAL(test_suite(&asl_to_string, "adobe::to_string (v2)"), to_string_match_count_k);
 

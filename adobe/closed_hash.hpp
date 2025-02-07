@@ -17,6 +17,7 @@
 #include <climits>
 #include <cstddef>
 #include <cstdint>
+#include <initializer_list>
 #include <limits>
 #include <utility>
 
@@ -299,6 +300,11 @@ public:
     closed_hash_set(I f, I l) {
         header() = 0;
         insert(f, l);
+    }
+
+    closed_hash_set(std::initializer_list<value_type> init) {
+        header() = 0;
+        insert(init.begin(), init.end());
     }
 
     template <typename I> // I models InputIterator
@@ -621,8 +627,9 @@ pair.
 template <typename Key, typename T, typename Hash, typename Pred, typename A>
 class closed_hash_map
     : public closed_hash_set<std::pair<Key, T>, get_element<0, std::pair<Key, T>>, Hash, Pred, A> {
-    typedef closed_hash_set<std::pair<Key, T>, get_element<0, std::pair<Key, T>>, Hash, Pred, A>
-        set_type;
+
+    using set_type =
+        closed_hash_set<std::pair<Key, T>, get_element<0, std::pair<Key, T>>, Hash, Pred, A>;
 
 public:
     typedef T mapped_type;
@@ -631,6 +638,8 @@ public:
 
     template <typename I> // I models InputIterator
     closed_hash_map(I f, I l) : set_type(f, l) {}
+
+    closed_hash_map(std::initializer_list<typename set_type::value_type> init) : set_type(init) {}
 
     closed_hash_map(const closed_hash_map& x) : set_type(x) {}
     closed_hash_map(closed_hash_map&& x) noexcept : set_type(std::move(x)) {}

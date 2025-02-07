@@ -1,0 +1,4 @@
+build-project clamp ;
+build-project median ;
+build-project minmax ;
+build-project select ;

@@ -22,7 +22,7 @@ struct line_position_t;
 
 class stream_error_t;
 
-std::string format_stream_error(std::istream&, const stream_error_t&);
+[[deprecated]] std::string format_stream_error(std::istream&, const stream_error_t&);
 
 std::string format_stream_error(const stream_error_t&);
 
