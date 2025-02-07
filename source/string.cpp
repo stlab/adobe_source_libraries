@@ -14,6 +14,8 @@
 #include <array>
 #include <charconv>
 #include <system_error>
+#else
+#include <iterator>
 #endif
 
 /**************************************************************************************************/
