@@ -76,19 +76,19 @@ sheet mini_image_size
  interface:
     constrain           : false;     
 
-    width_pixels        : original_width    <== std.round(width_pixels);
-    height_pixels       : original_height   <== std.round(height_pixels);
+    width_pixels        : original_width    <== round(width_pixels);
+    height_pixels       : original_height   <== round(height_pixels);
     width_percent;
     height_percent;
 
  logic:
     relate {
-      width_pixels  <== std.round(width_percent * original_width / 100);
+      width_pixels  <== round(width_percent * original_width / 100);
       width_percent <== width_pixels * 100 / original_width;
     }
     
     relate {
-      height_pixels  <== std.round(height_percent * original_height / 100);
+      height_pixels  <== round(height_percent * original_height / 100);
       height_percent <== height_pixels * 100 / original_height;
     }
 
@@ -185,7 +185,7 @@ check (mini_image_size,
    at the logic section of our sheet a little more closely, we find:
 
    relate {
-       width_pixels    <== std.round(width_percent * original_width / 100);
+       width_pixels    <== round(width_percent * original_width / 100);
        width_percent   <== width_pixels * 100 / original_width;
    }
 
@@ -258,7 +258,7 @@ check (mini_image_size,
    last remaining relate clause:
 
    relate {
-       height_pixels  <== std.round(height_percent * original_height / 100);
+       height_pixels  <== round(height_percent * original_height / 100);
        height_percent <== height_pixels * 100 / original_height;
    }
 
@@ -289,12 +289,12 @@ update (mini_image_size,
    clauses:
 
    relate {
-       width_pixels   <== std.round(width_percent * original_width / 100);
+       width_pixels   <== round(width_percent * original_width / 100);
        width_percent  <== width_pixels * 100 / original_width;
    }
    
    relate {
-       height_pixels  <== std.round(height_percent * original_height / 100);
+       height_pixels  <== round(height_percent * original_height / 100);
        height_percent <== height_pixels * 100 / original_height;
    }
 

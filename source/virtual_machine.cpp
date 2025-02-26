@@ -88,8 +88,9 @@ using dictionary_function_t = std::function<adobe::any_regular_t(const adobe::di
 #if !defined(ADOBE_NO_DOCUMENTATION)
 
 using operator_table_t = adobe::static_table<adobe::name_t, operator_t, 27>;
-using variable_table_t = adobe::static_table<adobe::name_t, adobe::any_regular_t, 9>;
-using type_table_t = adobe::static_table<const std::type_info*, adobe::name_t, 8>;
+using array_function_table_t = adobe::static_table<adobe::name_t, array_function_t, 7>;
+using dictionary_function_table_t = adobe::static_table<adobe::name_t, dictionary_function_t, 1>;
+using type_table_t = adobe::static_table<const std::type_info*, adobe::name_t, 7>;
 
 #endif // !defined(ADOBE_NO_DOCUMENTATION)
 
@@ -116,7 +117,6 @@ name_t known_type_name(const std::type_info& type) {
              type_table_t::entry_type(&typeid(string), "string"_name),
              type_table_t::entry_type(&typeid(adobe::array_t), "array"_name),
              type_table_t::entry_type(&typeid(adobe::dictionary_t), "dictionary"_name),
-             type_table_t::entry_type(&typeid(adobe::function_t), "function"_name),
              type_table_t::entry_type(&typeid(adobe::name_t), "name"_name)}};
 
         result.sort();
@@ -345,27 +345,14 @@ public:
         }
     }
 
-
-    vector<variable_scope_t> variable_scope_m;
-
-    void push_scope(variable_scope_t&& scope) { variable_scope_m.push_back(std::move(scope)); }
-
     variable_lookup_t variable_lookup_m;
+    array_function_lookup_t array_function_lookup_m;
+    dictionary_function_lookup_t dictionary_function_lookup_m;
     named_index_lookup_t named_index_lookup_m;
     numeric_index_lookup_t numeric_index_lookup_m;
 
     // override maps
     binary_op_override_map_t binary_op_override_map_m;
-
-    any_regular_t variable_lookup(name_t name) const {
-
-        for (auto iter = variable_scope_m.rbegin(); iter != variable_scope_m.rend(); ++iter) {
-            if (auto result = (*iter)(name))
-                return *result;
-        }
-
-        throw_variable_not_defined(name);
-    }
 
 private:
     stack_type value_stack_m;
@@ -400,13 +387,15 @@ public:
     void dictionary_operator();
 
     static operator_table_t* operator_table_g;
-    static variable_table_t* variable_table_g;
+    static array_function_table_t* array_function_table_g;
+    static dictionary_function_table_t* dictionary_function_table_g;
 };
 
 /**************************************************************************************************/
 
 operator_table_t* virtual_machine_t::implementation_t::operator_table_g;
-variable_table_t* virtual_machine_t::implementation_t::variable_table_g;
+array_function_table_t* virtual_machine_t::implementation_t::array_function_table_g;
+dictionary_function_table_t* virtual_machine_t::implementation_t::dictionary_function_table_g;
 
 /**************************************************************************************************/
 
@@ -469,33 +458,26 @@ void virtual_machine_init_() {
          op_entry_type(adobe::bitwise_negate_k,
                        &implementation_t::bitwise_unary_operator<bitwise_negate_t>)}};
 
+    static array_function_table_t array_function_table_s = {
+        {array_function_table_t::entry_type("typeof"_name, &typeof_function),
+         array_function_table_t::entry_type("min"_name, &min_function),
+         array_function_table_t::entry_type("max"_name, &max_function),
+         array_function_table_t::entry_type("round"_name, &round_function),
+         array_function_table_t::entry_type("localize"_name, &localize_function),
+         array_function_table_t::entry_type("xml_escape"_name, &xml_escape_function),
+         array_function_table_t::entry_type("xml_unescape"_name, &xml_unescape_function)}};
 
-    static variable_table_t variable_table_s = {
-        {variable_table_t::entry_type("typeof"_name, function_t{&typeof_function}),
-         variable_table_t::entry_type("min"_name, function_t{&min_function}),
-         variable_table_t::entry_type("max"_name, function_t{&max_function}),
-         variable_table_t::entry_type(
-             "round"_name, make_function<double(double)>((double (*)(double))std::round)),
-         variable_table_t::entry_type("localize"_name, function_t{&localize_function}),
-         variable_table_t::entry_type("xml_escape"_name, function_t{&xml_escape_function}),
-         variable_table_t::entry_type("xml_unescape"_name, function_t{&xml_unescape_function}),
-         variable_table_t::entry_type("scale"_name, function_t{&scale_function}),
-         variable_table_t::entry_type(
-             "std"_name, dictionary_t{{"typeof"_name, function_t{&typeof_function}},
-                                      {"min"_name, function_t{&min_function}},
-                                      {"max"_name, function_t{&max_function}},
-                                      {"round"_name, function_t{&round_function}},
-                                      {"localize"_name, function_t{&localize_function}},
-                                      {"xml_escape"_name, function_t{&xml_escape_function}},
-                                      {"xml_unescape"_name, function_t{&xml_unescape_function}},
-                                      {"scale"_name, function_t{&scale_function}}})}};
-
+    static dictionary_function_table_t dictionary_function_table_s = {
+        {dictionary_function_table_t::entry_type("scale"_name, &scale_function)}};
 
     operator_table_s.sort();
-    variable_table_s.sort();
+    array_function_table_s.sort();
+    dictionary_function_table_s.sort();
 
     adobe::virtual_machine_t::implementation_t::operator_table_g = &operator_table_s;
-    adobe::virtual_machine_t::implementation_t::variable_table_g = &variable_table_s;
+    adobe::virtual_machine_t::implementation_t::array_function_table_g = &array_function_table_s;
+    adobe::virtual_machine_t::implementation_t::dictionary_function_table_g =
+        &dictionary_function_table_s;
 }
 
 /**************************************************************************************************/
@@ -519,40 +501,7 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-virtual_machine_t::implementation_t::implementation_t() {
-    virtual_machine_init();
-
-    push_scope([this](name_t name) -> optional<any_regular_t> {
-        // This section handles the legacy lookup mechanism. The old callback simply failed if not
-        // found.
-
-        if (any_regular_t value; (*variable_table_g)(name, value)) {
-            // legacy functions sorted by name
-            constexpr static_name_t legacy_functions_s[]{
-                "localize"_name, "max"_name,    "min"_name,        "round"_name,
-                "scale"_name,    "typeof"_name, "xml_escape"_name, "xml_unescape"_name};
-
-            // todo: (sean-parent) This should report the source file/line/character when that
-            // information is integrated into the virtual machine.
-            if (binary_search(legacy_functions_s, name, less{}, make<name_t>{}) !=
-                std::end(legacy_functions_s)) {
-                clog << "warning: deprecated legacy function `" << name
-                     << "` may hide a variable.\n";
-                clog << "note: use `std." << name << "` for the function or rename the variable.\n";
-            }
-            return value;
-        }
-
-
-        // The legacy variable lookup function must be last. It will throw if the variable is not
-        // found. Because the throw may have terminated a evaluation within a sheet, we cannot
-        // squelch the error and continue.
-        if (variable_lookup_m) {
-            return variable_lookup_m(name);
-        }
-        return nullopt;
-    });
-}
+virtual_machine_t::implementation_t::implementation_t() { virtual_machine_init(); }
 
 /**************************************************************************************************/
 
@@ -727,8 +676,16 @@ void virtual_machine_t::implementation_t::ifelse_operator() {
 /**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::variable_operator() {
-    value_stack_m.push_back(variable_lookup(pop_as<adobe::name_t>()));
+    adobe::name_t variable(back().cast<adobe::name_t>());
+
+    pop_back();
+
+    if (!variable_lookup_m)
+        throw std::logic_error("No variable lookup installed.");
+
+    value_stack_m.push_back(variable_lookup_m(variable));
 }
+
 /**************************************************************************************************/
 
 void virtual_machine_t::implementation_t::array_operator() {
@@ -781,12 +738,40 @@ void virtual_machine_t::implementation_t::bitwise_unary_operator() {
 
 /**************************************************************************************************/
 
+/**************************************************************************************************/
+
 void virtual_machine_t::implementation_t::function_operator() {
     virtual_machine_init();
 
-    auto argument{pop_as<any_regular_t>()};
-    auto function{pop_as<function_t>()};
-    value_stack_m.push_back(function(argument));
+    // pop the function name
+    adobe::name_t function_name(back().cast<adobe::name_t>());
+    pop_back();
+
+    if (back().type_info() == typeid(adobe::array_t)) {
+        // handle unnamed parameter functions
+        array_function_t array_func;
+        adobe::array_t arguments(back().cast<adobe::array_t>());
+
+        // handle function lookup
+
+        if ((*array_function_table_g)(function_name, array_func))
+            value_stack_m.back() = array_func(arguments);
+        else if (array_function_lookup_m)
+            value_stack_m.back() = array_function_lookup_m(function_name, arguments);
+        else
+            throw_function_not_defined(function_name);
+    } else {
+        // handle named parameter functions
+        dictionary_function_t dictionary_func;
+        adobe::dictionary_t arguments(back().cast<adobe::dictionary_t>());
+
+        if ((*dictionary_function_table_g)(function_name, dictionary_func))
+            value_stack_m.back() = dictionary_func(arguments);
+        else if (dictionary_function_lookup_m)
+            value_stack_m.back() = dictionary_function_lookup_m(function_name, arguments);
+        else
+            throw_function_not_defined(function_name);
+    }
 }
 
 /**************************************************************************************************/
@@ -820,8 +805,15 @@ void virtual_machine_t::set_variable_lookup(const variable_lookup_t& lookup) {
 
 /**************************************************************************************************/
 
-void virtual_machine_t::push_scope(variable_scope_t&& scope) {
-    object_m->push_scope(std::move(scope));
+void virtual_machine_t::set_array_function_lookup(const array_function_lookup_t& function) {
+    object_m->array_function_lookup_m = function;
+}
+
+/**************************************************************************************************/
+
+void virtual_machine_t::set_dictionary_function_lookup(
+    const dictionary_function_lookup_t& function) {
+    object_m->dictionary_function_lookup_m = function;
 }
 
 /**************************************************************************************************/

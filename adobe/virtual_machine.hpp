@@ -32,33 +32,6 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-/// Any function of the form `any_regular_t(const any_regular_t&)`. All function_t objects compare
-/// equal so they can be placed in an `any_regular_t` object.
-class function_t : public std::function<any_regular_t(const any_regular_t&)> {
-public:
-    using base_t = std::function<any_regular_t(const any_regular_t&)>;
-    using base_t::function;
-    using base_t::operator=;
-    using base_t::swap;
-    using base_t::operator bool;
-    using base_t::target;
-    using base_t::target_type;
-
-    function_t() noexcept = default;
-    function_t(std::nullptr_t) noexcept : base_t(nullptr) {}
-    function_t(const function_t&) = default;
-    function_t(function_t&&) noexcept = default;
-    template <class F, std::enable_if_t<!std::is_same_v<std::decay_t<F>, function_t>, int> = 0>
-    function_t(F&& f) : base_t(std::forward<F>(f)) {}
-    function_t& operator=(const function_t&) = default;
-    function_t& operator=(function_t&&) noexcept = default;
-
-    bool operator==(const function_t&) const { return true; }
-    bool operator!=(const function_t&) const { return false; }
-};
-
-/**************************************************************************************************/
-
 /// Returns a simple name for the core types used by the virtual machine.
 const char* type_name(const std::type_info& type);
 
@@ -87,45 +60,6 @@ auto cast(const adobe::any_regular_t& x) -> decltype(x.cast<T>()) {
 }
 
 /**************************************************************************************************/
-
-namespace detail {
-
-/// Provide an invoke function for an invocable F with a signature Sig, that will extract the
-/// arguments from an array_t. An exception will be thrown if the number of items in the array
-/// does not match the number of arguments in the signature, or if any of the argument types do
-/// not match the corresponding array_t item type.
-template <class Sig>
-struct function_packager;
-
-template <class R, class... Args>
-struct function_packager<R(Args...)> {
-    template <class F, std::size_t... Indicies>
-    static auto invoke(const F& f, const array_t& args, std::index_sequence<Indicies...>) {
-        if (args.size() != sizeof...(Args))
-            throw std::logic_error("expected `" + std::to_string(sizeof...(Args)) +
-                                   "` arguments, found `" + std::to_string(args.size()) + "`.");
-        // Use std::invoke to make it easier to handle member function pointers?
-        return f(cast<Args>(args[Indicies])...);
-    }
-    template <class F>
-    static auto invoke(const F& f, const array_t& args) {
-        return invoke(f, args, std::index_sequence_for<Args...>());
-    }
-};
-
-} // namespace detail
-
-/**************************************************************************************************/
-
-/// Create a function_t from an invocable object.
-template <class Sig, class F>
-any_regular_t make_function(F&& f) {
-    return function_t{[f = std::forward<F>(f)](const any_regular_t& args) {
-        return detail::function_packager<Sig>::invoke(f, args.cast<array_t>());
-    }};
-}
-
-/**************************************************************************************************/
 /*
     Note: For all bitwise operators the numeric data type (double) will be cast down to a
           std::uint32_t for the operation.
@@ -141,11 +75,9 @@ public:
     typedef any_regular_t(numeric_index_lookup_signature_t)(const any_regular_t&,
                                                             std::size_t index);
 
-
-    using variable_scope_t = std::function<std::optional<any_regular_t>(name_t)>;
-
     using variable_lookup_t = std::function<variable_lookup_signature_t>;
-
+    using dictionary_function_lookup_t = std::function<dictionary_function_lookup_signature_t>;
+    using array_function_lookup_t = std::function<array_function_lookup_signature_t>;
     using named_index_lookup_t = std::function<named_index_lookup_signature_t>;
     using numeric_index_lookup_t = std::function<numeric_index_lookup_signature_t>;
 
@@ -172,16 +104,13 @@ public:
     any_regular_t& back();
     void pop_back();
 
-    void push_scope(variable_scope_t&& scope);
-
     void set_variable_lookup(const variable_lookup_t&);
-
+    void set_array_function_lookup(const array_function_lookup_t&);
+    void set_dictionary_function_lookup(const dictionary_function_lookup_t&);
     void set_named_index_lookup(const named_index_lookup_t&);
     void set_numeric_index_lookup(const numeric_index_lookup_t&);
 
     void override_operator(name_t, const binary_op_override_t&);
-
-    void add_variable(const name_t& name, const any_regular_t& value);
 
     class implementation_t;
 

@@ -86,7 +86,7 @@ struct sheet_tracker {
     sheet_tracker(const fs::path& sheet_path, const fs::path& input_path)
         : callbacks_m(adobe::bind_to_sheet(sheet_m)) {
         //  attach the VM to the sheet.
-        sheet_m.machine_m.push_scope(std::bind(&adobe::sheet_t::cell_value, &sheet_m, _1));
+        sheet_m.machine_m.set_variable_lookup(std::bind(&adobe::sheet_t::get, &sheet_m, _1));
 
         const auto& sheet_path_str{sheet_path.native()};
         std::ifstream sheet_stream{sheet_path_str.c_str()};

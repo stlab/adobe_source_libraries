@@ -123,15 +123,15 @@ public:
     void touch(const name_t* first, const name_t* last); // range of input cells.
 
     /*!
-       Returns the value of the named cell, evaluating the cell if necessary.
-       If no cell with the given name is not found, an empty optional is returned.
+        The get function is intended to be connected to the VM variable lookup by the client. During
+        expression evaluation, triggered by initialization, reinitialize, or update the VM can call
+        get() to return the value of a variable.
 
-       The cell_value function is intended to be connected to the VM variable lookup by the client.
-       During expression evaluation, triggered by initialization, reinitialize, or update the VM can
-       call
+        \param cell name of cell to calculate/get the value.
     */
 
-    auto cell_value(name_t) -> std::optional<any_regular_t>;
+    // REVISIT (sparent) : get() is likely a bad name giving the pairing with set.
+    any_regular_t get(name_t cell);
 
     /*!
         Returns the most recent ouput value of the cell cashed from the last call to update().

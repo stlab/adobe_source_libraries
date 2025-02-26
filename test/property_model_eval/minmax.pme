@@ -11,8 +11,8 @@ interface:
 
 logic:
     when (use_min && use_max) relate {
-        min_value <== std.min(min_value, max_value );
-        max_value <== std.max(min_value, max_value );
+        min_value <== min(min_value, max_value );
+        max_value <== max(min_value, max_value );
     }
 output:
 result <== { max_value: max_value, min_value:min_value };

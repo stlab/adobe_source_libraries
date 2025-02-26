@@ -125,7 +125,7 @@
             "cacheVariables": {
                 "CMAKE_CXX_STANDARD": "17",
                 "CMAKE_BUILD_TYPE": "DEBUG",
-                "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--extra-arg=/EHsc;--extra-arg=/DNOMINMAX"
+                "CMAKE_CXX_CLANG_TIDY": "clang-tidy"
             },
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {

@@ -160,7 +160,7 @@ public:
     void set(name_t, const any_regular_t&);   // input cell.
     void touch(const name_t*, const name_t*); // range of input cells.
 
-    auto cell_value(name_t) -> optional<any_regular_t>;
+    any_regular_t get(name_t);
     const any_regular_t& operator[](name_t) const;
 
     void add_input(name_t, const line_position_t&, const array_t& initializer);
@@ -606,9 +606,7 @@ void sheet_t::reinitialize() { object_m->reinitialize(); }
 
 void sheet_t::set(const dictionary_t& dictionary) { object_m->set(dictionary); }
 
-auto sheet_t::cell_value(name_t cell) -> optional<any_regular_t> {
-    return object_m->cell_value(cell);
-}
+any_regular_t sheet_t::get(name_t cell) { return object_m->get(cell); }
 
 const any_regular_t& sheet_t::operator[](name_t x) const { return (*object_m)[x]; }
 
@@ -787,14 +785,9 @@ void sheet_t::implementation_t::add_interface(name_t name, bool linked,
                                               std::ref(*this), position2, expression),
                                     cell_set_m.size(), &cell_set_m.back()));
     } else {
-        cell_set_m.push_back(cell_t(
-            access_interface_output, name,
-            [this, name]() {
-                auto r = cell_value(name);
-                ADOBE_ASSERT(r && "cell not found");
-                return std::move(*r);
-            },
-            cell_set_m.size(), &cell_set_m.back()));
+        cell_set_m.push_back(cell_t(access_interface_output, name,
+                                    std::bind(&implementation_t::get, std::ref(*this), name),
+                                    cell_set_m.size(), &cell_set_m.back()));
     }
     output_index_m.insert(cell_set_m.back());
 
@@ -816,14 +809,9 @@ void sheet_t::implementation_t::add_interface(name_t name, any_regular_t initial
     cell.state_m = std::move(initial);
     cell.priority_m = ++priority_high_m;
 
-    cell_set_m.push_back(cell_t(
-        access_interface_output, name,
-        [this, name] {
-            auto r = cell_value(name);
-            ADOBE_ASSERT(r && "cell not found");
-            return std::move(*r);
-        },
-        cell_set_m.size(), &cell));
+    cell_set_m.push_back(cell_t(access_interface_output, name,
+                                std::bind(&implementation_t::get, std::ref(*this), name),
+                                cell_set_m.size(), &cell));
 
     output_index_m.insert(cell_set_m.back());
 
@@ -1460,7 +1448,7 @@ const any_regular_t& sheet_t::implementation_t::operator[](name_t variable_name)
 
 /**************************************************************************************************/
 
-auto sheet_t::implementation_t::cell_value(name_t variable_name) -> optional<any_regular_t> {
+any_regular_t sheet_t::implementation_t::get(name_t variable_name) {
 #if 0
     // REVISIT (sparent) : I can't currently turn this assert on because of inspect.
     // However, it would be good to seperate out this get from the operator[] and
@@ -1477,7 +1465,8 @@ auto sheet_t::implementation_t::cell_value(name_t variable_name) -> optional<any
         if (iter == input_index_m.end()) {
             iter = name_index_m.find(variable_name);
             if (iter == name_index_m.end() || iter->specifier_m != access_constant) {
-                return nullopt;
+                throw std::logic_error(
+                    make_string("variable ", variable_name.c_str(), " not found."));
             }
         }
 
@@ -1485,12 +1474,6 @@ auto sheet_t::implementation_t::cell_value(name_t variable_name) -> optional<any
 
         accumulate_contributing_m |= cell.init_contributing_m;
         return cell.state_m;
-    }
-
-
-    index_t::iterator iter = name_index_m.find(variable_name);
-    if (iter == name_index_m.end()) {
-        return nullopt;
     }
 
     scope_count scope(get_count_m);
@@ -1502,6 +1485,12 @@ auto sheet_t::implementation_t::cell_value(name_t variable_name) -> optional<any
 
     if (get_count_m > cell_set_m.size()) {
         throw std::logic_error(std::string("cycle detected, consider using a relate { } clause."));
+    }
+
+    index_t::iterator iter = name_index_m.find(variable_name);
+
+    if (iter == name_index_m.end()) {
+        throw std::logic_error(make_string("variable ", variable_name.c_str(), " not found."));
     }
 
     cell_t& cell = *iter;

@@ -339,8 +339,7 @@ bool expression_parser::is_unary_expression(array_t& expression_stack) {
 
 /**************************************************************************************************/
 
-//  postfix_expression          = primary_expression { ("[" expression "]") | ("." identifier)
-//                                  | "(" [argument_expression_list] ")"}.
+//  postfix_expression = primary_expression { ("[" expression "]") | ("." identifier) }.
 
 bool expression_parser::is_postfix_expression(array_t& expression_stack) {
     if (!is_primary_expression(expression_stack))
@@ -350,20 +349,14 @@ bool expression_parser::is_postfix_expression(array_t& expression_stack) {
         if (is_token(open_bracket_k)) {
             require_expression(expression_stack);
             require_token(close_bracket_k);
-            expression_stack.push_back(index_k);
         } else if (is_token(dot_k)) {
             any_regular_t result;
             require_token(identifier_k, result);
             expression_stack.push_back(std::move(result));
-            expression_stack.push_back(index_k);
-        } else if (is_token(open_parenthesis_k)) {
-            // If there are no parameters then set the parameters to an empty array.
-            if (!is_argument_expression_list(expression_stack))
-                push_back(expression_stack, adobe::array_t());
-            require_token(close_parenthesis_k);
-            expression_stack.push_back(function_k);
         } else
             break;
+
+        expression_stack.push_back(index_k);
     }
 
     return true;
@@ -446,12 +439,11 @@ bool expression_parser::is_named_argument(array_t& expression_stack) {
 
 /**************************************************************************************************/
 
-// primary_expression          = name | number | boolean | string | "empty" | array | dictionary
-//                                | identifier | ( "(" expression ")" ).
+//  primary_expression = name | number | boolean | string | "empty" | array | dictionary
+//      | variable_or_function | ( "(" expression ")" ).
 
 bool expression_parser::is_primary_expression(array_t& expression_stack) {
     any_regular_t result; // empty result used if is_keyword(empty_k)
-    name_t name_result;
 
     if (is_name(result) || is_token(number_k, result) || is_boolean(result) ||
         is_token(string_k, result) || is_keyword(empty_k)) {
@@ -461,17 +453,40 @@ bool expression_parser::is_primary_expression(array_t& expression_stack) {
         return true;
     else if (is_dictionary(expression_stack))
         return true;
-    else if (is_identifier(name_result)) {
-        expression_stack.push_back(name_result);
-        expression_stack.push_back(any_regular_t(variable_k));
+    else if (is_variable_or_function(expression_stack))
         return true;
-    } else if (is_token(open_parenthesis_k)) {
+    else if (is_token(open_parenthesis_k)) {
         require_expression(expression_stack);
         require_token(close_parenthesis_k);
         return true;
     }
 
     return false;
+}
+
+/**************************************************************************************************/
+
+//  variable_or_function = identifier ["(" [argument_expression_list] ")"].
+bool expression_parser::is_variable_or_function(array_t& expression_stack) {
+    any_regular_t result;
+
+    if (!is_token(identifier_k, result))
+        return false;
+
+    if (is_token(open_parenthesis_k)) {
+        // If there are no parameters then set the parameters to an empty array.
+        if (!is_argument_expression_list(expression_stack))
+            expression_stack.push_back(adobe::array_t());
+
+        require_token(close_parenthesis_k);
+        expression_stack.push_back(result);
+        expression_stack.push_back(function_k);
+    } else {
+        expression_stack.push_back(result);
+        expression_stack.push_back(variable_k);
+    }
+
+    return true;
 }
 
 /**************************************************************************************************/

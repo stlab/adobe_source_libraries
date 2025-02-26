@@ -46,11 +46,12 @@ multiplicative_expression   = unary_expression { ("*" | "/" | "%") unary_express
 unary_expression            = postfix_expression | (unary_operator unary_expression).
 unary_operator              = "+" | "-" | "!" | "~".
 
-postfix_expression          = primary_expression { ("[" expression "]") | ("." identifier)
-                                | "(" [argument_expression_list] ")"}.
+postfix_expression          = primary_expression { ("[" expression "]") | ("." identifier) }.
 
 primary_expression          = name | number | boolean | string | "empty" | array | dictionary
-                                | identifier | ( "(" expression ")" ).
+                                | variable_or_fuction | ( "(" expression ")" ).
+
+variable_or_function        = identifier ["(" [argument_expression_list] ")"].
 
 array                       = "[" [argument_list] "]".
 dictionary                  = "{" [named_argument_list] "}".
@@ -123,14 +124,15 @@ public:
     //  unary_operator = "+" | "-" | "!" | "~".
     bool is_unary_operator(name_t&);
 
-    //  postfix_expression          = primary_expression { ("[" expression "]") | ("." identifier)
-    //                                  | "(" [argument_expression_list] ")"}.
+    //  postfix_expression = primary_expression { ("[" expression "]") | ("." identifier) }.
     bool is_postfix_expression(array_t&);
 
-    //  primary_expression          = name | number | boolean | string | "empty" | array |
-    //  dictionary
-    //                                  | identifier | ( "(" expression ")" ).
+    //  primary_expression = name | number | boolean | string | "empty" | array | dictionary
+    //      | variable_or_function | ( "(" expression ")" ).
     bool is_primary_expression(array_t&);
+
+    //  variable_or_function = identifier ["(" [argument_expression_list] ")"].
+    bool is_variable_or_function(array_t&);
 
     //  argument_expression_list = named_argument_list | argument_list.
     bool is_argument_expression_list(array_t&);
