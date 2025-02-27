@@ -115,7 +115,7 @@ void read_sheet(const fs::path& filepath, adobe::sheet_t& sheet) {
                      adobe::bind_to_sheet(sheet));
     } catch (const adobe::stream_error_t& error) {
         std::cerr << "adobe:: "
-                  << ": " << format_stream_error(input_file, error) << "\n";
+                  << ": " << format_stream_error(error) << "\n";
 
         throw;
     }

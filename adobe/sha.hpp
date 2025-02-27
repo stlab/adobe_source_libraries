@@ -100,7 +100,7 @@ public:
     // byte_source_iterator_n.
     // The number available is not necessarily the total number, it is just
     // the number we can get hold of right now.
-    std::size_t bits_available() const { return (first_ == last_) ? 0 : 8; }
+    std::uint64_t bits_available() const { return (first_ == last_) ? 0 : 8; }
 
     std::uint8_t operator*() const { return *first_; }
 
@@ -131,14 +131,14 @@ up front
 template <typename I>
 class byte_source_iterator_n {
 public:
-    byte_source_iterator_n(I const& first, std::size_t num_bits)
+    byte_source_iterator_n(I const& first, std::uint64_t num_bits)
         : first_(first), num_bits_(num_bits) {
         static_assert(sizeof(typename std::iterator_traits<I>::value_type) == sizeof(std::uint8_t),
                       "Iterator must supply bytes.");
     }
 
     // The last byte might not be complete
-    std::size_t bits_available() const { return (num_bits_ > 8) ? 8 : num_bits_; }
+    std::uint64_t bits_available() const { return (num_bits_ > 8u) ? 8u : num_bits_; }
 
     std::uint8_t operator*() const { return *first_; }
 
@@ -159,14 +159,14 @@ public:
 
 private:
     I first_;
-    std::size_t num_bits_;
+    std::uint64_t num_bits_;
 };
 
 /**************************************************************************************************/
 
 template <typename HashTraits, typename ByteSource>
 std::uint64_t stuff_into_state(typename HashTraits::message_block_type& state,
-                               std::uint16_t& stuff_bit_offset, std::size_t num_bits,
+                               std::uint16_t& stuff_bit_offset, std::uint64_t num_bits,
                                ByteSource& byte_source) {
 
     typedef HashTraits traits_type;

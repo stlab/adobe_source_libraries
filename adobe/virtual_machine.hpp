@@ -12,7 +12,11 @@
 
 #include <bitset>
 #include <functional>
+#include <optional>
+#include <stdexcept>
+#include <string>
 #include <vector>
+
 
 #define BOOST_FUNCTION_NO_DEPRECATED
 #include <boost/operators.hpp>
@@ -25,6 +29,35 @@
 /**************************************************************************************************/
 
 namespace adobe {
+
+/**************************************************************************************************/
+
+/// Returns a simple name for the core types used by the virtual machine.
+const char* type_name(const std::type_info& type);
+
+/**************************************************************************************************/
+
+/// Does a runtime cast on an any_regular_t with better error reporting.
+template <class T>
+auto cast(adobe::any_regular_t& x) -> decltype(x.cast<T>()) {
+    if constexpr (!std::is_same_v<T, adobe::any_regular_t>) {
+        if (x.type_info() != typeid(promote_t<T>))
+            throw std::runtime_error(std::string{"expected `"} + type_name(typeid(promote_t<T>)) +
+                                     "` found `" + type_name(x.type_info()) + "`");
+    }
+    return x.cast<T>();
+}
+
+/// Does a runtime cast on an any_regular_t with better error reporting.
+template <class T>
+auto cast(const adobe::any_regular_t& x) -> decltype(x.cast<T>()) {
+    if constexpr (!std::is_same_v<T, adobe::any_regular_t>) {
+        if (x.type_info() != typeid(promote_t<T>))
+            throw std::runtime_error(std::string{"expected `"} + type_name(typeid(promote_t<T>)) +
+                                     "` found `" + type_name(x.type_info()) + "`");
+    }
+    return x.cast<T>();
+}
 
 /**************************************************************************************************/
 /*

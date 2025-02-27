@@ -12,10 +12,12 @@ with regards to state.
 
 /**************************************************************************************************/
 
+#include <array>
 #include <cassert>
 #include <functional>
 #include <iomanip>
 #include <istream>
+#include <optional>
 #include <sstream>
 #include <utility>
 
@@ -42,6 +44,85 @@ using ::isspace;
 #endif
 
 using namespace std;
+using namespace adobe;
+
+/**************************************************************************************************/
+
+namespace {
+
+/**************************************************************************************************/
+
+// Handles short-circuit productions of the form:
+//  `<expression> { ("&&" | "||") <expression> }.`
+template <class IsExpression, class IsOperator>
+bool is_logical_expression(expression_parser& parser, array_t& expression_stack,
+                           IsExpression is_expression, IsOperator is_operator,
+                           const char* error_message) {
+    if (!is_expression(expression_stack))
+        return false;
+
+    for (auto oper = is_operator(); oper; oper = is_operator()) {
+        array_t operand2;
+
+        if (!is_expression(operand2))
+            parser.throw_exception(error_message);
+
+        push_back(expression_stack, operand2);
+        expression_stack.push_back(*oper);
+    }
+
+    return true;
+}
+
+/**************************************************************************************************/
+
+// Handles non-short-circuit productions of the form:
+//  `<expression> { <operator> <expression> }.`
+template <class IsExpression, class IsOperator>
+bool is_binary_expression(expression_parser& parser, array_t& expression_stack,
+                          IsExpression is_expression, IsOperator is_operator,
+                          const char* error_message) {
+    if (!is_expression(expression_stack))
+        return false;
+
+    for (auto oper = is_operator(); oper; oper = is_operator()) {
+        if (!is_expression(expression_stack))
+            parser.throw_exception(error_message);
+
+        expression_stack.push_back(*oper);
+    }
+
+    return true;
+}
+
+
+/**************************************************************************************************/
+
+class name_span_t {
+public:
+    template <class T>
+    name_span_t(const T& a) : first_m(a.data()), last_m(a.data() + a.size()) {}
+
+    const static_name_t* begin() const { return first_m; }
+    const static_name_t* end() const { return last_m; }
+
+private:
+    const static_name_t* first_m;
+    const static_name_t* last_m;
+};
+
+optional<name_t> match_token(expression_parser& parser, name_span_t span) {
+    for (const auto& token : span) {
+        if (parser.is_token(token)) {
+            return token;
+        }
+    }
+    return nullopt;
+}
+
+/**************************************************************************************************/
+
+} // namespace
 
 /**************************************************************************************************/
 
@@ -130,7 +211,7 @@ bool expression_parser::is_expression(array_t& expression_stack) {
 
 void expression_parser::require_expression(array_t& expression_stack) {
     if (!is_expression(expression_stack)) {
-        throw_exception("Expression required.");
+        throw_exception("`expression` required.");
     }
 }
 
@@ -138,195 +219,99 @@ void expression_parser::require_expression(array_t& expression_stack) {
 
 //  or_expression = and_expression { "||" and_expression }.
 bool expression_parser::is_or_expression(array_t& expression_stack) {
-    if (!is_and_expression(expression_stack))
-        return false;
-
-    while (is_token(or_k)) {
-        array_t operand2;
-
-        if (!is_and_expression(operand2))
-            throw_exception("and_expression required");
-
-        push_back(expression_stack, operand2);
-        expression_stack.push_back(any_regular_t(or_k));
-    }
-
-    return true;
+    return is_logical_expression(
+        *this, expression_stack, [&](auto& stack) { return is_and_expression(stack); },
+        [&] { return match_token(*this, array{or_k}); }, "`and_expression` required.");
 }
 
 /**************************************************************************************************/
 
 //  and_expression = bitwise_or_expression { "&&" bitwise_or_expression }.
 bool expression_parser::is_and_expression(array_t& expression_stack) {
-    if (!is_bitwise_or_expression(expression_stack))
-        return false;
-
-    while (is_token(and_k)) {
-        array_t operand2;
-
-        if (!is_bitwise_or_expression(operand2))
-            throw_exception("bitwise_or_expression required");
-
-        push_back(expression_stack, operand2);
-        expression_stack.push_back(any_regular_t(and_k));
-    }
-
-    return true;
+    return is_logical_expression(
+        *this, expression_stack, [&](auto& stack) { return is_bitwise_or_expression(stack); },
+        [&] { return is_token(and_k) ? optional{and_k} : nullopt; },
+        "`bitwise_or_expression` required.");
 }
 
 /**************************************************************************************************/
 
 //  bitwise_or_expression = bitwise_xor_expression { "|" bitwise_xor_expression }.
 bool expression_parser::is_bitwise_or_expression(array_t& expression_stack) {
-    if (!is_bitwise_xor_expression(expression_stack))
-        return false;
-
-    while (is_token(bitwise_or_k)) {
-        array_t operand2;
-
-        if (!is_bitwise_xor_expression(operand2))
-            throw_exception("bitwise_xor_expression required");
-
-        push_back(expression_stack, operand2);
-        expression_stack.push_back(any_regular_t(bitwise_or_k));
-    }
-
-    return true;
+    return is_binary_expression(
+        *this, expression_stack, [&](auto& stack) { return is_bitwise_xor_expression(stack); },
+        [&] { return is_token(bitwise_or_k) ? optional{bitwise_or_k} : nullopt; },
+        "`bitwise_xor_expression` required.");
 }
 
 /**************************************************************************************************/
 
 //  bitwise_xor_expression = bitwise_and_expression { "^" bitwise_and_expression }.
 bool expression_parser::is_bitwise_xor_expression(array_t& expression_stack) {
-    if (!is_bitwise_and_expression(expression_stack))
-        return false;
-
-    while (is_token(bitwise_xor_k)) {
-        array_t operand2;
-
-        if (!is_bitwise_and_expression(operand2))
-            throw_exception("bitwise_and_expression required");
-
-        push_back(expression_stack, operand2);
-        expression_stack.push_back(any_regular_t(bitwise_xor_k));
-    }
-
-    return true;
+    return is_binary_expression(
+        *this, expression_stack, [&](auto& stack) { return is_bitwise_and_expression(stack); },
+        [&] { return is_token(bitwise_xor_k) ? optional{bitwise_xor_k} : nullopt; },
+        "`bitwise_and_expression` required.");
 }
 
 /**************************************************************************************************/
 
 //  bitwise_and_expression = equality_expression { "&" equality_expression }.
 bool expression_parser::is_bitwise_and_expression(array_t& expression_stack) {
-    if (!is_equality_expression(expression_stack))
-        return false;
-
-    while (is_token(bitwise_and_k)) {
-        array_t operand2;
-
-        if (!is_equality_expression(operand2))
-            throw_exception("equality_expression required");
-
-        push_back(expression_stack, operand2);
-        expression_stack.push_back(any_regular_t(bitwise_and_k));
-    }
-
-    return true;
+    return is_binary_expression(
+        *this, expression_stack, [&](auto& stack) { return is_equality_expression(stack); },
+        [&] { return is_token(bitwise_and_k) ? optional{bitwise_and_k} : nullopt; },
+        "`equality_expression` required.");
 }
 
 /**************************************************************************************************/
 
 //  equality_expression = relational_expression { ("==" | "!=") relational_expression }.
 bool expression_parser::is_equality_expression(array_t& expression_stack) {
-    if (!is_relational_expression(expression_stack))
-        return false;
-
-    bool is_equal = false;
-
-    while ((is_equal = is_token(equal_k)) || is_token(not_equal_k)) {
-        if (!is_relational_expression(expression_stack))
-            throw_exception("Primary required.");
-
-        expression_stack.push_back(is_equal ? any_regular_t(equal_k) : any_regular_t(not_equal_k));
-    }
-
-    return true;
+    return is_binary_expression(
+        *this, expression_stack, [&](auto& stack) { return is_relational_expression(stack); },
+        [&] { return match_token(*this, array{equal_k, not_equal_k}); },
+        "`relational_expression` required.");
 }
 
 /**************************************************************************************************/
 
 //  relational_expression = bitshift_expression { ("<" | ">" | "<=" | ">=") bitshift_expression }.
 bool expression_parser::is_relational_expression(array_t& expression_stack) {
-    if (!is_bitshift_expression(expression_stack))
-        return false;
-
-    name_t operator_l;
-
-    while (is_relational_operator(operator_l)) {
-        if (!is_bitshift_expression(expression_stack))
-            throw_exception("Primary required.");
-
-        expression_stack.push_back(any_regular_t(operator_l));
-    }
-
-    return true;
+    return is_binary_expression(
+        *this, expression_stack, [&](auto& stack) { return is_bitshift_expression(stack); },
+        [&] { return match_token(*this, array{less_k, greater_k, less_equal_k, greater_equal_k}); },
+        "`bitshift_expression` required.");
 }
 
 /**************************************************************************************************/
 
 //  bitshift_expression = additive_expression { ("<<" | ">>") additive_expression }.
 bool expression_parser::is_bitshift_expression(array_t& expression_stack) {
-    if (!is_additive_expression(expression_stack))
-        return false;
-
-    name_t operator_l;
-
-    while (is_bitshift_operator(operator_l)) {
-        if (!is_additive_expression(expression_stack))
-            throw_exception("Primary required.");
-
-        expression_stack.push_back(any_regular_t(operator_l));
-    }
-
-    return true;
+    return is_binary_expression(
+        *this, expression_stack, [&](auto& stack) { return is_additive_expression(stack); },
+        [&] { return match_token(*this, array{bitwise_lshift_k, bitwise_rshift_k}); },
+        "`additive_expression` required.");
 }
 
 /**************************************************************************************************/
 
 //  additive_expression = multiplicative_expression { additive_operator multiplicative_expression }.
 bool expression_parser::is_additive_expression(array_t& expression_stack) {
-    if (!is_multiplicative_expression(expression_stack))
-        return false;
-
-    name_t operator_l;
-
-    while (is_additive_operator(operator_l)) {
-        if (!is_multiplicative_expression(expression_stack))
-            throw_exception("Primary required.");
-
-        expression_stack.push_back(any_regular_t(operator_l));
-    }
-
-    return true;
+    return is_binary_expression(
+        *this, expression_stack, [&](auto& stack) { return is_multiplicative_expression(stack); },
+        [&] { return match_token(*this, array{add_k, subtract_k}); },
+        "`multiplicative_expression` required.");
 }
 
 /**************************************************************************************************/
 
 //  multiplicative_expression = unary_expression { ("*" | "/" | "%") unary_expression }.
 bool expression_parser::is_multiplicative_expression(array_t& expression_stack) {
-    if (!is_unary_expression(expression_stack))
-        return false;
-
-    name_t operator_l;
-
-    while (is_multiplicative_operator(operator_l)) {
-        if (!is_unary_expression(expression_stack))
-            throw_exception("Primary required.");
-
-        expression_stack.push_back(any_regular_t(operator_l));
-    }
-
-    return true;
+    return is_binary_expression(
+        *this, expression_stack, [&](auto& stack) { return is_unary_expression(stack); },
+        [&] { return match_token(*this, array{multiply_k, divide_k, modulus_k}); },
+        "`unary_expression` required.");
 }
 
 /**************************************************************************************************/
@@ -341,7 +326,7 @@ bool expression_parser::is_unary_expression(array_t& expression_stack) {
 
     if (is_unary_operator(operator_l)) {
         if (!is_unary_expression(expression_stack))
-            throw_exception("Unary expression required.");
+            throw_exception("`unary_expression` required.");
 
         if (operator_l != add_k)
             expression_stack.push_back(any_regular_t(operator_l));
@@ -367,11 +352,11 @@ bool expression_parser::is_postfix_expression(array_t& expression_stack) {
         } else if (is_token(dot_k)) {
             any_regular_t result;
             require_token(identifier_k, result);
-            expression_stack.push_back(result);
+            expression_stack.push_back(std::move(result));
         } else
             break;
 
-        expression_stack.push_back(any_regular_t(index_k));
+        expression_stack.push_back(index_k);
     }
 
     return true;
@@ -455,7 +440,7 @@ bool expression_parser::is_named_argument(array_t& expression_stack) {
 /**************************************************************************************************/
 
 //  primary_expression = name | number | boolean | string | "empty" | array | dictionary
-//      | variable_or_fuction | ( "(" expression ")" ).
+//      | variable_or_function | ( "(" expression ")" ).
 
 bool expression_parser::is_primary_expression(array_t& expression_stack) {
     any_regular_t result; // empty result used if is_keyword(empty_k)
@@ -491,14 +476,14 @@ bool expression_parser::is_variable_or_function(array_t& expression_stack) {
     if (is_token(open_parenthesis_k)) {
         // If there are no parameters then set the parameters to an empty array.
         if (!is_argument_expression_list(expression_stack))
-            expression_stack.push_back(any_regular_t(adobe::array_t()));
+            expression_stack.push_back(adobe::array_t());
 
         require_token(close_parenthesis_k);
         expression_stack.push_back(result);
-        expression_stack.push_back(any_regular_t(function_k));
+        expression_stack.push_back(function_k);
     } else {
         expression_stack.push_back(result);
-        expression_stack.push_back(any_regular_t(variable_k));
+        expression_stack.push_back(variable_k);
     }
 
     return true;
@@ -539,7 +524,7 @@ bool expression_parser::is_name(any_regular_t& result) {
         return false;
 
     if (!is_token(keyword_k, result) && !is_token(identifier_k, result))
-        throw_exception("identifier or keyword required.");
+        throw_exception("`identifier` or `keyword` required.");
 
     return true;
 }
@@ -558,65 +543,6 @@ bool expression_parser::is_boolean(any_regular_t& result) {
     return false;
 }
 
-/**************************************************************************************************/
-
-//  relational_operator = "<" | ">" | "<=" | ">=".
-bool expression_parser::is_relational_operator(name_t& name_result) {
-    const stream_lex_token_t& result(get_token());
-
-    name_t name = result.first;
-    if (name == less_k || name == greater_k || name == less_equal_k || name == greater_equal_k) {
-        name_result = name;
-        return true;
-    }
-    putback();
-    return false;
-}
-
-/**************************************************************************************************/
-
-//  bitshift_operator = "<<" | ">>"
-bool expression_parser::is_bitshift_operator(name_t& name_result) {
-    const stream_lex_token_t& result(get_token());
-
-    name_t name = result.first;
-    if (name == bitwise_rshift_k || name == bitwise_lshift_k) {
-        name_result = name;
-        return true;
-    }
-    putback();
-    return false;
-}
-
-/**************************************************************************************************/
-
-//  additive_operator = "+" | "-".
-bool expression_parser::is_additive_operator(name_t& name_result) {
-    const stream_lex_token_t& result(get_token());
-
-    name_t name = result.first;
-    if (name == add_k || name == subtract_k) {
-        name_result = name;
-        return true;
-    }
-    putback();
-    return false;
-}
-
-/**************************************************************************************************/
-
-//  multiplicative_operator = "*" | "/" | "%".
-bool expression_parser::is_multiplicative_operator(name_t& name_result) {
-    const stream_lex_token_t& result(get_token());
-
-    name_t name = result.first;
-    if (name == multiply_k || name == divide_k || name == modulus_k) {
-        name_result = name;
-        return true;
-    }
-    putback();
-    return false;
-}
 
 /**************************************************************************************************/
 
@@ -724,6 +650,7 @@ void expression_parser::putback() { object->token_stream_m.putback(); }
 void expression_parser::require_token(name_t tokenName, any_regular_t& tokenValue) {
     const stream_lex_token_t& result(get_token());
     if (result.first != tokenName) {
+        putback();
         throw_exception(tokenName, result.first);
     }
 
@@ -734,10 +661,15 @@ void expression_parser::require_token(name_t tokenName, any_regular_t& tokenValu
 
 void expression_parser::require_keyword(name_t keyword_name) {
     const stream_lex_token_t& result(get_token());
-    if (result.first == keyword_k && result.second.cast<name_t>() == keyword_name)
-        return;
-
-    throw_exception(keyword_name, result.second.cast<name_t>());
+    if (result.first != keyword_k) {
+        putback();
+        throw_parser_exception(keyword_name.c_str(), token_to_string(result.first),
+                               next_position());
+    }
+    if (result.second.cast<name_t>() != keyword_name) {
+        putback();
+        throw_exception(keyword_name, result.second.cast<name_t>());
+    }
 }
 
 /**************************************************************************************************/
@@ -747,6 +679,7 @@ void expression_parser::require_token(name_t tokenName) {
     if (result.first == tokenName)
         return;
 
+    putback();
     throw_exception(tokenName, result.first);
 }
 

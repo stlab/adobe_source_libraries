@@ -1,5 +1,0 @@
-# Jamfile for building functional test
-
-project adobe/functional ;
-
-run functional_test.cpp ;

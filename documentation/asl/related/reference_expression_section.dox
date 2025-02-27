@@ -13,7 +13,7 @@ compound_token  = "&&" | "||" | "<=" | ">=" | "==" | "!=".
 string          = quoted_string { quoted_string }.
 lead_comment    = "/*" {character} "*/".
 trail_comment   = "//" {character} eol.
-identifer       = (letter | "_") {letter | "_" | digit}.
+identifier       = (letter | "_") {letter | "_" | digit}.
 keywords        = "empty" | "true" | "false" | <extension>.
 number          = digits ["e" ["+" | "-"]] digits.
 

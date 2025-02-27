@@ -54,7 +54,7 @@ primary_expression          = name | number | boolean | string | "empty" | array
 variable_or_function        = identifier ["(" [argument_expression_list] ")"].
 
 array                       = "[" [argument_list] "]".
-dictionary                  = "{" named_argument_list "}".
+dictionary                  = "{" [named_argument_list] "}".
 
 argument_expression_list    = named_argument_list | argument_list.
 
@@ -105,7 +105,8 @@ public:
     //  equality_expression = relational_expression { ("==" | "!=") relational_expression }.
     bool is_equality_expression(array_t&);
 
-    //  relational_expression = bitshift_expression { relational_operator bitshift_expression }.
+    //  relational_expression = bitshift_expression { ("<" | ">" | "<=" | ">=") bitshift_expression
+    //  }.
     bool is_relational_expression(array_t&);
 
     //  bitshift_expression = additive_expression { ("<<" | ">>") additive_expression }.
@@ -114,12 +115,8 @@ public:
     //  additive_expression = multiplicative_expression { ("+" | "-") multiplicative_expression }.
     bool is_additive_expression(array_t&);
 
-    bool is_additive_operator(name_t&);
-
     //  multiplicative_expression = unary_expression { ("*" | "/" | "%" | "div") unary_expression }.
     bool is_multiplicative_expression(array_t&);
-
-    bool is_multiplicative_operator(name_t&);
 
     //  unary_expression = postfix_expression | (unary_operator unary_expression).
     bool is_unary_expression(array_t&);
@@ -131,10 +128,10 @@ public:
     bool is_postfix_expression(array_t&);
 
     //  primary_expression = name | number | boolean | string | "empty" | array | dictionary
-    //      | variable_or_fuction | ( "(" expression ")" ).
+    //      | variable_or_function | ( "(" expression ")" ).
     bool is_primary_expression(array_t&);
 
-    //  variable_or_fuctiontion = identifier ["(" [argument_expression_list] ")"].
+    //  variable_or_function = identifier ["(" [argument_expression_list] ")"].
     bool is_variable_or_function(array_t&);
 
     //  argument_expression_list = named_argument_list | argument_list.
@@ -143,7 +140,7 @@ public:
     //  array = "[" [argument_list] "]".
     bool is_array(array_t&);
 
-    //  dictionary = "{" named_argument_list "}".
+    //  dictionary = "{" [named_argument_list] "}".
     bool is_dictionary(array_t&);
 
     //  argument_list = expression { "," expression }.
@@ -161,12 +158,6 @@ public:
     //  boolean = "true" | "false".
     bool is_boolean(any_regular_t&);
 
-    //  relational_operator = "<" | ">" | "<=" | ">=".
-    bool is_relational_operator(name_t&);
-
-    //  bitshift_operator = "<<" | ">>".
-    bool is_bitshift_operator(name_t&);
-
     //  lexical tokens:
 
     bool is_identifier(name_t&);
@@ -178,19 +169,20 @@ public:
         subclasses to access it directly - but for now we'll stick with the law of Demiter.
     */
 
+    void throw_exception(const char* errorString);
+    void throw_exception(const name_t& found, const name_t& expected);
+    bool is_token(name_t tokenName);
+
 protected:
     const stream_lex_token_t& get_token();
     void putback();
 
     bool is_token(name_t tokenName, any_regular_t& tokenValue);
-    bool is_token(name_t tokenName);
     void require_token(name_t tokenName, any_regular_t& tokenValue);
     void require_token(name_t tokenName);
     bool is_keyword(name_t keywordName);
     void require_keyword(name_t keywordName);
 
-    void throw_exception(const char* errorString);
-    void throw_exception(const name_t& found, const name_t& expected);
 
 private:
     class implementation;
