@@ -135,7 +135,7 @@ protected:
     stack_value_type& stack_top() { return stack_n(0); }
 
     const stack_value_type& stack_n(std::size_t n) const {
-        if (n > stack_m.size()) {
+        if (n >= stack_m.size()) {
             std::stringstream buf;
             buf << "stack_n: n(" << static_cast<unsigned int>(n) << ") > size("
                 << static_cast<unsigned int>(stack_m.size()) << ").";
@@ -146,7 +146,7 @@ protected:
     }
 
     stack_value_type& stack_n(std::size_t n) {
-        if (n > stack_m.size()) {
+        if (n >= stack_m.size()) {
             std::stringstream buf;
             buf << "stack_n: n(" << static_cast<unsigned int>(n) << ") > size("
                 << static_cast<unsigned int>(stack_m.size()) << ").";
