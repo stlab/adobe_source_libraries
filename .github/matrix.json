@@ -53,6 +53,7 @@
             "compiler": "apple-clang",
             "version": "14.3.1",
             "os": "macos-13",
+            "cxxstd": "17",
             "build-type": "Release"
         },
         {
