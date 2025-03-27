@@ -5,52 +5,89 @@
             "compiler": "gcc",
             "version": "11",
             "os": "ubuntu-22.04",
-            "cxxstd": "17"
+            "cxxstd": "17",
+            "build-type": "Release"
         },
         {
             "name": "Linux GCC 11 C++20",
             "compiler": "gcc",
             "version": "11",
             "os": "ubuntu-22.04",
-            "cxxstd": "20"
+            "cxxstd": "20",
+            "build-type": "Release"
+        },
+        {
+            "name": "Linux GCC 11 C++17 Debug",
+            "compiler": "gcc",
+            "version": "11",
+            "os": "ubuntu-22.04",
+            "cxxstd": "17",
+            "build-type": "Debug"
         },
         {
             "name": "Linux Clang 14 C++17",
             "compiler": "clang",
             "version": "14",
             "os": "ubuntu-22.04",
-            "cxxstd": "17"
+            "cxxstd": "17",
+            "build-type": "Release"
         },
         {
             "name": "Linux Clang 14 C++20",
             "compiler": "clang",
             "version": "14",
             "os": "ubuntu-22.04",
-            "cxxstd": "20"
+            "cxxstd": "20",
+            "build-type": "Release"
+        },
+        {
+            "name": "Linux Clang 14 C++17 Debug",
+            "compiler": "clang",
+            "version": "14",
+            "os": "ubuntu-22.04",
+            "cxxstd": "17",
+            "build-type": "Debug"
         },
         {
             "name": "macOS apple-clang 14.3.1 C++17",
             "compiler": "apple-clang",
             "version": "14.3.1",
             "os": "macos-13",
-            "cxxstd": "17"
+            "build-type": "Release"
         },
         {
             "name": "macOS apple-clang 14.3.1 C++20",
             "compiler": "apple-clang",
             "version": "14.3.1",
             "os": "macos-13",
-            "cxxstd": "20"
+            "cxxstd": "20",
+            "build-type": "Release"
+        },
+        {
+            "name": "macOS apple-clang 14.3.1 C++17 Debug",
+            "compiler": "apple-clang",
+            "version": "14.3.1",
+            "os": "macos-13",
+            "cxxstd": "17",
+            "build-type": "Debug"
         },
         {
             "name": "Windows VS2022 C++17",
             "os": "windows-2022",
-            "cxxstd": "17"
+            "cxxstd": "17",
+            "build-type": "Release"
         },
         {
             "name": "Windows VS2022 C++20",
             "os": "windows-2022",
-            "cxxstd": "20"
+            "cxxstd": "20",
+            "build-type": "Release"
+        },
+        {
+            "name": "Windows VS2022 C++17 Debug",
+            "os": "windows-2022",
+            "cxxstd": "17",
+            "build-type": "Debug"
         }
     ]
 }

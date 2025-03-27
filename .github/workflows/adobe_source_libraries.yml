@@ -88,14 +88,14 @@ jobs:
         shell: bash
         run: |
           mkdir ../build
-          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{matrix.config.cxxstd}}
+          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=${{matrix.config.build-type}} -DCMAKE_CXX_STANDARD=${{matrix.config.cxxstd}}
 
       - name: Configure (MacOS)
         if: ${{ startsWith(matrix.config.os, 'macos') }}
         shell: bash
         run: |
           mkdir ../build
-          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{matrix.config.cxxstd}}
+          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=${{matrix.config.build-type}} -DCMAKE_CXX_STANDARD=${{matrix.config.cxxstd}}
 
       - name: Configure (Windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
@@ -103,7 +103,8 @@ jobs:
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           mkdir ..\build
-          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=${{matrix.config.cxxstd}}
+          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=${{matrix.config.build-type}} -DCMAKE_CXX_STANDARD=${{matrix.config.cxxstd}}
+
       - name: Build (Unix)
         if: ${{ startsWith(matrix.config.os, 'ubuntu') || startsWith(matrix.config.os, 'macos') }}
         shell: bash
