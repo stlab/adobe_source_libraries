@@ -266,7 +266,7 @@ fnvtype<Bits> fnv1a(Iterator first, Predicate p) {
     while (!p(*first))
         result = (result ^ static_cast<result_type>(*first++)) * fnv_traits<Bits>::prime();
 
-    return detail::bitmask<fnv_traits<Bits>::size(), Bits>::template mask(result);
+    return detail::bitmask<fnv_traits<Bits>::size(), Bits>::template mask<result_type>(result);
 }
 
 /**************************************************************************************************/
@@ -290,7 +290,7 @@ inline fnvtype<Bits> fnv1a(Iterator first, Iterator last) {
     while (first != last)
         result = (result ^ static_cast<result_type>(*first++)) * fnv_traits<Bits>::prime();
 
-    return detail::bitmask<fnv_traits<Bits>::size(), Bits>::template mask(result);
+    return detail::bitmask<fnv_traits<Bits>::size(), Bits>::template mask<result_type>(result);
 }
 
 /**************************************************************************************************/

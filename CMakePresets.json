@@ -19,7 +19,34 @@
             "toolchainFile": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake",
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
-                "hostOS": [ "Windows" ]
+                    "hostOS": [
+                        "Windows"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "debug-windows-cpp17",
+            "displayName": "debug-windows-cpp17",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_STANDARD": "17",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "VCPKG_TARGET_TRIPLET": "x64-windows"
+            },
+            "architecture": {
+                "value": "x64",
+                "strategy": "external"
+            },
+            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [
+                        "Windows"
+                    ]
                 }
             }
         },
@@ -38,6 +65,23 @@
                     "hostOS": [ "macOS" ]
                 }
             }
+        },
+        {
+            "name": "macos-debug-C++20",
+            "displayName": "macos-debug-C++20",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_STANDARD": "20",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [ "macOS" ]
+                }
+            }
         }
     ],
     "buildPresets": [
@@ -46,6 +90,17 @@
             "description": "",
             "displayName": "",
             "configurePreset": "debug"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "macos-debug-C++20-verbose",
+            "description": "",
+            "displayName": "",
+            "configurePreset": "macos-debug-C++20",
+            "output":{
+                "verbosity": "verbose"
+            }
         }
     ]
 }
