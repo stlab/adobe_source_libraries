@@ -8,14 +8,14 @@
 
 #include <boost/version.hpp>
 
+#include <chrono>
+#include <cstring>
 #include <mutex>
 #include <thread>
 
 #include <adobe/config.hpp>
 #include <adobe/implementation/zuid_sys_dep.hpp>
 #include <adobe/once.hpp>
-
-#include <cstring>
 
 #if ADOBE_PLATFORM_WIN
 #include <windows.h>

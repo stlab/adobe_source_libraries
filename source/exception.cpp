@@ -5,12 +5,11 @@
 */
 /**************************************************************************************************/
 
-#ifndef ADOBE_CSTRING_HPP
-#define ADOBE_CSTRING_HPP
+#include <adobe/exception.hpp>
 
-/**************************************************************************************************/
-
-#include <adobe/config.hpp>
+#include <exception>
+#include <stdexcept>
+#include <string>
 
 /**************************************************************************************************/
 
@@ -18,20 +17,24 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-inline int strcmp(const char* x, const char* y) {
-    while (*x && *x == *y) {
-        ++x;
-        ++y;
+[[noreturn]] void terminate(const char* message) {
+    try {
+        throw std::logic_error(message);
+    } catch (...) {
+        std::terminate();
     }
-    return *x - *y;
+}
+
+[[noreturn]] void terminate(const std::string& message) {
+    try {
+        throw std::logic_error(message);
+    } catch (...) {
+        std::terminate();
+    }
 }
 
 /**************************************************************************************************/
 
 } // namespace adobe
-
-/**************************************************************************************************/
-
-#endif
 
 /**************************************************************************************************/

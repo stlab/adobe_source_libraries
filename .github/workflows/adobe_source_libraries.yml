@@ -4,16 +4,18 @@ on:
   pull_request:
   push:
     branches:
-    - master
+      - main
 
 jobs:
+  # Information on the runner matrix can be found in the `matrix.json` file. To find available
+  # versions of compilers, check https://github.com/actions/runner-images/.
   generate-matrix:
     name: Generate job matrix
     runs-on: ubuntu-22.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Generate job matrix
         id: set-matrix
@@ -30,12 +32,21 @@ jobs:
     name: ${{ matrix.config.name }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Install dependencies (macos)
         if: ${{ startsWith(matrix.config.os, 'macos') }}
         run: |
-          brew install boost
+          rm '/usr/local/bin/2to3'
+          rm '/usr/local/bin/2to3-3.12'
+          rm '/usr/local/bin/idle3'
+          rm '/usr/local/bin/idle3.12'
+          rm '/usr/local/bin/pydoc3'
+          rm '/usr/local/bin/pydoc3.12'
+          rm '/usr/local/bin/python3'
+          rm '/usr/local/bin/python3.12'
+          rm '/usr/local/bin/python3-config'
+          rm '/usr/local/bin/python3.12-config'
           brew install ninja
         shell: bash
 
@@ -43,14 +54,12 @@ jobs:
         if: ${{ startsWith(matrix.config.os, 'ubuntu') }}
         run: |
           sudo apt-get install -y ninja-build
-          sudo apt-get install -y libboost-all-dev
         shell: bash
 
       - name: Install dependencies (Windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
         run: |
           choco install --yes ninja
-          vcpkg install --triplet=x64-windows
         shell: cmd
 
       - name: Set enviroment variables (Linux+GCC)
@@ -79,14 +88,14 @@ jobs:
         shell: bash
         run: |
           mkdir ../build
-          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=23
+          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=${{matrix.config.build-type}} -DCMAKE_CXX_STANDARD=${{matrix.config.cxxstd}}
 
       - name: Configure (MacOS)
         if: ${{ startsWith(matrix.config.os, 'macos') }}
         shell: bash
         run: |
           mkdir ../build
-          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=23
+          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=${{matrix.config.build-type}} -DCMAKE_CXX_STANDARD=${{matrix.config.cxxstd}}
 
       - name: Configure (Windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
@@ -94,7 +103,7 @@ jobs:
         run: |
           call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           mkdir ..\build
-          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=23 -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake -DBOOST_TEST_DYN_LINK=TRUE
+          cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=${{matrix.config.build-type}} -DCMAKE_CXX_STANDARD=${{matrix.config.cxxstd}}
 
       - name: Build (Unix)
         if: ${{ startsWith(matrix.config.os, 'ubuntu') || startsWith(matrix.config.os, 'macos') }}
@@ -102,7 +111,7 @@ jobs:
         run: |
           cmake --build ../build/
 
-      - name: Build (windows)
+      - name: Build (Windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
         shell: cmd
         run: |
@@ -113,4 +122,4 @@ jobs:
         shell: bash
         run: |
           cd ../build/
-          ctest
+          ctest --output-on-failure

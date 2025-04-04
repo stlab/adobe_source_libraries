@@ -1,13 +1,13 @@
 sheet minmax {
 input:
-    min;
-    max;
+    min_;
+    max_;
 interface:
-    use_min : min == -9999 ? true : false;
-    use_max : max == 9999 ? true : false;
+    use_min : min_ == -9999 ? true : false;
+    use_max : max_ == 9999 ? true : false;
 
-    min_value : min <== use_min ? min_value : 0;
-    max_value : max <== use_max ? max_value : 0;
+    min_value : min_ <== use_min ? min_value : 0;
+    max_value : max_ <== use_max ? max_value : 0;
 
 logic:
     when (use_min && use_max) relate {
@@ -31,8 +31,8 @@ check (minmax, {
 });
 
 reinitialize (minmax, {
-    min : -9999,
-    max : 9999
+    min_ : -9999,
+    max_ : 9999
 });
 
 print(minmax, "after reinitialization" );

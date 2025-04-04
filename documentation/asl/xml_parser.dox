@@ -200,8 +200,9 @@ token_range_t my_content_callback(
 	static const token_range_t id_attr_k(  static_token_range("id") );
 
 	const token_range_t id( attribute_set[id_addr_k] );
-	if (0 == boost::size(id))
+	if (0 == adobe::token_range_size(id)) {
 		throw std::runtime_error("replace-me tags require an id attribute");
+	}
 
 	return lookup_replacement_text(id);
 }\endverbatim
@@ -295,27 +296,30 @@ token_range_t my_content_callback(
 		make_xml_document(value.first, value.second,
 			line_position_t("canvas"),
 			adobe::always_true<token_range_t>(),
-			boost::bind(my_simple_content_callback, _1, _2, _3, _4, boost::ref(graphics)),
+			std::bind(my_simple_content_callback, _1, _2, _3, _4, std::ref(graphics)),
 			adobe::null_output_t()).parse_content();
 	}
 	else if (token_range_equal(rect_tag_k, name))
 	{
-		if (0 != boost::size(value))
+		if (0 != adobe::token_range_size(value)) {
 			throw std::runtime_error("rect elements must be empty");
-			
+		}
+
 		draw_rectangle(attribute_set, graphics);
 	}
 	else if (token_range_equal(circle_tag_k, name))
 	{
-		if (0 != boost::size(value))
+		if (0 != adobe::token_range_size(value)) {
 			throw std::runtime_error("circle elements must be empty");
+		}
 
 		draw_circle(attribute_set, graphics);
 	}
 	else if (token_range_equal(polygon_tag_k, name))
 	{
-		if (0 != boost::size(value))
+		if (0 != adobe::token_range_size(value)) {
 			throw std::runtime_error("polygon elements must be empty");
+		}
 
 		draw_polygon(attribute_set, graphics);
 	}
@@ -332,7 +336,7 @@ void draw_graphics(const std::string& xml_shape, graphics_context_t& graphics)
 	make_xml_document(xml_shape.begin(), xml_shape.end(),
 		line_position_t("xml shape"),
 		adobe::always_true<token_range_t>(),
-		boost::bind(my_content_callback, _1, _2, _3, _4, boost::ref(graphics)),
+		std::bind(my_content_callback, _1, _2, _3, _4, std::ref(graphics)),
 		adobe::null_output_t()).parse_document();
 }\endverbatim
 With this content callback function and external entry function, we
@@ -415,20 +419,22 @@ token_range_t my_group_callback(
 		make_xml_document(value.first, value.second,
 			line_position_t("group"),
 			adobe::always_true<token_range_t>(),
-			boost::bind(my_group_callback, _1, _2, _3, _4, boost::ref(translated_graphics)),
+			std::bind(my_group_callback, _1, _2, _3, _4, std::ref(translated_graphics)),
 			adobe::null_output_t()).parse_content();
 	}
 	else if (token_range_equal(rect_tag_k, name))
 	{
-		if (0 != boost::size(value))
+		if (0 != adobe::token_range_size(value)) {
 			throw std::runtime_error("rect elements must be empty");
-			
+		}
+
 		draw_rectangle(attribute_set, graphics);
 	}
 	else if (token_range_equal(circle_tag_k, name))
 	{
-		if (0 != boost::size(value))
+		if (0 != adobe::token_range_size(value)) {
 			throw std::runtime_error("circle elements must be empty");
+		}
 
 		draw_circle(attribute_set, graphics);
 	}
@@ -439,7 +445,7 @@ token_range_t my_group_callback(
 		make_xml_document(value.first, value.second,
 			line_position_t("polygon"),
 			adobe::always_true<token_range_t>(),
-			boost::bind(my_polygon_callback, _1, _2, _3, _4, boost::ref(polygon)),
+			std::bind(my_polygon_callback, _1, _2, _3, _4, std::ref(polygon)),
 			adobe::null_output_t()).parse_content();
 
 		draw_polygon(polygon, graphics);
@@ -466,7 +472,7 @@ token_range_t my_canvas_callback(
 		make_xml_document(value.first, value.second,
 			line_position_t("canvas"),
 			adobe::always_true<token_range_t>(),
-			boost::bind(my_group_callback, _1, _2, _3, _4, boost::ref(graphics)),
+			std::bind(my_group_callback, _1, _2, _3, _4, std::ref(graphics)),
 			adobe::null_output_t()).parse_content();
 	}
 	else
@@ -482,7 +488,7 @@ void draw_graphics(const std::string& xml_shape, graphics_context_t& graphics)
 	make_xml_document(xml_shape.begin(), xml_shape.end(),
 		line_position_t("xml shape"),
 		adobe::always_true<token_range_t>(),
-		boost::bind(my_canvas_callback, _1, _2, _3, _4, boost::ref(graphics)),
+		std::bind(my_canvas_callback, _1, _2, _3, _4, std::ref(graphics)),
 		adobe::null_output_t()).parse_document();
 }\endverbatim
 Note that this solution guarantees that the root element is a canvas,

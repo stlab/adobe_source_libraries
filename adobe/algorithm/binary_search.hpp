@@ -118,7 +118,7 @@ template <typename I, // I models ForwardIterator
           typename T>
 // T models Regular
 inline I binary_search(I f, I l, const T& x) {
-    return binary_search(f, l, x, less());
+    return adobe::binary_search(f, l, x, less());
 }
 
 template <typename I, typename T>

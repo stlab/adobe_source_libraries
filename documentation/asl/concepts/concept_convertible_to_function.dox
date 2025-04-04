@@ -24,14 +24,14 @@
 \ingroup asl_concepts
 
 \description
-A ConvertibleToFunction is simply something which can be invoked using function notation - or something that \c boost::bind can convert to a function. Specifically, a ConvertibleToFunction can be:
+A ConvertibleToFunction is simply something which can be invoked using function notation - or something that \c std::bind can convert to a function. Specifically, a ConvertibleToFunction can be:
     - A pointer to a function
     - A pointer to a class or struct data member (argument is a pointer or a reference to a struct/class instance)
     - A pointer to a class or struct member function (first argument is a pointer or a reference to a struct/class instance; Member function arguments follow in order)
-    - A \c boost::reference_wrapper to a ConvertibleToFunction
+    - A \c std::reference_wrapper to a ConvertibleToFunction
     - A function object
 
-Where functions are passed as template parameters in the Adobe Source Libraries, any ConvertibleToFunction may be used. The idea is that <code>boost::bind(x, ...);</code> is a valid expression where <code>...</code> are arguments to <code>x</code>. <code>x</code>, in this case, is ConvertibleToFunction.
+Where functions are passed as template parameters in the Adobe Source Libraries, any ConvertibleToFunction may be used. The idea is that <code>std::bind(x, ...);</code> is a valid expression where <code>...</code> are arguments to <code>x</code>. <code>x</code>, in this case, is ConvertibleToFunction.
 
 \refinement_of
 
@@ -62,9 +62,9 @@ Where functions are passed as template parameters in the Adobe Source Libraries,
     </tr>
     <tr>
         <td valign="top">Convertible</td>
-        <td valign="top"><code>boost::bind(&f, x1...xn);</code></td>
+        <td valign="top"><code>std::bind(&f, x1...xn);</code></td>
         <td valign="top">&nbsp;</td>
-        <td valign="top">An invokable <code>boost::function</code> whose template argument is the function signature of <code>f</code></td>
+        <td valign="top">An invokable <code>std::function</code> whose template argument is the function signature of <code>f</code></td>
     </tr>
 </table>
 
@@ -75,7 +75,7 @@ Where functions are passed as template parameters in the Adobe Source Libraries,
 \invariants
 
 \models
-    - Anything that is acceptable to <code>boost::bind</code>.
+    - Anything that is acceptable to <code>std::bind</code>.
 
 \example
 Given a \c vector of structs...

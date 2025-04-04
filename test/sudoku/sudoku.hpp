@@ -12,11 +12,11 @@
 
 #include <adobe/config.hpp>
 
-#include <boost/array.hpp>
-#include <boost/function.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 
+#include <array>
+#include <functional>
 #include <stdexcept>
 #include <string>
 
@@ -181,7 +181,7 @@ private:
 
 class possibility_set_t {
 public:
-    typedef boost::array<bool, 9> set_t;
+    typedef std::array<bool, 9> set_t;
     typedef set_t::iterator iterator;
     typedef set_t::const_iterator const_iterator;
 

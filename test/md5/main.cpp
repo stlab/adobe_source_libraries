@@ -5,14 +5,15 @@
 */
 /**************************************************************************************************/
 
+#include <array>
+#include <fstream>
+#include <iostream>
+
 #include <adobe/config.hpp>
 #include <adobe/md5.hpp>
 
 #include <boost/filesystem/path.hpp>
 #include <boost/version.hpp>
-
-#include <fstream>
-#include <iostream>
 
 /**************************************************************************************************/
 
@@ -37,7 +38,7 @@ int main(int argc, char* argv[]) {
                              std::ios::binary | std::ios::in);
 
         while (stream.good()) {
-            boost::array<std::ifstream::char_type, 256 * 1024> buffer;
+            std::array<std::ifstream::char_type, 256 * 1024> buffer;
 
             stream.read(&buffer[0], static_cast<std::streamsize>(buffer.size()));
 

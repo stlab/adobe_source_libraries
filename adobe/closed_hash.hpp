@@ -17,6 +17,7 @@
 #include <climits>
 #include <cstddef>
 #include <cstdint>
+#include <initializer_list>
 #include <limits>
 #include <utility>
 
@@ -301,6 +302,11 @@ public:
         insert(f, l);
     }
 
+    closed_hash_set(std::initializer_list<value_type> init) {
+        header() = 0;
+        insert(init.begin(), init.end());
+    }
+
     template <typename I> // I models InputIterator
     closed_hash_set(I f, I l, size_type n, const hasher& hf = hasher(),
                     const key_equal& eq = key_equal(), const key_transform& kf = key_transform(),
@@ -543,9 +549,9 @@ private:
             alloc.allocate(sizeof(header_t) - sizeof(node_t) + sizeof(node_t) * n));
         header()->capacity() = n;
         header()->size() = 0;
-        construct_at(&header()->free_tail());
-        construct_at(&header()->used_tail());
-        construct_at(&header()->allocator(), a);
+        adobe::construct_at(&header()->free_tail());
+        adobe::construct_at(&header()->used_tail());
+        adobe::construct_at(&header()->allocator(), a);
 
         node_t* prior = header()->free_tail().address();
         for (node_ptr first(&header()->storage_m[0]), last(&header()->storage_m[0] + n);
@@ -582,7 +588,7 @@ private:
 
     // location points to a free node
     static void insert_raw(iterator location, value_type x, std::size_t state) {
-        construct_at<value_type>(&*location, std::move(x));
+        adobe::construct_at<value_type>(&*location, std::move(x));
         location.set_state(state);
         unsafe::skip_node(location);
     }
@@ -621,8 +627,9 @@ pair.
 template <typename Key, typename T, typename Hash, typename Pred, typename A>
 class closed_hash_map
     : public closed_hash_set<std::pair<Key, T>, get_element<0, std::pair<Key, T>>, Hash, Pred, A> {
-    typedef closed_hash_set<std::pair<Key, T>, get_element<0, std::pair<Key, T>>, Hash, Pred, A>
-        set_type;
+
+    using set_type =
+        closed_hash_set<std::pair<Key, T>, get_element<0, std::pair<Key, T>>, Hash, Pred, A>;
 
 public:
     typedef T mapped_type;
@@ -631,6 +638,8 @@ public:
 
     template <typename I> // I models InputIterator
     closed_hash_map(I f, I l) : set_type(f, l) {}
+
+    closed_hash_map(std::initializer_list<typename set_type::value_type> init) : set_type(init) {}
 
     closed_hash_map(const closed_hash_map& x) : set_type(x) {}
     closed_hash_map(closed_hash_map&& x) noexcept : set_type(std::move(x)) {}

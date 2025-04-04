@@ -486,7 +486,7 @@ Concept requirement. For example,
 
 template <typename T, typename U>
 T poly_cast(poly<U>* x) {
-    typedef typename boost::remove_pointer<T>::type target_type;
+    typedef typename std::remove_pointer<T>::type target_type;
     typedef typename target_type::interface_type target_interface_type;
     return x->template is_dynamic_convertible_to<target_interface_type>() ? reinterpret_cast<T>(x)
                                                                           : NULL;
@@ -504,7 +504,7 @@ T poly_cast(poly<U>* x) {
 
 template <typename T, typename U>
 T poly_cast(const poly<U>* x) {
-    typedef typename boost::remove_pointer<T>::type target_type;
+    typedef typename std::remove_pointer<T>::type target_type;
     typedef typename target_type::interface_type target_interface_type;
     return x->template is_dynamic_convertible_to<target_interface_type>() ? reinterpret_cast<T>(x)
                                                                           : NULL;

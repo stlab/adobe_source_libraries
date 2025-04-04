@@ -1,0 +1,4 @@
+---
+SystemHeaders: false
+HeaderFilterRegex: '^(?!.*(boost|_deps)).*$'
+FormatStyle: none

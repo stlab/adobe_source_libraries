@@ -14,11 +14,10 @@
 #include <adobe/dancing_links.hpp>
 #include <adobe/timer.hpp>
 
-#include <boost/bind/bind.hpp>
-#include <boost/function.hpp>
-
 #include "sudoku.hpp"
 
+#include <array>
+#include <functional>
 #include <iostream>
 #include <limits>
 #include <sstream>
@@ -171,14 +170,14 @@ inline std::size_t count_unsolved_in_range(Iterator first, Iterator last) {
 
 template <typename Iterator>
 inline std::size_t count_unsolved_for_range(Iterator first, Iterator last, int n) {
-    return std::count_if(first, last, boost::bind(is_unsolved_for, _1, n));
+    return std::count_if(first, last, std::bind(is_unsolved_for, _1, n));
 }
 
 /**************************************************************************************************/
 
 template <typename Iterator>
 inline bool solved_for_range(Iterator first, Iterator last, int n) {
-    return std::find_if(first, last, boost::bind(is_solved_for, _1, n)) != last;
+    return std::find_if(first, last, std::bind(is_solved_for, _1, n)) != last;
 }
 
 /**************************************************************************************************/
@@ -198,10 +197,10 @@ inline bool unsolved_for_range(Iterator first, Iterator last, int n) {
 
 template <typename Iterator>
 bool verify_integrity_for_value_in_range(Iterator first, Iterator last, std::size_t value) {
-    Iterator result(std::find_if(first, last, boost::bind(is_solved_for, _1, value)));
+    Iterator result(std::find_if(first, last, std::bind(is_solved_for, _1, value)));
 
     return result == last ||
-           std::find_if(++result, last, boost::bind(is_solved_for, _1, value)) == last;
+           std::find_if(++result, last, std::bind(is_solved_for, _1, value)) == last;
 }
 
 /**************************************************************************************************/
@@ -553,7 +552,7 @@ template <typename Iterator>
 std::size_t disjoint_subset_reduction_for_range(Iterator first, Iterator last,
                                                 std::size_t set_size) {
     typedef typename std::iterator_traits<Iterator>::value_type value_type;
-    typedef boost::function<bool(const value_type&)> predicate_t;
+    typedef std::function<bool(const value_type&)> predicate_t;
 
     if (count_unsolved_in_range(first, last) <= set_size)
         return false;
@@ -665,7 +664,7 @@ std::size_t disjoint_subset_reduction(sudoku_t& puzzle) {
 template <typename Iterator>
 std::size_t unique_subset_reduction_for_range(Iterator first, Iterator last, std::size_t set_size) {
     typedef typename std::iterator_traits<Iterator>::value_type value_type;
-    typedef boost::function<bool(const value_type&)> predicate_t;
+    typedef std::function<bool(const value_type&)> predicate_t;
 
     if (count_unsolved_in_range(first, last) <= set_size)
         return false;
@@ -1101,7 +1100,7 @@ void timed_solve(const sudoku_t& cpuzzle) {
 
 struct solution_output_t {
 private:
-    typedef boost::array<int, 81> results_t;
+    typedef std::array<int, 81> results_t;
 
 public:
     solution_output_t(std::ofstream* output) : output_m(output) {}

@@ -9,6 +9,7 @@
 #define ADOBE_ENUM_OPS_HPP
 
 /**************************************************************************************************/
+
 #include <type_traits>
 
 /**************************************************************************************************/
@@ -25,11 +26,11 @@
     defined for an enumeration type, \c E, the result will be of type \c E exactly when the
     operand(s) are of type \c E.
 
-    \c ADOBE_DEFINE_BITSET_OPS(E) or auto stlab_enable_bitmask_enum(E) -> std::true_type;
+    \c ADOBE_DEFINE_BITSET_OPS(E) or auto adobe_enable_bitmask_enum(E) -> std::true_type;
     enables the bitset operations <code>~, |, &, ^, |=, &=, ^= </code>
     for enumeration type \c E.
 
-    \c ADOBE_DEFINE_ARITHMETIC_OPS(E) or auto stlab_enable_arithmetic_enum(E) -> std::true_type;
+    \c ADOBE_DEFINE_ARITHMETIC_OPS(E) or auto adobe_enable_arithmetic_enum(E) -> std::true_type;
     enables the typesafe arithmetic operations <code>+, -, *, /,
     %, +=, *=, -=, /=, \%=</code> for enumeration type \c E.
 
@@ -58,8 +59,8 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-auto stlab_enable_bitmask_enum(...) -> std::false_type;
-auto stlab_enable_arithmetic_enum(...) -> std::false_type;
+auto adobe_enable_bitmask_enum(...) -> std::false_type;
+auto adobe_enable_arithmetic_enum(...) -> std::false_type;
 
 /**************************************************************************************************/
 
@@ -69,10 +70,10 @@ namespace implementation {
 
 #if !defined(ADOBE_NO_DOCUMENTATION)
 template <typename T>
-constexpr bool has_enabled_bitmask = decltype(stlab_enable_bitmask_enum(std::declval<T>()))::value;
+constexpr bool has_enabled_bitmask = decltype(adobe_enable_bitmask_enum(std::declval<T>()))::value;
 template <typename T>
 constexpr bool has_enabled_arithmetic =
-    decltype(stlab_enable_arithmetic_enum(std::declval<T>()))::value;
+    decltype(adobe_enable_arithmetic_enum(std::declval<T>()))::value;
 #endif
 
 /**************************************************************************************************/
@@ -87,35 +88,35 @@ constexpr bool has_enabled_arithmetic =
 
 // this exist to mantain backwards compatability with the old ops
 #define ADOBE_DEFINE_BITSET_OPS(EnumType)                                                          \
-    constexpr auto stlab_enable_bitmask_enum(EnumType)->std::true_type;
+    constexpr auto adobe_enable_bitmask_enum(EnumType)->std::true_type;
 
 
 template <typename T>
 constexpr auto operator&(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) & static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) & static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator~(const T a)
     -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(~static_cast<underlying>(a));
+    return static_cast<T>(~static_cast<underlying>(a)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator|(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) | static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) | static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator^(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_bitmask<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) ^ static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) ^ static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
@@ -138,54 +139,54 @@ constexpr auto operator|=(T& lhs, const T rhs)
 
 // this exist to mantain backwards compatability with the old ops
 #define ADOBE_DEFINE_ARITHMETIC_OPS(EnumType)                                                      \
-    constexpr auto stlab_enable_arithmetic_enum(EnumType)->std::true_type;
+    constexpr auto adobe_enable_arithmetic_enum(EnumType)->std::true_type;
 template <typename T>
 constexpr auto operator+(const T a)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(+static_cast<underlying>(a));
+    return static_cast<T>(+static_cast<underlying>(a)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator-(const T a)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(-static_cast<underlying>(a));
+    return static_cast<T>(-static_cast<underlying>(a)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator+(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) + static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) + static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator-(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) - static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) - static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator*(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) * static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) * static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator/(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) / static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) / static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator%(const T lhs, const T rhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     using underlying = std::underlying_type_t<T>;
-    return static_cast<T>(static_cast<underlying>(lhs) % static_cast<underlying>(rhs));
+    return static_cast<T>(static_cast<underlying>(lhs) % static_cast<underlying>(rhs)); // NOLINT
 }
 
 template <typename T>
@@ -221,28 +222,28 @@ constexpr auto operator%=(T& lhs, const T rhs)
 template <typename T>
 constexpr auto operator++(T& lhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
-    return lhs += static_cast<T>(1);
+    return lhs += static_cast<T>(1); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator++(T& lhs, int)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     T result = lhs;
-    lhs += static_cast<T>(1);
+    lhs += static_cast<T>(1); // NOLINT
     return result;
 }
 
 template <typename T>
 constexpr auto operator--(T& lhs)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
-    return lhs -= static_cast<T>(1);
+    return lhs -= static_cast<T>(1); // NOLINT
 }
 
 template <typename T>
 constexpr auto operator--(T& lhs, int)
     -> std::enable_if_t<adobe::implementation::has_enabled_arithmetic<T>, T> {
     T result = lhs;
-    lhs -= static_cast<T>(1);
+    lhs -= static_cast<T>(1); // NOLINT
     return result;
 }
 

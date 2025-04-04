@@ -11,7 +11,9 @@
 #include <adobe/any_regular.hpp>
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
+#include <adobe/exception.hpp>
 #include <adobe/json.hpp>
+#include <adobe/macro_utilities.hpp>
 
 /**************************************************************************************************/
 
@@ -56,7 +58,7 @@ struct asl_json_helper_t {
         else if (type == typeid(adobe::empty_t))
             return json_type::null;
 
-        ADOBE_ASSERT(false && "invalid type for serialization");
+        terminate(ADOBE_MESSAGE("invalid type for serialization"));
     }
 
     template <typename T>

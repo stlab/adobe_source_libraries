@@ -11,16 +11,16 @@
 #include <adobe/xml_parser.hpp>
 #include <adobe/xstring.hpp>
 
-#include <boost/bind/bind.hpp>
 #include <boost/lexical_cast.hpp>
 
 #include <exception>
+#include <functional>
 #include <iostream>
 #include <vector>
 
 /**************************************************************************************************/
 
-using namespace boost::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -149,7 +149,7 @@ long calculate_expression(const adobe::token_range_t& content) {
 
     adobe::make_xml_parser(content.first, content.second, adobe::line_position_t("expression"),
                            adobe::always_true<adobe::token_range_t>(),
-                           boost::bind(expression_content, _1, _2, _3, _4, boost::ref(value_stack)),
+                           std::bind(expression_content, _1, _2, _3, _4, std::ref(value_stack)),
                            adobe::implementation::null_output_t())
         .parse_content();
 
@@ -169,7 +169,7 @@ adobe::token_range_t document_content(const adobe::token_range_t& /*entire_eleme
 
         adobe::make_xml_parser(value.first, value.second, adobe::line_position_t("math-test"),
                                adobe::always_true<adobe::token_range_t>(),
-                               boost::bind(test_content, _1, _2, _3, _4, boost::ref(test)),
+                               std::bind(test_content, _1, _2, _3, _4, std::ref(test)),
                                adobe::implementation::null_output_t())
             .parse_content();
 
@@ -193,8 +193,9 @@ adobe::token_range_t test_content(const adobe::token_range_t& /*entire_element_r
     } else if (adobe::token_range_equal(name, result_token_k)) {
         const adobe::token_range_t value_attr(attribute_set[value_attr_k]);
 
-        if (0 == boost::size(value_attr))
+        if (0 == adobe::token_range_size(value_attr)) {
             throw std::runtime_error("result element is missing value attribute");
+        }
 
         test.expected_m = to_long(value_attr);
     } else {
@@ -220,8 +221,9 @@ adobe::token_range_t expression_content(const adobe::token_range_t& /*entire_ele
     } else if (adobe::token_range_equal(name, operand_token_k)) {
         const adobe::token_range_t value_attr(attribute_set[value_attr_k]);
 
-        if (0 == boost::size(value_attr))
+        if (0 == adobe::token_range_size(value_attr)) {
             throw std::runtime_error("result element is missing value attribute");
+        }
 
         stack.push_back(to_long(value_attr));
     } else if (adobe::token_range_equal(name, add_token_k)) {
@@ -252,7 +254,7 @@ bool run_test(const adobe::token_range_t& document, const adobe::line_position_t
 
     adobe::make_xml_parser(document.first, document.second, line_position,
                            adobe::always_true<adobe::token_range_t>(),
-                           boost::bind(document_content, _1, _2, _3, _4, boost::ref(passed)),
+                           std::bind(document_content, _1, _2, _3, _4, std::ref(passed)),
                            adobe::implementation::null_output_t())
         .parse_document();
 

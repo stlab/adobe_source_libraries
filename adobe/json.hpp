@@ -17,12 +17,6 @@
 #include <unordered_map>
 #include <vector>
 
-#ifdef ADOBE_BUILT_WITH_CMAKE
-#include <double-conversion/double-conversion.h>
-#else
-#include <double-conversion/src/double-conversion.h>
-#endif
-
 #include <adobe/cassert.hpp>
 #include <adobe/string/to_string.hpp>
 
@@ -69,8 +63,7 @@ public:
     allow 'junk' as it is the end of this token and on to the next one.
     */
     explicit json_parser(const char* p)
-        : p_(p), s2d_(double_conversion::StringToDoubleConverter::ALLOW_TRAILING_JUNK, kNaN, kNaN,
-                      nullptr, nullptr) {}
+        : p_(p) {}
 
     value_type parse() {
         value_type result;
@@ -207,13 +200,13 @@ private:
         frac();
         exp();
 
-        int count = 0;
-        double value = s2d_.StringToDouble(p, static_cast<int>(p_ - p), &count);
-
+        char* p_end = nullptr;
+        double value = std::strtod(p, &p_end);
         require(std::isfinite(value), "finite number");
-        ADOBE_ASSERT(count == p_ - p && "StringToDouble() failure");
+        ADOBE_ASSERT((p_ - p) == (p_end - p) && "std::strtod() failure");
 
         t = value_type(value);
+
         return true;
     }
 
@@ -350,7 +343,6 @@ private:
     }
 
     const char* p_;
-    double_conversion::StringToDoubleConverter s2d_;
 
     typedef char table_t_[256];
 

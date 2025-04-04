@@ -3,20 +3,20 @@
     "configurePresets": [
         {
             "name": "debug",
-            "displayName": "Custom configure preset",
+            "displayName": "debug-windows",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/${presetName}",
+            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_BUILD_TYPE": "DEBUG",
+                "CMAKE_CXX_STANDARD": "20",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "VCPKG_TARGET_TRIPLET": "x64-windows"
+                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
             },
             "architecture": {
                 "value": "x64",
                 "strategy": "external"
             },
-            "toolchainFile": "${sourceDir}/vcpkg/scripts/buildsystems/vcpkg.cmake",
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
                     "hostOS": [
@@ -27,21 +27,20 @@
         },
         {
             "name": "debug-windows-cpp17",
-            "displayName": "debug-windows-cpp17",
+            "displayName": "windows-debug-C++17",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/${presetName}",
+            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_BUILD_TYPE": "DEBUG",
                 "CMAKE_CXX_STANDARD": "17",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "VCPKG_TARGET_TRIPLET": "x64-windows"
+                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
             },
             "architecture": {
                 "value": "x64",
                 "strategy": "external"
             },
-            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
                     "hostOS": [
@@ -51,18 +50,92 @@
             }
         },
         {
-            "name": "macos-debug",
-            "displayName": "macos-debug",
+            "name": "macos-debug-C++20",
+            "displayName": "macos-debug-C++20",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/build/${presetName}",
+            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_BUILD_TYPE": "DEBUG",
+                "CMAKE_CXX_STANDARD": "20",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
             },
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
-                    "hostOS": [ "macOS" ]
+                    "hostOS": [
+                        "macOS"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "macos-debug-C++17",
+            "displayName": "macos-debug-C++17",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja",
+            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "DEBUG",
+                "CMAKE_CXX_STANDARD": "17",
+                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
+            }
+        },
+        {
+            "name": "clang-tidy-base",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
+            "cacheVariables": {
+                "CMAKE_CXX_STANDARD": "17",
+                "CMAKE_BUILD_TYPE": "DEBUG",
+                "CMAKE_CXX_CLANG_TIDY": "clang-tidy",
+                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
+            }
+        },
+        {
+            "name": "windows-clang-tidy-nofix",
+            "inherits": "clang-tidy-base",
+            "condition": {
+                "type": "equals",
+                "lhs": "${hostSystemName}",
+                "rhs": "Windows"
+            },
+            "cacheVariables": {
+                "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--extra-arg=/EHsc;--extra-arg=/DNOMINMAX"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "enableMicrosoftCodeAnalysis": true
+                }
+            }
+        },
+        {
+            "name": "clang-tidy-fix",
+            "hidden": false,
+            "generator": "Ninja",
+            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
+            "cacheVariables": {
+                "CMAKE_CXX_STANDARD": "17",
+                "CMAKE_BUILD_TYPE": "DEBUG",
+                "CMAKE_CXX_CLANG_TIDY":
+                    "clang-tidy;--fix;--allow-no-checks;--extra-arg=/EHsc;--extra-arg=/DNOMINMAX"
+            }
+        },
+        {
+            "name": "clang-tidy-nofix",
+            "hidden": false,
+            "generator": "Ninja",
+            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
+            "cacheVariables": {
+                "CMAKE_CXX_STANDARD": "17",
+                "CMAKE_BUILD_TYPE": "DEBUG",
+                "CMAKE_CXX_CLANG_TIDY": "clang-tidy"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "enableMicrosoftCodeAnalysis": true,
+                    "enableClangTidyCodeAnalysis": true
                 }
             }
         },
@@ -86,7 +159,7 @@
     ],
     "buildPresets": [
         {
-            "name": "debug",
+            "name": "debug-windows",
             "description": "",
             "displayName": "",
             "configurePreset": "debug"

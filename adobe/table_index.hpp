@@ -16,7 +16,6 @@
 #include <stdexcept>
 #include <vector>
 
-#include <boost/bind/bind.hpp>
 #include <boost/iterator/indirect_iterator.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/next_prior.hpp>
@@ -1069,7 +1068,7 @@ inline typename table_index<Key, T, Compare, Transform>::iterator
 table_index<Key, T, Compare, Transform>::lower_bound(const key_type& key) {
     return adobe::lower_bound(
         index_m, key, compare_m,
-        boost::bind(transform_m, bind(indirect<value_type>(), boost::placeholders::_1)));
+        std::bind(transform_m, bind(indirect<value_type>(), std::placeholders::_1)));
 }
 
 /**************************************************************************************************/
@@ -1079,7 +1078,7 @@ inline typename table_index<Key, T, Compare, Transform>::const_iterator
 table_index<Key, T, Compare, Transform>::lower_bound(const key_type& key) const {
     return adobe::lower_bound(
         index_m, key, compare_m,
-        boost::bind(transform_m, bind(indirect<value_type>(), boost::placeholders::_1)));
+        std::bind(transform_m, bind(indirect<value_type>(), std::placeholders::_1)));
 }
 
 /**************************************************************************************************/
@@ -1089,7 +1088,7 @@ inline typename table_index<Key, T, Compare, Transform>::iterator
 table_index<Key, T, Compare, Transform>::upper_bound(const key_type& key) {
     return adobe::upper_bound(
         index_m, key, compare_m,
-        boost::bind(transform_m, bind(indirect<value_type>(), boost::placeholders::_1)));
+        std::bind(transform_m, bind(indirect<value_type>(), std::placeholders::_1)));
 }
 
 /**************************************************************************************************/
@@ -1099,7 +1098,7 @@ inline typename table_index<Key, T, Compare, Transform>::const_iterator
 table_index<Key, T, Compare, Transform>::upper_bound(const key_type& key) const {
     return adobe::upper_bound(
         index_m, key, compare_m,
-        boost::bind(transform_m, bind(indirect<value_type>(), boost::placeholders::_1)));
+        std::bind(transform_m, bind(indirect<value_type>(), std::placeholders::_1)));
 }
 
 /**************************************************************************************************/
@@ -1110,7 +1109,7 @@ inline std::pair<typename table_index<Key, T, Compare, Transform>::iterator,
 table_index<Key, T, Compare, Transform>::equal_range(const key_type& key) {
     return adobe::equal_range(
         index_m, key, compare_m,
-        boost::bind(transform_m, bind(indirect<value_type>(), boost::placeholders::_1)));
+        std::bind(transform_m, bind(indirect<value_type>(), std::placeholders::_1)));
 }
 
 /**************************************************************************************************/
@@ -1121,7 +1120,7 @@ inline std::pair<typename table_index<Key, T, Compare, Transform>::const_iterato
 table_index<Key, T, Compare, Transform>::equal_range(const key_type& key) const {
     return adobe::equal_range(
         index_m, key, compare_m,
-        boost::bind(transform_m, bind(indirect<value_type>(), boost::placeholders::_1)));
+        std::bind(transform_m, bind(indirect<value_type>(), std::placeholders::_1)));
 }
 
 /**************************************************************************************************/

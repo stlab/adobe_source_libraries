@@ -14,17 +14,15 @@
 #include <ostream>
 #include <type_traits>
 
-#ifdef ADOBE_BUILT_WITH_CMAKE
-#include <double-conversion/double-conversion.h>
-#else
-#include <double-conversion/src/double-conversion.h>
-#endif
-
+#include <adobe/string/to_string.hpp>
 #include <adobe/typeinfo.hpp>
+
 
 /**************************************************************************************************/
 
 namespace adobe {
+
+#if __cplusplus < 202002L
 
 /**************************************************************************************************/
 
@@ -68,6 +66,16 @@ template <class T>
 inline typename std::enable_if<!has_ostream_insertion<T>::value>::type
 ostream_insertion(std::ostream&, const T&) {}
 
+#else  // __cplusplus < 202002L
+
+template <class T>
+inline void ostream_insertion(std::ostream& s, const T& x) {
+    if constexpr (requires { s << x; }) {
+        s << x;
+    }
+}
+#endif // __cplusplus < 202002L
+
 template <>
 inline void ostream_insertion<bool>(std::ostream& s, const bool& x) {
     s << std::boolalpha << x << std::noboolalpha;
@@ -75,19 +83,12 @@ inline void ostream_insertion<bool>(std::ostream& s, const bool& x) {
 
 template <>
 inline void ostream_insertion<double>(std::ostream& s, const double& x) {
-    using namespace double_conversion;
-
-    const DoubleToStringConverter& c(DoubleToStringConverter::EcmaScriptConverter());
-    char buf[32] = {0};
-    StringBuilder builder(buf, sizeof(buf));
-    c.ToShortest(x, &builder);
-
-    s << builder.Finalize();
+    s << adobe::to_string(x);
 }
 
 /**************************************************************************************************/
 // serialize<T> is an opportunity to hook user-defined wrapper types (e.g.,
-// boost::reference_wrapper)
+// std::reference_wrapper)
 
 template <typename T>
 struct serialize {
@@ -112,7 +113,7 @@ public:
 
     serializable_t(serializable_t&& x) : instance_m(x.instance_m.release()) {}
 
-    void operator()(std::ostream& s) const { object()(s); }
+    void operator()(std::ostream& s) const { object()._out(s); }
 
     const std::type_info& type_info() const { return object().type_info(); }
 
@@ -123,7 +124,7 @@ public:
         if (type != typeid(T))
             throw bad_cast(type, typeid(T));
 
-        return static_cast<const T&>(reinterpret_cast<const instance<T>&>(object()).object_m);
+        return static_cast<const instance<T>&>(object()).object_m;
     }
 
     template <typename T>
@@ -137,19 +138,21 @@ private:
 
         virtual instance_t* _copy() const = 0;
 
-        virtual void operator()(std::ostream& s) const = 0;
+        virtual void _out(std::ostream& s) const = 0;
         virtual const std::type_info& type_info() const = 0;
     };
 
     template <typename T>
-    struct instance : instance_t {
+    struct instance final : instance_t {
         explicit instance(T x) : object_m(std::move(x)) {}
 
-        instance_t* _copy() const { return new instance(object_m); }
+        instance_t* _copy() const override { return new instance(object_m); }
 
-        void operator()(std::ostream& s) const { serialize<T>()(s, object_m); }
+        void _out(std::ostream& s) const override {
+            ostream_insertion(s, object_m);
+        }
 
-        const std::type_info& type_info() const { return typeid(T); }
+        const std::type_info& type_info() const override { return typeid(T); }
 
         T object_m;
     };

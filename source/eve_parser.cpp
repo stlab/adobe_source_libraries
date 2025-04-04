@@ -7,10 +7,8 @@
 
 #include <adobe/eve_parser.hpp>
 
+#include <functional>
 #include <string>
-
-#include <boost/bind/bind.hpp>
-
 #include <adobe/algorithm/binary_search.hpp>
 #include <adobe/algorithm/sorted.hpp>
 #include <adobe/any_regular.hpp>
@@ -26,7 +24,7 @@
 /**************************************************************************************************/
 
 using namespace std;
-using namespace boost::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -74,7 +72,7 @@ public:
     eve_parser(const eve_callback_suite_t& assembler, std::istream& in,
                const line_position_t& position)
         : expression_parser(in, position), assembler_m(assembler) {
-        set_keyword_extension_lookup(boost::bind(&keyword_lookup, _1));
+        set_keyword_extension_lookup(std::bind(&keyword_lookup, _1));
 
         ADOBE_ASSERT(assembler_m.add_view_proc_m);
         //  ADOBE_ASSERT(assembler_m.add_cell_proc_m); Only required if you have a sheet state.
@@ -516,7 +514,11 @@ line_position_t parse(std::istream& in, const line_position_t& line_position,
                       const eve_callback_suite_t::position_t& position,
                       const eve_callback_suite_t& assembler) {
     eve_parser parser(assembler, in, line_position);
-    parser.parse(position);
+    try {
+        parser.parse(position);
+    } catch (const exception& error) {
+        throw stream_error_t(error, parser.next_position());
+    }
     return parser.next_position();
 }
 

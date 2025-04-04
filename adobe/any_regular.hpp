@@ -287,8 +287,8 @@ struct any_regular_model_remote : any_regular_interface_t, boost::noncopyable {
     static object_t* new_move(T& x) {
         allocator_type a;
         object_t* result = a.allocate(1);
-        construct_at(&result->alloc_m, aligned_storage<allocator_type>(a));
-        construct_at(&result->data_m, std::move(x));
+        adobe::construct_at(&result->alloc_m, aligned_storage<allocator_type>(a));
+        adobe::construct_at(&result->data_m, std::move(x));
         return result;
     }
 

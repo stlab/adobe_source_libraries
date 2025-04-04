@@ -4,18 +4,16 @@
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 /**************************************************************************************************/
-
-#include <boost/bind/bind.hpp>
+#include <functional>
 
 #include <adobe/adam_evaluate.hpp>
-
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
 #include <adobe/name.hpp>
 
 /**************************************************************************************************/
 
-using namespace boost::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -92,11 +90,15 @@ namespace adobe {
 adam_callback_suite_t bind_to_sheet(sheet_t& sheet) {
     adam_callback_suite_t suite;
 
-    suite.add_cell_proc_m = boost::bind(&add_cell, boost::ref(sheet), _1, _2, _3, _4);
-    suite.add_relation_proc_m = boost::bind(&add_relation, boost::ref(sheet), _1, _2, _3, _4);
+    suite.add_cell_proc_m = std::bind(&add_cell, std::ref(sheet), _1, _2, _3, _4);
+    suite.add_relation_proc_m = std::bind(&add_relation, std::ref(sheet), _1, _2, _3, _4);
     suite.add_interface_proc_m =
-        boost::bind(&adobe::sheet_t::add_interface, boost::ref(sheet), _1, _2, _3, _4, _5, _6);
-
+        [&sheet](name_t name, bool linked, const line_position_t& position1,
+                 const array_t& initializer, const line_position_t& position2,
+                 const array_t& expression, const std::string& /* brief */,
+                 const std::string& /* detailed */) -> void {
+        sheet.add_interface(name, linked, position1, initializer, position2, expression);
+    };
     return suite;
 }
 
@@ -106,7 +108,7 @@ adam_callback_suite_t bind_to_sheet(sheet_t& sheet, external_model_t& external_m
     adam_callback_suite_t suite = bind_to_sheet(sheet);
 
     suite.add_external_proc_m =
-        boost::bind(&adobe::external_model_t::add_cell, boost::ref(external_model), _1);
+        std::bind(&adobe::external_model_t::add_cell, std::ref(external_model), _1);
 
     return suite;
 }

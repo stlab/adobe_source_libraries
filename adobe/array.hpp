@@ -35,6 +35,9 @@ inline void push_back(array_t& v, any_regular_t x) { v.push_back(std::move(x)); 
 
 #ifdef ADOBE_STD_SERIALIZATION
 
+// To be findable by ADL, the operator must be in the same namespace as `any_regular_t.`
+namespace version_1 {
+
 inline std::ostream& operator<<(std::ostream& out, const array_t& x) {
     out << begin_sequence;
 
@@ -45,6 +48,8 @@ inline std::ostream& operator<<(std::ostream& out, const array_t& x) {
 
     return out;
 }
+
+} // namespace version_1
 
 #endif
 

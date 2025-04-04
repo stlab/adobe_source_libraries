@@ -64,7 +64,7 @@ void async_(const std::chrono::steady_clock::time_point&, any_packaged_task_&&);
 /**************************************************************************************************/
 
 template <class F, class... Args>
-auto async(F&& f, Args&&... args) -> std::future<typename std::result_of<F(Args...)>::type> {
+auto async(F&& f, Args&&... args) -> std::future<typename adobe::invoke_result_t<F, Args...>> {
     using namespace std;
 
     using result_t = adobe::invoke_result_t<F, Args...>;
@@ -86,7 +86,7 @@ auto async(const std::chrono::time_point<std::chrono::steady_clock, Duration>& w
     using namespace std;
     using namespace chrono;
 
-    using result_t = typename result_of<F(Args...)>::type;
+    using result_t = typename adobe::invoke_result_t<F, Args...>;
     using packaged_t = packaged_task<result_t()>;
 
     auto p = packaged_t(forward<F>(f), forward<Args>(args)...);
@@ -171,7 +171,7 @@ public:
     auto async(F&& f, Args&&... args) -> std::future<adobe::invoke_result_t<F, Args...>> {
         using namespace std;
 
-        using result_t = typename result_of<F(Args...)>::type;
+        using result_t = typename adobe::invoke_result_t<F, Args...>;
         using packaged_t = packaged_task<result_t()>;
 
         auto p = packaged_t(forward<F>(f), forward<Args>(args)...);

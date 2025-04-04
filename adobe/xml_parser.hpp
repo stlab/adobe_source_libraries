@@ -24,7 +24,6 @@
 #include <adobe/name.hpp>
 #include <adobe/string.hpp>
 
-#include <boost/bind/bind.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/operators.hpp>
@@ -605,7 +604,7 @@ inline token_range_t xml_element_linefeed(const token_range_t& /*entire_element_
                                           const attribute_set_t& attribute_set,
                                           const token_range_t& value) {
     if (token_range_equal(name, static_token_range("br")) && attribute_set.empty() &&
-        boost::size(value) == 0) {
+        adobe::token_range_size(value) == 0) {
 #if ADOBE_PLATFORM_WIN
         return static_token_range("&cr;&lf;");
 #elif ADOBE_PLATFORM_MAC
@@ -870,7 +869,7 @@ bool xml_parser_t<O>::is_content(token_range_t& content) {
         token_range_t result;
 
         if (is_token(xml_token_reference_k, result)) {
-            if (boost::size(result)) {
+            if (adobe::token_range_size(result)) {
                 if (preorder_mode_m) {
                     // Again, if we're in preorder mode we're not outputting
                     // but extending (possibly even starting, too) the token_range
@@ -889,7 +888,7 @@ bool xml_parser_t<O>::is_content(token_range_t& content) {
                 }
             }
         } else if (is_element(result)) {
-            if (boost::size(result)) {
+            if (adobe::token_range_size(result)) {
                 if (preorder_mode_m) {
                     // Again, if we're in preorder mode we're not outputting
                     // but extending (possibly even starting, too) the token_range
@@ -996,16 +995,16 @@ bool xml_parser_t<O>::is_bom(token_range_t& bom) {
     token_stream_m.set_skip_white_space(false);
 
     if (is_token(xml_token_char_data_k, bom)) {
-        if (boost::size(utf8_bom) <= boost::size(bom) && adobe::equal(utf8_bom, bom.first)) {
+        if (adobe::token_range_size(utf8_bom) <= adobe::token_range_size(bom) && adobe::equal(utf8_bom, bom.first)) {
             bom.second = bom.first;
-            std::advance(bom.second, boost::size(utf8_bom));
+            std::advance(bom.second, adobe::token_range_size(utf8_bom));
 
             result = true;
-        } else if (boost::size(utf16_be_bom) <= boost::size(bom) &&
+        } else if (adobe::token_range_size(utf16_be_bom) <= adobe::token_range_size(bom) &&
                    adobe::equal(utf16_be_bom, bom.first)) {
             // it's a bom, but it's not a format the parser supports
             throw_exception("utf16be bom encountered; xml_parser_t only supports utf8 encoding");
-        } else if (boost::size(utf16_le_bom) <= boost::size(bom) &&
+        } else if (adobe::token_range_size(utf16_le_bom) <= adobe::token_range_size(bom) &&
                    adobe::equal(utf16_le_bom, bom.first)) {
             // it's a bom, but it's not a format the parser supports
             throw_exception("utf16le bom encountered; xml_parser_t only supports utf8 encoding");
@@ -1072,13 +1071,14 @@ void xml_parser_t<O>::parse_content() {
         // always returns true; have to test results
         is_content(content);
 
-        if (boost::size(content)) {
+        if (adobe::token_range_size(content)) {
             token_range_t result(
                 this->callback_m(content, token_range_t(), attribute_set_t(), content));
 
             adobe::copy(result, this->output_m);
-        } else
+        } else {
             break;
+        }
     }
 }
 

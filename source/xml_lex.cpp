@@ -4,8 +4,7 @@
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 /**************************************************************************************************/
-
-#include <boost/bind/bind.hpp>
+#include <functional>
 
 #include <adobe/implementation/xml_lex.hpp>
 
@@ -17,13 +16,13 @@ namespace adobe {
 
 xml_lex_t::xml_lex_t(uchar_ptr_t first, uchar_ptr_t last, const line_position_t& position)
     : _super(first, last, position), name_possible_m(false) {
-    _super::set_parse_token_proc(boost::bind(&xml_lex_t::parse_token, boost::ref(*this)));
+    _super::set_parse_token_proc(std::bind(&xml_lex_t::parse_token, std::ref(*this)));
 }
 
 /**************************************************************************************************/
 
 xml_lex_t::xml_lex_t(const xml_lex_t& rhs) : _super(rhs), name_possible_m(rhs.name_possible_m) {
-    _super::set_parse_token_proc(boost::bind(&xml_lex_t::parse_token, boost::ref(*this)));
+    _super::set_parse_token_proc(std::bind(&xml_lex_t::parse_token, std::ref(*this)));
 }
 
 /**************************************************************************************************/
@@ -305,8 +304,8 @@ bool xml_lex_t::is_name_start_char() {
         return false;
 
     return (c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == ':' || c == '_' ||
-           (c >= char(0xC0) && c <= char(0xD6)) || (c >= char(0xD8) && c <= char(0xF6)) ||
-           (c >= char(0xF8) && c <= char(0xFF));
+           (c >= '\xC0' && c <= '\xD6') || (c >= '\xD8' && c <= '\xF6') ||
+           (c >= '\xF8' && c <= '\xFF');
 }
 
 /**************************************************************************************************/
@@ -324,7 +323,7 @@ bool xml_lex_t::is_name_char() {
     if (!peek_char(c))
         return false;
 
-    return c == '-' || c == '.' || (c >= '0' && c <= '9') || c == char(0xB7);
+    return c == '-' || c == '.' || (c >= '0' && c <= '9') || c == '\xB7';
 }
 
 /**************************************************************************************************/

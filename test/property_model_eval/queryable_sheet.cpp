@@ -6,13 +6,13 @@
 
 /**************************************************************************************************/
 
-#include <boost/bind/bind.hpp>
-
 #include "queryable_sheet.hpp"
+
+#include <functional>
 
 /**************************************************************************************************/
 
-using namespace boost::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -22,7 +22,7 @@ namespace adobe {
 
 queryable_sheet_t::queryable_sheet_t(adam_parser& p) : no_pure_outputs_m(true), parser_m(p) {
     //  attach the VM to the sheet.
-    sheet_m.machine_m.set_variable_lookup(boost::bind(&adobe::sheet_t::get, &sheet_m, _1));
+    sheet_m.machine_m.set_variable_lookup(std::bind(&adobe::sheet_t::get, &sheet_m, _1));
 
     parser_m.adam_callback_suite_m = setup_callbacks();
     (void)parser_m.is_sheet_specifier(sheet_name_m);
@@ -44,42 +44,50 @@ void queryable_sheet_t::begin_monitoring() {
         std::size_t i(iter->second);
         name_t& name(name_m[i]);
         sheet_m.monitor_enabled(name, NULL, NULL,
-                                boost::bind(adobe::assign(), _1, boost::ref(active_m[i])));
+                                std::bind(adobe::assign(), _1, std::ref(active_m[i])));
 
         std::vector<name_t> v;
         v.push_back(name);
-        sheet_m.monitor_enabled(
-            dummy, &v[0], 1 + &v[0],
-            boost::bind(adobe::assign(), _1, boost::ref(priority_accessed_m[i])));
+        sheet_m.monitor_enabled(dummy, &v[0], 1 + &v[0],
+                                std::bind(adobe::assign(), _1, std::ref(priority_accessed_m[i])));
 
-        sheet_m.monitor_value(name, boost::bind(adobe::assign(), _1, boost::ref(value_m[i])));
+        /*
+        binding to a reference to an any_regular_t is not working with Clang 14 and the gnu
+        standard library. Using a lambda instead.
 
-        sheet_m.monitor_contributing(
-            name, dictionary_t(), boost::bind(adobe::assign(), _1, boost::ref(contributors_m[i])));
+        sheet_m.monitor_value(name, std::bind(adobe::assign(), _1, std::ref(value_m[i])));
+        */
+        sheet_m.monitor_value(name, [i, this](const any_regular_t& value) { value_m[i] = value; });
+
+        sheet_m.monitor_contributing(name, dictionary_t(),
+                                     std::bind(adobe::assign(), _1, std::ref(contributors_m[i])));
     }
 
     for (queryable_sheet_t::index_t::iterator iter = output_index_m.begin(),
                                               e = output_index_m.end();
          iter != e; ++iter) {
         std::size_t i(iter->second);
-        sheet_m.monitor_value(name_m[i], boost::bind(adobe::assign(), _1, boost::ref(value_m[i])));
 
-        sheet_m.monitor_contributing(
-            name_m[i], dictionary_t(),
-            boost::bind(adobe::assign(), _1, boost::ref(contributors_m[i])));
+        // sheet_m.monitor_value(name_m[i], std::bind(adobe::assign(), _1, std::ref(value_m[i])));
+        sheet_m.monitor_value(name_m[i],
+                              [i, this](const any_regular_t& value) { value_m[i] = value; });
+
+        sheet_m.monitor_contributing(name_m[i], dictionary_t(),
+                                     std::bind(adobe::assign(), _1, std::ref(contributors_m[i])));
     }
     for (queryable_sheet_t::index_t::iterator iter = invariant_index_m.begin(),
                                               e = invariant_index_m.end();
          iter != e; ++iter) {
         std::size_t i(iter->second);
-        sheet_m.monitor_value(name_m[i], boost::bind(adobe::assign(), _1, boost::ref(value_m[i])));
+        // sheet_m.monitor_value(name_m[i], std::bind(adobe::assign(), _1, std::ref(value_m[i])));
+        sheet_m.monitor_value(name_m[i],
+                              [i, this](const any_regular_t& value) { value_m[i] = value; });
     }
 }
 
 /**************************************************************************************************/
 
 void queryable_sheet_t::update() { sheet_m.update(); }
-
 
 /**************************************************************************************************/
 
@@ -113,11 +121,11 @@ any_regular_t queryable_sheet_t::inspect(const array_t& expression) {
 
 adam_callback_suite_t queryable_sheet_t::setup_callbacks() {
     adam_callback_suite_t callbacks(adobe::bind_to_sheet(sheet_m));
-    callbacks.add_cell_proc_m = boost::bind(&queryable_sheet_t::add_cell_trap, this,
-                                            callbacks.add_cell_proc_m, _1, _2, _3, _4);
+    callbacks.add_cell_proc_m = std::bind(&queryable_sheet_t::add_cell_trap, this,
+                                          callbacks.add_cell_proc_m, _1, _2, _3, _4);
     callbacks.add_interface_proc_m =
-        boost::bind(&queryable_sheet_t::add_interface_trap, this, callbacks.add_interface_proc_m,
-                    _1, _2, _3, _4, _5, _6);
+        std::bind(&queryable_sheet_t::add_interface_trap, this, callbacks.add_interface_proc_m, _1,
+                  _2, _3, _4, _5, _6);
     return callbacks;
 }
 
@@ -200,6 +208,7 @@ void queryable_sheet_t::add_cell_trap(adam_callback_suite_t::add_cell_proc_t ori
 }
 
 /**************************************************************************************************/
+
 } // namespace adobe
 
 /**************************************************************************************************/

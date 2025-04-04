@@ -140,7 +140,26 @@ and second value are equivalent, but any value. Typically this value is
 0, but this is not required.
 */
 
-typedef std::pair<uchar_ptr_t, uchar_ptr_t> token_range_t;
+using token_range_t = std::pair<uchar_ptr_t, uchar_ptr_t>;
+
+/**************************************************************************************************/
+
+/*!
+\ingroup asl_xml_parser
+
+Determines the size of a token range.
+
+Determines the character count represented by the range (does not consider
+interstitial null terminators).
+
+\param r the range we are determining the size of
+
+\return the distance between the first and second members of the range
+*/
+
+inline auto token_range_size(const token_range_t& r) {
+    return std::distance(r.first, r.second);
+}
 
 /**************************************************************************************************/
 
@@ -160,7 +179,7 @@ in equality for each set of characters. false otherwise.
 */
 
 inline bool token_range_equal(const token_range_t& x, const token_range_t& y) {
-    return boost::size(x) == boost::size(y) && adobe::bounded_equal(x, y);
+    return adobe::token_range_size(x) == adobe::token_range_size(y) && adobe::bounded_equal(x, y);
 }
 
 /**************************************************************************************************/
@@ -189,18 +208,20 @@ as adobe::mismatch.
 */
 
 inline bool token_range_less(const token_range_t& x, const token_range_t& y) {
-    std::size_t sizex(boost::size(x));
-    std::size_t sizey(boost::size(y));
+    const auto sizex{adobe::token_range_size(x)};
+    const auto sizey{adobe::token_range_size(y)};
 
-    if (sizex < sizey)
+    if (sizex < sizey) {
         return true;
-    else if (sizey < sizex)
+    } else if (sizey < sizex) {
         return false;
+    }
 
     std::pair<uchar_ptr_t, uchar_ptr_t> diff(adobe::mismatch(x, boost::begin(y)));
 
-    if (diff.first == boost::end(x))
+    if (diff.first == boost::end(x)) {
         return false;
+    }
 
     return *diff.first < *diff.second;
 }
@@ -255,13 +276,13 @@ inline token_range_t static_token_range(T* begin) {
 
 template <typename E> // E models Enumeration
 struct lex_token_t {
-    lex_token_t() {}
+    lex_token_t() = default;
 
     explicit lex_token_t(E enumeration, uchar_ptr_t first = 0, uchar_ptr_t last = 0)
         : enum_m(enumeration), range_m(first, last) {}
 
-    E enum_m;
-    token_range_t range_m;
+    E enum_m{static_cast<E>(0)};
+    token_range_t range_m{nullptr, nullptr};
 };
 
 /**************************************************************************************************/

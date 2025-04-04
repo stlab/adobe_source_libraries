@@ -30,7 +30,7 @@ void operator<<(std::ostream& s, const foo_t& x) { s << x.x; }
 // bar_t has no operator<< defined. As such it will not be serialized when bar_t
 // is wrapped in an any_regular_t.
 struct bar_t {};
-bool operator==(const bar_t& x, const bar_t& y) { return true; };
+bool operator==(const bar_t&, const bar_t&) { return true; };
 bool operator!=(const bar_t& x, const bar_t& y) { return !(x == y); }
 
 BOOST_AUTO_TEST_CASE(any_regular_serialization_test) {

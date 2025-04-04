@@ -142,7 +142,7 @@ void test_copy_on_write() {
     typename CowType::value_type (*mv)(const long&) =
         &make_value<typename CowType::value_type, long>;
 
-    if (is_noisy) {
+    if constexpr (is_noisy) {
         // reset counters
         noisy_check_allocation();
         noisy_check_deallocation();
@@ -151,9 +151,11 @@ void test_copy_on_write() {
     }
 
     // Test default constructor
-    { CowType value_0; }
+    {
+        CowType value_0;
+    }
     // Check
-    if (is_noisy) {
+    if constexpr (is_noisy) {
         BOOST_CHECK_MESSAGE(noisy_check_allocation() == 1, "allocation count mismatch");
         BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 0, "deallocation count mismatch");
     }
@@ -186,7 +188,7 @@ void test_copy_on_write() {
         BOOST_CHECK(value_test.identity(value_2));
     }
     // Check
-    if (is_noisy) {
+    if constexpr (is_noisy) {
         BOOST_CHECK_MESSAGE(noisy_check_allocation() == 4, "allocation count mismatch");
         BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 4, "deallocation count mismatch");
     }
@@ -211,7 +213,7 @@ void test_copy_on_write() {
 #endif
     }
     // Check
-    if (is_noisy) {
+    if constexpr (is_noisy) {
         BOOST_CHECK_MESSAGE(noisy_check_allocation() == 2, "allocation count mismatch");
         BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 2, "deallocation count mismatch");
     }
@@ -224,7 +226,7 @@ void test_copy_on_write() {
         value_4.write() = mv(4);
     }
     // Check
-    if (is_noisy) {
+    if constexpr (is_noisy) {
         BOOST_CHECK_MESSAGE(noisy_check_allocation() == 1, "allocation count mismatch");
         BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 1, "deallocation count mismatch");
     }
@@ -237,7 +239,7 @@ void test_copy_on_write() {
         foo = mv(2); // allocation
     }
     // Check
-    if (is_noisy) {
+    if constexpr (is_noisy) {
         BOOST_CHECK_MESSAGE(noisy_check_allocation() == 2, "allocation count mismatch");
         BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 2, "deallocation count mismatch");
     }
@@ -254,7 +256,7 @@ void test_copy_on_write() {
         BOOST_CHECK(bar.unique_instance() && foo.unique_instance());
     }
     // Check
-    if (is_noisy) {
+    if constexpr (is_noisy) {
         BOOST_CHECK_MESSAGE(noisy_check_allocation() == 2, "allocation count mismatch");
         BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 2, "deallocation count mismatch");
     }
@@ -268,7 +270,7 @@ void test_copy_on_write() {
         foo = std::move(value); // allocation
     }
     // Check
-    if (is_noisy) {
+    if constexpr (is_noisy) {
         BOOST_CHECK_MESSAGE(noisy_check_allocation() == 2, "allocation count mismatch");
         BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 2, "deallocation count mismatch");
     }
@@ -281,7 +283,7 @@ void test_copy_on_write() {
         foo = std::move(value);
     }
     // Check
-    if (is_noisy) {
+    if constexpr (is_noisy) {
         BOOST_CHECK_MESSAGE(noisy_check_allocation() == 1, "allocation count mismatch");
         BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 1, "deallocation count mismatch");
     }
@@ -295,7 +297,7 @@ void test_copy_on_write() {
         foo = std::move(value); // allocation
     }
     // Check
-    if (is_noisy) {
+    if constexpr (is_noisy) {
         BOOST_CHECK_MESSAGE(noisy_check_allocation() == 2, "allocation count mismatch");
         BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 2, "deallocation count mismatch");
     }
@@ -307,7 +309,7 @@ void test_copy_on_write() {
         foo.write() = typename CowType::value_type(mv(2));
     }
     // Check
-    if (is_noisy) {
+    if constexpr (is_noisy) {
         BOOST_CHECK_MESSAGE(noisy_check_allocation() == 1, "allocation count mismatch");
         BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 1, "deallocation count mismatch");
     }
@@ -320,7 +322,7 @@ void test_copy_on_write() {
         foo.write() = typename CowType::value_type(mv(2)); // allocation
     }
     // Check
-    if (is_noisy) {
+    if constexpr (is_noisy) {
         BOOST_CHECK_MESSAGE(noisy_check_allocation() == 2, "allocation count mismatch");
         BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 2, "deallocation count mismatch");
     }
@@ -338,7 +340,7 @@ void test_copy_on_write() {
                             "read error");
     }
     // Check
-    if (is_noisy) {
+    if constexpr (is_noisy) {
         BOOST_CHECK_MESSAGE(noisy_check_allocation() == 1, "allocation count mismatch");
         BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 1, "deallocation count mismatch");
     }
@@ -354,7 +356,7 @@ void test_copy_on_write() {
         BOOST_CHECK_MESSAGE(bar.read() == typename CowType::value_type(mv(1)), "swap error");
     }
     // Check
-    if (is_noisy) {
+    if constexpr (is_noisy) {
         BOOST_CHECK_MESSAGE(noisy_check_allocation() == 2, "allocation count mismatch");
         BOOST_CHECK_MESSAGE(noisy_check_deallocation() == 2, "deallocation count mismatch");
     }

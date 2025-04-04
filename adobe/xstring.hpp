@@ -20,11 +20,11 @@
 #include <adobe/unicode.hpp>
 #include <adobe/xml_parser.hpp>
 
-#include <boost/bind/bind.hpp>
 #include <boost/noncopyable.hpp>
 
 #include <cassert>
 #include <cctype>
+#include <functional>
 #include <map>
 #include <sstream>
 #include <vector>
@@ -186,14 +186,14 @@ void xstring_clear_glossary();
 
 template <typename O> // O models OutputIterator
 inline void parse_xml_fragment(uchar_ptr_t fragment, std::size_t n, O output) {
-    using namespace boost::placeholders;
+    using namespace std::placeholders;
 
     const implementation::context_frame_t& context(implementation::top_frame());
 
     make_xml_parser(fragment, fragment + n, line_position_t("parse_xml_fragment"),
                     always_true<token_range_t>(),
-                    boost::bind(&implementation::context_frame_t::element_handler,
-                                boost::cref(context), _1, _2, _3, _4),
+                    std::bind(&implementation::context_frame_t::element_handler,
+                                std::cref(context), _1, _2, _3, _4),
                     output)
         .parse_content(); // REVISIT (fbrereto) : More or less legible than
                           // having it after the above declaration?
@@ -311,8 +311,9 @@ private:
     void glossary_parse() {
         implementation::context_frame_t& context(implementation::top_frame());
 
-        if (context.parsed_m || !boost::size(context.slurp_m))
+        if (context.parsed_m || !adobe::token_range_size(context.slurp_m)) {
             return;
+        }
 
         make_xml_parser(context.slurp_m.first, context.slurp_m.second, context.parse_info_m,
                         implementation::xstring_preorder_predicate, &implementation::xml_xstr_store,

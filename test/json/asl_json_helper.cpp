@@ -19,9 +19,32 @@
 
 /**************************************************************************************************/
 
+BOOST_AUTO_TEST_CASE(asl_json_floating_point_parsing) {
+    struct test_t {
+        const char* str;
+        double expected;
+    };
+
+    test_t tests[] = {
+        {"[42]", 42},
+        {"[12.536]", 12.536},
+        {"[-20.5]", -20.5},
+        {"[-1.375e+112]", -1.375e+112},
+        {"[3.1415926535897932384626433832795028841971693993751058209]", 3.1415926535897932384626433832795028841971693993751058209},
+    };
+
+    for (const auto& test : tests) {
+        adobe::any_regular_t x = adobe::json_parse(test.str);
+        double d = x.cast<adobe::array_t>()[0].cast<double>();
+        BOOST_CHECK_CLOSE(d, test.expected, 0.000001);
+    }
+}
+
+/**************************************************************************************************/
+
 BOOST_AUTO_TEST_CASE(asl_json_helper_smoke) {
     std::cout << "-=-=- asl_json_helper_smoke -=-=-\n";
-    adobe::any_regular_t x = adobe::json_parse(u8R"raw(
+    adobe::any_regular_t x = adobe::json_parse(reinterpret_cast<const char*>(u8R"raw(
         [
             42,
             12.536,
@@ -50,7 +73,7 @@ BOOST_AUTO_TEST_CASE(asl_json_helper_smoke) {
                 "Country": "US"
             }
         ]
-    )raw");
+    )raw"));
 
     adobe::json_generate(x, std::ostream_iterator<char>(std::cout));
 }

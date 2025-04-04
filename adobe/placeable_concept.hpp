@@ -8,6 +8,7 @@
 #define ADOBE_PLACEABLE_HPP
 
 /************************************************************************************************/
+#include <functional>
 
 #include <boost/concept_check.hpp>
 
@@ -70,8 +71,8 @@ void place(T& t, const place_data_t& place_data) { t.place(place_data); }
 \ingroup placeable_concept
  */
 template <PlaceableConcept T>
-concept_map PlaceableConcept<boost::reference_wrapper<T>>{
-    void measure(boost::reference_wrapper<T> & r,
+concept_map PlaceableConcept<std::reference_wrapper<T>>{
+    void measure(std::reference_wrapper<T> & r,
                  extents_t& result){PlaceableConcept<T>::measure(static_cast<T&>(r), result);
 }
 }
@@ -122,15 +123,15 @@ void measure_vertical(PlaceableTwoPassMFConcept<T>& t, extents_t& calculated_hor
 \ingroup placeable_concept
  */
 template <typename T>
-concept_map PlaceableTwoPassConcept<boost::reference_wrapper<PlaceableTwoPassConcept<T>>>{
-    void measure(boost::reference_wrapper<PlaceableTwoPassConcept<T>> & r, extents_t& extents){
+concept_map PlaceableTwoPassConcept<std::reference_wrapper<PlaceableTwoPassConcept<T>>>{
+    void measure(std::reference_wrapper<PlaceableTwoPassConcept<T>> & r, extents_t& extents){
         PlaceableTwoPassConcept<PlaceableTwoPassConcept<T>>::measure(*r.get_pointer(), extents);
 }
-void place(boost::reference_wrapper<PlaceableTwoPassConcept<T>>& r,
+void place(std::reference_wrapper<PlaceableTwoPassConcept<T>>& r,
            const place_data_t& place_data) {
     PlaceableTwoPassConcept<PlaceableTwoPassConcept<T>>::place(*r.get_pointer(), place_data);
 }
-void measure_vertical(boost::reference_wrapper<PlaceableTwoPassConcept<T>>& r,
+void measure_vertical(std::reference_wrapper<PlaceableTwoPassConcept<T>>& r,
                       extents_t& calculated_horizontal, const place_data_t& placed_horizontal) {
     PlaceableTwoPassConcept<PlaceableTwoPassConcept<T>>::measure_vertical(
         *r.get_pointer(), calculated_horizontal, placed_horizontal);
@@ -245,7 +246,7 @@ struct PlaceableConcept {
 /*!
 
 \brief Concept map and constraints checking for to allow
-boost::reference_wrapper<T> to model this concept when T does.
+std::reference_wrapper<T> to model this concept when T does.
 \ingroup placeable_concept
 
 */
@@ -337,7 +338,7 @@ struct PlaceableTwoPassConcept : PlaceableConcept<T> {
 /*!
 
 \brief Concept map and constraints checking for to allow
-boost::reference_wrapper<T> to model this concept when T does.
+std::reference_wrapper<T> to model this concept when T does.
 \ingroup placeable_concept
 
 */

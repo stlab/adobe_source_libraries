@@ -62,7 +62,9 @@ struct less {
         return x < y;
     }
 
-    bool operator()(const std::type_info& x, const std::type_info& y) { return x.before(y) != 0; }
+    bool operator()(const std::type_info& x, const std::type_info& y) const {
+        return x.before(y) != 0;
+    }
 };
 
 struct greater_equal {
@@ -110,12 +112,14 @@ struct logical_not {
     }
 };
 
+// `assign` is a function object type for the assignment operator.
+// `assign{}(x, r)` is equivalent to `(void)(r = x)`
 struct assign {
     typedef void result_type;
 
-    template <typename T> // T models Regular
-    void operator()(T x, T& r) {
-        r = std::move(x);
+    template <class T, class U>
+    void operator()(T&& x, U& r) {
+        r = std::forward<T>(x);
     }
 };
 

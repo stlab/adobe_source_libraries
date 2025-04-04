@@ -10,12 +10,9 @@
 #define ADOBE_STRING_TO_STRING_HPP
 
 #include <algorithm>
-#include <cassert>
 #include <cstdio>
-
-#ifndef NDEBUG
+#include <string>
 #include <cfloat>
-#endif
 
 #include <adobe/cassert.hpp>
 
@@ -117,6 +114,41 @@ O to_string(double x, O out, bool precise = false) {
 
     return std::copy(&buf[0], &buf[0] + size, out);
 }
+
+/**************************************************************************************************/
+/*!
+    \ingroup string_algorithm
+
+    \brief Convert double precision floating point numbers to ascii representation.
+
+    \return A `std::string` with the representation, similar to the `std::to_string` routines.
+
+    Google's `double-conversion` library was originally used by ASL to serialize floating-point
+    values (mostly indirectly when serializing `any_regular_t`s that held a double.) In an effort
+    to reduce our dependencies, we have removed ASL's use of `double-conversion` in favor of this
+    variant of `adobe::to_string`, which itself is a light wrapping around `std::to_chars`.
+
+    `double-conversion`'s serialization class (`DoubleToStringConverter`) is highly configurable.
+    There is a comment detailing the all the knobs one can twist and their effects here:
+
+        https://github.com/google/double-conversion/blob/4f7a25d8ced8c7cf6eee6fd09d6788eaa23c9afe/double-conversion/double-to-string.h#L86-L164
+
+    `double-conversion` also comes with a handful of predefined settings for these knobs to make it
+    easier for library consumers to serialize floating-point values consistently. ASL used one of
+    these, called `EcmaScriptConverter`, and would then invoke its `ToShortest` API. The knob
+    values for the `EcmaScriptConverter` are defined here:
+
+        https://github.com/google/double-conversion/blob/4f7a25d8ced8c7cf6eee6fd09d6788eaa23c9afe/double-conversion/double-to-string.cc#L42-L51
+
+    `EcmaScriptConverter` sets the `DoubleToStringConverter` knobs a way that is not exactly
+    reproducible by `std::to_chars`. `adobe::to_string` gets us as close as possible to
+    `EcmaScriptConverter` without inundating the implementation with special cases. (There are
+    special cases for nan and +/-infinity so this variant's output matches `EcmaScriptConverter`'s
+    for those values.) The ways in which `EcmaScriptConverter` and `adobe::to_string` still differ
+    are considered to be acceptable tradeoffs in light of the eliminated dependency. Some of those
+    differences can be seen in ASL's `to_string` tests.
+*/
+std::string to_string(double x);
 
 /**************************************************************************************************/
 

@@ -8,10 +8,10 @@
 #include <adobe/implementation/expression_filter.hpp>
 
 #include <cctype>
+#include <functional>
 #include <iterator>
 #include <vector>
-
-#include <boost/bind/bind.hpp>
+#include <locale>
 
 #include <adobe/algorithm/copy.hpp>
 #include <adobe/algorithm/find.hpp>
@@ -23,7 +23,7 @@
 /**************************************************************************************************/
 
 using namespace std;
-using namespace boost::placeholders;
+using namespace std::placeholders;
 
 /**************************************************************************************************/
 
@@ -596,7 +596,7 @@ string entity_unescape(const string& value) {
 
     while (iter != value.end()) {
         string::const_iterator next(copy_until(iter, value.end(), std::back_inserter(result),
-                                               boost::bind(std::not_equal_to<char>(), _1, '&'))
+                                               std::bind(std::not_equal_to<char>(), _1, '&'))
                                         .first);
 
         if (next == value.end())
