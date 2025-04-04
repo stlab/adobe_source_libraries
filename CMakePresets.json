@@ -6,11 +6,12 @@
             "displayName": "debug-windows",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/../build/asl-${presetName}",
+            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "DEBUG",
                 "CMAKE_CXX_STANDARD": "20",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
             },
             "architecture": {
                 "value": "x64",
@@ -29,11 +30,12 @@
             "displayName": "windows-debug-C++17",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/../build/asl-${presetName}",
+            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "DEBUG",
                 "CMAKE_CXX_STANDARD": "17",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
             },
             "architecture": {
                 "value": "x64",
@@ -52,11 +54,12 @@
             "displayName": "macos-debug-C++20",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/../build/asl-${presetName}",
+            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "DEBUG",
                 "CMAKE_CXX_STANDARD": "20",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
             },
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -71,21 +74,23 @@
             "displayName": "macos-debug-C++17",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/../build/asl-${presetName}",
+            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "DEBUG",
-                "CMAKE_CXX_STANDARD": "17"
+                "CMAKE_CXX_STANDARD": "17",
+                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
             }
         },
         {
             "name": "clang-tidy-base",
             "hidden": true,
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/../build/asl-${presetName}",
+            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
             "cacheVariables": {
                 "CMAKE_CXX_STANDARD": "17",
                 "CMAKE_BUILD_TYPE": "DEBUG",
-                "CMAKE_CXX_CLANG_TIDY": "clang-tidy"
+                "CMAKE_CXX_CLANG_TIDY": "clang-tidy",
+                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
             }
         },
         {
@@ -109,7 +114,7 @@
             "name": "clang-tidy-fix",
             "hidden": false,
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/../build/asl-${presetName}",
+            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
             "cacheVariables": {
                 "CMAKE_CXX_STANDARD": "17",
                 "CMAKE_BUILD_TYPE": "DEBUG",
@@ -121,7 +126,7 @@
             "name": "clang-tidy-nofix",
             "hidden": false,
             "generator": "Ninja",
-            "binaryDir": "${sourceDir}/../build/asl-${presetName}",
+            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
             "cacheVariables": {
                 "CMAKE_CXX_STANDARD": "17",
                 "CMAKE_BUILD_TYPE": "DEBUG",

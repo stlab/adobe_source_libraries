@@ -19,7 +19,6 @@ set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
 project(adobe-source-libraries CXX)
 
-
 CPMAddPackage(
     NAME Boost
     VERSION 1.87.0
