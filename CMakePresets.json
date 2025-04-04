@@ -26,7 +26,7 @@
             }
         },
         {
-            "name": "wd17",
+            "name": "debug-windows-cpp17",
             "displayName": "windows-debug-C++17",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
@@ -138,6 +138,23 @@
                     "enableClangTidyCodeAnalysis": true
                 }
             }
+        },
+        {
+            "name": "macos-debug-C++20",
+            "displayName": "macos-debug-C++20",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_CXX_STANDARD": "20",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
+            },
+            "vendor": {
+                "microsoft.com/VisualStudioSettings/CMake/1.0": {
+                    "hostOS": [ "macOS" ]
+                }
+            }
         }
     ],
     "buildPresets": [
@@ -146,6 +163,17 @@
             "description": "",
             "displayName": "",
             "configurePreset": "debug"
+        }
+    ],
+    "testPresets": [
+        {
+            "name": "macos-debug-C++20-verbose",
+            "description": "",
+            "displayName": "",
+            "configurePreset": "macos-debug-C++20",
+            "output":{
+                "verbosity": "verbose"
+            }
         }
     ]
 }
