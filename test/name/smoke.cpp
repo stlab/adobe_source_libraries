@@ -29,7 +29,7 @@ namespace {
 
 /**************************************************************************************************/
 
-inline std::ostream& operator"" _dump(const char* str, std::size_t n) {
+inline std::ostream& operator""_dump(const char* str, std::size_t n) {
     return std::cout << "dump: {\n"
                      << "   str: '" << str << "'\n"
                      << "     n: " << n << '\n'
