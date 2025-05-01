@@ -12,9 +12,9 @@
 // stdc++
 #include <iostream>
 #include <mutex>
-#include <unordered_map>
 
 // asl
+#include <adobe/closed_hash.hpp>
 #include <adobe/implementation/string_pool.hpp>
 
 /**************************************************************************************************/
@@ -61,19 +61,24 @@ const char* name_t::map_string(const char* str) {
 /**************************************************************************************************/
 
 const char* name_t::map_string(const char* str, std::size_t hash) {
-    typedef std::unordered_map<std::size_t, const char*> map_t;
-    typedef std::lock_guard<std::mutex> lock_t;
+    typedef closed_hash_map<std::size_t, const char*> map_t;
+    typedef std::unique_lock<std::mutex> lock_t;
 
     static std::mutex sync_s;
 
-    lock_t lock(sync_s);
-
     static adobe::unique_string_pool_t pool_s;
     static map_t map_s;
+
+    // There may be an opportunity here to use a shared_mutex, but it's not clear that would be
+    // faster than the current implementation.
+
+    lock_t lock(sync_s);
+
     map_t::const_iterator found(map_s.find(hash));
 
-    return found == map_s.end() ? map_s.emplace(hash, pool_s.add(str)).first->second
-                                : found->second;
+    return found == map_s.end()
+               ? map_s.insert(map_t::value_type(hash, pool_s.add(str))).first->second
+               : found->second;
 }
 
 /**************************************************************************************************/

@@ -289,9 +289,7 @@ private:
         \complexity
             O(N)
     */
-    static inline std::size_t hash(const name_t& x) {
-        return reinterpret_cast<std::size_t>(x.ptr_m);
-    }
+    static inline std::size_t hash(const name_t& x) { return std::hash<const char*>{}(x.ptr_m); }
 
     static const char* map_string(const char* str);
     static const char* map_string(const char* str, std::size_t hash);
