@@ -61,8 +61,8 @@ const char* name_t::map_string(const char* str) {
 /**************************************************************************************************/
 
 const char* name_t::map_string(const char* str, std::size_t hash) {
-    typedef closed_hash_map<std::size_t, const char*> map_t;
-    typedef std::unique_lock<std::mutex> lock_t;
+    using map_t = closed_hash_map<std::size_t, const char*>;
+    using lock_t = std::scoped_lock<std::mutex>;
 
     static std::mutex sync_s;
 
@@ -70,7 +70,17 @@ const char* name_t::map_string(const char* str, std::size_t hash) {
     static map_t map_s;
 
     // There may be an opportunity here to use a shared_mutex, but it's not clear that would be
-    // faster than the current implementation.
+    // faster than the current implementation. The idea would be to do a find under a shared_lock
+    // and then a find / insert under an exclusive_lock if the key is not found. Unfortunately, I
+    // don't see a way to try_upgrade a shared_lock to an exclusive_lock. Another approach would be:
+    // 1. Try to aquire an exclusive_lock.
+    //    if success - do the find/insert and return the result
+    // 2. If failure, aquire a shared_lock and find the value
+    //    if found - return the value
+    // 3. If not found, aquire an exclusive_lock and do the find/insert and return the result.
+    //
+    // This would have to be coded multiple ways and profiled to see which is faster but since
+    // use on thread is likely low, the current implementation is probably fine.
 
     lock_t lock(sync_s);
 

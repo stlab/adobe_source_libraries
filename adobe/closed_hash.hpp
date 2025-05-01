@@ -468,7 +468,6 @@ public:
         case state_home: {
             iterator found = find(node, end_(), key_function()(x));
             if (found != end()) {
-                *found = std::move(x);
                 return std::make_pair(found, false);
             }
 
