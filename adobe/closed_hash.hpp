@@ -407,7 +407,7 @@ public:
 
     const_iterator find(const key_type& key) const { return find(key, hash_function()(key)); }
 
-    const_iterator find(const key_type& key, size_t hash) const {
+    const_iterator find(const key_type& key, std::size_t hash) const {
         return adobe::remove_const(*this).find(key, hash);
     }
 
@@ -442,7 +442,7 @@ public:
         return equal_range(key, hash_function()(key));
     }
 
-    std::pair<iterator, iterator> equal_range(const key_type& key, size_t hash) {
+    std::pair<iterator, iterator> equal_range(const key_type& key, std::size_t hash) {
         iterator result = find(key, hash);
         if (result == end())
             return std::make_pair(result, result);
@@ -451,7 +451,7 @@ public:
 
 
     std::size_t count(const key_type& key) const { return count(key, hash_function()(key)); }
-    std::size_t count(const key_type& key, size_t hash) const {
+    std::size_t count(const key_type& key, std::size_t hash) const {
         return std::size_t(find(key, hash) != end());
     }
 
@@ -481,7 +481,7 @@ public:
         recalculating the bucket (a potentially expensive operation) there is no other solution.
     */
 
-    std::pair<iterator, bool> insert(value_type x, size_t hash) {
+    std::pair<iterator, bool> insert(value_type x, std::size_t hash) {
         if (capacity() == size())
             reserve(size() ? 2 * size() : 3);
 

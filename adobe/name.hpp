@@ -249,7 +249,7 @@ struct name_t : boost::totally_ordered<name_t, name_t> {
     friend bool operator==(const name_t& x, const name_t& y) { return x.ptr_m == y.ptr_m; }
 
     /**
-        Lexicographical comparison of two names. For a faster comparsion
+        Lexicographical comparison of two names. For a faster comparison
         use name_t::fast_compare.
 
         \complexity
