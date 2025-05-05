@@ -417,7 +417,7 @@ public:
         if (!header())
             return iterator(0);
 
-        iterator node = bucket_(key, hash);
+        iterator node = bucket_(hash);
         iterator last = end_();
 
         if (node.state() != std::size_t(state_home))
@@ -485,7 +485,7 @@ public:
         if (capacity() == size())
             reserve(size() ? 2 * size() : 3);
 
-        iterator node = bucket_(key_function()(x), hash);
+        iterator node = bucket_(hash);
 
         switch (node.state()) {
         case state_home: {
@@ -593,7 +593,7 @@ private:
     size_type capacity_() const { return header()->capacity(); }
 
     // precondition: header() != NULL
-    iterator bucket_(const key_type& key, std::size_t hash) {
+    iterator bucket_(std::size_t hash) {
         return iterator(&header()->storage_m[0] + hash % capacity_());
     }
 
