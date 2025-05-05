@@ -12,6 +12,8 @@
 
 #include <adobe/config.hpp>
 
+#include <cstddef>
+
 #include <boost/noncopyable.hpp>
 
 /**************************************************************************************************/
@@ -27,6 +29,7 @@ public:
     ~unique_string_pool_t();
 
     const char* add(const char* str);
+    const char* add(const char* str, std::size_t hash, bool is_static);
 
 private:
     struct implementation_t;

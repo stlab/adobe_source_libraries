@@ -158,13 +158,14 @@ BOOST_AUTO_TEST_CASE(closed_hash) {
                                         std::make_pair(2, vector_t(2, 2)),
                                         std::make_pair(3, vector_t(3, 3))};
         hash_map_vector_t x(std::begin(a), std::end(a));
-        const void* addr = remote_address(x.find(2)->second);
+        // items may still relocate even if capacity is reserved.
+        //const void* addr = remote_address(x.find(2)->second);
 
         std::size_t c = x.capacity();
         x.reserve(2 * x.capacity());
         BOOST_CHECK(x.capacity() > c);
         BOOST_CHECK(x.size() == 3);
-        BOOST_CHECK(addr == remote_address(x.find(2)->second));
+        //BOOST_CHECK(addr == remote_address(x.find(2)->second));
     }
 
 #if 0

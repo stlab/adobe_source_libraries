@@ -60,6 +60,18 @@ struct str_less_t {
     }
 };
 
+//!\ingroup misc_functional
+struct str_equal_to_t {
+    bool operator()(const char* x, const char* y) const {
+        while (*x && *x == *y) {
+            ++x;
+            ++y;
+        }
+        return *x == *y;
+    }
+};
+
+
 /**************************************************************************************************/
 
 } // namespace adobe
