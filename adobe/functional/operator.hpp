@@ -144,7 +144,9 @@ struct identity {
 template <>
 struct identity<void> {
     template <class T>
-    auto operator()(T&& x) const noexcept { return std::forward<T>(x); }
+    auto operator()(T&& x) const noexcept {
+        return std::forward<T>(x);
+    }
 };
 
 /**************************************************************************************************/

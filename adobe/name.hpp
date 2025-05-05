@@ -285,7 +285,10 @@ struct name_t : boost::totally_ordered<name_t, name_t> {
     /**
         Deprecated. Use `fast_compare{}` instead.
     */
-    [[deprecated("use `fast_compare{}` instead")]] static inline bool fast_sort(const name_t& x, const name_t& y) { return hash(x) < hash(y); }
+    [[deprecated("use `fast_compare{}` instead")]] static inline bool fast_sort(const name_t& x,
+                                                                                const name_t& y) {
+        return hash(x) < hash(y);
+    }
 
 private:
     friend struct std::hash<name_t>;

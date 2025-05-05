@@ -154,7 +154,7 @@
             "description": "",
             "displayName": "",
             "configurePreset": "macos-debug-C++20",
-            "output":{
+            "output": {
                 "verbosity": "verbose"
             }
         }

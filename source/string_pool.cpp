@@ -9,14 +9,15 @@
 
 #include <cassert>
 #include <cstddef>
+#include <mutex>
 #include <vector>
 
 #include <adobe/algorithm/copy.hpp>
 #include <adobe/algorithm/for_each.hpp>
-#include <adobe/functional.hpp>
-#include <adobe/string.hpp>
-#include <adobe/name.hpp>
 #include <adobe/closed_hash.hpp>
+#include <adobe/functional.hpp>
+#include <adobe/name.hpp>
+#include <adobe/string.hpp>
 
 /**************************************************************************************************/
 
@@ -143,7 +144,9 @@ unique_string_pool_t::~unique_string_pool_t() { delete object_m; }
 
 const char* unique_string_pool_t::add(const char* str) { return object_m->add(str); }
 
-const char* unique_string_pool_t::add(const char* str, std::size_t hash, bool is_static) { return object_m->add(str, hash, is_static); }
+const char* unique_string_pool_t::add(const char* str, std::size_t hash, bool is_static) {
+    return object_m->add(str, hash, is_static);
+}
 
 /**************************************************************************************************/
 
