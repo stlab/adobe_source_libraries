@@ -20,15 +20,15 @@ jobs:
       - name: Generate job matrix
         id: set-matrix
         # Note: The json in this variable must be a single line for parsing to succeed.
-        # run: echo "matrix=$(cat .github/matrix.json | scripts/flatten_json.py)" >> $GITHUB_STATE
-        run: echo "::set-output name=matrix::$(cat .github/matrix.json | scripts/flatten_json.py)"
+        run: |
+          echo "matrix=$(cat .github/matrix.json | scripts/flatten_json.py)" >> $GITHUB_OUTPUT
 
   builds:
     needs: generate-matrix
     runs-on: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
-      matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)}}
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
     name: ${{ matrix.config.name }}
 
     steps:

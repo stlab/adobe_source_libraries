@@ -15,6 +15,7 @@
 #include <cstring>
 #include <functional>
 #include <iosfwd>
+#include <string_view>
 
 // boost
 #include <boost/mpl/bool.hpp>
@@ -29,7 +30,7 @@
     \defgroup name name_t and static_name_t
 
     \details
-    name_t is holding onto a `std::unordered_map` on the backside that maps from
+    name_t is holding onto a `closed_hash_map` on the backside that maps from
     a `name_t`'s hash to its string. When a `name_t` is constructed, its hash is
     used to find the unique string pointer common to all `name_t`s with that
     same string.
@@ -166,7 +167,6 @@ private:
     friend std::ostream& operator<<(std::ostream& s, const static_name_t& name);
 
     const char* string_m;
-
     std::size_t hash_m;
 };
 
@@ -223,12 +223,13 @@ struct name_t : boost::totally_ordered<name_t, name_t> {
     using iterator = const char*;
 
     explicit name_t(const char* s = "") : ptr_m(map_string(s)) {}
+    operator std::string_view() const { return ptr_m; }
 
     /**
         Implicit conversion constructor from a static_name_t.
     */
     name_t(const static_name_t& static_name)
-        : ptr_m(map_string(static_name.string_m, static_name.hash_m)) {}
+        : ptr_m(map_string(static_name.string_m, static_name.hash_m, true)) {}
 
     friend std::ostream& operator<<(std::ostream& s, const name_t& name);
 
@@ -248,8 +249,8 @@ struct name_t : boost::totally_ordered<name_t, name_t> {
     friend bool operator==(const name_t& x, const name_t& y) { return x.ptr_m == y.ptr_m; }
 
     /**
-        Lexicographical comparison of two names. For a faster comparsion
-        use name_t::fast_sort.
+        Lexicographical comparison of two names. For a faster comparison
+        use name_t::fast_compare.
 
         \complexity
             O(N)
@@ -266,7 +267,7 @@ struct name_t : boost::totally_ordered<name_t, name_t> {
     /**
         for use with sorting, e.g.:
 
-            std::sort(begin(c), end(c), adobe::name_t::fast_sort);
+            std::sort(begin(c), end(c), adobe::name_t::fast_compare{});
 
         The implicit sort (`operator<`) is lexicographical ("slow"), whereas fast
         sort leverages the runtime hash of the name_t to speed things up. The sort
@@ -277,7 +278,17 @@ struct name_t : boost::totally_ordered<name_t, name_t> {
         \complexity
             O(1)
     */
-    static inline bool fast_sort(const name_t& x, const name_t& y) { return hash(x) < hash(y); }
+    struct fast_compare {
+        bool operator()(const name_t& x, const name_t& y) const { return x.ptr_m < y.ptr_m; }
+    };
+
+    /**
+        Deprecated. Use `fast_compare{}` instead.
+    */
+    [[deprecated("use `fast_compare{}` instead")]] static inline bool fast_sort(const name_t& x,
+                                                                                const name_t& y) {
+        return hash(x) < hash(y);
+    }
 
 private:
     friend struct std::hash<name_t>;
@@ -289,12 +300,10 @@ private:
         \complexity
             O(N)
     */
-    static inline std::size_t hash(const name_t& x) {
-        return reinterpret_cast<std::size_t>(x.ptr_m);
-    }
+    static inline std::size_t hash(const name_t& x) { return std::hash<const char*>{}(x.ptr_m); }
 
     static const char* map_string(const char* str);
-    static const char* map_string(const char* str, std::size_t hash);
+    static const char* map_string(const char* str, std::size_t hash, bool is_static);
 
     const char* ptr_m;
 };

@@ -9,18 +9,29 @@
 
 #include <cassert>
 #include <cstddef>
-#include <list>
-#include <set>
+#include <mutex>
+#include <vector>
 
 #include <adobe/algorithm/copy.hpp>
 #include <adobe/algorithm/for_each.hpp>
+#include <adobe/closed_hash.hpp>
 #include <adobe/functional.hpp>
-#include <adobe/once.hpp>
+#include <adobe/name.hpp>
 #include <adobe/string.hpp>
 
 /**************************************************************************************************/
 
-namespace detail {
+namespace {
+
+/**************************************************************************************************/
+
+constexpr std::size_t empty_hash_s = adobe::detail::name_hash("");
+
+struct str_name_hash {
+    std::size_t operator()(const char* str) const {
+        return adobe::detail::name_hash(str, std::strlen(str));
+    }
+};
 
 /**************************************************************************************************/
 
@@ -65,14 +76,14 @@ private:
     }
 
     std::size_t pool_size_m;
-    std::list<char*> pool_m;
+    std::vector<char*> pool_m;
     char* next_m;
     char* end_m;
 };
 
 /**************************************************************************************************/
 
-} // namespace detail
+} // namespace
 
 /**************************************************************************************************/
 
@@ -82,29 +93,47 @@ namespace adobe {
 
 struct unique_string_pool_t::implementation_t {
 public:
+    using lock_t = std::scoped_lock<std::mutex>;
+    using index_t = closed_hash_set<const char*, identity<>, str_name_hash, str_equal_to_t>;
+
     implementation_t() {}
 
-    // Precondition: length only need be non-zero if not copying
-    // Precondition: if str is null then length must be zero
     const char* add(const char* str) {
+        return add(str, adobe::detail::name_hash(str, std::strlen(str)), false);
+    }
+
+    const char* add(const char* str, std::size_t hash, bool is_static) {
         if (!str || !*str)
             return detail::empty_string_s();
 
-        name_store_t::iterator iter = store_m.find(str);
+        auto& shard = _shards[hash % shard_count];
+        auto& index = shard._index;
+        lock_t lock(shard._mutex);
 
-        if (iter == store_m.end()) {
-            str = pool_m.add(str);
-            iter = store_m.insert(str).first;
+        if (is_static) {
+            return *index.insert(shard._pool.add(str), hash).first;
         }
 
-        return *iter;
+        index_t::const_iterator found(index.find(str, hash));
+
+        return found == index.end() ? *index.insert(shard._pool.add(str), hash).first : *found;
     }
 
 private:
-    typedef std::set<const char*, str_less_t> name_store_t;
+    // The size of 8 for sharding was chosen to avoid waisting space with buckets.
+    // Ps currently (2025-05-05) allocates 6 * 4K buckets at startup and most access
+    // is from the main thread.
+    static constexpr std::size_t shard_count = 8;
 
-    name_store_t store_m;
-    ::detail::string_pool_t pool_m;
+    // After some research a shard appears to be the best, simple, option to share a hashmap.
+    // https://le.qun.ch/en/blog/sharding/
+    struct shard {
+        std::mutex _mutex;
+        index_t _index;
+        string_pool_t _pool;
+    };
+
+    shard _shards[shard_count];
 };
 
 /**************************************************************************************************/
@@ -114,6 +143,10 @@ unique_string_pool_t::unique_string_pool_t() : object_m(new implementation_t()) 
 unique_string_pool_t::~unique_string_pool_t() { delete object_m; }
 
 const char* unique_string_pool_t::add(const char* str) { return object_m->add(str); }
+
+const char* unique_string_pool_t::add(const char* str, std::size_t hash, bool is_static) {
+    return object_m->add(str, hash, is_static);
+}
 
 /**************************************************************************************************/
 

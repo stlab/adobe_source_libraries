@@ -405,13 +405,19 @@ public:
             ;
     }
 
-    const_iterator find(const key_type& key) const { return adobe::remove_const(*this).find(key); }
+    const_iterator find(const key_type& key) const { return find(key, hash_function()(key)); }
 
-    iterator find(const key_type& key) {
+    const_iterator find(const key_type& key, std::size_t hash) const {
+        return adobe::remove_const(*this).find(key, hash);
+    }
+
+    iterator find(const key_type& key) { return find(key, hash_function()(key)); }
+
+    iterator find(const key_type& key, std::size_t hash) {
         if (!header())
             return iterator(0);
 
-        iterator node = bucket_(key);
+        iterator node = bucket_(hash);
         iterator last = end_();
 
         if (node.state() != std::size_t(state_home))
@@ -421,20 +427,33 @@ public:
     }
 
     std::pair<const_iterator, const_iterator> equal_range(const key_type& key) const {
-        const_iterator result = find(key);
+        return equal_range(key, hash_function()(key));
+    }
+
+    std::pair<const_iterator, const_iterator> equal_range(const key_type& key, size_t hash) const {
+        const_iterator result = find(key, hash);
         if (result == end())
             return std::make_pair(result, result);
         return std::make_pair(result, boost::next(result));
     }
+
 
     std::pair<iterator, iterator> equal_range(const key_type& key) {
-        iterator result = find(key);
+        return equal_range(key, hash_function()(key));
+    }
+
+    std::pair<iterator, iterator> equal_range(const key_type& key, std::size_t hash) {
+        iterator result = find(key, hash);
         if (result == end())
             return std::make_pair(result, result);
         return std::make_pair(result, boost::next(result));
     }
 
-    std::size_t count(const key_type& key) const { return std::size_t(find(key) != end()); }
+
+    std::size_t count(const key_type& key) const { return count(key, hash_function()(key)); }
+    std::size_t count(const key_type& key, std::size_t hash) const {
+        return std::size_t(find(key, hash) != end());
+    }
 
     template <typename I> // I models InputIterator
     void insert(I first, I last) {
@@ -452,23 +471,26 @@ public:
         }
     }
 
+    std::pair<iterator, bool> insert(value_type x) {
+        return insert(x, hash_function()(key_function()(x)));
+    }
+
     /*
         NOTE (sparent): If there is not enough space for one element we will reserve the space
         prior to attempting the insert even if the item is already in the hash table. Without
         recalculating the bucket (a potentially expensive operation) there is no other solution.
     */
 
-    std::pair<iterator, bool> insert(value_type x) {
+    std::pair<iterator, bool> insert(value_type x, std::size_t hash) {
         if (capacity() == size())
             reserve(size() ? 2 * size() : 3);
 
-        iterator node = bucket_(key_function()(x));
+        iterator node = bucket_(hash);
 
         switch (node.state()) {
         case state_home: {
             iterator found = find(node, end_(), key_function()(x));
             if (found != end()) {
-                *found = std::move(x);
                 return std::make_pair(found, false);
             }
 
@@ -571,8 +593,8 @@ private:
     size_type capacity_() const { return header()->capacity(); }
 
     // precondition: header() != NULL
-    iterator bucket_(const key_type& key) {
-        return iterator(&header()->storage_m[0] + hash_function()(key) % capacity_());
+    iterator bucket_(std::size_t hash) {
+        return iterator(&header()->storage_m[0] + hash % capacity_());
     }
 
     // preconditino: [f, l) is not empty

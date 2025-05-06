@@ -11,8 +11,6 @@
 
 // stdc++
 #include <iostream>
-#include <mutex>
-#include <unordered_map>
 
 // asl
 #include <adobe/implementation/string_pool.hpp>
@@ -24,6 +22,12 @@ namespace {
 /**************************************************************************************************/
 
 constexpr std::size_t empty_hash_s = adobe::detail::name_hash("");
+
+struct str_name_hash {
+    std::size_t operator()(const char* str) const {
+        return adobe::detail::name_hash(str, std::strlen(str));
+    }
+};
 
 /**************************************************************************************************/
 
@@ -49,31 +53,22 @@ name_t::operator bool() const { return ptr_m != detail::empty_string_s(); }
 
 const char* name_t::map_string(const char* str) {
     if (!str || !*str)
-        return map_string(detail::empty_string_s(), empty_hash_s);
+        return map_string(detail::empty_string_s(), empty_hash_s, true);
 
-    // Once fnv1a is in master we can make the hash faster
+    // Revisit, fnv1a is in main but not constexpr???
+
+    // Once fnv1a is in main we can make the hash faster
     // with a call to the sentinel variant.
     std::size_t hash(detail::name_hash(str, std::strlen(str)));
 
-    return map_string(str, hash);
+    return map_string(str, hash, false);
 }
 
 /**************************************************************************************************/
 
-const char* name_t::map_string(const char* str, std::size_t hash) {
-    typedef std::unordered_map<std::size_t, const char*> map_t;
-    typedef std::lock_guard<std::mutex> lock_t;
-
-    static std::mutex sync_s;
-
-    lock_t lock(sync_s);
-
+const char* name_t::map_string(const char* str, std::size_t hash, bool is_static) {
     static adobe::unique_string_pool_t pool_s;
-    static map_t map_s;
-    map_t::const_iterator found(map_s.find(hash));
-
-    return found == map_s.end() ? map_s.emplace(hash, pool_s.add(str)).first->second
-                                : found->second;
+    return pool_s.add(str, hash, is_static);
 }
 
 /**************************************************************************************************/

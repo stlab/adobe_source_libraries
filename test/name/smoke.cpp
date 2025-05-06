@@ -110,11 +110,11 @@ BOOST_AUTO_TEST_CASE(name_smoke) {
 
     BOOST_CHECK(is_sorted(begin(name_set), end(name_set)));
 
-    BOOST_CHECK(!is_sorted(begin(name_set), end(name_set), adobe::name_t::fast_sort));
+    BOOST_CHECK(!is_sorted(begin(name_set), end(name_set), adobe::name_t::fast_compare{}));
 
-    std::sort(begin(name_set), end(name_set), adobe::name_t::fast_sort);
+    std::sort(begin(name_set), end(name_set), adobe::name_t::fast_compare{});
 
-    BOOST_CHECK(is_sorted(begin(name_set), end(name_set), adobe::name_t::fast_sort));
+    BOOST_CHECK(is_sorted(begin(name_set), end(name_set), adobe::name_t::fast_compare{}));
 
     dumpy("Hello, world!");
 }

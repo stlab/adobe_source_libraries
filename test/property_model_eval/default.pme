@@ -5,7 +5,7 @@ input:
     unit        : 1;
 
 interface:
-    distance    : 15 * unit;
+    distance;
     rate        : 3 * unit;
     time        : 5 * unit;
 

@@ -134,11 +134,19 @@ struct pointer_to {
 
 /**************************************************************************************************/
 
-template <typename T>
+template <typename T = void>
 struct identity {
     typedef T& result_type;
 
     T& operator()(T& x) const { return x; }
+};
+
+template <>
+struct identity<void> {
+    template <class T>
+    auto operator()(T&& x) const noexcept {
+        return std::forward<T>(x);
+    }
 };
 
 /**************************************************************************************************/
