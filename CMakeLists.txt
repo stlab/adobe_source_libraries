@@ -44,4 +44,7 @@ function(target_link_boost_test target)
 endfunction(target_link_boost_test)
 
 add_subdirectory(source)
-add_subdirectory(test)
+
+if(BUILD_TESTING)
+    add_subdirectory(test)
+endif()

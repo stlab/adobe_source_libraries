@@ -23,6 +23,10 @@
 
 #include <ostream>
 
+#ifndef NDEBUG
+#include <adobe/iomanip_asl_cel.hpp>
+#endif
+
 using namespace std;
 
 /**************************************************************************************************/
@@ -65,6 +69,17 @@ std::ostream& operator<<(std::ostream& out, const dictionary_t& x) {
 }
 
 } // namespace version_1
+
+/**************************************************************************************************/
+
+#ifndef NDEBUG
+
+void print(const any_regular_t& x) {
+    ostream out(cout.rdbuf());
+    out << begin_asl_cel << x << end_asl_cel << std::endl;
+}
+
+#endif
 
 /**************************************************************************************************/
 

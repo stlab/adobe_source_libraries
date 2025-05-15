@@ -516,6 +516,8 @@ line_position_t parse(std::istream& in, const line_position_t& line_position,
     eve_parser parser(assembler, in, line_position);
     try {
         parser.parse(position);
+    } catch (const stream_error_t& error) {
+        throw;
     } catch (const exception& error) {
         throw stream_error_t(error, parser.next_position());
     }
