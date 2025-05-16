@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.29)
 include(FindGit)
 include(CMakeParseArguments)
 include(./cmake/CPM.cmake)
-enable_testing()
 
 if(WIN32)
     set(CMAKE_OBJECT_PATH_MAX 500)
 endif()
 
 project(adobe_source_libraries CXX)
+include(CTest)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 if(NOT DEFINED CMAKE_CXX_STANDARD)
@@ -44,4 +44,7 @@ function(target_link_boost_test target)
 endfunction(target_link_boost_test)
 
 add_subdirectory(source)
-add_subdirectory(test)
+
+if(BUILD_TESTING)
+    add_subdirectory(test)
+endif()
