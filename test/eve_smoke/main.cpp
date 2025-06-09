@@ -71,8 +71,8 @@ void test_print_debug() {
     }
 
     struct my_leaf {
-        void measure(adobe::extents_t & result) {}
-        void place(const adobe::place_data_t& place_data) {}
+        void measure(adobe::extents_t&) {}
+        void place(const adobe::place_data_t&) {}
     };
 
     adobe::poly_placeable_t placeable_leaf{my_leaf()};
