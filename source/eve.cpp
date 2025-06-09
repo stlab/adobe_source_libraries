@@ -384,7 +384,10 @@ constexpr const char* to_string(layout_attributes_alignment_t::alignment_t x) {
 
 void eve_t::implementation_t::set_visible(iterator c, bool visible) { c->visible_m = visible; }
 
-void eve_t::implementation_t::set_layout_attributes(iterator c, const layout_attributes_t& geometry) { c->geometry_m = geometry; }
+void eve_t::implementation_t::set_layout_attributes(iterator c,
+                                                    const layout_attributes_t& geometry) {
+    c->geometry_m = geometry;
+}
 
 void eve_t::implementation_t::dump() {
     adobe::eve_t::iterator iter = proxies_m.begin();
