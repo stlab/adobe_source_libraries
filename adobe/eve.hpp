@@ -246,7 +246,7 @@ public:
     Parameters for each widget include view proxy attribute values for
     bounds (top, left, width, height), horizontal/vertical placement, and alignment.
     */
-    void dump();
+    void print_debug(std::ostream& os);
 
 private:
     friend struct implementation::view_proxy_t;

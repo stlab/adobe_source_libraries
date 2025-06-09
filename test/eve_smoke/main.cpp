@@ -54,6 +54,37 @@ adobe::eve_callback_suite_t::position_t assemble(adobe::name_t name,
 }
 
 /**************************************************************************************************/
+//
+/// Ensure eve_t::print_debug() behaves as expected.
+//
+void test_print_debug() {
+    std::stringstream result;
+    const auto fail_test = [&result]() {
+        std::cerr << "test_print_debug() failed\n" << result.str() << "\n";
+        throw std::runtime_error("test_print_debug() failed");
+    };
+
+    adobe::eve_t eve;
+    eve.print_debug(result);
+    if (!result.str().empty()) {
+        fail_test();
+    }
+
+    struct my_row {
+        void measure(adobe::extents_t & result) {}
+        void place(const adobe::place_data_t& place_data) {}
+    };
+    adobe::poly_placeable_t placeable_row{my_row()};
+
+    auto top = eve.add_placeable(adobe::eve_t::iterator(), adobe::layout_attributes_t(), false, placeable_row, false);
+
+    eve.print_debug(result);
+    if (result.str().empty()) {
+        fail_test();
+    }
+}
+
+/**************************************************************************************************/
 
 //
 // void testParse( std::string fileName )
@@ -128,6 +159,8 @@ int main(int argc, char* argv[]) {
         //
 
         testParse(file_path);
+
+        test_print_debug();
     } catch (const std::exception& error) {
         //
         // Oops, something didn't work out.
