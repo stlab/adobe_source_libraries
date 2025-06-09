@@ -79,8 +79,10 @@ void test_print_debug() {
     auto top = eve.add_placeable(adobe::eve_t::iterator(), adobe::layout_attributes_t(), false, placeable_row, false);
 
     eve.print_debug(result);
-        std::cout << result.str() << std::endl;
-    if (result.str().empty()) {
+    // The exact string cannot be checked for because the name of the type
+    // will vary from compiler to compiler. Even so, we can ensure the attribute
+    // value are correct and in the right order.
+    if (result.str().find("(left: 0, top: 0, width: 0, height: 0, horizontal: default, vertical: default, placement: leaf);") == std::string::npos) {
         fail_test();
     }
 }
