@@ -390,13 +390,13 @@ template <class F>
 void with_default_formatting(std::ostream& os, F&& f) {
     struct state_saver {
         state_saver(std::ostream& os) : _os(os) {
-            _old.copyfmt(_os);
+            _old.copyfmt(_os); // save the original state
             _os.copyfmt(std::ios{nullptr}); // default formatting - picks up global locale
             _os.imbue(std::locale::classic()); // "C" locale with UTF-8 support
         }
 
         ~state_saver() {
-            _old.copyfmt(_os);
+            _os.copyfmt(_old); // restore the original state
         }
 
         std::ios _old{nullptr};
