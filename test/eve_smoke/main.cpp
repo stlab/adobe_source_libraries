@@ -70,15 +70,17 @@ void test_print_debug() {
         fail_test();
     }
 
-    struct my_row {
+    struct my_leaf {
         void measure(adobe::extents_t & result) {}
         void place(const adobe::place_data_t& place_data) {}
     };
-    adobe::poly_placeable_t placeable_row{my_row()};
 
-    auto top = eve.add_placeable(adobe::eve_t::iterator(), adobe::layout_attributes_t(), false, placeable_row, false);
+    adobe::poly_placeable_t placeable_leaf{my_leaf()};
+
+    eve.add_placeable(adobe::eve_t::iterator(), adobe::layout_attributes_t(), false, placeable_leaf, false);
 
     eve.print_debug(result);
+
     // The exact string cannot be checked for because the name of the type
     // will vary from compiler to compiler. Even so, we can ensure the attribute
     // value are correct and in the right order.
