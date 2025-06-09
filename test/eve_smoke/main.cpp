@@ -79,6 +79,7 @@ void test_print_debug() {
     auto top = eve.add_placeable(adobe::eve_t::iterator(), adobe::layout_attributes_t(), false, placeable_row, false);
 
     eve.print_debug(result);
+        std::cout << result.str() << std::endl;
     if (result.str().empty()) {
         fail_test();
     }
