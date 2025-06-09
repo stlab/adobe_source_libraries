@@ -255,6 +255,7 @@ public:
     void set_visible(iterator, bool);
     void set_layout_attributes(iterator, const layout_attributes_t&);
 
+    void dump();
 private:
     void solve(slice_select_t select);
     void layout(slice_select_t select, int optional_length);
@@ -288,6 +289,10 @@ std::pair<int, int> eve_t::evaluate(evaluate_options_t options, int width, int h
 
 std::pair<int, int> eve_t::adjust(evaluate_options_t options, int width, int height) {
     return object_m->adjust(options, width, height);
+}
+
+void eve_t::dump() {
+    object_m->dump();
 }
 
 eve_t::iterator eve_t::add_placeable(iterator parent, const layout_attributes_t& initial,
@@ -344,11 +349,90 @@ eve_t::iterator eve_t::implementation_t::add_placeable(iterator parent,
 
 /**************************************************************************************************/
 
+namespace {
+
+constexpr const char* to_string(eve_t::placement_t x) {
+    switch (x) {
+        case eve_t::place_leaf: return "leaf";
+        case eve_t::place_column: return "column";
+        case eve_t::place_row: return "row";
+        case eve_t::place_overlay: return "overlay";
+    }
+    // If you get here, it means you somehow have a placement_t whose value is invalid.
+    assert(false);
+    return "invalid";
+}
+
+constexpr const char* to_string(layout_attributes_alignment_t::alignment_t x) {
+    switch (x) {
+        case layout_attributes_alignment_t::align_forward: return "forward";
+        case layout_attributes_alignment_t::align_reverse: return "reverse";
+        case layout_attributes_alignment_t::align_center: return "center";
+        case layout_attributes_alignment_t::align_proportional: return "proportional";
+        case layout_attributes_alignment_t::align_forward_fill: return "forward_fill";
+        case layout_attributes_alignment_t::align_reverse_fill: return "reverse_fill";
+        case layout_attributes_alignment_t::align_default: return "default";
+    }
+    // If you get here, it means you somehow have an alignment_t whose value is invalid.
+    assert(false);
+    return "invalid";
+}
+
+} // namespace
+
+/**************************************************************************************************/
+
 void eve_t::implementation_t::set_visible(iterator c, bool visible) { c->visible_m = visible; }
 
-void eve_t::implementation_t::set_layout_attributes(iterator c,
-                                                    const layout_attributes_t& geometry) {
-    c->geometry_m = geometry;
+void eve_t::implementation_t::set_layout_attributes(iterator c, const layout_attributes_t& geometry) { c->geometry_m = geometry; }
+
+void eve_t::implementation_t::dump() {
+    adobe::eve_t::iterator iter = proxies_m.begin();
+    adobe::eve_t::iterator last = proxies_m.end();
+    std::size_t depth(0);
+
+    for (; iter != last; ++iter) {
+        if (iter.edge() == adobe::forest_trailing_edge) {
+            --depth;
+            if (has_children(iter)) {
+                std::cerr << std::string(depth * 4, ' ') << "}\n";
+            }
+            continue;
+        }
+
+        const adobe::implementation::view_proxy_t& proxy = *iter;
+        const auto& g = proxy.geometry_m;
+        const auto& h = proxy.place_m.horizontal();
+        const auto& v = proxy.place_m.vertical();
+        
+        std::cerr << std::string(depth * 4, ' ');
+        std::cerr << proxy.placeable_m.type_info().name();
+        std::cerr << "(";
+        std::cerr << "left: " << h.position_m;
+        std::cerr << ", ";
+        std::cerr << "top: " << v.position_m;
+        std::cerr << ", ";
+        std::cerr << "width: " << h.length_m;
+        std::cerr << ", ";
+        std::cerr << "height: " << v.length_m;
+        std::cerr << ", ";
+        std::cerr << "horizontal: " << to_string(g.horizontal().alignment_m);
+        std::cerr << ", ";
+        std::cerr << "vertical: " << to_string(g.vertical().alignment_m);
+        std::cerr << ", ";
+        std::cerr << "placement: " << to_string(g.placement_m);
+        std::cerr << ")";
+
+        if (has_children(iter)) {
+            std::cerr << " {";
+        } else {
+            std::cerr << ";";
+        }
+
+        std::cerr << "\n";
+
+        ++depth;
+    }
 }
 
 /**************************************************************************************************/
