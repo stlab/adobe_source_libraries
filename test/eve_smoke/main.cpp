@@ -54,6 +54,42 @@ adobe::eve_callback_suite_t::position_t assemble(adobe::name_t name,
 }
 
 /**************************************************************************************************/
+//
+/// Ensure eve_t::print_debug() behaves as expected.
+//
+void test_print_debug() {
+    std::stringstream result;
+    const auto fail_test = [&result]() {
+        std::cerr << "test_print_debug() failed\n" << result.str() << "\n";
+        throw std::runtime_error("test_print_debug() failed");
+    };
+
+    adobe::eve_t eve;
+    eve.print_debug(result);
+    if (!result.str().empty()) {
+        fail_test();
+    }
+
+    struct my_leaf {
+        void measure(adobe::extents_t&) {}
+        void place(const adobe::place_data_t&) {}
+    };
+
+    adobe::poly_placeable_t placeable_leaf{my_leaf()};
+
+    eve.add_placeable(adobe::eve_t::iterator(), adobe::layout_attributes_t(), false, placeable_leaf, false);
+
+    eve.print_debug(result);
+
+    // The exact string cannot be checked for because the name of the type
+    // will vary from compiler to compiler. Even so, we can ensure the attribute
+    // value are correct and in the right order.
+    if (result.str().find("(left: 0, top: 0, width: 0, height: 0, horizontal: default, vertical: default, placement: leaf);") == std::string::npos) {
+        fail_test();
+    }
+}
+
+/**************************************************************************************************/
 
 //
 // void testParse( std::string fileName )
@@ -128,6 +164,8 @@ int main(int argc, char* argv[]) {
         //
 
         testParse(file_path);
+
+        test_print_debug();
     } catch (const std::exception& error) {
         //
         // Oops, something didn't work out.

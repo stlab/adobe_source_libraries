@@ -239,6 +239,15 @@ public:
 
     std::pair<int, int> adjust(evaluate_options_t options, int width, int height);
 
+    /*!
+    \brief Print the current state of the view proxy forest to stderr.
+
+    The name of each widget will be the type_info of underlying placeable.
+    Parameters for each widget include view proxy attribute values for
+    bounds (top, left, width, height), horizontal/vertical placement, and alignment.
+    */
+    void print_debug(std::ostream& os);
+
 private:
     friend struct implementation::view_proxy_t;
 
