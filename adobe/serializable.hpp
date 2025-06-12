@@ -107,7 +107,7 @@ struct serialize<std::reference_wrapper<T>> {
 class serializable_t {
 public:
     template <typename T>
-    explicit serializable_t(T x) : instance_m(new instance<T>(x)) {}
+    explicit serializable_t(T x) : instance_m(std::make_unique<instance<T>>(x)) {}
 
     serializable_t(const serializable_t& x) : instance_m(x.object()._copy()) {}
 
@@ -136,7 +136,7 @@ private:
     struct instance_t {
         virtual ~instance_t() {}
 
-        virtual instance_t* _copy() const = 0;
+        virtual std::unique_ptr<instance_t> _copy() const = 0;
 
         virtual void _out(std::ostream& s) const = 0;
         virtual const std::type_info& type_info() const = 0;
@@ -146,11 +146,11 @@ private:
     struct instance final : instance_t {
         explicit instance(T x) : object_m(std::move(x)) {}
 
-        instance_t* _copy() const override { return new instance(object_m); }
-
-        void _out(std::ostream& s) const override {
-            ostream_insertion(s, object_m);
+        std::unique_ptr<instance_t> _copy() const override {
+            return std::make_unique<instance>(object_m);
         }
+
+        void _out(std::ostream& s) const override { ostream_insertion(s, object_m); }
 
         const std::type_info& type_info() const override { return typeid(T); }
 

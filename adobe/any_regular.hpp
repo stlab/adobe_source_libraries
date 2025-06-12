@@ -21,7 +21,6 @@
 #include <boost/mpl/if.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/operators.hpp>
-#include <boost/type_traits/has_nothrow_copy.hpp>
 
 #include <adobe/conversion.hpp>
 #include <adobe/empty.hpp>
@@ -413,15 +412,8 @@ to
 details.
         - cast<>() results are returned by reference, making any_regular_t generally more
 efficient.
-        - small values (less than or equal to 64 bits) with a non-throwing copy constructor or
-which
-            model \ref concept_movable are stored without a free store allocation.
-
-\note With currently compilers the trait
-<a
-href="http://www.boost.org/doc/libs/1_35_0/libs/type_traits/doc/html/boost_typetraits/reference/has_nothrow_copy.html">
-<code>boost::has_no_throw_copy</code></a> must be manually declared for small types to be stored
-without a free store allocation.
+        - small values (less than or equal to 64 bits) with a non-throwing move constructor are
+stored without a free store allocation.
 
 \see_also
     adobe::runtime_cast
@@ -448,15 +440,15 @@ class any_regular_t : boost::equality_comparable<any_regular_t, any_regular_t> {
         typedef implementation::any_regular_model_remote<promote_type> regular_model_remote_type;
 
         typedef boost::mpl::bool_<(sizeof(regular_model_local_type) <= sizeof(storage_t)) &&
-                                  (boost::has_nothrow_copy<promote_type>::value ||
-                                   std::is_nothrow_move_constructible<promote_type>::value)>
+                                  std::is_nothrow_move_constructible<promote_type>::value>
             use_local_type;
 
         typedef typename boost::mpl::if_<use_local_type, regular_model_local_type,
                                          regular_model_remote_type>::type model_type;
 
-        typedef typename boost::mpl::if_c<std::is_same<promote_type, T>::value, reference_type,
-                                          T>::type result_type;
+        typedef
+            typename boost::mpl::if_c<std::is_same<promote_type, T>::value, reference_type, T>::type
+                result_type;
 
         typedef typename boost::mpl::if_c<std::is_same<promote_type, T>::value,
                                           const_reference_type, T>::type const_result_type;

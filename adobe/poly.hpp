@@ -13,8 +13,6 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/or.hpp>
-#include <boost/type_traits/has_nothrow_constructor.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <adobe/implementation/swap.hpp>
@@ -46,7 +44,7 @@ namespace adobe {
 
 template <typename T, typename U>
 struct is_base_derived_or_same
-    : boost::mpl::or_<boost::is_base_of<T, U>, boost::is_base_of<U, T>, std::is_same<T, U>> {};
+    : boost::mpl::or_<std::is_base_of<T, U>, std::is_base_of<U, T>, std::is_same<T, U>> {};
 #endif
 // !defined(ADOBE_NO_DOCUMENTATION)
 
@@ -168,7 +166,7 @@ typedef double storage_t[2];
 template <typename T, int N = sizeof(storage_t)>
 struct is_small {
     enum {
-        value = sizeof(T) <= N && (boost::has_nothrow_constructor<typename T::value_type>::value ||
+        value = sizeof(T) <= N && (std::is_nothrow_constructible<typename T::value_type>::value ||
                                    std::is_same<std::string, typename T::value_type>::value)
     };
 };
@@ -264,8 +262,7 @@ struct poly_base {
     // Construct from value type
 
     template <typename T>
-    explicit poly_base(T x,
-                       typename boost::disable_if<boost::is_base_of<poly_base, T>>::type* = 0) {
+    explicit poly_base(T x, typename boost::disable_if<std::is_base_of<poly_base, T>>::type* = 0) {
         ::new (storage()) implementation::poly_instance<Instance<T>>(std::move(x));
     }
 
@@ -273,7 +270,7 @@ struct poly_base {
     template <typename J, template <typename> class K>
     explicit poly_base(const poly_base<J, K>& x,
                        typename boost::enable_if<is_base_derived_or_same<I, J>>::type* = 0) {
-        if (boost::is_base_of<J, I>::value)
+        if (std::is_base_of<J, I>::value)
             dynamic_cast<const I&>(static_cast<const poly_copyable_interface&>(x.interface_ref()));
         x.interface_ref().clone(storage());
     }
@@ -361,7 +358,7 @@ struct poly_base {
     template <typename J, template <typename> class K>
     typename boost::enable_if<is_base_derived_or_same<I, J>>::type
     assign(const poly_base<J, K>& x) {
-        if (boost::is_base_of<J, I>::value)
+        if (std::is_base_of<J, I>::value)
             dynamic_cast<I&>(static_cast<J&>(*x.interface_ptr())); // make sure type safe
         interface_ref().~interface_type();
         x.interface_ref().clone(storage());

@@ -21,9 +21,6 @@
 #include <iterator>
 #include <memory>
 
-#include <boost/operators.hpp>
-#include <boost/type_traits/has_nothrow_constructor.hpp>
-
 #include <adobe/algorithm/minmax.hpp>
 #include <adobe/empty.hpp>
 #include <adobe/memory.hpp>
@@ -534,13 +531,6 @@ ADOBE_NAME_TYPE_1("vector:version_1:adobe",
 ADOBE_NAME_TYPE_2("vector:version_1:adobe", adobe::version_1::vector<T0, T1>)
 
 /**************************************************************************************************/
-
-namespace boost {
-
-template <typename T, typename A>
-struct has_nothrow_constructor<adobe::version_1::vector<T, A>> : boost::mpl::true_ {};
-
-} // namespace boost
 
 /*!
 @}

@@ -14,10 +14,6 @@
 
 #include <boost/mpl/bool.hpp>
 #include <boost/operators.hpp>
-#include <boost/type_traits/has_trivial_constructor.hpp>
-#include <boost/type_traits/has_trivial_destructor.hpp>
-#include <boost/type_traits/is_empty.hpp>
-#include <boost/type_traits/is_pod.hpp>
 
 #if defined(ADOBE_STD_SERIALIZATION)
 #include <iosfwd>
@@ -76,20 +72,6 @@ struct empty_base {};
 /**************************************************************************************************/
 
 } // namespace adobe
-
-/**************************************************************************************************/
-
-namespace boost {
-
-template <>
-struct is_pod<adobe::version_1::empty_t> : boost::mpl::true_ {};
-template <>
-struct is_empty<adobe::version_1::empty_t> : boost::mpl::true_ {};
-template <>
-struct has_trivial_constructor<adobe::version_1::empty_t> : boost::mpl::true_ {};
-template <>
-struct has_trivial_destructor<adobe::version_1::empty_t> : boost::mpl::true_ {};
-} // namespace boost
 
 /**************************************************************************************************/
 

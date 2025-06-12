@@ -19,11 +19,12 @@ set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
 project(adobe-source-libraries CXX)
 
+# https://github.com/boostorg/boost/releases
 CPMAddPackage(
     NAME Boost
-    VERSION 1.87.0
-    URL https://github.com/boostorg/boost/releases/download/boost-1.87.0/boost-1.87.0-cmake.7z
-    URL_HASH SHA256=61d61a3f33283bab8f3736745a4e47c37141f07e413986cd05d1f942c69d529a
+    VERSION 1.88.0
+    URL https://github.com/boostorg/boost/releases/download/boost-1.88.0/boost-1.88.0-cmake.7z
+    URL_HASH SHA256=feba537f6d32c062ed0f26b4d6e5b8e8450d51ef81492369a101ab99fcead278
     OPTIONS
     "BOOST_ENABLE_CMAKE ON"
     "CMAKE_CXX_CLANG_TIDY ;"

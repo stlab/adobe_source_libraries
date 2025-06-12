@@ -8,6 +8,7 @@
 #include <adobe/config.hpp>
 
 #include <functional>
+#include <type_traits>
 
 #define BOOST_TEST_MAIN
 #include <adobe/test/check_less_than_comparable.hpp>
@@ -40,6 +41,6 @@ BOOST_AUTO_TEST_CASE(name_test) {
     // 1 arg ctor, c_str
     BOOST_CHECK_EQUAL(std::strcmp(simple.c_str(), "simple"), 0);
 
-    // is_pod
-    BOOST_CHECK_EQUAL(boost::is_pod<adobe::name_t>::value, true);
+    // is_standard_layout
+    BOOST_CHECK_EQUAL(std::is_standard_layout<adobe::name_t>::value, true);
 }

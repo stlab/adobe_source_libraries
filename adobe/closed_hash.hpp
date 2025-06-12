@@ -26,7 +26,6 @@
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/next_prior.hpp>
 #include <boost/operators.hpp>
-#include <boost/type_traits/has_nothrow_constructor.hpp>
 
 #include <adobe/algorithm/lower_bound.hpp>
 #include <adobe/conversion.hpp>
@@ -718,20 +717,6 @@ static_assert(sizeof(closed_hash_set<int>) == sizeof(void*));
 /**************************************************************************************************/
 
 } // namespace adobe
-
-/**************************************************************************************************/
-
-namespace boost {
-
-template <typename T, typename KeyTransform, typename Hash, typename Pred, typename A>
-struct has_nothrow_constructor<adobe::version_1::closed_hash_set<T, KeyTransform, Hash, Pred, A>>
-    : boost::mpl::true_ {};
-
-template <typename Key, typename T, typename Hash, typename Pred, typename A>
-struct has_nothrow_constructor<adobe::version_1::closed_hash_map<Key, T, Hash, Pred, A>>
-    : boost::mpl::true_ {};
-
-} // namespace boost
 
 /**************************************************************************************************/
 

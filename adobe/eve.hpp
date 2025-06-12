@@ -35,15 +35,6 @@ struct view_proxy_t;
 
 /**************************************************************************************************/
 
-#if !defined(ADOBE_NO_DOCUMENTATION)
-namespace boost {
-template <>
-struct is_pod<adobe::implementation::view_proxy_t> : boost::mpl::true_ {};
-} // namespace boost
-#endif
-
-/**************************************************************************************************/
-
 namespace adobe {
 
 /**************************************************************************************************/
@@ -195,7 +186,7 @@ public:
     */
 
     void set_visible(iterator, bool);
-    
+
     /*!
     \brief set_layout_attributes
     */
