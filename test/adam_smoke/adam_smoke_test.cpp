@@ -7,6 +7,7 @@
 
 #include <adobe/config.hpp>
 
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <functional>
@@ -111,8 +112,7 @@ void read_sheet(const fs::path& filepath, adobe::sheet_t& sheet) {
         auto native_path{filepath.native()};
         std::string path;
         adobe::copy_utf<char>(begin(native_path), end(native_path), std::back_inserter(path));
-        adobe::parse(input_file, adobe::line_position_t(path.c_str()),
-                     adobe::bind_to_sheet(sheet));
+        adobe::parse(input_file, adobe::line_position_t(path.c_str()), adobe::bind_to_sheet(sheet));
     } catch (const adobe::stream_error_t& error) {
         std::cerr << "adobe:: "
                   << ": " << format_stream_error(error) << "\n";
@@ -227,8 +227,10 @@ int main(int argc, char* argv[]) {
         }
     } catch (const std::exception& error) {
         std::cerr << "std::exception: " << typeid(error).name() << ": " << error.what() << "\n";
+        return EXIT_FAILURE;
     } catch (...) {
         std::cerr << "Unknown Exception\n";
+        return EXIT_FAILURE;
     }
 
     return result;
