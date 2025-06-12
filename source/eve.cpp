@@ -255,6 +255,7 @@ public:
     void set_visible(iterator, bool);
     void set_layout_attributes(iterator, const layout_attributes_t&);
 
+    void print_debug(std::ostream& os);
 private:
     void solve(slice_select_t select);
     void layout(slice_select_t select, int optional_length);
@@ -288,6 +289,10 @@ std::pair<int, int> eve_t::evaluate(evaluate_options_t options, int width, int h
 
 std::pair<int, int> eve_t::adjust(evaluate_options_t options, int width, int height) {
     return object_m->adjust(options, width, height);
+}
+
+void eve_t::print_debug(std::ostream& os) {
+    object_m->print_debug(os);
 }
 
 eve_t::iterator eve_t::add_placeable(iterator parent, const layout_attributes_t& initial,
@@ -344,11 +349,123 @@ eve_t::iterator eve_t::implementation_t::add_placeable(iterator parent,
 
 /**************************************************************************************************/
 
+namespace {
+
+constexpr const char* to_string(eve_t::placement_t x) {
+    switch (x) {
+        case eve_t::place_leaf: return "leaf";
+        case eve_t::place_column: return "column";
+        case eve_t::place_row: return "row";
+        case eve_t::place_overlay: return "overlay";
+    }
+    // If you get here, it means you somehow have a placement_t whose value is invalid.
+    ADOBE_ASSERT(false);
+    return "invalid";
+}
+
+constexpr const char* to_string(layout_attributes_alignment_t::alignment_t x) {
+    switch (x) {
+        case layout_attributes_alignment_t::align_forward: return "forward";
+        case layout_attributes_alignment_t::align_reverse: return "reverse";
+        case layout_attributes_alignment_t::align_center: return "center";
+        case layout_attributes_alignment_t::align_proportional: return "proportional";
+        case layout_attributes_alignment_t::align_forward_fill: return "forward_fill";
+        case layout_attributes_alignment_t::align_reverse_fill: return "reverse_fill";
+        case layout_attributes_alignment_t::align_default: return "default";
+    }
+    // If you get here, it means you somehow have an alignment_t whose value is invalid.
+    ADOBE_ASSERT(false);
+    return "invalid";
+}
+
+///
+/// This routine ensures the `os` is set to a default state such that output
+/// to it will be in a consistent format. The stream's state will be restored
+/// when the routine returns, even if an exception is thrown.
+///
+/// \param os The stream to be formatted.
+/// \param f A function to be called with the formatted stream.
+///
+template <class F>
+void with_default_formatting(std::ostream& os, F&& f) {
+    struct state_saver {
+        state_saver(std::ostream& os) : _os(os) {
+            _old.copyfmt(_os); // save the original state
+            _os.copyfmt(std::ios{nullptr}); // default formatting - picks up global locale
+            _os.imbue(std::locale::classic()); // "C" locale with UTF-8 support
+        }
+
+        ~state_saver() {
+            _os.copyfmt(_old); // restore the original state
+        }
+
+        std::ios _old{nullptr};
+        std::ostream& _os;
+    } saver(os);
+
+    f(os);
+}
+
+} // namespace
+
+/**************************************************************************************************/
+
 void eve_t::implementation_t::set_visible(iterator c, bool visible) { c->visible_m = visible; }
 
 void eve_t::implementation_t::set_layout_attributes(iterator c,
                                                     const layout_attributes_t& geometry) {
     c->geometry_m = geometry;
+}
+
+void eve_t::implementation_t::print_debug(std::ostream& output_stream) {
+    with_default_formatting(output_stream, [&](std::ostream& os) {
+        iterator iter = proxies_m.begin();
+        iterator last = proxies_m.end();
+        std::size_t depth(0);
+
+        for (; iter != last; ++iter) {
+            if (iter.edge() == forest_trailing_edge) {
+                --depth;
+                if (has_children(iter)) {
+                    os << std::string(depth * 4, ' ') << "}\n";
+                }
+                continue;
+            }
+
+            const implementation::view_proxy_t& proxy = *iter;
+            const auto& g = proxy.geometry_m;
+            const auto& h = proxy.place_m.horizontal();
+            const auto& v = proxy.place_m.vertical();
+            
+            os << std::string(depth * 4, ' ');
+            os << proxy.placeable_m.type_info().name();
+            os << "(";
+            os << "left: " << h.position_m;
+            os << ", ";
+            os << "top: " << v.position_m;
+            os << ", ";
+            os << "width: " << h.length_m;
+            os << ", ";
+            os << "height: " << v.length_m;
+            os << ", ";
+            os << "horizontal: " << to_string(g.horizontal().alignment_m);
+            os << ", ";
+            os << "vertical: " << to_string(g.vertical().alignment_m);
+            os << ", ";
+            os << "placement: " << to_string(g.placement_m);
+            os << ")";
+
+            if (has_children(iter)) {
+                os << " {";
+            } else {
+                os << ";";
+            }
+
+            os << "\n";
+
+            ++depth;
+        }
+    });
 }
 
 /**************************************************************************************************/
