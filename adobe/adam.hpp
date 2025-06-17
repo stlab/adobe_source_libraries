@@ -25,11 +25,11 @@
 
 /*
 
-    REVISIT (sparent) : It would be best to detangle the sheet from
-    the virtual machine. The way to do this is to allow for funciton
+    REVISIT (sparent) : It would be best to untangle the sheet from
+    the virtual machine. The way to do this is to allow for function
     objects to be passed instead of line positions and expression
     arrays. The function object could bind to the line_position_t and
-    the array.... This would allow for easier programatic driving.
+    the array.... This would allow for easier programmatic driving.
 
 */
 
