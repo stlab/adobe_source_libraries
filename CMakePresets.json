@@ -138,6 +138,16 @@
                     "enableClangTidyCodeAnalysis": true
                 }
             }
+        },
+        {
+            "name": "docs",
+            "displayName": "docs",
+            "description": "Build Doxygen documentation",
+            "generator": "Ninja",
+            "binaryDir": "${sourceParentDir}/build/asl-docs",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "DEBUG"
+            }
         }
     ],
     "buildPresets": [
@@ -146,6 +156,13 @@
             "description": "",
             "displayName": "",
             "configurePreset": "debug"
+        },
+        {
+            "name": "docs",
+            "description": "",
+            "displayName": "",
+            "configurePreset": "docs",
+            "targets": [ "doxygen" ]
         }
     ],
     "testPresets": [
