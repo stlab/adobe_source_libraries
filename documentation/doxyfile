@@ -44,6 +44,7 @@ PREDEFINED             = __STDC_LIMIT_MACROS \
                          DOXYGEN_ONLY=1 \
                          INCLUDE_ASL_SERIALIZATION=1 \
                          DEBUG=1
+
 # The PROJECT_NAME tag is a single word (or a sequence of words surrounded by
 # double-quotes, unless you are using Doxywizard) that should identify the
 # project for which the documentation is generated. This name is used in the
