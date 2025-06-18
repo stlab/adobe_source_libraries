@@ -23,7 +23,7 @@ The adobe::any_iterator template is an experiment in concept based polymorphism.
 
 \todo (sparent) A future extension would be to include a tuple of "known types" into the interface which would be stored in a variant and eliminate the need for the heap allocation except for unknown types.
 
-\section Example Example
+\example any_iterator_example.cpp
 
 This example illustrates how an any_iterator can be used to deal with runtime polymorphic sequences. We have a single concrete function, reverse_and_print(), which can be used with a list, vector, deque, or any other bidirectional sequence.
 

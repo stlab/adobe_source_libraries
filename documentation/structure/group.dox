@@ -12,8 +12,52 @@ file we are able to reorganize the groups easily.
 */
 
 /*!
+\defgroup parsing Parsing, Serialization, and Strings
+\brief Libraries for parsing text.
+*/
+
+/*!
+\defgroup containers Containers
+\brief General-purpose containers.
+*/
+
+/*!
+\defgroup abi_container ABI-Safe Containers: hash containers, vector, ...
+\ingroup containers
+\brief Containers that are safe to use across ABI boundaries.
+*/
+
+/*!
 \defgroup unicode Unicode Utilities
 \ingroup parsing
 
 \brief Basic unicode conversion
+*/
+
+/*!
+\defgroup apl_libraries APL Libraries
+*/
+
+/*!
+\defgroup util_misc Miscellaneous Utilities
+*/
+
+/*!
+\defgroup inspection Inspection
+*/
+
+/*!
+\defgroup type_info_related Type Info
+*/
+
+/*!
+\defgroup abi_string ABI-Safe Strings
+*/
+
+/*!
+\defgroup dictionary_arg_stream Dictionary Argument Stream
+*/
+
+/*!
+\defgroup string_algorithm String Algorithms
 */

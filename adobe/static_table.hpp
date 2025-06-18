@@ -90,8 +90,7 @@ It is publicly available to support static table initialization by the C++ compi
 */
 
 /*!
-\fn const adobe::static_table::value_type& adobe::static_table::operator()(const
-adobe::static_table::key_type& key) const
+\fn const value_type& adobe::static_table::operator()(const key_type& key) const
 
 \param key The key whose stored value we are searching for.
 
@@ -103,8 +102,7 @@ adobe::static_table::key_type& key) const
 */
 
 /*!
-\fn bool adobe::static_table::operator()(const adobe::static_table::key_type& key,
-adobe::static_table::value_type& result) const
+\fn bool adobe::static_table::operator()(const key_type& key, value_type& result) const
 
 \param key The key whose stored value we are searching for.
 \param result Set to the value associated with the key if <code>key</code> is found.
@@ -165,8 +163,7 @@ A pair comprised of a key_type and a value_type.
 */
 
 /*!
-\fn adobe::static_table_traits::result_type adobe::static_table_traits::operator()(const
-adobe::static_table_traits::entry_type& x, const adobe::static_table_traits::entry_type& y) const
+\fn result_type adobe::static_table_traits::operator()(const entry_type& x, const entry_type& y) const
 
 \param x The first entry
 \param y The second entry
@@ -177,8 +174,7 @@ otherwise.
 */
 
 /*!
-\fn adobe::static_table_traits::result_type adobe::static_table_traits::operator()(const
-adobe::static_table_traits::entry_type& x, const adobe::static_table_traits::key_type& y) const
+\fn result_type adobe::static_table_traits::operator()(const entry_type& x, const key_type& y) const
 
 \param x The table entry
 \param y An arbitrary key
@@ -188,8 +184,7 @@ adobe::static_table_traits::entry_type& x, const adobe::static_table_traits::key
 */
 
 /*!
-\fn adobe::static_table_traits::result_type adobe::static_table_traits::equal(const
-adobe::static_table_traits::key_type& x, const adobe::static_table_traits::key_type& y) const
+\fn result_type adobe::static_table_traits::equal(const key_type& x, const key_type& y) const
 
 \param x The first key
 \param y The second key

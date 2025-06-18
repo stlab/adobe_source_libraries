@@ -23,7 +23,6 @@ namespace adobe {
 
 
 /*!
-\ingroup arg_stream
 \ingroup dictionary_arg_stream
 
 \brief dictionary_arg_stream requires specializations of get_dictionary_entry for the dictionary.
@@ -73,7 +72,7 @@ struct dictionary_arg_stream_base {
 };
 
 /*!
-\ingroup arg_stream
+\ingroup dictionary_arg_stream
 
 \brief dictionary_arg_stream implements the arg_stream interface
 
@@ -248,7 +247,6 @@ struct if_range_else_key : if_range_base<NoThrow, is_range_for_dictionary<Dictio
 } // namespace dictionary_arg_stream_detail
 
 /*!
-\ingroup arg_stream
 \ingroup dictionary_arg_stream
 
 \brief call the function/callable-object \c f with args pulled from dictionary \c dict via keys from

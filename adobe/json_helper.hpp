@@ -86,7 +86,7 @@ struct asl_json_helper_t {
 
     \param data raw JSON data.
 
-    \return Either a \ref array_t or a \ref `dictionary_t` representing the
+    \return Either a \ref adobe::array_t or a \ref adobe::dictionary_t representing the
             raw data parsed, wrapped in an `any_regular_t`.
 */
 inline adobe::any_regular_t json_parse(const char* data) {

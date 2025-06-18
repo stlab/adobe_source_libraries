@@ -28,12 +28,8 @@ namespace adobe {
 
 /*!
 \defgroup memory Memory
-\ingroup utility
-
-Augments the functionality of \<memory\>
-@{
+\brief Augments the functionality of \<memory\>
 */
-
 
 template <typename T>
 struct empty_ptr;
@@ -95,8 +91,8 @@ struct ptr_traits<T (*)[]> {
     static bool empty_ptr(const_pointer_type x) throw() { return adobe::empty_ptr<T(*)[]>()(x); }
 };
 
-/*!
-    The ptr_traits class provide basic information and operations associated with a pointer
+/*! \ingroup memory
+    \brief The ptr_traits class provide basic information and operations associated with a pointer
     type.
 */
 
@@ -195,9 +191,6 @@ struct adobe_static_assert<true> {};
 
 /* REVISIT (sparent) : auto_resource should become unique_resource. */
 
-/*! \addtogroup memory
-  @{
-*/
 /*! \brief The template class <code>auto_resource\< X, Traits \></code> provides similar
     functionality to <code>unique_ptr</code> for resources for which the pointer is <i>opaque</i>
     refered to by a non-pointer type.
@@ -495,10 +488,13 @@ private:
     replace usage with C++11 aligned storage.
 */
 
-//! \addtogroup memory
-//! @{
+/*! \addtogroup memory
+@{
+*/
 template <typename T>
-struct aligned_storage {
+class aligned_storage {
+    ~aligned_storage(); // objects of this type must be on the stack
+public:
     aligned_storage() { construct_at(&get()); }
 
     explicit aligned_storage(T x) { construct_at(&get(), std::move(x)); }
@@ -531,8 +527,7 @@ private:
     static_assert(sizeof(T) <= sizeof(storage_t));
 };
 
-//! @} //end addtogroup memory
-
+//! @}
 /**************************************************************************************************/
 
 } // namespace adobe

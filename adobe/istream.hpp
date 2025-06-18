@@ -90,23 +90,13 @@ from where it originated.
 */
 
 /*!
-\fn adobe::stream_error_t::stream_error_t(const ExceptionBase& base, const adobe::line_position_t&
+\fn adobe::stream_error_t::stream_error_t(const std::exception& base, const adobe::line_position_t&
 position)
 
-Constructing from an arbitrary exception. It captures the value in base.what(), and moves on.
+Constructing from an arbitrary exception. It captures the value in base.what(). If base is a
+stream_error_t, it captures the line positions from the base exception.
 
 \param base The base exception from which the what() string is captured
-\param position The stream information detailing position of failure.
-*/
-
-/*!
-\fn adobe::stream_error_t::stream_error_t(adobe::stream_error_t& base, const adobe::line_position_t&
-position)
-
-This contstructor will construct a list of positions and retain the exception information. This is
-used to report back traces of what went wrong.
-
-\param base The base exception from which the what() string and previous position sets are captured
 \param position The stream information detailing position of failure.
 */
 
