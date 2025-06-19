@@ -184,6 +184,13 @@ struct binary_compose {
 
 /**************************************************************************************************/
 
+template <std::size_t I, class T>
+using element = std::tuple_element<I, T>;
+
+template <std::size_t I, class T>
+using element_t = typename element<I, T>::type;
+
+#if 0
 template <int N, typename T> // T is std::tuple<>
 struct element {
     typedef typename std::tuple_element<N, T>::type type;
@@ -199,8 +206,24 @@ struct element<1, std::pair<T1, T2>> {
     typedef typename std::pair<T1, T2>::second_type type;
 };
 
+#endif
+
 /**************************************************************************************************/
 
+template <std::size_t I>
+struct get_element {
+    template <class T>
+    element_t<I, T>& operator()(T& x) const {
+        return std::get<I>(x);
+    }
+
+    template <class T>
+    const element_t<I, T>& operator()(const T& x) const {
+        return std::get<I>(x);
+    }
+};
+
+#if 0
 template <int N, typename T> // T is pair or tuple
 struct get_element {
     typename element<N, T>::type& operator()(T& x) const { return std::get<N>(x); }
@@ -231,6 +254,8 @@ struct get_element<1, std::pair<T1, T2>> {
 
     const result_type& operator()(const argument_type& x) const { return x.second; }
 };
+
+#endif
 
 /**************************************************************************************************/
 

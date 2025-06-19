@@ -647,10 +647,10 @@ pair.
 
 template <typename Key, typename T, typename Hash, typename Pred, typename A>
 class closed_hash_map
-    : public closed_hash_set<std::pair<Key, T>, get_element<0, std::pair<Key, T>>, Hash, Pred, A> {
+    : public closed_hash_set<std::pair<Key, T>, get_element<0>, Hash, Pred, A> {
 
     using set_type =
-        closed_hash_set<std::pair<Key, T>, get_element<0, std::pair<Key, T>>, Hash, Pred, A>;
+        closed_hash_set<std::pair<Key, T>, get_element<0>, Hash, Pred, A>;
 
 public:
     typedef T mapped_type;

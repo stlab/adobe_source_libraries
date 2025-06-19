@@ -492,8 +492,7 @@ private:
 @{
 */
 template <typename T>
-class aligned_storage {
-    ~aligned_storage(); // objects of this type must be on the stack
+struct aligned_storage {
 public:
     aligned_storage() { construct_at(&get()); }
 

@@ -118,10 +118,6 @@ type.
 The promoted value type from T that will be returned by this function object's
 <code>operator()</code>s.
 
-\typedef any_regular_t::transform<T>::argument_type
-
-Parameter type required by this function object's <code>operator()</code>s.
-
 \fn template <typename T>
     typename traits<T>::result_type operator()(any_regular_t &x) const
 
