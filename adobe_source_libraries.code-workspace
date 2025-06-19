@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../build"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"*.cpp": "cpp",
+			"*.rust": "rust",
+			"*.ipp": "cpp"
+		},
+		"testing.coverageToolbarEnabled": true
+	}
+}

@@ -998,7 +998,7 @@ WARN_AS_ERROR          = NO
 # See also: WARN_LINE_FORMAT
 # The default value is: $file:$line: $text.
 
-WARN_FORMAT            = "$file:$line -- $text"
+WARN_FORMAT            = "$file:$line: $text"
 
 # In the $text part of the WARN_FORMAT command it is possible that a reference
 # to a more specific place is given. To make it easier to jump to this place
@@ -1008,7 +1008,7 @@ WARN_FORMAT            = "$file:$line -- $text"
 # See also: WARN_FORMAT
 # The default value is: at line $line of file $file.
 
-WARN_LINE_FORMAT       = "at line $line of file $file"
+WARN_LINE_FORMAT       = "at $file:$line: "
 
 # The WARN_LOGFILE tag can be used to specify a file to which warning and error
 # messages should be written. If left blank the output is written to standard
@@ -1017,7 +1017,7 @@ WARN_LINE_FORMAT       = "at line $line of file $file"
 # specified the warning and error messages are written to standard output
 # (stdout).
 
-WARN_LOGFILE           = ../build/asl-docs/doxygen_warn.log
+WARN_LOGFILE           =
 
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
@@ -1178,7 +1178,11 @@ EXAMPLE_RECURSIVE      = NO
 # that contain images that are to be included in the documentation (see the
 # \image command).
 
-IMAGE_PATH             =
+IMAGE_PATH             = documentation/asl/images \
+                         documentation/asl/related/images \
+                         documentation/doxygen_support_files/images \
+                         documentation/stldoc/images \
+                         documentation/tutorials/images
 
 # The INPUT_FILTER tag can be used to specify a program that Doxygen should
 # invoke to filter for each input file. Doxygen will invoke the filter program

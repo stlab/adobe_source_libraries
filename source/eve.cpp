@@ -256,6 +256,7 @@ public:
     void set_layout_attributes(iterator, const layout_attributes_t&);
 
     void print_debug(std::ostream& os);
+
 private:
     void solve(slice_select_t select);
     void layout(slice_select_t select, int optional_length);
@@ -291,9 +292,7 @@ std::pair<int, int> eve_t::adjust(evaluate_options_t options, int width, int hei
     return object_m->adjust(options, width, height);
 }
 
-void eve_t::print_debug(std::ostream& os) {
-    object_m->print_debug(os);
-}
+void eve_t::print_debug(std::ostream& os) { object_m->print_debug(os); }
 
 eve_t::iterator eve_t::add_placeable(iterator parent, const layout_attributes_t& initial,
                                      bool is_container_type,      // is the element a container?
@@ -353,10 +352,14 @@ namespace {
 
 constexpr const char* to_string(eve_t::placement_t x) {
     switch (x) {
-        case eve_t::place_leaf: return "leaf";
-        case eve_t::place_column: return "column";
-        case eve_t::place_row: return "row";
-        case eve_t::place_overlay: return "overlay";
+    case eve_t::place_leaf:
+        return "leaf";
+    case eve_t::place_column:
+        return "column";
+    case eve_t::place_row:
+        return "row";
+    case eve_t::place_overlay:
+        return "overlay";
     }
     // If you get here, it means you somehow have a placement_t whose value is invalid.
     ADOBE_ASSERT(false);
@@ -365,13 +368,20 @@ constexpr const char* to_string(eve_t::placement_t x) {
 
 constexpr const char* to_string(layout_attributes_alignment_t::alignment_t x) {
     switch (x) {
-        case layout_attributes_alignment_t::align_forward: return "forward";
-        case layout_attributes_alignment_t::align_reverse: return "reverse";
-        case layout_attributes_alignment_t::align_center: return "center";
-        case layout_attributes_alignment_t::align_proportional: return "proportional";
-        case layout_attributes_alignment_t::align_forward_fill: return "forward_fill";
-        case layout_attributes_alignment_t::align_reverse_fill: return "reverse_fill";
-        case layout_attributes_alignment_t::align_default: return "default";
+    case layout_attributes_alignment_t::align_forward:
+        return "forward";
+    case layout_attributes_alignment_t::align_reverse:
+        return "reverse";
+    case layout_attributes_alignment_t::align_center:
+        return "center";
+    case layout_attributes_alignment_t::align_proportional:
+        return "proportional";
+    case layout_attributes_alignment_t::align_forward_fill:
+        return "forward_fill";
+    case layout_attributes_alignment_t::align_reverse_fill:
+        return "reverse_fill";
+    case layout_attributes_alignment_t::align_default:
+        return "default";
     }
     // If you get here, it means you somehow have an alignment_t whose value is invalid.
     ADOBE_ASSERT(false);
@@ -390,8 +400,8 @@ template <class F>
 void with_default_formatting(std::ostream& os, F&& f) {
     struct state_saver {
         state_saver(std::ostream& os) : _os(os) {
-            _old.copyfmt(_os); // save the original state
-            _os.copyfmt(std::ios{nullptr}); // default formatting - picks up global locale
+            _old.copyfmt(_os);                 // save the original state
+            _os.copyfmt(std::ios{nullptr});    // default formatting - picks up global locale
             _os.imbue(std::locale::classic()); // "C" locale with UTF-8 support
         }
 
@@ -436,7 +446,7 @@ void eve_t::implementation_t::print_debug(std::ostream& output_stream) {
             const auto& g = proxy.geometry_m;
             const auto& h = proxy.place_m.horizontal();
             const auto& v = proxy.place_m.vertical();
-            
+
             os << std::string(depth * 4, ' ');
             os << proxy.placeable_m.type_info().name();
             os << "(";

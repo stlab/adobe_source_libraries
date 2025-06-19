@@ -76,7 +76,7 @@ Code formatting is a highly-debated issue between programmers. Adobe is no stran
 All new code submitted to ASL should have a compiling, linking and successfully executable test in the <code>//{depot}/adobe/test/</code> directory.
 
 \par
-All source files (code and documentation) should be named only with lowercase, 7-bit ASCII alphanumeric characters and the underscore ('_') character (<code>[0-9a-z_]</code>). This is to ensure maximum cross-platform, cross-locale compatibility.
+All source files (code and documentation) should be named only with lowercase, 7-bit ASCII alphanumeric characters and the underscore ('_') character (<code>[0-9a-z\_]</code>). This is to ensure maximum cross-platform, cross-locale compatibility.
 
 \par
 For legal reasons, no third-party code is allowed in any <code>stlab.adobe.com</code> depot. Examples of this might be the Boost or Lua library sources. Only code intended for submission to the Adobe Source Libraries is permitted.
