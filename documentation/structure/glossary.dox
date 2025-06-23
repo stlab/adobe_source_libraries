@@ -62,8 +62,6 @@
             <div class="def">Application Programming Interface. The C or C++ header file that describes the functions available to you in the DLL (or other code block).</div>
 
     \section glossary_B B
-        \subsection glossary_bjam bjam
-            <div class="def">bjam is an executable component of the Boost Build system version 2 (BBv2). BBv2 is used for building the \ref web_sourcelibrary and the necessary components of the <a href="http://www.boost.org">boost</a> libraries. See \ref asl_readme for more informoration.</div>
 
     \section glossary_C C
         \subsection glossary_class_invariant class invariants
@@ -113,7 +111,7 @@
 
     \section glossary_R R
         \subsection glossary_reference_range range
-            <div class="def">A concept and associated traits and functions for handling <code>[first, last)</code> style ranges. Please see \ref concept_range.</div>
+            <div class="def">A concept and associated traits and functions for handling <code>[first, last)</code> style ranges. Please see \ref concept_convertible_to_range.</div>
 
         \subsection glossary_reference_semantics reference semantics
             <div class="def">When you can treat a variable as you would treat an <code>int*</code></div>

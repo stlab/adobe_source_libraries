@@ -150,8 +150,7 @@ Const iterator used to iterate backwards through a table_index.
 */
 
 /*!
-\fn adobe::table_index::table_index(TransformPrimitive transform, const
-adobe::table_index::key_compare& compare)
+\fn adobe::table_index::table_index(TransformPrimitive transform, const adobe::table_index::key_compare& compare)
 
 \param transform \ref concept_convertible_to_function to be converted to the transformation function
 for this index
@@ -159,16 +158,14 @@ for this index
 */
 
 /*!
-\fn adobe::table_index::table_index(const adobe::table_index::transform_type& transform, const
-adobe::table_index::key_compare& compare)
+\fn adobe::table_index::table_index(const adobe::table_index::transform_type& transform, const adobe::table_index::key_compare& compare)
 
 \param transform transformation function for this index
 \param compare key comparison function for this index
 */
 
 /*!
-\fn adobe::table_index::table_index(InputIterator first, InputIterator last, const transform_type&
-transform, const key_compare& compare)
+\fn adobe::table_index::table_index(InputIterator first, InputIterator last, TransformPrimitive transform, const key_compare& compare)
 
 \param first iterator to first element to populate the table
 \param last iterator to one-past-the-last element to populate the table
@@ -472,8 +469,7 @@ ordering of the table.
 */
 
 /*!
-\fn adobe::table_index::const_iterator adobe::table_index::lower_bound(const
-adobe::table_index::key_type& x) const
+\fn adobe::table_index::const_iterator adobe::table_index::lower_bound(const adobe::table_index::key_type& x) const
 
 \pre
     table must be sorted.
@@ -500,8 +496,7 @@ ordering of the table.
 */
 
 /*!
-\fn adobe::table_index::const_iterator adobe::table_index::upper_bound(const
-adobe::table_index::key_type& x) const
+\fn adobe::table_index::const_iterator adobe::table_index::upper_bound(const adobe::table_index::key_type& x) const
 
 \pre
     table must be sorted.
@@ -514,8 +509,7 @@ ordering of the table.
 */
 
 /*!
-\fn std::pair<adobe::table_index::iterator, adobe::table_index::iterator>
-adobe::table_index::equal_range(const adobe::table_index::key_type& x)
+\fn std::pair<adobe::table_index::iterator, adobe::table_index::iterator> adobe::table_index::equal_range(const adobe::table_index::key_type& x)
 
 \pre
     table must be sorted.
@@ -527,8 +521,7 @@ adobe::table_index::equal_range(const adobe::table_index::key_type& x)
 */
 
 /*!
-\fn std::pair<adobe::table_index::const_iterator, adobe::table_index::const_iterator>
-adobe::table_index::equal_range(const adobe::table_index::key_type& x) const
+\fn std::pair<adobe::table_index::const_iterator, adobe::table_index::const_iterator> adobe::table_index::equal_range(const adobe::table_index::key_type& x) const
 
 \pre
     table must be sorted.

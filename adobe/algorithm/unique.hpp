@@ -26,8 +26,8 @@ namespace adobe {
 \ingroup mutating_algorithm
 
 \see
-    - STL documentation for \ref stldoc_unique
-    - STL documentation for \ref stldoc_unique_copy
+    - [STL documentation for unique](https://www.boost.org/sgi/stl/unique.html)
+    - [STL documentation for unique_copy](https://www.boost.org/sgi/stl/unique_copy.html)
 */
 /**************************************************************************************************/
 /*!

@@ -139,7 +139,7 @@ A \c closed_hash_set is a hash based associative container, similar to a hash_se
 
 \model_of
     - \ref concept_regular_type
-    - \ref stldoc_UniqueHashedAssociativeContainer
+    - [UniqueHashedAssociativeContainer](https://www.boost.org/sgi/stl/UniqueHashedAssociativeContainer.html)
 
 \todo
     - re-order parameters so key_function is after comparison - to be consistent with
@@ -640,7 +640,7 @@ pair.
 
 \model_of
     - \ref concept_regular_type
-    - \ref stldoc_UniqueHashedAssociativeContainer
+    - [UniqueHashedAssociativeContainer](https://www.boost.org/sgi/stl/UniqueHashedAssociativeContainer.html)
 
 
 */

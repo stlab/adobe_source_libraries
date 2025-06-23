@@ -26,11 +26,11 @@ namespace adobe {
 \ingroup sorting
 
 \see
-    - STL documentation for \ref stldoc_includes
-    - STL documentation for \ref stldoc_set_union
-    - STL documentation for \ref stldoc_set_intersection
-    - STL documentation for \ref stldoc_set_difference
-    - STL documentation for \ref stldoc_set_symmetric_difference
+    - [STL documentation for includes](https://www.boost.org/sgi/stl/includes.html)
+    - [STL documentation for set_union](https://www.boost.org/sgi/stl/set_union.html)
+    - [STL documentation for set_intersection](https://www.boost.org/sgi/stl/set_intersection.html)
+    - [STL documentation for set_difference](https://www.boost.org/sgi/stl/set_difference.html)
+    - [STL documentation for set_symmetric_difference](https://www.boost.org/sgi/stl/set_symmetric_difference.html)
 */
 /**************************************************************************************************/
 /*!

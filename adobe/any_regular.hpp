@@ -118,16 +118,14 @@ type.
 The promoted value type from T that will be returned by this function object's
 <code>operator()</code>s.
 
-\fn template <typename T>
-    typename traits<T>::result_type operator()(any_regular_t &x) const
+\fn template <typename T> typename traits<T>::result_type transform<T>::operator()(any_regular_t &x) const
 
 \param x The value from which the result is to be obtained.
 
 \return
     A reference to the instance value stored in this any_regular_t.
 
-\fn template <typename T>
-    typename traits<T>::const_result_type operator()(const any_regular_t &x) const
+\fn template <typename T> typename traits<T>::const_result_type transform<T>::operator()(const any_regular_t &x) const
 
 \param x The value from which the result is to be obtained.
 

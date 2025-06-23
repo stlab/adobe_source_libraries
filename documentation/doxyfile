@@ -1143,7 +1143,7 @@ EXCLUDE_SYMLINKS       = NO
 # exclude all test directories for example use the pattern */test/*
 
 EXCLUDE_PATTERNS       = */implementation/* \
-                         */stldoc/*
+                         */examples/*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names
 # (namespaces, classes, functions, etc.) that should be excluded from the
@@ -1158,7 +1158,7 @@ EXCLUDE_SYMBOLS        = detail \
 # that contain example code fragments that are included (see the \include
 # command).
 
-EXAMPLE_PATH           = 
+EXAMPLE_PATH           = documentation/examples
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
 # EXAMPLE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp and
@@ -1181,6 +1181,7 @@ EXAMPLE_RECURSIVE      = NO
 IMAGE_PATH             = documentation/asl/images \
                          documentation/asl/related/images \
                          documentation/doxygen_support_files/images \
+                         documentation/doxygen_support_files/include \
                          documentation/stldoc/images \
                          documentation/tutorials/images
 

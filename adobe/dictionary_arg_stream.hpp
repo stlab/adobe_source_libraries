@@ -80,7 +80,7 @@ struct dictionary_arg_stream_base {
 
 \template_parameters
     - \c Dictionary - A dictionary which implements adobe::get_entry
-    - \c Inputrange - models \ref stldoc_InputRange
+    - \c Inputrange - models [InputRange](https://www.boost.org/sgi/stl/InputRange.html)
     - \c NoThrow - if \ref std::nothrow_t, then the arg_stream will NOT throw if the key is not in
 the dictionary (it will instead return a default initialized argument)
                  - if it is NOT std::nothrow_t, it will likely throw if the key is not in the

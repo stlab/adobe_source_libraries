@@ -145,12 +145,6 @@ One implication of this requirement is that a <code>const</code> type is not Ass
 \par
 <A name="2">[2]</A>
 The reason this says &quot;<code>x</code> is a copy of <code>y</code>&quot;, rather than &quot;<code>x == y</code>&quot;, is that <code>operator==</code> is not necessarily defined: equality is not a requirement of Assignable.  If the type <code>X</code> is \ref stldoc_EqualityComparable as well as Assignable, then a copy of <code>x</code> should compare equal to <code>x</code>.
-\par
-<A name="3">[3]</A>
-\c adobe::swap will not throw an exception for an assignable type. For types with remote parts, \c adobe::swap must be specialized to swap the remote parts. <!--Please see the documentation on adobe::swap for more information.-->
-\par
-<A name="4">[4]</A>
-It is assumed that adobe::swap() will not throw an exception. Items with remote parts much specialize swap as described in \ref swap.
 
 \see_also
     - \ref stldoc_DefaultConstructible

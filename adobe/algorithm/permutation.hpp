@@ -26,8 +26,8 @@ namespace adobe {
 \ingroup sorting
 
 \see
-    - STL documentation for \ref stldoc_next_permutation
-    - STL documentation for \ref stldoc_prev_permutation
+    - [STL documentation for next_permutation](https://www.boost.org/sgi/stl/next_permutation.html)
+    - [STL documentation for prev_permutation](https://www.boost.org/sgi/stl/prev_permutation.html)
 */
 /**************************************************************************************************/
 /*!

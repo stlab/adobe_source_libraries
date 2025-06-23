@@ -25,8 +25,7 @@ namespace adobe {
 \defgroup filter filter
 \ingroup mutating_algorithm
 
-Filter is similar to \c std::tranform. The \c op function is passed an instance of an \ref
-stldoc_output_iterator and can generate more than (or fewer than) a single result.
+Filter is similar to \c std::tranform. The \c op function is passed an instance of an [output_iterator](https://www.boost.org/sgi/stl/output_iterator.html) and can generate more than (or fewer than) a single result.
 
 The \c op function is called once for each item in the range <code>[first, last)</code>. The \c
 result parameter is passed into the first call to \c op, the result of \c op is passed to subsequent
@@ -35,8 +34,8 @@ calls to \c op.
 \see std::transform, std::remove
 
 \requirements
-    - \em I models \ref stldoc_input_iterator.
-    - \em O models \ref stldoc_output_iterator.
+    - \em I models [input_iterator](https://www.boost.org/sgi/stl/input_iterator.html).
+    - \em O models [output_iterator](https://www.boost.org/sgi/stl/output_iterator.html).
     - \em F models \ref concept_convertible_to_function with signature O op(value_type(I), O)
     - \em <code>[first, last)</code> is a valid range.
 

@@ -61,7 +61,7 @@ I lower_bound_n_(I f, N n, const T& x, C c, P p) {
 \ingroup sorting
 
 \see
-    - STL documentation for \ref stldoc_lower_bound
+    - [STL documentation for lower_bound](https://www.boost.org/sgi/stl/lower_bound.html)
 */
 
 /**************************************************************************************************/

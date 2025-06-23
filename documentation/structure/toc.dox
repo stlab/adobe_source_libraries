@@ -15,7 +15,6 @@ starting points:
 	- \ref algorithm "Algorithms"
 	- \ref forest_related (Trees)
 	    - \ref asl_tutorials_forest "Forest library tutorial"
-	- \ref move_related
 	- \ref adobe::version_1::copy_on_write "Copy on Write library"
 	- \ref adobe::table_index "Table Index library"
     
@@ -61,19 +60,14 @@ starting points:
     - \ref adobe_functional
     - \ref adobe_iterator
     - \ref adobe_once
-    - \ref move_related
     - \ref type_info_related
     - \ref poly_related
-    - \ref sequence_mvc
-    - \ref adobe_sha
-    - \ref adobe_string
+    - \ref sha
+    - \ref parsing
     - \ref asl_thread_id
-    - \ref asl_unicode
+    - \ref unicode
     - \ref asl_xml_parser
     - \ref asl_xstring
-    - \ref apl_widgets [Future]
-        - \ref apl_widgets_carbon
-        - \ref widget_reference (deprecated)
 
 <h2>Classes (Alphabetically) [move to index]</h2>
     - adobe::any_regular_t
@@ -102,7 +96,7 @@ starting points:
         - adobe::static_name_t
     - adobe::selection_t
     - adobe::sequence_model_t
-    - \ref adobe_sha
+    - \ref sha
         - adobe::sha1_t
         - adobe::sha224_t
         - adobe::sha256_t
@@ -122,9 +116,9 @@ starting points:
 <h2>Libraries and Classes (Categorically)</h2>
 
 <h3>String and Text Processing</h3>
-    - \ref adobe_string
+    - \ref parsing
     - \ref asl_xstring
-    - \ref asl_unicode
+    - \ref unicode
 
 <h3>Containers (old section)</h3>
     - adobe::array_t
@@ -147,13 +141,13 @@ starting points:
     - adobe::dancing_links
     - adobe::md5_t
     - \ref selection_algorithms
-    - \ref adobe_sha
+    - \ref sha
         - adobe::sha1_t
         - adobe::sha224_t
         - adobe::sha256_t
         - adobe::sha384_t
         - adobe::sha512_t
-    - \ref asl_unicode
+    - \ref unicode
 
 <h3>Math and Numerics</h3>
     - \ref conversion
@@ -200,18 +194,7 @@ starting points:
     - \ref adam_engine
     - \ref eve_engine
         - \ref asl_tutorials_eve (Tutorial)
-    - \ref modal_dialog_kit [Future]
-    - \ref sequence_mvc
-    - \ref apl_widgets [Future]
-        - \ref apl_widgets_carbon
-        - \ref widget_reference (deprecated)
     - poly_controller.hpp
     - poly_view.hpp
 
-<h1>Concepts</h1>
-    - \ref controller_concept
-    - \ref view_concept.hpp
-    - \ref sequence_controller
-    - \ref sequence_view
-</table>
 */

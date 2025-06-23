@@ -26,7 +26,7 @@ namespace adobe {
 \ingroup sorting
 
 \see
-    - STL documentation for \ref stldoc_merge
+    - [STL documentation for merge](https://www.boost.org/sgi/stl/merge.html)
 */
 /**************************************************************************************************/
 /*!

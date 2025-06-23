@@ -26,8 +26,8 @@ namespace adobe {
 \ingroup non_mutating_algorithm
 
 \see
-    - STL documentation for \ref stldoc_search
-    - STL documentation for \ref stldoc_search_n
+    - [STL documentation for search](https://www.boost.org/sgi/stl/search.html)
+    - [STL documentation for search_n](https://www.boost.org/sgi/stl/search_n.html)
 */
 /**************************************************************************************************/
 /*!

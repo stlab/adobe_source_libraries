@@ -25,7 +25,7 @@ namespace adobe {
 \ingroup mutating_algorithm
 
 \see
-    - STL documentation for \ref stldoc_swap_ranges
+    - [STL documentation for swap_ranges](https://www.boost.org/sgi/stl/swap_ranges.html)
 */
 /**************************************************************************************************/
 /*!

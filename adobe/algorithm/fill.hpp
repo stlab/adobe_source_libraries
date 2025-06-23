@@ -25,7 +25,7 @@ namespace adobe {
 \ingroup mutating_algorithm
 
 \see
-    - STL documentation for \ref stldoc_fill
+    - [STL documentation for fill](https://www.boost.org/sgi/stl/fill.html)
 */
 /**************************************************************************************************/
 /*!

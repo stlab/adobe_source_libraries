@@ -63,36 +63,7 @@ it's parameter:
 \ingroup asl_concepts
 
 \description
-The idea of movable is that a value can be relocated to a new position without requiring additional
-resources (and hence without throwing an exception) with complexity proportional to the \c sizeof()
-the object as opposed to copy which has complexity proportional to the area of the object.
-Iterators to remote parts remain valid after a move. Move can be used in place of copying when the
-value of the item being copied from will not be used again. Because of this move can be used in
-place of copying when the item being copied from is an r-value (an unnamed temporary).
-
-Ideally, the concept \ref concept_movable would be part of \ref concept_regular_type. However,
-because of current language restrictions and history, the best we can do at this time is approximate
-this concept. We document it as a refinement of Regular and use it as an optimization of copy.
-
-\refinement_of
-	- \ref concept_regular_type
-	
-\valid_expressions
-Given a type \c T which models \ref concept_movable:
-	- <tt>T b; T a(adobe::move_from<T>(b));</tt>
-	
-\par Required Signatures:
-    - <tt>T(adobe::move_from<T>);<tt> <em>// move-ctor</em>
-    - <tt>T& operator=(T);<tt> <em>// move-assign</em>
-
-\expression_semantics
-Given a type \c T which models \ref concept_movable, a function (which may be partial)
-<tt>remote_identity(T) -> I</tt> which return the identity of a non-local part of T and a function
-<tt>f(I& id) -> T</tt> which sets /c id to the remote_identity of it's result.
-	- <tt>I id = remote_identity(b); T a(adobe::move_from<T>(b)); assert(id == remote_identity(a));</tt>
-	<em>// explicit move-ctor</em>
-	- <tt>I id; T a = f(id); assert(id == remote_identity(a));</tt> <em>// move-ctor with r-value (RVO)</em>
-	- <tt>I id; T a; a = f(id); assert(id == remote_identity(a));</tt> <em>// move-assign with r-value</em>
+See [C++20 concept movable](https://en.cppreference.com/w/cpp/header/concepts.html).
 
 \models
 	- adobe::version_1::vector
@@ -100,16 +71,5 @@ Given a type \c T which models \ref concept_movable, a function (which may be pa
 	- adobe::version_1::closed_hash_set
 	- adobe::version_1::closed_hash_map
 	- adobe::copy_on_write
-	
-\notes
-Because movable currently relies on the return value optimization being implemented by the
-compiler and being applied as needed we cannot rely on the axioms holding in practice although
-they often do. We can only rely on move as a potential optimization of copy. If moving a type is
-required then swap should be used instead. See \ref stldoc_Assignable.
 
-The move-ctor is rarely invoked directly but rather is called by <tt>adobe::move(a)</tt>. The
-required signature are tested for with <tt>adobe::is_movable<T></tt>.
-
-\see_also
-	- \ref move_related
 */

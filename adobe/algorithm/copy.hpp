@@ -27,9 +27,9 @@ namespace adobe {
 \ingroup mutating_algorithm
 
 \see
-    - STL documentation for \ref stldoc_copy
-    - STL documentation for \ref stldoc_copy_n
-    - STL documentation for \ref stldoc_copy_backward
+    - [STL documentation for copy](https://www.boost.org/sgi/stl/copy.html)
+    - [STL documentation for copy_n](https://www.boost.org/sgi/stl/copy_n.html)
+    - [STL documentation for copy_backward](https://www.boost.org/sgi/stl/copy_backward.html)
 */
 /**************************************************************************************************/
 

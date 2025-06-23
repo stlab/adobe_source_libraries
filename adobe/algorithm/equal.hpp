@@ -26,7 +26,7 @@ namespace adobe {
 \ingroup non_mutating_algorithm
 
 \see
-    - STL documentation for \ref stldoc_equal
+    - [STL documentation for equal](https://www.boost.org/sgi/stl/equal.html)
 */
 /**************************************************************************************************/
 /*!

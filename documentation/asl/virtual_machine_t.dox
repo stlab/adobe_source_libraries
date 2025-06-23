@@ -119,11 +119,7 @@ The following is a pdf-formatted expression sequence for the expression<br>&nbsp
 The expression to be evaluated, broken up into elements of an adobe::array_t.
 */
 
-/*!
-\typedef adobe::virtual_machine_t::contributing_t
 
-A bitfield for mapping the Adam input cells that contributed to the value of a virtual_machine_t::tracked_value_t
-*/
 
 /*!
 \typedef adobe::virtual_machine_t::variable_lookup_signature_t
@@ -131,17 +127,7 @@ A bitfield for mapping the Adam input cells that contributed to the value of a v
 Function signature for variable lookup functions.
 */
 
-/*!
-\typedef adobe::virtual_machine_t::simple_variable_lookup_signature_t
 
-Function signature for simple variable lookup functions.
-*/
-
-/*!
-\typedef adobe::virtual_machine_t::contributing_lookup_signature_t
-
-Function signature for contributing lookup functions.
-*/
 
 /*!
 \typedef adobe::virtual_machine_t::dictionary_function_lookup_signature_t
@@ -161,17 +147,7 @@ Function signature for functions with array-based (unnamed) arguments.
 A function used to map an identifier with its underlying tracked_value_t.
 */
 
-/*!
-\typedef adobe::virtual_machine_t::simple_variable_lookup_t
 
-A function used to map an identifier with its underlying any_regular_t.
-*/
-
-/*!
-\typedef adobe::virtual_machine_t::contributing_lookup_t
-
-A function used to map a contributing bitset with a tracked_value_t.
-*/
 
 /*!
 \typedef adobe::virtual_machine_t::dictionary_function_lookup_t
@@ -206,13 +182,7 @@ A function callback used for client-side unnamed-argument functions.
 Pops the top of the evaluation stack
 */
 
-/*!
-\fn void adobe::virtual_machine_t::set_contributing_lookup(const adobe::virtual_machine_t::contributing_lookup_t& lookup)
 
-Sets the function callback for contributing lookup.
-
-\param lookup The function to be used as the callback.
-*/
 
 /*!
 \fn void adobe::virtual_machine_t::set_variable_lookup(const adobe::virtual_machine_t::variable_lookup_t& lookup)
@@ -222,51 +192,7 @@ Sets the function callback for variable lookup.
 \param lookup The function to be used as the callback.
 */
 
-/*!
-\fn void adobe::virtual_machine_t::set_simple_variable_lookup(const adobe::virtual_machine_t::simple_variable_lookup_t& lookup)
 
-Sets the function callback for simple variable lookup.
 
-\param lookup The function to be used as the callback.
-*/
 
-/*!
-\class adobe::virtual_machine_t::tracked_value_t virtual_machine.hpp <adobe/virtual_machine.hpp>
-
-\brief Primary element of the virtual machine evaluation stack.
-
-\model_of
-    - \ref concept_regular_type
-
-\c tracked_value_t is the stack object for \c virtual_machine_t. During the course of evaluating an expression, its results are wrapped in <code>tracked_value_t</code>s and pushed onto the virtual machine's evaluation stack. Each \c tracked_value_t also contains metadata to track how this value was derived.
-*/
-
-/*!
-\fn void adobe::virtual_machine_t::tracked_value_t::tracked_value_t(const adobe::any_regular_t& value)
-
-Initialization with no contributing bit set.
-
-\param value The initial value stored.
-*/
-
-/*!
-\fn void adobe::virtual_machine_t::tracked_value_t::tracked_value_t(const adobe::any_regular_t& value, const adobe::virtual_machine_t::contributing_t& contributing)
-
-Initialization with a value and contributing bit set.
-
-\param value The initial value stored.
-\param contributing The initial contributing bit vector stored.
-*/
-
-/*!
-\var adobe::virtual_machine_t::tracked_value_t::value_m
-
-The value stored in this object.
-*/
-
-/*!
-\var adobe::virtual_machine_t::tracked_value_t::contributing_m
-
-The contributing bit set for the value stored in this object. Every bit in the bitset corresponds to an input cell in an Adam sheet; where a bit is 1, the index for that bit is also the index for a contributing cell to this value in the Adam input cell vector.
-*/
 /*\@}*/

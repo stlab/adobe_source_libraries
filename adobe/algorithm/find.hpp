@@ -28,11 +28,11 @@ namespace adobe {
 \ingroup non_mutating_algorithm
 
 \see
-    - STL documentation for \ref stldoc_find
-    - STL documentation for \ref stldoc_find_if
-    - STL documentation for \ref stldoc_find_end
-    - STL documentation for \ref stldoc_find_first_of
-    - STL documentation for \ref stldoc_adjacent_find
+    - [STL documentation for find](https://www.boost.org/sgi/stl/find.html)
+    - [STL documentation for find_if](https://www.boost.org/sgi/stl/find_if.html)
+    - [STL documentation for find_end](https://www.boost.org/sgi/stl/find_end.html)
+    - [STL documentation for find_first_of](https://www.boost.org/sgi/stl/find_first_of.html)
+    - [STL documentation for adjacent_find](https://www.boost.org/sgi/stl/adjacent_find.html)
 */
 
 /**************************************************************************************************/
