@@ -48,7 +48,7 @@ namespace version_1 {
     - \ref concept_movable
 
 \requirements
-    - \ref T models \ref concept_regular_type (supports T models \ref concept_movable).
+    - T models \ref concept_regular_type (supports T models \ref concept_movable).
 
 Copy-on-write sematics allow for object to be lazily copied - only creating a
 copy when the value is modified and there is more than one reference to the
@@ -77,7 +77,8 @@ public:
 private:
     struct implementation_t;
 
-    using implementation_allocator_type = typename std::allocator_traits<allocator_type>::template rebind_alloc<implementation_t>;
+    using implementation_allocator_type =
+        typename std::allocator_traits<allocator_type>::template rebind_alloc<implementation_t>;
 
 public:
 #endif

@@ -1182,7 +1182,6 @@ IMAGE_PATH             = documentation/asl/images \
                          documentation/asl/related/images \
                          documentation/doxygen_support_files/images \
                          documentation/doxygen_support_files/include \
-                         documentation/stldoc/images \
                          documentation/tutorials/images
 
 # The INPUT_FILTER tag can be used to specify a program that Doxygen should

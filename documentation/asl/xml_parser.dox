@@ -104,7 +104,8 @@ adobe::make_xml_parser(start_of_xml_document,
                        line_position_t("sample document"),
                        my_preorder_predicate,
                        my_content_callback,
-                       my_output_iterator).parse_document();\endverbatim
+                       my_output_iterator).parse_document();
+\endverbatim
 Note that in this usage, the parser is never even stored in a local
 variable. Instead, the result of make_xml_parser is immediately told
 to parse the document. This is a very common coding pattern for
@@ -124,7 +125,8 @@ following discussion, we will refer to this sample xml document:
 	<complex-child id="node3">
 		<grandchild id="node4"/>
 	</complex-child>
-</parent>\endverbatim
+</parent>
+\endverbatim
 \par
 xml_parser_t identifies the range corresponding to a given element and
 its contents -- in the example document above, the first element

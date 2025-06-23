@@ -156,7 +156,7 @@ namespace version_1 {
 /**************************************************************************************************/
 
 /*!
-    \requires \c R must have a non-throwing default constructor. \c R and all argument types
+    \pre \c R must have a non-throwing default constructor. \c R and all argument types
     must be abi safe. Any arguments passed by value must have a non-throwing copy constructor.
 */
 

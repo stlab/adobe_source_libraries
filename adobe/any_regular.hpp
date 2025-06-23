@@ -46,15 +46,6 @@ namespace adobe {
 
 
 /*!
-\fn template <typename T> any_regular_t::any_regular_t(T x)
-
-\param x Value to copy as the instance value of this object.
-
-\note
-    What is stored is a copy of <code>x</code> promoted to <code>promote<T>::type</code>.
-*/
-
-/*!
 \fn const typename promote<T>::type& adobe::any_regular_t::cast() const
 
 \return
@@ -78,27 +69,6 @@ instance value.
 type.
 */
 
-/*!
-\fn template <typename T> bool any_regular_t::cast(T& x) const
-
-\param
-    x Value that will be set to the value stored in the any_regular_t.
-
-\return
-    <code>true</code> if x was set successfully, <code>false</code> otherwise.
-
-\exception
-    Undefined Will relay anything thrown by <code>x.operator=()</code>.
-*/
-
-/*!
-\fn template <typename T> any_regular_t& any_regular_t::assign(T x)
-
-\param x The new value to assign to this any_regular_t.
-
-\return
-    The any_regular_t with its new value set.
-*/
 
 /*!
 \fn const std::type_info& any_regular_t::type_info() const
@@ -107,31 +77,6 @@ type.
     The information returned by <code>typeid()</code> for the instance value.
 */
 
-/*!
-\class any_regular_t::transform
-\ingroup any_regular
-
-\brief Function object used in binding for instance value access.
-
-\typedef any_regular_t::transform<T>::result_type
-
-The promoted value type from T that will be returned by this function object's
-<code>operator()</code>s.
-
-\fn template <typename T> typename traits<T>::result_type transform<T>::operator()(any_regular_t &x) const
-
-\param x The value from which the result is to be obtained.
-
-\return
-    A reference to the instance value stored in this any_regular_t.
-
-\fn template <typename T> typename traits<T>::const_result_type transform<T>::operator()(const any_regular_t &x) const
-
-\param x The value from which the result is to be obtained.
-
-\return
-    A reference to the instance value stored in this any_regular_t.
-*/
 
 /**************************************************************************************************/
 

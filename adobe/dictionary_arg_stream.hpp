@@ -76,14 +76,14 @@ struct dictionary_arg_stream_base {
 
 \brief dictionary_arg_stream implements the arg_stream interface
 
-\par This works with any dictionary type that implements \c get_dictionary_entry<R>(dict, key)
+\par This works with any dictionary type that implements \c get_dictionary_entry\<R\>(dict, key)
 
 \template_parameters
     - \c Dictionary - A dictionary which implements adobe::get_entry
     - \c Inputrange - models [InputRange](https://www.boost.org/sgi/stl/InputRange.html)
-    - \c NoThrow - if \ref std::nothrow_t, then the arg_stream will NOT throw if the key is not in
+    - \c NoThrow - if \c std::nothrow_t, then the arg_stream will NOT throw if the key is not in
 the dictionary (it will instead return a default initialized argument)
-                 - if it is NOT std::nothrow_t, it will likely throw if the key is not in the
+                 - if it is NOT \c std::nothrow_t, it will likely throw if the key is not in the
 dictionary
 */
 template <typename Dictionary, typename InputRange /*to get the keys*/,

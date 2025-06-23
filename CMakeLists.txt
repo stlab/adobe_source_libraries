@@ -17,6 +17,16 @@ endif(NOT DEFINED CMAKE_CXX_STANDARD)
 
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
+# Create symlink to compile_commands.json for clangd
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+    add_custom_target(clangd_compile_commands ALL
+        COMMAND ${CMAKE_COMMAND} -E create_symlink
+            ${CMAKE_BINARY_DIR}/compile_commands.json
+            ${CMAKE_SOURCE_DIR}/compile_commands.json
+        COMMENT "Creating symlink to compile_commands.json for clangd"
+    )
+endif()
+
 project(adobe-source-libraries CXX)
 
 # https://github.com/boostorg/boost/releases
