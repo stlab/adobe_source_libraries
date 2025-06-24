@@ -184,52 +184,34 @@ struct binary_compose {
 
 /**************************************************************************************************/
 
-template <int N, typename T> // T is std::tuple<>
-struct element {
-    typedef typename std::tuple_element<N, T>::type type;
-};
-
-template <typename T1, typename T2>
-struct element<0, std::pair<T1, T2>> {
-    typedef typename std::pair<T1, T2>::first_type type;
-};
-
-template <typename T1, typename T2>
-struct element<1, std::pair<T1, T2>> {
-    typedef typename std::pair<T1, T2>::second_type type;
-};
+//! Deprecated, use std::tuple_element instead.
+template <std::size_t I, class T>
+using element = std::tuple_element<I, T>;
 
 /**************************************************************************************************/
 
-template <int N, typename T> // T is pair or tuple
+template <std::size_t I, class T = void>
 struct get_element {
-    typename element<N, T>::type& operator()(T& x) const { return std::get<N>(x); }
+    auto operator()(T& x) const -> std::tuple_element_t<I, T>& {
+        return std::get<I>(x);
+    }
 
-    const typename element<N, T>::type& operator()(const T& x) const { return std::get<N>(x); }
+    auto operator()(const T& x) const -> const std::tuple_element_t<I, T>& {
+        return std::get<I>(x);
+    }
 };
 
-/**************************************************************************************************/
+template <std::size_t I>
+struct get_element<I, void> {
+    template <class T>
+    auto operator()(T& x) const -> std::tuple_element_t<I, T>& {
+        return std::get<I>(x);
+    }
 
-template <typename T1, typename T2> // T is pair or tuple
-struct get_element<0, std::pair<T1, T2>> {
-    typedef std::pair<T1, T2> argument_type;
-    typedef typename argument_type::first_type result_type;
-
-    result_type& operator()(argument_type& x) const { return x.first; }
-
-    const result_type& operator()(const argument_type& x) const { return x.first; }
-};
-
-/**************************************************************************************************/
-
-template <typename T1, typename T2> // T is pair or tuple
-struct get_element<1, std::pair<T1, T2>> {
-    typedef std::pair<T1, T2> argument_type;
-    typedef typename argument_type::second_type result_type;
-
-    result_type& operator()(argument_type& x) const { return x.second; }
-
-    const result_type& operator()(const argument_type& x) const { return x.second; }
+    template <class T>
+    auto operator()(const T& x) const -> const std::tuple_element_t<I, T>& {
+        return std::get<I>(x);
+    }
 };
 
 /**************************************************************************************************/

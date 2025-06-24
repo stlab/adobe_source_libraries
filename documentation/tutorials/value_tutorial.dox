@@ -1,4 +1,5 @@
 /*!
+\page asl_tutorials_value_t any_regular_t
 \defgroup asl_tutorials_value_t any_regular_t
 \ingroup asl_tutorials
 
@@ -6,14 +7,14 @@
 
 \section value_t_background Background
 
-\subsection background_discriminated_types Discriminated Types and Unions
+\subsection any_regular_t_background_discriminated_types Discriminated Types and Unions
 \par
 adobe::any_regular_t is a pseudo-discriminated union. Before we can go any further we must first understand what a discriminated type is. Kevin Henney best describes discriminated types in his documentation of <a href="http://www.boost.org/doc/html/any.html#id447427">boost::any</a>:
     - <i>Discriminated types ... contain values of different types but do not attempt conversion between them, i.e. <code>5</code> is held strictly as an <code>int</code> and is not implicitly convertible either to <code>"5"</code> or to <code>5.0</code>. Their indifference to interpretation but awareness of type effectively makes them safe, generic containers of single values, with no scope for surprises from ambiguous conversions.</i>
 \par
-A discriminated union, then, is a type that can retain any one of a collection of discriminated types, but then only one at a time. In the case of adobe::any_regular_t its storable type range is limited to any type modeling the \ref background_data_type_requirements.
+A discriminated union, then, is a type that can retain any one of a collection of discriminated types, but then only one at a time. In the case of adobe::any_regular_t its storable type range is limited to any type modeling the \ref any_regular_t_background_data_type_requirements.
 
-\subsubsection discriminated_types_similarities Similarities
+\subsubsection any_regular_t_discriminated_types_similarities Similarities
 \par
 adobe::any_regular_t being a discriminated union means it is capable of holding any of:
 \par
@@ -44,7 +45,7 @@ my_value = my_whizzy_class; // adobe::any_regular_t to adobe::any_regular_t assi
 \par
 Note that in the last case the type stored within <code>my_value</code> is not adobe::any_regular_t, but the type stored within the adobe::any_regular_t from which it was assigned. In the case above, <code>my_value</code> now retains data of type <code>whizzy_class</code> because <code>my_whizzy_class</code> stored data of that type.
 
-\subsubsection discriminated_types_differences Differences
+\subsubsection any_regular_t_discriminated_types_differences Differences
 \par Type Promotion
 Unless otherwise specified, adobe::any_regular_t makes no attempt to store data in any other than its original type. (This follows the behavior of a discriminated union). However it is possible to specify an explicit coersion from one data type to another. In order to ensure preservation of data the coersion should always be from a type of smaller resolution to one of greater resolution. That is to say there should be no data loss during the type coersion. This restricted type conversion is thus called <i>type promotion</i>.
 \par
@@ -82,13 +83,13 @@ Therefore you should be very carfeul when specifying your own type promotions. I
 \par
 Whenever data is stored in a adobe::any_regular_t, it is always type-promoted before storage. Similarly, when a data is retrieved from a adobe::any_regular_t the data is "type-demoted" to the requested type at the time of the retrieval. If the requested type is not specified to be promoted to the stored type, an exception is thrown (more on this later.)
 
-\subsection background_data_type_requirements Data Type Concept Requirements
+\subsection any_regular_t_background_data_type_requirements Data Type Concept Requirements
 \par
 In order for adobe::any_regular_t to be assigned from a given type and value, the type must model the concept of a \ref concept_regular_type. All built-in data types model this concept, as do many of the classes found in both the STL and the ASL. adobe::any_regular_t may store any user-defined data type as well, as long as that data type is a model of \ref concept_regular_type.
 
 \section value_t_usage Usage
 
-\subsection usage_initialization_and_storage Initialization and Storage
+\subsection any_regular_t_usage_initialization_and_storage Initialization and Storage
 \par
 As we have seen in some of the previous examples, using adobe::any_regular_t is pretty straightforward. adobe::any_regular_t can be constructed with anything that is a \ref concept_regular_type, including default construction:
 \par
@@ -112,7 +113,7 @@ As mentioned above, the last adobe::any_regular_t in this code snippet inherits 
     adobe::any_regular_t my_vector_value_value(my_vector_value);
 \endcode
 
-\subsection usage_query Data Type Querying
+\subsection any_regular_t_usage_query Data Type Querying
 \par
 It is possible to check the type of data stored within an adobe::any_regular_t with <code>type_info()</code>:
 \par
@@ -146,7 +147,7 @@ else if (my_int_value.type_info() == typeid(double))
 }
 \endcode
 
-\subsection usage_retrieval Retrieval
+\subsection any_regular_t_usage_retrieval Retrieval
 \par
 Data is extracted from the adobe::any_regular_t by means of adobe::any_regular_t::cast<>:
 \par
@@ -186,7 +187,7 @@ catch(...)
 
 \section value_t_experimental_features Experimental Features
 
-\subsection experimental_features_serialization Serialization
+\subsection any_regular_t_experimental_features_serialization Serialization
 \par
 It is possible to extend adobe::any_regular_t's functionality in such a way that the contained data can be serialized from within adobe::any_regular_t. This is activated by defining a macro:
 \par

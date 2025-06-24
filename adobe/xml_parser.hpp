@@ -30,10 +30,6 @@
 
 #include <cassert>
 #include <functional>
-#include <iomanip>
-#include <istream>
-#include <list>
-#include <sstream>
 #include <utility>
 
 /**************************************************************************************************/
@@ -460,19 +456,22 @@ public:
     content range is processed by the application. Character data between top-level elements
     in the content range is ignored by the parser and is not processed.
 
-    \example
+    \par Example
     \par
         Consider this content range:
-    \verbatim
+
+\verbatim
 <top-level type="simple">element 1</top-level>
 
 these characters are ignored
 
-<top-level type="complex">element 2<embedded/></top-level>\endverbatim
+<top-level type="complex">element 2<embedded/></top-level>
+\endverbatim
+
     \par
-        Parsing this content range as an element sequence yields two top-level elements, one of
-which
-        contains embedded elements. Each top-level element is processed by the application according
+        Parsing this content range as an element sequence yields two top-level elements.
+        The first element is simple, and the second contains embedded elements.
+        Each top-level element is processed by the application according
         to the application's preorder predicate and content callback functions. The content between
         the two top-level elements is ignored.
     \par
@@ -487,19 +486,23 @@ which
     This function is most useful when invoking a sub-parser within an application's content
     callback function.
 
-    \example
+    \par Example
     \par
         Consider this document:
-    \verbatim
+
+\verbatim
 <?xml encoding="UTF-8" version="1.0" ?>
 <root>
     <content>sample document content</content>
-</root>\endverbatim
+</root>
+\endverbatim
+
     \par
         An application that wished to enforce the string structure of the document could
         use a content callback like the following to ensure that the root element of the
         document is "root", while also processing the content of the root element.
-    \code
+
+\code
 token_range_t top_level_callback(
                                   const token_range_t&     entire_element_range,
                                   const token_range_t&     name,
@@ -517,7 +520,8 @@ token_range_t top_level_callback(
 
     return token_range_t();
 }
-    \endcode
+\endcode
+
     \par
     In this example, the top level callback performs a sanity check that the element
     it encounters is the tag "root". It then creates a new parser to process the content
@@ -995,7 +999,8 @@ bool xml_parser_t<O>::is_bom(token_range_t& bom) {
     token_stream_m.set_skip_white_space(false);
 
     if (is_token(xml_token_char_data_k, bom)) {
-        if (adobe::token_range_size(utf8_bom) <= adobe::token_range_size(bom) && adobe::equal(utf8_bom, bom.first)) {
+        if (adobe::token_range_size(utf8_bom) <= adobe::token_range_size(bom) &&
+            adobe::equal(utf8_bom, bom.first)) {
             bom.second = bom.first;
             std::advance(bom.second, adobe::token_range_size(utf8_bom));
 

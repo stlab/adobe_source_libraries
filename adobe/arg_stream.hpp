@@ -205,7 +205,7 @@ struct signature<std::function<F>> {
 \brief result_type<F>::type is the return type of the function f.
 
 \template_parameters
-    - \c F models \ref callable_object
+    - \c F models callable object
 */
 template <typename F>
 struct result_type {

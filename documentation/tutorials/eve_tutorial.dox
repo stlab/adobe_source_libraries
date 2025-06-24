@@ -1,4 +1,5 @@
 /*!
+\page asl_tutorials_eve Eve
 \defgroup asl_tutorials_eve Eve
 \ingroup asl_tutorials
 
@@ -110,7 +111,7 @@ adobe::position_t client_assemble(  const adobe::eve_t::position_t& parent,
 \par
 There's a lot of new code being introduced here, so let us go through the main parts.
 
-\subsection tutorials_eve_assembler_placeable Layout Elements
+\subsection tutorials_eve_assembler_placeable_layout_elements Layout Elements
 \par
 Earlier we stated that the assemblage code is the only code that knows "context"- what components are available and how they should communicate with one another. This does not mean that the components cannot communicate with one another directly, however- just that the assemblage must dictate <i>how</i> this communication is going to happen.
 \par
@@ -128,7 +129,7 @@ You really do not need to know what the marker is, just that it <i>is</i>. You s
 \par
 In the case of the root node, notice that the 3rd parameter of the call to adobe::eve_t::parse is an empty position_t; a test is performed in the assembler that converts that value to an empty Eve Engine marker, which will place the element being added at the root of the heirarchy. Note that it is technically possible to put more than one root in the heirarchy (thereby creating a forest) but to do so is undefined for Eve.
 
-\subsection tutorials_eve_assembler_placeable  member functions
+\subsection tutorials_eve_assembler_placeable_member_function  member functions
 \par
 The code above mentions member functions of adobe::placeable_t constructed using a factory function taking a single argument, that is the name of the widget type found by the parser. If the widget type is "push_button", the factory creates a layout element wrapping a my_push_button class whose member functions do the actual work.
 \par

@@ -25,11 +25,11 @@
 
 /*
 
-    REVISIT (sparent) : It would be best to detangle the sheet from
-    the virtual machine. The way to do this is to allow for funciton
+    REVISIT (sparent) : It would be best to untangle the sheet from
+    the virtual machine. The way to do this is to allow for function
     objects to be passed instead of line positions and expression
     arrays. The function object could bind to the line_position_t and
-    the array.... This would allow for easier programatic driving.
+    the array.... This would allow for easier programmatic driving.
 
 */
 
@@ -190,8 +190,6 @@ public:
       \param name name of the cell being added.
 
       \param value value for the cell.
-
-      \param initializer expression to be evaluated for the cell's value.
     */
     void add_constant(name_t name, any_regular_t value);
 
@@ -233,7 +231,7 @@ public:
       \param linked specifies whether or not the output value is
       automatically applied back to the input value of the cell.
 
-      \param position position in the parse of the initializer definition.
+      \param position1 position in the parse of the initializer definition.
 
       \param initializer expression to be evaluated for the cell's value
 
@@ -254,7 +252,7 @@ public:
 
         \param name name of the cell being added.
 
-        \param inital initial value of the cell.
+        \param initial initial value of the cell.
     */
     void add_interface(name_t name, any_regular_t initial);
 
@@ -288,7 +286,7 @@ public:
       Establishes a callback for a cell to be called when the value of the
       cell changes.
 
-      \param cell the name of the cell to monitor.
+      \param name the name of the cell to monitor.
 
       \param proc the \ref concept_convertible_to_function to be called
       with the new cell value.

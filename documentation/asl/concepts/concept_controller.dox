@@ -44,7 +44,7 @@ A Controller is a one-way channel for information to travel from outside a model
         <tr>
             <td valign="top">Monitor</td>
             <td valign="top"><code>monitor(t, p);</code></td>
-            <td valign="top">See \ref monitor for requirements on<code>p</code></td>
+            <td valign="top">See monitor function documentation for requirements on<code>p</code></td>
             <td valign="top">void</td>
         </tr>
     </table>

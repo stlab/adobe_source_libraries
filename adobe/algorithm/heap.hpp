@@ -26,10 +26,10 @@ namespace adobe {
 \ingroup sorting
 
 \see
-    - STL documentation for \ref stldoc_push_heap
-    - STL documentation for \ref stldoc_pop_heap
-    - STL documentation for \ref stldoc_make_heap
-    - STL documentation for \ref stldoc_sort_heap
+    - [STL documentation for push_heap](https://www.boost.org/sgi/stl/push_heap.html)
+    - [STL documentation for pop_heap](https://www.boost.org/sgi/stl/pop_heap.html)
+    - [STL documentation for make_heap](https://www.boost.org/sgi/stl/make_heap.html)
+    - [STL documentation for sort_heap](https://www.boost.org/sgi/stl/sort_heap.html)
 */
 /**************************************************************************************************/
 /*!

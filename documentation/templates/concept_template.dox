@@ -1,4 +1,5 @@
-/*! \defgroup concept_documentaiton_template DocumentationTemplateForAConcept
+/*!
+\defgroup concept_documentation_template Documentation Template For A Concept
 \ingroup asl_documentation_templates
 
 \description

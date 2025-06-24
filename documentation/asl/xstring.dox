@@ -238,8 +238,6 @@ Clears the entire contents of the xstring glossary
 \param  n       size of the input buffer
 \param  output  Type that models OutputIterator; recieves the result of the xstring lookup.
 
-\return The glossary-obtained xstring value, or the default string if none is found in the glossary. This result will be a valid XML fragment
-
 \note When compiled without <code>NDEBUG</code> defined, if the string is not found in the glossary it will be added. This is useful for checking for duplicate entries across your application.
 */
 
@@ -250,13 +248,11 @@ Clears the entire contents of the xstring glossary
 \param  xstring Null-terminated 7-bit ASCII encoded xstring definition (an XML element fragment) to parse
 \param  output  Type that models OutputIterator; recieves the result of the xstring lookup.
 
-\return The glossary-obtained xstring value, or the default string if none is found in the glossary. This result will be a valid XML fragment
-
 \note When compiled without <code>NDEBUG</code> defined, if the string is not found in the glossary it will be added. This is useful for checking for duplicate entries across your application.
 */
 
 /*!
-\fn std::string adobe::parse_xml_fragment(uchar_ptr_t fragment, std::size_t n, O output)
+\fn void adobe::parse_xml_fragment(uchar_ptr_t fragment, std::size_t n, O output)
 \ingroup asl_xstring
 
 Parses a fragment of XML, outputting the result to an OutputIterator instance.
@@ -264,32 +260,26 @@ Parses a fragment of XML, outputting the result to an OutputIterator instance.
 \param  fragment    utf-8 encoded fragment of XML to parse
 \param  n           Number of bytes in the fragment
 \param  output      OutputIterator implementation that receives the result of the parse
-
-\return The value of the parsed fragment
 */
 
 /*!
-\fn std::string adobe::parse_xml_fragment(const std::string& fragment, O output)
+\fn void adobe::parse_xml_fragment(const std::string& fragment, O output)
 \ingroup asl_xstring
 
 Parses a fragment of XML, outputting the result to an OutputIterator instance.
 
 \param  fragment    utf-8 encoded fragment of XML to parse
 \param  output      OutputIterator implementation that receives the result of the parse
-
-\return The value of the parsed fragment
 */
 
 /*!
-\fn std::string adobe::parse_xml_fragment(const char* fragment, O output)
+\fn void adobe::parse_xml_fragment(const char* fragment, O output)
 \ingroup asl_xstring
 
 Parses a fragment of XML, outputting the result to an OutputIterator instance.
 
 \param  fragment    Null-terminated 7-bit ASCII encoded fragment of XML to parse
 \param  output      OutputIterator implementation that receives the result of the parse
-
-\return The value of the parsed fragment
 */
 
 /*!

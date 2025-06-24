@@ -23,7 +23,6 @@ namespace adobe {
 
 
 /*!
-\ingroup arg_stream
 \ingroup dictionary_arg_stream
 
 \brief dictionary_arg_stream requires specializations of get_dictionary_entry for the dictionary.
@@ -73,18 +72,18 @@ struct dictionary_arg_stream_base {
 };
 
 /*!
-\ingroup arg_stream
+\ingroup dictionary_arg_stream
 
 \brief dictionary_arg_stream implements the arg_stream interface
 
-\par This works with any dictionary type that implements \c get_dictionary_entry<R>(dict, key)
+\par This works with any dictionary type that implements \c get_dictionary_entry\<R\>(dict, key)
 
 \template_parameters
     - \c Dictionary - A dictionary which implements adobe::get_entry
-    - \c Inputrange - models \ref stldoc_InputRange
-    - \c NoThrow - if \ref std::nothrow_t, then the arg_stream will NOT throw if the key is not in
+    - \c Inputrange - models [InputRange](https://www.boost.org/sgi/stl/InputRange.html)
+    - \c NoThrow - if \c std::nothrow_t, then the arg_stream will NOT throw if the key is not in
 the dictionary (it will instead return a default initialized argument)
-                 - if it is NOT std::nothrow_t, it will likely throw if the key is not in the
+                 - if it is NOT \c std::nothrow_t, it will likely throw if the key is not in the
 dictionary
 */
 template <typename Dictionary, typename InputRange /*to get the keys*/,
@@ -248,7 +247,6 @@ struct if_range_else_key : if_range_base<NoThrow, is_range_for_dictionary<Dictio
 } // namespace dictionary_arg_stream_detail
 
 /*!
-\ingroup arg_stream
 \ingroup dictionary_arg_stream
 
 \brief call the function/callable-object \c f with args pulled from dictionary \c dict via keys from

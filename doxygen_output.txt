@@ -1,0 +1,8 @@
+/Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:161: warning: no matching class member found for 
+  table_index(const Transform &, const key_compare &)
+Possible candidates:
+  'template < TransformPrimitive >
+  table_index< Key, T, Transform, Compare >::table_index(TransformPrimitive transform, const key_compare &compare=key_compare())' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:690:
+  'table_index< Key, T, Transform, Compare >::table_index(const transform_type &, const key_compare &, bool undocumented_param=false)' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:692:
+  'template < InputIterator, TransformPrimitive >
+  table_index< Key, T, Transform, Compare >::table_index(InputIterator first, InputIterator last, TransformPrimitive transform, const key_compare &compare=key_compare())' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:704:

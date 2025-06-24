@@ -17,20 +17,20 @@ This class is an implementation of the "1-cover" problem:
 */
 
 /*!
-\fn void adobe::dancing_links::set(std::size_t row, std::size_t col)
+\fn void adobe::dancing_links_t::set(std::size_t row, std::size_t col, char color)
 
 Establishes a 1-node at the intersection of <code>[ row, col ]</code>.
 
 \param row The row in which the node will be set
 \param col The column in which the node will be set
-
+\param color The color of the node
 \pre
     You must start with the top-left node and work to the right, then down, when setting nodes in the matrix.
     i.e., This must be the right-bottom-most node you have set to this point.
 */
 
 /*!
-\fn void adobe::dancing_links::set_secondary_column(std::size_t col)
+\fn void adobe::dancing_links_t::set_secondary_column(std::size_t col)
 
 Secondary columns take dancing links to the next step, in that they allow for a column to be optionally used zero or one times. This essentially allows for a condition that can be met once but no more than once.
 
@@ -38,7 +38,7 @@ Secondary columns take dancing links to the next step, in that they allow for a 
 */
 
 /*!
-\fn std::size_t adobe::dancing_links::search(std::size_t max_solutions)
+\fn std::size_t adobe::dancing_links_t::search(std::size_t max_solutions)
 
 Performs a search looking for solutions to the 1-cover problem.
 
@@ -48,7 +48,7 @@ Performs a search looking for solutions to the 1-cover problem.
 */
 
 /*!
-\fn std::size_t adobe::dancing_links::search(std::size_t max_solutions, ResultCallback callback)
+\fn std::size_t adobe::dancing_links_t::search(std::size_t max_solutions, ResultCallback callback, SearchHeuristic heuristic)
 
 Performs a search looking for solutions to the 1-cover problem. When a solution is found the callback is called once for every row in the solution. The signature for the callback is:
 \code
@@ -57,6 +57,6 @@ void (*ResultCallback)(std::size_t row, bool last_row_in_solution);
 
 \param max_solutions Maximum number of solutions to find before breaking out of the search.
 \param callback callback
-
+\param heuristic The search heuristic to use
 \return the number of solutions actually found
 */

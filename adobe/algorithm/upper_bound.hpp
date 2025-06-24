@@ -65,7 +65,7 @@ I upper_bound_n(I f, N n, const T& x, C c, P p) {
 \ingroup sorting
 
 \see
-    - STL documentation for \ref stldoc_upper_bound
+    - [STL documentation for upper_bound](https://www.boost.org/sgi/stl/upper_bound.html)
 */
 
 /**************************************************************************************************/

@@ -9,3 +9,4 @@ documentation/doxyfile.bak
 build_asl/
 .vs/
 .vscode/settings.json
+/.cache

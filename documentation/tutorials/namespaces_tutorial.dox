@@ -5,6 +5,7 @@
 */
 
 /*!
+\page asl_tutorials_namespaces Namespaces
 \defgroup asl_tutorials_namespaces Namespaces
 \ingroup asl_tutorials
 
@@ -19,7 +20,7 @@ using namespace adobe;
 
 Implies that any unqualifed name subsequently used in the same scope will have the same semantics
 as the function defined in the adobe namespace. This may be a function which is defined in a
-different namespace but picked up through the argument dependent lookup (ADL or Koenig Lookup) feature of C++.
+different namespace but picked up through the argument dependent lookup (ADL) feature of C++.
 
 Within the ASL library, if the semantics of a function are substantially similar to a function
 defined in the standard library or in one of the libraries upon which ASL depends, then we will

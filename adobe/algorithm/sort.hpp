@@ -26,9 +26,9 @@ namespace adobe {
 \ingroup sorting
 
 \see
-    - STL documentation for \ref stldoc_sort
-    - STL documentation for \ref stldoc_stable_sort
-    - STL documentation for \ref stldoc_partial_sort_copy
+    - [STL documentation for sort](https://www.boost.org/sgi/stl/sort.html)
+    - [STL documentation for stable_sort](https://www.boost.org/sgi/stl/stable_sort.html)
+    - [STL documentation for partial_sort_copy](https://www.boost.org/sgi/stl/partial_sort_copy.html)
 */
 /**************************************************************************************************/
 /*!

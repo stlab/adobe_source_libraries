@@ -241,7 +241,7 @@ This only erases nodes if the deletion iterator passes through the node twice. S
 */
 
 /*!
-\fn adobe::forest::iterator adobe::forest::insert(const iterator& position, const T& x)
+\fn adobe::forest::iterator adobe::forest::insert(const iterator& position, T x)
 
 \param position an iterator to the position of insertion.
 \param x a value to be copy-constructed into position.
@@ -255,11 +255,15 @@ This only erases nodes if the deletion iterator passes through the node twice. S
 
 Inserts the sub-forest <code>[first.base(), last.base())</code> at \c position.
 
-\complexity
-    Linear.
+\param position an iterator to the position of insertion.
+\param first an iterator to the beginning of the range to be inserted
+\param last an iterator to the end of the range to be inserted
 
 \return
     An iterator to the first new node.
+    
+\complexity
+    Linear.
 */
 
 /*!

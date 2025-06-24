@@ -39,6 +39,6 @@ void check_regular(const T& x) {
 BOOST_TEST_CASE_TEMPLATE_FUNCTION(check_regulars, T) {
     check_regular(arbitrary_regular_value<T>());
 }
-} // namespace adobe
 
 //! @}
+} // namespace adobe

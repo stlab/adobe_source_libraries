@@ -34,7 +34,7 @@ namespace adobe {
 \ingroup non_mutating_algorithm
 
 \see
-    - STL documentation for \ref stldoc_mismatch
+    - [STL documentation for mismatch](https://www.boost.org/sgi/stl/mismatch.html)
 */
 /**************************************************************************************************/
 /*!

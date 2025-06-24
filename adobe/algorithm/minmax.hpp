@@ -52,10 +52,10 @@ assert(a == 10);
 </code>
 
 \see
-    - STL documentation for \ref stldoc_min
-    - STL documentation for \ref stldoc_max
-    - STL documentation for \ref stldoc_min_element
-    - STL documentation for \ref stldoc_max_element
+    - [STL documentation for min](https://www.boost.org/sgi/stl/min.html)
+    - [STL documentation for max](https://www.boost.org/sgi/stl/max.html)
+    - [STL documentation for min_element](https://www.boost.org/sgi/stl/min_element.html)
+    - [STL documentation for max_element](https://www.boost.org/sgi/stl/max_element.html)
 */
 /**************************************************************************************************/
 

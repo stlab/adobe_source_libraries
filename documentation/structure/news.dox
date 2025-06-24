@@ -117,7 +117,7 @@ Highlights of this release include:
 
 I have left Adobe and will be pursuing other opportunities.  This
 release is my first as an "external" opensource contributor.  Please
-use my mmarcus <at> emarcus <dot> org address instead of my former
+use my mmarcus \<at\> emarcus \<dot\> org address instead of my former
 adobe.com address.
 
  Mat
@@ -458,7 +458,7 @@ Highlights of this release include:
 \par August 2, 2007 - ASL 1.0.30 Release
 
 Highlights of this release include:
-    - This is a light release, a few minor bug fixes, some improved docs on the \ref move_related including a tutorial. And some minor reorganization including moving GIL out of the third_party directory.
+    - This is a light release, a few minor bug fixes, some improved docs on move-related algorithms including a tutorial. And some minor reorganization including moving GIL out of the third_party directory.
     - For more information and changes see the \ref asl_release_notes.
 
 \par July 5, 2007 - ASL 1.0.29 Release
@@ -561,7 +561,7 @@ Highlights of this release include:
     - Massive refactoring of the widget library to make each widget a standalone component
     - Delayed creation of the platform-widget to display::insert<> time, allowing proper subwindow ownership to take place on win32
     - Removed more files than you can shake a stick at
-    - Began the documentation process of the individual widgets under \ref asl_widgets
+    - Began the documentation process of the individual widgets
     - For more information and more changes see the \ref asl_release_notes
 \par
 Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.

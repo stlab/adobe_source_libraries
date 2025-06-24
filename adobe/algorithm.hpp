@@ -94,7 +94,7 @@ using.
     - \ref minmax
     - \ref rotate
 
-\sa \ref stldoc_index
+
 
 \defgroup mutating_algorithm Mutating Algorithms
 \ingroup algorithm

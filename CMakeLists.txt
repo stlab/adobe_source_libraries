@@ -17,6 +17,16 @@ endif(NOT DEFINED CMAKE_CXX_STANDARD)
 
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
+# Create symlink to compile_commands.json for clangd
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+    add_custom_target(clangd_compile_commands ALL
+        COMMAND ${CMAKE_COMMAND} -E create_symlink
+            ${CMAKE_BINARY_DIR}/compile_commands.json
+            ${CMAKE_SOURCE_DIR}/compile_commands.json
+        COMMENT "Creating symlink to compile_commands.json for clangd"
+    )
+endif()
+
 project(adobe-source-libraries CXX)
 
 # https://github.com/boostorg/boost/releases
@@ -48,4 +58,19 @@ add_subdirectory(source)
 
 if(BUILD_TESTING)
     add_subdirectory(test)
+endif()
+
+find_package(Doxygen)
+
+if(DOXYGEN_FOUND)
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/documentation/doxyfile)
+
+    add_custom_target(doxygen ALL
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_IN}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM
+    )
+else()
+    message(WARNING "Doxygen not found - documentation will not be built")
 endif()

@@ -150,8 +150,7 @@ Const iterator used to iterate backwards through a table_index.
 */
 
 /*!
-\fn adobe::table_index::table_index(TransformPrimitive transform, const
-adobe::table_index::key_compare& compare)
+\fn adobe::table_index::table_index(TransformPrimitive transform, const key_compare& compare)
 
 \param transform \ref concept_convertible_to_function to be converted to the transformation function
 for this index
@@ -159,21 +158,9 @@ for this index
 */
 
 /*!
-\fn adobe::table_index::table_index(const adobe::table_index::transform_type& transform, const
-adobe::table_index::key_compare& compare)
+\fn adobe::table_index::table_index(const transform_type&, const key_compare&)
 
-\param transform transformation function for this index
-\param compare key comparison function for this index
-*/
-
-/*!
-\fn adobe::table_index::table_index(InputIterator first, InputIterator last, const transform_type&
-transform, const key_compare& compare)
-
-\param first iterator to first element to populate the table
-\param last iterator to one-past-the-last element to populate the table
-\param transform transformation function for this index
-\param compare key comparison function for this index
+Constructs a table_index with the specified transformation function and key comparison function.
 */
 
 /*!
@@ -272,8 +259,6 @@ Reduces the index to a single value per key.
 \fn adobe::table_index::const_reference adobe::table_index::at(adobe::table_index::size_type n)
 const
 
-\param n index into the table.
-
 \return
     Element \c n in the table.
 */
@@ -349,9 +334,9 @@ to them exist.
 */
 
 /*!
-\fn adobe::table_index::iterator adobe::table_index::erase(adobe::table_index::iterator position)
+\fn adobe::table_index::iterator adobe::table_index::erase(adobe::table_index::iterator location)
 
-\param position iterator to the element to be removed from the index
+\param location iterator to the element to be removed from the index
 
 \return
     An iterator pointing to the next element after the one removed from the index
@@ -472,8 +457,8 @@ ordering of the table.
 */
 
 /*!
-\fn adobe::table_index::const_iterator adobe::table_index::lower_bound(const
-adobe::table_index::key_type& x) const
+\fn adobe::table_index::const_iterator adobe::table_index::lower_bound( \
+    const adobe::table_index::key_type& x) const
 
 \pre
     table must be sorted.
@@ -500,8 +485,8 @@ ordering of the table.
 */
 
 /*!
-\fn adobe::table_index::const_iterator adobe::table_index::upper_bound(const
-adobe::table_index::key_type& x) const
+\fn adobe::table_index::const_iterator adobe::table_index::upper_bound( \
+    const adobe::table_index::key_type& x) const
 
 \pre
     table must be sorted.
@@ -514,7 +499,7 @@ ordering of the table.
 */
 
 /*!
-\fn std::pair<adobe::table_index::iterator, adobe::table_index::iterator>
+\fn std::pair<adobe::table_index::iterator, adobe::table_index::iterator> \
 adobe::table_index::equal_range(const adobe::table_index::key_type& x)
 
 \pre
@@ -527,7 +512,7 @@ adobe::table_index::equal_range(const adobe::table_index::key_type& x)
 */
 
 /*!
-\fn std::pair<adobe::table_index::const_iterator, adobe::table_index::const_iterator>
+\fn std::pair<adobe::table_index::const_iterator, adobe::table_index::const_iterator> \
 adobe::table_index::equal_range(const adobe::table_index::key_type& x) const
 
 \pre
@@ -706,6 +691,14 @@ public:
         : transform_m(transform), compare_m(compare) {}
     explicit table_index(const transform_type&, const key_compare& = key_compare());
 
+    /*!
+    Constructs a table_index by copying elements from a range.
+
+    \param first iterator to first element to populate the table
+    \param last iterator to one-past-the-last element to populate the table
+    \param transform transformation function for this index
+    \param compare key comparison function for this index
+    */
     template <typename InputIterator, typename TransformPrimitive>
     table_index(InputIterator first, InputIterator last, TransformPrimitive transform,
                 const key_compare& compare = key_compare())

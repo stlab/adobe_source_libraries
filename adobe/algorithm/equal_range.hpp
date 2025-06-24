@@ -31,7 +31,7 @@
 \ingroup sorting
 
 \see
-    - STL documentation for \ref stldoc_equal_range
+    - [STL documentation for equal_range](https://www.boost.org/sgi/stl/equal_range.html)
 */
 
 /**************************************************************************************************/

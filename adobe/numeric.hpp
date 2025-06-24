@@ -105,7 +105,7 @@ max_adjacent_difference(const ForwardRange& range) {
 /*!
 \ingroup accumulate
 \see
-    STL documentation for \ref stldoc_accumulate
+    [STL documentation for accumulate](https://www.boost.org/sgi/stl/accumulate.html)
 */
 template <typename InputRange, typename T>
 inline T accumulate(const InputRange& range, T init) {
@@ -115,7 +115,7 @@ inline T accumulate(const InputRange& range, T init) {
 /*!
 \ingroup accumulate
 \see
-    STL documentation for \ref stldoc_accumulate
+    [STL documentation for accumulate](https://www.boost.org/sgi/stl/accumulate.html)
 */
 template <typename InputIterator, typename T, typename BinaryOperation>
 inline T accumulate(InputIterator first, InputIterator last, T init, BinaryOperation binary_op) {
@@ -126,7 +126,7 @@ inline T accumulate(InputIterator first, InputIterator last, T init, BinaryOpera
 /*!
 \ingroup accumulate
 \see
-    STL documentation for \ref stldoc_accumulate
+    [STL documentation for accumulate](https://www.boost.org/sgi/stl/accumulate.html)
 */
 template <typename InputRange, typename T, typename BinaryOperation>
 inline T accumulate(const InputRange& range, T init, BinaryOperation binary_op) {
@@ -183,7 +183,7 @@ inline T inner_product(const InputRange& range, InputIterator first, T init,
 /*!
 \ingroup partial_sum
 \see
-    STL documentation for \ref stldoc_partial_sum
+    [STL documentation for partial_sum](https://www.boost.org/sgi/stl/partial_sum.html)
 */
 template <typename InputRange, typename OutputIterator>
 inline OutputIterator partial_sum(const InputRange& range, OutputIterator result) {
@@ -193,7 +193,7 @@ inline OutputIterator partial_sum(const InputRange& range, OutputIterator result
 /*!
 \ingroup partial_sum
 \see
-    STL documentation for \ref stldoc_partial_sum
+    [STL documentation for partial_sum](https://www.boost.org/sgi/stl/partial_sum.html)
 */
 template <typename InputIterator, typename OutputIterator, typename BinaryOperation>
 inline OutputIterator partial_sum(InputIterator first, InputIterator last, OutputIterator result,
@@ -205,7 +205,7 @@ inline OutputIterator partial_sum(InputIterator first, InputIterator last, Outpu
 /*!
 \ingroup partial_sum
 \see
-    STL documentation for \ref stldoc_partial_sum
+    [STL documentation for partial_sum](https://www.boost.org/sgi/stl/partial_sum.html)
 */
 template <typename InputRange, typename OutputIterator, typename BinaryOperation>
 inline OutputIterator partial_sum(const InputRange& range, OutputIterator result,
@@ -220,7 +220,7 @@ inline OutputIterator partial_sum(const InputRange& range, OutputIterator result
 /*!
 \ingroup adjacent_difference
 \see
-    STL documentation for \ref stldoc_adjacent_difference
+    [STL documentation for adjacent_difference](https://www.boost.org/sgi/stl/adjacent_difference.html)
 */
 template <typename InputRange, typename OutputIterator>
 inline OutputIterator adjacent_difference(const InputRange& range, OutputIterator result) {
@@ -230,7 +230,7 @@ inline OutputIterator adjacent_difference(const InputRange& range, OutputIterato
 /*!
 \ingroup adjacent_difference
 \see
-    STL documentation for \ref stldoc_adjacent_difference
+    [STL documentation for adjacent_difference](https://www.boost.org/sgi/stl/adjacent_difference.html)
 */
 template <typename InputIterator, typename OutputIterator, typename BinaryOperation>
 inline OutputIterator adjacent_difference(InputIterator first, InputIterator last,
@@ -242,7 +242,7 @@ inline OutputIterator adjacent_difference(InputIterator first, InputIterator las
 /*!
 \ingroup adjacent_difference
 \see
-    STL documentation for \ref stldoc_adjacent_difference
+    [STL documentation for adjacent_difference](https://www.boost.org/sgi/stl/adjacent_difference.html)
 */
 template <typename InputRange, typename OutputIterator, typename BinaryOperation>
 inline OutputIterator adjacent_difference(const InputRange& range, OutputIterator result,

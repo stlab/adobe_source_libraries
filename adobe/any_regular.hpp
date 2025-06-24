@@ -46,15 +46,6 @@ namespace adobe {
 
 
 /*!
-\fn adobe::any_regular_t::any_regular_t(const T& x)
-
-\param x Value to copy as the instance value of this object.
-
-\note
-    What is stored is a copy of <code>x</code> promoted to <code>promote<T>::type</code>.
-*/
-
-/*!
 \fn const typename promote<T>::type& adobe::any_regular_t::cast() const
 
 \return
@@ -78,73 +69,14 @@ instance value.
 type.
 */
 
-/*!
-\fn bool adobe::any_regular_t::cast(T& x) const
-
-\param
-    x Value that will be set to the value stored in the any_regular_t.
-
-\return
-    <code>true</code> if x was set successfully, <code>false</code> otherwise.
-
-\exception
-    Undefined Will relay anything thrown by <code>x.operator=()</code>.
-*/
 
 /*!
-\fn adobe::any_regular_t& adobe::any_regular_t::assign(const T& x)
-
-\param x The new value to assign to this any_regular_t.
-
-\return
-    The any_regular_t with its new value set.
-*/
-
-/*!
-\fn const adobe::type_info_t& adobe::any_regular_t::type() const
+\fn const std::type_info& any_regular_t::type_info() const
 
 \return
     The information returned by <code>typeid()</code> for the instance value.
 */
 
-/*!
-\class adobe::any_regular_t::transform
-\ingroup any_regular
-
-\brief Function object used in binding for instance value access.
-*/
-
-/*!
-\typedef adobe::any_regular_t::transform::result_type
-
-The promoted value type from T that will be returned by this function object's
-<code>operator()</code>s.
-*/
-
-/*!
-\typedef adobe::any_regular_t::transform::argument_type
-
-Parameter type required by this function object's <code>operator()</code>s.
-*/
-
-/*!
-\fn promote<T>::type& adobe::any_regular_t::transform::operator()(any_regular_t &x) const
-
-\param x The value from which the result is to be obtained.
-
-\return
-    A reference to the instance value stored in this any_regular_t.
-*/
-
-/*!
-\fn const promote<T>::type& adobe::any_regular_t::transform::operator()(const any_regular_t &x)
-const
-
-\param x The value from which the result is to be obtained.
-
-\return
-    A reference to the instance value stored in this any_regular_t.
-*/
 
 /**************************************************************************************************/
 
@@ -486,7 +418,10 @@ public:
     /*!@{*/
 
     /*!
-    \param x Value is promoted to type \c promote<T>::type and stored in the object.
+    \param x Value to copy as the instance value of this object.
+
+    \note
+        What is stored is a copy of <code>x</code> promoted to <code>promote<T>::type</code>.
     */
 
     template <typename T>

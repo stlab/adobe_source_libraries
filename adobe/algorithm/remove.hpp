@@ -26,10 +26,10 @@ namespace adobe {
 \ingroup mutating_algorithm
 
 \see
-    - STL documentation for \ref stldoc_remove
-    - STL documentation for \ref stldoc_remove_if
-    - STL documentation for \ref stldoc_remove_copy
-    - STL documentation for \ref stldoc_remove_copy_if
+    - [STL documentation for remove](https://www.boost.org/sgi/stl/remove.html)
+    - [STL documentation for remove_if](https://www.boost.org/sgi/stl/remove_if.html)
+    - [STL documentation for remove_copy](https://www.boost.org/sgi/stl/remove_copy.html)
+    - [STL documentation for remove_copy_if](https://www.boost.org/sgi/stl/remove_copy_if.html)
 */
 /**************************************************************************************************/
 /*!

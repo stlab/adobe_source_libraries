@@ -23,7 +23,7 @@ namespace adobe {
 \ingroup mutating_algorithm
 
 \see
-    - STL documentation for \ref stldoc_generate
+    - [STL documentation for generate](https://www.boost.org/sgi/stl/generate.html)
 */
 /**************************************************************************************************/
 /*!

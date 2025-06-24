@@ -26,8 +26,8 @@ namespace adobe {
 \ingroup mutating_algorithm
 
 \see
-    - STL documentation for \ref stldoc_partition
-    - STL documentation for \ref stldoc_stable_partition
+    - [STL documentation for partition](https://www.boost.org/sgi/stl/partition.html)
+    - [STL documentation for stable_partition](https://www.boost.org/sgi/stl/stable_partition.html)
 */
 /**************************************************************************************************/
 /*!

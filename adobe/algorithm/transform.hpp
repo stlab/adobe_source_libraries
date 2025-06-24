@@ -26,7 +26,7 @@ namespace adobe {
 \ingroup mutating_algorithm
 
 \see
-    - STL documentation for \ref stldoc_transform
+    - [STL documentation for transform](https://www.boost.org/sgi/stl/transform.html)
 */
 /**************************************************************************************************/
 /*!

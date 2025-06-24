@@ -27,8 +27,8 @@ namespace adobe {
 \ingroup non_mutating_algorithm
 
 \see
-    - STL documentation for \ref stldoc_count
-    - STL documentation for \ref stldoc_count_if
+    - [STL documentation for count](https://www.boost.org/sgi/stl/count.html)
+    - [STL documentation for count_if](https://www.boost.org/sgi/stl/count_if.html)
 */
 /**************************************************************************************************/
 /*!

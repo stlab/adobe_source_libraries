@@ -31,13 +31,7 @@ Constructs a name_t associated with string_name. If this is the first instance o
 \pre \c string_name is a '\\0' terminated character sequence.
 */
 
-/*!
-\fn adobe::name_t::name_t(const char* string_name, std::size_t length)
 
-Constructs a name_t associated with string_name. If this is the first instance of this string, then the string will be copied to a pool with static storage duration.
-
-\pre <code> [string_name, string_name + length) </code> is a sequence of non '\\0' characters.
-*/
 
 /*!
 \fn const char* adobe::name_t::c_str() const
@@ -57,46 +51,14 @@ Constructs a name_t associated with string_name. If this is the first instance o
 */
 
 /*!
-\fn adobe::static_name_t::static_name_t(const char* string_name = "")
+\fn adobe::static_name_t::static_name_t(const char* str, std::size_t hash)
 
-Constructs a static_name_t associated with string_name. The string will not be copied to the pool, however, it is not guaranteed that the associated string will be the identity of string_name.
+Constructs a static_name_t associated with str and hash. The string will not be copied to the pool, however, it is not guaranteed that the associated string will be the identity of str.
 
-\pre \c string_name is a '\\0' terminated character sequence.
-\pre \c string_name is immutable, and has static storage duration \ref note_1 "[1]".
+\pre \c str is a '\\0' terminated character sequence.
+\pre \c str is immutable, and has static storage duration \ref note_1 "[1]".
 
 
 \note
 \anchor note_1 [1] C++ Standard, second edition, (ISO/IEC 14882, 2003-04-01), section 3.7.1.
-*/
-
-/*!
-\class adobe::const_once_name_t name.hpp <adobe/name.hpp>
-\ingroup abi_string
-
-\brief Utility wrapper to construct name_t without initializing the string pointer.
-
-\promotes_to
-    adobe::name_t
-
-\rationale
-    The primary purpose of const_once_name_t is to provide a name_t implementation that can be used in a multithreaded environment as a static variable. Because its construction does nothing to initialize the value of the name_t, such initialization must take place during a threadsafe intialization function (boost::call_once, for instance).
-*/
-
-/*!
-\fn adobe::const_once_name_t::const_once_name_t()
-
-Constructs an uninitialized name_t. Must initialize proior to use.
-
-\fn adobe::const_once_name_t::initialize(const char* name)
-
-\pre \c name is a '\\0' terminated character sequence.
-
-\fn adobe::const_once_name_t::initialize(const char* name, std::size_t length)
-
-\pre <code> [string_name, string_name + length) </code> is a sequence of non '\\0' characters.
-
-\fn adobe::const_once_name_t::initialize(name_t name)
-
-\fn adobe::const_once_name_t::operator const name_t& () const
-
 */

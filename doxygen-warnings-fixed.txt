@@ -1,0 +1,28 @@
+[0/2] Re-checking globbed directories...
+[1/2] Generating API documentation with Doxygen
+/Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:161: warning: no matching class member found for 
+  table_index(InputIterator first, InputIterator last, TransformPrimitivetransform, const key_compare &compare)
+Possible candidates:
+  'template < TransformPrimitive >
+  table_index< Key, T, Transform, Compare >::table_index(TransformPrimitive transform, const key_compare &compare=key_compare())' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:694:
+  'table_index< Key, T, Transform, Compare >::table_index(const transform_type &, const key_compare &=key_compare())' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:696:
+  'template < InputIterator, TransformPrimitive >
+  table_index< Key, T, Transform, Compare >::table_index(InputIterator first, InputIterator last, TransformPrimitive transform, const key_compare &compare=key_compare())' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:707:
+/Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:464: warning: no uniquely matching class member found for 
+  adobe::table_index::const_iterator lower_bound(constadobe::table_index::key_type &x) const
+Possible candidates:
+  'iterator hash_index< T, H, C, P >::lower_bound(const key_type &)' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:633:
+  'const_iterator hash_index< T, H, C, P >::lower_bound(const key_type &) const' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:634:
+  'iterator table_index< Key, T, Transform, Compare >::lower_bound(const key_type &x)' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:770:
+  'const_iterator table_index< Key, T, Transform, Compare >::lower_bound(const key_type &x) const' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:771:
+  'bool attribute_set_t::lower_bound(const value_type &attribute, set_type::iterator &result)' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/xml_parser.hpp:86:
+  'bool attribute_set_t::lower_bound(const key_type &key, set_type::iterator &result)' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/xml_parser.hpp:103:
+  'bool attribute_set_t::lower_bound(const value_type &attribute, set_type::const_iterator &result) const' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/xml_parser.hpp:110:
+  'bool attribute_set_t::lower_bound(const key_type &key, set_type::const_iterator &result) const' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/xml_parser.hpp:119:
+/Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:492: warning: no uniquely matching class member found for 
+  adobe::table_index::const_iterator upper_bound(constadobe::table_index::key_type &x) const
+Possible candidates:
+  'iterator hash_index< T, H, C, P >::upper_bound(const key_type &)' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:637:
+  'const_iterator hash_index< T, H, C, P >::upper_bound(const key_type &) const' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:638:
+  'iterator table_index< Key, T, Transform, Compare >::upper_bound(const key_type &x)' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:772:
+  'const_iterator table_index< Key, T, Transform, Compare >::upper_bound(const key_type &x) const' at /Users/sean-parent/repos/github.com/stlab/adobe_source_libraries/adobe/table_index.hpp:773:

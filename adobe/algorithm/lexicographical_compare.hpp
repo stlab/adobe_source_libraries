@@ -26,7 +26,7 @@ namespace adobe {
 \ingroup sorting
 
 \see
-    - STL documentation for \ref stldoc_lexicographical_compare
+    - [STL documentation for lexicographical_compare](https://www.boost.org/sgi/stl/lexicographical_compare.html)
 */
 /**************************************************************************************************/
 /*!
