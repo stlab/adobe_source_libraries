@@ -11,16 +11,25 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Install Doxygen
-        run: sudo apt-get update && sudo apt-get install -y doxygen
+      - name: Install dependencies
+        uses: ssciwr/doxygen-install@v1
+
+      - name: Configure CMake with docs
+        run: cmake --preset docs
 
       - name: Build documentation
-        run: doxygen documentation/doxyfile
+        run: cmake --build build/docs --target docs
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/docs/html
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/asl-docs/html 
+        id: deployment
+        uses: actions/deploy-pages@v4
