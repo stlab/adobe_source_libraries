@@ -77,7 +77,7 @@ if(BUILD_DOCS)
         set(AWESOME_CSS_DIR ${doxygen-awesome-css_SOURCE_DIR})
         
         # Configure Doxyfile
-        set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/documentation/Doxyfile.in)
+        set(DOXYFILE_IN ${CMAKE_CURRENT_SOURCE_DIR}/documentation/doxyfile.in)
         set(DOXYFILE_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
         
         # Set variables for Doxyfile template
