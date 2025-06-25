@@ -1,3 +1,0 @@
-// Settings that are useful when building with Boost
-
-DOUBLE_CONVERSION_HEADER_SEARCH_PATHS = ../../

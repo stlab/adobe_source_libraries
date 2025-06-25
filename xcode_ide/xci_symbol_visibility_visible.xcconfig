@@ -1,4 +1,0 @@
-// Visible symbol visibility
-
-GCC_INLINES_ARE_PRIVATE_EXTERN = NO
-GCC_SYMBOLS_PRIVATE_EXTERN = NO

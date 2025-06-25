@@ -1,3 +1,0 @@
-#include "xci_debug_symbols_general.xcconfig"
-
-DEBUG_INFORMATION_FORMAT = dwarf-with-dsym

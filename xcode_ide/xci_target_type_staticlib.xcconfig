@@ -1,3 +1,0 @@
-// Specifies a static library target type
-
-MACH_O_TYPE = staticlib

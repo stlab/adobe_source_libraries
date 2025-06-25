@@ -1,3 +1,0 @@
-// For building fat (universal) binaries
-
-ARCHS = ppc i386

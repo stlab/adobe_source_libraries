@@ -1,3 +1,0 @@
-// General settings that may be overridden later. These are good defaults.
-
-ARCHS = $(NATIVE_ARCH)

@@ -1,3 +1,0 @@
-// Specifies an application target type
-
-MACH_O_TYPE = mh_execute

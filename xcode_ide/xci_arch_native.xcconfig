@@ -1,3 +1,0 @@
-// For building native binaries
-
-ARCHS = $(NATIVE_ARCH)
