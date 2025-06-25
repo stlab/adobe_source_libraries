@@ -36,12 +36,6 @@ namespace version_1 {
 /**************************************************************************************************/
 
 /*!
-\defgroup abi_misc ABI-Safe Utilities
-\ingroup abi_safe
-*/
-
-/*!
-\ingroup abi_misc util_misc
 \brief A copy-on-write wrapper for any model of \ref concept_regular_type.
 
 \model_of

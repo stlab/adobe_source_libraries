@@ -1,5 +1,0 @@
-# Jamfile for building the xml_parser smoke test app
-
-project ;
-
-run main.cpp ;

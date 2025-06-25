@@ -124,12 +124,6 @@ namespace version_1 {
 /**************************************************************************************************/
 
 /*!
-\defgroup abi_container ABI-Safe Containers: hash containers, vector, ...
-\ingroup abi_safe container
- */
-
-/*!
-\ingroup abi_container
 
 \brief A hash based associative container.
 
@@ -628,9 +622,6 @@ private:
 /**************************************************************************************************/
 
 /*!
-
-\ingroup abi_container
-
 \brief A hash based associative container.
 
 \par

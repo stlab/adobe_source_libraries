@@ -46,7 +46,6 @@ namespace version_1 {
 
 /**************************************************************************************************/
 
-//!\ingroup abi_container
 template <typename T, // T models Regular
           typename A> // A models Allocator(T)
 class vector : boost::totally_ordered<vector<T, A>, vector<T, A>> {

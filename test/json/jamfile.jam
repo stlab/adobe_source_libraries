@@ -1,3 +1,0 @@
-project adobe/json ;
-
-run [ glob *.cpp ] ;

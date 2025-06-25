@@ -27,8 +27,6 @@ namespace version_1 {
 /**************************************************************************************************/
 
 /*!
-\ingroup abi_misc
-
 \model_of
     - \ref concept_regular_type
     - \ref stldoc_LessThanComparable
@@ -48,7 +46,6 @@ struct empty_t : private boost::totally_ordered<empty_t> {
 };
 
 #if defined(ADOBE_STD_SERIALIZATION)
-//!\ingroup abi_misc
 std::ostream& operator<<(std::ostream& stream, const empty_t&);
 #endif
 

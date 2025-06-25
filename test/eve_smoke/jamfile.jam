@@ -1,9 +1,0 @@
-# Jamfile for building the Eve smoke test app
-
-project ;
-
-run main.cpp
-    : # args
-    : default.eve #files
-    : #requirements
-    ;

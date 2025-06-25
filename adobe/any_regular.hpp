@@ -41,7 +41,6 @@ namespace adobe {
 
 /*!
 \defgroup any_regular any_regular_t
-\ingroup runtime_concepts abi_safe
 */
 
 

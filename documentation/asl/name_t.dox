@@ -1,6 +1,5 @@
 /*!
 \class adobe::name_t name.hpp <adobe/name.hpp>
-\ingroup abi_string
 
 \brief A character string class for immutable strings.
 
@@ -42,7 +41,6 @@ Constructs a name_t associated with string_name. If this is the first instance o
 
 /*!
 \class adobe::static_name_t name.hpp <adobe/name.hpp>
-\ingroup abi_string
 
 \brief Utility wrapper to construct name_t with strings of static storage duration.
 

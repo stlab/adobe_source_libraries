@@ -1,8 +1,0 @@
-import testing ;
-
-project adobe/sudoku
-	;
-
-exe sudoku
-	:	main.cpp
-	;

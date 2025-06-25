@@ -8,7 +8,7 @@ starting points:
          - \ref toc_5_quickies "Five immediately useful components".  
          - An \ref asl_overview "introduction to ASL", with a focus on the Layout Library (for automatic layout generation), and the Property Model Library (for human interface construction). 
          - Browse through the <a href="modules.html">Module Index</a>, which gives a single-page hierarchical overview of many of the main ASL components, or one of the other the \ref toc_indices "indices".
-         - Detailed references on the \ref layout_library "Layout Library" (Eve), \ref property_model "Property Model Library" (Adam), \ref algorithm "generic algorithms", \ref container "container classes" (Forest (Tree), Hashed Containers, Etc.), \ref utility "utility classes" (Concurrency, Parsing, Move, Runtime Concepts), \ref adobe_functional "Function Objects", \ref adobe_iterator "Iterators", or the \ref abi_safe "ABI-Safe Libraries" (types and containers with definined binary representations for DLL-safe/compatible interfaces).
+         - Detailed references on the \ref layout_library "Layout Library" (Eve), \ref property_model "Property Model Library" (Adam), \ref algorithm "generic algorithms", \ref container "container classes" (Forest (Tree), Hashed Containers, Etc.), \ref utility "utility classes" (Concurrency, Parsing, Move, Runtime Concepts), \ref adobe_functional "Function Objects", \ref adobe_iterator "Iterators".
          - \ref asl_tutorials "Some ASL tutorials".  
 
 \section  toc_5_quickies Five immediately useful components

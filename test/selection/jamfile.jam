@@ -1,7 +1,0 @@
-import testing ;
-
-project adobe/selection
-	;
-
-run main.cpp
-	;

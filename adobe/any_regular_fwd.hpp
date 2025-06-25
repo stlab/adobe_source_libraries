@@ -26,15 +26,6 @@ class any_regular_t;
 
 using version_1::any_regular_t;
 
-#if defined(ADOBE_NO_DOCUMENTATION)
-/* REVISIT (mmarcus) : doxygen doesn't seem to understand using
-declarartions.  This is a doxygen only hack to keep reference links
-from breaking.
-*/
-//!\ingroup abi_container
-typedef version_1::any_regular_t any_regular_t;
-#endif
-
 } // namespace adobe
 
 /**************************************************************************************************/

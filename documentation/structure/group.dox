@@ -22,12 +22,6 @@ file we are able to reorganize the groups easily.
 */
 
 /*!
-\defgroup abi_container ABI-Safe Containers: hash containers, vector, ...
-\ingroup containers
-\brief Containers that are safe to use across ABI boundaries.
-*/
-
-/*!
 \defgroup unicode Unicode Utilities
 \ingroup parsing
 
@@ -48,10 +42,6 @@ file we are able to reorganize the groups easily.
 
 /*!
 \defgroup type_info_related Type Info
-*/
-
-/*!
-\defgroup abi_string ABI-Safe Strings
 */
 
 /*!
