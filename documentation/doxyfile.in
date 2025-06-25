@@ -1020,8 +1020,18 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = @INPUT_DIR@/adobe \
-                         @INPUT_DIR@/documentation
+# The order of related pages can be controlled here.
+
+INPUT                  += @INPUT_DIR@/documentation/structure/news.dox
+INPUT                  += @INPUT_DIR@/documentation/asl
+INPUT                  += @INPUT_DIR@/documentation/doxygen_support_files
+INPUT                  += @INPUT_DIR@/documentation/examples
+INPUT                  += @INPUT_DIR@/documentation/performance
+INPUT                  += @INPUT_DIR@/documentation/structure
+INPUT                  += @INPUT_DIR@/documentation/templates
+INPUT                  += @INPUT_DIR@/documentation/tutorials
+INPUT                  += @INPUT_DIR@/documentation/widget_lib
+INPUT                  += @INPUT_DIR@/adobe
 
 # This tag can be used to specify the character encoding of the source files
 # that Doxygen parses. Internally Doxygen uses the UTF-8 encoding. Doxygen uses

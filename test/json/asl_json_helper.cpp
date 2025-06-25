@@ -1,7 +1,7 @@
 /*
     Copyright 2005-2013 Adobe Systems Incorporated
-    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
-    or a copy at http://stlab.adobe.com/licenses.html)
+    Distributed under the Boost Software License - Version 1.0 (see the accompanying file LICENSE
+    or a copy at https://stlab.github.io/adobe_source_libraries/licenses.html)
 */
 
 /**************************************************************************************************/
@@ -30,7 +30,8 @@ BOOST_AUTO_TEST_CASE(asl_json_floating_point_parsing) {
         {"[12.536]", 12.536},
         {"[-20.5]", -20.5},
         {"[-1.375e+112]", -1.375e+112},
-        {"[3.1415926535897932384626433832795028841971693993751058209]", 3.1415926535897932384626433832795028841971693993751058209},
+        {"[3.1415926535897932384626433832795028841971693993751058209]",
+         3.1415926535897932384626433832795028841971693993751058209},
     };
 
     for (const auto& test : tests) {

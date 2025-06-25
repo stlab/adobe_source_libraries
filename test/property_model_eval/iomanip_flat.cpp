@@ -1,7 +1,7 @@
 /*
     Copyright 2008 Adobe Systems Incorporated
-    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
-    or a copy at http://stlab.adobe.com/licenses.html)
+    Distributed under the Boost Software License - Version 1.0 (see the accompanying file LICENSE
+    or a copy at https://stlab.github.io/adobe_source_libraries/licenses.html)
 */
 
 // REVISIT (mmarcus) : replace this file with merge into iomanip_asl_cel
@@ -151,7 +151,8 @@ void flat_format::handle_atom(stream_type& os, bool is_push) {
         } else if (value.type_info() == typeid(dictionary_t)) {
             os << value.cast<dictionary_t>();
         } else if (value.type_info() == typeid(array_t)) {
-            os << value.cast<array_t>();;
+            os << value.cast<array_t>();
+            ;
         } else {
             os << "'cel_unknown: " << value.type_info().name() << "'";
         }

@@ -1,7 +1,7 @@
 /*
     Copyright 2005-2007 Adobe Systems Incorporated and others
-    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
-    or a copy at http://stlab.adobe.com/licenses.html)
+    Distributed under the Boost Software License - Version 1.0 (see the accompanying file LICENSE
+    or a copy at https://stlab.github.io/adobe_source_libraries/licenses.html)
 */
 
 /**************************************************************************************************/
@@ -102,25 +102,25 @@ Rotation is separate from addition to prevent recomputation. */
 
 #define FF(a, b, c, d, x, s, ac)                                                                   \
     {                                                                                              \
-        (a) += F((b), (c), (d)) + (x) + (std::uint32_t)(ac);                                     \
+        (a) += F((b), (c), (d)) + (x) + (std::uint32_t)(ac);                                       \
         (a) = ROTATE_LEFT((a), (s));                                                               \
         (a) += (b);                                                                                \
     }
 #define GG(a, b, c, d, x, s, ac)                                                                   \
     {                                                                                              \
-        (a) += G((b), (c), (d)) + (x) + (std::uint32_t)(ac);                                     \
+        (a) += G((b), (c), (d)) + (x) + (std::uint32_t)(ac);                                       \
         (a) = ROTATE_LEFT((a), (s));                                                               \
         (a) += (b);                                                                                \
     }
 #define HH(a, b, c, d, x, s, ac)                                                                   \
     {                                                                                              \
-        (a) += H((b), (c), (d)) + (x) + (std::uint32_t)(ac);                                     \
+        (a) += H((b), (c), (d)) + (x) + (std::uint32_t)(ac);                                       \
         (a) = ROTATE_LEFT((a), (s));                                                               \
         (a) += (b);                                                                                \
     }
 #define II(a, b, c, d, x, s, ac)                                                                   \
     {                                                                                              \
-        (a) += I((b), (c), (d)) + (x) + (std::uint32_t)(ac);                                     \
+        (a) += I((b), (c), (d)) + (x) + (std::uint32_t)(ac);                                       \
         (a) = ROTATE_LEFT((a), (s));                                                               \
         (a) += (b);                                                                                \
     }
@@ -241,8 +241,7 @@ void Decode(std::uint32_t* output, std::uint8_t* input, std::uint16_t len) {
 
     for (i = 0, j = 0; j < len; i++, j += 4)
         output[i] = ((std::uint32_t)input[j]) | (((std::uint32_t)input[j + 1]) << 8) |
-                    (((std::uint32_t)input[j + 2]) << 16) |
-                    (((std::uint32_t)input[j + 3]) << 24);
+                    (((std::uint32_t)input[j + 2]) << 16) | (((std::uint32_t)input[j + 3]) << 24);
 }
 
 /**************************************************************************************************/
@@ -285,7 +284,7 @@ void md5_t::update(void* input_block, std::size_t input_length) {
     std::uint32_t lsb_length(
         static_cast<std::uint32_t>(input_length << 3)); // low order length in bits
     count_m[0] += lsb_length;
-    count_m[1] += count_m[0] < lsb_length;                          // add cary bit
+    count_m[1] += count_m[0] < lsb_length;                        // add cary bit
     count_m[1] += static_cast<std::uint32_t>(input_length >> 29); // high order bits.
 
     std::size_t partLen(64 - index);
@@ -316,9 +315,9 @@ void md5_t::update(void* input_block, std::size_t input_length) {
 
 md5_t::digest_t md5_t::final() {
     static std::uint8_t padding_s[64] = {0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                           0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                           0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                           0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+                                         0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                         0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                                         0,    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     digest_t digest;
 

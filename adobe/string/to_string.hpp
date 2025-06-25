@@ -1,7 +1,7 @@
 /*
     Copyright 2012 Adobe Systems Incorporated
-    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
-    or a copy at http://stlab.adobe.com/licenses.html)
+    Distributed under the Boost Software License - Version 1.0 (see the accompanying file LICENSE
+    or a copy at https://stlab.github.io/adobe_source_libraries/licenses.html)
 */
 
 /**************************************************************************************************/
@@ -10,9 +10,9 @@
 #define ADOBE_STRING_TO_STRING_HPP
 
 #include <algorithm>
+#include <cfloat>
 #include <cstdio>
 #include <string>
-#include <cfloat>
 
 #include <adobe/cassert.hpp>
 

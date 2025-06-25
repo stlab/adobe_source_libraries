@@ -1,7 +1,7 @@
 /*
     Copyright 2008 Adobe Systems Incorporated
-    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
-    or a copy at http://stlab.adobe.com/licenses.html)
+    Distributed under the Boost Software License - Version 1.0 (see the accompanying file LICENSE
+    or a copy at https://stlab.github.io/adobe_source_libraries/licenses.html)
 */
 
 
@@ -98,8 +98,7 @@ int main(int argc, char* argv[]) {
 
             if (!in_stream.is_open())
                 std::cerr << "Could not open \"" << path << "\"!\n";
-            if (!adobe::parse(in_stream, adobe::line_position_t(path.c_str()),
-                              std::cout))
+            if (!adobe::parse(in_stream, adobe::line_position_t(path.c_str()), std::cout))
                 success = false;
         }
     }

@@ -1,7 +1,7 @@
 /*
     Copyright 2005-2013 Adobe Systems Incorporated
-    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
-    or a copy at http://stlab.adobe.com/licenses.html)
+    Distributed under the Boost Software License - Version 1.0 (see the accompanying file LICENSE
+    or a copy at https://stlab.github.io/adobe_source_libraries/licenses.html)
 */
 
 /******************************************************************************/
@@ -109,14 +109,13 @@ std::string asl_to_string_v1(const test_t& test) {
     return result;
 }
 
-std::string asl_to_string(const test_t& test) {
-    return adobe::to_string(test.value_m);
-}
+std::string asl_to_string(const test_t& test) { return adobe::to_string(test.value_m); }
 
 std::string std_to_chars(const test_t& test) {
 #if __cpp_lib_to_chars >= 201611L
     std::array<char, 64> str;
-    if (auto [ptr, ec] = std::to_chars(str.data(), str.data() + str.size(), test.value_m); ec == std::errc()) {
+    if (auto [ptr, ec] = std::to_chars(str.data(), str.data() + str.size(), test.value_m);
+        ec == std::errc()) {
         const auto sz = ptr - str.data();
         return std::string(str.data(), sz);
     } else {
@@ -180,7 +179,8 @@ BOOST_AUTO_TEST_CASE(serialization_test_suite) {
 
     BOOST_CHECK_EQUAL(test_suite(&std_to_chars, "std::to_chars"), to_chars_match_count_k);
 
-    BOOST_CHECK_EQUAL(test_suite(&any_regular_serialization, "adobe::any_regular_t"), to_string_match_count_k);
+    BOOST_CHECK_EQUAL(test_suite(&any_regular_serialization, "adobe::any_regular_t"),
+                      to_string_match_count_k);
 }
 
 /******************************************************************************/

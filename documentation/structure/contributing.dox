@@ -14,7 +14,7 @@ This process is in place to acccomplish the following goals:
 \section asl_contrib_license_guidelines License Guidelines
 
 \par
-All code contributions must be under the MIT license and copyright of the Adobe opensource project. By contributing code you agree that we can distribute the contribution under the terms of the MIT license, that it can be distributed without any royalties, copyright, trademark, patent or other legal lock ups. Open source means no discrimination against any group or individual that may wish to use the code.
+All code contributions must be under the Boost Software License - Version 1.0 and copyright of the Adobe opensource project. By contributing code you agree that we can distribute the contribution under the terms of the Boost Software License - Version 1.0, that it can be distributed without any royalties, copyright, trademark, patent or other legal lock ups. Open source means no discrimination against any group or individual that may wish to use the code.
 
 \par
 The following boilerplate licensing information must be the first lines of any source file(s) submitted to stlab.adobe.com (where {year} is substituted with the appropriate value, and is the only value that can be altered in the boilerplate):
@@ -23,8 +23,8 @@ The following boilerplate licensing information must be the first lines of any s
 \verbatim
 /*
     Copyright 2007-{year} Adobe Systems Incorporated
-    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
-    or a copy at http://stlab.adobe.com/licenses.html)
+    Distributed under the Boost Software License - Version 1.0 (see the accompanying file LICENSE
+    or a copy at https://stlab.github.io/adobe_source_libraries/licenses.html)
 */
 
 /**************************************************************************************************/

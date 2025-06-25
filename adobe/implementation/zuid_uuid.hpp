@@ -1,7 +1,7 @@
 /*
     Copyright 2005-2007 Adobe Systems Incorporated and others
-    Distributed under the MIT License (see accompanying file LICENSE_1_0_0.txt
-    or a copy at http://stlab.adobe.com/licenses.html)
+    Distributed under the Boost Software License - Version 1.0 (see the accompanying file LICENSE
+    or a copy at https://stlab.github.io/adobe_source_libraries/licenses.html)
 */
 
 /**************************************************************************************************/
@@ -57,12 +57,12 @@ namespace adobe {
 std::int16_t uuid_create(uuid_t* uuid);
 
 /* uuid_create_from_name -- create a UUID using a "name" from a "name space" */
-void uuid_create_from_name(uuid_t* uuid,             /*  resulting UUID */
-                           uuid_t nsid,              /*  UUID to serve as context, so identical
-                                                    names from different name spaces generate
-                                                    different UUIDs */
-                           std::uint8_t* name,       /*  the name from which to generate a UUID */
-                           std::uint16_t namelen);   /*  the length of the name */
+void uuid_create_from_name(uuid_t* uuid,           /*  resulting UUID */
+                           uuid_t nsid,            /*  UUID to serve as context, so identical
+                                                  names from different name spaces generate
+                                                  different UUIDs */
+                           std::uint8_t* name,     /*  the name from which to generate a UUID */
+                           std::uint16_t namelen); /*  the length of the name */
 
 /*
 uuid_compare --  Compare two UUID's "lexically" and return
