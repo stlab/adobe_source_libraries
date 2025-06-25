@@ -30,7 +30,7 @@ jobs:
         run: cmake --preset docs
 
       - name: Build documentation
-        run: cmake --build --preset docs --target doxygen
+        run: cmake --build --preset docs --target docs
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
