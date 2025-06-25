@@ -22,7 +22,7 @@
 #include <adobe/any_regular.hpp>
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
-#include <adobe/implementation/expression_parser.hpp>
+#include <adobe/expression_parser.hpp>
 #include <adobe/iomanip_asl_cel.hpp>
 #include <adobe/name.hpp>
 #include <adobe/unicode.hpp>
@@ -92,10 +92,10 @@ struct sheet_tracker {
         std::ifstream sheet_stream{sheet_path_str.c_str()};
 
         callbacks_m.add_cell_proc_m = std::bind(&sheet_tracker::add_cell_trap, std::ref(*this),
-                                                  callbacks_m.add_cell_proc_m, _1, _2, _3, _4);
+                                                callbacks_m.add_cell_proc_m, _1, _2, _3, _4);
         callbacks_m.add_interface_proc_m =
             std::bind(&sheet_tracker::add_interface_trap, std::ref(*this),
-                        callbacks_m.add_interface_proc_m, _1, _2, _3, _4, _5, _6);
+                      callbacks_m.add_interface_proc_m, _1, _2, _3, _4, _5, _6);
 
         if (!sheet_stream.is_open()) {
             std::cerr << "Could not open \"";

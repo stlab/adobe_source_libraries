@@ -20,7 +20,7 @@
 #include <adobe/any_regular.hpp>
 #include <adobe/array.hpp>
 #include <adobe/dictionary.hpp>
-#include <adobe/implementation/expression_parser.hpp>
+#include <adobe/expression_parser.hpp>
 #include <adobe/name.hpp>
 #include <adobe/unicode.hpp>
 #include <adobe/virtual_machine.hpp>

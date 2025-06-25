@@ -140,13 +140,25 @@
             }
         },
         {
+        "name": "test",
+        "displayName": "Test Configuration",
+        "description": "Configuration for building and running tests",
+        "binaryDir": "${sourceDir}/build/test",
+        "generator": "Ninja",
+        "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "BUILD_TESTING": "ON",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
             "name": "docs",
-            "displayName": "docs",
-            "description": "Build Doxygen documentation",
-            "generator": "Ninja",
-            "binaryDir": "${sourceParentDir}/build/asl-docs",
+            "displayName": "Documentation Configuration",
+            "description": "Configuration for building documentation",
+            "binaryDir": "${sourceDir}/build/docs",
+            "inherits": "test",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "DEBUG"
+                "BUILD_DOCS": "ON"
             }
         }
     ],
@@ -158,11 +170,11 @@
             "configurePreset": "debug"
         },
         {
-            "name": "docs",
-            "description": "",
-            "displayName": "",
-            "configurePreset": "docs",
-            "targets": [ "doxygen" ]
+        "name": "docs",
+        "displayName": "Build Documentation",
+        "description": "Build the documentation",
+        "configurePreset": "docs",
+        "targets": ["docs"]
         }
     ],
     "testPresets": [

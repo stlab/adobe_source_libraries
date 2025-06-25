@@ -7,8 +7,6 @@
 
 #include <adobe/eve_parser.hpp>
 
-#include <functional>
-#include <string>
 #include <adobe/algorithm/binary_search.hpp>
 #include <adobe/algorithm/sorted.hpp>
 #include <adobe/any_regular.hpp>
@@ -18,8 +16,10 @@
 #include <adobe/functional/operator.hpp>
 #include <adobe/implementation/token.hpp>
 #include <adobe/name.hpp>
+#include <functional>
+#include <string>
 
-#include <adobe/implementation/expression_parser.hpp>
+#include <adobe/expression_parser.hpp>
 
 /**************************************************************************************************/
 

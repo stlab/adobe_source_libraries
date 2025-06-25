@@ -29,7 +29,7 @@ with regards to state.
 #include <adobe/name.hpp>
 #include <adobe/string.hpp>
 
-#include <adobe/implementation/expression_parser.hpp>
+#include <adobe/expression_parser.hpp>
 #include <adobe/implementation/lex_stream.hpp>
 #include <adobe/implementation/parser_shared.hpp>
 #include <adobe/implementation/token.hpp>

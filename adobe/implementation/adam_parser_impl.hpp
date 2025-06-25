@@ -12,7 +12,7 @@
 
 #include <adobe/adam.hpp>
 #include <adobe/adam_parser.hpp>
-#include <adobe/implementation/expression_parser.hpp>
+#include <adobe/expression_parser.hpp>
 
 /**************************************************************************************************/
 
