@@ -388,7 +388,7 @@ F uninitialized_move(I f, I l, F r) {
 
 /**************************************************************************************************/
 
-namespace version_1 {
+inline namespace version_1 {
 
 //! \addtogroup memory
 //! @{

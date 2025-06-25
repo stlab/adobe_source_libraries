@@ -14,7 +14,7 @@
 
 namespace adobe {
 
-namespace version_1 {
+inline namespace version_1 {
 
 /**************************************************************************************************/
 
@@ -23,8 +23,6 @@ class any_regular_t;
 /**************************************************************************************************/
 
 } // namespace version_1
-
-using version_1::any_regular_t;
 
 } // namespace adobe
 

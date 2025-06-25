@@ -36,7 +36,7 @@
 /**************************************************************************************************/
 
 namespace adobe {
-namespace version_1 {
+inline namespace version_1 {
 
 /*!
 \defgroup container Containers

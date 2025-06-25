@@ -23,7 +23,7 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-namespace details {
+namespace detail {
 
 struct any_packaged_task_ {
 
@@ -59,7 +59,7 @@ struct any_packaged_task_ {
 void async_(any_packaged_task_&&);
 void async_(const std::chrono::steady_clock::time_point&, any_packaged_task_&&);
 
-} // namespace details
+} // namespace detail
 
 /**************************************************************************************************/
 
@@ -73,7 +73,7 @@ auto async(F&& f, Args&&... args) -> std::future<typename adobe::invoke_result_t
     auto p = packaged_t(forward<F>(f), forward<Args>(args)...);
     auto result = p.get_future();
 
-    details::async_(move(p));
+    detail::async_(move(p));
 
     return result;
 }
@@ -92,7 +92,7 @@ auto async(const std::chrono::time_point<std::chrono::steady_clock, Duration>& w
     auto p = packaged_t(forward<F>(f), forward<Args>(args)...);
     auto result = p.get_future();
 
-    details::async_(when, move(p));
+    detail::async_(when, move(p));
     return result;
 }
 
@@ -158,7 +158,7 @@ class shared_task_queue {
     };
 
     static auto make_task_queue_() -> std::shared_ptr<task_queue_>;
-    void async_(details::any_packaged_task_&&);
+    void async_(detail::any_packaged_task_&&);
 
     static void continue_(const std::shared_ptr<task_queue_>&);
     static void suspend_(const std::shared_ptr<task_queue_>&);

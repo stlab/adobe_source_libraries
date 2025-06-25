@@ -14,7 +14,7 @@
 #include <vector>
 
 using namespace std;
-using namespace adobe::details;
+using namespace adobe::detail;
 using namespace std::chrono;
 
 /**************************************************************************************************/
@@ -113,7 +113,7 @@ struct timed_queue {
                 q_.pop_back();
             }
 
-            adobe::details::async_(std::move(task));
+            adobe::detail::async_(std::move(task));
         }
     }
 
@@ -138,7 +138,7 @@ struct timed_queue {
 /**************************************************************************************************/
 
 namespace adobe {
-namespace details {
+namespace detail {
 
 void async_(any_packaged_task_&& p) {
     /*
@@ -163,7 +163,7 @@ void async_(const steady_clock::time_point& when, any_packaged_task_&& p) {
     queue_s.async(when, std::move(p));
 }
 
-} // namespace details
+} // namespace detail
 
 /**************************************************************************************************/
 
@@ -191,7 +191,7 @@ struct shared_task_queue::task_queue_ {
         }
 
         if (!tmp.empty())
-            details::async_(std::move(tmp.front()));
+            detail::async_(std::move(tmp.front()));
     }
 
     void _continue() {
@@ -206,7 +206,7 @@ struct shared_task_queue::task_queue_ {
         }
 
         if (!tmp.empty())
-            details::async_(std::move(tmp.front()));
+            detail::async_(std::move(tmp.front()));
     }
 
     void async(any_packaged_task_&& p) {
@@ -222,7 +222,7 @@ struct shared_task_queue::task_queue_ {
         }
 
         if (!tmp.empty())
-            details::async_(std::move(tmp.front()));
+            detail::async_(std::move(tmp.front()));
     }
 
     queue_t q_;
@@ -235,7 +235,9 @@ auto shared_task_queue::make_task_queue_() -> std::shared_ptr<task_queue_> {
     return make_shared<task_queue_>();
 }
 
-void shared_task_queue::async_(details::any_packaged_task_&& task) { object_->async(std::move(task)); }
+void shared_task_queue::async_(detail::any_packaged_task_&& task) {
+    object_->async(std::move(task));
+}
 void shared_task_queue::continue_(const std::shared_ptr<task_queue_>& q) { q->_continue(); }
 void shared_task_queue::suspend_(const std::shared_ptr<task_queue_>& q) { q->_suspend(); }
 void shared_task_queue::resume_(const std::shared_ptr<task_queue_>& q) { q->_resume(); }

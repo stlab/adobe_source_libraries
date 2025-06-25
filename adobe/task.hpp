@@ -67,7 +67,7 @@ typedef std::function<void()>* cancellation_token_registration;
 
 /**************************************************************************************************/
 
-namespace details {
+namespace detail {
 
 /**************************************************************************************************/
 
@@ -142,7 +142,7 @@ struct cancel_state {
 
 /**************************************************************************************************/
 
-} // namespace details
+} // namespace detail
 
 /**************************************************************************************************/
 
@@ -174,9 +174,9 @@ public:
 private:
     friend class cancellation_token_source;
     cancellation_token() {}
-    explicit cancellation_token(std::shared_ptr<details::cancel_state> s) : state_(std::move(s)) {}
+    explicit cancellation_token(std::shared_ptr<detail::cancel_state> s) : state_(std::move(s)) {}
 
-    std::shared_ptr<details::cancel_state> state_;
+    std::shared_ptr<detail::cancel_state> state_;
 };
 
 inline bool operator!=(const cancellation_token& x, const cancellation_token& y) {
@@ -187,7 +187,7 @@ inline bool operator!=(const cancellation_token& x, const cancellation_token& y)
 
 class cancellation_token_source {
 public:
-    cancellation_token_source() : state_(std::make_shared<details::cancel_state>()) {}
+    cancellation_token_source() : state_(std::make_shared<detail::cancel_state>()) {}
 
     void cancel() const { state_->cancel(); }
 
@@ -199,7 +199,7 @@ public:
     }
 
 private:
-    std::shared_ptr<details::cancel_state> state_;
+    std::shared_ptr<detail::cancel_state> state_;
 };
 
 inline bool operator!=(const cancellation_token_source& x, const cancellation_token_source& y) {

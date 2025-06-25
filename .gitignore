@@ -10,3 +10,4 @@ build_asl/
 .vs/
 .vscode/settings.json
 /.cache
+compile_commands.json

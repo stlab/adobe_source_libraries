@@ -45,7 +45,7 @@ namespace adobe {
 
 /**************************************************************************************************/
 
-namespace version_1 {
+inline namespace version_1 {
 
 std::ostream& operator<<(std::ostream& out, const dictionary_t& x) {
     typedef table_index<const name_t, const dictionary_t::value_type> index_type;

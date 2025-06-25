@@ -117,7 +117,7 @@ struct set_next_fn<implementation::closed_hash_iterator<T, V>> {
 
 #ifndef ADOBE_NO_DOCUMENTATION
 
-namespace version_1 {
+inline namespace version_1 {
 
 #endif
 
@@ -133,7 +133,8 @@ A \c closed_hash_set is a hash based associative container, similar to a hash_se
 
 \model_of
     - \ref concept_regular_type
-    - [UniqueHashedAssociativeContainer](https://www.boost.org/sgi/stl/UniqueHashedAssociativeContainer.html)
+    -
+[UniqueHashedAssociativeContainer](https://www.boost.org/sgi/stl/UniqueHashedAssociativeContainer.html)
 
 \todo
     - re-order parameters so key_function is after comparison - to be consistent with
@@ -631,17 +632,16 @@ pair.
 
 \model_of
     - \ref concept_regular_type
-    - [UniqueHashedAssociativeContainer](https://www.boost.org/sgi/stl/UniqueHashedAssociativeContainer.html)
+    -
+[UniqueHashedAssociativeContainer](https://www.boost.org/sgi/stl/UniqueHashedAssociativeContainer.html)
 
 
 */
 
 template <typename Key, typename T, typename Hash, typename Pred, typename A>
-class closed_hash_map
-    : public closed_hash_set<std::pair<Key, T>, get_element<0>, Hash, Pred, A> {
+class closed_hash_map : public closed_hash_set<std::pair<Key, T>, get_element<0>, Hash, Pred, A> {
 
-    using set_type =
-        closed_hash_set<std::pair<Key, T>, get_element<0>, Hash, Pred, A>;
+    using set_type = closed_hash_set<std::pair<Key, T>, get_element<0>, Hash, Pred, A>;
 
 public:
     typedef T mapped_type;
