@@ -13,6 +13,7 @@
 			"*.rust": "rust",
 			"*.ipp": "cpp"
 		},
-		"testing.coverageToolbarEnabled": true
+		"testing.coverageToolbarEnabled": true,
+		"git.ignoreLimitWarning": true
 	}
 }

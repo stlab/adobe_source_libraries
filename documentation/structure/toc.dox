@@ -15,7 +15,7 @@ starting points:
 	- \ref algorithm "Algorithms"
 	- \ref forest_related (Trees)
 	    - \ref asl_tutorials_forest "Forest library tutorial"
-	- \ref adobe::version_1::copy_on_write "Copy on Write library"
+	- \ref adobe::copy_on_write "Copy on Write library"
 	- \ref adobe::table_index "Table Index library"
     
 \section toc_libraries Adobe Source Libraries

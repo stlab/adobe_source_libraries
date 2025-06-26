@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.29)
 include(FindGit)
 include(CMakeParseArguments)
-include(./cmake/CPM.cmake)
 
 if(WIN32)
     set(CMAKE_OBJECT_PATH_MAX 500)
@@ -9,6 +8,26 @@ endif()
 
 project(adobe_source_libraries CXX)
 include(CTest)
+
+# download CPM.cmake
+file(
+  DOWNLOAD
+  https://github.com/cpm-cmake/CPM.cmake/releases/download/v0.40.8/CPM.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/cmake/CPM.cmake
+  EXPECTED_HASH SHA256=78ba32abdf798bc616bab7c73aac32a17bbd7b06ad9e26a6add69de8f3ae4791
+)
+include(${CMAKE_CURRENT_BINARY_DIR}/cmake/CPM.cmake)
+
+# Enable CPM caching to avoid re-downloading dependencies
+set(CPM_SOURCE_CACHE ${CMAKE_SOURCE_DIR}/.cpm-cache CACHE PATH "Directory to cache CPM packages" FORCE)
+
+
+CPMAddPackage(
+    NAME stlab-copy-on-write
+    GITHUB_REPOSITORY stlab/copy-on-write
+    GIT_TAG main # or specify a version tag
+    OPTIONS "BUILD_TESTING OFF"
+)
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 if(NOT DEFINED CMAKE_CXX_STANDARD)
@@ -18,7 +37,7 @@ endif(NOT DEFINED CMAKE_CXX_STANDARD)
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
 # Create symlink to compile_commands.json for clangd
-if(CMAKE_EXPORT_COMPILE_COMMANDS)
+if(CMAKE_EXPORT_COMPILE_COMMANDS AND TOP_LEVEL_PROJECT)
     add_custom_target(clangd_compile_commands ALL
         COMMAND ${CMAKE_COMMAND} -E create_symlink
             ${CMAKE_BINARY_DIR}/compile_commands.json
@@ -47,6 +66,7 @@ function(target_link_boost target)
     target_link_libraries(${target} PUBLIC Boost::range)
     target_link_libraries(${target} PUBLIC Boost::multiprecision)
     target_link_libraries(${target} PUBLIC Boost::date_time)
+    target_link_libraries(${target} PUBLIC stlab::copy-on-write)
 endfunction(target_link_boost)
 
 function(target_link_boost_test target)
