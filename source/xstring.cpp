@@ -4,7 +4,9 @@
     (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 */
 /**************************************************************************************************/
+
 #include <functional>
+#include <mutex>
 #include <tuple>
 
 #include <adobe/xstring.hpp>
@@ -317,7 +319,7 @@ count_max_element_tuple(Range& x, UnaryFunction f) {
         return std::make_tuple(1, 0, max_item.base());
 
     return std::make_tuple(std::count(max_item, container.end(), *max_item), *max_item,
-                             max_item.base());
+                           max_item.base());
 }
 
 /**************************************************************************************************/
@@ -340,8 +342,8 @@ context_frame_t::closest_match(store_range_pair_t /* range */,
     if (!range_size)
         return glossary_m.end();
 
-    std::tuple<std::size_t, std::size_t, store_iterator> result_tuple = count_max_element_tuple(
-        range, std::bind(store_count_same_t(), _1, boost::cref(searching)));
+    std::tuple<std::size_t, std::size_t, store_iterator> result_tuple =
+        count_max_element_tuple(range, std::bind(store_count_same_t(), _1, boost::cref(searching)));
 
     if (boost::get<1>(result_tuple) == 0)
         return glossary_m.end();
@@ -550,8 +552,7 @@ struct replacement_engine_t {
             adobe::make_xml_parser(first, last, adobe::line_position_t("replacement_engine_t::run"),
                                    adobe::implementation::xstring_preorder_predicate,
                                    std::bind(&replacement_engine_t::candidate_parse,
-                                               std::ref(*this), _1, _2, _3, _4,
-                                               std::ref(score)),
+                                             std::ref(*this), _1, _2, _3, _4, std::ref(score)),
                                    std::back_inserter(temp_result))
                 .parse_content();
 
