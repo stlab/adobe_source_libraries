@@ -11,7 +11,6 @@
 #define BOOST_TEST_MAIN
 
 #include <cstdlib>
-#include <iostream>
 #include <string>
 
 #include <boost/test/unit_test.hpp>
@@ -19,11 +18,12 @@
 #include <adobe/poly_copyable.hpp>
 #include <adobe/poly_regular.hpp>
 
-inline double size(int x) { return static_cast<double>(std::abs(x)); }
+double adobe_test_size(int x) { return static_cast<double>(std::abs(static_cast<int>(x))); }
 
 #include "poly_measurable.hpp"
 #include "poly_measurable2d.hpp"
 
+using namespace adobe_test;
 
 /**************************************************************************************************/
 
@@ -46,8 +46,8 @@ double max_size(const M1& x, const M2& y) {
 
 BOOST_AUTO_TEST_CASE(compile_time_poly) {
     // tests compile-time generic max_size function template
-    BOOST_CHECK_EQUAL(max_size(4, 5), 5);
-    BOOST_CHECK_EQUAL(max_size(4, std::string("hello")), 5);
+    BOOST_CHECK_EQUAL(max_size(4, 5), 5.0);
+    BOOST_CHECK_EQUAL(max_size(4, std::string("hello")), 5.0);
 }
 
 
@@ -56,8 +56,8 @@ BOOST_AUTO_TEST_CASE(compile_time_poly) {
 // *runtime* generic function
 // (not a template)
 
-double max_size_poly(const poly_measurable& x, const poly_measurable& y) {
-    return std::max(size(x), size(y));
+double max_amount_poly(const poly_measurable& x, const poly_measurable& y) {
+    return std::max(x.size(), y.size());
 }
 
 BOOST_AUTO_TEST_CASE(run_time_poly) {
@@ -65,8 +65,8 @@ BOOST_AUTO_TEST_CASE(run_time_poly) {
     poly_measurable four(4), five(5);
     poly_measurable y(std::string("hello"));
 
-    BOOST_CHECK_EQUAL(max_size_poly(four, five), 5);
-    BOOST_CHECK_EQUAL(max_size_poly(four, y), 5);
+    BOOST_CHECK_EQUAL(max_amount_poly(four, five), 5.0);
+    BOOST_CHECK_EQUAL(max_amount_poly(four, y), 5.0);
 }
 
 
@@ -90,7 +90,7 @@ bool operator!=(const concrete_measurable2d& x, const concrete_measurable2d& y) 
     return !(x == y);
 }
 
-inline double perimeter(poly_measurable2d x) { return 2 * (x.size() + x.height()); }
+inline double perimeter(const poly_measurable2d& x) { return 2 * (x.size() + x.height()); }
 
 BOOST_AUTO_TEST_CASE(refinement) {
     concrete_measurable2d a(2, 3), b(1, 4);
@@ -102,8 +102,8 @@ BOOST_AUTO_TEST_CASE(refinement) {
     poly_measurable2d m2a(a), m2b(b);
     BOOST_CHECK_EQUAL(ma.size(), m2a.size());
     BOOST_CHECK_EQUAL(perimeter(m2a), perimeter(m2b));
-    BOOST_CHECK_EQUAL(max_size_poly(adobe::poly_cast<poly_measurable&>(m2a),
-                                    adobe::poly_cast<poly_measurable&>(m2b)),
+    BOOST_CHECK_EQUAL(max_amount_poly(adobe::poly_cast<poly_measurable&>(m2a),
+                                      adobe::poly_cast<poly_measurable&>(m2b)),
                       2);
     poly_measurable x(m2a);
     BOOST_CHECK_EQUAL(x.size(), m2a.size());
@@ -128,7 +128,7 @@ BOOST_AUTO_TEST_CASE(move_test) {
     poly_measurable ma(a), mb(b);
     poly_measurable2d m2a(a), m2b(b);
 
-    poly_measurable mc(adobe::move(ma));
+    poly_measurable mc(std::move(ma));
 }
 
 
@@ -139,7 +139,7 @@ BOOST_AUTO_TEST_CASE(poly_copyable) {
         poly<copyable> ma(a), mb(b);
         poly<copyable> m2a(a), m2b(b);
 
-        poly<copyable> mc(adobe::move(ma));
+        poly<copyable> mc(std::move(ma));
     }
     {
         poly<regular> ma(a), mb(b);

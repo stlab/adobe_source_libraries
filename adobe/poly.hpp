@@ -10,6 +10,11 @@
 
 #include <adobe/config.hpp>
 
+#include <string>
+#include <type_traits>
+#include <typeinfo>
+#include <utility>
+
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/or.hpp>
@@ -17,8 +22,6 @@
 
 #include <adobe/implementation/swap.hpp>
 #include <adobe/typeinfo.hpp>
-
-#include <type_traits>
 
 /**************************************************************************************************/
 
@@ -439,10 +442,10 @@ T's Concept requirement. For example,
 */
 template <typename T, typename U>
 T poly_cast(poly<U>& x) {
-    typedef typename boost::remove_reference<T>::type target_type;
+    typedef typename std::remove_reference<T>::type target_type;
     typedef typename target_type::interface_type target_interface_type;
     if (!x.template is_dynamic_convertible_to<target_interface_type>())
-        throw bad_cast(typeid(poly<U>), typeid(T));
+        throw adobe::bad_cast(typeid(poly<U>), typeid(T));
     return reinterpret_cast<T>(x);
 }
 
@@ -457,10 +460,10 @@ T poly_cast(poly<U>& x) {
 
 template <typename T, typename U>
 T poly_cast(const poly<U>& x) {
-    typedef typename boost::remove_reference<T>::type target_type;
+    typedef typename std::remove_reference<T>::type target_type;
     typedef typename target_type::interface_type target_interface_type;
     if (!x.template is_dynamic_convertible_to<target_interface_type>())
-        throw bad_cast(typeid(poly<U>), typeid(T));
+        throw adobe::bad_cast(typeid(poly<U>), typeid(T));
     return reinterpret_cast<T>(x);
 }
 

@@ -1,0 +1,38 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Documentation",
+            "type": "shell",
+            "command": "cmake --build --preset docs",
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "dependsOn": [
+                "Configure Documentation"
+            ],
+            "problemMatcher": [
+                "$gcc",
+                "$msCompile"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "Configure Documentation",
+            "type": "shell",
+            "command": "cmake --preset docs",
+            "problemMatcher": [
+                "$gcc",
+                "$msCompile"
+            ],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        }
+    ]
+}

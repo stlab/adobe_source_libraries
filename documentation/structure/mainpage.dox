@@ -5,7 +5,4 @@ This is the documentation site for the Adobe Source Libraries (ASL).
 
 ASL provides peer-reviewed and portable C++ source libraries. The libraries are intended to be widely useful, leveraging and extending both the C++ Standard Library and the Boost Libraries.
 
-The Adobe Source Libraries are maintained by Sean Parent, Mat Marcus, and Foster Brereton.
-
-Both site and sources have migrated to GitHub, and in so doing we are trying to clean things up. Please pardon our dust.
 */

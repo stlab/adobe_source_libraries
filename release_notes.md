@@ -1,5 +1,7 @@
 # RELEASE NOTES
 
+Recent release notes can be found on the [release notes](https://github.com/stlab/adobe_source_libraries/releases) page.
+
 ## v1.0.46
 
 2024-01-12

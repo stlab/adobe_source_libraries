@@ -6,6 +6,43 @@
 
 \page top_news Top News
 
+\par June 26, 2025 ASL - 2.0.0 Release
+
+This release is labeled 2.0.0, because going forward I'm going to be trying to adhere to semantic
+versioning and this release (like most others) contains some breaking changes.
+
+ASL and the STLab libraries are no longer research projects or experiments. Going forward my goals
+are:
+
+- Address bugs.
+- Maintain ABI stability to the extent possible.
+- Support the releases of the C++ standard (currently C++17 to 23, but as Adobe moves to C++20 and
+C++26 is standardized that range will move forward).
+- Support the latest major compiler releases (gcc, clang, and MSVC++).
+- Improve the documentation (see below).
+- Continue to simplify the libraries, removing uses of boost that could the standard library, and
+possibly adding new dependencies where a better supported library overlaps these libraries.
+- Refactor the existing libraries into smaller components [see the new
+copy-on-write](https://stlab.github.io/copy-on-write).
+- Simplify the documentation systems (moving to doxygen for STLab libraries).
+- Simplify the unit test system (moving to doctest).
+
+Despite being minimally maintained, these libraries still see significant use. My goal is to find
+new maintainers. My ongoing research has moved on from C++ and maintaining these libraries is now an
+evening project.
+
+After over 15 years of [stale documentation](https://stlab.adobe.com/), with the help of Cursor and
+Claude I was able to get the docs building again and cleaned so they are in a usable form and can
+now be found at [stlab/github.com/adobe_source_libraries]. There is still a lot of work to clean out
+old cruft, document some undocumented items, and improve the structure, but now that work can happen
+incrementally. A couple of the libraries where migrated to the [stlab
+libraries](https://github.com/stlab/libraries) but not removed from ASL. I started the work to
+consolidate these and move the copy-on-write library into a [standalone
+library](https://stlab.github.io/copy-on-write). Check the [release
+notes](https://github.com/stlab/adobe_source_libraries/releases) for more details.
+
+Sean
+
 \par November 4, 2010 ASL - 1.0.43 Release
 
 This release is source only, no binary packages and no net setup scripts.
@@ -14,7 +51,7 @@ I've recently returned to Adobe as architect for mobile imaging applications.
 The Software Technology Lab remains a "virtual group." We have a collection
 of improvements, fixes, updates, and additions that we've gathered over the last
 year and a half since the last release. We are working to simplify the release
-process to something more managable and to get back to more frequent releases.
+process to something more manageable and to get back to more frequent releases.
 That is why we've dropped the binary distribution and net setup scripts.
 Suggestions for further simplification welcome.
 
@@ -72,7 +109,7 @@ Highlights of this release include:
         	- Fixed issue introduced in 1.0.41 with incorrect poison set being
         	    calculated for invariants.
 	        - Reworked invariant cells they now behave more like output cells
-	          and can be refered to in expressions.
+	          and can be referred to in expressions.
 	        - Updated the image_size example to demonstrate an ignored/disabled
 	          control (resample method when not resampling).
         - Some 64 bit fixes and cleanup.
@@ -116,7 +153,7 @@ Highlights of this release include:
 \par December 23, 2008 ASL - 1.0.40 Release
 
 I have left Adobe and will be pursuing other opportunities.  This
-release is my first as an "external" opensource contributor.  Please
+release is my first as an "external" open source contributor.  Please
 use my mmarcus \<at\> emarcus \<dot\> org address instead of my former
 adobe.com address.
 
@@ -153,7 +190,7 @@ Highlights of this release include:
           sheets.)
         - Fixed bug where interface cells appearing in a when clause
 	      condition were not contributing.
-        - New papers and presnetations at
+        - New papers and presentations at
           http://stlab.adobe.com/wiki/index.php/Papers_and_Presentations
         - Patched boost to allow preservation of test targets (now the
           default).
@@ -188,7 +225,7 @@ Highlights of this release include:
           no callbacks are triggered. Calls to reinitialize should be
           followed by calls to update must be called, just as if the
           cells were updated by set operations on sorted ranges."
-        - Adam documentaion improvements
+        - Adam documentation improvements
         - Updated to (patched) boost 1.37.0
         - Added a command line property model evaluator tool, and
           programmer-oriented tutorial at:
@@ -207,7 +244,7 @@ Highlights of this release include:
 Highlights of this release include:
 
     ASL:
-        - New papers and presnetations at
+        - New papers and presentations at
           http://stlab.adobe.com/wiki/index.php/Papers_and_Presentations
         - Major improvements to documentation structure
         - Updated to boost 1.36.0, with patches to fix some boost bugs
@@ -232,7 +269,7 @@ Highlights of this release include:
         - removed outdated expression_filter routines; updated
           adam_tutorial output format; deleting some unnecessary
           sources
-        - Cleaned out static intializers
+        - Cleaned out static initializers
         - Collapsed entity lookup to a single place -- removed the
           once stuff from xml_parser
         - Fixed issue with implicit casts of enum node state in
@@ -378,7 +415,7 @@ Highlights of this release include:
         - Misc bug fixes.
         - Fixes to build and distribution tools.
         - Fixed search on documentation site to point to stlab and not
-        opensource domain.
+        open source domain.
 
 \par January 28, 2008 - ASL 1.0.35 Release
 
@@ -396,9 +433,9 @@ Highlights of this release include:
         - renamed copy_bound to copy_bounded
         - minor improvements to operator+() for strings
         - updated doxyfile for latest doxygen
-        - More algorithm documentation clean-up. Greately improved erase/erase_if
+        - More algorithm documentation clean-up. Greatly improved erase/erase_if
         container algorithms and container storage type function.
-        - Templatize erase_if test cases
+        - Template erase_if test cases
         - Initial work on forest unit_test
 
 
@@ -407,12 +444,12 @@ Highlights of this release include:
 Highlights of this release include:
 
     ASL:
-        - Lots of clean up and removed defered initialization of
+        - Lots of clean up and removed deferred initialization of
         property model cells.
         - changes to the initializers for the property model library
-        you must now call upate() prior to monitoring or attaching a
+        you must now call update() prior to monitoring or attaching a
         view (you'll get an assert if you don't) and the monitor
-        function (or view) is called immeditely when attached with the
+        function (or view) is called immediately when attached with the
         current state.
         - support for stateful function object (hash, key function,
         and compare) to closed_hash_set
@@ -490,7 +527,7 @@ Highlights of this release include:
 Highlights of this release include:
     - GIL 2.0 release! (GIL was recently accepted as a Boost library; congratulations to the GIL team!)
     - Addition of the poly<> class, allowing for a generic means of specifying runtime-polymorphic objects based on a provided concept specification.
-    - algorithm.hpp was completely refactored into smaller, more digestable algorithm subfamily headers
+    - algorithm.hpp was completely refactored into smaller, more digestible algorithm subfamily headers
     - Widget implementation improvement (primarily for the list widget) including supporting code in selection_t and sequence_model_t.
     - For more information and more changes see the \ref asl_release_notes
 \par
@@ -531,7 +568,7 @@ Highlights of this release include:
     - adobe::selection_t was added, along with a set of selection-based algorithms
     - Added changes to support gcc-4.1.1 and conceptgcc a5
     - Simplify assemblage to be a collection of nullary function objects invoked in LIFO order upon destruction
-    - Boost patchfile updated; please repatch your boost distribution
+    - Boost patch file updated; please repatch your boost distribution
     - For more information and more changes see the \ref asl_release_notes
 \par
 Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a> section to grab it.
@@ -824,7 +861,7 @@ Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=
 We would like to build a case for Adobe to do more in the open source arena, and so would like to know more about who you are and what your plans are for using the Adobe Source Libraries in your software development. Please contact <a href="http://sourceforge.net/users/sean_parent/">Sean Parent</a> with any and all comments (including those on how to improve the Adobe Source Libraries as they stand -- we need feedback, too!)
 
 \par May 03, 2005 - ASL 1.0.3 Released
-I'm pleased to announce the arrival of Adobe Source Libraries 1.0.3. This is mostly a maintenance release but it also boasts a small set of new features, including a threadsafe, context-sensitive string lookup system for internationalization/localization. There are also a slew of bug fixes that make this release well worth the download. Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417&package_id=145420">download</a> section and check it out.
+I'm pleased to announce the arrival of Adobe Source Libraries 1.0.3. This is mostly a maintenance release but it also boasts a small set of new features, including a thread-safe, context-sensitive string lookup system for internationalization/localization. There are also a slew of bug fixes that make this release well worth the download. Head over to the <a href="http://sourceforge.net/project/showfiles.php?group_id=132417&package_id=145420">download</a> section and check it out.
 
 \par April 01, 2005 - ASL 1.0.2 Released
 The Adobe Source Libraries 1.0.2 is now available for <a href="http://sourceforge.net/project/showfiles.php?group_id=132417">download</a>. Changes include a budding Win32 implementation of Adobe Begin, increased compiler compatibility, and extensive bug fixes and additions. The Win32 implementation of Adobe Begin does not have the same functionality as the Mac version, however it is in a place where it demonstrates the functionality of Adam and Eve well enough to warrant release.

@@ -21,13 +21,12 @@ include(${CMAKE_CURRENT_BINARY_DIR}/cmake/CPM.cmake)
 # Enable CPM caching to avoid re-downloading dependencies
 set(CPM_SOURCE_CACHE ${CMAKE_SOURCE_DIR}/.cpm-cache CACHE PATH "Directory to cache CPM packages" FORCE)
 
+################################################################################
+# Dependencies
 
-CPMAddPackage(
-    NAME stlab-copy-on-write
-    GITHUB_REPOSITORY stlab/copy-on-write
-    GIT_TAG main # or specify a version tag
-    OPTIONS "BUILD_TESTING OFF"
-)
+CPMAddPackage("gh:stlab/copy-on-write@1.0.3")
+
+################################################################################
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 if(NOT DEFINED CMAKE_CXX_STANDARD)
@@ -103,7 +102,7 @@ if(BUILD_DOCS)
         # Set variables for Doxyfile template
         set(PROJECT_NAME "Adobe Source Libraries")
         set(PROJECT_BRIEF "A collection of C++ libraries.")
-        set(PROJECT_VERSION "1.49.0")
+        set(PROJECT_VERSION "2.0.0")
         set(INPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
         set(OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
         set(AWESOME_CSS_PATH "${AWESOME_CSS_DIR}")

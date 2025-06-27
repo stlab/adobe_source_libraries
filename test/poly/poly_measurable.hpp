@@ -17,6 +17,8 @@
 
 #include "measurable_concept.hpp"
 
+namespace adobe_test {
+
 /////////////////////
 
 // This is the "abstract" measurable interface, modeling the MeasurableConcept
@@ -36,12 +38,11 @@ struct poly_measurable_instance
     : adobe::optimized_storage_type<T, poly_measurable_interface>::type {
     typedef typename adobe::optimized_storage_type<T, poly_measurable_interface>::type base_t;
 
-    BOOST_CLASS_REQUIRE(T, , MeasurableConcept);
+    BOOST_CLASS_REQUIRE(T, adobe_test, MeasurableConcept);
 
     poly_measurable_instance(const T& x) : base_t(x) {}
 
-    poly_measurable_instance(adobe::move_from<poly_measurable_instance> x)
-        : base_t(adobe::move_from<base_t>(x.source)) {}
+    poly_measurable_instance(poly_measurable_instance&& x) noexcept : base_t(std::move(x)) {}
 
     double size() const { return MeasurableConcept<T>::size(this->get()); }
 };
@@ -57,12 +58,14 @@ struct measurable : adobe::poly_base<poly_measurable_interface, poly_measurable_
     template <typename T>
     explicit measurable(const T& s) : base_t(s) {}
 
-    measurable(adobe::move_from<measurable> x) : base_t(adobe::move_from<base_t>(x.source)) {}
+    measurable(measurable&& x) noexcept : base_t(std::move(x)) {}
 
     // No forwarding in C++, so we do it manually
     double size() const { return interface_ref().size(); }
 };
 
 typedef adobe::poly<measurable> poly_measurable;
+
+} // namespace adobe_test
 
 #endif

@@ -51,8 +51,7 @@ struct poly_copyable_instance : optimized_storage_type<T, poly_copyable_interfac
     /*!
         Move constructor
     */
-    poly_copyable_instance(move_from<poly_copyable_instance> x)
-        : base_t(move_from<base_t>(x.source)) {}
+    poly_copyable_instance(poly_copyable_instance&& x) noexcept : base_t(std::move(x)) {}
 };
 
 /**************************************************************************************************/
@@ -75,7 +74,7 @@ struct copyable : poly_base<poly_copyable_interface, poly_copyable_instance> {
     /*!
         Move constructor
     */
-    copyable(move_from<copyable> x) : base_t(move_from<base_t>(x.source)) {}
+    copyable(copyable&& x) noexcept : base_t(std::move(x)) {}
 };
 
 

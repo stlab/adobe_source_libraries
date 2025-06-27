@@ -11,6 +11,10 @@
 
 #include <adobe/config.hpp>
 
+#include "measurable_concept.hpp"
+
+namespace adobe_test {
+
 // define default implementation of size operation to call member function size
 template <typename T>
 double height(const T& t) {
@@ -23,19 +27,21 @@ template <class T>
 struct Measurable_2DConcept : MeasurableConcept<T> {
     // operations
     static double height(const T& t) {
-        using ::height;
+        using ::adobe_test::height;
         return height(t);
     }
 
     // constraints
     void constraints() {
         d = height(t);
-        d = size(t);
+        d = adobe_test_size(t);
     }
 
     const T t;
     double d;
 };
+
+} // namespace adobe_test
 
 #else
 

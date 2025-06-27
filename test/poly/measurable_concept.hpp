@@ -11,21 +11,21 @@
 
 #include <adobe/config.hpp>
 
-// define default implementation of size operation to call member function size
+// define default implementation of amount operation to call member function amount
 template <typename T>
-double size(const T& t) {
+double adobe_test_size(const T& t) {
     return static_cast<double>(t.size());
 }
+
+namespace adobe_test {
+
 
 template <class T>
 struct MeasurableConcept {
     MeasurableConcept() {} // for gcc
 
     // operations
-    static double size(const T& t) {
-        using ::size;
-        return size(t);
-    }
+    static double size(const T& t) { return adobe_test_size(t); }
 
     // constraints
     void constraints() { d = size(t); };
@@ -33,6 +33,8 @@ struct MeasurableConcept {
     const T t;
     double d;
 };
+
+} // namespace adobe_test
 
 
 #endif

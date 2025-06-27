@@ -10,7 +10,6 @@
 #include <adobe/any_regular.hpp>
 
 #include <cassert>
-#include <string>
 
 #include <adobe/algorithm/lower_bound.hpp>
 #include <adobe/algorithm/sorted.hpp>

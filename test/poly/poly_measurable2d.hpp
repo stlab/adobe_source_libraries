@@ -16,6 +16,9 @@
 #include <adobe/poly.hpp>
 
 #include "measurable_2dconcept.hpp"
+#include "poly_measurable.hpp"
+
+namespace adobe_test {
 
 /////////////////////
 
@@ -34,12 +37,11 @@ struct poly_measurable_2d_instance
     : adobe::optimized_storage_type<T, poly_measurable_2d_interface>::type {
     typedef typename adobe::optimized_storage_type<T, poly_measurable_2d_interface>::type base_t;
 
-    BOOST_CLASS_REQUIRE(T, , Measurable_2DConcept);
+    BOOST_CLASS_REQUIRE(T, adobe_test, Measurable_2DConcept);
 
     poly_measurable_2d_instance(const T& x) : base_t(x) {}
 
-    poly_measurable_2d_instance(adobe::move_from<poly_measurable_2d_instance> x)
-        : base_t(adobe::move_from<base_t>(x.source)) {}
+    poly_measurable_2d_instance(poly_measurable_2d_instance&& x) noexcept : base_t(std::move(x)) {}
 
     double size() const { return Measurable_2DConcept<T>::size(this->get()); }
 
@@ -57,7 +59,17 @@ struct measurable_2d : adobe::poly_base<poly_measurable_2d_interface, poly_measu
     template <typename T>
     explicit measurable_2d(const T& s) : base_t(s) {}
 
-    measurable_2d(adobe::move_from<measurable_2d> x) : base_t(adobe::move_from<base_t>(x.source)) {}
+    measurable_2d(const measurable_2d& x) : base_t(x) {}
+    measurable_2d(measurable_2d&& x) noexcept : base_t(std::move(x)) {}
+
+    measurable_2d& operator=(const measurable_2d& x) {
+        base_t::operator=(x);
+        return *this;
+    }
+    measurable_2d& operator=(measurable_2d&& x) noexcept {
+        base_t::operator=(std::move(x));
+        return *this;
+    }
 
     // No forwarding in C++, so we do it manually
     double size() const { return interface_ref().size(); }
@@ -67,5 +79,7 @@ struct measurable_2d : adobe::poly_base<poly_measurable_2d_interface, poly_measu
 };
 
 typedef adobe::poly<measurable_2d> poly_measurable2d;
+
+} // namespace adobe_test
 
 #endif

@@ -13,6 +13,8 @@
 
 #include <adobe/config.hpp>
 
+#include <utility>
+
 #include <boost/concept_check.hpp>
 
 #include <adobe/empty.hpp>
@@ -63,8 +65,7 @@ struct poly_regular_instance : optimized_storage_type<T, poly_regular_interface>
     /*!
         Move constructor
     */
-    poly_regular_instance(move_from<poly_regular_instance> x)
-        : base_t(move_from<base_t>(x.source)) {}
+    poly_regular_instance(poly_regular_instance&& x) noexcept : base_t(std::move(x)) {}
 
     bool equals(const poly_regular_interface& x) const {
         return this->type_info() == x.type_info() &&
@@ -94,7 +95,7 @@ struct regular : poly_base<poly_regular_interface, poly_regular_instance> {
     /*!
         Move constructor
     */
-    regular(move_from<regular> x) : base_t(move_from<base_t>(x.source)) {}
+    regular(regular&& x) noexcept : base_t(std::move(x)) {}
 };
 
 
