@@ -267,7 +267,7 @@ abstracted object.
 */
 template <typename F, typename ArgStream>
 typename result_type<F>::type call(F f, ArgStream& astream) {
-    return detail::invoker<F>::template apply(f, astream, boost::fusion::nil());
+    return detail::invoker<F>::apply(f, astream, boost::fusion::nil());
 }
 
 /*!
