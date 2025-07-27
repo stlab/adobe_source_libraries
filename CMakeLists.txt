@@ -2,12 +2,15 @@ cmake_minimum_required(VERSION 3.29)
 include(FindGit)
 include(CMakeParseArguments)
 
+if (PROJECT_IS_TOP_LEVEL)
+    include(CTest)
+endif()
+
 if(WIN32)
     set(CMAKE_OBJECT_PATH_MAX 500)
 endif()
 
 project(adobe_source_libraries CXX)
-include(CTest)
 
 # download CPM.cmake
 file(
@@ -36,7 +39,7 @@ endif(NOT DEFINED CMAKE_CXX_STANDARD)
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
 
 # Create symlink to compile_commands.json for clangd
-if(CMAKE_EXPORT_COMPILE_COMMANDS AND TOP_LEVEL_PROJECT)
+if(CMAKE_EXPORT_COMPILE_COMMANDS AND PROJECT_IS_TOP_LEVEL)
     add_custom_target(clangd_compile_commands ALL
         COMMAND ${CMAKE_COMMAND} -E create_symlink
             ${CMAKE_BINARY_DIR}/compile_commands.json
@@ -75,7 +78,7 @@ endfunction(target_link_boost_test)
 
 add_subdirectory(source)
 
-if(BUILD_TESTING)
+if(PROJECT_IS_TOP_LEVEL AND BUILD_TESTING)
     add_subdirectory(test)
 endif()
 
