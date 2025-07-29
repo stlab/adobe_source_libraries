@@ -101,6 +101,33 @@
 
 /**************************************************************************************************/
 
-#endif
+#define ASL_CPP_VERSION(X) (ASL_CPP_VERSION_PRIVATE() == (X))
+#define ASL_CPP_VERSION_LESS_THAN(X) (ASL_CPP_VERSION_PRIVATE() < (X))
+#define ASL_CPP_VERSION_AT_LEAST(X) (ASL_CPP_VERSION_PRIVATE() >= (X))
+
+// Check C++ language standard, e.g. C++17 vs. C++20/23.
+//
+// Note that on Windows the value for __cplusplus is only set properly if /Zc:__cplusplus is set.
+// This should be the case with the most projects setup but we're not taking any chances.
+// https://devblogs.microsoft.com/cppblog/msvc-now-correctly-reports-__cplusplus/
+//
+// For MSVS for now there is no c++23 only /std:c++latest which is
+// "It's set to a higher, unspecified value when the /std:c++latest option is specified."
+// Newer compiler has /std:c++23preview, but we are not using it yet.
+#if (defined(__cplusplus) && __cplusplus >= 202302L) || (defined(_MSVC_LANG) && _MSVC_LANG > 202002L)
+#define ASL_CPP_VERSION_PRIVATE() 23
+#elif (defined(__cplusplus) && __cplusplus >= 202002L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 202002L)
+#define ASL_CPP_VERSION_PRIVATE() 20
+#elif (defined(__cplusplus) && __cplusplus >= 201703L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 201703L)
+#define ASL_CPP_VERSION_PRIVATE() 17
+#elif (defined(__cplusplus) && __cplusplus >= 201402L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
+#define ASL_CPP_VERSION_PRIVATE() 14
+#else
+// #warning Unknown version of C++, assuming C++23.
+#define ASL_CPP_VERSION_PRIVATE() 23
+#endif  // (defined(__cplusplus) && __cplusplus >= 201402L) || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
+
+/**************************************************************************************************/
+#endif  // #define ADOBE_CONFIG_HPP
 
 /**************************************************************************************************/

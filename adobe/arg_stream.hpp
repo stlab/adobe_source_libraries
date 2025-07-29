@@ -27,6 +27,7 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <adobe/type_inspection.hpp> // ADOBE_HAS_TYPE/ADOBE_HAS_MEMBER
+#include <adobe/typeinfo.hpp>
 
 #include <functional>
 
@@ -165,12 +166,12 @@ compile.
 */
 template <typename R, typename ArgStream>
 R get_next_arg(ArgStream const& as) {
-    return as.get_next_arg<R>();
+    return as.template get_next_arg<R>();
 }
 // specialize these or let them fallback to the above specialization
 template <typename R, typename ArgStream>
 R get_next_arg(ArgStream& as) {
-    return as.get_next_arg<R>();
+    return as.template get_next_arg<R>();
 }
 template <typename R, typename ArgStream>
 R get_next_arg(ArgStream* as) {
@@ -289,7 +290,7 @@ typename result_type<F>::type call(T* that, F f, ArgStream& astream) {
             type,
         typename boost::mpl::end<boost::function_types::parameter_types<
             typename signature<F>::type, boost::add_pointer<boost::mpl::placeholders::_>>>::type>::
-        template apply(f, astream, boost::fusion::push_back(args, that));
+        apply(f, astream, boost::fusion::push_back(args, that));
 }
 
 
@@ -321,13 +322,13 @@ struct chain {
     T get_next_arg() {
         if (!eof(first)) {
             try {
-                return first->get_next_arg<T>();
+                return first->template get_next_arg<T>();
             } catch (arg_stream::no_more_args&) {
                 first = 0;
             }
         }
 
-        return second->get_next_arg<T>();
+        return second->template get_next_arg<T>();
     }
 
     bool eof() const { return eof(first) && eof(second); }
