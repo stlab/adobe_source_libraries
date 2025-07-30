@@ -12,17 +12,12 @@ endif()
 
 project(adobe_source_libraries CXX)
 
-# download CPM.cmake
-file(
-  DOWNLOAD
-  https://github.com/cpm-cmake/CPM.cmake/releases/download/v0.40.8/CPM.cmake
-  ${CMAKE_CURRENT_BINARY_DIR}/cmake/CPM.cmake
-  EXPECTED_HASH SHA256=78ba32abdf798bc616bab7c73aac32a17bbd7b06ad9e26a6add69de8f3ae4791
-)
-include(${CMAKE_CURRENT_BINARY_DIR}/cmake/CPM.cmake)
+################################################################################
 
-# Enable CPM caching to avoid re-downloading dependencies
+# Enable CPM caching to avoid re-downloading dependencies. Must be before CPM.cmake include.
 set(CPM_SOURCE_CACHE ${CMAKE_SOURCE_DIR}/.cpm-cache CACHE PATH "Directory to cache CPM packages" FORCE)
+
+include(cmake/CPM.cmake)
 
 ################################################################################
 # Dependencies
@@ -91,9 +86,7 @@ if(BUILD_DOCS)
     if(DOXYGEN_FOUND)
         # Download doxygen-awesome-css theme via CPM
         CPMAddPackage(
-            NAME doxygen-awesome-css
-            GITHUB_REPOSITORY jothepro/doxygen-awesome-css
-            GIT_TAG v2.3.4
+            URI gh:jothepro/doxygen-awesome-css@2.3.4
             DOWNLOAD_ONLY YES
         )
         set(AWESOME_CSS_DIR ${doxygen-awesome-css_SOURCE_DIR})
