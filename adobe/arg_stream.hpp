@@ -30,6 +30,7 @@
 #include <adobe/typeinfo.hpp>
 
 #include <functional>
+#include <type_traits>
 
 namespace adobe {
 
@@ -110,17 +111,15 @@ struct traits {
 
 
 namespace detail {
-template <class ArgStream>
-static bool
-eof_check(ArgStream& as,
-          typename boost::enable_if_c<traits<ArgStream>::has_eof_memberfunction>::type* dummy = 0) {
+template <class ArgStream,
+          typename boost::enable_if_c<traits<ArgStream>::has_eof_memberfunction>::type* dummy = nullptr>
+static bool eof_check(ArgStream& as) {
     return as.eof();
 }
 
-template <class ArgStream>
-static bool eof_check(
-    ArgStream& as,
-    typename boost::disable_if_c<traits<ArgStream>::has_eof_memberfunction>::type* dummy = 0) {
+template <class ArgStream,
+    typename boost::disable_if_c<traits<ArgStream>::has_eof_memberfunction>::type* dummy = nullptr>
+static bool eof_check(ArgStream& as) {
     return false;
 }
 
@@ -386,16 +385,16 @@ struct single {
 
     bool eof() { return repeat == 0; }
 
-    template <typename R>
+    template <typename R,
+              typename std::enable_if<std::is_convertible_v<value_type, R>>::type* dummy = nullptr>
     R convert_or_throw(
-        value_type& value,
-        typename boost::enable_if<boost::is_convertible<value_type, R>>::type* dummy = 0) {
+        value_type& value) {
         return R(value);
     }
-    template <typename R>
+    template <typename R,
+              typename std::enable_if<!std::is_convertible_v<value_type, R>>::type* dummy = nullptr>
     R convert_or_throw(
-        value_type& value,
-        typename boost::disable_if<boost::is_convertible<value_type, R>>::type* dummy = 0) {
+        value_type& value) {
         throw adobe::bad_cast();
         return *(R*)value;
     }

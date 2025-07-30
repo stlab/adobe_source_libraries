@@ -1,3 +1,0 @@
-project adobe/arg_stream ;
-
-run main.cpp ;

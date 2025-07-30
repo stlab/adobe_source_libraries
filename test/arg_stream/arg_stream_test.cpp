@@ -6,14 +6,14 @@
 
 /******************************************************************************/
 
+// asl
+#include <adobe/arg_stream.hpp>
+
 #include <adobe/config.hpp>
 
 // boost
 #define BOOST_TEST_MAIN
 #include <boost/test/unit_test.hpp>
-
-// asl
-#include <adobe/arg_stream.hpp>
 
 // std
 #include <string>
@@ -117,7 +117,7 @@ double multiply_double_int(double d, int i) {
     return d * i;
 }
 
-void void_function(int value) {
+void void_function(int /* value */) {
     // Just consume the value, nothing to return
 }
 
