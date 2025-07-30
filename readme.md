@@ -1,6 +1,6 @@
 # Adobe Source Libraries
 
-[![Build and Tests][ci-badge][ci-link]
+[![Build and Tests][ci-badge]][ci-link]
 [![Documentation][docs-badge]][docs-link]
 [![License][license-badge]][license-link]
 
