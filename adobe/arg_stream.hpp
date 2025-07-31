@@ -27,8 +27,10 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <adobe/type_inspection.hpp> // ADOBE_HAS_TYPE/ADOBE_HAS_MEMBER
+#include <adobe/typeinfo.hpp>
 
 #include <functional>
+#include <type_traits>
 
 namespace adobe {
 
@@ -109,17 +111,15 @@ struct traits {
 
 
 namespace detail {
-template <class ArgStream>
-static bool
-eof_check(ArgStream& as,
-          typename boost::enable_if_c<traits<ArgStream>::has_eof_memberfunction>::type* dummy = 0) {
+template <class ArgStream,
+          typename boost::enable_if_c<traits<ArgStream>::has_eof_memberfunction>::type* dummy = nullptr>
+static bool eof_check(ArgStream& as) {
     return as.eof();
 }
 
-template <class ArgStream>
-static bool eof_check(
-    ArgStream& as,
-    typename boost::disable_if_c<traits<ArgStream>::has_eof_memberfunction>::type* dummy = 0) {
+template <class ArgStream,
+    typename boost::disable_if_c<traits<ArgStream>::has_eof_memberfunction>::type* dummy = nullptr>
+static bool eof_check(ArgStream& as) {
     return false;
 }
 
@@ -165,12 +165,12 @@ compile.
 */
 template <typename R, typename ArgStream>
 R get_next_arg(ArgStream const& as) {
-    return as.get_next_arg<R>();
+    return as.template get_next_arg<R>();
 }
 // specialize these or let them fallback to the above specialization
 template <typename R, typename ArgStream>
 R get_next_arg(ArgStream& as) {
-    return as.get_next_arg<R>();
+    return as.template get_next_arg<R>();
 }
 template <typename R, typename ArgStream>
 R get_next_arg(ArgStream* as) {
@@ -289,7 +289,7 @@ typename result_type<F>::type call(T* that, F f, ArgStream& astream) {
             type,
         typename boost::mpl::end<boost::function_types::parameter_types<
             typename signature<F>::type, boost::add_pointer<boost::mpl::placeholders::_>>>::type>::
-        template apply(f, astream, boost::fusion::push_back(args, that));
+        apply(f, astream, boost::fusion::push_back(args, that));
 }
 
 
@@ -321,13 +321,13 @@ struct chain {
     T get_next_arg() {
         if (!eof(first)) {
             try {
-                return first->get_next_arg<T>();
+                return first->template get_next_arg<T>();
             } catch (arg_stream::no_more_args&) {
                 first = 0;
             }
         }
 
-        return second->get_next_arg<T>();
+        return second->template get_next_arg<T>();
     }
 
     bool eof() const { return eof(first) && eof(second); }
@@ -385,16 +385,16 @@ struct single {
 
     bool eof() { return repeat == 0; }
 
-    template <typename R>
+    template <typename R,
+              typename std::enable_if<std::is_convertible_v<value_type, R>>::type* dummy = nullptr>
     R convert_or_throw(
-        value_type& value,
-        typename boost::enable_if<boost::is_convertible<value_type, R>>::type* dummy = 0) {
+        value_type& value) {
         return R(value);
     }
-    template <typename R>
+    template <typename R,
+              typename std::enable_if<!std::is_convertible_v<value_type, R>>::type* dummy = nullptr>
     R convert_or_throw(
-        value_type& value,
-        typename boost::disable_if<boost::is_convertible<value_type, R>>::type* dummy = 0) {
+        value_type& value) {
         throw adobe::bad_cast();
         return *(R*)value;
     }

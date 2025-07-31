@@ -22,7 +22,7 @@
 
 namespace adobe {
 
-#if __cplusplus < 202002L
+#if ASL_CPP_VERSION_LESS_THAN(20)
 
 /**************************************************************************************************/
 
@@ -66,7 +66,7 @@ template <class T>
 inline typename std::enable_if<!has_ostream_insertion<T>::value>::type
 ostream_insertion(std::ostream&, const T&) {}
 
-#else  // __cplusplus < 202002L
+#else  // ASL_CPP_VERSION_LESS_THAN(20)
 
 template <class T>
 inline void ostream_insertion(std::ostream& s, const T& x) {
@@ -74,7 +74,7 @@ inline void ostream_insertion(std::ostream& s, const T& x) {
         s << x;
     }
 }
-#endif // __cplusplus < 202002L
+#endif // ASL_CPP_VERSION_LESS_THAN(20)
 
 template <>
 inline void ostream_insertion<bool>(std::ostream& s, const bool& x) {

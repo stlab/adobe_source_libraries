@@ -10,13 +10,15 @@
 #ifndef ADOBE_TYPE_TRAITS_HPP
 #define ADOBE_TYPE_TRAITS_HPP
 
+#include <adobe/config.hpp>
+
 #include <type_traits>
 
 /**************************************************************************************************/
 
 namespace adobe {
 
-#if __cplusplus < 201703L
+#if ASL_CPP_VERSION_LESS_THAN(17)
 
 template <class F, class... Args>
 using invoke_result_t = std::result_of_t<F(Args...)>;
