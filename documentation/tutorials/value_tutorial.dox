@@ -8,7 +8,7 @@
 
 \subsection any_regular_t_background_discriminated_types Discriminated Types and Unions
 \par
-adobe::any_regular_t is a pseudo-discriminated union. Before we can go any further we must first understand what a discriminated type is. Kevin Henney best describes discriminated types in his documentation of <a href="http://www.boost.org/doc/html/any.html#id447427">boost::any</a>:
+adobe::any_regular_t is a pseudo-discriminated union. Before we can go any further we must first understand what a discriminated type is. Kevin Henney best describes discriminated types in his documentation of <a href="https://en.cppreference.com/w/cpp/utility/any.html">std::any</a>:
     - <i>Discriminated types ... contain values of different types but do not attempt conversion between them, i.e. <code>5</code> is held strictly as an <code>int</code> and is not implicitly convertible either to <code>"5"</code> or to <code>5.0</code>. Their indifference to interpretation but awareness of type effectively makes them safe, generic containers of single values, with no scope for surprises from ambiguous conversions.</i>
 \par
 A discriminated union, then, is a type that can retain any one of a collection of discriminated types, but then only one at a time. In the case of adobe::any_regular_t its storable type range is limited to any type modeling the \ref any_regular_t_background_data_type_requirements.

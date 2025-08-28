@@ -308,7 +308,7 @@ inline namespace version_1 {
 /*!
 \ingroup any_regular
 
-\brief A runtime polymorphic type similar to boost::any which can hold any type which models
+\brief A runtime polymorphic type similar to std::any which can hold any type which models
     \ref concept_regular_type.
 
 \model_of
