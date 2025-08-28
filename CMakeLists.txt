@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.29)
+project(adobe-source-libraries CXX)
 include(FindGit)
 include(CMakeParseArguments)
 
@@ -10,19 +11,24 @@ if(WIN32)
     set(CMAKE_OBJECT_PATH_MAX 500)
 endif()
 
-project(adobe_source_libraries CXX)
-
 ################################################################################
 
 # Enable CPM caching to avoid re-downloading dependencies. Must be before CPM.cmake include.
-set(CPM_SOURCE_CACHE ${CMAKE_SOURCE_DIR}/.cpm-cache CACHE PATH "Directory to cache CPM packages" FORCE)
+set(CPM_SOURCE_CACHE ${CMAKE_SOURCE_DIR}/.cache/cpm CACHE PATH "Directory to cache CPM packages" FORCE)
 
 include(cmake/CPM.cmake)
 
 ################################################################################
 # Dependencies
 
-CPMAddPackage("gh:stlab/copy-on-write@1.0.3")
+# https://github.com/stlab/copy-on-write/releases
+CPMAddPackage("gh:stlab/copy-on-write@1.0.4")
+
+# https://github.com/stlab/enum-ops/releases
+CPMAddPackage(gh:stlab/enum-ops@1.0.4)
+# CPMAddPackage(NAME enum-ops
+#     URL "${CMAKE_SOURCE_DIR}/../enum-ops"
+# )
 
 ################################################################################
 
@@ -43,8 +49,6 @@ if(CMAKE_EXPORT_COMPILE_COMMANDS AND PROJECT_IS_TOP_LEVEL)
     )
 endif()
 
-project(adobe-source-libraries CXX)
-
 # https://github.com/boostorg/boost/releases
 CPMAddPackage(
     NAME Boost
@@ -64,6 +68,7 @@ function(target_link_boost target)
     target_link_libraries(${target} PUBLIC Boost::multiprecision)
     target_link_libraries(${target} PUBLIC Boost::date_time)
     target_link_libraries(${target} PUBLIC stlab::copy-on-write)
+    target_link_libraries(${target} PUBLIC stlab::enum-ops)
 endfunction(target_link_boost)
 
 function(target_link_boost_test target)
