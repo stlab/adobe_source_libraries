@@ -34,33 +34,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install dependencies (macos)
-        if: ${{ startsWith(matrix.config.os, 'macos') }}
-        run: |
-          rm '/usr/local/bin/2to3'
-          rm '/usr/local/bin/2to3-3.12'
-          rm '/usr/local/bin/idle3'
-          rm '/usr/local/bin/idle3.12'
-          rm '/usr/local/bin/pydoc3'
-          rm '/usr/local/bin/pydoc3.12'
-          rm '/usr/local/bin/python3'
-          rm '/usr/local/bin/python3.12'
-          rm '/usr/local/bin/python3-config'
-          rm '/usr/local/bin/python3.12-config'
-          brew install ninja
-        shell: bash
+      # - name: Install dependencies (macos)
+      #   if: ${{ startsWith(matrix.config.os, 'macos') }}
+      #   run: |
+      #     rm '/usr/local/bin/2to3'
+      #     rm '/usr/local/bin/2to3-3.12'
+      #     rm '/usr/local/bin/idle3'
+      #     rm '/usr/local/bin/idle3.12'
+      #     rm '/usr/local/bin/pydoc3'
+      #     rm '/usr/local/bin/pydoc3.12'
+      #     rm '/usr/local/bin/python3'
+      #     rm '/usr/local/bin/python3.12'
+      #     rm '/usr/local/bin/python3-config'
+      #     rm '/usr/local/bin/python3.12-config'
+      #     brew install ninja
+      #   shell: bash
 
-      - name: Install dependencies (ubuntu)
-        if: ${{ startsWith(matrix.config.os, 'ubuntu') }}
-        run: |
-          sudo apt-get install -y ninja-build
-        shell: bash
+      # - name: Install dependencies (ubuntu)
+      #   if: ${{ startsWith(matrix.config.os, 'ubuntu') }}
+      #   run: |
+      #     sudo apt-get install -y ninja-build
+      #   shell: bash
 
-      - name: Install dependencies (Windows)
-        if: ${{ startsWith(matrix.config.os, 'windows') }}
-        run: |
-          choco install --yes ninja
-        shell: cmd
+      # - name: Install dependencies (Windows)
+      #   if: ${{ startsWith(matrix.config.os, 'windows') }}
+      #   run: |
+      #     choco install --yes ninja
+      #   shell: cmd
 
       - name: Set enviroment variables (Linux+GCC)
         if: ${{ matrix.config.compiler == 'gcc' }}
