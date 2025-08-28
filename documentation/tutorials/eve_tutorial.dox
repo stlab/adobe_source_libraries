@@ -99,7 +99,7 @@ adobe::position_t client_assemble(  const adobe::eve_t::position_t& parent,
 {
      adobe::layoutable_t widget(widget_factory(widget_name));
      return eve_g.add_view_element(parent.empty() ?
-                                    boost::any_cast<adobe::eve::position_t>(parent) :
+                                    std::any_cast<adobe::eve::position_t>(parent) :
                                     adobe::eve_t::iterator(),
                                     widget->default_extents(), //documentation update in progress
                                     widget->is_container(),    //documentation update in progress

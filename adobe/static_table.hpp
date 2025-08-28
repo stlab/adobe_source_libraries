@@ -134,7 +134,7 @@ Sorts the contents of the table according to the static_table_traits type.
 static_table_traits provides functionality lifted out of the static_table class so clients can add
 their own traits should their key types require custom comparison and equality functionality. An
 example key type that would require a customized static_table_traits class would be
-<code>boost::reference_wrapper<const std::type_info></code>, as the default-supplied functionality
+<code>std::reference_wrapper<const std::type_info></code>, as the default-supplied functionality
 is not compatible.
 */
 
@@ -162,16 +162,6 @@ The resultant type from a table lookup.
 A pair comprised of a key_type and a value_type.
 */
 
-/*!
-\fn result_type adobe::static_table_traits::operator()(const entry_type& x, const entry_type& y) const
-
-\param x The first entry
-\param y The second entry
-
-\return
-    <code>true</code> if <code>x</code>'s key &lt; <code>y</code>'s key; <code>false</code>
-otherwise.
-*/
 
 /*!
 \fn result_type adobe::static_table_traits::operator()(const entry_type& x, const key_type& y) const
@@ -201,6 +191,11 @@ struct static_table_traits {
     typedef ValueType value_type;
     typedef std::pair<key_type, value_type> entry_type;
 
+
+    /*!
+    \return <code>true</code> if <code>x</code>'s key &lt; <code>y</code>'s key; <code>false</code>
+    otherwise.
+    */
     result_type operator()(const entry_type& x, const entry_type& y) const {
         return (*this)(x, y.first);
     }

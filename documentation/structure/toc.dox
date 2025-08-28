@@ -50,7 +50,6 @@ starting points:
     - \ref algorithm
     - \ref conversion
     - \ref cmath
-    - \ref enum_ops
     - \ref eve_engine
         - \ref asl_tutorials_eve (Tutorial)
     - \ref eveparser
@@ -152,7 +151,6 @@ starting points:
 <h3>Math and Numerics</h3>
     - \ref conversion
     - \ref cmath
-    - \ref enum_ops
 
 <h3>Correctness and Testing</h3>
     - adobe::bad_cast

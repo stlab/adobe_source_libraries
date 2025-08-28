@@ -11,7 +11,6 @@
 #include <adobe/config.hpp>
 
 #include <functional>
-#include <optional>
 #include <vector>
 
 #include <boost/signals2/signal.hpp>
@@ -529,7 +528,7 @@ struct set_monitor_t {
 
 private:
     name_t cell_name_m;
-    boost::reference_wrapper<sheet_t> sheet_m;
+    std::reference_wrapper<sheet_t> sheet_m;
 };
 
 /**************************************************************************************************/
