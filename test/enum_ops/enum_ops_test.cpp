@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(enum_arith_ops) {
     BOOST_CHECK(x == 1);
 
     // *
-    x = num_2 * num_3;
+    x = num_2 * 3;
     BOOST_CHECK(x == 6);
 
     // /
@@ -130,7 +130,7 @@ BOOST_AUTO_TEST_CASE(enum_arith_ops) {
 
     // *=
     x = num_2;
-    x *= num_3;
+    x *= 3;
     BOOST_CHECK(x == 6);
 
     // /=

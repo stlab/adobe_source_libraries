@@ -10,8 +10,7 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "DEBUG",
                 "CMAKE_CXX_STANDARD": "20",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
             },
             "architecture": {
                 "value": "x64",
@@ -34,8 +33,7 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "DEBUG",
                 "CMAKE_CXX_STANDARD": "17",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
             },
             "architecture": {
                 "value": "x64",
@@ -58,8 +56,7 @@
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "DEBUG",
                 "CMAKE_CXX_STANDARD": "20",
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
-                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
             },
             "vendor": {
                 "microsoft.com/VisualStudioSettings/CMake/1.0": {
@@ -77,8 +74,7 @@
             "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "DEBUG",
-                "CMAKE_CXX_STANDARD": "17",
-                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
+                "CMAKE_CXX_STANDARD": "17"
             }
         },
         {
@@ -89,8 +85,7 @@
             "cacheVariables": {
                 "CMAKE_CXX_STANDARD": "17",
                 "CMAKE_BUILD_TYPE": "DEBUG",
-                "CMAKE_CXX_CLANG_TIDY": "clang-tidy",
-                "CPM_SOURCE_CACHE": "${sourceParentDir}/.cache/CPM"
+                "CMAKE_CXX_CLANG_TIDY": "clang-tidy"
             }
         },
         {
@@ -174,7 +169,7 @@
         "displayName": "Build Documentation",
         "description": "Build the documentation",
         "configurePreset": "docs",
-        "targets": ["docs"]
+        "targets": "docs"
         }
     ],
     "testPresets": [
