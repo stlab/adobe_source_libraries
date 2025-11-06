@@ -7,10 +7,10 @@
 
 #include <adobe/adam.hpp>
 
+#include <bitset>
 #include <deque>
 #include <functional>
 #include <string>
-#include <tuple>
 #include <utility>
 #include <vector>
 
@@ -101,7 +101,7 @@ enum access_specifier_t {
 */
 
 /*
-    REVIST (sparent) : Some version of MSVC didn't like function level try blocks. Need to test.
+    REVISIT (sparent) : Some version of MSVC didn't like function level try blocks. Need to test.
 */
 
 void evaluate(adobe::virtual_machine_t& machine, const adobe::line_position_t& position,
@@ -442,7 +442,7 @@ void sheet_t::implementation_t::enabled_filter(const cell_bits_t& touch_set,
     bool new_active(new_active_bits.test(contributing_index_pos));
 
     /*
-        REVIST <sean_parent@mac.com> : This is check seems to missing a check on value_accessed_m.
+        REVISIT <sean_parent@mac.com> : This is check seems to missing a check on value_accessed_m.
         A change there might go unnoticed and cause the control active state to go out of sync.
     */
 
@@ -1278,7 +1278,7 @@ void sheet_t::implementation_t::update() {
 
     cell_bits_t active = priority_accessed;
 
-    // REVIST (sparent) : input monitor should recieve priority_accessed and poison bits.
+    // REVISIT (sparent) : input monitor should receive priority_accessed and poison bits.
 
     for (index_t::const_iterator iter(output_index_m.begin()), last(output_index_m.end());
          iter != last; ++iter) {
