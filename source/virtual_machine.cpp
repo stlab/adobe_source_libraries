@@ -643,7 +643,7 @@ void virtual_machine_t::implementation_t::index_operator() {
             result = get_value(cast<dictionary_t>(operand1), index);
         }
     } else {
-        auto index{cast<size_t>(operand2)};
+        auto index{static_cast<size_t>(cast<double>(operand2))};
 
         if (numeric_index_lookup_m) {
             result = numeric_index_lookup_m(operand1, index);

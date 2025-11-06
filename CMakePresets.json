@@ -6,7 +6,7 @@
             "displayName": "debug-windows",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
-            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
+            "binaryDir": "${sourceDir}/build/asl-${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "DEBUG",
                 "CMAKE_CXX_STANDARD": "20",
@@ -29,7 +29,7 @@
             "displayName": "windows-debug-C++17",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
-            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
+            "binaryDir": "${sourceDir}/build/asl-${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "DEBUG",
                 "CMAKE_CXX_STANDARD": "17",
@@ -71,7 +71,7 @@
             "displayName": "macos-debug-C++17",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
-            "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
+            "binaryDir": "${sourceDir}/build/asl-${presetName}",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "DEBUG",
                 "CMAKE_CXX_STANDARD": "17"

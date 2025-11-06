@@ -103,7 +103,7 @@ if(BUILD_DOCS)
         # Set variables for Doxyfile template
         set(PROJECT_NAME "Adobe Source Libraries")
         set(PROJECT_BRIEF "A collection of C++ libraries.")
-        set(PROJECT_VERSION "2.0.0")
+        set(PROJECT_VERSION "2.0.2")
         set(INPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
         set(OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
         set(AWESOME_CSS_PATH "${AWESOME_CSS_DIR}")

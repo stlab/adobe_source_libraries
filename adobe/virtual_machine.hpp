@@ -10,13 +10,9 @@
 
 #include <adobe/config.hpp>
 
-#include <bitset>
 #include <functional>
-#include <optional>
 #include <stdexcept>
 #include <string>
-#include <vector>
-
 
 #define BOOST_FUNCTION_NO_DEPRECATED
 #include <boost/operators.hpp>
