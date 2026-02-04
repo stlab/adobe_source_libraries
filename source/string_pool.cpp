@@ -13,9 +13,7 @@
 #include <vector>
 
 #include <adobe/algorithm/copy.hpp>
-#include <adobe/algorithm/for_each.hpp>
 #include <adobe/closed_hash.hpp>
-#include <adobe/functional.hpp>
 #include <adobe/name.hpp>
 #include <adobe/string.hpp>
 
@@ -43,7 +41,11 @@ public:
     explicit string_pool_t(std::size_t pool_size = default_pool_size_k)
         : pool_size_m(pool_size), next_m(NULL), end_m(NULL) {}
 
-    ~string_pool_t() { adobe::for_each(pool_m, adobe::delete_ptr()); }
+    ~string_pool_t() {
+        for (char* pool : pool_m) {
+            ::operator delete(pool);
+        }
+    }
 
     const char* add(const char* ident) {
         std::size_t n = std::strlen(ident);
