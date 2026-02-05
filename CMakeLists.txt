@@ -90,8 +90,9 @@ if(BUILD_DOCS)
     
     if(DOXYGEN_FOUND)
         # Download doxygen-awesome-css theme via CPM
+        # https://github.com/jothepro/doxygen-awesome-css
         CPMAddPackage(
-            URI gh:jothepro/doxygen-awesome-css@2.3.4
+            URI gh:jothepro/doxygen-awesome-css@2.4.1
             DOWNLOAD_ONLY YES
         )
         set(AWESOME_CSS_DIR ${doxygen-awesome-css_SOURCE_DIR})
