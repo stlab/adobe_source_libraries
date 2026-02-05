@@ -34,14 +34,14 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Set enviroment variables (Linux+GCC)
+      - name: Set environment variables (Linux+GCC)
         if: ${{ matrix.config.compiler == 'gcc' }}
         shell: bash
         run: |
           echo "CC=gcc" >> $GITHUB_ENV
           echo "CXX=g++" >> $GITHUB_ENV
 
-      - name: Set enviroment variables (Linux+Clang)
+      - name: Set environment variables (Linux+Clang)
         if: ${{ matrix.config.compiler == 'clang' }}
         shell: bash
         run: |
@@ -67,7 +67,7 @@ jobs:
         uses: ilammy/msvc-dev-cmd@v1
         with:
           arch: amd64
-        run: |
+      - run: |
           mkdir ..\build
           cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=${{matrix.config.build-type}} -DCMAKE_CXX_STANDARD=${{matrix.config.cxxstd}}
 
@@ -79,9 +79,6 @@ jobs:
 
       - name: Build (Windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: amd64
         run: |
           cmake --build ../build/
 
