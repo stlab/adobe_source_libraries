@@ -22,10 +22,10 @@ include(cmake/CPM.cmake)
 # Dependencies
 
 # https://github.com/stlab/copy-on-write/releases
-CPMAddPackage("gh:stlab/copy-on-write@1.0.4")
+CPMAddPackage("gh:stlab/copy-on-write@1.1.0")
 
 # https://github.com/stlab/enum-ops/releases
-CPMAddPackage(gh:stlab/enum-ops@1.0.4)
+CPMAddPackage(gh:stlab/enum-ops@1.2.0)
 # CPMAddPackage(NAME enum-ops
 #     URL "${CMAKE_SOURCE_DIR}/../enum-ops"
 # )
@@ -52,9 +52,9 @@ endif()
 # https://github.com/boostorg/boost/releases
 CPMAddPackage(
     NAME Boost
-    VERSION 1.88.0
-    URL https://github.com/boostorg/boost/releases/download/boost-1.88.0/boost-1.88.0-cmake.7z
-    URL_HASH SHA256=feba537f6d32c062ed0f26b4d6e5b8e8450d51ef81492369a101ab99fcead278
+    VERSION 1.90.0
+    URL https://github.com/boostorg/boost/releases/download/boost-1.90.0/boost-1.90.0-cmake.7z
+    URL_HASH SHA256=218e74c4aa362a994b7b7a23b2920f455a00205c656405fcf262cf60b8871921
     OPTIONS
     "BOOST_ENABLE_CMAKE ON"
     "CMAKE_CXX_CLANG_TIDY ;"
