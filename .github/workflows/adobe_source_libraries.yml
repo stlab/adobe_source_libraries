@@ -33,6 +33,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
+      - if: ${{ startsWith(matrix.config.os, 'windows') }}
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
 
       - name: Set environment variables (Linux+GCC)
         if: ${{ matrix.config.compiler == 'gcc' }}
@@ -64,10 +68,7 @@ jobs:
 
       - name: Configure (Windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: amd64
-      - run: |
+        run: |
           mkdir ..\build
           cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=${{matrix.config.build-type}} -DCMAKE_CXX_STANDARD=${{matrix.config.cxxstd}}
 
