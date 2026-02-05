@@ -15,7 +15,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Generate job matrix
         id: set-matrix
@@ -32,21 +32,25 @@ jobs:
     name: ${{ matrix.config.name }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+      - if: ${{ startsWith(matrix.config.os, 'windows') }}
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: amd64
 
-      - name: Set enviroment variables (Linux+GCC)
+      - name: Set environment variables (Linux+GCC)
         if: ${{ matrix.config.compiler == 'gcc' }}
         shell: bash
         run: |
-          echo "CC=gcc-${{matrix.config.version}}" >> $GITHUB_ENV
-          echo "CXX=g++-${{matrix.config.version}}" >> $GITHUB_ENV
+          echo "CC=gcc" >> $GITHUB_ENV
+          echo "CXX=g++" >> $GITHUB_ENV
 
-      - name: Set enviroment variables (Linux+Clang)
+      - name: Set environment variables (Linux+Clang)
         if: ${{ matrix.config.compiler == 'clang' }}
         shell: bash
         run: |
-          echo "CC=clang-${{matrix.config.version}}" >> $GITHUB_ENV
-          echo "CXX=clang++-${{matrix.config.version}}" >> $GITHUB_ENV
+          echo "CC=clang" >> $GITHUB_ENV
+          echo "CXX=clang++" >> $GITHUB_ENV
 
       - name: Configure (Ubuntu)
         if: ${{ startsWith(matrix.config.os, 'ubuntu') }}
@@ -64,9 +68,7 @@ jobs:
 
       - name: Configure (Windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
-        shell: cmd
         run: |
-          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           mkdir ..\build
           cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=${{matrix.config.build-type}} -DCMAKE_CXX_STANDARD=${{matrix.config.cxxstd}}
 
@@ -78,9 +80,7 @@ jobs:
 
       - name: Build (Windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
-        shell: cmd
         run: |
-          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           cmake --build ../build/
 
       - name: Test

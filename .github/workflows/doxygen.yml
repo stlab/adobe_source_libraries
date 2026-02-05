@@ -21,10 +21,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install dependencies
-        uses: ssciwr/doxygen-install@v1
+        uses: ssciwr/doxygen-install@v2
 
       - name: Configure CMake with docs
         run: cmake --preset docs
@@ -36,7 +36,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./build/docs/html
 
