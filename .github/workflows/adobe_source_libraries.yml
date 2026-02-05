@@ -64,9 +64,8 @@ jobs:
 
       - name: Configure (Windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
-        shell: cmd
+        shell: bash
         run: |
-          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           mkdir ..\build
           cmake -S. -B../build -GNinja -DCMAKE_BUILD_TYPE=${{matrix.config.build-type}} -DCMAKE_CXX_STANDARD=${{matrix.config.cxxstd}}
 
@@ -78,9 +77,8 @@ jobs:
 
       - name: Build (Windows)
         if: ${{ startsWith(matrix.config.os, 'windows') }}
-        shell: cmd
+        shell: bash
         run: |
-          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x64
           cmake --build ../build/
 
       - name: Test
