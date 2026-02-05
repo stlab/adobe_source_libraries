@@ -15,7 +15,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Generate job matrix
         id: set-matrix
@@ -32,21 +32,21 @@ jobs:
     name: ${{ matrix.config.name }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set enviroment variables (Linux+GCC)
         if: ${{ matrix.config.compiler == 'gcc' }}
         shell: bash
         run: |
-          echo "CC=gcc-${{matrix.config.version}}" >> $GITHUB_ENV
-          echo "CXX=g++-${{matrix.config.version}}" >> $GITHUB_ENV
+          echo "CC=gcc" >> $GITHUB_ENV
+          echo "CXX=g++" >> $GITHUB_ENV
 
       - name: Set enviroment variables (Linux+Clang)
         if: ${{ matrix.config.compiler == 'clang' }}
         shell: bash
         run: |
-          echo "CC=clang-${{matrix.config.version}}" >> $GITHUB_ENV
-          echo "CXX=clang++-${{matrix.config.version}}" >> $GITHUB_ENV
+          echo "CC=clang" >> $GITHUB_ENV
+          echo "CXX=clang++" >> $GITHUB_ENV
 
       - name: Configure (Ubuntu)
         if: ${{ startsWith(matrix.config.os, 'ubuntu') }}
