@@ -1,5 +1,20 @@
 cmake_minimum_required(VERSION 3.29)
+include(cmake/CPM.cmake)
+
+# Add cpp-library for set version
+# CPMAddPackage(
+#     NAME cpp-library
+#     SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../cpp-library"
+# )
+CPMAddPackage("gh:stlab/cpp-library@5.2.0")
+include(${cpp-library_SOURCE_DIR}/cpp-library.cmake)
+
 project(adobe-source-libraries CXX)
+
+cpp_library_set_version()
+
+################################################################################
+
 include(FindGit)
 include(CMakeParseArguments)
 
@@ -10,13 +25,6 @@ endif()
 if(WIN32)
     set(CMAKE_OBJECT_PATH_MAX 500)
 endif()
-
-################################################################################
-
-# Enable CPM caching to avoid re-downloading dependencies. Must be before CPM.cmake include.
-set(CPM_SOURCE_CACHE ${CMAKE_SOURCE_DIR}/.cache/cpm CACHE PATH "Directory to cache CPM packages" FORCE)
-
-include(cmake/CPM.cmake)
 
 ################################################################################
 # Dependencies
@@ -38,16 +46,6 @@ if(NOT DEFINED CMAKE_CXX_STANDARD)
 endif(NOT DEFINED CMAKE_CXX_STANDARD)
 
 set(CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY "libc++")
-
-# Create symlink to compile_commands.json for clangd
-if(CMAKE_EXPORT_COMPILE_COMMANDS AND PROJECT_IS_TOP_LEVEL)
-    add_custom_target(clangd_compile_commands ALL
-        COMMAND ${CMAKE_COMMAND} -E create_symlink
-            ${CMAKE_BINARY_DIR}/compile_commands.json
-            ${CMAKE_SOURCE_DIR}/compile_commands.json
-        COMMENT "Creating symlink to compile_commands.json for clangd"
-    )
-endif()
 
 # https://github.com/boostorg/boost/releases
 CPMAddPackage(
@@ -104,7 +102,6 @@ if(BUILD_DOCS)
         # Set variables for Doxyfile template
         set(PROJECT_NAME "Adobe Source Libraries")
         set(PROJECT_BRIEF "A collection of C++ libraries.")
-        set(PROJECT_VERSION "2.0.2")
         set(INPUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
         set(OUTPUT_DIR "${CMAKE_CURRENT_BINARY_DIR}")
         set(AWESOME_CSS_PATH "${AWESOME_CSS_DIR}")

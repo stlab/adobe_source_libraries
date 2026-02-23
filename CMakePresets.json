@@ -2,7 +2,17 @@
     "version": 3,
     "configurePresets": [
         {
+            "name": "base",
+            "displayName": "base",
+            "description": "Base configuration",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CPM_SOURCE_CACHE": "${sourceDir}/.cache/cpm"
+            }
+        },
+        {
             "name": "debug",
+            "inherits": "base",
             "displayName": "debug-windows",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
@@ -26,6 +36,7 @@
         },
         {
             "name": "debug-windows-cpp17",
+            "inherits": "base",
             "displayName": "windows-debug-C++17",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
@@ -49,6 +60,7 @@
         },
         {
             "name": "macos-debug-C++20",
+            "inherits": "base",
             "displayName": "macos-debug-C++20",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
@@ -68,6 +80,7 @@
         },
         {
             "name": "macos-debug-C++17",
+            "inherits": "base",
             "displayName": "macos-debug-C++17",
             "description": "Sets Ninja generator, build and install directory",
             "generator": "Ninja",
@@ -79,6 +92,7 @@
         },
         {
             "name": "clang-tidy-base",
+            "inherits": "base",
             "hidden": true,
             "generator": "Ninja",
             "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
@@ -107,18 +121,19 @@
         },
         {
             "name": "clang-tidy-fix",
+            "inherits": "base",
             "hidden": false,
             "generator": "Ninja",
             "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
             "cacheVariables": {
                 "CMAKE_CXX_STANDARD": "17",
                 "CMAKE_BUILD_TYPE": "DEBUG",
-                "CMAKE_CXX_CLANG_TIDY":
-                    "clang-tidy;--fix;--allow-no-checks;--extra-arg=/EHsc;--extra-arg=/DNOMINMAX"
+                "CMAKE_CXX_CLANG_TIDY": "clang-tidy;--fix;--allow-no-checks;--extra-arg=/EHsc;--extra-arg=/DNOMINMAX"
             }
         },
         {
             "name": "clang-tidy-nofix",
+            "inherits": "base",
             "hidden": false,
             "generator": "Ninja",
             "binaryDir": "${sourceParentDir}/build/asl-${presetName}",
@@ -135,12 +150,13 @@
             }
         },
         {
-        "name": "test",
-        "displayName": "Test Configuration",
-        "description": "Configuration for building and running tests",
-        "binaryDir": "${sourceDir}/build/test",
-        "generator": "Ninja",
-        "cacheVariables": {
+            "name": "test",
+            "inherits": "base",
+            "displayName": "Test Configuration",
+            "description": "Configuration for building and running tests",
+            "binaryDir": "${sourceDir}/build/test",
+            "generator": "Ninja",
+            "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug",
                 "BUILD_TESTING": "ON",
                 "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
@@ -148,6 +164,7 @@
         },
         {
             "name": "docs",
+            "inherits": "base",
             "displayName": "Documentation Configuration",
             "description": "Configuration for building documentation",
             "binaryDir": "${sourceDir}/build/docs",
@@ -165,11 +182,11 @@
             "configurePreset": "debug"
         },
         {
-        "name": "docs",
-        "displayName": "Build Documentation",
-        "description": "Build the documentation",
-        "configurePreset": "docs",
-        "targets": "docs"
+            "name": "docs",
+            "displayName": "Build Documentation",
+            "description": "Build the documentation",
+            "configurePreset": "docs",
+            "targets": "docs"
         }
     ],
     "testPresets": [

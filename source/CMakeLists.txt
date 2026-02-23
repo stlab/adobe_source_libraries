@@ -1,8 +1,19 @@
+# Generate adobe/config.hpp from CMake project version (set by cpp_library_set_version)
+file(MAKE_DIRECTORY "${PROJECT_BINARY_DIR}/adobe")
+configure_file(
+    "${PROJECT_SOURCE_DIR}/adobe/config.hpp.in"
+    "${PROJECT_BINARY_DIR}/adobe/config.hpp"
+    @ONLY
+)
+
 aux_source_directory(. SRC_LIST)
 file(GLOB_RECURSE INC_LIST ../adobe/*.hpp)
 add_library(asl ${SRC_LIST} ${INC_LIST})
 
-target_include_directories(asl PUBLIC ..)
+# Binary dir first so generated config.hpp is used; .. is project root for other adobe headers
+target_include_directories(asl PUBLIC
+    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>)
 target_compile_definitions(asl PUBLIC ADOBE_STD_SERIALIZATION)
 
 # otherwise boost concept checking fails on adobe::selection_t because it lacks non const begin/end
