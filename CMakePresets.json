@@ -164,7 +164,6 @@
         },
         {
             "name": "docs",
-            "inherits": "base",
             "displayName": "Documentation Configuration",
             "description": "Configuration for building documentation",
             "binaryDir": "${sourceDir}/build/docs",
