@@ -739,7 +739,7 @@ void sheet_t::implementation_t::add_output(name_t name, const line_position_t& p
     // REVISIT (sparent) : Non-transactional on failure.
     cell_set_m.push_back(cell_t(
         access_output, name,
-        std::bind(&implementation_t::calculate_expression, std::ref(*this), position, expression),
+        [&, this]() { return calculate_expression(position, expression); },
         cell_set_m.size(), nullptr));
 
     output_index_m.insert(cell_set_m.back());
@@ -765,8 +765,9 @@ void sheet_t::implementation_t::add_interface(name_t name, bool linked,
 
     if (initializer_expression.size()) {
         cell_set_m.push_back(cell_t(name, linked,
-                                    std::bind(&implementation_t::calculate_expression,
-                                              std::ref(*this), position1, initializer_expression),
+                                    [&, this]() {
+                                        return calculate_expression(position1, initializer_expression);
+                                    },
                                     cell_set_m.size()));
     } else {
         cell_set_m.push_back(cell_t(name, linked, cell_t::calculator_t(), cell_set_m.size()));
@@ -781,12 +782,13 @@ void sheet_t::implementation_t::add_interface(name_t name, bool linked,
     if (expression.size()) {
         // REVISIT (sparent) : Non-transactional on failure.
         cell_set_m.push_back(cell_t(access_interface_output, name,
-                                    std::bind(&implementation_t::calculate_expression,
-                                              std::ref(*this), position2, expression),
+                                    [&, this]() {
+                                        return calculate_expression(position2, expression);
+                                    },
                                     cell_set_m.size(), &cell_set_m.back()));
     } else {
         cell_set_m.push_back(cell_t(access_interface_output, name,
-                                    std::bind(&implementation_t::get, std::ref(*this), name),
+                                    [&, this]() { return get(name); },
                                     cell_set_m.size(), &cell_set_m.back()));
     }
     output_index_m.insert(cell_set_m.back());
@@ -810,7 +812,7 @@ void sheet_t::implementation_t::add_interface(name_t name, any_regular_t initial
     cell.priority_m = ++priority_high_m;
 
     cell_set_m.push_back(cell_t(access_interface_output, name,
-                                std::bind(&implementation_t::get, std::ref(*this), name),
+                                [&, this]() { return get(name); },
                                 cell_set_m.size(), &cell));
 
     output_index_m.insert(cell_set_m.back());
@@ -852,7 +854,7 @@ void sheet_t::implementation_t::add_logic(name_t logic, const line_position_t& p
                                           const array_t& expression) {
     cell_set_m.push_back(cell_t(
         access_logic, logic,
-        std::bind(&implementation_t::calculate_expression, std::ref(*this), position, expression),
+        [&, this]() { return calculate_expression(position, expression); },
         cell_set_m.size(), nullptr));
 
     if (!name_index_m.insert(cell_set_m.back()).second) {
@@ -868,7 +870,7 @@ void sheet_t::implementation_t::add_invariant(name_t name, const line_position_t
     // REVISIT (sparent) : Non-transactional on failure.
     cell_set_m.push_back(cell_t(
         access_invariant, name,
-        std::bind(&implementation_t::calculate_expression, std::ref(*this), position, expression),
+        [&, this]() { return calculate_expression(position, expression); },
         cell_set_m.size(), nullptr));
 
     output_index_m.insert(cell_set_m.back());
@@ -953,8 +955,11 @@ sheet_t::connection_t sheet_t::implementation_t::monitor_enabled(name_t n, const
     monitor(active_m.test(iter->cell_set_pos_m) || (value_accessed_m.test(iter->cell_set_pos_m) &&
                                                     (touch_set & priority_accessed_m).any()));
 
-    return monitor_enabled_m.connect(std::bind(&sheet_t::implementation_t::enabled_filter, this,
-                                               touch_set, iter->cell_set_pos_m, monitor, _1, _2));
+    std::size_t iter_pos = iter->cell_set_pos_m;
+    return monitor_enabled_m.connect(
+        [&, this](const cell_bits_t& a, const cell_bits_t& b) {
+            enabled_filter(touch_set, iter_pos, monitor, a, b);
+        });
 }
 
 /**************************************************************************************************/
@@ -1006,8 +1011,7 @@ sheet_t::implementation_t::monitor_contributing(name_t n, const dictionary_t& ma
     monitor(contributing_set(mark, iter->contributing_m));
 
     return iter->monitor_contributing_m.connect(
-        std::bind(monitor, std::bind(&sheet_t::implementation_t::contributing_set, std::ref(*this),
-                                     mark, _1)));
+        [this, mark, monitor](const cell_bits_t& bits) { monitor(contributing_set(mark, bits)); });
 }
 
 /**************************************************************************************************/
