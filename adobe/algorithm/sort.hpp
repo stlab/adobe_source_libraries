@@ -48,7 +48,7 @@ inline void sort(RandomAccessRange& range) {
 */
 template <class RandomAccessIterator, class Compare>
 inline void sort(RandomAccessIterator first, RandomAccessIterator last, Compare comp) {
-    return std::sort(first, last, [comp](const auto& a, const auto& b) {
+    return std::sort(first, last, [&comp](const auto& a, const auto& b) {
         return std::invoke(comp, a, b);
     });
 }
@@ -65,7 +65,7 @@ template <typename I, // I models RandomAccessIterator
 inline void sort(I f, I l, C c, P p) {
     return std::sort(
         f, l,
-        [&](const auto& a, const auto& b) {
+        [&p, &c](const auto& a, const auto& b) {
             return std::invoke(c, std::invoke(p, a), std::invoke(p, b));
         });
 }
@@ -111,7 +111,7 @@ inline void stable_sort(RandomAccessRange& range) {
 template <class RandomAccessIterator, class Compare>
 inline void stable_sort(RandomAccessIterator first, RandomAccessIterator last, Compare comp) {
     return std::stable_sort(first, last,
-        [&](const auto& a, const auto& b) {
+        [&comp](const auto& a, const auto& b) {
             return std::invoke(comp, a, b);
         });
 }
@@ -158,7 +158,7 @@ inline void partial_sort_copy(InputIterator first, InputIterator last,
                               RandomAccessIterator result_first, RandomAccessIterator result_last,
                               Compare comp) {
     return std::partial_sort_copy(first, last, result_first, result_last,
-        [&](const auto& a, const auto& b) {
+        [&comp](const auto& a, const auto& b) {
             return std::invoke(comp, a, b);
         });
 }

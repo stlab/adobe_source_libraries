@@ -82,9 +82,9 @@ std::pair<Iter, Iter> gather(Iter first, Iter last, Iter pivot, Pred pred) {
     return std::make_pair(
         std::stable_partition(
             first, pivot,
-            [&](auto&& v) -> bool { return !pred(std::forward<decltype(v)>(v)); }),
-        std::stable_partition(pivot, last, [&](auto&& v) -> bool {
-            return pred(std::forward<decltype(v)>(v));
+            [&](const auto& v) -> bool { return !std::invoke(pred, v); }),
+        std::stable_partition(pivot, last, [&](const auto& v) -> bool {
+            return std::invoke(pred, v);
         }));
 }
 

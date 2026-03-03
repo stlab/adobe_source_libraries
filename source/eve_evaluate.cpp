@@ -200,7 +200,7 @@ eve_callback_suite_t bind_layout(const bind_layout_proc_t& proc, sheet_t& sheet,
     eve_callback_suite_t suite;
 
     suite.add_view_proc_m =
-        [&evaluator, &proc](const eve_callback_suite_t::position_t& parent, const line_position_t& /* parse_location */,
+        [&evaluator, proc](const eve_callback_suite_t::position_t& parent, const line_position_t& /* parse_location */,
               name_t name, const array_t& parameters, const std::string& /* brief */,
               const std::string& /* detailed */) -> eve_callback_suite_t::position_t {
         return proc(parent, name, evaluate_named_arguments(evaluator, parameters));

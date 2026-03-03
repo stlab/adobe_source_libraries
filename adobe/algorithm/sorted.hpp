@@ -35,7 +35,7 @@ I sorted(I f, I l, O o) {
 
     f = std::adjacent_find(
         f, l,
-        [&](const auto& first, const auto& next) {
+        [&o](const auto& first, const auto& next) {
             return !std::invoke(o, first, next);
         });
 
@@ -65,7 +65,7 @@ template <typename I, // I models InputIterator
 inline bool is_sorted(I f, I l, O o) {
     return std::adjacent_find(
             f, l,
-            [&](const auto& first, const auto& next) {
+            [&o](const auto& first, const auto& next) {
                 return !std::invoke(o, first, next);
             }) == l;
 }
@@ -92,7 +92,7 @@ template <typename I, // I models ForwardIterator
 inline bool is_sorted(I f, I l, C c, P p) {
     return std::adjacent_find(
         f, l,
-        [&](const auto& first, const auto& next) {
+        [&c, &p](const auto& first, const auto& next) {
             return !std::invoke(
                 c,
                 std::invoke(p, first),
