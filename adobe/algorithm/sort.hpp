@@ -48,7 +48,9 @@ inline void sort(RandomAccessRange& range) {
 */
 template <class RandomAccessIterator, class Compare>
 inline void sort(RandomAccessIterator first, RandomAccessIterator last, Compare comp) {
-    return std::sort(first, last, std::bind(comp, std::placeholders::_1, std::placeholders::_2));
+    return std::sort(first, last, [&comp](const auto& a, const auto& b) {
+        return std::invoke(comp, a, b);
+    });
 }
 
 /*!
@@ -63,7 +65,9 @@ template <typename I, // I models RandomAccessIterator
 inline void sort(I f, I l, C c, P p) {
     return std::sort(
         f, l,
-        std::bind(c, std::bind(p, std::placeholders::_1), std::bind(p, std::placeholders::_2)));
+        [&p, &c](const auto& a, const auto& b) {
+            return std::invoke(c, std::invoke(p, a), std::invoke(p, b));
+        });
 }
 
 /*!
@@ -76,9 +80,7 @@ template <typename R, // I models RandomAccessRange
           typename P>
 // P models UnaryFunction(value_type(I)) -> T
 inline void sort(R& r, C c, P p) {
-    return adobe::sort(
-        boost::begin(r), boost::end(r),
-        std::bind(c, std::bind(p, std::placeholders::_1), std::bind(p, std::placeholders::_2)));
+    return adobe::sort(boost::begin(r), boost::end(r), c, p);
 }
 
 /*!
@@ -109,7 +111,9 @@ inline void stable_sort(RandomAccessRange& range) {
 template <class RandomAccessIterator, class Compare>
 inline void stable_sort(RandomAccessIterator first, RandomAccessIterator last, Compare comp) {
     return std::stable_sort(first, last,
-                            std::bind(comp, std::placeholders::_1, std::placeholders::_2));
+        [&comp](const auto& a, const auto& b) {
+            return std::invoke(comp, a, b);
+        });
 }
 
 /*!
@@ -154,7 +158,9 @@ inline void partial_sort_copy(InputIterator first, InputIterator last,
                               RandomAccessIterator result_first, RandomAccessIterator result_last,
                               Compare comp) {
     return std::partial_sort_copy(first, last, result_first, result_last,
-                                  std::bind(comp, std::placeholders::_1, std::placeholders::_2));
+        [&comp](const auto& a, const auto& b) {
+            return std::invoke(comp, a, b);
+        });
 }
 
 /*!

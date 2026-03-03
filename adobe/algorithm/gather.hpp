@@ -16,6 +16,7 @@
 
 #include <algorithm> // for std::table_partition
 #include <functional>
+#include <utility>
 
 #include <boost/range/begin.hpp> // for boost::begin(range)
 #include <boost/range/end.hpp>   // for boost::end(range)
@@ -81,8 +82,10 @@ std::pair<Iter, Iter> gather(Iter first, Iter last, Iter pivot, Pred pred) {
     return std::make_pair(
         std::stable_partition(
             first, pivot,
-            std::bind(std::logical_not<bool>(), std::bind(pred, std::placeholders::_1))),
-        std::stable_partition(pivot, last, std::bind(pred, std::placeholders::_1)));
+            [&](const auto& v) -> bool { return !std::invoke(pred, v); }),
+        std::stable_partition(pivot, last, [&](const auto& v) -> bool {
+            return std::invoke(pred, v);
+        }));
 }
 
 /**************************************************************************************************/

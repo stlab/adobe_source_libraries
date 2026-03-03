@@ -24,8 +24,6 @@
 #include <boost/fusion/include/invoke.hpp>
 #include <boost/fusion/include/push_back.hpp>
 
-#include <boost/utility/enable_if.hpp>
-
 #include <adobe/type_inspection.hpp> // ADOBE_HAS_TYPE/ADOBE_HAS_MEMBER
 #include <adobe/typeinfo.hpp>
 
@@ -111,14 +109,12 @@ struct traits {
 
 
 namespace detail {
-template <class ArgStream,
-          typename boost::enable_if_c<traits<ArgStream>::has_eof_memberfunction>::type* dummy = nullptr>
+template <class ArgStream, std::enable_if_t<traits<ArgStream>::has_eof_memberfunction>* dummy = nullptr>
 static bool eof_check(ArgStream& as) {
     return as.eof();
 }
 
-template <class ArgStream,
-    typename boost::disable_if_c<traits<ArgStream>::has_eof_memberfunction>::type* dummy = nullptr>
+template <class ArgStream, std::enable_if_t<!traits<ArgStream>::has_eof_memberfunction>* dummy = nullptr>
 static bool eof_check(ArgStream& as) {
     return false;
 }
@@ -453,13 +449,13 @@ struct with_transform {
     bool eof() { return detail::eof_check(argstream); }
 
     template <typename R>
-    R transforming_get(typename boost::enable_if<has_transform<Transformer, R>>::type* dummy = 0) {
+    R transforming_get(std::enable_if<has_transform<Transformer, R>::value>* dummy = nullptr) {
         typedef typename Transformer::template arg_stream_inverse_lookup<R>::type Rfrom;
         return transformer.template arg_stream_transform<R>(
             arg_stream::get_next_arg<Rfrom>(argstream));
     }
     template <typename R>
-    R transforming_get(typename boost::disable_if<has_transform<Transformer, R>>::type* dummy = 0) {
+    R transforming_get(std::enable_if<!has_transform<Transformer, R>::value>* dummy = nullptr) {
         return arg_stream::get_next_arg<R>(argstream);
     }
 
