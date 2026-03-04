@@ -6,13 +6,13 @@
 /**************************************************************************************************/
 
 #include <array>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 
 #include <adobe/config.hpp>
 #include <adobe/md5.hpp>
 
-#include <boost/filesystem/path.hpp>
 #include <boost/version.hpp>
 
 /**************************************************************************************************/
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 
     try {
         adobe::md5_t m;
-        boost::filesystem::path file_path(argv[1], boost::filesystem::native);
+        std::filesystem::path file_path(argv[1], std::filesystem::path::native);
         std::ifstream stream(file_path.native_file_string().c_str(),
                              std::ios::binary | std::ios::in);
 

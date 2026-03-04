@@ -91,7 +91,7 @@ const std::vector<adobe::name_t>& zuid_corpus() {
 
 /**************************************************************************************************/
 
-std::vector<adobe::name_t> word_corpus_init(boost::filesystem::ifstream& stream) {
+std::vector<adobe::name_t> word_corpus_init(std::filesystem::ifstream& stream) {
     std::vector<adobe::name_t> result;
 
     while (stream) {
@@ -107,7 +107,7 @@ std::vector<adobe::name_t> word_corpus_init(boost::filesystem::ifstream& stream)
 
 /**************************************************************************************************/
 
-const std::vector<adobe::name_t>& word_corpus(boost::filesystem::ifstream& stream) {
+const std::vector<adobe::name_t>& word_corpus(std::filesystem::ifstream& stream) {
     static std::vector<adobe::name_t> result_s(word_corpus_init(stream));
 
     return result_s;
@@ -179,7 +179,7 @@ void hash_test_corpus(const std::vector<adobe::name_t>& corpus, const char* corp
 
 /**************************************************************************************************/
 
-void hash_test(boost::filesystem::ifstream&& corpus_file) {
+void hash_test(std::filesystem::ifstream&& corpus_file) {
     hash_test_corpus(lexed_number_corpus(), "lexed numbers");
     hash_test_corpus(zuid_corpus(), "zuids");
 
@@ -196,12 +196,12 @@ void hash_test(boost::filesystem::ifstream&& corpus_file) {
 /**************************************************************************************************/
 
 int main(int argc, char** argv) try {
-    boost::filesystem::path corpus_file;
+    std::filesystem::path corpus_file;
 
     if (argc > 1)
-        corpus_file = boost::filesystem::path(argv[1]);
+        corpus_file = std::filesystem::path(argv[1]);
 
-    hash_test(boost::filesystem::ifstream(corpus_file));
+    hash_test(std::filesystem::ifstream(corpus_file));
 
     return 0;
 } catch (std::exception& error) {

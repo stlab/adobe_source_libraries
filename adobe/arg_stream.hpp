@@ -6,9 +6,7 @@
 #ifndef ADOBE_ARG_STREAM_H
 #define ADOBE_ARG_STREAM_H
 
-#include <boost/function_types/function_arity.hpp>
 #include <boost/function_types/function_type.hpp>
-#include <boost/function_types/result_type.hpp>
 
 #include <boost/mpl/begin.hpp>
 #include <boost/mpl/deref.hpp>
@@ -195,26 +193,13 @@ struct signature<std::function<F>> {
     typedef F type;
 };
 
-/*!
-\ingroup arg_stream
-
-\brief result_type<F>::type is the return type of the function f.
-
-\template_parameters
-    - \c F models callable object
-*/
-template <typename F>
-struct result_type {
-    typedef typename boost::function_types::result_type<typename signature<F>::type>::type type;
-};
-
 namespace detail {
 // how it all works...
 
-
 template <typename T>
-struct remove_cv_ref : boost::remove_cv<typename boost::remove_reference<T>::type> {};
-
+struct remove_cv_ref {
+    using type = std::remove_cv_t<std::remove_reference_t<T>>;
+};
 
 // see also boost::function_types 'interpreter' example
 // we convert the function signature into a mpl sequence (it *is* an mpl sequence, since it
@@ -231,7 +216,7 @@ template <typename F,
 struct invoker {
     // add an argument to a Fusion cons-list for each parameter type
     template <typename Args, typename ArgStream>
-    static inline typename result_type<F>::type apply(F func, ArgStream& astream,
+    static inline auto apply(F func, ArgStream& astream,
                                                       Args const& args) {
         typedef typename remove_cv_ref<typename boost::mpl::deref<From>::type>::type arg_type;
         typedef typename boost::mpl::next<From>::type next_iter_type;
@@ -245,7 +230,7 @@ struct invoker {
 template <typename F, class To>
 struct invoker<F, To, To> {
     template <typename Args, typename ArgStream>
-    static inline typename result_type<F>::type apply(F func, ArgStream&, Args const& args) {
+    static inline auto apply(F func, ArgStream&, Args const& args) {
         return boost::fusion::invoke(func, args);
     }
 };
@@ -262,7 +247,7 @@ struct invoker<F, To, To> {
 abstracted object.
 */
 template <typename F, typename ArgStream>
-typename result_type<F>::type call(F f, ArgStream& astream) {
+auto call(F f, ArgStream& astream) {
     return detail::invoker<F>::apply(f, astream, boost::fusion::nil());
 }
 
@@ -272,7 +257,7 @@ typename result_type<F>::type call(F f, ArgStream& astream) {
 \brief specialization of arg_stream::call for handling member function calls.
 */
 template <class T, typename F, typename ArgStream>
-typename result_type<F>::type call(T* that, F f, ArgStream& astream) {
+auto call(T* that, F f, ArgStream& astream) {
     // object gets pushed on as first arg of fusion list,
     // and remove first arg from signature (the object that the member function belongs to)
     // using

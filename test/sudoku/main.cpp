@@ -8,9 +8,6 @@
 #include <adobe/config.hpp>
 #include <adobe/timer.hpp>
 
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem/operations.hpp>
-
 #include "sudoku.hpp"
 #include "sudoku_utilities.hpp"
 
@@ -22,12 +19,6 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-
-/**************************************************************************************************/
-
-namespace bfs = boost::filesystem;
-
-/**************************************************************************************************/
 
 namespace {
 
@@ -48,7 +39,7 @@ public:
         setting_set_size
     };
 
-    explicit application_t(bfs::path prefs_path) : prefs_path_m(prefs_path) {
+    explicit application_t(std::filesystem::path prefs_path) : prefs_path_m(prefs_path) {
         for (std::size_t i(0); i < setting_set_size; ++i)
             solver_usage_m[i] = true;
 
@@ -70,7 +61,7 @@ private:
 
     void pick_new_puzzle();
 
-    bfs::path prefs_path_m;
+    std::path prefs_path_m;
     sudoku_set_t sudoku_set_m;
     sudoku::sudoku_t puzzle_m;
     std::array<bool, setting_set_size> solver_usage_m;
@@ -80,7 +71,7 @@ private:
 
 void application_t::import_preferences() {
     char buffer[1024];
-    bfs::ifstream input(prefs_path_m, std::ios_base::in | std::ios_base::binary);
+    std::ifstream input(prefs_path_m, std::ios_base::in | std::ios_base::binary);
 
     if (input.fail()) {
         std::cerr << "Could not open preferences file." << std::endl;
@@ -386,7 +377,7 @@ int main(int argc, char** argv) {
     if (argc > 1)
         db_name.assign(argv[1]);
 
-    bfs::path filepath(db_name.c_str(), argc > 1 ? bfs::native : bfs::portable_name);
+    std::path filepath(db_name.c_str(), argc > 1 ? std::native : std::portable_name);
 
     { application_t(filepath).run(); }
 
