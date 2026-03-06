@@ -687,13 +687,12 @@ inline bool empty(const any_regular_t& x) { return x.type_info() == typeid(empty
 template <typename R>
 struct runtime_cast_t<R, const any_regular_t> {
     R operator()(const any_regular_t& x) const {
-        typedef typename boost::remove_const<typename boost::remove_reference<R>::type>::type
-            result_type;
+        using result_type = std::remove_const_t<std::remove_reference_t<R>>;
 
-        static_assert(boost::is_reference<R>::value);
+        static_assert(std::is_reference_v<R>);
 
         /* There is no auto-promotion through the new interface. Soon promotion will be disabled. */
-        static_assert(std::is_same<typename promote<result_type>::type, result_type>::value);
+        static_assert(std::is_same_v<typename promote<result_type>::type, result_type>);
 
         return x.cast<result_type>();
     }
@@ -704,9 +703,9 @@ struct runtime_cast_t<R, const any_regular_t> {
 template <typename R>
 struct runtime_cast_t<R, any_regular_t> {
     R operator()(any_regular_t& x) const {
-        typedef typename boost::remove_reference<R>::type result_type;
+        using result_type = std::remove_reference_t<R>;
 
-        static_assert(boost::is_reference<R>::value);
+        static_assert(std::is_reference_v<R>);
 
         /* There is no auto-promotion through the new interface. Soon promotion will be disabled. */
         static_assert(std::is_same<typename promote<result_type>::type, result_type>::value);
@@ -720,9 +719,9 @@ struct runtime_cast_t<R, any_regular_t> {
 template <typename R>
 struct runtime_cast_t<R, any_regular_t*> {
     R operator()(any_regular_t* x) const {
-        typedef typename boost::remove_pointer<R>::type result_type;
+        using result_type = std::remove_pointer_t<R>;
 
-        static_assert(boost::is_pointer<R>::value);
+        static_assert(std::is_pointer_v<R>);
 
         /* There is no auto-promotion through the new interface. Soon promotion will be disabled. */
         static_assert(std::is_same<typename promote<result_type>::type, result_type>::value);
@@ -736,13 +735,12 @@ struct runtime_cast_t<R, any_regular_t*> {
 template <typename R>
 struct runtime_cast_t<R, const any_regular_t*> {
     R operator()(const any_regular_t* x) const {
-        typedef
-            typename boost::remove_const<typename boost::remove_pointer<R>::type>::type result_type;
+        using result_type = std::remove_const_t<std::remove_pointer_t<R>>;
 
-        static_assert(boost::is_pointer<R>::value);
+        static_assert(std::is_pointer_v<R>);
 
         /* There is no auto-promotion through the new interface. Soon promotion will be disabled. */
-        static_assert(std::is_same<typename promote<result_type>::type, result_type>::value);
+        static_assert(std::is_same_v<typename promote<result_type>::type, result_type>);
 
         if (x->type_info() != typeid(result_type))
             return 0;
