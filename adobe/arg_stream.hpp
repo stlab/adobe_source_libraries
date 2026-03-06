@@ -216,7 +216,7 @@ template <typename F,
 struct invoker {
     // add an argument to a Fusion cons-list for each parameter type
     template <typename Args, typename ArgStream>
-    static inline auto apply(F func, ArgStream& astream,
+    static inline decltype(auto) apply(F func, ArgStream& astream,
                                                       Args const& args) {
         typedef typename remove_cv_ref<typename boost::mpl::deref<From>::type>::type arg_type;
         typedef typename boost::mpl::next<From>::type next_iter_type;
@@ -230,7 +230,7 @@ struct invoker {
 template <typename F, class To>
 struct invoker<F, To, To> {
     template <typename Args, typename ArgStream>
-    static inline auto apply(F func, ArgStream&, Args const& args) {
+    static inline decltype(auto) apply(F func, ArgStream&, Args const& args) {
         return boost::fusion::invoke(func, args);
     }
 };
