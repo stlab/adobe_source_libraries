@@ -256,6 +256,7 @@ public:
     void set_layout_attributes(iterator, const layout_attributes_t&);
 
     void print_debug(std::ostream& os);
+    void print_debug_source(std::ostream& os);
 
 private:
     void solve(slice_select_t select);
@@ -477,6 +478,131 @@ void eve_t::implementation_t::print_debug(std::ostream& output_stream) {
         }
     });
 }
+void eve_t::implementation_t::print_debug_source(std::ostream& output_stream) {
+
+    with_default_formatting(output_stream, [&](std::ostream& os) {
+        auto print_guide_set = [&](const guide_set_t& guide_set) {
+            os << "[";
+            for (const auto& guide : guide_set) {
+                os << guide;
+                if (&guide != &guide_set.back()) {
+                    os << ", ";
+                }
+            }
+            os << "]";
+        };
+
+        iterator iter = proxies_m.begin();
+        iterator last = proxies_m.end();
+        std::size_t depth(0);
+
+        for (; iter != last; ++iter) {
+            if (iter.edge() == forest_trailing_edge) {
+                --depth;
+                if (has_children(iter)) {
+                    os << std::string(depth * 4, ' ') << "}\n";
+                }
+                continue;
+            }
+
+            const implementation::view_proxy_t& proxy = *iter;
+            const auto& e = proxy.geometry_m.extents_m;
+            const auto& g = proxy.geometry_m;
+
+            os << std::string(depth * 4, ' ');
+            os << proxy.placeable_m.type_info().name();
+            os << "(";
+            os << "placement: " << to_string(g.placement_m);
+            os << ", ";
+            os << "horizontal: " << to_string(g.horizontal().alignment_m);
+            os << ", ";
+            os << "vertical: " << to_string(g.vertical().alignment_m);
+            os << ", ";
+            os << "width: " << e.width();
+            os << ", ";
+            os << "height: " << e.height();
+            if (g.horizontal().balance_m) {
+                os << ", ";
+                os << "horizontal_balance: true";
+            }
+            if (g.vertical().balance_m) {
+                os << ", ";
+                os << "vertical_balance: true";
+            }
+            if (g.indent_m != 0) {
+                os << ", ";
+                os << "indent: " << g.indent_m;
+            }
+            if (g.create_m) {
+                os << ", ";
+                os << "create: " << g.create_m;
+            }
+            if (g.placement_m != place_leaf) {
+                os << ", ";
+                os << "spacing: ";
+                print_guide_set(g.spacing_m);
+                if ((g.horizontal().margin_m != pair_long_t{0, 0} ||
+                     g.vertical().margin_m != pair_long_t{0, 0})) {
+                    os << ", ";
+                    os << "margin: [" << g.vertical().margin_m.first << ", "
+                       << g.horizontal().margin_m.first << ", " << g.vertical().margin_m.second
+                       << ", " << g.horizontal().margin_m.second << "]";
+                }
+            }
+            if (e.horizontal().outset_m != pair_long_t{0, 0}) {
+                os << ", ";
+                os << "horizontal_outset: " << e.horizontal().outset_m.first << ", "
+                   << e.horizontal().outset_m.second;
+            }
+            if (e.vertical().outset_m != pair_long_t{0, 0}) {
+                os << ", ";
+                os << "vertical_outset: " << e.vertical().outset_m.first << ", "
+                   << e.vertical().outset_m.second;
+            }
+            if (e.horizontal().frame_m != pair_long_t{0, 0}) {
+                os << ", ";
+                os << "horizontal_frame: " << e.horizontal().frame_m.first << ", "
+                   << e.horizontal().frame_m.second;
+            }
+            if (e.vertical().frame_m != pair_long_t{0, 0}) {
+                os << ", ";
+                os << "vertical_frame: " << e.vertical().frame_m.first << ", "
+                   << e.vertical().frame_m.second;
+            }
+            if (e.horizontal().inset_m != pair_long_t{0, 0}) {
+                os << ", ";
+                os << "horizontal_inset: " << e.horizontal().inset_m.first << ", "
+                   << e.horizontal().inset_m.second;
+            }
+            if (e.vertical().inset_m != pair_long_t{0, 0}) {
+                os << ", ";
+                os << "vertical_inset: " << e.vertical().inset_m.first << ", "
+                   << e.vertical().inset_m.second;
+            }
+            if (!e.horizontal().guide_set_m.empty()) {
+                os << ", ";
+                os << "horizontal_guides: ";
+                print_guide_set(e.horizontal().guide_set_m);
+            }
+            if (!e.vertical().guide_set_m.empty()) {
+                os << ", ";
+                os << "vertical_guides: ";
+                print_guide_set(e.vertical().guide_set_m);
+            }
+            os << ")";
+
+            if (has_children(iter)) {
+                os << " {";
+            } else {
+                os << ";";
+            }
+
+            os << "\n";
+
+            ++depth;
+        }
+    });
+}
 
 /**************************************************************************************************/
 
@@ -492,16 +618,21 @@ void eve_t::implementation_t::solve(slice_select_t select) {
     bool progress(false);
 
     /*
-        REVISIT (sparent) : This loop should solve it in rougly log N passes
+        REVISIT (sparent) : This loop should solve it in roughly log N passes
         We know that we are guaranteed to solve one guide completely per iteration
         and most often it should be several. But, I've been known to make a mistake or two
         (which could cause this loop to solve forever!). So we put a limiter on it and
         an assert.
-
     */
     proxy_tree_t::size_type limiter(proxies_m.size() + 1); // + 1 to account for the empty case
+    // proxy_tree_t::size_type limiter(1);
 
     do {
+        if (!limiter) {
+            std::cerr << __FILE__ ":" << __LINE__ << ": WARNING: Eve solver limit reached."
+                      << std::endl;
+            print_debug_source(std::cerr);
+        }
         --limiter;
         progress = false;
 
@@ -516,9 +647,11 @@ void eve_t::implementation_t::solve(slice_select_t select) {
                                  ::apply_to_children<postorder_iterator>(
                                      &implementation::view_proxy_t::solve_up, select));
 
-    } while (progress && limiter);
 
-    ADOBE_ASSERT(limiter); // Failing to make forward progress - aborting.
+    } while (progress);
+
+
+    // ADOBE_ASSERT(limiter); // Failing to make forward progress - aborting.
 }
 
 /**************************************************************************************************/
@@ -1274,9 +1407,8 @@ void view_proxy_t::adjust_with(::child_iterator first, ::child_iterator last,
     // size the container guide set based on the number of guides our children have.
 
     /*
-    REVISIT (sparent) : I'm sure there is oportunity to do less work here but we clear the
-    guides
-    so we can re-adjust on a size adjust.
+    REVISIT (sparent) : I'm sure there is opportunity to do less work here but we clear the
+    guides so we can re-adjust on a size adjust.
     */
 
     container_guide_set_m[select][layout_attributes_t::align_forward].clear();
@@ -1328,9 +1460,8 @@ void view_proxy_t::adjust_cross(::child_iterator first, ::child_iterator last,
     // size the container guide set based on the number of guides our children have.
 
     /*
-    REVISIT (sparent) : I'm sure there is oportunity to do less work here but we clear the
-    guides
-    so we can re-adjust on a size adjust.
+    REVISIT (sparent) : I'm sure there is opportunity to do less work here but we clear the
+    guides so we can re-adjust on a size adjust.
     */
 
     container_guide_set_m[select][layout_attributes_t::align_forward].clear();

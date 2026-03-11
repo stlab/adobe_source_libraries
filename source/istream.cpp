@@ -10,7 +10,6 @@
 
 /**************************************************************************************************/
 
-#include <filesystem>
 #include <iomanip>
 #include <ostream>
 #include <sstream>
@@ -131,51 +130,6 @@ std::ostream& operator<<(std::ostream& out, const stream_error_t& error) {
 std::string format_stream_error(std::istream&, const stream_error_t& error) {
     return format_stream_error(error);
 }
-
-/**************************************************************************************************/
-
-#if 0
-// REVISIT (sparent) : Why doesn't this return the string?
-std::istream& getline(std::istream& is, std::string& str)
-{
-    typedef std::string::size_type  size_type;
-    typedef std::char_traits<char>  traits_type;
-    
-    std::istream::sentry    ok(is, true);
-    size_type               count(0);
-    
-    if (ok)
-    {
-        str.clear();
-        while (true)
-        {
-            traits_type::int_type i = is.rdbuf()->sbumpc();
-            if (i == traits_type::eof())
-            {
-                is.setstate(std::ios_base::eofbit);
-                break;
-            }
-            char c (traits_type::to_char_type(i));
-            ++count;
-/*
-    REVISIT (sparent) : I'm not real happy with the iterator interface for is_line_end() and in this
-    case it is just plain wrong - constructing an istream_iterator consumes one character
-    from the stream. Also, istream_iterator uses operator >> which does line ending interpretation.
-*/
-
-#if 0
-            std::istream_iterator<char> first(is);
-            if (is_line_end(first, std::istream_iterator<char>(), c)) break;
-#endif
-            std::istreambuf_iterator<char> first(is);
-            if (is_line_end(first, std::istreambuf_iterator<char>(), c)) break;
-            str.append(1, c);
-        }
-    }
-    if (count == 0) is.setstate(std::ios_base::failbit);
-    return is;
-}
-#endif
 
 /**************************************************************************************************/
 
